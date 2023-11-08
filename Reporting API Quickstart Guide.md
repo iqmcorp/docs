@@ -312,7 +312,7 @@ Example: <code>api.iqm.com</code>
 {
    "grantType": "password",
    "email": "pratik.t+ihp@iqm.com",
-   "password": "123456
+   "password": "123456"
 }
 ```
 
