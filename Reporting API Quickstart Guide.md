@@ -781,10 +781,7 @@ Example: <code>{{advertiser_api_token}}</code>
 
 
 
-##### REQUEST BODY SCHEMA: application/json
-
-
-##### required
+##### REQUEST BODY SCHEMA: application/json required
 
 
 <table>
