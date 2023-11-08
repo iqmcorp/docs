@@ -791,13 +791,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>startDate</code>
    </td>
-   <td>integer <int64> - Unix timestamp
+   <td>integer <code>int64</code> - Unix timestamp
    </td>
   </tr>
   <tr>
    <td><code>endDate</code>
    </td>
-   <td>integer <int64> - Unix timestamp
+   <td>integer <code>int64</code> - Unix timestamp
    </td>
   </tr>
   <tr>
@@ -809,7 +809,7 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>customerIds</code>
    </td>
-   <td>Array of integers <int32> [ items <int32 > ] list of customers IDs to include in the report, leave empty array []  to include all
+   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all
    </td>
   </tr>
   <tr>
@@ -821,13 +821,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>timezoneId</code>
    </td>
-   <td>integer <int32> - Timezone ID from the timezones API
+   <td>integer <code>int32</code> - Timezone ID from the timezones API
    </td>
   </tr>
   <tr>
    <td><code>requestType</code>
    </td>
-   <td>integer <int32> - 1 aggregated or 2 daily
+   <td>integer <code>int32</code> - 1 aggregated or 2 daily
    </td>
   </tr>
   <tr>
@@ -851,13 +851,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>pageNo</code>
    </td>
-   <td>integer <int32> - pagination parameter, page number
+   <td>integer <code>int32</code> - pagination parameter, page number
    </td>
   </tr>
   <tr>
    <td><code>noOfEntries</code>
    </td>
-   <td>integer <int32> - pagination parameter, records per page
+   <td>integer <code>int32</code> - pagination parameter, records per page
    </td>
   </tr>
   <tr>
