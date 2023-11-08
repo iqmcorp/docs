@@ -705,9 +705,9 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
    <td><code>X-IAA-OW-ID</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{ow_id}}</code>
    </td>
@@ -716,9 +716,9 @@ Example: <code>{{ow_id}}</code>
    <td><code>Authorization</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{bearer_token}}</code>
    </td>
@@ -730,17 +730,16 @@ Example: <code>{{bearer_token}}</code>
 ##### Response 200:
 
 
-```
+```json
 {
-"statusCode": 200,
-"responseObject":
-[
-{
-"name": "US/Central",
-"id": 423,
-"label": "US/Central"
-}
-]
+   "statusCode":200,
+   "responseObject":[
+      {
+         "name":"US/Central",
+         "id":423,
+         "label":"US/Central"
+      }
+   ]
 }
 ```
 
@@ -771,9 +770,9 @@ At least one dimension is required.
    <td><code>x-iaa-api-token</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{advertiser_api_token}}</code>
    </td>
@@ -792,13 +791,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>startDate</code>
    </td>
-   <td>integer &lt;int64> - Unix timestamp
+   <td>integer <int64> - Unix timestamp
    </td>
   </tr>
   <tr>
    <td><code>endDate</code>
    </td>
-   <td>integer &lt;int64> - Unix timestamp
+   <td>integer <int64> - Unix timestamp
    </td>
   </tr>
   <tr>
@@ -810,7 +809,7 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>customerIds</code>
    </td>
-   <td>Array of integers &lt;int32> [ items &lt;int32 > ] list of customers IDs to include in the report, leave empty array []  to include all
+   <td>Array of integers <int32> [ items <int32 > ] list of customers IDs to include in the report, leave empty array []  to include all
    </td>
   </tr>
   <tr>
@@ -822,13 +821,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>timezoneId</code>
    </td>
-   <td>integer &lt;int32> - Timezone ID from the timezones API
+   <td>integer <int32> - Timezone ID from the timezones API
    </td>
   </tr>
   <tr>
    <td><code>requestType</code>
    </td>
-   <td>integer &lt;int32> - 1 aggregated or 2 daily
+   <td>integer <int32> - 1 aggregated or 2 daily
    </td>
   </tr>
   <tr>
@@ -852,13 +851,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>pageNo</code>
    </td>
-   <td>integer &lt;int32> - pagination parameter, page number
+   <td>integer <int32> - pagination parameter, page number
    </td>
   </tr>
   <tr>
    <td><code>noOfEntries</code>
    </td>
-   <td>integer &lt;int32> - pagination parameter, records per page
+   <td>integer <int32> - pagination parameter, records per page
    </td>
   </tr>
   <tr>
@@ -874,30 +873,32 @@ Example: <code>{{advertiser_api_token}}</code>
 ##### Request:
 
 
-```
+```json
 {
-"customerIds":[],
-"startDate":1690550314033,
-"endDate":1698326314033,
-"dimensions":"[{\"filter\":\"ioName\"},{\"filter\":\"campaign\"}]",
-"columns":[
-"impressions",
-"clicks",
-"CTR",
-"VCR",
-"spent",
-"dataCost",
-"mediaSpent",
-"eCPM"
-],
-"requestType":2,
-"reportAggregated":"0",
-"timezoneName":"US/Eastern",
-"timezoneId":29,
-"counter":1,
-"pageNo":1,
-"noOfEntries":20,
-"sortBy":"-impressions"
+   "customerIds":[
+      
+   ],
+   "startDate":1690550314033,
+   "endDate":1698326314033,
+   "dimensions":"[{\"filter\":\"ioName\"},{\"filter\":\"campaign\"}]",
+   "columns":[
+      "impressions",
+      "clicks",
+      "CTR",
+      "VCR",
+      "spent",
+      "dataCost",
+      "mediaSpent",
+      "eCPM"
+   ],
+   "requestType":2,
+   "reportAggregated":"0",
+   "timezoneName":"US/Eastern",
+   "timezoneId":29,
+   "counter":1,
+   "pageNo":1,
+   "noOfEntries":20,
+   "sortBy":"-impressions"
 }
 ```
 
@@ -906,394 +907,393 @@ Example: <code>{{advertiser_api_token}}</code>
 ##### Response 200:
 
 
-```
+```json
 {
-"success": true,
-"data": {
-"total": {
-"CTR": 0.481871,
-"totalRecords": 12,
-"VCR": 95.481106,
-"totalBudget": null,
-"dataCost": 0.0,
-"budgetMappingDataCost": null,
-"ioId": null,
-"ioBudgetTypeId": null,
-"campaignTimezone": null,
-"eCPM": 12.334902368021696,
-"bidImpressions": 2976779,
-"mediaSpent": 366.05056267341183,
-"startCount": 2567,
-"campaignType": null,
-"ioBudget": null,
-"campaignId": null,
-"spent": 366.05056267341183,
-"impressions": 29676,
-"completeCount": 2451,
-"budgetMappingSpent": null,
-"dailyBudget": null,
-"maxBid": null,
-"clicks": 143,
-"campaign": null,
-"ioName": null,
-"budgetCompletion": null,
-"status": null
-},
-"totalRecords": 12,
-"data": [
-{
-"CTR": 0.178300,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 40.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 6.999405681683113,
-"bidImpressions": 23581,
-"mediaSpent": 58.88600000000003,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22844,
-"spent": 58.88600000000003,
-"impressions": 8413,
-"completeCount": 0,
-"budgetMappingSpent": 58.88600000000002,
-"dailyBudget": 25.0,
-"maxBid": 7.0,
-"clicks": 15,
-"campaign": "Exchange Integration (Banner) - Beachfront",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 147.21500000000006,
-"status": "expired"
-},
-{
-"CTR": 0.317100,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 50.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 7.54409543944428,
-"bidImpressions": 779956,
-"mediaSpent": 49.95700000000002,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22950,
-"spent": 49.95700000000002,
-"impressions": 6622,
-"completeCount": 0,
-"budgetMappingSpent": 49.95700000000001,
-"dailyBudget": 5.0,
-"maxBid": 5.0,
-"clicks": 21,
-"campaign": "Exchange Integration (Banner) - Smaato - Verve (Opened for other exchanges)",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 99.91400000000002,
-"status": "expired"
-},
-{
-"CTR": 0.270300,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 80.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 17.49336347425682,
-"bidImpressions": 1023343,
-"mediaSpent": 71.19798934022526,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22843,
-"spent": 71.19798934022526,
-"impressions": 4070,
-"completeCount": 0,
-"budgetMappingSpent": 71.19798934022528,
-"dailyBudget": 10.0,
-"maxBid": 10.0,
-"clicks": 11,
-"campaign": "Exchange Integration - Infolink",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 88.9974866752816,
-"status": "expired"
-},
-{
-"CTR": 0.961200,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 10.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "America/Chicago",
-"eCPM": 2.9996703782638954,
-"bidImpressions": 48286,
-"mediaSpent": 9.985902689240508,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22875,
-"spent": 9.985902689240508,
-"impressions": 3329,
-"completeCount": 0,
-"budgetMappingSpent": 9.985902689240508,
-"dailyBudget": 5.0,
-"maxBid": 3.0,
-"clicks": 32,
-"campaign": "Test Campaign for Conversion - 323",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 99.85902689240508,
-"status": "expired"
-},
-{
-"CTR": 0.229400,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 60.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 24.865059716102436,
-"bidImpressions": 846787,
-"mediaSpent": 65.04699621732398,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 23004,
-"spent": 65.04699621732398,
-"impressions": 2616,
-"completeCount": 0,
-"budgetMappingSpent": 65.04699621732398,
-"dailyBudget": 25.0,
-"maxBid": 25.0,
-"clicks": 6,
-"campaign": "Exchange Integration - Infolink - 1",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 108.41166036220665,
-"status": "expired"
-},
-{
-"CTR": 0.158600,
-"totalRecords": null,
-"VCR": 95.398651,
-"totalBudget": 100.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1686,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 39.63124504361618,
-"bidImpressions": 87831,
-"mediaSpent": 99.95000000000002,
-"startCount": 2521,
-"campaignType": "cpv",
-"ioBudget": 105.0,
-"campaignId": 22870,
-"spent": 99.95000000000002,
-"impressions": 2522,
-"completeCount": 2405,
-"budgetMappingSpent": 99.95000000000002,
-"dailyBudget": 50.0,
-"maxBid": 40.0,
-"clicks": 4,
-"campaign": "Exchange Integration (Video) - Beachfront",
-"ioName": "Datadog",
-"budgetCompletion": 99.95000000000002,
-"status": "expired"
-},
-{
-"CTR": 2.082300,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 12.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 4.999841166878848,
-"bidImpressions": 13389,
-"mediaSpent": 10.084679633594636,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22999,
-"spent": 10.084679633594636,
-"impressions": 2017,
-"completeCount": 0,
-"budgetMappingSpent": 10.084679633594636,
-"dailyBudget": 10.0,
-"maxBid": 5.0,
-"clicks": 42,
-"campaign": "Integration Test - Nova",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 84.03899694662196,
-"status": "expired"
-},
-{
-"CTR": 20.588200,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 10.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "America/Chicago",
-"eCPM": 1.999846853748152,
-"bidImpressions": 128,
-"mediaSpent": 0.06799479302743718,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22718,
-"spent": 0.06799479302743718,
-"impressions": 34,
-"completeCount": 0,
-"budgetMappingSpent": 0.06799479302743719,
-"dailyBudget": 5.0,
-"maxBid": 2.0,
-"clicks": 7,
-"campaign": "Test Impression Capping",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 0.6799479302743718,
-"status": "expired"
-},
-{
-"CTR": 0.000000,
-"totalRecords": null,
-"VCR": 100.000000,
-"totalBudget": 100.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1616,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "US/Eastern",
-"eCPM": 10.000000000000002,
-"bidImpressions": 153307,
-"mediaSpent": 0.26000000000000006,
-"startCount": 26,
-"campaignType": "cpv",
-"ioBudget": 1810.0,
-"campaignId": 19870,
-"spent": 0.26000000000000006,
-"impressions": 26,
-"completeCount": 26,
-"budgetMappingSpent": 6.940000000000002,
-"dailyBudget": 5.0,
-"maxBid": 10.0,
-"clicks": 0,
-"campaign": "DO NOT DELETE US Test Campaign",
-"ioName": "TopSpenders",
-"budgetCompletion": 6.940000000000001,
-"status": "running"
-},
-{
-"CTR": 0.000000,
-"totalRecords": null,
-"VCR": 100.000000,
-"totalBudget": 100.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "Asia/Kolkata",
-"eCPM": 30.00000000000001,
-"bidImpressions": 164,
-"mediaSpent": 0.6000000000000002,
-"startCount": 20,
-"campaignType": "cpv",
-"ioBudget": 553523.7423799998,
-"campaignId": 22951,
-"spent": 0.6000000000000002,
-"impressions": 20,
-"completeCount": 20,
-"budgetMappingSpent": 0.6000000000000002,
-"dailyBudget": 30.0,
-"maxBid": 30.0,
-"clicks": 0,
-"campaign": "Exchange Integration (Video) - Smaato - Verve",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 0.6000000000000002,
-"status": "expired"
-},
-{
-"CTR": 60.000000,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 5.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1686,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "America/Chicago",
-"eCPM": 2.0,
-"bidImpressions": 5,
-"mediaSpent": 0.01,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 105.0,
-"campaignId": 22873,
-"spent": 0.01,
-"impressions": 5,
-"completeCount": 0,
-"budgetMappingSpent": 0.01,
-"dailyBudget": 3.0,
-"maxBid": 2.0,
-"clicks": 3,
-"campaign": "Test Campaign for Test Conversions - 315 & 318",
-"ioName": "Datadog",
-"budgetCompletion": 0.2,
-"status": "expired"
-},
-{
-"CTR": 100.000000,
-"totalRecords": null,
-"VCR": 0.000000,
-"totalBudget": 5.0,
-"dataCost": 0.0,
-"budgetMappingDataCost": 0.0,
-"ioId": 1706,
-"ioBudgetTypeId": 1,
-"campaignTimezone": "America/Chicago",
-"eCPM": 2.0,
-"bidImpressions": 2,
-"mediaSpent": 0.004,
-"startCount": 0,
-"campaignType": "cpm",
-"ioBudget": 553523.7423799998,
-"campaignId": 22872,
-"spent": 0.004,
-"impressions": 2,
-"completeCount": 0,
-"budgetMappingSpent": 0.004,
-"dailyBudget": 3.0,
-"maxBid": 2.0,
-"clicks": 2,
-"campaign": "Test Campaign for testing conversions - 314 & 317",
-"ioName": "Default Insertion Order",
-"budgetCompletion": 0.08,
-"status": "expired"
+   "success":true,
+   "data":{
+      "total":{
+         "CTR":0.481871,
+         "totalRecords":12,
+         "VCR":95.481106,
+         "totalBudget":null,
+         "dataCost":0.0,
+         "budgetMappingDataCost":null,
+         "ioId":null,
+         "ioBudgetTypeId":null,
+         "campaignTimezone":null,
+         "eCPM":12.334902368021696,
+         "bidImpressions":2976779,
+         "mediaSpent":366.05056267341183,
+         "startCount":2567,
+         "campaignType":null,
+         "ioBudget":null,
+         "campaignId":null,
+         "spent":366.05056267341183,
+         "impressions":29676,
+         "completeCount":2451,
+         "budgetMappingSpent":null,
+         "dailyBudget":null,
+         "maxBid":null,
+         "clicks":143,
+         "campaign":null,
+         "ioName":null,
+         "budgetCompletion":null,
+         "status":null
+      },
+      "totalRecords":12,
+      "data":[
+         {
+            "CTR":0.178300,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":40.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":6.999405681683113,
+            "bidImpressions":23581,
+            "mediaSpent":58.88600000000003,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22844,
+            "spent":58.88600000000003,
+            "impressions":8413,
+            "completeCount":0,
+            "budgetMappingSpent":58.88600000000002,
+            "dailyBudget":25.0,
+            "maxBid":7.0,
+            "clicks":15,
+            "campaign":"Exchange Integration (Banner) - Beachfront",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":147.21500000000006,
+            "status":"expired"
+         },
+         {
+            "CTR":0.317100,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":50.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":7.54409543944428,
+            "bidImpressions":779956,
+            "mediaSpent":49.95700000000002,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22950,
+            "spent":49.95700000000002,
+            "impressions":6622,
+            "completeCount":0,
+            "budgetMappingSpent":49.95700000000001,
+            "dailyBudget":5.0,
+            "maxBid":5.0,
+            "clicks":21,
+            "campaign":"Exchange Integration (Banner) - Smaato - Verve (Opened for other exchanges)",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":99.91400000000002,
+            "status":"expired"
+         },
+         {
+            "CTR":0.270300,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":80.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":17.49336347425682,
+            "bidImpressions":1023343,
+            "mediaSpent":71.19798934022526,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22843,
+            "spent":71.19798934022526,
+            "impressions":4070,
+            "completeCount":0,
+            "budgetMappingSpent":71.19798934022528,
+            "dailyBudget":10.0,
+            "maxBid":10.0,
+            "clicks":11,
+            "campaign":"Exchange Integration - Infolink",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":88.9974866752816,
+            "status":"expired"
+         },
+         {
+            "CTR":0.961200,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":10.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"America/Chicago",
+            "eCPM":2.9996703782638954,
+            "bidImpressions":48286,
+            "mediaSpent":9.985902689240508,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22875,
+            "spent":9.985902689240508,
+            "impressions":3329,
+            "completeCount":0,
+            "budgetMappingSpent":9.985902689240508,
+            "dailyBudget":5.0,
+            "maxBid":3.0,
+            "clicks":32,
+            "campaign":"Test Campaign for Conversion - 323",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":99.85902689240508,
+            "status":"expired"
+         },
+         {
+            "CTR":0.229400,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":60.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":24.865059716102436,
+            "bidImpressions":846787,
+            "mediaSpent":65.04699621732398,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":23004,
+            "spent":65.04699621732398,
+            "impressions":2616,
+            "completeCount":0,
+            "budgetMappingSpent":65.04699621732398,
+            "dailyBudget":25.0,
+            "maxBid":25.0,
+            "clicks":6,
+            "campaign":"Exchange Integration - Infolink - 1",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":108.41166036220665,
+            "status":"expired"
+         },
+         {
+            "CTR":0.158600,
+            "totalRecords":null,
+            "VCR":95.398651,
+            "totalBudget":100.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1686,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":39.63124504361618,
+            "bidImpressions":87831,
+            "mediaSpent":99.95000000000002,
+            "startCount":2521,
+            "campaignType":"cpv",
+            "ioBudget":105.0,
+            "campaignId":22870,
+            "spent":99.95000000000002,
+            "impressions":2522,
+            "completeCount":2405,
+            "budgetMappingSpent":99.95000000000002,
+            "dailyBudget":50.0,
+            "maxBid":40.0,
+            "clicks":4,
+            "campaign":"Exchange Integration (Video) - Beachfront",
+            "ioName":"Datadog",
+            "budgetCompletion":99.95000000000002,
+            "status":"expired"
+         },
+         {
+            "CTR":2.082300,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":12.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":4.999841166878848,
+            "bidImpressions":13389,
+            "mediaSpent":10.084679633594636,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22999,
+            "spent":10.084679633594636,
+            "impressions":2017,
+            "completeCount":0,
+            "budgetMappingSpent":10.084679633594636,
+            "dailyBudget":10.0,
+            "maxBid":5.0,
+            "clicks":42,
+            "campaign":"Integration Test - Nova",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":84.03899694662196,
+            "status":"expired"
+         },
+         {
+            "CTR":20.588200,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":10.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"America/Chicago",
+            "eCPM":1.999846853748152,
+            "bidImpressions":128,
+            "mediaSpent":0.06799479302743718,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22718,
+            "spent":0.06799479302743718,
+            "impressions":34,
+            "completeCount":0,
+            "budgetMappingSpent":0.06799479302743719,
+            "dailyBudget":5.0,
+            "maxBid":2.0,
+            "clicks":7,
+            "campaign":"Test Impression Capping",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":0.6799479302743718,
+            "status":"expired"
+         },
+         {
+            "CTR":0.000000,
+            "totalRecords":null,
+            "VCR":100.000000,
+            "totalBudget":100.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1616,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"US/Eastern",
+            "eCPM":10.000000000000002,
+            "bidImpressions":153307,
+            "mediaSpent":0.26000000000000006,
+            "startCount":26,
+            "campaignType":"cpv",
+            "ioBudget":1810.0,
+            "campaignId":19870,
+            "spent":0.26000000000000006,
+            "impressions":26,
+            "completeCount":26,
+            "budgetMappingSpent":6.940000000000002,
+            "dailyBudget":5.0,
+            "maxBid":10.0,
+            "clicks":0,
+            "campaign":"DO NOT DELETE US Test Campaign",
+            "ioName":"TopSpenders",
+            "budgetCompletion":6.940000000000001,
+            "status":"running"
+         },
+         {
+            "CTR":0.000000,
+            "totalRecords":null,
+            "VCR":100.000000,
+            "totalBudget":100.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"Asia/Kolkata",
+            "eCPM":30.00000000000001,
+            "bidImpressions":164,
+            "mediaSpent":0.6000000000000002,
+            "startCount":20,
+            "campaignType":"cpv",
+            "ioBudget":553523.7423799998,
+            "campaignId":22951,
+            "spent":0.6000000000000002,
+            "impressions":20,
+            "completeCount":20,
+            "budgetMappingSpent":0.6000000000000002,
+            "dailyBudget":30.0,
+            "maxBid":30.0,
+            "clicks":0,
+            "campaign":"Exchange Integration (Video) - Smaato - Verve",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":0.6000000000000002,
+            "status":"expired"
+         },
+         {
+            "CTR":60.000000,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":5.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1686,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"America/Chicago",
+            "eCPM":2.0,
+            "bidImpressions":5,
+            "mediaSpent":0.01,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":105.0,
+            "campaignId":22873,
+            "spent":0.01,
+            "impressions":5,
+            "completeCount":0,
+            "budgetMappingSpent":0.01,
+            "dailyBudget":3.0,
+            "maxBid":2.0,
+            "clicks":3,
+            "campaign":"Test Campaign for Test Conversions - 315 & 318",
+            "ioName":"Datadog",
+            "budgetCompletion":0.2,
+            "status":"expired"
+         },
+         {
+            "CTR":100.000000,
+            "totalRecords":null,
+            "VCR":0.000000,
+            "totalBudget":5.0,
+            "dataCost":0.0,
+            "budgetMappingDataCost":0.0,
+            "ioId":1706,
+            "ioBudgetTypeId":1,
+            "campaignTimezone":"America/Chicago",
+            "eCPM":2.0,
+            "bidImpressions":2,
+            "mediaSpent":0.004,
+            "startCount":0,
+            "campaignType":"cpm",
+            "ioBudget":553523.7423799998,
+            "campaignId":22872,
+            "spent":0.004,
+            "impressions":2,
+            "completeCount":0,
+            "budgetMappingSpent":0.004,
+            "dailyBudget":3.0,
+            "maxBid":2.0,
+            "clicks":2,
+            "campaign":"Test Campaign for testing conversions - 314 & 317",
+            "ioName":"Default Insertion Order",
+            "budgetCompletion":0.08,
+            "status":"expired"
+         }
+      ],
+      "filteredRecords":12
+   }
 }
-],
-"filteredRecords": 12
-}
-}
-
 ```
 
 
@@ -1314,7 +1314,7 @@ The maximum data size per page is 1K rows.
 
 ### What are the most commonly used dimensions in reports?
 
-The most frequently used dimensions and combinations of dimensions are: \
+The most frequently used dimensions and combinations of dimensions are: 
 
 
 
