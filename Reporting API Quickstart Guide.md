@@ -385,7 +385,7 @@ For full documentation on the Login API, see [https://app.iqm.com/docs/?path=tag
 
 Choose the dimensions and metrics you want to see in your report. This API offers Dimension and Metrics information grouped by category. \
 Full documentation on dimensions and metrics we support: \
-https://www.google.com/url?q=https://help.iqm.com/en/articles/7826036-dimensions-and-metrics
+https://help.iqm.com/en/articles/7826036-dimensions-and-metrics
 
 Reports will be in table format. The metrics comprise the columns, and the dimensions comprise the rows. Necessary information about campaigns is found in the columns.
 
