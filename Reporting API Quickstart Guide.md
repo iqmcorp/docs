@@ -308,7 +308,7 @@ Example: <code>api.iqm.com</code>
 ##### Request:
 
 
-```
+```json
 {
    "grantType": "password",
    "email": "pratik.t+ihp@iqm.com",
@@ -321,7 +321,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 200:
 
 
-```
+```json
 {
    "success": true,
    "data":
@@ -341,7 +341,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 400:
 
 
-```
+```json
 {
    "success": false,
    "data":
@@ -365,7 +365,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 403:
 
 
-```
+```json
 {
    "success": false,
    "errorObjects":
@@ -568,80 +568,80 @@ Organization Workspace Id Header
             ]
          },
          {
-         "Counts":
-         [
-         {
-         "id": 5,
-         "label": "Impressions",
-         "order": 1,
-         "defaultEnabled": true,
-         "key": "impressions",
-         "dependentDimensions": null
-         }
-         ]
+            "Counts":
+            [
+               {
+                  "id": 5,
+                  "label": "Impressions",
+                  "order": 1,
+                  "defaultEnabled": true,
+                  "key": "impressions",
+                  "dependentDimensions": null
+               }
+            ]
          }
       ],
       "dimensions":
       [
-      {
-      "Campaign Specifics":
-      [
-      {
-      "id": 1,
-      "label": "Campaign",
-      "order": 1,
-      "isFilterSupported": true,
-      "isRowToColumn": false,
-      "isCustomerDependent": true,
-      "fieldDataType": "text",
-      "description": "Campaign Name",
-      "groupId": 1,
-      "key": "campaign"
-      },
-      {
-      "id": 2,
-      "label": "Campaign ID",
-      "order": 2,
-      "isFilterSupported": true,
-      "isRowToColumn": false,
-      "isCustomerDependent": true,
-      "fieldDataType": "text",
-      "description": "Unique system-generated number assigned to each Campaign",
-      "groupId": 1,
-      "key": "campaignId"
-      }
+         {
+            "Campaign Specifics":
+               [
+                  {
+                     "id": 1,
+                     "label": "Campaign",
+                     "order": 1,
+                     "isFilterSupported": true,
+                     "isRowToColumn": false,
+                     "isCustomerDependent": true,
+                     "fieldDataType": "text",
+                     "description": "Campaign Name",
+                     "groupId": 1,
+                     "key": "campaign"
+                  },
+                  {
+                     "id": 2,
+                     "label": "Campaign ID",
+                     "order": 2,
+                     "isFilterSupported": true,
+                     "isRowToColumn": false,
+                     "isCustomerDependent": true,
+                     "fieldDataType": "text",
+                     "description": "Unique system-generated number assigned to each Campaign",
+                     "groupId": 1,
+                     "key": "campaignId"
+                  }
+               ]
+          },
+          {
+             "Locations":
+               [
+                  {
+                     "id": 34,
+                     "label": "Country",
+                     "order": 1,
+                     "isFilterSupported": true,
+                     "isRowToColumn": false,
+                     "isCustomerDependent": false,
+                     "fieldDataType": "country",
+                     "description": "Country the ad ran in",
+                     "groupId": 29,
+                     "key": "country"
+                  },
+                  {
+                     "id": 35,
+                     "label": "State",
+                     "order": 2,
+                     "isFilterSupported": true,
+                     "isRowToColumn": false,
+                     "isCustomerDependent": false,
+                     "fieldDataType": "regionCode",
+                     "description": "State the ad ran in",
+                     "groupId": 30,
+                     "key": "state"
+                  }
+               ]
+         }
       ]
-      },
-      {
-      "Locations":
-      [
-      {
-      "id": 34,
-      "label": "Country",
-      "order": 1,
-      "isFilterSupported": true,
-      "isRowToColumn": false,
-      "isCustomerDependent": false,
-      "fieldDataType": "country",
-      "description": "Country the ad ran in",
-      "groupId": 29,
-      "key": "country"
-      },
-      {
-      "id": 35,
-      "label": "State",
-      "order": 2,
-      "isFilterSupported": true,
-      "isRowToColumn": false,
-      "isCustomerDependent": false,
-      "fieldDataType": "regionCode",
-      "description": "State the ad ran in",
-      "groupId": 30,
-      "key": "state"
-      }
-      ]
-      }
-   ]
 }
 
 ```
@@ -651,15 +651,15 @@ Organization Workspace Id Header
 ##### Response 403:
 
 
-```
+```json
 {
-"success": false,
-"errorObjects":
-[
-{
-"error": "Forbidden!"
-}
-]
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "Forbidden!"
+      }
+   ]
 }
 ```
 
@@ -668,15 +668,15 @@ Organization Workspace Id Header
 ##### Response 500:
 
 
-```
+```json
 {
-"success": false,
-"errorObjects":
-[
-{
-"error": "server encountered an error !"
-}
-]
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "server encountered an error !"
+      }
+   ]
 }
 ```
 
