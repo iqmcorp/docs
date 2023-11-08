@@ -2,7 +2,7 @@
 
 IQM’s REST API enables you to interact with most of IQM’s offerings. 
 
-Getting started with running your first reports is easy. All you need to do is utilize the four following endpoints: \
+Getting started with running your first reports is easy. All you need to do is utilize the four following endpoints:
 
 
 
