@@ -249,10 +249,8 @@ HEADER PARAMETERS
   <tr>
    <td><code>Authorization</code>
 <p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
    </td>
@@ -261,11 +259,11 @@ Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
    <td><code>X-Iaa-Host</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
-Example: <code>app.stage.inhousebuying.com</code>
+Example: <code>api.iqm.com</code>
    </td>
   </tr>
 </table>
