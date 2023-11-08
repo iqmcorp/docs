@@ -278,27 +278,27 @@ Example: <code>api.iqm.com</code>
    <td><code>grantType</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>Strin - https://oauth.net/2/grant-types/
+   <td><code>required</code>String - https://oauth.net/2/grant-types/
    </td>
   </tr>
   <tr>
    <td><code>email</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account email
+   <td><code>required</code>String - your user account email
    </td>
   </tr>
   <tr>
    <td><code>password</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account password
+   <td><code>required</code>String - your user account password
    </td>
   </tr>
 </table>
@@ -310,9 +310,9 @@ Example: <code>api.iqm.com</code>
 
 ```
 {
-"grantType": "password",
-"email": "pratik.t+ihp@iqm.com",
-"password": "123456
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456
 }
 ```
 
@@ -323,16 +323,16 @@ Example: <code>api.iqm.com</code>
 
 ```
 {
-"success": true,
-"data":
-{
-"access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-"refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-"scope": "read write",
-"token_type": "bearer",
-"expires_in": 35999,
-"owId": 200001
-}
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
 }
 ```
 
@@ -343,20 +343,20 @@ Example: <code>api.iqm.com</code>
 
 ```
 {
-"success": false,
-"data":
-{
-"status": "On Hold",
-"reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-"supportEmail": "support@iqm.com"
-},
-"errorObjects":
-[
-{
-"error": "User is not allowed to access provided customer",
-"reason": "User is not associated with any active organization."
-}
-]
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
 }
 ```
 
@@ -367,13 +367,13 @@ Example: <code>api.iqm.com</code>
 
 ```
 {
-"success": false,
-"errorObjects":
-[
-{
-"error": "User doesn't exist or user is not allowed to provided workspace."
-}
-]
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
 }
 ```
 
@@ -536,124 +536,112 @@ Organization Workspace Id Header
 ##### Response 200:
 
 
-```
+```json
 {
-"success": true,
-"data":
-{
-"metrics":
-[
-{
-"Budget":
-[
-{
-"id": 1,
-"label": "Daily Budget",
-"order": 1,
-"fieldDataType": "currencyUSD",
-"aggregationType": "sum",
-"description": "Amount up to which you allow platform to spend on average each day",
-"defaultEnabled": false,
-"key": "dailyBudget",
-"dependentDimensions":
-[
-1,
-2,
-43,
-44
-]
-},
-{
-"id": 2,
-"label": "Total Budget",
-"order": 2,
-"defaultEnabled": false,
-"key": "totalBudget",
-"dependentDimensions":
-[
-1,
-2,
-43,
-44
-]
-}
-]
-},
-{
-"Counts":
-[
-{
-"id": 5,
-"label": "Impressions",
-"order": 1,
-"defaultEnabled": true,
-"key": "impressions",
-"dependentDimensions": null
-}
-]
-}
-],
-"dimensions":
-[
-{
-"Campaign Specifics":
-[
-{
-"id": 1,
-"label": "Campaign",
-"order": 1,
-"isFilterSupported": true,
-"isRowToColumn": false,
-"isCustomerDependent": true,
-"fieldDataType": "text",
-"description": "Campaign Name",
-"groupId": 1,
-"key": "campaign"
-},
-{
-"id": 2,
-"label": "Campaign ID",
-"order": 2,
-"isFilterSupported": true,
-"isRowToColumn": false,
-"isCustomerDependent": true,
-"fieldDataType": "text",
-"description": "Unique system-generated number assigned to each Campaign",
-"groupId": 1,
-"key": "campaignId"
-}
-]
-},
-{
-"Locations":
-[
-{
-"id": 34,
-"label": "Country",
-"order": 1,
-"isFilterSupported": true,
-"isRowToColumn": false,
-"isCustomerDependent": false,
-"fieldDataType": "country",
-"description": "Country the ad ran in",
-"groupId": 29,
-"key": "country"
-},
-{
-"id": 35,
-"label": "State",
-"order": 2,
-"isFilterSupported": true,
-"isRowToColumn": false,
-"isCustomerDependent": false,
-"fieldDataType": "regionCode",
-"description": "State the ad ran in",
-"groupId": 30,
-"key": "state"
-}
-]
-}
-]
+   "success": true,
+   "data":
+   {
+      "metrics":
+      [
+         {
+         "Budget":
+            [
+               {
+                  "id": 1,
+                  "label": "Daily Budget",
+                  "order": 1,
+                  "fieldDataType": "currencyUSD",
+                  "aggregationType": "sum",
+                  "description": "Amount up to which you allow platform to spend on average each day",
+                  "defaultEnabled": false,
+                  "key": "dailyBudget",
+                  "dependentDimensions": [ 1, 2, 43, 44 ]
+               },
+               {
+                  "id": 2,
+                  "label": "Total Budget",
+                  "order": 2,
+                  "defaultEnabled": false,
+                  "key": "totalBudget",
+                  "dependentDimensions": [ 1, 2, 43, 44 ]
+               }
+            ]
+         },
+         {
+         "Counts":
+         [
+         {
+         "id": 5,
+         "label": "Impressions",
+         "order": 1,
+         "defaultEnabled": true,
+         "key": "impressions",
+         "dependentDimensions": null
+         }
+         ]
+         }
+      ],
+      "dimensions":
+      [
+      {
+      "Campaign Specifics":
+      [
+      {
+      "id": 1,
+      "label": "Campaign",
+      "order": 1,
+      "isFilterSupported": true,
+      "isRowToColumn": false,
+      "isCustomerDependent": true,
+      "fieldDataType": "text",
+      "description": "Campaign Name",
+      "groupId": 1,
+      "key": "campaign"
+      },
+      {
+      "id": 2,
+      "label": "Campaign ID",
+      "order": 2,
+      "isFilterSupported": true,
+      "isRowToColumn": false,
+      "isCustomerDependent": true,
+      "fieldDataType": "text",
+      "description": "Unique system-generated number assigned to each Campaign",
+      "groupId": 1,
+      "key": "campaignId"
+      }
+      ]
+      },
+      {
+      "Locations":
+      [
+      {
+      "id": 34,
+      "label": "Country",
+      "order": 1,
+      "isFilterSupported": true,
+      "isRowToColumn": false,
+      "isCustomerDependent": false,
+      "fieldDataType": "country",
+      "description": "Country the ad ran in",
+      "groupId": 29,
+      "key": "country"
+      },
+      {
+      "id": 35,
+      "label": "State",
+      "order": 2,
+      "isFilterSupported": true,
+      "isRowToColumn": false,
+      "isCustomerDependent": false,
+      "fieldDataType": "regionCode",
+      "description": "State the ad ran in",
+      "groupId": 30,
+      "key": "state"
+      }
+      ]
+      }
+   ]
 }
 
 ```
