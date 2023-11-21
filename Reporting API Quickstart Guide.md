@@ -806,7 +806,7 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>customerIds</code>
    </td>
-   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all, <code>optional</code>code> for workspace users only.
+   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all, <code>optional</code> for workspace users only.
    </td>
   </tr>
   <tr>
