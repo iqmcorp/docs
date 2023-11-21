@@ -806,7 +806,7 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>customerIds</code>
    </td>
-   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all
+   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all, <code>optional</code>code> for workspace users only.
    </td>
   </tr>
   <tr>
@@ -963,7 +963,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":25.0,
             "maxBid":7.0,
             "clicks":15,
-            "campaign":"Exchange Integration (Banner) - Beachfront",
+            "campaign":"Bright Horizons: Illuminating Your Path",
             "ioName":"Default Insertion Order",
             "budgetCompletion":147.21500000000006,
             "status":"expired"
@@ -992,7 +992,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":5.0,
             "maxBid":5.0,
             "clicks":21,
-            "campaign":"Exchange Integration (Banner) - Smaato - Verve (Opened for other exchanges)",
+            "campaign":"Next Chapter: Unveiling Future Possibilities",
             "ioName":"Default Insertion Order",
             "budgetCompletion":99.91400000000002,
             "status":"expired"
@@ -1021,7 +1021,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":10.0,
             "maxBid":10.0,
             "clicks":11,
-            "campaign":"Exchange Integration - Infolink",
+            "campaign":"Fresh Perspectives: A New View on Life",
             "ioName":"Default Insertion Order",
             "budgetCompletion":88.9974866752816,
             "status":"expired"
@@ -1050,7 +1050,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":5.0,
             "maxBid":3.0,
             "clicks":32,
-            "campaign":"Test Campaign for Conversion - 323",
+            "campaign":"Elevate Everyday: Lifting Life's Experience",
             "ioName":"Default Insertion Order",
             "budgetCompletion":99.85902689240508,
             "status":"expired"
@@ -1079,7 +1079,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":25.0,
             "maxBid":25.0,
             "clicks":6,
-            "campaign":"Exchange Integration - Infolink - 1",
+            "campaign":"Pathfinders: Navigating Success",
             "ioName":"Default Insertion Order",
             "budgetCompletion":108.41166036220665,
             "status":"expired"
@@ -1108,8 +1108,8 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":50.0,
             "maxBid":40.0,
             "clicks":4,
-            "campaign":"Exchange Integration (Video) - Beachfront",
-            "ioName":"Datadog",
+            "campaign":"Green Leap: Sustaining Tomorrow",
+            "ioName":"Momentum: Moving Forward Together",
             "budgetCompletion":99.95000000000002,
             "status":"expired"
          },
@@ -1137,7 +1137,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":10.0,
             "maxBid":5.0,
             "clicks":42,
-            "campaign":"Integration Test - Nova",
+            "campaign":"Horizon Shift: Beyond the Now",
             "ioName":"Default Insertion Order",
             "budgetCompletion":84.03899694662196,
             "status":"expired"
@@ -1166,7 +1166,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":5.0,
             "maxBid":2.0,
             "clicks":7,
-            "campaign":"Test Impression Capping",
+            "campaign":"Spark Ignition: Fueling Passion",
             "ioName":"Default Insertion Order",
             "budgetCompletion":0.6799479302743718,
             "status":"expired"
@@ -1195,8 +1195,8 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":5.0,
             "maxBid":10.0,
             "clicks":0,
-            "campaign":"DO NOT DELETE US Test Campaign",
-            "ioName":"TopSpenders",
+            "campaign":"Vista Vision: Broadening Your Scope",
+            "ioName":"Momentum: Moving Forward Together",
             "budgetCompletion":6.940000000000001,
             "status":"running"
          },
@@ -1224,7 +1224,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":30.0,
             "maxBid":30.0,
             "clicks":0,
-            "campaign":"Exchange Integration (Video) - Smaato - Verve",
+            "campaign":"Life in HD: High Definition Living",
             "ioName":"Default Insertion Order",
             "budgetCompletion":0.6000000000000002,
             "status":"expired"
@@ -1253,8 +1253,8 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":3.0,
             "maxBid":2.0,
             "clicks":3,
-            "campaign":"Test Campaign for Test Conversions - 315 & 318",
-            "ioName":"Datadog",
+            "campaign":"Momentum: Moving Forward Together",
+            "ioName":"Momentum: Moving Forward Together",
             "budgetCompletion":0.2,
             "status":"expired"
          },
@@ -1282,7 +1282,7 @@ Example: <code>{{advertiser_api_token}}</code>
             "dailyBudget":3.0,
             "maxBid":2.0,
             "clicks":2,
-            "campaign":"Test Campaign for testing conversions - 314 & 317",
+            "campaign":"Renaissance of Ideas: Crafting the Future",
             "ioName":"Default Insertion Order",
             "budgetCompletion":0.08,
             "status":"expired"
