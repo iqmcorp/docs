@@ -403,28 +403,22 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
@@ -549,28 +543,22 @@ To upload matched audiences,  provide file columns for matching and all the nece
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
@@ -594,21 +582,21 @@ For information on FormData format see the MDN documentation: [https://developer
  
 This supports a few columns mapping as follows: 
  
-1.FirstName,LastName,State,Zip - 
-SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
- 
-</code>2.LastName,StreetAddress,State,Zip - SampleValue: <code>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
-</code>3.StreetAddress,State,Zip - SampleValue: <code>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
- 
-</code>4.NPI_ID - SampleValue: <code>{ "NPI_ID_VALUE": "NPI_ID" } 
- 
-</code>5.VoterId - SampleValue: <code>{ "LALVOTERID": "Voters_ID" } 
- 
-</code>6.Phone - SampleValue: <code>{ "Phone": "Phone" } 
- 
-</code>7.Email - SampleValue: <code>{ "Email": "Email" } 
- 
-</code>8.FullAddress - SampleValue: <code>{ "FullAddress": "Residence_FullAddress" }</code>
+1. FirstName, LastName, State, Zip - 
+SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</code>
+
+2. LastName, StreetAddress, State, Zip - SampleValue: <code>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</code>
+
+3. StreetAddress, State, Zip - SampleValue: <code>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</code>
+
+4. NPI_ID - SampleValue: <code>{ "NPI_ID_VALUE": "NPI_ID" }</code>
+
+5. VoterId - SampleValue: <code>{ "LALVOTERID": "Voters_ID" }</code>
+
+6. Phone - SampleValue: <code>{ "Phone": "Phone" }</code>
+
+7. Email - SampleValue: <code>{ "Email": "Email" }</code>
+8. FullAddress - SampleValue: <code>{ "FullAddress": "Residence_FullAddress" }</code>
    </td>
   </tr>
 </table>
@@ -624,25 +612,25 @@ SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastNa
 <code><em>(FormData)</em></code>
    </td>
    <td>Matched audience columns setting as per the selected columns for matching 
-Column setting should be as per the the selected column as follows: 
+Column setting should be as per the selected column as follows: 
  
-1.FirstName,LastName,State,Zip - NOT REQUIRED. 
+1. FirstName, LastName, State, Zip - NOT REQUIRED. 
  
-2.LastName,StreetAddress,State,Zip - NOT REQUIRED. 
+2. LastName, StreetAddress, State, Zip - NOT REQUIRED. 
  
-3.StreetAddress,State,Zip - NOT REQUIRED. 
+3. StreetAddress, State, Zip - NOT REQUIRED. 
  
-2.LastName,StreetAddress,State,Zip -NOT REQUIRED. 
+4. LastName, StreetAddress, State, Zip -NOT REQUIRED. 
  
-4.VoterId (It must be supported voter's data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataPartner">API DOCs</a> -) - SampleValue: <code>{ "Voters_ID": "voterbase_id" } 
- 
-</code>5.NPI_Id (It must be supported healthcare data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/addMatchedAudience">API DOCs</a> -) - SampleValue: <code>{ "NPI_ID": "healthcare_id" } 
- 
-</code>6.Phone (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Phone": "SHA1" } 
- 
-</code>7.Email (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Email": "SHA256" } 
- 
-</code>8.FullAddress - NOT REQUIRED.
+5. VoterId (It must be supported voter's data partners id - SampleValue: <code>{ "Voters_ID": "voterbase_id" }</code>
+
+6. NPI_Id (It must be supported healthcare data partners id - SampleValue: <code>{ "NPI_ID": "healthcare_id" }</code>
+
+7. Phone (It must be supported data format's id - SampleValue: <code>{ "Phone": "SHA1" }</code>
+
+8. Email (It must be supported data format's id - SampleValue: <code>{ "Email": "SHA256" }</code>
+
+9. FullAddress - NOT REQUIRED.
    </td>
   </tr>
 </table>
@@ -823,28 +811,22 @@ Before the audience can be used for campaign targeting it has to be processed an
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
-{{bearer_token_description}}
+Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-   
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td><code>required</code>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-{{ow_id_header_description}}
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
