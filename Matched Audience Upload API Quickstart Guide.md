@@ -32,7 +32,7 @@ To run reports, you must have the following:
 2.  Client ID and Client Secret 
 3. CSV or XLSX file for matching.
 
-If you do not have any of the above, please follow the steps below: \
+If you do not have any of the above, please follow the steps below:
 
 
 
