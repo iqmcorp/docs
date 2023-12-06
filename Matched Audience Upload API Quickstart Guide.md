@@ -63,10 +63,10 @@ For authorization, we use [OAuth 2.0](https://oauth.net/2/).
 
 To use the API, first contact [integrations@iqm.com](mailto:integrations@iqm.com). Our team will generate a Client ID and Client Secret specific to you per app or customer.
 
-The keys are used in the Authorization header:  \
-`Authorization: Basic &lt;Client ID:Client Secret>`  \
-where `&lt;Client ID:Client Secret>` is a Base64 encoded string. \
-Please refer to MDN documentation on Base64 encoding: \
+The keys are used in the Authorization header:  
+`Authorization: Basic <Client ID:Client Secret>`  
+where `<Client ID:Client Secret>` is a Base64 encoded string. 
+Please refer to MDN documentation on Base64 encoding: 
 https://developer.mozilla.org/en-US/docs/Glossary/Base64
 
 
