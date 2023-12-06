@@ -315,7 +315,7 @@ Example: <code>api.iqm.com</code>
 ##### Request:
 
 
-```
+```json
 {
 "grantType": "password",
 "email": "pratik.t+ihp@iqm.com",
@@ -328,7 +328,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 200:
 
 
-```
+```json
 {
 "success": true,
 "data":
@@ -348,7 +348,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 400:
 
 
-```
+```json
 {
 "success": false,
 "data":
@@ -372,7 +372,7 @@ Example: <code>api.iqm.com</code>
 ##### Response 403:
 
 
-```
+```json
 {
 "success": false,
 "errorObjects":
@@ -405,9 +405,9 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
    <td><code>Authorization</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{bearer_token}}</code>
 <p>
@@ -418,9 +418,9 @@ Authorization Bearer Token
    <td><code>{{ow_id_header_key}}</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{ow_id}}</code>
 <p>
@@ -434,7 +434,7 @@ Organization Workspace Id
 ##### Response 200:
 
 
-```
+```json
 {
    "statusCode":200,
    "responseObject":{
@@ -551,9 +551,9 @@ To upload matched audiences,  provide file columns for matching and all the nece
    <td><code>Authorization</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{bearer_token}}</code>
 <p>
@@ -564,9 +564,9 @@ Authorization Bearer Token
    <td><code>{{ow_id_header_key}}</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{ow_id}}</code>
 <p>
@@ -714,7 +714,7 @@ Column setting should be as per the the selected column as follows: \
 ##### Request (FormData)
 
 
-```
+```json
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
 Content-Disposition: form-data; name="file"; filename="matched-audience-example.csv"
 Content-Type: text/csv
@@ -747,7 +747,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ##### Response 200:
 
 
-```
+```json
 {
    "statusCode": 200,
    "responseObject": {
@@ -762,7 +762,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ##### Response 400:
 
 
-```
+```json
 {
    "statusCode": 400,
    "responseObject": {
@@ -777,7 +777,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ##### Response 500:
 
 
-```
+```json
 {
    "statusCode": 500,
    "responseObject": {
@@ -808,9 +808,9 @@ Before the audience can be used for campaign targeting it has to be processed an
    <td><code>matched_audience_Id</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
    </td>
   </tr>
 </table>
@@ -825,9 +825,9 @@ Before the audience can be used for campaign targeting it has to be processed an
    <td><code>Authorization</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{bearer_token}}</code>
 <p>
@@ -838,9 +838,9 @@ Example: <code>{{bearer_token}}</code>
    <td><code>{{ow_id_header_key}}</code>
 <p>
 
-    <code>required</code>
+   
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{ow_id}}</code>
 <p>
@@ -854,7 +854,7 @@ Example: <code>{{ow_id}}</code>
 ##### Response 200:
 
 
-```
+```json
 {
    "statusCode": 200,
    "responseObject": {
