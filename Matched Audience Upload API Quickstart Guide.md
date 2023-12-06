@@ -534,9 +534,9 @@ For complete documentation on matched audience column list API please see:
 [https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields)
 
 
-## Step 2: Request column list
+## Step 3: Request column data formats
 
-To upload a matched audience, you must provide a list of mapping between IQM-allowed fields and columns in your file. Use the column list endpoint to request a full list of allowed columns for mapping.
+When uploading a matched audience, you can provide a list of data formats for columns in your file. Use the column data formats endpoint to request a full list of allowed formats.
 
 
 
