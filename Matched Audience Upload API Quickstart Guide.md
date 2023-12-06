@@ -225,13 +225,19 @@ This quick start will help you to create a matched audience.  At a minimum, you 
    </td>
   </tr>
   <tr>
-   <td>Step 3: Upload matched audience
+   <td>Step 3: Request column data formats
+   </td>
+   <td>Optional if you know what you need or have already requested before.
+   </td>
+  </tr>
+  <tr>
+   <td>Step 4: Upload matched audience
    </td>
    <td>Upload the audience with parameters from the previous steps.
    </td>
   </tr>
   <tr>
-   <td>Step 4: Check audience status
+   <td>Step 5: Check audience status
    </td>
    <td>Matched audience requires processing and approval before it can be used for targeting.
    </td>
@@ -528,7 +534,89 @@ For complete documentation on matched audience column list API please see:
 [https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields)
 
 
-## Step 3: Upload matched audience
+## Step 2: Request column list
+
+To upload a matched audience, you must provide a list of mapping between IQM-allowed fields and columns in your file. Use the column list endpoint to request a full list of allowed columns for mapping.
+
+
+
+* `GET /api/v3/audience/static/matched/data-format`
+
+
+##### HEADER PARAMETERS
+
+
+<table>
+  <tr>
+   <td><code>Authorization</code>
+   </td>
+   <td>any
+<p>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
+<p>
+Authorization Bearer Token
+   </td>
+  </tr>
+  <tr>
+   <td><code>X-IAA-OW-ID</code>
+   </td>
+   <td>any
+<p>
+Example: <code>1</code>
+<p>
+Organization Workspace Id Header
+   </td>
+  </tr>
+</table>
+
+
+
+##### Response 200:
+
+
+```json
+{
+ "success": true,
+ "data": [
+   {
+     "id": 1,
+     "label": "Raw",
+     "keyName": "Raw"
+   },
+   {
+     "id": 2,
+     "label": "Hashed (MD5)",
+     "keyName": "MD5"
+   },
+   {
+     "id": 3,
+     "label": "Hashed (SHA1)",
+     "keyName": "SHA1"
+   },
+   {
+     "id": 4,
+     "label": "Hashed (SHA256)",
+     "keyName": "SHA256"
+   },
+   {
+     "id": 5,
+     "label": "Hashed (SHA512)",
+     "keyName": "SHA512"
+   },
+   {
+     "id": 6,
+     "label": "Hashed (other)",
+     "keyName": "Other"
+   }
+ ]
+}
+```
+
+For complete documentation on matched audience column data formats API please see: 
+
+
+
+## Step 4: Upload matched audience
 
 To upload matched audiences,  provide file columns for matching and all the necessary parameters 
 
@@ -779,7 +867,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 For complete documentation on matched audience upload API see: 
 
 
-## Step 4: Check audience status
+## Step 5: Check audience status
 
 Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. To get audience details use the following endpoint:
 
