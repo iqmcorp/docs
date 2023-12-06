@@ -285,27 +285,27 @@ Example: <code>api.iqm.com</code>
    <td><code>grantType</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>Strin - https://oauth.net/2/grant-types/
+   <td><code>required</code>String - https://oauth.net/2/grant-types/
    </td>
   </tr>
   <tr>
    <td><code>email</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account email
+   <td><code>required</code>String - your user account email
    </td>
   </tr>
   <tr>
    <td><code>password</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account password
+   <td><code>required</code>String - your user account password
    </td>
   </tr>
 </table>
