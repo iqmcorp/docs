@@ -317,9 +317,9 @@ Example: <code>api.iqm.com</code>
 
 ```json
 {
-"grantType": "password",
-"email": "pratik.t+ihp@iqm.com",
-"password": "123456
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456
 }
 ```
 
@@ -330,16 +330,16 @@ Example: <code>api.iqm.com</code>
 
 ```json
 {
-"success": true,
-"data":
-{
-"access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-"refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-"scope": "read write",
-"token_type": "bearer",
-"expires_in": 35999,
-"owId": 200001
-}
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
 }
 ```
 
@@ -350,20 +350,20 @@ Example: <code>api.iqm.com</code>
 
 ```json
 {
-"success": false,
-"data":
-{
-"status": "On Hold",
-"reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-"supportEmail": "support@iqm.com"
-},
-"errorObjects":
-[
-{
-"error": "User is not allowed to access provided customer",
-"reason": "User is not associated with any active organization."
-}
-]
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
 }
 ```
 
@@ -374,13 +374,13 @@ Example: <code>api.iqm.com</code>
 
 ```json
 {
-"success": false,
-"errorObjects":
-[
-{
-"error": "User doesn't exist or user is not allowed to provided workspace."
-}
-]
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
 }
 ```
 
@@ -590,24 +590,24 @@ For information on FormData format see the MDN documentation: [https://developer
 <p>
 <code><em>(FormData)</em></code>
    </td>
-   <td>Matched audience file columns mapped with system fields \
- \
-This supports a few columns mapping as follows: \
- \
-1.FirstName,LastName,State,Zip - \
-SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } \
- \
-</code>2.LastName,StreetAddress,State,Zip - SampleValue: <code>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } \
-</code>3.StreetAddress,State,Zip - SampleValue: <code>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } \
- \
-</code>4.NPI_ID - SampleValue: <code>{ "NPI_ID_VALUE": "NPI_ID" } \
- \
-</code>5.VoterId - SampleValue: <code>{ "LALVOTERID": "Voters_ID" } \
- \
-</code>6.Phone - SampleValue: <code>{ "Phone": "Phone" } \
- \
-</code>7.Email - SampleValue: <code>{ "Email": "Email" } \
- \
+   <td>Matched audience file columns mapped with system fields 
+ 
+This supports a few columns mapping as follows: 
+ 
+1.FirstName,LastName,State,Zip - 
+SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
+ 
+</code>2.LastName,StreetAddress,State,Zip - SampleValue: <code>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
+</code>3.StreetAddress,State,Zip - SampleValue: <code>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" } 
+ 
+</code>4.NPI_ID - SampleValue: <code>{ "NPI_ID_VALUE": "NPI_ID" } 
+ 
+</code>5.VoterId - SampleValue: <code>{ "LALVOTERID": "Voters_ID" } 
+ 
+</code>6.Phone - SampleValue: <code>{ "Phone": "Phone" } 
+ 
+</code>7.Email - SampleValue: <code>{ "Email": "Email" } 
+ 
 </code>8.FullAddress - SampleValue: <code>{ "FullAddress": "Residence_FullAddress" }</code>
    </td>
   </tr>
@@ -623,25 +623,25 @@ SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastNa
 <p>
 <code><em>(FormData)</em></code>
    </td>
-   <td>Matched audience columns setting as per the selected columns for matching \
-Column setting should be as per the the selected column as follows: \
- \
-1.FirstName,LastName,State,Zip - NOT REQUIRED. \
- \
-2.LastName,StreetAddress,State,Zip - NOT REQUIRED. \
- \
-3.StreetAddress,State,Zip - NOT REQUIRED. \
- \
-2.LastName,StreetAddress,State,Zip -NOT REQUIRED. \
- \
-4.VoterId (It must be supported voter's data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataPartner">API DOCs</a> -) - SampleValue: <code>{ "Voters_ID": "voterbase_id" } \
- \
-</code>5.NPI_Id (It must be supported healthcare data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/addMatchedAudience">API DOCs</a> -) - SampleValue: <code>{ "NPI_ID": "healthcare_id" } \
- \
-</code>6.Phone (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Phone": "SHA1" } \
- \
-</code>7.Email (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Email": "SHA256" } \
- \
+   <td>Matched audience columns setting as per the selected columns for matching 
+Column setting should be as per the the selected column as follows: 
+ 
+1.FirstName,LastName,State,Zip - NOT REQUIRED. 
+ 
+2.LastName,StreetAddress,State,Zip - NOT REQUIRED. 
+ 
+3.StreetAddress,State,Zip - NOT REQUIRED. 
+ 
+2.LastName,StreetAddress,State,Zip -NOT REQUIRED. 
+ 
+4.VoterId (It must be supported voter's data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataPartner">API DOCs</a> -) - SampleValue: <code>{ "Voters_ID": "voterbase_id" } 
+ 
+</code>5.NPI_Id (It must be supported healthcare data partners id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/addMatchedAudience">API DOCs</a> -) - SampleValue: <code>{ "NPI_ID": "healthcare_id" } 
+ 
+</code>6.Phone (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Phone": "SHA1" } 
+ 
+</code>7.Email (It must be supported data format's id - <a href="https://docs.stage.iqm.services/swagger/internal/?path=/Audience%20API/getMatchedAudienceDataFormats">API DOCs</a> -) - SampleValue: <code>{ "Email": "SHA256" } 
+ 
 </code>8.FullAddress - NOT REQUIRED.
    </td>
   </tr>
@@ -714,7 +714,7 @@ Column setting should be as per the the selected column as follows: \
 ##### Request (FormData)
 
 
-```json
+```
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
 Content-Disposition: form-data; name="file"; filename="matched-audience-example.csv"
 Content-Type: text/csv
