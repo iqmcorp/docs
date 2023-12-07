@@ -567,7 +567,7 @@ Organization Workspace Id Header
 
 ##### Payload (FormData)
 
-For information on FormData format see the MDN documentation: [https://developer.mozilla.org/en-US/docs/Web/API/FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
+For information on FormData format see the MDN documentation: [https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data)
 
 
 <table>
