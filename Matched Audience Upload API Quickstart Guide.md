@@ -612,7 +612,7 @@ Organization Workspace Id Header
 }
 ```
 
-For complete documentation on matched audience column data formats API please see: 
+For complete documentation on matched audience column data formats API please see: [https://app.iqm.com/docs?path=tag/Audience-API/operation/getMatchedAudienceDataFormats](https://app.iqm.com/docs?path=tag/Audience-API/operation/getMatchedAudienceDataFormats)
 
 
 
@@ -710,13 +710,13 @@ Column setting should be as per the selected column as follows:
  
 4. LastName, StreetAddress, State, Zip -NOT REQUIRED. 
  
-5. VoterId (It must be supported voter's data partners id - SampleValue: <code>{ "Voters_ID": "voterbase_id" }</code>
+5. VoterId (It must be supported voter's data partners id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner)) - SampleValue: <code>{ "Voters_ID": "voterbase_id" }</code>
 
-6. NPI_Id (It must be supported healthcare data partners id - SampleValue: <code>{ "NPI_ID": "healthcare_id" }</code>
+6. NPI_Id (It must be supported healthcare data partners id [see API documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience)) - SampleValue: <code>{ "NPI_ID": "healthcare_id" }</code>
 
-7. Phone (It must be supported data format's id - SampleValue: <code>{ "Phone": "SHA1" }</code>
+7. Phone (It must be supported data format's id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats)) - SampleValue: <code>{ "Phone": "SHA1" }</code>
 
-8. Email (It must be supported data format's id - SampleValue: <code>{ "Email": "SHA256" }</code>
+8. Email (It must be supported data format's id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats))- SampleValue: <code>{ "Email": "SHA256" }</code>
 
 9. FullAddress - NOT REQUIRED.
    </td>
@@ -864,7 +864,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ```
 
 
-For complete documentation on matched audience upload API see: 
+For complete documentation on matched audience upload API see: [https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience) 
 
 
 ## Step 5: Check audience status
