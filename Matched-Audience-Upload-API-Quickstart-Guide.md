@@ -24,7 +24,7 @@ Once uploaded and processed, the matched audience can be used for advertising ca
 
 ## Before you begin
 
-To run reports, you must have the following:
+To upload Matched Audience, you must have the following:
 
 
 
