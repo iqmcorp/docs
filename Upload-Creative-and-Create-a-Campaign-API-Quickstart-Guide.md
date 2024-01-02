@@ -270,10 +270,8 @@ HEADER PARAMETERS
   <tr>
    <td><code>Authorization</code>
 <p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
    </td>
@@ -282,11 +280,11 @@ Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
    <td><code>X-Iaa-Host</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
-Example: <code>app.stage.inhousebuying.com</code>
+Example: <code>api.iqm.com</code>
    </td>
   </tr>
 </table>
@@ -301,27 +299,27 @@ Example: <code>app.stage.inhousebuying.com</code>
    <td><code>grantType</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>Strin - https://oauth.net/2/grant-types/
+   <td><code>required</code>String - https://oauth.net/2/grant-types/
    </td>
   </tr>
   <tr>
    <td><code>email</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account email
+   <td><code>required</code>String - your user account email
    </td>
   </tr>
   <tr>
    <td><code>password</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>String - your user account password
+   <td><code>required</code>String - your user account password
    </td>
   </tr>
 </table>
@@ -331,11 +329,11 @@ Example: <code>app.stage.inhousebuying.com</code>
 ##### Request:
 
 
-```
+```json
 {
-"grantType": "password",
-"email": "pratik.t+ihp@iqm.com",
-"password": "123456
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
 }
 ```
 
@@ -344,18 +342,18 @@ Example: <code>app.stage.inhousebuying.com</code>
 ##### Response 200:
 
 
-```
+```json
 {
-"success": true,
-"data":
-{
-"access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-"refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-"scope": "read write",
-"token_type": "bearer",
-"expires_in": 35999,
-"owId": 200001
-}
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
 }
 ```
 
@@ -364,22 +362,22 @@ Example: <code>app.stage.inhousebuying.com</code>
 ##### Response 400:
 
 
-```
+```json
 {
-"success": false,
-"data":
-{
-"status": "On Hold",
-"reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-"supportEmail": "support@iqm.com"
-},
-"errorObjects":
-[
-{
-"error": "User is not allowed to access provided customer",
-"reason": "User is not associated with any active organization."
-}
-]
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
 }
 ```
 
@@ -388,15 +386,15 @@ Example: <code>app.stage.inhousebuying.com</code>
 ##### Response 403:
 
 
-```
+```json
 {
-"success": false,
-"errorObjects":
-[
-{
-"error": "User doesn't exist or user is not allowed to provided workspace."
-}
-]
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
 }
 ```
 
