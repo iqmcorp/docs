@@ -1584,10 +1584,104 @@ Organization Workspace Id Header
 
 
 ##### Scheduling example
-
+```json
+"scheduling": {
+    "0": [
+      [
+        "03:00:00",
+        "05:00:00"
+      ],
+      [
+        "06:00:00",
+        "11:00:00"
+      ]
+    ]
+}
+```
 
 ##### GeoRadiusDetails example (below is the common format for whitelist and blacklist both)
-
+```json
+"whiteListedGeoRadiusDetails" : [
+        {
+            "unit": "mile",
+            "address": "Denver, CO 80202, USA",
+            "latitude": 39.739235,
+            "radius": 2,
+            "type": "circle",
+            "longitude": -104.99025,
+            "sid": "4666",
+            "cid": "246"
+        },
+        {
+            "unit": "mile",
+            "address": "Grand Lake, CO 80447, USA",
+            "latitude": 40.19427,
+            "radius": 1,
+            "type": "circle",
+            "longitude": -105.84889,
+            "sid": "4666",
+            "cid": "246"
+        },
+        {
+            "unit": "mile",
+            "address": "Yonkers, NY 10710, USA",
+            "latitude": 40.95017,
+            "radius": 3,
+            "type": "circle",
+            "longitude": -73.84669,
+            "sid": "4694",
+            "cid": "246"
+        },
+        {
+            "polypath": [
+                {
+                    "lng": -112.05635319323119,
+                    "lat": 40.80285757668772
+                },
+                {
+                    "lng": -111.44111881823119,
+                    "lat": 38.15773779255543
+                },
+                {
+                    "lng": -108.45283756823119,
+                    "lat": 39.25508137287102
+                },
+                {
+                    "lng": -109.15596256823119,
+                    "lat": 41.266931755469045
+                }
+            ],
+            "unit": "mile",
+            "address": "Dry Creek Rd, Utah, USA",
+            "latitude": 39.712334774012234,
+            "type": "custom",
+            "radius": 164.41,
+            "longitude": -110.25459538073119,
+            "sid": "4709",
+            "cid": "246"
+        },
+        {
+            "polypath": [
+                {
+                    "lng": -98.60998217413051,
+                    "lat": 39.527470270360105
+                },
+                {
+                    "lng": -93.16076342413051,
+                    "lat": 41.662771525199084
+                }
+            ],
+            "unit": "mile",
+            "address": "Nebraska City, NE 68410, USA",
+            "latitude": 40.595120897779594,
+            "type": "square",
+            "radius": 259.09,
+            "longitude": -95.88537279913051,
+            "sid": "4689",
+            "cid": "246"
+        }
+]
+```
 
 ##### Request:
 
