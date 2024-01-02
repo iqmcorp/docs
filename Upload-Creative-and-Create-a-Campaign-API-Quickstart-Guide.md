@@ -518,9 +518,9 @@ When uploading a creative, you can provide a file and creative parameters like t
    <td><code>X-IAA-OW-ID</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{ow_id}}</code>
    </td>
@@ -529,9 +529,9 @@ Example: <code>{{ow_id}}</code>
    <td><code>Authorization</code>
 <p>
 
-    <code>required</code>
+   
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 Example: <code>{{bearer_token}}</code>
    </td>
@@ -540,9 +540,9 @@ Example: <code>{{bearer_token}}</code>
    <td><code>content-type</code>
 <p>
 
-    <code>required</code>
+   
    </td>
-   <td>string
+   <td> <code>required</code>string
 <p>
 Value: <code>"multipart/form-data"</code>
 <p>
@@ -561,9 +561,9 @@ Example: <code>multipart/form-data</code>
    <td><code>creativeFiles</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
 <p>
 File-image file as mutipart-form data
    </td>
@@ -572,9 +572,9 @@ File-image file as mutipart-form data
    <td><code>creativeImageMetadata</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>object (creativeImageMetadata)
+   <td><code>required</code>object (creativeImageMetadata)
    </td>
   </tr>
 </table>
@@ -586,7 +586,7 @@ For information on FormData format see the MDN documentation: [https://developer
 ##### Request (FormData)
 
 
-```
+```json
 ------WebKitFormBoundaryyTwoz48E2hTuXZoX
 Content-Disposition: form-data; name="dspId"
 
@@ -634,7 +634,7 @@ J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅ�
 ##### Response 201:
 
 
-```
+```json
 {
  "statusCode": 201,
  "responseObject": {
@@ -671,9 +671,9 @@ To create a campaign, creative must be processed and approved, check for status 
    <td><code>creative_id</code>
 <p>
 
-    <code>required</code>
+    
    </td>
-   <td>string
+   <td><code>required</code>string
    </td>
   </tr>
 </table>
@@ -686,38 +686,31 @@ To create a campaign, creative must be processed and approved, check for status 
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    <code>required</code>
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
 
 
-
 ##### Response 200:
 
 
-```
+```json
 {
  "statusCode": 200,
  "responseObject": [
@@ -792,28 +785,22 @@ To create a campaign, specify the creative and targeting parameters using the AP
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    <code>required</code>
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
@@ -1605,7 +1592,7 @@ Organization Workspace Id
 ##### Request:
 
 
-```
+```json
 {
  "campaignName": "Test Campaign",
  "maxBid": 10,
@@ -1646,7 +1633,7 @@ Organization Workspace Id
 ##### Response 201:
 
 
-```
+```json
 {
  "statusCode": 201,
  "responseObject": {
@@ -1662,7 +1649,7 @@ Organization Workspace Id
 ##### Response 400:
 
 
-```
+```json
 {
  "statusCode": 412,
  "responseObject": {
@@ -1677,7 +1664,7 @@ Organization Workspace Id
 ##### Response 500:
 
 
-```
+```json
 {
  "statusCode": 500,
  "responseObject": {
@@ -1710,9 +1697,9 @@ To run a campaign, it must be approved, check for status updates using:
    <td><code>campaign_id</code>
 <p>
 
-    <code>required</code>
+   
    </td>
-   <td>string
+   <td><code>required</code>string
    </td>
   </tr>
 </table>
@@ -1725,28 +1712,22 @@ To run a campaign, it must be approved, check for status updates using:
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    <code>required</code>
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
@@ -1756,7 +1737,7 @@ Organization Workspace Id
 ##### Response 200:
 
 
-```
+```json
 {
  "statusCode": 200,
  "responseObject": {
