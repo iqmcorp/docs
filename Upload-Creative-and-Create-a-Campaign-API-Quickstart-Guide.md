@@ -34,7 +34,7 @@ To upload a Creative and create a Campaign, you must have the following:
 2. Client ID and Client Secret 
 3. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX file to upload Creative.
 
-If you do not have any of the above, please follow the steps below: \
+If you do not have any of the above, please follow the steps below:
 
 
 
