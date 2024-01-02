@@ -417,28 +417,22 @@ To upload a creative, you must provide a creative type. Use the creative type li
 <table>
   <tr>
    <td><code>Authorization</code>
-<p>
-
-    <code>required</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{bearer_token}}</code>
+Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
 <p>
 Authorization Bearer Token
    </td>
   </tr>
   <tr>
-   <td><code>{{ow_id_header_key}}</code>
-<p>
-
-    <code>required</code>
+   <td><code>X-IAA-OW-ID</code>
    </td>
-   <td>string
+   <td>any
 <p>
-Example: <code>{{ow_id}}</code>
+Example: <code>1</code>
 <p>
-Organization Workspace Id
+Organization Workspace Id Header
    </td>
   </tr>
 </table>
@@ -448,7 +442,7 @@ Organization Workspace Id
 ##### Response 200:
 
 
-```
+```json
 {
  "success": true,
  "data": [
@@ -491,7 +485,7 @@ Organization Workspace Id
 ##### Response 500:
 
 
-```
+```json
 {
  "statusCode": 500,
  "responseObject": {
