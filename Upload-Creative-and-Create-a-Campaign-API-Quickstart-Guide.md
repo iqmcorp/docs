@@ -4,7 +4,7 @@
 
 IQM’s REST API enables you to interact with most of IQM’s offerings. 
 
-Use the following endpoints to start uploading your first matched audience:: \
+Use the following endpoints to start uploading your first matched audience:
 
 
 
