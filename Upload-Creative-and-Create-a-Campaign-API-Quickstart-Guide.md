@@ -586,7 +586,7 @@ For information on FormData format see the MDN documentation: [https://developer
 ##### Request (FormData)
 
 
-```json
+```
 ------WebKitFormBoundaryyTwoz48E2hTuXZoX
 Content-Disposition: form-data; name="dspId"
 
