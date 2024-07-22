@@ -824,13 +824,13 @@ Example: <code>{{advertiser_api_token}}</code>
   <tr>
    <td><code>requestType</code>
    </td>
-   <td>integer <code>int32</code> - 1 aggregated or 2 daily
+   <td>integer <code>int32</code> - ID to identify if the report request is Daily or Aggregated. 1 - Daily, 2 - Aggregated.
    </td>
   </tr>
   <tr>
    <td><code>reportAggregated</code>
    </td>
-   <td>String - “0” - daily, “1” - aggregated
+   <td>String - Field to identify if the first report dimension is Aggregated or not. 0 - Not aggregated, 1 - Aggregated.
    </td>
   </tr>
   <tr>
