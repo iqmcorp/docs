@@ -21,7 +21,7 @@ To run reports, you must have:
 
 1. An Account On the IQM platform
 2. Run at least one campaign
-3. A Client ID and Client Secret 
+3. A Client ID and Client Secret
 
 If you do not have any of the above,  please follow the steps below.
 
@@ -39,11 +39,11 @@ An hour after running a campaign, you can generate reports on it.
 
 See the quick start guide on [executing a report](/Reporting-API-Quickstart-Guide.md).
 
-# Connect to the IQM APi
+## Connect to the IQM API
 
-# Authentication
+## Authentication
 
-# Create a Report Scheduling Event
+## Create a Report Scheduling Event
 
 This quick start guide will help you create a report scheduling event. At a minimum, you must log in, have a campaign started, in order to execute reports. Once these steps have been completed, you can create a scheduling event.
 
@@ -52,7 +52,7 @@ This quick start guide will help you create a report scheduling event. At a mini
 | Step 1: Login | Optional if you have already logged in and have a token.|
 | Step 2: Create Scheduling Event | Execute scheduling event with frequency, day, end date parameters |
 
-## Step 1: Log in
+### Step 1: Log in
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
@@ -73,7 +73,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 | `email` | string (required) | your user account email |
 | `password` | string (required) | your user accout password |
 
-## Step 2: Create Scheduling Event
+### Step 2: Create Scheduling Event
 
 Decide the delivery frequency, day, and end date of scheduled reports. This API will save the delivery information and return a success message. 
 
