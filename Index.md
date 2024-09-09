@@ -28,10 +28,10 @@ An hour after running a campaign, you can generate reports on it.
 
 These guides will help you to perform the most essential tasks using the API of the IQM platform:
 
-* [Create a Report](https://github.com/iqmcorp/docs/blob/main/Reporting-API-Quickstart-Guide.md)
+* [Create a Report](/Reporting-API-Quickstart-Guide.md)
 * [Create a Report Scheduling Event](/Schedule-Report-API-Quickstart-Guide.md)
-* [Upload a Matched Audience](https://github.com/iqmcorp/docs/blob/main/Matched-Audience-Upload-API-Quickstart-Guide.md)
-* [Upload a Creative and Create a Campaign](https://github.com/iqmcorp/docs/blob/main/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
+* [Upload a Matched Audience](/Matched-Audience-Upload-API-Quickstart-Guide.md)
+* [Upload a Creative and Create a Campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
 
 ## Requests
 
@@ -39,16 +39,15 @@ Data resources are accessed via standard HTTP requests in UTF-8 format to an API
 
 | Method | Action |
 |---|---|
-| GET | Retrieves Resources
-| POST | Creates Resources
-| PUT | Changes or replaces resources
-| DELETE | Deletes Resources
-| PATCH | Applies partial modification to a resources
+| GET | Retrieves Resources |
+| POST | Creates Resources |
+| PUT | Changes or replaces resources |
+| DELETE | Deletes Resources |
+| PATCH | Applies partial modification to a resources |
 
 Please refer to [MDN documentation on methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
 
 ## Error handling
-
 
 ### Status codes
 
