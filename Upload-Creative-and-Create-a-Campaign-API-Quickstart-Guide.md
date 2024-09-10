@@ -1,21 +1,15 @@
-
-
-# Overview
+# Quickstart Guide: Upload Creative and Create a Campaign
 
 IQM’s REST API enables you to interact with most of IQM’s offerings. 
 
-Use the following endpoints to start uploading your first matched audience:
+Use the following endpoints to start uploading your first Creative:
 
-
-
-
-* `POST /api/v3/ua/login`
-* `GET /api/v3/master/creativeTypes`
-* `POST /api/v2/crt/add/image/banner/creative`
-* `GET /api/v2/crt/creatives/details?creativeIds={creativeId}`
-* `POST /api/v2/cmp/campaigns/add`
-* `GET /api/v2/cmp/campaign/{campaignId}`
-
+* `POST` /api/v3/ua/login
+* `GET` /api/v3/master/creativeTypes
+* `POST` /api/v2/crt/add/image/banner/creative
+* `GET` /api/v2/crt/creatives/details?creativeIds={creativeId}
+* `POST` /api/v2/cmp/campaigns/add
+* `GET` /api/v2/cmp/campaign/{campaignId}
 
 ## About IQM Campaign & Creative
 
@@ -23,311 +17,67 @@ The IQM APIs provide access to create Campaigns and upload Creative in Image, Vi
 
 Once uploaded and processed, Creative can be used for creating and running advertising Campaigns.
 
-
 ## Before you begin
 
 To upload a Creative and create a Campaign, you must have the following:
 
-
-
 1. An Account On the IQM platform
-2. Client ID and Client Secret 
-3. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX file to upload Creative.
+1. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX file to upload Creative
 
 If you do not have any of the above, please follow the steps below:
 
-
-
-
-* Got to: [https://app.iqm.com/#/signup](https://app.iqm.com/#/signup) to sign up for an IQM Account
-    * Use your work email as a username and create a password
-    * Passwords must be at least 8 characters in length
-    * Require at least 1 uppercase letter
-    * Require at least 1 lowercase letter
-    * Require at least 1 special character
-* Email [integrations@iqm.com](mailto:integrations@iqm.com) to request a Client ID and Client Secret 
+* See [Before You Begin](/index#before-you-begin) section to create an account and request a Client ID and Client Secret
 * File requirements for creative file:
-    * 2MB for JPG, JPEG, PNG
-    * 750KB for GIF
-    * 400MB for MOV, MP4
-    * 100MB for MP3, WAV, OGG, MPEG
+  * 2MB for JPG, JPEG, PNG
+  * 750KB for GIF
+  * 400MB for MOV, MP4
+  * 100MB for MP3, WAV, OGG, MPEG
 
-For more information on VAST and DAAST XML format specifications, please see: [https://www.iab.com/guidelines/vast/](https://www.iab.com/guidelines/vast/)
+For more information on [VAST](https://www.iab.com/guidelines/vast/) and DAAST XML format specifications, please see:
 
-[https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/)
+* [https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/)
 
 Sample CSV file: [https://app.iqm.com/creatives/u/0/sample.CSV](https://app.iqm.com/creatives/u/0/sample.CSV)
 
-
-# Connect to the IQM API
-
-For authorization, we use [OAuth 2.0](https://oauth.net/2/). 
-
-To use the API, first contact [integrations@iqm.com](mailto:integrations@iqm.com). Our team will generate a Client ID and Client Secret specific to you per app or customer.
-
-The keys are used in the Authorization header:  \
-`Authorization: Basic &lt;Client ID:Client Secret>`  \
-where `&lt;Client ID:Client Secret>` is a Base64 encoded string. \
-Please refer to MDN documentation on Base64 encoding: \
-https://developer.mozilla.org/en-US/docs/Glossary/Base64
-
-
-# Authentication
-
-The API uses HTTP Basic authentication. HTTP Basic authentication uses standard fields in the HTTP header.
-
-Your Client ID and Client Secret are provided in the header,  and your username and password are provided in the payload with the password grant for the `/login` endpoint.
-
-The response will provide a Bearer token to include in the authorization header with all subsequent requests. The Organization Workspace ID (OWID) returned from login has to be provided in the `X-IAA-OW-ID `header for every call after login.
-
-If they match, the server fulfills your request. However, if they do not match, HTTP Status code 401 (unauthorized access) is returned. 
-
-
-# Requests
-
-Data resources are accessed via standard HTTP requests in UTF-8 format to an API endpoint. The IQM API uses the following HTTP methods:
-
-
-<table>
-  <tr>
-   <td><strong>Method</strong>
-   </td>
-   <td><strong>Action</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>GET
-   </td>
-   <td>Retrieves resources
-   </td>
-  </tr>
-  <tr>
-   <td>POST
-   </td>
-   <td>Creates resources
-   </td>
-  </tr>
-  <tr>
-   <td>PUT
-   </td>
-   <td>Changes or replaces resources
-   </td>
-  </tr>
-  <tr>
-   <td>DELETE
-   </td>
-   <td>Deletes resources
-   </td>
-  </tr>
-  <tr>
-   <td>PATCH
-   </td>
-   <td>Applies partial modification to a resource
-   </td>
-  </tr>
-</table>
-
-
- \
-Please refer to MDN documentation on methods: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-
-
-# Error handling
-
-
-## Status codes
-
-We use standard HTTP status codes. The error codes you’ll most likely see are:
-
-
-<table>
-  <tr>
-   <td><strong>Code</strong>
-   </td>
-   <td><strong>Definition</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>200
-   </td>
-   <td>OK
-   </td>
-  </tr>
-  <tr>
-   <td>201
-   </td>
-   <td>Created
-   </td>
-  </tr>
-  <tr>
-   <td>400
-   </td>
-   <td>Bad request
-   </td>
-  </tr>
-  <tr>
-   <td>403
-   </td>
-   <td>Forbidden
-   </td>
-  </tr>
-  <tr>
-   <td>408
-   </td>
-   <td>Request timeout
-   </td>
-  </tr>
-  <tr>
-   <td>412
-   </td>
-   <td>Precondition failed
-   </td>
-  </tr>
-  <tr>
-   <td>422
-   </td>
-   <td>Unprocessable entity
-   </td>
-  </tr>
-  <tr>
-   <td>500
-   </td>
-   <td>Internal server error
-   </td>
-  </tr>
-</table>
-
-
-Please refer to MDN documentation on status codes: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-
-
-## Rate limits
-
-The message rate limit is 20 requests per minute. Exceeding the limit will cause a 429 (too many requests) error.
-
-
-# Upload Creative and create a Campaign using the IQM API
+## Upload Creative and create a Campaign using the IQM API
 
 This quick start will help you to create a Campaign and upload Creative.  At a minimum, you must log in, upload creative, and create a campaign. Once you have accomplished these basics, you can continue learning more about our API through the [documentation](https://app.iqm.com/docs).
 
+1. Log In
+    * Optional if you have already logged in and have a token
+1. Request Creative Types
+    *  Optional if you know what you need or have already requested before
+1. Upload Creative
+    * Optional if you have already uploaded before
+1. Check the Creative Status
+    * Check if Creative was approved to use, processing and approval is required
+1. Create a Campaign
+    * Create a Campaign using Creative, provide necessary targeting parameters
+1. Check the Campaign Status
+    * Check if the Campaign is running, you can check the KPI in the report
 
-<table>
-  <tr>
-   <td>Step 1: Login
-   </td>
-   <td>Optional if you have already logged in and have a token.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 2: Request creative types
-   </td>
-   <td>Optional if you know what you need or have already requested before.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 3: Upload Creative
-   </td>
-   <td>Optional if you have already uploaded before.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 4: Check the Creative status
-   </td>
-   <td>Check if Creative was approved to use. Processing and approval is required.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 5: Create a Campaign
-   </td>
-   <td>Create a Campaign using Creative. Provide necessary targeting parameters.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 6: Check the Campaign status
-   </td>
-   <td>Check if the Campaign is running. You can check the KPI in the report.
-   </td>
-  </tr>
-</table>
-
-
-
-## Step 1: Log in
+### Step 1: Log in
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), a unique identifier for each organization. This ID will be used for any further API communications.
 
+* `POST` /api/v3/ua/login
 
+#### HEADER PARAMETERS
 
-* `POST /api/v3/ua/login`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
 
- \
-HEADER PARAMETERS
+#### REQUEST BODY SCHEMA: application/json
 
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` | string (required) | Your user account email |
+| `password` | string (required) | Your user accout password |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-<p>
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-Iaa-Host</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>api.iqm.com</code>
-   </td>
-  </tr>
-</table>
-
-
-
-##### REQUEST BODY SCHEMA: application/json
-
-
-<table>
-  <tr>
-   <td><code>grantType</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - https://oauth.net/2/grant-types/
-   </td>
-  </tr>
-  <tr>
-   <td><code>email</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account email
-   </td>
-  </tr>
-  <tr>
-   <td><code>password</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account password
-   </td>
-  </tr>
-</table>
-
-
-
-##### Request:
-
+##### Request
 
 ```json
 {
@@ -337,10 +87,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -357,10 +104,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 400:
-
+##### Response 400
 
 ```json
 {
@@ -381,10 +125,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 403:
-
+##### Response 403
 
 ```json
 {
@@ -398,49 +139,22 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-For full documentation on the Login API, see [https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
-
-
-## Step 2: Request creative types
+### Step 2: Request creative types
 
 To upload a creative, you must provide a creative type. Use the creative type list endpoint to request a full list of allowed creative types.
 
+* `GET` /api/v3/master/creativeTypes
 
+#### HEADER PARAMETERS
 
-* `GET /api/v3/master/creativeTypes`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
 
-
-##### HEADER PARAMETERS
-
-
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -480,10 +194,7 @@ Organization Workspace Id Header
 }
 ```
 
-
-
-##### Response 500:
-
+##### Response 500
 
 ```json
 {
@@ -495,96 +206,32 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
 
-For complete documentation on creative types list API please see: 
-
-[https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
-
-
-## Step 3: Upload creative
+### Step 3: Upload creative
 
 When uploading a creative, you can provide a file and creative parameters like tracking pixel and click URL
 
+* `POST` /api/v2/crt/add/image/banner/creative
 
+#### HEADER PARAMETERS
 
-* `POST /api/v2/crt/add/image/banner/creative`
+| Property | Type | Example |
+| ---- | ---- | --- |
+| `X-IAA-OW-ID` | string [required] |  Example: `{{ow_id}}` |
+|  `Authorization` | string [required] | Example: `{{bearer token}}` |
+| `content-type` | string [required] | Value: `"multipart/form-data"` <br>Example: `multipart/form-data` |
 
+#### Payload (Form Data)
 
-##### HEADER PARAMETERS
+| Property | Type | Definition |
+| ---- | ---- | --- |
+| `creativeFiles` | string [required] | File - image file as multipart form data |
+|  `creativeImageMetadata` | object [required] | (creativeImageMetadata) |
 
+Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
-<table>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>{{ow_id}}</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>Authorization</code>
-<p>
-
-   
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>{{bearer_token}}</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>content-type</code>
-<p>
-
-   
-   </td>
-   <td> <code>required</code>string
-<p>
-Value: <code>"multipart/form-data"</code>
-<p>
-Example: <code>multipart/form-data</code>
-   </td>
-  </tr>
-</table>
-
-
-
-##### Payload (FormData)
-
-
-<table>
-  <tr>
-   <td><code>creativeFiles</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-File-image file as mutipart-form data
-   </td>
-  </tr>
-  <tr>
-   <td><code>creativeImageMetadata</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>object (creativeImageMetadata)
-   </td>
-  </tr>
-</table>
-
-
-For information on FormData format see the MDN documentation: [https://developer.mozilla.org/en-US/docs/Web/API/FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
-
-
-##### Request (FormData)
-
+##### Request (Form Data)
 
 ```
 ------WebKitFormBoundaryyTwoz48E2hTuXZoX
@@ -629,10 +276,7 @@ x}¼=Þà×àËðûñ§ð7ðCø12ÁàJ#p    ùM}NÂ5Â a¨B4#º�
 J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅÝuc·×î¦jÝêê/?ó¾·ÇOkiMÙ^ìÞÜ½ÏöÅìëþ�þKC­VmIí·:A¬>¢þ|sCÃ~ýáFiãðÄ×úlo²nÚÓLm.9IShow more
 ```
 
-
-
-##### Response 201:
-
+##### Response 201
 
 ```json
 {
@@ -644,71 +288,34 @@ J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅ�
 }
 ```
 
+For further information see the complete API Documentation:
 
-For complete documentation on creative upload API including other creative types upload please see: 
+* [Add Image Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddImageCreative)
 
-[https://app.iqm.com/docs?path=tag/Creative-API/operation/AddImageCreative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddImageCreative)
+* [Audio/Video Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/Audio/VideoCreative)
 
-[https://app.iqm.com/docs?path=tag/Creative-API/operation/Audio/VideoCreative](https://app.iqm.com/docs?path=tag/Creative-API/operation/Audio/VideoCreative)
+* [Add HTML Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddHtmlCreative)
 
-[https://app.iqm.com/docs?path=tag/Creative-API/operation/AddHtmlCreative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddHtmlCreative)
+### Step 4: Check the creative status
 
+To create a campaign, creative must be processed and approved, check for status updates using:
 
-## Step 4: Check the creative status
+* `GET` /api/v2/crt/creatives/details?creativeIds={creativeId}
 
-To create a campaign, creative must be processed and approved, check for status updates using: 
+#### PATH PARAMETERS
 
+| Property | Type | Definition |
+| --- | --- | --- |
+| `creative_id` | string [required] | Unique ID of Creative
 
+#### HEADER PARAMETERS
 
-* `GET /api/v2/crt/creatives/details?creativeIds={creativeId}`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
 
-
-##### PATH PARAMETERS
-
-
-<table>
-  <tr>
-   <td><code>creative_id</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-   </td>
-  </tr>
-</table>
-
-
-
-##### HEADER PARAMETERS
-
-
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -766,824 +373,124 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Creative Details API Documentation](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid)
 
-For complete documentation on creative details API see: [https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid)
-
-
-## Step 5: Create a Campaign
+### Step 5: Create a Campaign
 
 To create a campaign, specify the creative and targeting parameters using the API: 
 
+* `POST` /api/v2/cmp/campaigns/add
 
+#### HEADER PARAMETERS
 
-* `POST /api/v2/cmp/campaigns/add`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
 
+#### REQUEST BODY SCHEMA: application/json
 
-##### HEADER PARAMETERS
-
-
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### REQUEST BODY SCHEMA: application/json
-
-
-<table>
-  <tr>
-   <td><strong>Field</strong>
-   </td>
-   <td><strong>Type</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>advertiserDomain
-   </td>
-   <td>String
-   </td>
-   <td>add domain
-   </td>
-  </tr>
-  <tr>
-   <td>budgetDay
-   </td>
-   <td>Number
-   </td>
-   <td>Daily budget
-   </td>
-  </tr>
-  <tr>
-   <td>budgetTotal
-   </td>
-   <td>Number
-   </td>
-   <td>Total budget
-   </td>
-  </tr>
-  <tr>
-   <td>campaignName
-   </td>
-   <td>String
-   </td>
-   <td>name of campaign
-   </td>
-  </tr>
-  <tr>
-   <td>campaignType
-   </td>
-   <td>Number
-   </td>
-   <td>Campaign type id
-   </td>
-  </tr>
-  <tr>
-   <td>creativeIds
-   </td>
-   <td>String
-   </td>
-   <td>Comma separated creative Ids
-   </td>
-  </tr>
-  <tr>
-   <td>creativeType
-   </td>
-   <td>Number
-   </td>
-   <td>Creative type id
-   </td>
-  </tr>
-  <tr>
-   <td>isAgreementChecked
-   </td>
-   <td>Boolean
-   </td>
-   <td>agreement check
-   </td>
-  </tr>
-  <tr>
-   <td>maxBid
-   </td>
-   <td>Number
-   </td>
-   <td>max bid
-   </td>
-  </tr>
-  <tr>
-   <td>startTime
-   </td>
-   <td>Number
-   </td>
-   <td>campaign start time
-   </td>
-  </tr>
-  <tr>
-   <td>timezone
-   </td>
-   <td>Number
-   </td>
-   <td>timezone id.
-   </td>
-  </tr>
-  <tr>
-   <td>bidOptimization <code>[optional]</code>
-   </td>
-   <td>Boolean
-   </td>
-   <td>Optimize bid price based on analysis.
-   </td>
-  </tr>
-  <tr>
-   <td>bidPacing <code>[optional]</code>
-   </td>
-   <td>Boolean
-   </td>
-   <td>Budget is spent equally every hour.
-   </td>
-  </tr>
-  <tr>
-   <td>impressionCapping <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Maximum impressions in one inventory.
-   </td>
-  </tr>
-  <tr>
-   <td>maxDayClicks <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Maximum daily clicks
-   </td>
-  </tr>
-  <tr>
-   <td>totalClicks <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Total clicks
-   </td>
-  </tr>
-  <tr>
-   <td>maxDayImpressions <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Maximum daily impressions
-   </td>
-  </tr>
-  <tr>
-   <td>totalImpressions <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Total impressions
-   </td>
-  </tr>
-  <tr>
-   <td>maxDayConversions <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Maximum daily conversions
-   </td>
-  </tr>
-  <tr>
-   <td>totalConversions <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Total conversions
-   </td>
-  </tr>
-  <tr>
-   <td>conversionType <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>User conversion type. Allowed values: 'install', 'non-install'.
-   </td>
-  </tr>
-  <tr>
-   <td>appURL <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>If conversion type is install, specify URL of inventory.
-   </td>
-  </tr>
-  <tr>
-   <td>targetCPI <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Cost per install if conversion type is install.
-   </td>
-  </tr>
-  <tr>
-   <td>carriers <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Carrier targeting. Value in form of String of comma separated IDs of targeted carrier(s).
-   </td>
-  </tr>
-  <tr>
-   <td>networkType <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Network targeting. Value in form of String of comma separated IDs of targeted network(s).
-   </td>
-  </tr>
-  <tr>
-   <td>deviceType <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Device targeting. Value in form of String of comma separated IDs of targeted device type(s).
-   </td>
-  </tr>
-  <tr>
-   <td>trafficType <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Traffic type targeting. Value in form of String of comma separated IDs of targeted traffic type(s).
-   </td>
-  </tr>
-  <tr>
-   <td>manufacturer <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Manufacturer targeting. Value in form of String of comma separated IDs of targeted manufacturer type(s).
-   </td>
-  </tr>
-  <tr>
-   <td>os <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>OS targeting. Value in form of String of comma separated IDs of targeted OS.
-   </td>
-  </tr>
-  <tr>
-   <td>osVersion <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>OS version targeting. Value in form of String of comma separated IDs of targeted OS version based on targeted OS.
-   </td>
-  </tr>
-  <tr>
-   <td>exchanges <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Targeted exchanges. Value in form of String of comma separated IDs of exchanges.
-   </td>
-  </tr>
-  <tr>
-   <td>prebidAudienceSegmentIdList <code>[optional]</code>
-   </td>
-   <td>Array
-   </td>
-   <td>Prebid Audience Segment Ids to attach campaign to segment Ids.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedDeviceId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target Device Ids. Value in form of String of comma separated device IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedIp <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>IPV4 address. Value in form of String of comma separated IP Address.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedAppId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>iOS app ID
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedPackageName <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Android package names. Value in form of String of comma separated package names.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedSiteDomain <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target sites. Value in form of String of comma separated domain urls.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedDeviceId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target Device Ids. Value in form of String of comma separated device IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedIp <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>IPV4 address. Value in form of String of comma separated IP Address.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedAppId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>iOS app ID
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedPackageName <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Android package names. Value in form of String of comma separated package names.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedSiteDomain <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target sites. Value in form of String of comma separated domain urls.
-   </td>
-  </tr>
-  <tr>
-   <td>publisherAdCategory <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target Publisher ad category. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>ioId
-   </td>
-   <td>Number
-   </td>
-   <td>Target Insertion OrderId in which this campaign belongs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedInventoryGroupIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created Inventory groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedInventoryGroupIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created Inventory groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedCustomAudienceIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created custom audience Groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedCustomAudienceIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created custom audience Groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedAudienceSegmentGroupIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created audience segment Groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedAudienceSegmentGroupIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created audience segment Groups. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedConversionTagIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created conversion tags. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedConversionTagIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target already created conversion tags. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>userDealId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>User specific deal IDs. Value in form of String of comma separated deal IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>groupDealId <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Group of selected deals. Value in form of String of comma separated deal IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>politicalAdvertiserClientId <code>[optional]</code>
-   </td>
-   <td>Number
-   </td>
-   <td>Id of political advertiser in case of campaign is political campaign.
-   </td>
-  </tr>
-  <tr>
-   <td>stateIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>State Target (It will be considered as White list State Target). Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedStateIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>White list State Target . Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedStateIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Black list State Target . Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>countryId
-   </td>
-   <td>String
-   </td>
-   <td>Country Target
-   </td>
-  </tr>
-  <tr>
-   <td>dmaIds <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>DMA Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedDmaIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list DMA Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedDmaIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list DMA Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>senateDistrictIds <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>Senate districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedSenateDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list senate districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedSenateDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list senate districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>congressionalDistrictIds <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>Congressional districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedCongressionalDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list congressional districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedCongressionalDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list congressional districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>houseDistrictIds <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>House districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedHouseDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list house districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedHouseDistrictIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list house districts Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>geoRadiusDetails <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>To target custom ares in circle or polygon. Value in form of JSON.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedGeoRadiusDetails <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>To white list custom ares in circle or polygon. Value in form of JSON.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedGeoRadiusDetails <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>To black list custom ares in circle or polygon. Value in form of JSON.
-   </td>
-  </tr>
-  <tr>
-   <td>zipcodes <code>[optional]</code> <code>deprecated</code>
-   </td>
-   <td>String
-   </td>
-   <td>ZipCode Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedZipcodes <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list zipCode Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedZipcodes <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list zipCode Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>locationFileIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedLocationIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list location ids from uploaded files. Value in form of String of comma separated location ids.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedLocationIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list location ids from uploaded files. Value in form of String of comma separated location ids.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedCityIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list city Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedCityIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list city Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>whiteListedCountyIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>white list county Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>blackListedCountyIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>black list county Target. Value in form of String of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>ageRangeIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target age range. Value in form of string of comma separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>genderIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target gender. Value in form of String of comma-separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>interestIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target user interest. Value in form of a string of comma-separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>incomeRangeIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target user income range. Value in form of a string of comma-separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>languageIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target user language. Value in form of a string of comma-separated IDs.
-   </td>
-  </tr>
-  <tr>
-   <td>ethnicityIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target user ethnicity. Value in form of a string of comma-separated ID.
-   </td>
-  </tr>
-  <tr>
-   <td>schedule <code>[optional]</code>
-   </td>
-   <td>String[][]
-   </td>
-   <td>key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
-   </td>
-  </tr>
-  <tr>
-   <td>conversionIds <code>[optional]</code>
-   </td>
-   <td>String
-   </td>
-   <td>Target pixel conversions. Value in form of a string of comma-separated ID.
-   </td>
-  </tr>
-  <tr>
-   <td>isAdvanceAudioVideoTargeted
-   </td>
-   <td>Boolean
-   </td>
-   <td>To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted.
-   </td>
-  </tr>
-  <tr>
-   <td>creativeAdvanceTargeting
-   </td>
-   <td>JSON Map: String to Integer
-   </td>
-   <td>Map of Creative advanced targeting group to list of creative advance targeting segment ids.
-   </td>
-  </tr>
-  <tr>
-   <td>campaignEstimatorMetaData
-   </td>
-   <td>JSON
-   </td>
-   <td>Campaign Estimator data with <code>reachMeta</code>, <code>landScapeMeta</code> and <code>sliderMeta</code>
-   </td>
-  </tr>
-</table>
-
-
+| Field | Type | Description |
+|---|---|---|
+| `advertiserDomain` | string | add domain |
+| `budgetDay` | integer | Daily budget |
+| `budgetTotal` | integer | Total budget |
+| `campaignName` | string | name of campaign |
+| `campaignType` | integer | Campaign type id |
+| `creativeIds` | string | Comma separated creative Ids |
+| `creativeType` | integer | Creative type id |
+| `isAgreementChecked` | boolean | agreement check |
+| `maxBid` | integer | max bid |
+| `startTime` | integer | campaign start time |
+| `timezone` | integer | timezone id. |
+| `bidOptimization` [optional] | boolean | Optimize bid price based on analysis. |
+| `bidPacing` [optional] | boolean | Budget is spent equally every hour. |
+| `impressionCapping` [optional] | integer | Maximum impressions in one inventory. |
+| `maxDayClicks` [optional] | integer | Maximum daily clicks |
+| `totalClicks` [optional] | integer | Total clicks |
+| `maxDayImpressions` [optional] | integer | Maximum daily impressions |
+| `totalImpressions` [optional] | integer | Total impressions |
+| `maxDayConversions` [optional] | integer | Maximum daily conversions |
+| `totalConversions` [optional] | integer | Total conversions |
+| `conversionType` [optional] | string | User conversion type. Allowed values: 'install', 'non-install'. |
+| `appURL` [optional] | string | If conversion type is install, specify URL of inventory. |
+| `targetCPI` [optional] | integer | Cost per install if conversion type is install. |
+| `carriers` [optional] | string | Carrier targeting. Value in form of string of comma separated IDs of targeted carrier(s). |
+| `networkType` [optional] | string | Network targeting. Value in form of string of comma separated IDs of targeted network(s). |
+| `deviceType` [optional] | string | Device targeting. Value in form of string of comma separated IDs of targeted device type(s). |
+| `trafficType` [optional] | string | Traffic type targeting. Value in form of string of comma separated IDs of targeted traffic type(s). |
+| `manufacturer` [optional] | string | Manufacturer targeting. Value in form of string of comma separated IDs of targeted manufacturer type(s). |
+| `os` [optional] | string | OS targeting. Value in form of string of comma separated IDs of targeted OS. |
+| `osVersion` [optional] | string | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS. |
+| `exchanges` [optional] | string | Targeted exchanges. Value in form of string of comma separated IDs of exchanges. |
+| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment Ids to attach campaign to segment Ids. |
+| `whiteListedDeviceId` [optional] | string | Target Device Ids. Value in form of string of comma separated device IDs. |
+| `whiteListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
+| `whiteListedAppId` [optional] | string | iOS app ID |
+| `whiteListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
+| `whiteListedSiteDomain` [optional] | string | Target sites. Value in form of string of comma separated domain urls. |
+| `blackListedDeviceId` [optional] | string | Target Device Ids. Value in form of string of comma separated device IDs. |
+| `blackListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
+| `blackListedAppId` [optional] | string | iOS app ID |
+| `blackListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
+| `blackListedSiteDomain` [optional] | string | Target sites. Value in form of string of comma separated domain urls. |
+| `publisherAdCategory` [optional] | string | Target Publisher ad category. Value in form of string of comma separated IDs. |
+| `ioId` | integer | Target Insertion OrderId in which this campaign belongs. |
+| `blackListedInventoryGroupIds` [optional] | string | Target already created Inventory groups. Value in form of string of comma separated IDs. |
+| `whiteListedInventoryGroupIds` [optional] | string | Target already created Inventory groups. Value in form of string of comma separated IDs. |
+| `blackListedCustomAudienceIds` [optional] | string | Target already created custom audience Groups. Value in form of string of comma separated IDs. |
+| `whiteListedCustomAudienceIds` [optional] | string | Target already created custom audience Groups. Value in form of string of comma separated IDs. |
+| `blackListedAudienceSegmentGroupIds` [optional] | string | Target already created audience segment Groups. Value in form of string of comma separated IDs. |
+| `whiteListedAudienceSegmentGroupIds` [optional] | string | Target already created audience segment Groups. Value in form of string of comma separated IDs. |
+| `blackListedConversionTagIds` [optional] | string | Target already created conversion tags. Value in form of string of comma separated IDs. |
+| `whiteListedConversionTagIds` [optional] | string | Target already created conversion tags. Value in form of string of comma separated IDs. |
+| `userDealId` [optional] | string | User specific deal IDs. Value in form of string of comma separated deal IDs. |
+| `groupDealId` [optional] | string | Group of selected deals. Value in form of string of comma separated deal IDs. |
+| `politicalAdvertiserClientId` [optional] | integer | Id of political advertiser in case of campaign is political campaign. |
+| `stateIds` [optional] | string | State Target (It will be considered as White list State Target). Value in form of string of comma separated IDs. |
+| `whiteListedStateIds` [optional] | string | White list State Target . Value in form of string of comma separated IDs. |
+| `blackListedStateIds` [optional] | string | Black list State Target . Value in form of string of comma separated IDs. |
+| `countryId` | string | Country Target |
+| `dmaIds` [optional] deprecated | string | DMA Target. Value in form of string of comma separated IDs. |
+| `whiteListedDmaIds` [optional] | string | white list DMA Target. Value in form of string of comma separated IDs. |
+| `blackListedDmaIds` [optional] | string | black list DMA Target. Value in form of string of comma separated IDs. |
+| `senateDistrictIds` [optional] deprecated | string | Senate districts Target. Value in form of string of comma separated IDs. |
+| `whiteListedSenateDistrictIds` [optional] | string | white list senate districts Target. Value in form of string of comma separated IDs. |
+| `blackListedSenateDistrictIds` [optional] | string | black list senate districts Target. Value in form of string of comma separated IDs. |
+| `congressionalDistrictIds` [optional] deprecated | string | Congressional districts Target. Value in form of string of comma separated IDs. |
+| `whiteListedCongressionalDistrictIds` [optional] | string | white list congressional districts Target. Value in form of string of comma separated IDs. |
+| `blackListedCongressionalDistrictIds` [optional] | string | black list congressional districts Target. Value in form of string of comma separated IDs. |
+| `houseDistrictIds` [optional] deprecated | string | House districts Target. Value in form of string of comma separated IDs. |
+| `whiteListedHouseDistrictIds` [optional] | string | white list house districts Target. Value in form of string of comma separated IDs. |
+| `blackListedHouseDistrictIds` [optional] | string | black list house districts Target. Value in form of string of comma separated IDs. |
+| `geoRadiusDetails` [optional] deprecated | string | To target custom ares in circle or polygon. Value in form of JSON. |
+| `whiteListedGeoRadiusDetails` [optional] | string | To white list custom ares in circle or polygon. Value in form of JSON. |
+| `blackListedGeoRadiusDetails` [optional] | string | To black list custom ares in circle or polygon. Value in form of JSON. |
+| `zipcodes` [optional] deprecated | string | ZipCode Target. Value in form of string of comma separated IDs. |
+| `whiteListedZipcodes` [optional] | string | white list zipCode Target. Value in form of string of comma separated IDs. |
+| `blackListedZipcodes` [optional] | string | black list zipCode Target. Value in form of string of comma separated IDs. |
+| `locationFileIds` [optional] | string | Target location by uploading file. Value in form of string of comma separated csv file ids.(pre uploaded) |
+| `whiteListedLocationIds` [optional] | string | white list location ids from uploaded files. Value in form of string of comma separated location ids. |
+| `blackListedLocationIds` [optional] | string | black list location ids from uploaded files. Value in form of string of comma separated location ids. |
+| `whiteListedCityIds` [optional] | string | white list city Target. Value in form of string of comma separated IDs. |
+| `blackListedCityIds` [optional] | string | black list city Target. Value in form of string of comma separated IDs. |
+| `whiteListedCountyIds` [optional] | string | white list county Target. Value in form of string of comma separated IDs. |
+| `blackListedCountyIds` [optional] | string | black list county Target. Value in form of string of comma separated IDs. |
+| `ageRangeIds` [optional] | string | Target age range. Value in form of string of comma separated IDs. |
+| `genderIds` [optional] | string | Target gender. Value in form of string of comma-separated IDs. |
+| `interestIds` [optional] | string | Target user interest. Value in form of a string of comma-separated IDs. |
+| `incomeRangeIds` [optional] | string | Target user income range. Value in form of a string of comma-separated IDs. |
+| `languageIds` [optional] | string | Target user language. Value in form of a string of comma-separated IDs. |
+| `ethnicityIds` [optional] | string | Target user ethnicity. Value in form of a string of comma-separated ID. |
+| `schedule` [optional] | string[][] | key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] |
+| `conversionIds` [optional] | string | Target pixel conversions. Value in form of a string of comma-separated ID. |
+| `isAdvanceAudioVideoTargeted` | boolean | To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted. |
+| `isBidPacing` | boolean | To indicate whether the bid shading is enabled. |
+| `creativeAdvanceTargeting` | JSON Map: string to integer | Map of Creative advanced targeting group to list of creative advance targeting segment ids. |
+| `campaignEstimatorMetaData` | JSON | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
 
 ##### Scheduling example
+
 ```json
 "scheduling": {
     "0": [
@@ -1600,6 +507,7 @@ Organization Workspace Id Header
 ```
 
 ##### GeoRadiusDetails example (below is the common format for whitelist and blacklist both)
+
 ```json
 "whiteListedGeoRadiusDetails" : [
         {
@@ -1683,8 +591,7 @@ Organization Workspace Id Header
 ]
 ```
 
-##### Request:
-
+##### Request
 
 ```json
 {
@@ -1722,10 +629,7 @@ Organization Workspace Id Header
 }
 ```
 
-
-
-##### Response 201:
-
+##### Response 201
 
 ```json
 {
@@ -1738,10 +642,7 @@ Organization Workspace Id Header
 }
 ```
 
-
-
-##### Response 400:
-
+##### Response 400
 
 ```json
 {
@@ -1753,10 +654,7 @@ Organization Workspace Id Header
 }
 ```
 
-
-
-##### Response 500:
-
+##### Response 500
 
 ```json
 {
@@ -1768,68 +666,28 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Campaign Creation API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/saveCampaign)
 
-For complete documentation on campaign creation API see: 
-
-[https://app.iqm.com/docs?path=tag/Campaign-API/operation/saveCampaign](https://app.iqm.com/docs?path=tag/Campaign-API/operation/saveCampaign)
-
-
-## Step 5: Check the campaign status
+### Step 5: Check the campaign status
 
 To run a campaign, it must be approved, check for status updates using: 
 
+* `GET` /api/v2/cmp/campaign/{campaignId}
 
+#### PATH PARAMETERS
 
-* `GET /api/v2/cmp/campaign/{campaignId}`
+| Property | Type | Definition |
+| --- | --- | --- |
+| `campaign_id` | string [required] | Unique ID of Campaign
 
+#### HEADER PARAMETERS
 
-##### PATH PARAMETERS
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
 
-
-<table>
-  <tr>
-   <td><code>campaign_id</code>
-<p>
-
-   
-   </td>
-   <td><code>required</code>string
-   </td>
-  </tr>
-</table>
-
-
-
-##### HEADER PARAMETERS
-
-
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -1895,15 +753,11 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Campaign Details API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign)
 
-For complete documentation on campaign details API see: 
+## Best Practices
 
-[https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign](https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign)
-
-
-# Best Practices
-
-The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error. 
+The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error.
 
 API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
 
