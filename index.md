@@ -1,4 +1,4 @@
-# AQM API
+# IQM API
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.
 
@@ -8,19 +8,19 @@ Before you can use most of the API's service, you will need to complete the foll
 
 1. An Account On the IQM platform
 2. Run at least one campaign
-3. A Client ID and Client Secret 
+3. A Client ID and Client Secret
 
 If you do not have any of the above,  please follow the steps below.
 
-* To sign up for an IQM Account: [https://app.iqm.com/#/signup](https://app.iqm.com/#/signup)
-    * Use your work email as a username and secure password.
+* [Sign up for an IQM Account](https://app.iqm.com/#/signup)
+  * Use your work email as a username and create a secure password
     * Password must be at least 8 characters in length
-    * Require at least 1 uppercase letter
-    * Require at least 1 lowercase letter
-    * Require at least 1 special character
+    * Requires at least 1 uppercase letter
+    * Requires at least 1 lowercase letter
+    * Requires at least 1 special character
 * To Run a Campaign:
-    * Follow this guide to create a campaign: https://help.iqm.com/en/articles/5651476-create-a-new-campaign
-* Email [integrations@iqm.com](mailto:integrations@iqm.com) to request a Client ID and Client Secret 
+  * See the [Create a New Campaign Guide](https://help.iqm.com/en/articles/5651476-create-a-new-campaign)
+* Email [integrations@iqm.com](mailto:integrations@iqm.com) to request a Client ID and Client Secret.
 
 An hour after running a campaign, you can generate reports on it.
 
@@ -64,8 +64,7 @@ We use standard HTTP status codes. The error codes you’ll most likely see are:
 | 422 | Unprocessable Entity |
 | 500 | Internal Service Error|
 
-Please refer to MDN documentation on status codes: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+Please refer to [MDN documentation on status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
 ### Rate limits
 

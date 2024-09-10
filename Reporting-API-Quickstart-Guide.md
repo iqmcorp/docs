@@ -1,312 +1,57 @@
-# Overview
+# Quickstart Guide: Run a Report
 
 IQM’s REST API enables you to interact with most of IQM’s offerings. 
 
 Getting started with running your first reports is easy; just use the following endpoints:
 
-
-
-
-* `POST /api/v3/ua/login`
-* `GET /api/v2/adv/static/timezones`
-* `GET /api/v3/ra/report/dimension-metrics/detail`
-* `POST /api/v3/ra/report/execute`
-
+* `POST` /api/v3/ua/login
+* `GET` /api/v2/adv/static/timezones
+* `GET` /api/v3/ra/report/dimension-metrics/detail
+* `POST` /api/v3/ra/report/execute
 
 ## About IQM Reports
 
 The IQM APIs provide access to all dimensions and KPIs of your ad-serving reporting data in JSON format. You can use the APIs to connect to applications of your choice.
 
-Reports can be either **daily** or **aggregated**. The daily report will include the date as a dimension and provide the data breakdown by date. Reports provide five top-level dimensions of filtering support, and you can filter on multiple values for each dimension. 
+Reports can be either **daily** or **aggregated**. The daily report will include the date as a dimension and provide the data breakdown by date. Reports provide five top-level dimensions of filtering support, and you can filter on multiple values for each dimension.
 
-You can run a report containing up to three months of data for any dimension combination or up to one year for the campaign dimension. You must run multiple reports if you need more than that amount of data. 
+You can run a report containing up to three months of data for any dimension combination or up to one year for the campaign dimension. You must run multiple reports if you need more than that amount of data.
 
-
-## Before you begin
-
-To run reports, you must have:
-
-
-
-1. An Account On the IQM platform
-2. Run at least one campaign
-3. A Client ID and Client Secret 
-
-If you do not have any of the above,  please follow the steps below. \
-
-
-
-
-* To sign up for an IQM Account: [https://app.iqm.com/#/signup](https://app.iqm.com/#/signup)
-    * Use your work email as a username and secure password.
-    * Password must be at least 8 characters in length
-    * Require at least 1 uppercase letter
-    * Require at least 1 lowercase letter
-    * Require at least 1 special character
-* To Run a Campaign:
-    * Follow this guide to create a campaign: https://help.iqm.com/en/articles/5651476-create-a-new-campaign
-* Email [integrations@iqm.com](mailto:integrations@iqm.com) to request a Client ID and Client Secret 
-
-An hour after running a campaign, you can generate reports on it.
-
-
-# Connect to the IQM API
-
-For authorization, we use [OAuth 2.0](https://oauth.net/2/). 
-
-To use the API, first contact [integrations@iqm.com](mailto:integrations@iqm.com). Our team will generate a Client ID and Client Secret specific to you per app or customer.
-
-The keys are used in the Authorization header:  \
-`Authorization: Basic <Client ID:Client Secret>`  \
-where `<Client ID:Client Secret>` is a Base64 encoded string. \
-Please refer to MDN documentation on Base64 encoding: \
-https://developer.mozilla.org/en-US/docs/Glossary/Base64
-
-
-# Authentication
-
-The API uses HTTP Basic authentication. HTTP Basic authentication uses standard fields in the HTTP header.
-
-Your Client ID and Client Secret are provided in the header,  and your username and password are provided in the payload with the password grant for the `/login` endpoint.
-
-The response will provide a Bearer token to include in the authorization header with all subsequent requests. The Organization Workspace ID (OWID) returned from login has to be provided in the `X-IAA-OW-ID `header for every call after login.
-
-If they match, the server fulfills your request. However, if they do not match, HTTP Status code 401 (unauthorized access) is returned. 
-
-
-# Requests
-
-Data resources are accessed via standard HTTP requests in UTF-8 format to an API endpoint. The IQM API uses the following HTTP methods:
-
-
-<table>
-  <tr>
-   <td><strong>Method</strong>
-   </td>
-   <td><strong>Action</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>GET
-   </td>
-   <td>Retrieves resources
-   </td>
-  </tr>
-  <tr>
-   <td>POST
-   </td>
-   <td>Creates resources
-   </td>
-  </tr>
-  <tr>
-   <td>PUT
-   </td>
-   <td>Changes or replaces resources
-   </td>
-  </tr>
-  <tr>
-   <td>DELETE
-   </td>
-   <td>Deletes resources
-   </td>
-  </tr>
-  <tr>
-   <td>PATCH
-   </td>
-   <td>Applies partial modification to a resource
-   </td>
-  </tr>
-</table>
-
-
- \
-Please refer to MDN documentation on methods: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-
-
-# Error handling
-
-
-## Status codes
-
-We use standard HTTP status codes. The error codes you’ll most likely see are:
-
-
-<table>
-  <tr>
-   <td><strong>Code</strong>
-   </td>
-   <td><strong>Definition</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>200
-   </td>
-   <td>OK
-   </td>
-  </tr>
-  <tr>
-   <td>201
-   </td>
-   <td>Created
-   </td>
-  </tr>
-  <tr>
-   <td>400
-   </td>
-   <td>Bad request
-   </td>
-  </tr>
-  <tr>
-   <td>403
-   </td>
-   <td>Forbidden
-   </td>
-  </tr>
-  <tr>
-   <td>408
-   </td>
-   <td>Request timeout
-   </td>
-  </tr>
-  <tr>
-   <td>412
-   </td>
-   <td>Precondition failed
-   </td>
-  </tr>
-  <tr>
-   <td>422
-   </td>
-   <td>Unprocessable entity
-   </td>
-  </tr>
-  <tr>
-   <td>500
-   </td>
-   <td>Internal server error
-   </td>
-  </tr>
-</table>
-
-
-Please refer to MDN documentation on status codes: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-
-
-## Rate limits
-
-The message rate limit is 20 requests per minute. Exceeding the limit will cause a 429 (too many requests) error.
-
-
-# Run a report using the IQM API
+## Run a report using the IQM API
 
 This quick start will help you run a basic IQM report.  At a minimum, you must log in, select dimensions and metrics, choose a time zone, and execute your report. Once you have accomplished these basics, you can continue learning more about our API through the [documentation](https://app.iqm.com/docs).
 
+1. Log In
+      * Optional if you have already logged in and have a token.
+1. Request Dimensions and Metrics
+      * Optional if you know what you need or have already requested before.
+1. Request Time Zones
+      * Optional if you already requested before.
+1. Execute the Report
+      * Execute the report with parameters from the previous steps.
 
-<table>
-  <tr>
-   <td>Step 1: Login
-   </td>
-   <td>Optional if you have already logged in and have a token.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 2: Request dimensions and metrics
-   </td>
-   <td>Optional if you know what you need or have already requested before.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 3: Request time zones
-   </td>
-   <td>Optional if you already requested before.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 4: Execute the report
-   </td>
-   <td>Execute the report with parameters from the previous steps.
-   </td>
-  </tr>
-</table>
-
-
-
-## Step 1: Log in
+### Step 1: Log in
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
+* `POST` /api/v3/ua/login
 
+#### HEADER PARAMETERS
 
-* `POST /api/v3/ua/login`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
 
- \
-HEADER PARAMETERS
+#### REQUEST BODY SCHEMA: application/json
 
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` | string (required) | Your user account email |
+| `password` | string (required) | Your user accout password |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-<p>
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-Iaa-Host</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>api.iqm.com</code>
-   </td>
-  </tr>
-</table>
-
-
-
-##### REQUEST BODY SCHEMA: application/json
-
-
-<table>
-  <tr>
-   <td><code>grantType</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - https://oauth.net/2/grant-types/
-   </td>
-  </tr>
-  <tr>
-   <td><code>email</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account email
-   </td>
-  </tr>
-  <tr>
-   <td><code>password</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account password
-   </td>
-  </tr>
-</table>
-
-
-
-##### Request:
-
+##### Request
 
 ```json
 {
@@ -316,10 +61,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -336,10 +78,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 400:
-
+##### Response 400
 
 ```json
 {
@@ -360,10 +99,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 403:
-
+##### Response 403
 
 ```json
 {
@@ -377,164 +113,134 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-For full documentation on the Login API, see [https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
+### Step 2: Request dimensions and metrics
 
-
-## Step 2: Request dimensions and metrics
-
-Choose the dimensions and metrics you want to see in your report. This API offers Dimension and Metrics information grouped by category. \
-Full documentation on dimensions and metrics we support: \
-https://help.iqm.com/en/articles/7826036-dimensions-and-metrics
+Choose the dimensions and metrics you want to see in your report. This API offers Dimension and Metrics information grouped by category.
+ See [full documentation on dimensions and metrics](https://help.iqm.com/en/articles/7826036-dimensions-and-metrics) we support.
 
 Reports will be in table format. The metrics comprise the columns, and the dimensions comprise the rows. Necessary information about campaigns is found in the columns.
 
 Available dimensions are:
 
-
-
 * Insertion Order specifics
-    * Insertion Order
-    * Insertion Order ID
-    * Insertion Order Start Date
-    * Insertion Order End Date
+  * Insertion Order
+  * Insertion Order ID
+  * Insertion Order Start Date
+  * Insertion Order End Date
 * Campaign specifics
-    * Campaign
-    * Campaign ID
-    * Campaign Start Date
-    * Campaign End Date
-    * Campaign Group
-    * Campaign Group ID
-    * Hour
-    * Day
+  * Campaign
+  * Campaign ID
+  * Campaign Start Date
+  * Campaign End Date
+  * Campaign Group
+  * Campaign Group ID
+  * Hour
+  * Day
 * Creative specifics
-    * Creative
-    * Creative ID
-    * Creative Type
-    * Creative Group
-    * Playback Method
-    * Player Size
-    * Placement Type
-    * Rol Type
-    * Skippability
+  * Creative
+  * Creative ID
+  * Creative Type
+  * Creative Group
+  * Playback Method
+  * Player Size
+  * Placement Type
+  * Rol Type
+  * Skippability
 * Demographics
-    * Age group
-    * Gender
-    * Ethnicity
-    * Language
-    * Income Range
+  * Age group
+  * Gender
+  * Ethnicity
+  * Language
+  * Income Range
 * Technologies
-    * Device Type
-    * Manufacturer
-    * Carrier
-    * Connection Type
-    * Operating System
+  * Device Type
+  * Manufacturer
+  * Carrier
+  * Connection Type
+  * Operating System
 * Deliveries
-    * Channel
-    * Site and app
-    * Exchange
-    * Site and app ID
-    * Private Deal
-    * Publisher Category
+  * Channel
+  * Site and app
+  * Exchange
+  * Site and app ID
+  * Private Deal
+  * Publisher Category
 * Locations
-    * Country
-    * State
-    * City
-    * County (US-only)
-    * Zip Code (postal code)
-    * Congressional District (US-only)
-    * State Senate (US-only)
-    * State House (US-only)
-    * DMA (US-only)
+  * Country
+  * State
+  * City
+  * County (US-only)
+  * Zip Code (postal code)
+  * Congressional District (US-only)
+  * State Senate (US-only)
+  * State House (US-only)
+  * DMA (US-only)
 * Customers
-    * Customer
-    * Customer ID
+  * Customer
+  * Customer ID
 
 Available metrics are:
 
-
-
 * Budget
-    * Daily budget
-    * IO budget
-    * Total budget
-    * Max bid
-    * Daily budget completion %
+  * Daily budget
+  * IO budget
+  * Total budget
+  * Max bid
+  * Daily budget completion %
 * Counts
-    * Impressions
-    * Clicks
-    * Reach
-    * Frequency
+  * Impressions
+  * Clicks
+  * Reach
+  * Frequency
 * Rates
-    * CTR
-    * Win rate
-    * VCR
-    * Viewability
+  * CTR
+  * Win rate
+  * VCR
+  * Viewability
 * Spending
-    * Total spent
-    * Data cost
-    * Media spent
-    * Platform spent
-    * Workspace spent
+  * Total spent
+  * Data cost
+  * Media spent
+  * Platform spent
+  * Workspace spent
 * Earnings
-    * Platform earnings
-    * Workspace earnings
+  * Platform earnings
+  * Workspace earnings
 * Cost
-    * eCPM
-    * eCPC
-    * CPCV
+  * eCPM
+  * eCPC
+  * CPCV
 * Video
-    * Video start
-    * Video 25%
-    * Video 50%
-    * Video 75%
-    * Video 100%
-    * Hours viewed
+  * Video start
+  * Video 25%
+  * Video 50%
+  * Video 75%
+  * Video 100%
+  * Hours viewed
 * Conversion
-    * Total conversions
-    * Total Attributed Conversions
-    * Total Attributed View-Through Conversions
-    * Total Attributed Click-Through Conversions
-    * Cost Per Attributed Conversions
-    * Total Conversion Value
-    * Attributed Conversion Rate
-    * ROAS
+  * Total conversions
+  * Total Attributed Conversions
+  * Total Attributed View-Through Conversions
+  * Total Attributed Click-Through Conversions
+  * Cost Per Attributed Conversions
+  * Total Conversion Value
+  * Attributed Conversion Rate
+  * ROAS
 
-    For more information about Conversions, see: [https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform)
+   For more information see this [help article about Conversions](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform).
 
-* `GET /api/v3/ra/report/dimension-metrics/detail`
-
+* `GET` /api/v3/ra/report/dimension-metrics/detail
 
 ##### HEADER PARAMETERS
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -646,10 +352,7 @@ Organization Workspace Id Header
 
 ```
 
-
-
-##### Response 403:
-
+##### Response 403
 
 ```json
 {
@@ -663,10 +366,7 @@ Organization Workspace Id Header
 }
 ```
 
-
-
-##### Response 500:
-
+##### Response 500
 
 ```json
 {
@@ -680,55 +380,24 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Dimension and Metrics Details API Documentation](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails).
 
-For complete documentation on the Dimension and Metrics details API, see: [https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails)
-
-
-## Step 3: Select time zones
+### Step 3: Select time zones
 
 After you’ve chosen your metrics and dimensions, choose the time zone to target. You can only include one-time zone per report. Run multiple reports if you want to see results for numerous time zones.
 
 Use the Timeszones API to generate a list of time zone IDs to refer to in API calls. Use these IDs to target time zones in your report.
 
- 
-
-
-
-* `GET /api/v2/adv/static/timezones`
-
+* `GET` /api/v2/adv/static/timezones
 
 ##### HEADER PARAMETERS
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string [required] | Example: `{{bearer_token}}` |
+| `X-IAA-OW-ID` | string [required] |  Example: `{{ow_id}}` |
 
-<table>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>{{ow_id}}</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>Authorization</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>{{bearer_token}}</code>
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -742,133 +411,45 @@ Example: <code>{{bearer_token}}</code>
    ]
 }
 ```
+For further information see the complete [Timezone API documentation](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones).
 
+### Step 4: Execute your report
 
-For complete documentation on the Timezones API, see: [https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones)
+Run your report based on Report Data.
 
+The report will default to the previous three months if you don’t include a start and end date.
 
-## Step 4: Execute your report
-
-Run your report based on Report Data. 
-
-The report will default to the previous three months if you don’t include a start and end date. 
-
-All columns are optional, but you must include some for running the report. 
+All columns are optional, but you must include some for running the report.
 
 At least one dimension is required.
 
-
-
-* `POST /api/v3/ra/report/execute`
-
+* `POST` /api/v3/ra/report/execute
 
 ##### HEADER PARAMETERS
 
-
-<table>
-  <tr>
-   <td><code>x-iaa-api-token</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>{{advertiser_api_token}}</code>
-   </td>
-  </tr>
-</table>
-
-
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `x-iaa-api-token` | string | Example: `{{advertiser_api_token}}` |
 
 ##### REQUEST BODY SCHEMA: application/json required
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `startDate` | integer | `int64` - Unix timestamp |
+| `endDate` | integer | `int64` - Unix timestamp | 
+| `dimensions` | string | List of dimensions for the report obtained from dimensions and metrics details API |
+| `customerIds` | Array of integers | `int32` List of customers IDs to include in the report, leave empty array [ ] to include all, optional for workspace users only. |
+| `columns` | Array of strings | List of metrics for the report obtained from dimensions and metrics details API | 
+| `timezoneId` | integer | `int32` Timezone ID from the timezones API |
+| `requestType` | integer | `int32` ID to identify if the report request is Daily ["1"] or Aggregated ["2"]. |
+| `reportAggregated` | string | Field to identify if the first report dimension is Aggregated ["1"] or not["0"]. |
+|`timezoneName` | string | Timezone name from timezones API |
+| `filters` | object | Filter values to filter dimensions |
+| `pageNo` | integer | `int32` Pagination parameter, page number. |
+| `noOfEntries` | integer | `int32` Pagination paramter, records per page. |
+| `sortBy` | string | Dimension or metric to sort by, if prefixed by “-” then descending “-impressions”. |
 
-<table>
-  <tr>
-   <td><code>startDate</code>
-   </td>
-   <td>integer <code>int64</code> - Unix timestamp
-   </td>
-  </tr>
-  <tr>
-   <td><code>endDate</code>
-   </td>
-   <td>integer <code>int64</code> - Unix timestamp
-   </td>
-  </tr>
-  <tr>
-   <td><code>dimensions</code>
-   </td>
-   <td>String - List of dimensions for the report obtained from dimensions and metrics details API
-   </td>
-  </tr>
-  <tr>
-   <td><code>customerIds</code>
-   </td>
-   <td>Array of integers <code>int32</code> [ items <code>int32</code> ] list of customers IDs to include in the report, leave empty array []  to include all, <code>optional</code> for workspace users only.
-   </td>
-  </tr>
-  <tr>
-   <td><code>columns</code>
-   </td>
-   <td>Array of strings - List of metrics for the report obtained from dimensions and metrics details API
-   </td>
-  </tr>
-  <tr>
-   <td><code>timezoneId</code>
-   </td>
-   <td>integer <code>int32</code> - Timezone ID from the timezones API
-   </td>
-  </tr>
-  <tr>
-   <td><code>requestType</code>
-   </td>
-   <td>integer <code>int32</code> - ID to identify if the report request is Daily or Aggregated. 1 - Daily, 2 - Aggregated.
-   </td>
-  </tr>
-  <tr>
-   <td><code>reportAggregated</code>
-   </td>
-   <td>String - Field to identify if the first report dimension is Aggregated or not. 0 - Not aggregated, 1 - Aggregated.
-   </td>
-  </tr>
-  <tr>
-   <td><code>timezoneName</code>
-   </td>
-   <td>String - Timezone Name from timezones API
-   </td>
-  </tr>
-  <tr>
-   <td><code>filters</code>
-   </td>
-   <td>Object - filter values to filter dimensions
-   </td>
-  </tr>
-  <tr>
-   <td><code>pageNo</code>
-   </td>
-   <td>integer <code>int32</code> - pagination parameter, page number
-   </td>
-  </tr>
-  <tr>
-   <td><code>noOfEntries</code>
-   </td>
-   <td>integer <code>int32</code> - pagination parameter, records per page
-   </td>
-  </tr>
-  <tr>
-   <td><code>sortBy</code>
-   </td>
-   <td>String - dimension or metric to sort by, if prefixed by “-” then descending “-impressions”
-   </td>
-  </tr>
-</table>
-
-
-
-##### Request:
-
+##### Request
 
 ```json
 {
@@ -899,10 +480,7 @@ Example: <code>{{advertiser_api_token}}</code>
 }
 ```
 
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -1293,30 +871,23 @@ Example: <code>{{advertiser_api_token}}</code>
 }
 ```
 
+For further information see the complete [Execute Report Data API](https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportDatas).
 
-For complete documentation on the Execute Report Data API, see: [https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportData](https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportData)
+## Best Practices
 
-
-# Best Practices
-
-The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error. 
+The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error.
 
 API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
 
 The maximum data size per page is 1K rows.
 
-
-# FAQ
-
+## FAQ
 
 ### What are the most commonly used dimensions in reports?
 
-The most frequently used dimensions and combinations of dimensions are: 
+The most frequently used dimensions and combinations of dimensions are:
 
-
-
-
-* Insertion Order 
+* Insertion Order
 * Insertion Order & Campaign
 * Campaign & Creative
 * Campaign & Inventory
