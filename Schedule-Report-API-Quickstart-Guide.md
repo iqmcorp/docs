@@ -34,8 +34,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Example |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
+| `Authorization` | string (required) | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | `api.iqm.com` |
 
 #### REQUEST BODY SCHEMA: application/json
 
