@@ -1,19 +1,13 @@
+# Quickstart Guide: Matched Audience Upload
 
-
-# Overview
-
-IQM’s REST API enables you to interact with most of IQM’s offerings. 
+IQM’s REST API enables you to interact with most of IQM’s offerings.
 
 Getting started with uploading your first matched audience is easy; just use the following endpoints:
 
-
-
-
-* `POST /api/v3/ua/login`
-* `POST /api/v3/audience/static/matched/column-list`
-* `POST /api/v2/audience/matched/add`
-* `GET /api/v2/audience/matched/{matched_audience_Id}`
-
+* `POST` /api/v3/ua/login
+* `POST` /api/v3/audience/static/matched/column-list
+* `POST` /api/v2/audience/matched/add
+* `GET` /api/v2/audience/matched/{matched_audience_Id}
 
 ## About IQM Matched Audience
 
@@ -21,299 +15,63 @@ The IQM APIs provide access to upload the audience for matching in XLSX or CSV f
 
 Once uploaded and processed, the matched audience can be used for advertising campaign targeting.
 
-
 ## Before you begin
 
 To upload Matched Audience, you must have the following:
 
-
-
 1. An Account On the IQM platform
-2.  Client ID and Client Secret 
-3. CSV or XLSX file for matching.
+1. CSV or XLSX file for matching
 
 If you do not have any of the above, please follow the steps below:
 
-
-
-
-* Got to: [https://app.iqm.com/#/signup](https://app.iqm.com/#/signup) to sign up for an IQM Account
-    * Use your work email as a username and create password
-    * Passwords must be at least 8 characters in length
-    * Require at least 1 uppercase letter
-    * Require at least 1 lowercase letter
-    * Require at least 1 special character
-* Email [integrations@iqm.com](mailto:integrations@iqm.com) to request a Client ID and Client Secret 
+* See [Before You Begin](/index#before-you-begin) section to create an account and request a Client ID and Client Secret.
 * File requirements for audience matching
-    * CSV or XLSX file for audience matching with maximum 1GB or 5M records. 
-    * Without Voter ID / Email / Phone / Address in the file
-        * One of the following system field combinations is required for matching
-            * First Name, Last Name, Zip, State
-            * Last Name, Street Address, Zip, State,
-            * Street Address, Zip, state
-        * Other fields are optional and can be added along with the above fields
-    * With Voter ID / Email / Phone / Address in the file
-        * Only one of these fields is required - Voter ID or Email or Phone, or Address. The preferred format for full address is Street, City, Zip, and State. 
-        * Other fields are optional and can be added along with one of the above fields
+  * CSV or XLSX file for audience matching with maximum 1GB or 5M records
+  * Without Voter ID / Email / Phone / Address in the file
+    * One of the following system field combinations is required for matching
+      * First Name, Last Name, Zip, State
+      * Last Name, Street Address, Zip, State
+      * Street Address, Zip, state
+    * Other fields are optional and can be added along with the above fields
+  * With Voter ID / Email / Phone / Address in the file
+    * Only one of these fields is required - Voter ID or Email or Phone, or Address. The preferred format for full address is Street, City, Zip, and State
+    * Other fields are optional and can be added along with one of the above fields
 
-
-# Connect to the IQM API
-
-For authorization, we use [OAuth 2.0](https://oauth.net/2/). 
-
-To use the API, first contact [integrations@iqm.com](mailto:integrations@iqm.com). Our team will generate a Client ID and Client Secret specific to you per app or customer.
-
-The keys are used in the Authorization header:  
-`Authorization: Basic <Client ID:Client Secret>`  
-where `<Client ID:Client Secret>` is a Base64 encoded string. 
-Please refer to MDN documentation on Base64 encoding: 
-https://developer.mozilla.org/en-US/docs/Glossary/Base64
-
-
-# Authentication
-
-The API uses HTTP Basic authentication. HTTP Basic authentication uses standard fields in the HTTP header.
-
-Your Client ID and Client Secret are provided in the header,  and your username and password are provided in the payload with the password grant for the `/login` endpoint.
-
-The response will provide a Bearer token to include in the authorization header with all subsequent requests. The Organization Workspace ID (OWID) returned from login has to be provided in the `X-IAA-OW-ID `header for every call after login.
-
-If they match, the server fulfills your request. However, if they do not match, HTTP Status code 401 (unauthorized access) is returned. 
-
-
-# Requests
-
-Data resources are accessed via standard HTTP requests in UTF-8 format to an API endpoint. The IQM API uses the following HTTP methods:
-
-
-<table>
-  <tr>
-   <td><strong>Method</strong>
-   </td>
-   <td><strong>Action</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>GET
-   </td>
-   <td>Retrieves resources
-   </td>
-  </tr>
-  <tr>
-   <td>POST
-   </td>
-   <td>Creates resources
-   </td>
-  </tr>
-  <tr>
-   <td>PUT
-   </td>
-   <td>Changes or replaces resources
-   </td>
-  </tr>
-  <tr>
-   <td>DELETE
-   </td>
-   <td>Deletes resources
-   </td>
-  </tr>
-  <tr>
-   <td>PATCH
-   </td>
-   <td>Applies partial modification to a resource
-   </td>
-  </tr>
-</table>
-
-
- \
-Please refer to MDN documentation on methods: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-
-
-# Error handling
-
-
-## Status codes
-
-We use standard HTTP status codes. The error codes you’ll most likely see are:
-
-
-<table>
-  <tr>
-   <td><strong>Code</strong>
-   </td>
-   <td><strong>Definition</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>200
-   </td>
-   <td>OK
-   </td>
-  </tr>
-  <tr>
-   <td>201
-   </td>
-   <td>Created
-   </td>
-  </tr>
-  <tr>
-   <td>400
-   </td>
-   <td>Bad request
-   </td>
-  </tr>
-  <tr>
-   <td>403
-   </td>
-   <td>Forbidden
-   </td>
-  </tr>
-  <tr>
-   <td>408
-   </td>
-   <td>Request timeout
-   </td>
-  </tr>
-  <tr>
-   <td>412
-   </td>
-   <td>Precondition failed
-   </td>
-  </tr>
-  <tr>
-   <td>422
-   </td>
-   <td>Unprocessable entity
-   </td>
-  </tr>
-  <tr>
-   <td>500
-   </td>
-   <td>Internal server error
-   </td>
-  </tr>
-</table>
-
-
-Please refer to MDN documentation on status codes: \
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-
-
-## Rate limits
-
-The message rate limit is 20 requests per minute. Exceeding the limit will cause a 429 (too many requests) error.
-
-
-# Upload Matched Audience using the IQM API
+## Upload Matched Audience using the IQM API
 
 This quick start will help you to create a matched audience.  At a minimum, you must log in, select columns for matching, and upload your audience. Once you have accomplished these basics, you can continue learning more about our API through the [documentation](https://app.iqm.com/docs).
 
+1. Log In
+   * Optional if you have already logged in and have a token
+1. Request Column List
+   * Optional if you know what you need or have already requested before
+1. Upload Matched Audience
+   * Upload the audience with parameters from the previous steps
+1. Check Audience Status
+   * Matched audience requires processing and approval before it can be used for targeting
 
-<table>
-  <tr>
-   <td>Step 1: Login
-   </td>
-   <td>Optional if you have already logged in and have a token.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 2: Request column list
-   </td>
-   <td>Optional if you know what you need or have already requested before.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 3: Upload matched audience
-   </td>
-   <td>Upload the audience with parameters from the previous steps.
-   </td>
-  </tr>
-  <tr>
-   <td>Step 4: Check audience status
-   </td>
-   <td>Matched audience requires processing and approval before it can be used for targeting.
-   </td>
-  </tr>
-</table>
-
-
-
-## Step 1: Log in
+### Step 1: Log in
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), a unique identifier for each organization. This ID will be used for any further API communications.
 
+* `POST` /api/v3/ua/login
 
+#### HEADER PARAMETERS
 
-* `POST /api/v3/ua/login`
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
 
- \
-HEADER PARAMETERS
+#### REQUEST BODY SCHEMA: application/json
 
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` | string (required) | Your user account email |
+| `password` | string (required) | Your user accout password |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-<p>
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2</code>
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-Iaa-Host</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-<p>
-Example: <code>api.iqm.com</code>
-   </td>
-  </tr>
-</table>
-
-
-
-##### REQUEST BODY SCHEMA: application/json
-
-
-<table>
-  <tr>
-   <td><code>grantType</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - https://oauth.net/2/grant-types/
-   </td>
-  </tr>
-  <tr>
-   <td><code>email</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account email
-   </td>
-  </tr>
-  <tr>
-   <td><code>password</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>String - your user account password
-   </td>
-  </tr>
-</table>
-
-
-
-##### Request:
-
+##### Request
 
 ```json
 {
@@ -323,10 +81,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -343,10 +98,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 400:
-
+##### Response 400
 
 ```json
 {
@@ -367,10 +119,7 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
-
-
-##### Response 403:
-
+##### Response 403
 
 ```json
 {
@@ -384,49 +133,22 @@ Example: <code>api.iqm.com</code>
 }
 ```
 
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-For full documentation on the Login API, see [https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
-
-
-## Step 2: Request column list
+### Step 2: Request column list
 
 To upload a matched audience, you must provide a list of mapping between IQM-allowed fields and columns in your file. Use the column list endpoint to request a full list of allowed columns for mapping.
 
-
-
-* `POST /api/v3/audience/static/matched/column-list`
-
+* `POST` /api/v3/audience/static/matched/column-list
 
 ##### HEADER PARAMETERS
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -522,53 +244,25 @@ Organization Workspace Id Header
 }
 ```
 
+For further information see the complete [Matched Audience Fields API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields).
 
-For complete documentation on matched audience column list API please see: 
+### Step 3: Upload matched audience
 
-[https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields)
+To upload matched audiences,  provide file columns for matching and all the necessary parameters.
 
-
-## Step 3: Upload matched audience
-
-To upload matched audiences,  provide file columns for matching and all the necessary parameters 
-
-
-
-* `POST /api/v2/audience/matched/add`
+* `POST` /api/v2/audience/matched/add
 
 
 ##### HEADER PARAMETERS
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
+##### Payload (Form Data)
 
-
-
-##### Payload (FormData)
-
-For information on FormData format see the MDN documentation: [https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data)
-
+Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
 <table>
   <tr>
@@ -600,8 +294,6 @@ SampleValue: <code>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastNa
    </td>
   </tr>
 </table>
-
-
 
 <table>
   <tr>
@@ -697,10 +389,7 @@ Column setting should be as per the selected column as follows:
   </tr>
 </table>
 
-
-
 ##### Request (FormData)
-
 
 ```
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
@@ -730,10 +419,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ--
 ```
 
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -745,10 +431,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 }
 ```
 
-
-
-##### Response 400:
-
+##### Response 400
 
 ```json
 {
@@ -760,10 +443,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 }
 ```
 
-
-
-##### Response 500:
-
+##### Response 500
 
 ```json
 {
@@ -775,21 +455,15 @@ Content-Disposition: form-data; name="fileTotalCount"
 }
 ```
 
+For further information see the complete [Matched Audience Upload API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience).
 
-For complete documentation on matched audience upload API see: [https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience) 
-
-
-## Step 4: Check audience status
+### Step 4: Check audience status
 
 Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. To get audience details use the following endpoint:
 
-
-
-* `GET /api/v2/audience/matched/{matched_audience_Id}`
-
+* `GET` /api/v2/audience/matched/{matched_audience_Id}
 
 ##### PATH PARAMETERS
-
 
 <table>
   <tr>
@@ -807,34 +481,12 @@ Before the audience can be used for campaign targeting it has to be processed an
 
 ##### HEADER PARAMETERS
 
+| Property | Type| Example |
+| ---- | ---- | --- |
+| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
 
-<table>
-  <tr>
-   <td><code>Authorization</code>
-   </td>
-   <td>any
-<p>
-Example: <code>Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24</code>
-<p>
-Authorization Bearer Token
-   </td>
-  </tr>
-  <tr>
-   <td><code>X-IAA-OW-ID</code>
-   </td>
-   <td>any
-<p>
-Example: <code>1</code>
-<p>
-Organization Workspace Id Header
-   </td>
-  </tr>
-</table>
-
-
-
-##### Response 200:
-
+##### Response 200
 
 ```json
 {
@@ -872,11 +524,9 @@ Organization Workspace Id Header
  }
 ```
 
+For further information see the complete [Matched Audience Details API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails).
 
-For complete documentation on matched audience details API see: [https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails)
-
-
-# Best Practices
+## Best Practices
 
 The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error. 
 
