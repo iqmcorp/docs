@@ -60,8 +60,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Example |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
+| `Authorization` | string (required) | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | `api.iqm.com` |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -97,6 +97,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
    }
 }
 ```
+<details>
+<summary>More Response Samples</summary>
 
 ##### Response 400
 
@@ -133,6 +135,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
+</details><br>
+
 For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
 ### Step 2: Request column list
@@ -143,10 +147,10 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
 
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
+| `Authorization` | string | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
 
 ##### Response 200
 
@@ -252,13 +256,12 @@ To upload matched audiences,  provide file columns for matching and all the nece
 
 * `POST` /api/v2/audience/matched/add
 
-
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
+| `Authorization` | string  | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
 
 ##### Payload (Form Data)
 
@@ -430,6 +433,8 @@ Content-Disposition: form-data; name="fileTotalCount"
    }
 }
 ```
+<details>
+<summary>More Response Samples</summary>
 
 ##### Response 400
 
@@ -454,6 +459,8 @@ Content-Disposition: form-data; name="fileTotalCount"
    }
 }
 ```
+</details><br>
+
 
 For further information see the complete [Matched Audience Upload API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience).
 
@@ -465,26 +472,16 @@ Before the audience can be used for campaign targeting it has to be processed an
 
 ##### PATH PARAMETERS
 
-<table>
-  <tr>
-   <td><code>matched_audience_Id</code>
-<p>
-
-    
-   </td>
-   <td><code>required</code>string
-   </td>
-  </tr>
-</table>
-
-
+| Path | Type| Description |
+| ---- | ---- | --- |
+| `mathced_audience_id` | string [required] | |
 
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
+| `Authorization` | string  | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
 
 ##### Response 200
 
