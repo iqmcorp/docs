@@ -495,8 +495,6 @@ A user can be granted access to specified apps using the following endpoint:
     "accessLevel": "Full"
 }
 ```
-<details>
-<summary>Response Samples</summary>
 
 #### Response 200
 
@@ -506,6 +504,9 @@ A user can be granted access to specified apps using the following endpoint:
     "data": "Application access added successfully."
 }
 ```
+
+<details>
+<summary>More Response Samples</summary>
 
 #### Response 403 
 
