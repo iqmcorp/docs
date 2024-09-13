@@ -104,6 +104,9 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
+<details>
+<summary>More Response Samples</summary>
+
 ##### Response 400
 
 ```json
@@ -138,6 +141,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
    ]
 }
 ```
+</details><br>
 
 For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
@@ -194,6 +198,9 @@ To upload a creative, you must provide a creative type. Use the creative type li
 }
 ```
 
+<details>
+<summary>More Response Samples</summary>
+
 ##### Response 500
 
 ```json
@@ -205,6 +212,8 @@ To upload a creative, you must provide a creative type. Use the creative type li
  }
 }
 ```
+
+</details><br>
 
 For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
 
@@ -218,9 +227,9 @@ When uploading a creative, you can provide a file and creative parameters like t
 
 | Property | Type | Example |
 | ---- | ---- | --- |
-| `X-IAA-OW-ID` | string [required] |  Example: `{{ow_id}}` |
-|  `Authorization` | string [required] | Example: `{{bearer token}}` |
-| `content-type` | string [required] | Value: `"multipart/form-data"` <br>Example: `multipart/form-data` |
+| `X-IAA-OW-ID` | string [required] | `{{ow_id}}` |
+|  `Authorization` | string [required] | `{{bearer token}}` |
+| `content-type` | string [required] | `"multipart/form-data"` |
 
 #### Payload (Form Data)
 
@@ -682,10 +691,10 @@ To run a campaign, it must be approved, check for status updates using:
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
+| `Authorization` | string  | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
 
 ##### Response 200
 

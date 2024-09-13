@@ -33,6 +33,17 @@ These guides will help you to perform the most essential tasks using the API of 
 * [Upload a Matched Audience](/Matched-Audience-Upload-API-Quickstart-Guide.md)
 * [Upload a Creative and Create a Campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
 
+## Guidelines
+
+These guidelines pages will help you navigate common methods and resources in the various endpoints available.
+
+* [User & Profile Management](user-profile-guidelines.md)
+  * [Send User Invitation](user-profile-guidelines.md#send-user-invitation)
+  * [User Sign Up](user-profile-guidelines.md#user-sign-up)
+  * [Change User Password](user-profile-guidelines.md#change-password)
+  * [Update User Profile](user-profile-guidelines.md#update-user-profile)
+  * [User Application Access](user-profile-guidelines.md#user-app-access-list)
+
 ## Requests
 
 Data resources are accessed via standard HTTP requests in UTF-8 format to an API endpoint. The IQM API uses the following HTTP methods:

@@ -40,8 +40,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Example |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
+| `Authorization` | string (required) | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string (required) | `api.iqm.com` |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -78,6 +78,9 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
+<details>
+<summary>More Response Samples</summary>
+
 ##### Response 400
 
 ```json
@@ -112,6 +115,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
    ]
 }
 ```
+
+</details><br>
 
 For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
@@ -235,10 +240,10 @@ Available metrics are:
 
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
+| `Authorization` | string | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
 
 ##### Response 200
 
@@ -352,6 +357,9 @@ Available metrics are:
 
 ```
 
+<details>
+<summary>More Response Samples</summary>
+
 ##### Response 403
 
 ```json
@@ -380,6 +388,8 @@ Available metrics are:
 }
 ```
 
+</details><br>
+
 For further information see the complete [Dimension and Metrics Details API Documentation](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails).
 
 ### Step 3: Select time zones
@@ -392,10 +402,10 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Example: `{{bearer_token}}` |
-| `X-IAA-OW-ID` | string [required] |  Example: `{{ow_id}}` |
+| `Authorization` | string | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
 
 ##### Response 200
 
@@ -411,6 +421,7 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
    ]
 }
 ```
+
 For further information see the complete [Timezone API documentation](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones).
 
 ### Step 4: Execute your report
@@ -429,7 +440,7 @@ At least one dimension is required.
 
 | Property | Type| Example |
 | ---- | ---- | --- |
-| `x-iaa-api-token` | string | Example: `{{advertiser_api_token}}` |
+| `x-iaa-api-token` | string | `{{advertiser_api_token}}` |
 
 ##### REQUEST BODY SCHEMA: application/json required
 
