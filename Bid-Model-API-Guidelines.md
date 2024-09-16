@@ -17,18 +17,19 @@ The **Include** and **Exclude** options allow the user to control where their ad
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-Iaa-Host` | string [required] | |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-HOST` | string [required] | Workspace URL |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `ids` | string [required] | |
-| `isExcluded` | integer [required] | |
-| `campaignId | integer [required] | |
+| `ids` | string [required] | ID of entity |
+| `isExcluded` | integer [required] | Allow targeted entity (`0`) or block targeted entity (`1`) |
+| `campaignId` | integer [required] | Unique campaign ID |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -38,13 +39,13 @@ The **Include** and **Exclude** options allow the user to control where their ad
 }
 ```
 
-#### Response 200 Sample (deviceType)
+Response 200 Sample (deviceType)
 
 ```json
 {
     "statusCode": 200,
     "responseObject": {
-        "message": "Device Types excluded successfully."
+        "message": "The Device Types have been allowed."
     }
 }
 ```
@@ -59,15 +60,15 @@ This API allows users to target entities by updating their status to either incl
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `campaignId` | integer [required] | Unique Id of campaign |
-| `dimensionId` | integer [required] | Unique Id of dimension |
+| `campaignId` | integer [required] | Unique ID of campaign |
+| `dimensionId` | integer [required] | Unique ID of dimension |
 
 #### Header Parameters 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
@@ -75,13 +76,14 @@ This API allows users to target entities by updating their status to either incl
 | ---- | ---- | --- |
 | `advertiserId` | integer | Unique ID of advertiser |
 | `dspId` | integer | | 
-| `owId` | integer | Organization workspace Id |
-| `uowId` | integer | User organization workspace Id |
-| `campaignId` | integer | Unique Id of campaign |
-| `ids` | string | Creative Id |
-| `isExcluded` | integer | Target entity = `0`; Block entity = `1`
+| `owId` | integer | Organization workspace ID |
+| `uowId` | integer | User organization workspace ID |
+| `campaignId` | integer | Unique ID of campaign |
+| `ids` | string | Creative ID |
+| `isExcluded` | integer | Target entity (`0`); Block entity (`1`)
 
-#### Request Sample (creatives)
+\
+Request Sample (creatives)
 
 ```json
 {
@@ -90,7 +92,7 @@ This API allows users to target entities by updating their status to either incl
 }
 ```
 
-#### Response 200 Sample (creatives)
+Response 200 Sample (creatives)
 
 ```json
 {
@@ -99,7 +101,7 @@ This API allows users to target entities by updating their status to either incl
 }
 ```
 
-## Manage Campaign Priority
+## Campaign Priority Management
 
 Assigning priority to campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Use the following endpoint to assign priority (ranging 1 to 10) to multiple `campaignId`s with the same API:
 
@@ -109,7 +111,6 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| Insertion Order | any [required] | Unique identifier for insertion order |
 | `ioId` | integer [required] | Unique identifier for insertion order | 
 
 #### Header Parameters
@@ -117,7 +118,7 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
@@ -129,9 +130,10 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 | `updatePriority` | object | Update assigned priority to one or multiple campaigns, requires `priority` and `campaignIds` |
 | `deletePriority` | object | Deletes assigned priority from one or multiple campaigns, requires `priority` and `campaignIds` |
 | `priority` | integer [required] | Assigned priority: [1 .. 10]
-| `campaignIds` | array of integers [required] | Array of unique campaign Ids |
+| `campaignIds` | array of integers [required] | Array of unique campaign IDs |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -221,7 +223,6 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| Insertion Order | any [required] | Unique identifier for insertion order |
 | `ioId` | integer [required] | Unique identifier for insertion order | 
 
 #### Header Parameters
@@ -229,25 +230,26 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `priority` | integer [required] | Assigned priority: [1 .. 10]
-| `campaignIds` | array of integers [required] | Array of unique campaign Ids |
+| `campaignIds` | array of integers [required] | Array of unique campaign IDs |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
     "priority": 1,
     "campaignIdList": [
-        1,
-        2,
-        3,
-        4
+        123456,
+        234567,
+        345678,
+        456789
     ]
 }
 ```
@@ -258,5 +260,267 @@ Response 200
 {
     "success": true,
     "data": "Priority Updated Successfully"
+}
+```
+
+## Get Metrics Report For a Given Campaign and Dimension
+
+Generate a detailed metrics for a specific campaign, segmented by dimension with the following endpoint:
+
+* `POST` api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}
+
+#### Path Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `campaignId` | integer [required] | The campaign ID for which the report is being generated |
+| `dimensionId` | integer [required] | The dimension ID for which the report is being generated |
+
+#### Query Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `searchField` | string | Default: `""` |
+| `sortBy` | string | Default: `"-impressions"` |
+| `pageNo` | integer | Default: `1` |
+| `pageSize` | integer | Default: `50` |
+| `timeZoneId` | integer | ID of time zone |
+| `startDate` | integer | Unix timestamp of campaign start date |
+| `endDate` | integer | Unix timestamp of campaign end date |
+
+#### Header Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+
+#### Request Body Schema: application/json
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `name` | string | |
+| `fileName` | string| |
+| `activeTable` | string | 
+| `columns` | object | Contains `label` and `value` properties
+| `label` | string | | 
+| `value` | string| | 
+| `calledApp` | string | |
+| `fileType` | string | Desired file type for generated report
+| `token` | string | Access token
+| `download` | boolean | Generate download url (`true`)
+
+Sample Request
+
+```json
+{
+    "name": "Nisha T",
+    "fileName": "Stage Shared Advertiser_deal_id_1708536470049",
+    "activeTable": "deal_id",
+    "columns": [
+        {
+            "label": "Deal ID",
+            "value": "name"
+        },
+        {
+            "label": "eCPM($)",
+            "value": "eCPM"
+        }
+    ],
+    "calledApp": "bidModel",
+    "fileType": "csv",
+    "token": "fd5b502b-3c49-4703-83d9-df1b397011a2",
+    "download": true
+}
+```
+
+Sample Response
+
+```json
+{
+    "success": true,
+    "data": {
+        "url": "DownloadURL"
+    }
+}
+```
+
+<details>
+<summary>More Responses</summary>
+
+Response 403
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Forbidden!"
+        }
+    ]
+}
+```
+
+Response 422
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "The campaign ID is missing or invalid. Please provide a valid campaign ID."
+        }
+    ]
+}
+```
+
+Response 500
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "server encountered an error !"
+        }
+    ]
+}
+```
+
+</details>
+
+## Get List of Bid Model Dimensions
+
+This API will provide values of bid-model dimensions and sub-dimensions with the following endpoint:
+
+* `GET` /api/v3/bm/static/dimensions
+
+#### Resource Properties
+
+| Dimension ID | Dimension Name | Description |
+| :---: | --- | --- |
+| 1 | Creative |
+| 2 | Inventory |
+| 3 | Deal ID | Subdimension of Inventory
+| 4 | Open Exchange | Subdimension of Inventory
+| 5 | Publisher Category | Subdimension of Inventory
+| 6 | Device | |
+| 7 | Traffic Type | Subdimension of Device
+| 8 | Device Type | Subdimension of Device
+| 9 | Location | |
+| 10 | State | Subdimension of Location |
+| 11 | City | Subdimension of Location |
+| 12 | Zip | Subdimension of Location | 
+| 13 | Exchange | |
+
+\
+Response Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 5,
+        "filteredRecords": 5,
+        "dimensions": [
+            {
+                "name": "creative",
+                "id": 1,
+                "label": "Creative",
+                "order": 1,
+                "modellingEnabled": true
+            },
+            {
+                "name": "inventory",
+                "id": 2,
+                "label": "Inventory",
+                "order": 2,
+                "modellingEnabled": false,
+                "subdimensions": [
+                    {
+                        "name": "deal_id",
+                        "id": 3,
+                        "label": "Deal ID",
+                        "order": 1,
+                        "modellingEnabled": false
+                    },
+                    {
+                        "name": "open_exchange",
+                        "id": 4,
+                        "label": "Open Exchange",
+                        "order": 2,
+                        "modellingEnabled": false
+                    },
+                    {
+                        "name": "publisher_category",
+                        "id": 5,
+                        "label": "Publisher Category",
+                        "order": 3,
+                        "modellingEnabled": false
+                    }
+                ]
+            },
+            {
+                "name": "device",
+                "id": 6,
+                "label": "Device",
+                "order": 3,
+                "modellingEnabled": false,
+                "subdimensions": [
+                    {
+                        "name": "traffic_type",
+                        "id": 7,
+                        "label": "Traffic Type",
+                        "order": 1,
+                        "modellingEnabled": false
+                    },
+                    {
+                        "name": "device_type",
+                        "id": 8,
+                        "label": "Device Type",
+                        "order": 2,
+                        "modellingEnabled": false
+                    }
+                ]
+            },
+            {
+                "name": "location",
+                "id": 9,
+                "label": "Location",
+                "order": 4,
+                "modellingEnabled": false,
+                "subdimensions": [
+                    {
+                        "name": "state",
+                        "id": 10,
+                        "label": "State",
+                        "order": 1,
+                        "modellingEnabled": false
+                    },
+                    {
+                        "name": "city",
+                        "id": 11,
+                        "label": "City",
+                        "order": 2,
+                        "modellingEnabled": false
+                    },
+                    {
+                        "name": "zip",
+                        "id": 12,
+                        "label": "Zip",
+                        "order": 3,
+                        "modellingEnabled": false
+                    }
+                ]
+            },
+            {
+                "name": "exchange",
+                "id": 13,
+                "label": "Exchange",
+                "order": 5,
+                "modellingEnabled": false
+            }
+        ]
+    }
 }
 ```
