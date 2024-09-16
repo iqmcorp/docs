@@ -37,12 +37,13 @@ These guides will help you to perform the most essential tasks using the API of 
 
 These guidelines pages will help you navigate common methods and resources in the various endpoints available.
 
-* [User & Profile Management](user-profile-guidelines.md)
-  * [Send User Invitation](user-profile-guidelines.md#send-user-invitation)
-  * [User Sign Up](user-profile-guidelines.md#user-sign-up)
-  * [Change User Password](user-profile-guidelines.md#change-password)
-  * [Update User Profile](user-profile-guidelines.md#update-user-profile)
-  * [User Application Access](user-profile-guidelines.md#user-app-access-list)
+* [User & Profile Management](User-Profile-Guidelines.md)
+  * [Send User Invitation](User-Profile-Guidelines.md#send-user-invitation)
+  * [User Sign Up](User-Profile-Guidelines.md#user-sign-up)
+  * [Change User Password](User-Profile-Guidelines.md#change-password)
+  * [Update User Profile](User-Profile-Guidelines.md#update-user-profile)
+  * [Get List of Users](User-Profile-Guidelines.md#get-list-of-users)
+  * [User Application Access](User-Profile-Guidelines.md#user-app-access-list)
 
 ## Requests
 

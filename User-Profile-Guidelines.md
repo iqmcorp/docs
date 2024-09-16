@@ -24,7 +24,8 @@ Any customer or organization can send invitations to one or more users by provid
 | `email` | string [required] | User's email |
 | `name` | string [required] | User's name
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -33,7 +34,7 @@ Any customer or organization can send invitations to one or more users by provid
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -54,7 +55,8 @@ The invited user will receive an email with a link and a hash which can be valid
 | ---- | ---- | --- |
 | `inviteHash` | string [required] | Unique invite hash sent to invited user
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -62,7 +64,7 @@ The invited user will receive an email with a link and a hash which can be valid
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -76,7 +78,7 @@ The invited user will receive an email with a link and a hash which can be valid
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 422
+Response 422
 
 ```json
 {
@@ -99,9 +101,9 @@ A user/customer can sign up and create a password to access the API using the fo
 
 #### Header Parameters
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2`
+| `Authorization` | string [required] | Authorization bearer token |
 
 #### Request Body Schema: application json
 
@@ -110,7 +112,8 @@ A user/customer can sign up and create a password to access the API using the fo
 | `email` | string [required] | User's email |
 | `password` | string [required] | User's password |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -119,7 +122,7 @@ A user/customer can sign up and create a password to access the API using the fo
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -137,7 +140,7 @@ A user/customer can sign up and create a password to access the API using the fo
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 403
+Response 403
 
 ```json
 {
@@ -161,10 +164,10 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 
 #### Header Parameters
 
-| Property | Type | Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] |  `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string [required] | `app.stage.inhousebuying.com` |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-Iaa-Host` | string [required] | Workspace URL |
 
 #### Request Body Schema
 
@@ -174,7 +177,8 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 | `email` | string [required] | User's email |
 | `password` | string [required] | User's password |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -184,7 +188,7 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -203,7 +207,7 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 400
+Response 400
 
 ```json
 {
@@ -222,7 +226,7 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 }
 ```
 
-#### Response 403
+Response 403
 
 ```json
 {
@@ -243,7 +247,8 @@ The user can log out from the API using the following endpoing:
 
 * `POST` /api/v3/ua/logout
 
-#### Response Sample
+\
+Response Sample
 
 ```json
 {
@@ -265,7 +270,8 @@ The user can update their password with the following endpoint:
 | `email` | string [required] | User's email |
 | `password` | string [required] | User's password |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -274,7 +280,7 @@ The user can update their password with the following endpoint:
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -286,7 +292,7 @@ The user can update their password with the following endpoint:
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 403
+Response 403
 
 ```json
 {
@@ -312,7 +318,8 @@ The user can send a link to reset a password to a specified email using the foll
 | ---- | ---- | --- |
 | `email` | string [required] | User's email |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -320,7 +327,7 @@ The user can send a link to reset a password to a specified email using the foll
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -332,7 +339,7 @@ The user can send a link to reset a password to a specified email using the foll
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 404
+Response 404
 
 ```json
 {
@@ -368,7 +375,8 @@ The user's profile display name and avatar can be updated with the following end
 | `userAvatar` | string [required] | If `removeUserProfile` set to -true, can remain null, otherwise: Image file uploaded for profile |
 | `removeUserProfile` | boolean [required] | default: -false <br>To remove profile image: -true |
 
-#### Response 200 
+\
+Response 200 
 
 ```json
 {
@@ -383,7 +391,7 @@ The user's profile display name and avatar can be updated with the following end
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 422
+Response 422
 
 ```json
 {
@@ -398,6 +406,106 @@ The user's profile display name and avatar can be updated with the following end
 
 </details>
 
+## Get List of Users
+
+Get a list of users and details for a given workspace ID with the following endpoint:
+
+* `GET` /api/v3/ua/users/list
+
+#### Query Parameters
+
+| Property | Type | Example | Description |
+| ---- | ---- | --- | --- |
+| `status` | string [required] | `status=1` | Status of user, default: `""` |
+| `pageNo` | integer [required] | `pageNo=1` | (optional) Page number (default: `1`) |
+| `limit` | integer [required] | `limit=10` | (optional) Page size (deafult: `10`) |
+| `sortBy` | string [required] | `sortBy=+displayName` | (optional) Sort the result set by specific field (deafult: `+displayName`) For ascending use plus(+) sign and for descending use minus(-) sign |
+| `searchField` | string [required] | `searchField=iqm` | (optional) Search keyword, default: `""` |
+
+#### Header Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+
+#### Resource Properties
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `userId` | integer | Unique user ID |
+| `firstName` | string | User's first name |
+| `lastName` | string | User's last name |
+| `email` | string | User's email |
+| `displayName` | string | User's display name |
+| `status` | string | User's status |
+| `statusId` | integer | Status ID |
+| `userAvatar` | string | Image file uploaded for profile |
+| `createdAt` | integer | Unix timestamp in Milliseconds when account was created |
+| `uowId` | integer | User Organization Workspace ID |
+| `customersCount` | integer | Count of customers assigned to user |
+| `organizationName` | string | Organization associated with user |
+| `invitedOn` | integer | Unix timestamp in Milliseconds when user was invited to create account |
+| `isOrganizationOwnerUSer` | boolean | User is owner of organization (`true`) or not (`false`) |
+| `isModifactionAllowed` | boolean | User is allowed to modify (`true`) or not (`false`) |
+| `invitedByUserName` | string | Name of user that invited user |
+| `invitedByUserEmail` | string | Email of user that invited user |
+| `isAssignActionAllowed` | boolean | User is allowed to assign (`true`) or not (`false) |
+
+\
+Response Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "userId": 7130,
+                "firstName": "sample adv user -2",
+                "lastName": "2",
+                "email": "sample-user@iqm.com",
+                "displayName": "sample adv user - 2",
+                "status": "active",
+                "statusId": 1,
+                "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/K2.png",
+                "createdAt": 1705452608000,
+                "uowId": 119592,
+                "customersCount": 0,
+                "organizationName": "Adv Acc 1",
+                "invitedOn": 1705452608000,
+                "isOrganizationOwnerUser": false,
+                "isModificationAllowed": true,
+                "invitedByUserName": "User 2",
+                "invitedByUserEmail": "user2@iqm.com",
+                "isAssignActionAllowed": true
+            },
+            {
+                "userId": 7131,
+                "firstName": "sample-adv-user-3",
+                "email": "sample-user1@iqm.com",
+                "displayName": "sample-adv-user-3",
+                "status": "invited",
+                "statusId": 3,
+                "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/KH.png",
+                "createdAt": 1705466349000,
+                "uowId": 119595,
+                "customersCount": 0,
+                "organizationName": " Adv Acc",
+                "invitedOn": 1705466349000,
+                "isOrganizationOwnerUser": false,
+                "isModificationAllowed": true,
+                "invitedByUserName": "User 1",
+                "invitedByUserEmail": "user1@iqm.com",
+                "isAssignActionAllowed": true
+            },
+        ],
+        "totalRecords": 6,
+        "filteredRecords": 2
+    }
+}
+```
+
 ## User App Access List
 
 See what applications a user has access to, use query parameters to filter results with the following endpoint:
@@ -408,11 +516,11 @@ See what applications a user has access to, use query parameters to filter resul
 
 | Property | Type | Example | Description |
 | ---- | ---- | --- | --- |
-| `uowId` | string [required] | `uowId=495` | uow ID of selected user |
-| `searchField` | string [required] | `searchField="iqm"` | (optional) Search keyword |
+| `uowId` | integer [required] | `uowId=495` | User Organization Workspace ID |
+| `searchField` | string [required] | `searchField=iqm` | (optional) Search keyword |
 | `pageNo` | integer [required] | `pageNo=1` | (optional) Page number (default - 1) |
 | `limit` | integer [required] | `limit=10` | (optional) Page size (deafult - 10) |
-| `sortBy` | string [required] | `sortBy=+appName` | (optional) Sort by fields (deafult: +`appName`) Here minus(-) sign is for order DESC and plus(+) sign for order ASC. Value can be from `appName`, `appType` |
+| `sortBy` | string [required] | `sortBy=+appName` | (optional) Sort by fields (deafult: `+appName`) Here minus(-) sign is for descending order and plus(+) sign for ascending order. Value can be from `appName`, `appType` |
 
 #### Header Parameters
 
@@ -421,7 +529,8 @@ See what applications a user has access to, use query parameters to filter resul
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
 
-#### Response 200
+\
+Response 200
 
 ```json
 {
@@ -450,7 +559,7 @@ See what applications a user has access to, use query parameters to filter resul
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 422
+Response 422
 
 ```json
 {
@@ -486,7 +595,8 @@ A user can be granted access to specified apps using the following endpoint:
 | `appIds` | string [required] | Application ID |
 | `accessLevel` | string [required] | Level of access granted to user |
 
-#### Request Sample
+\
+Request Sample
 
 ```json
 {
@@ -496,7 +606,7 @@ A user can be granted access to specified apps using the following endpoint:
 }
 ```
 
-#### Response 200
+Response 200
 
 ```json
 {
@@ -508,7 +618,7 @@ A user can be granted access to specified apps using the following endpoint:
 <details>
 <summary>More Response Samples</summary>
 
-#### Response 403 
+Response 403 
 
 ```json
 {
