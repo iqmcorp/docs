@@ -58,26 +58,27 @@ This quick start will help you to create a Campaign and upload Creative.  At a m
 
 ### Step 1: Log in
 
-To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), a unique identifier for each organization. This ID will be used for any further API communications.
+To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), a unique identifier for each organization. This ID will be used for any further API communications.
 
 * `POST` /api/v3/ua/login
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Example: `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | Example: `api.iqm.com` |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-Iaa-Host` | string [required] | Workspace URL |
 
 #### REQUEST BODY SCHEMA: application/json
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string (required) | Your user account email |
-| `password` | string (required) | Your user accout password |
+| `grantType` | string [required] | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` | string [required] | Your user account email |
+| `password` | string [required] | Your user accout password |
 
-##### Request
+\
+Request Sample
 
 ```json
 {
@@ -87,7 +88,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
-##### Response 200
+Response 200
 
 ```json
 {
@@ -107,7 +108,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 <details>
 <summary>More Response Samples</summary>
 
-##### Response 400
+Response 400
 
 ```json
 {
@@ -128,7 +129,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
-##### Response 403
+Response 403
 
 ```json
 {
@@ -153,12 +154,13 @@ To upload a creative, you must provide a creative type. Use the creative type li
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Example: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24 <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: 1 <br> Organization Workspace Id Header |
+| `Authorization` | string | Authorization Bearer Token |
+| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
 
-##### Response 200
+\
+Response 200
 
 ```json
 {
@@ -201,7 +203,7 @@ To upload a creative, you must provide a creative type. Use the creative type li
 <details>
 <summary>More Response Samples</summary>
 
-##### Response 500
+Response 500
 
 ```json
 {
@@ -225,13 +227,13 @@ When uploading a creative, you can provide a file and creative parameters like t
 
 #### HEADER PARAMETERS
 
-| Property | Type | Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `X-IAA-OW-ID` | string [required] | `{{ow_id}}` |
-|  `Authorization` | string [required] | `{{bearer token}}` |
-| `content-type` | string [required] | `"multipart/form-data"` |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `content-type` | string [required] | Media type of the resource |
 
-#### Payload (Form Data)
+#### Request Body Schema: application/x-www-form-urlencoded
 
 | Property | Type | Definition |
 | ---- | ---- | --- |
@@ -240,7 +242,8 @@ When uploading a creative, you can provide a file and creative parameters like t
 
 Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
-##### Request (Form Data)
+\
+Request Sample (Form Data)
 
 ```
 ------WebKitFormBoundaryyTwoz48E2hTuXZoX
@@ -285,7 +288,7 @@ x}¼=Þà×àËðûñ§ð7ðCø12ÁàJ#p    ùM}NÂ5Â a¨B4#º�
 J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅÝuc·×î¦jÝêê/?ó¾·ÇOkiMÙ^ìÞÜ½ÏöÅìëþ�þKC­VmIí·:A¬>¢þ|sCÃ~ýáFiãðÄ×úlo²nÚÓLm.9IShow more
 ```
 
-##### Response 201
+Response 201
 
 ```json
 {
@@ -315,16 +318,17 @@ To create a campaign, creative must be processed and approved, check for status 
 
 | Property | Type | Definition |
 | --- | --- | --- |
-| `creative_id` | string [required] | Unique ID of Creative
+| `creative_id` | string [required] | Unique ID of Creative |
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
 
-##### Response 200
+\
+Response 200
 
 ```json
 {
@@ -392,10 +396,10 @@ To create a campaign, specify the creative and targeting parameters using the AP
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string  |Example: `Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24` <br>Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Example: `1` <br>Organization Workspace Id Header |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -498,7 +502,8 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `creativeAdvanceTargeting` | JSON Map: string to integer | Map of Creative advanced targeting group to list of creative advance targeting segment ids. |
 | `campaignEstimatorMetaData` | JSON | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
 
-##### Scheduling example
+\
+Scheduling example
 
 ```json
 "scheduling": {
@@ -515,7 +520,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 }
 ```
 
-##### GeoRadiusDetails example (below is the common format for whitelist and blacklist both)
+GeoRadiusDetails example (below is the common format for whitelist and blacklist both)
 
 ```json
 "whiteListedGeoRadiusDetails" : [
@@ -600,7 +605,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 ]
 ```
 
-##### Request
+Request Sample
 
 ```json
 {
@@ -638,7 +643,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 }
 ```
 
-##### Response 201
+Response 201
 
 ```json
 {
@@ -651,7 +656,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 }
 ```
 
-##### Response 400
+Response 400
 
 ```json
 {
@@ -663,7 +668,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 }
 ```
 
-##### Response 500
+Response 500
 
 ```json
 {
@@ -696,7 +701,8 @@ To run a campaign, it must be approved, check for status updates using:
 | `Authorization` | string  | Authorization Bearer Token |
 | `X-IAA-OW-ID` | string | Organization Workspace Id Header |
 
-##### Response 200
+\
+Response 200
 
 ```json
 {
