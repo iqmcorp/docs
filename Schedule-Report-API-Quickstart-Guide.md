@@ -26,7 +26,7 @@ This quick start guide will help you create a report scheduling event. At a mini
 
 ### Step 1: Log In
 
-To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), which is a unique identifier for each organization. This ID will be used for any further API communications.
+To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
 * `POST` /api/v3/ua/login
 
@@ -34,8 +34,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Example |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | `api.iqm.com` |
+| `Authorization` | string  | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
+| `X-Iaa-Host` | string | `api.iqm.com` |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -64,7 +64,8 @@ Decide the delivery frequency, day, and end date of scheduled reports. This API 
 | `runningTotalEnabled` | boolean [Optional] | Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension. If this is true the start-date for the report duration should be the EARLIEST campaign start date, so the report-time-period will be from the Earliest-campaign-start-date to the report-end-date. |
 | `earliestCampaignDate` | integer [Required] | With `runningTotalEnabled` as `true`, this should be a long TIME EPOCH in UNIX format, in milliseconds. This is campaign's EARLIEST start date from the selected campaigns, which will be set as the start date of the report-time-period. |
 
-##### Request
+\
+Request Sample
 
 ```json
 {
@@ -82,7 +83,7 @@ Decide the delivery frequency, day, and end date of scheduled reports. This API 
 }
 ```
 
-##### Response 200
+Response 200
 
 ```json
 {
