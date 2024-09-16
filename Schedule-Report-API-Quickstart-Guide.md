@@ -1,4 +1,4 @@
-# Quickstart Guide: Create a Report Scheduling Event
+# Quickstart Guide: Schedule a Report
 
 IQM's API allows you to create report scheduling events.
 
@@ -15,13 +15,13 @@ Reports can be either **daily** or **aggregated**. The daily report will include
 
 You can run a report containing up to three months of data for any dimension combination or up to one year for the campaign dimension. You must run multiple reports if you need more than that amount of data.
 
-## Create a Report Scheduling Event
+## Schedule a Report
 
 This quick start guide will help you create a report scheduling event. At a minimum, you must log in, have a campaign started, in order to execute reports. Once these steps have been completed, you can create a scheduling event.
 
 1. Log In
     * Optional if you have already logged in and have a token
-1. Create Scheduling Event
+1. Schedule a Report
     * Execute scheduling event with frequency, day, and end date parameters
 
 ### Step 1: Log In
@@ -45,7 +45,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 | `email` | string (required) | Your user account email |
 | `password` | string (required) | Your user accout password |
 
-### Step 2: Create Scheduling Event
+### Step 2: Schedule a Report
 
 Decide the delivery frequency, day, and end date of scheduled reports. This API will save the delivery information and return a success message.
 
