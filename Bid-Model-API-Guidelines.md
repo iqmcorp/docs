@@ -524,3 +524,110 @@ Response Sample
     }
 }
 ```
+
+## Get Campaign Dimension Counts
+
+Retrieves counts of dimensions for a specific campaign within a given date range with the following endpoint:
+
+* `GET` /api/v3/bm/campaigns/{campaignId}/dimensions/count
+
+#### Path Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `campaignId` | integer [required] | The campaign ID for which the report is being generated |
+
+#### Query Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `startDate` | integer | Unix timestamp for campaign start date | 
+| `endDate` | integer | Unix timestamp for campaign end date |
+
+#### Header Parameters
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+
+\
+Sample Response
+
+```json
+{
+    "success": true,
+    "data": {
+        "creative": 2,
+        "dealId": 0,
+        "openExchange": 0,
+        "publisherCategory": 0,
+        "trafficType": 2,
+        "deviceType": 4,
+        "state": 0,
+        "city": 0,
+        "zip": 0,
+        "exchange": 18
+    }
+}
+```
+
+<details>
+<summary>More Response</summary>
+
+Response 400
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Missing required parameter: 'startDate'. Type: long",
+            "field": "startDate"
+        }
+    ]
+}
+```
+
+Response 403
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Forbidden!"
+        }
+    ]
+}
+```
+
+Response 422
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "No campaign found with given campaign Id"
+        }
+    ]
+}
+```
+
+Response 500
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "server encountered an error !"
+        }
+    ]
+}
+```
+
+
+</details>
+
