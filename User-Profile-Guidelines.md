@@ -15,7 +15,7 @@ Any customer or organization can send invitations to one or more users by provid
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
@@ -167,7 +167,7 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-Iaa-Host` | string [required] | Workspace URL |
+| `X-IAA-HOST` | string [required] | Workspace URL |
 
 #### Request Body Schema
 
@@ -365,7 +365,7 @@ The user's profile display name and avatar can be updated with the following end
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/x-www-form-urlencoded
 
@@ -427,7 +427,7 @@ Get a list of users and details for a given workspace ID with the following endp
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Resource Properties
 
@@ -527,7 +527,7 @@ See what applications a user has access to, use query parameters to filter resul
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
 Response 200
@@ -585,7 +585,7 @@ A user can be granted access to specified apps using the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### Request Body Schema: application/json
 
