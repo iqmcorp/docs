@@ -29,7 +29,7 @@ An hour after running a campaign, you can generate reports on it.
 These guides will help you to perform the most essential tasks using the API of the IQM platform:
 
 * [Create a Report](/Reporting-API-Quickstart-Guide.md)
-* [Create a Report Scheduling Event](/Schedule-Report-API-Quickstart-Guide.md)
+* [Schedule a Report](/Schedule-Report-API-Quickstart-Guide.md)
 * [Upload a Matched Audience](/Matched-Audience-Upload-API-Quickstart-Guide.md)
 * [Upload a Creative and Create a Campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
 
