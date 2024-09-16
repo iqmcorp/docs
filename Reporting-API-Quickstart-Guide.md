@@ -32,26 +32,27 @@ This quick start will help you run a basic IQM report.  At a minimum, you must l
 
 ### Step 1: Log in
 
-To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), which is a unique identifier for each organization. This ID will be used for any further API communications.
+To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
 * `POST` /api/v3/ua/login
 
 #### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-Iaa-Host` | string (required) | `api.iqm.com` |
+| `Authorization` | string [required] | Authorization bearer token |
+| `X-Iaa-Host` | string [required] | Workspace URL |
 
 #### REQUEST BODY SCHEMA: application/json
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string (required) | Your user account email |
-| `password` | string (required) | Your user accout password |
+| `grantType` | string [required] | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` | string [required] | Your user account email |
+| `password` | string [required] | Your user accout password |
 
-##### Request
+\
+Request Sample
 
 ```json
 {
@@ -61,7 +62,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
-##### Response 200
+Response 200
 
 ```json
 {
@@ -81,7 +82,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 <details>
 <summary>More Response Samples</summary>
 
-##### Response 400
+Response 400
 
 ```json
 {
@@ -102,7 +103,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 }
 ```
 
-##### Response 403
+Response 403
 
 ```json
 {
@@ -245,7 +246,8 @@ Available metrics are:
 | `Authorization` | string | Authorization Bearer Token |
 | `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
 
-##### Response 200
+\
+Response 200
 
 ```json
 {
@@ -360,7 +362,7 @@ Available metrics are:
 <details>
 <summary>More Response Samples</summary>
 
-##### Response 403
+Response 403
 
 ```json
 {
@@ -374,7 +376,7 @@ Available metrics are:
 }
 ```
 
-##### Response 500
+Response 500
 
 ```json
 {
@@ -407,7 +409,8 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 | `Authorization` | string | Authorization Bearer Token |
 | `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
 
-##### Response 200
+\
+Response 200
 
 ```json
 {
@@ -438,9 +441,9 @@ At least one dimension is required.
 
 ##### HEADER PARAMETERS
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `x-iaa-api-token` | string | `{{advertiser_api_token}}` |
+| `x-iaa-api-token` | string | Advertiser API Token |
 
 ##### REQUEST BODY SCHEMA: application/json required
 
@@ -453,14 +456,15 @@ At least one dimension is required.
 | `columns` | Array of strings | List of metrics for the report obtained from dimensions and metrics details API | 
 | `timezoneId` | integer | `int32` Timezone ID from the timezones API |
 | `requestType` | integer | `int32` ID to identify if the report request is Daily ["1"] or Aggregated ["2"]. |
-| `reportAggregated` | string | Field to identify if the first report dimension is Aggregated ["1"] or not["0"]. |
+| `reportAggregated` | string | Field to identify if the first report dimension is Aggregated ["1"] or not ["0"]. |
 |`timezoneName` | string | Timezone name from timezones API |
 | `filters` | object | Filter values to filter dimensions |
 | `pageNo` | integer | `int32` Pagination parameter, page number. |
 | `noOfEntries` | integer | `int32` Pagination paramter, records per page. |
-| `sortBy` | string | Dimension or metric to sort by, if prefixed by “-” then descending “-impressions”. |
+| `sortBy` | string | Dimension or metric to sort by, if prefixed by “-” then descending: “-impressions”. |
 
-##### Request
+\
+Request Sample
 
 ```json
 {
@@ -491,7 +495,7 @@ At least one dimension is required.
 }
 ```
 
-##### Response 200
+Response 200
 
 ```json
 {
