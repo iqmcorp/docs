@@ -37,13 +37,21 @@ These guides will help you to perform the most essential tasks using the API of 
 
 These guidelines pages will help you navigate common methods and resources in the various endpoints available.
 
-* [User & Profile Management](User-Profile-Guidelines.md)
-  * [Send User Invitation](User-Profile-Guidelines.md#send-user-invitation)
-  * [User Sign Up](User-Profile-Guidelines.md#user-sign-up)
-  * [Change User Password](User-Profile-Guidelines.md#change-password)
-  * [Update User Profile](User-Profile-Guidelines.md#update-user-profile)
-  * [Get List of Users](User-Profile-Guidelines.md#get-list-of-users)
-  * [User Application Access](User-Profile-Guidelines.md#user-app-access-list)
+#### [Bid Model API](/Bid-Model-API-Guidelines.md)
+
+* [Include/Exclude Management](/Bid-Model-API-Guidelines.md#includeexclude-management)
+* [Campaign Priority Management](/Bid-Model-API-Guidelines.md#campaign-priority-management)
+* [Generate Metrics Report For a Given Campaign and Dimension](/Bid-Model-API-Guidelines.md#get-metrics-report-for-a-given-campaign-and-dimension)
+* [Get List of Bid Model Dimensions](/Bid-Model-API-Guidelines.md#get-list-of-bid-model-dimensions)
+
+#### [User & Profile Management](User-Profile-Guidelines.md)
+
+* [Send User Invitation](User-Profile-Guidelines.md#send-user-invitation)
+* [User Sign Up](User-Profile-Guidelines.md#user-sign-up)
+* [Change User Password](User-Profile-Guidelines.md#change-password)
+* [Update User Profile](User-Profile-Guidelines.md#update-user-profile)
+* [Get List of Users](User-Profile-Guidelines.md#get-list-of-users)
+* [User Application Access](User-Profile-Guidelines.md#user-app-access-list)
 
 ## Requests
 
