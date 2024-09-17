@@ -67,7 +67,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-Iaa-Host` | string [required] | Workspace URL |
+| `X-IAA-HOST` | string [required] | Workspace URL |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -157,7 +157,7 @@ To upload a creative, you must provide a creative type. Use the creative type li
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string | Authorization Bearer Token |
-| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
+| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
 Response 200
@@ -230,7 +230,7 @@ When uploading a creative, you can provide a file and creative parameters like t
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 | `content-type` | string [required] | Media type of the resource |
 
 #### Request Body Schema: application/x-www-form-urlencoded
@@ -325,7 +325,7 @@ To create a campaign, creative must be processed and approved, check for status 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
 Response 200
@@ -399,7 +399,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -410,7 +410,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `budgetTotal` | integer | Total budget |
 | `campaignName` | string | name of campaign |
 | `campaignType` | integer | Campaign type id |
-| `creativeIds` | string | Comma separated creative Ids |
+| `creativeIds` | string | Comma separated creative IDs |
 | `creativeType` | integer | Creative type id |
 | `isAgreementChecked` | boolean | agreement check |
 | `maxBid` | integer | max bid |
@@ -436,13 +436,13 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `os` [optional] | string | OS targeting. Value in form of string of comma separated IDs of targeted OS. |
 | `osVersion` [optional] | string | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS. |
 | `exchanges` [optional] | string | Targeted exchanges. Value in form of string of comma separated IDs of exchanges. |
-| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment Ids to attach campaign to segment Ids. |
-| `whiteListedDeviceId` [optional] | string | Target Device Ids. Value in form of string of comma separated device IDs. |
+| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment IDs to attach campaign to segment IDs. |
+| `whiteListedDeviceId` [optional] | string | Target Device IDs. Value in form of string of comma separated device IDs. |
 | `whiteListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
 | `whiteListedAppId` [optional] | string | iOS app ID |
 | `whiteListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
 | `whiteListedSiteDomain` [optional] | string | Target sites. Value in form of string of comma separated domain urls. |
-| `blackListedDeviceId` [optional] | string | Target Device Ids. Value in form of string of comma separated device IDs. |
+| `blackListedDeviceId` [optional] | string | Target Device IDs. Value in form of string of comma separated device IDs. |
 | `blackListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
 | `blackListedAppId` [optional] | string | iOS app ID |
 | `blackListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
@@ -459,7 +459,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `whiteListedConversionTagIds` [optional] | string | Target already created conversion tags. Value in form of string of comma separated IDs. |
 | `userDealId` [optional] | string | User specific deal IDs. Value in form of string of comma separated deal IDs. |
 | `groupDealId` [optional] | string | Group of selected deals. Value in form of string of comma separated deal IDs. |
-| `politicalAdvertiserClientId` [optional] | integer | Id of political advertiser in case of campaign is political campaign. |
+| `politicalAdvertiserClientId` [optional] | integer | ID of political advertiser in case of campaign is political campaign. |
 | `stateIds` [optional] | string | State Target (It will be considered as White list State Target). Value in form of string of comma separated IDs. |
 | `whiteListedStateIds` [optional] | string | White list State Target . Value in form of string of comma separated IDs. |
 | `blackListedStateIds` [optional] | string | Black list State Target . Value in form of string of comma separated IDs. |
@@ -699,7 +699,7 @@ To run a campaign, it must be approved, check for status updates using:
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string  | Authorization Bearer Token |
-| `X-IAA-OW-ID` | string | Organization Workspace Id Header |
+| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
 Response 200
