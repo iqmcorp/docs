@@ -41,7 +41,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
-| `X-Iaa-Host` | string [required] | Workspace URL |
+| `X-IAA-HOST` | string [required] | Workspace URL |
 
 #### REQUEST BODY SCHEMA: application/json
 
@@ -244,7 +244,7 @@ Available metrics are:
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string | Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
+| `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
 Response 200
@@ -407,7 +407,7 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string | Authorization Bearer Token |
-| `X-IAA-OW-ID` | string |  Organization Workspace Id Header |
+| `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
 Response 200
