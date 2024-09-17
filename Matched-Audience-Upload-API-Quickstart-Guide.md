@@ -56,14 +56,16 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 * `POST` /api/v3/ua/login
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string (required) | Authorization bearer token |
 | `X-IAA-HOST` | string (required) | Workspace URL |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -71,7 +73,8 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 | `email` | string (required) | Your user account email |
 | `password` | string (required) | Your user accout password |
 
-##### Request
+\
+Request Sample
 
 ```json
 {
@@ -145,13 +148,15 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
 
 * `POST` /api/v3/audience/static/matched/column-list
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string | Authorization Bearer Token |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
+\
 Response 200
 
 ```json
@@ -256,15 +261,16 @@ To upload matched audiences,  provide file columns for matching and all the nece
 
 * `POST` /api/v2/audience/matched/add
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string  | Authorization Bearer Token |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
-
-#### Payload (Form Data)
+\
+**Payload (Form Data)**
 
 Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
@@ -434,6 +440,7 @@ Response 200
    }
 }
 ```
+
 <details>
 <summary>More Response Samples</summary>
 
@@ -471,13 +478,15 @@ Before the audience can be used for campaign targeting it has to be processed an
 
 * `GET` /api/v2/audience/matched/{matched_audience_Id}
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Path | Type| Description |
 | ---- | ---- | --- |
 | `mathced_audience_id` | string [required] | |
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
