@@ -10,14 +10,16 @@ Any customer or organization can send invitations to one or more users by provid
 
 * `POST` /api/v3/ua/user/invite
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type| Example |
 | ---- | ---- | --- |
@@ -49,7 +51,8 @@ The invited user will receive an email with a link and a hash which can be valid
 
 * `POST` /api/v3/ua/invite/validate
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -99,13 +102,15 @@ A user/customer can sign up and create a password to access the API using the fo
 
 * `POST` /api/v3/ua/sign-up
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 
-#### Request Body Schema: application json
+\
+**Request Body Schema: application json**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -162,14 +167,16 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 
 * `POST` /api/v3/ua/login
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
-#### Request Body Schema
+\
+**Request Body Schema: application/json**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -263,7 +270,8 @@ The user can update their password with the following endpoint:
 
 * `POST` /api/v3/ua/user/update-password
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -312,7 +320,8 @@ The user can send a link to reset a password to a specified email using the foll
 
 * `POST` /api/v3/ua/user/reset-password
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -360,14 +369,16 @@ The user's profile display name and avatar can be updated with the following end
 
 * `PATCH` /api/v3/ua/user/update-profile
 
-#### Header Parameters 
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/x-www-form-urlencoded
+\
+**Request Body Schema: application/x-www-form-urlencoded**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -412,7 +423,8 @@ Get a list of users and details for a given workspace ID with the following endp
 
 * `GET` /api/v3/ua/users/list
 
-#### Query Parameters
+\
+**Query Parameters**
 
 | Property | Type | Example | Description |
 | ---- | ---- | --- | --- |
@@ -422,14 +434,16 @@ Get a list of users and details for a given workspace ID with the following endp
 | `sortBy` | string [required] | `sortBy=+displayName` | (optional) Sort the result set by specific field (deafult: `+displayName`) For ascending use plus(+) sign and for descending use minus(-) sign |
 | `searchField` | string [required] | `searchField=iqm` | (optional) Search keyword, default: `""` |
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Resource Properties
+\
+**Resource Properties**
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -512,7 +526,8 @@ See what applications a user has access to, use query parameters to filter resul
 
 * `GET` /api/v3/ua/user/applications/list
 
-#### Query Parameters
+\
+**Query Parameters**
 
 | Property | Type | Example | Description |
 | ---- | ---- | --- | --- |
@@ -522,7 +537,8 @@ See what applications a user has access to, use query parameters to filter resul
 | `limit` | integer [required] | `limit=10` | (optional) Page size (deafult - 10) |
 | `sortBy` | string [required] | `sortBy=+appName` | (optional) Sort by fields (deafult: `+appName`) Here minus(-) sign is for descending order and plus(+) sign for ascending order. Value can be from `appName`, `appType` |
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -580,14 +596,16 @@ A user can be granted access to specified apps using the following endpoint:
 
 * `POST` /api/v3/ua/user/application/add
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
