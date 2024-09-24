@@ -12,7 +12,8 @@ The **Include** and **Exclude** options allow the user to control where their ad
 * `POST` /api/v2/cmp/exchange/includeExclude
 * `POST` /api/v2/cmp/trafficsource/includeExclude
 
-#### Header Paramaters
+\
+**Header Paramaters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -20,7 +21,8 @@ The **Include** and **Exclude** options allow the user to control where their ad
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -39,7 +41,7 @@ Request Sample
 }
 ```
 
-Response 200 Sample (deviceType)
+Response 200 Sample (`deviceType`)
 
 ```json
 {
@@ -52,25 +54,28 @@ Response 200 Sample (deviceType)
 
 ### Include/Exclude Entities From a Campaign
 
-This API allows users to target entities by updating their status to either included or excluded from specified `campaignId` and `dimensionId`. Use the following endpoint:
+This API allows the user to optimize a campaign by updating the status of specified entities to either included or excluded with path parameters `campaignId` and `dimensionId`. Use the following endpoint:
 
 * `POST` /api/v3/bm/campaigns/{campaignId}/include-Exclude/dimensions/{dimensionId}
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `campaignId` | integer [required] | Unique ID of campaign |
 | `dimensionId` | integer [required] | Unique ID of dimension |
 
-#### Header Parameters 
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -107,20 +112,23 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 * `PUT` /api/v3/bm/io/{ioId}/bid-models
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `ioId` | integer [required] | Unique identifier for insertion order | 
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 [Note: all objects inside request body are not required]
 
@@ -219,20 +227,23 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 * `DELETE` /api/v3/bm/io/{ioId}/bid-models
 * `PATCH` /api/v3/bm/io/{ioId}/bid-models
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `ioId` | integer [required] | Unique identifier for insertion order | 
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -269,14 +280,16 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 
 * `POST` api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `campaignId` | integer [required] | The campaign ID for which the report is being generated |
 | `dimensionId` | integer [required] | The dimension ID for which the report is being generated |
 
-#### Query Parameters
+\
+**Query Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -288,14 +301,16 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 | `startDate` | integer | Unix timestamp of campaign start date |
 | `endDate` | integer | Unix timestamp of campaign end date |
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### Request Body Schema: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -395,7 +410,7 @@ This API will provide values of bid-model dimensions and sub-dimensions with the
 
 * `GET` /api/v3/bm/static/dimensions
 
-#### Resource Properties
+### Resource Properties
 
 | Dimension ID | Dimension Name | Description |
 | :---: | --- | --- |
@@ -531,20 +546,23 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 
 * `GET` /api/v3/bm/campaigns/{campaignId}/dimensions/count
 
-#### Path Parameters
+\
+**Path Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `campaignId` | integer [required] | The campaign ID for which the report is being generated |
 
-#### Query Parameters
+\
+**Query Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `startDate` | integer | Unix timestamp for campaign start date | 
 | `endDate` | integer | Unix timestamp for campaign end date |
 
-#### Header Parameters
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
