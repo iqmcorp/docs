@@ -67,7 +67,7 @@ Get a campaign's basic details and targeting details by ID with the following en
 | `conversionIds` | string | comma separated conversions IDs. |
 
 \
-Sample Response
+Response 200 Sample
 
 ```json
 {
@@ -157,7 +157,7 @@ Other details can be fetched with a simple `GET` operation and filtered by vario
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
-Response 200 (list of campaigns)
+Response 200 Sample (list of campaigns)
 
 ```json
 {
@@ -408,7 +408,7 @@ Request Sample
 }
 ```
 
-Response 200:
+Response 200
 
 ```json
 {
@@ -1130,7 +1130,7 @@ Sample Request (budget based IO)
 }
 ```
 
-Response 200
+Response 200 Sample
 
 ```json
 {
@@ -1169,7 +1169,7 @@ Duplicate a single IO, and all campaigns within that IO with the following endpo
 | `ioStartTime` | integer | Unix epoch of IO start time
 
 \
-Sample Request
+Request Sample
 
 ```json
 {
@@ -1214,7 +1214,7 @@ Delete one or multiple IOs and all campaigns attached to them with the following
 | `ioIdsList` | array of integers | Insertion Order IDs
 
 \
-Sample Request
+Request Sample
 
 ```json
 {
@@ -1261,7 +1261,7 @@ Update the details, end dates, and budgets of insertion orders with the followin
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
-Sample Request (update details)
+Request Sample (update details)
 
 ```json
 {
@@ -1276,7 +1276,7 @@ Sample Request (update details)
 }
 ```
 
-Sample Response 200 (update details)
+Response 200 Sample (update details)
 
 ```json
 {
@@ -1285,7 +1285,7 @@ Sample Response 200 (update details)
 }
 ```
 
-Sample Request (update budget)
+Request Sample (update budget)
 
 ```json
 {
@@ -1299,7 +1299,7 @@ Sample Request (update budget)
 }
 ```
 
-Sample Response 200 (update budget)
+Response 200 Sample (update budget)
 
 ```json
 {
