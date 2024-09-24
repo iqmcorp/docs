@@ -62,14 +62,16 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 * `POST` /api/v3/ua/login
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
-#### REQUEST BODY SCHEMA: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -152,7 +154,8 @@ To upload a creative, you must provide a creative type. Use the creative type li
 
 * `GET` /api/v3/master/creativeTypes
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -215,8 +218,9 @@ Response 500
 }
 ```
 
-</details><br>
+</details>
 
+\
 For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
 
 ### Step 3: Upload creative
@@ -225,7 +229,8 @@ When uploading a creative, you can provide a file and creative parameters like t
 
 * `POST` /api/v2/crt/add/image/banner/creative
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -233,7 +238,8 @@ When uploading a creative, you can provide a file and creative parameters like t
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 | `content-type` | string [required] | Media type of the resource |
 
-#### Request Body Schema: application/x-www-form-urlencoded
+\
+**Request Body Schema: application/x-www-form-urlencoded**
 
 | Property | Type | Definition |
 | ---- | ---- | --- |
@@ -314,13 +320,15 @@ To create a campaign, creative must be processed and approved, check for status 
 
 * `GET` /api/v2/crt/creatives/details?creativeIds={creativeId}
 
-#### PATH PARAMETERS
+\
+**Path Parameters**
 
 | Property | Type | Definition |
 | --- | --- | --- |
 | `creative_id` | string [required] | Unique ID of Creative |
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -394,14 +402,16 @@ To create a campaign, specify the creative and targeting parameters using the AP
 
 * `POST` /api/v2/cmp/campaigns/add
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
-#### REQUEST BODY SCHEMA: application/json
+\
+**Request Body Schema: application/json**
 
 | Field | Type | Description |
 |---|---|---|
@@ -409,97 +419,59 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `budgetDay` | integer | Daily budget |
 | `budgetTotal` | integer | Total budget |
 | `campaignName` | string | name of campaign |
-| `campaignType` | integer | Campaign type id |
+| `campaignType` | integer | Campaign type ID |
 | `creativeIds` | string | Comma separated creative IDs |
-| `creativeType` | integer | Creative type id |
+| `creativeType` | integer | Creative type ID |
 | `isAgreementChecked` | boolean | agreement check |
 | `maxBid` | integer | max bid |
 | `startTime` | integer | campaign start time |
-| `timezone` | integer | timezone id. |
-| `bidOptimization` [optional] | boolean | Optimize bid price based on analysis. |
-| `bidPacing` [optional] | boolean | Budget is spent equally every hour. |
-| `impressionCapping` [optional] | integer | Maximum impressions in one inventory. |
+| `timezone` | integer | timezone ID |
+| `bidOptimization` [optional] | boolean | Optimize bid price based on analysis |
+| `bidPacing` [optional] | boolean | Budget is spent equally every hour |
+| `impressionCapping` [optional] | integer | Maximum impressions in one inventory |
 | `maxDayClicks` [optional] | integer | Maximum daily clicks |
 | `totalClicks` [optional] | integer | Total clicks |
 | `maxDayImpressions` [optional] | integer | Maximum daily impressions |
 | `totalImpressions` [optional] | integer | Total impressions |
 | `maxDayConversions` [optional] | integer | Maximum daily conversions |
 | `totalConversions` [optional] | integer | Total conversions |
-| `conversionType` [optional] | string | User conversion type. Allowed values: 'install', 'non-install'. |
-| `appURL` [optional] | string | If conversion type is install, specify URL of inventory. |
+| `conversionType` [optional] | string | User conversion type. Allowed values: 'install', 'non-install' |
+| `appURL` [optional] | string | If conversion type is install, specify URL of inventory |
 | `targetCPI` [optional] | integer | Cost per install if conversion type is install. |
-| `carriers` [optional] | string | Carrier targeting. Value in form of string of comma separated IDs of targeted carrier(s). |
-| `networkType` [optional] | string | Network targeting. Value in form of string of comma separated IDs of targeted network(s). |
-| `deviceType` [optional] | string | Device targeting. Value in form of string of comma separated IDs of targeted device type(s). |
-| `trafficType` [optional] | string | Traffic type targeting. Value in form of string of comma separated IDs of targeted traffic type(s). |
-| `manufacturer` [optional] | string | Manufacturer targeting. Value in form of string of comma separated IDs of targeted manufacturer type(s). |
-| `os` [optional] | string | OS targeting. Value in form of string of comma separated IDs of targeted OS. |
-| `osVersion` [optional] | string | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS. |
-| `exchanges` [optional] | string | Targeted exchanges. Value in form of string of comma separated IDs of exchanges. |
-| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment IDs to attach campaign to segment IDs. |
-| `whiteListedDeviceId` [optional] | string | Target Device IDs. Value in form of string of comma separated device IDs. |
-| `whiteListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
-| `whiteListedAppId` [optional] | string | iOS app ID |
-| `whiteListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
-| `whiteListedSiteDomain` [optional] | string | Target sites. Value in form of string of comma separated domain urls. |
-| `blackListedDeviceId` [optional] | string | Target Device IDs. Value in form of string of comma separated device IDs. |
-| `blackListedIp` [optional] | string | IPV4 address. Value in form of string of comma separated IP Address. |
-| `blackListedAppId` [optional] | string | iOS app ID |
-| `blackListedPackageName` [optional] | string | Android package names. Value in form of string of comma separated package names. |
-| `blackListedSiteDomain` [optional] | string | Target sites. Value in form of string of comma separated domain urls. |
-| `publisherAdCategory` [optional] | string | Target Publisher ad category. Value in form of string of comma separated IDs. |
-| `ioId` | integer | Target Insertion OrderId in which this campaign belongs. |
-| `blackListedInventoryGroupIds` [optional] | string | Target already created Inventory groups. Value in form of string of comma separated IDs. |
-| `whiteListedInventoryGroupIds` [optional] | string | Target already created Inventory groups. Value in form of string of comma separated IDs. |
-| `blackListedCustomAudienceIds` [optional] | string | Target already created custom audience Groups. Value in form of string of comma separated IDs. |
-| `whiteListedCustomAudienceIds` [optional] | string | Target already created custom audience Groups. Value in form of string of comma separated IDs. |
-| `blackListedAudienceSegmentGroupIds` [optional] | string | Target already created audience segment Groups. Value in form of string of comma separated IDs. |
-| `whiteListedAudienceSegmentGroupIds` [optional] | string | Target already created audience segment Groups. Value in form of string of comma separated IDs. |
-| `blackListedConversionTagIds` [optional] | string | Target already created conversion tags. Value in form of string of comma separated IDs. |
-| `whiteListedConversionTagIds` [optional] | string | Target already created conversion tags. Value in form of string of comma separated IDs. |
-| `userDealId` [optional] | string | User specific deal IDs. Value in form of string of comma separated deal IDs. |
-| `groupDealId` [optional] | string | Group of selected deals. Value in form of string of comma separated deal IDs. |
-| `politicalAdvertiserClientId` [optional] | integer | ID of political advertiser in case of campaign is political campaign. |
-| `stateIds` [optional] | string | State Target (It will be considered as White list State Target). Value in form of string of comma separated IDs. |
-| `whiteListedStateIds` [optional] | string | White list State Target . Value in form of string of comma separated IDs. |
-| `blackListedStateIds` [optional] | string | Black list State Target . Value in form of string of comma separated IDs. |
+| `carriers` [optional] | string | Carrier targeting. Value in form of string of comma separated IDs of targeted carrier(s) |
+| `networkType` [optional] | string | Network targeting. Value in form of string of comma separated IDs of targeted network(s) |
+| `deviceType` [optional] | string | Device targeting. Value in form of string of comma separated IDs of targeted device type(s) |
+| `trafficType` [optional] | string | Traffic type targeting. Value in form of string of comma separated IDs of targeted traffic type(s) |
+| `manufacturer` [optional] | string | Manufacturer targeting. Value in form of string of comma separated IDs of targeted manufacturer type(s) |
+| `os` [optional] | string | OS targeting. Value in form of string of comma separated IDs of targeted OS |
+| `osVersion` [optional] | string | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS |
+| `exchanges` [optional] | string | Targeted exchanges. Value in form of string of comma separated IDs of exchanges |
+| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment IDs to attach campaign to segment IDs |
+| `publisherAdCategory` [optional] | string | Target Publisher ad category. Value in form of string of comma separated IDs |
+| `ioId` | integer | Target Insertion OrderId in which this campaign belongs |
+| `userDealId` [optional] | string | User specific deal IDs. Value in form of string of comma separated deal IDs |
+| `groupDealId` [optional] | string | Group of selected deals. Value in form of string of comma separated deal IDs |
+| `politicalAdvertiserClientId` [optional] | integer | ID of political advertiser in case of campaign is political campaign |
+| `stateIds` [optional] | string | State Target. Value in form of string of comma separated IDs |
 | `countryId` | string | Country Target |
-| `dmaIds` [optional] deprecated | string | DMA Target. Value in form of string of comma separated IDs. |
-| `whiteListedDmaIds` [optional] | string | white list DMA Target. Value in form of string of comma separated IDs. |
-| `blackListedDmaIds` [optional] | string | black list DMA Target. Value in form of string of comma separated IDs. |
-| `senateDistrictIds` [optional] deprecated | string | Senate districts Target. Value in form of string of comma separated IDs. |
-| `whiteListedSenateDistrictIds` [optional] | string | white list senate districts Target. Value in form of string of comma separated IDs. |
-| `blackListedSenateDistrictIds` [optional] | string | black list senate districts Target. Value in form of string of comma separated IDs. |
-| `congressionalDistrictIds` [optional] deprecated | string | Congressional districts Target. Value in form of string of comma separated IDs. |
-| `whiteListedCongressionalDistrictIds` [optional] | string | white list congressional districts Target. Value in form of string of comma separated IDs. |
-| `blackListedCongressionalDistrictIds` [optional] | string | black list congressional districts Target. Value in form of string of comma separated IDs. |
-| `houseDistrictIds` [optional] deprecated | string | House districts Target. Value in form of string of comma separated IDs. |
-| `whiteListedHouseDistrictIds` [optional] | string | white list house districts Target. Value in form of string of comma separated IDs. |
-| `blackListedHouseDistrictIds` [optional] | string | black list house districts Target. Value in form of string of comma separated IDs. |
-| `geoRadiusDetails` [optional] deprecated | string | To target custom ares in circle or polygon. Value in form of JSON. |
-| `whiteListedGeoRadiusDetails` [optional] | string | To white list custom ares in circle or polygon. Value in form of JSON. |
-| `blackListedGeoRadiusDetails` [optional] | string | To black list custom ares in circle or polygon. Value in form of JSON. |
-| `zipcodes` [optional] deprecated | string | ZipCode Target. Value in form of string of comma separated IDs. |
-| `whiteListedZipcodes` [optional] | string | white list zipCode Target. Value in form of string of comma separated IDs. |
-| `blackListedZipcodes` [optional] | string | black list zipCode Target. Value in form of string of comma separated IDs. |
+| `dmaIds` [optional] deprecated | string | DMA Target. Value in form of string of comma separated IDs |
+| `senateDistrictIds` [optional] deprecated | string | Senate districts Target. Value in form of string of comma separated IDs |
+| `congressionalDistrictIds` [optional] deprecated | string | Congressional districts Target. Value in form of string of comma separated IDs |
+| `houseDistrictIds` [optional] deprecated | string | House districts Target. Value in form of string of comma separated IDs |
+| `geoRadiusDetails` [optional] deprecated | string | To target custom ares in circle or polygon. Value in form of JSON |
+| `zipcodes` [optional] deprecated | string | ZipCode Target. Value in form of string of comma separated IDs |
 | `locationFileIds` [optional] | string | Target location by uploading file. Value in form of string of comma separated csv file ids.(pre uploaded) |
-| `whiteListedLocationIds` [optional] | string | white list location ids from uploaded files. Value in form of string of comma separated location ids. |
-| `blackListedLocationIds` [optional] | string | black list location ids from uploaded files. Value in form of string of comma separated location ids. |
-| `whiteListedCityIds` [optional] | string | white list city Target. Value in form of string of comma separated IDs. |
-| `blackListedCityIds` [optional] | string | black list city Target. Value in form of string of comma separated IDs. |
-| `whiteListedCountyIds` [optional] | string | white list county Target. Value in form of string of comma separated IDs. |
-| `blackListedCountyIds` [optional] | string | black list county Target. Value in form of string of comma separated IDs. |
-| `ageRangeIds` [optional] | string | Target age range. Value in form of string of comma separated IDs. |
-| `genderIds` [optional] | string | Target gender. Value in form of string of comma-separated IDs. |
-| `interestIds` [optional] | string | Target user interest. Value in form of a string of comma-separated IDs. |
-| `incomeRangeIds` [optional] | string | Target user income range. Value in form of a string of comma-separated IDs. |
-| `languageIds` [optional] | string | Target user language. Value in form of a string of comma-separated IDs. |
-| `ethnicityIds` [optional] | string | Target user ethnicity. Value in form of a string of comma-separated ID. |
+| `ageRangeIds` [optional] | string | Target age range. Value in form of string of comma separated IDs |
+| `genderIds` [optional] | string | Target gender. Value in form of string of comma-separated IDs |
+| `interestIds` [optional] | string | Target user interest. Value in form of a string of comma-separated IDs |
+| `incomeRangeIds` [optional] | string | Target user income range. Value in form of a string of comma-separated IDs |
+| `languageIds` [optional] | string | Target user language. Value in form of a string of comma-separated IDs |
+| `ethnicityIds` [optional] | string | Target user ethnicity. Value in form of a string of comma-separated ID |
 | `schedule` [optional] | string[][] | key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] |
-| `conversionIds` [optional] | string | Target pixel conversions. Value in form of a string of comma-separated ID. |
-| `isAdvanceAudioVideoTargeted` | boolean | To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted. |
+| `conversionIds` [optional] | string | Target pixel conversions. Value in form of a string of comma-separated ID |
+| `isAdvanceAudioVideoTargeted` | boolean | To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted |
 | `isBidPacing` | boolean | To indicate whether the bid shading is enabled. |
-| `creativeAdvanceTargeting` | JSON Map: string to integer | Map of Creative advanced targeting group to list of creative advance targeting segment ids. |
+| `creativeAdvanceTargeting` | JSON Map: string to integer | Map of Creative advanced targeting group to list of creative advance targeting segment IDs |
 | `campaignEstimatorMetaData` | JSON | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
 
 \
@@ -688,13 +660,15 @@ To run a campaign, it must be approved, check for status updates using:
 
 * `GET` /api/v2/cmp/campaign/{campaignId}
 
-#### PATH PARAMETERS
+\
+**Path Parameters**
 
 | Property | Type | Definition |
 | --- | --- | --- |
 | `campaign_id` | string [required] | Unique ID of Campaign
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |

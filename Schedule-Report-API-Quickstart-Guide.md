@@ -30,14 +30,16 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 * `POST` /api/v3/ua/login
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Example |
 | ---- | ---- | --- |
 | `Authorization` | string  | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
 | `X-IAA-HOST` | string | `api.iqm.com` |
 
-#### REQUEST BODY SCHEMA: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -51,7 +53,8 @@ Decide the delivery frequency, day, and end date of scheduled reports. This API 
 
 * `POST /api/v3/ra/report/email/schedule`
 
-#### REQUEST BODY SCHEMA: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 |---|---|---|
