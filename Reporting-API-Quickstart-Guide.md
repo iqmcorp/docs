@@ -36,14 +36,16 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 * `POST` /api/v3/ua/login
 
-#### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `Authorization` | string [required] | Authorization bearer token |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
-#### REQUEST BODY SCHEMA: application/json
+\
+**Request Body Schema: application/json**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -239,7 +241,8 @@ Available metrics are:
 
 * `GET` /api/v3/ra/report/dimension-metrics/detail
 
-##### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -402,7 +405,8 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 * `GET` /api/v2/adv/static/timezones
 
-##### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
@@ -439,15 +443,16 @@ At least one dimension is required.
 
 * `POST` /api/v3/ra/report/execute
 
-##### HEADER PARAMETERS
+\
+**Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
 | `x-iaa-api-token` | string | Advertiser API Token |
 
-##### REQUEST BODY SCHEMA: application/json required
+**Request Body Schema: application/json**
 
-| Property | Type| Example |
+| Property | Type | Example |
 | ---- | ---- | --- |
 | `startDate` | integer | `int64` - Unix timestamp |
 | `endDate` | integer | `int64` - Unix timestamp | 
