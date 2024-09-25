@@ -61,6 +61,11 @@ These guidelines pages will help you navigate common methods and resources in th
 * [Generate Metrics Report For a Given Campaign and Dimension](/Bid-Model-API-Guidelines.md#get-metrics-report-for-a-given-campaign-and-dimension)
 * [Get List of Bid Model Dimensions](/Bid-Model-API-Guidelines.md#get-list-of-bid-model-dimensions)
 
+#### [Master API Guidelines](/Master-API-Guidelines.md)
+* [Get Geographical Data](/Master-API-Guidelines.md#get-geographical-data)
+* [Get Creative Data](/Master-API-Guidelines.md#get-creative-data)
+* [Get More Data](/Master-API-Guidelines.md#get-more-data)
+
 
 
 ## Requests
