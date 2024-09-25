@@ -414,19 +414,19 @@ This API will provide values of bid-model dimensions and sub-dimensions with the
 
 | Dimension ID | Dimension Name | Description |
 | :---: | --- | --- |
-| 1 | Creative |
-| 2 | Inventory |
-| 3 | Deal ID | Subdimension of Inventory
-| 4 | Open Exchange | Subdimension of Inventory
-| 5 | Publisher Category | Subdimension of Inventory
-| 6 | Device | |
-| 7 | Traffic Type | Subdimension of Device
-| 8 | Device Type | Subdimension of Device
-| 9 | Location | |
-| 10 | State | Subdimension of Location |
-| 11 | City | Subdimension of Location |
-| 12 | Zip | Subdimension of Location | 
-| 13 | Exchange | |
+| `1` | Creative |
+| `2` | Inventory |
+| `3` | Deal ID | Subdimension of Inventory
+| `4` | Open Exchange | Subdimension of Inventory
+| `5` | Publisher Category | Subdimension of Inventory
+| `6` | Device | |
+| `7` | Traffic Type | Subdimension of Device
+| `8` | Device Type | Subdimension of Device
+| `9` | Location | |
+| `10` | State | Subdimension of Location |
+| `11` | City | Subdimension of Location |
+| `12` | Zip | Subdimension of Location | 
+| `13` | Exchange | |
 
 \
 Response Sample
@@ -646,6 +646,4 @@ Response 500
 }
 ```
 
-
 </details>
-

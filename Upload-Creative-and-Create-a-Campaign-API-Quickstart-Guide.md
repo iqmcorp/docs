@@ -475,7 +475,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 | `campaignEstimatorMetaData` | JSON | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
 
 \
-Scheduling example
+Scheduling Example
 
 ```json
 "scheduling": {
