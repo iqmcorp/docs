@@ -216,39 +216,39 @@ Response 200 Sample (open exchange inventories)
         "totalRecords": 3,
         "filteredRecords": 3,
         "openExchangeInventoryData": [
-        {
-            "id": 52982,
-            "name": "gazeta.pl",
-            "publisher": "UNKNOWN",
-            "appId": "INVENTORY",
-            "inventoryType": "Site",
-            "impressions": 25738,
-            "reach": 2128,
-            "videoPercentage": 18.29979,
-            "displayPercentage": 77.989743
-        },
-        {
-            "id": 52983,
-            "name": "protopage.com",
-            "publisher": "UNKNOWN",
-            "appId": "INVENTORY",
-            "inventoryType": "Site",
-            "impressions": 4315,
-            "reach": 322,
-            "videoPercentage": 0,
-            "displayPercentage": 100
-        },
-        {
-            "id": 52986,
-            "name": "gwiazdy.wp.pl",
-            "publisher": "UNKNOWN",
-            "appId": "INVENTORY",
-            "inventoryType": "Site",
-            "impressions": 516,
-            "reach": 58,
-            "videoPercentage": 4.651163,
-            "displayPercentage": 87.596899
-        }
+            {
+                "id": 52982,
+                "name": "gazeta.pl",
+                "publisher": "UNKNOWN",
+                "appId": "INVENTORY",
+                "inventoryType": "Site",
+                "impressions": 25738,
+                "reach": 2128,
+                "videoPercentage": 18.29979,
+                "displayPercentage": 77.989743
+            },
+            {
+                "id": 52983,
+                "name": "protopage.com",
+                "publisher": "UNKNOWN",
+                "appId": "INVENTORY",
+                "inventoryType": "Site",
+                "impressions": 4315,
+                "reach": 322,
+                "videoPercentage": 0,
+                "displayPercentage": 100
+            },
+            {
+                "id": 52986,
+                "name": "gwiazdy.wp.pl",
+                "publisher": "UNKNOWN",
+                "appId": "INVENTORY",
+                "inventoryType": "Site",
+                "impressions": 516,
+                "reach": 58,
+                "videoPercentage": 4.651163,
+                "displayPercentage": 87.596899
+            }
         ],
         "uniqueRecords": 3
     }
