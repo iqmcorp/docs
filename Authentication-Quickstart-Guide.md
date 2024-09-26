@@ -59,7 +59,7 @@ Once a user has created an account, they can perform the login. This API will se
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `authorization` | string | Basic |
+| `Authorization` | string | Basic |
 | `X-IAA-HOST` | string | Workspace URL |
 
 \
