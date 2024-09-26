@@ -29,7 +29,7 @@ Get a campaign's basic details and targeting details by ID with the following en
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
@@ -152,7 +152,7 @@ Other details can be fetched with a simple `GET` operation and filtered by vario
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -216,7 +216,7 @@ Update various aspects of a campaign, use the following Header Parameters for ea
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -377,7 +377,7 @@ See complete documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Get Campaign Count by Status
@@ -479,7 +479,7 @@ The campaign API allows the user to retrieve Insertion Order (IO) details with t
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
@@ -614,7 +614,7 @@ Get a list of campaign details grouped by Insertion Order ID (`ioId`) with suppo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -739,10 +739,10 @@ Response 200
                 "owId": 201353,
                 "timezoneId": 21,
                 "targetedAudienceIds": [
-                1010324,
-                1054144,
-                1060433,
-                1063317
+                    1010324,
+                    1054144,
+                    1060433,
+                    1063317
                 ]
             }
             ]
@@ -820,7 +820,7 @@ Get a list of campaigns with detailed report by Insertion Order ID (`ioId`) with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -1091,7 +1091,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -1257,7 +1257,7 @@ Update the details, end dates, and budgets of insertion orders with the followin
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \

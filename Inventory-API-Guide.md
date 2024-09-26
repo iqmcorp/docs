@@ -1,13 +1,19 @@
 # Inventory API
 
+IQM's advanced algorithm deterines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide advertisers a way to organize collecions or groups based on criteria such as ad format, placement type, targeting options, and other attributes. Private Marketplace (PMP) deals and Programmatic Guarantee (PG) deals are arranged so advertisers can purchase ad inventory. This page will cover common methods and endpoints associated with `Inventories`, `PMP Deals`, `PG Deals`, and `Groups`.  
+
+## Authorization
+
 Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Inventory Details
+
+Inventories are collections of all inventory sources. 
 
 Use the following endpoints to get details for various aspects of inventories, filtered by query parameters:
 
@@ -34,7 +40,7 @@ Use the following endpoints to get details for various aspects of inventories, f
 | `deviceTypes` | string | Filter by device type |
 | `exchanges` | string | Filter by exchange |
 | `videoPlayerSizes` | string | Filter by video player size |
-| `noOfEntries` | integer | Maximum number of entires per page |
+| `noOfEntries` | integer | Maximum number of entries per page |
 | `pageNo` | integer | Number of pages for retrieved data |
 | `groupId` | integer | Group ID |
 
@@ -103,6 +109,372 @@ Response 500
 ```
 
 </details>
+
+## Inventory Groups
+
+An inventory group refers to a collection or grouping of inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other attributes. There are three types of inventory group: `Open Exchange`, `PMP Deals`, and `Contextual Inventory`. This section will cover common methods and endpoints for managing inventory groups.
+
+### Get List of Inventory Groups
+
+Get a list of inventory groups based on various filters and parameters with the following endpoint:
+
+* `GET` /api/v3/inv/groups/list
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupFilterId` | integer | Filters groups list. Supported values: <br>All Groups [default]: `0` <br>Share by Admin: `1` <br>Own Groups: `2` |
+| `groupTypeIds` | string | Filters groups list. Supported values: <br>Open Exchange: `1` <br>PMP: `2` <br>Contextual: `3` |
+| `ids` | string | Comma separated IDs
+| `provideAccountLevelExcludedGroup` | boolean | Flag to indicate whether to include account-level excluded group in response or not, default: `false` |
+| `includeStatistics` | boolean | Flag to indicate whether to include statistics in response or not, default: `true` |
+| `excludeEmptyGroups` | boolean | Flag to indicate whether to include empty groups in response or not, default: `false` |
+| `searchField` | string | Searches by name |
+| `pageSize` | integer | Maximum number of entries per page |
+| `pageNo` | integer | Number of pages for retrieved data |
+| `owId` | integer | Organization Workspace ID |
+| `sortBy` | string | Sort entries by ascending (+) or descending (-) |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 371,
+        "filteredRecords": 6,
+        "inventoryGroupList": [
+        {
+            "groupTypeId": 1,
+            "created": 1720032375,
+            "modifiedDate": "2024-07-03T13:18:26.935+0000",
+            "owId": 201427,
+            "impressions": 0,
+            "isAccountLevelExcluded": null,
+            "campaignWhitelistCount": 0,
+            "campaignBlacklistCount": 0,
+            "whiteListedCampaignIds": [
+                503885,
+                486112,
+                478890
+            ],
+            "blackListedCampaignIds": [],
+            "publishers": 0,
+            "sharedCount": 0,
+            "uniques": 0,
+            "reach": 0,
+            "inventories": 0,
+            "deals": 0,
+            "contextualInventories": 0,
+            "count": 0,
+            "id": 176178,
+            "name": "Inventory Group - Open exchange - 3 campaign",
+            "isShared": false
+        }
+        ]
+    }
+}
+```
+
+### Get More Inventory Groups Details
+
+Get more inventory groups details with the following endpoints:
+
+| Method/Endpoint | Path | Description |
+| ---- | ---- | --- |
+| `GET` /api/v3/inv/groups | /statistics | Get statistics of inventory groups
+| `GET` /api/v3/group/{groupId} | /shared/campaigns/list | Gets list of campaigns attached to the inventory group |
+| | /pmp-deals | Gets list of PMP Deals in an inventory group |
+| | /pmp-deals/csv | Gets CSV format list of PMP Deals in an inventory group |
+| | /open-exchange-inventories | Gets list of open exchange inventories for an inventory group
+| | /open-exchange-inventories/distributions | Gets distribution of open exchange inventories in an inventory group |
+| | /open-exchange-inventories/count | Gets count of open exchange inventories in an inventory group |
+| | /contextual-inventories | Gets list of contextual inventories for an inventory group |
+| | /contextual-inventories/csv | Gets CSV format list of contextual inventories for an inventory group |
+| | /contextual-inventories/count | Gets count of contextual inventories for an inventory group | 
+
+\
+**Path Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `groupId` | integer [required] | Group ID |
+| `searchField` | string | Search inventory group by name |
+| `noOfEntries` | integer | Maximum number of entries per page, default: `50` |
+| `pageNo` | integer | Number of pages for retrieved data |
+
+\
+Response 200 Sample (open exchange inventories)
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 3,
+        "filteredRecords": 3,
+        "openExchangeInventoryData": [
+        {
+            "id": 52982,
+            "name": "gazeta.pl",
+            "publisher": "UNKNOWN",
+            "appId": "INVENTORY",
+            "inventoryType": "Site",
+            "impressions": 25738,
+            "reach": 2128,
+            "videoPercentage": 18.29979,
+            "displayPercentage": 77.989743
+        },
+        {
+            "id": 52983,
+            "name": "protopage.com",
+            "publisher": "UNKNOWN",
+            "appId": "INVENTORY",
+            "inventoryType": "Site",
+            "impressions": 4315,
+            "reach": 322,
+            "videoPercentage": 0,
+            "displayPercentage": 100
+        },
+        {
+            "id": 52986,
+            "name": "gwiazdy.wp.pl",
+            "publisher": "UNKNOWN",
+            "appId": "INVENTORY",
+            "inventoryType": "Site",
+            "impressions": 516,
+            "reach": 58,
+            "videoPercentage": 4.651163,
+            "displayPercentage": 87.596899
+        }
+        ],
+        "uniqueRecords": 3
+    }
+}
+```
+
+## Group Inventory Management
+
+Update details or delete group inventories.
+
+### Create a New Inventory Group
+
+Add a new inventory group based on the provided request body.
+
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupName` | integer | Desired name for group |
+| `groupTypeId` | integer | Group type. Supported values: <br>Open Exchange: `1` <br>PMP: `2` <br>Contextual: `3` |
+| `inventoryIds` | array of integers | Inventory to include in group |
+
+\
+**Request Sample**
+
+```json
+{
+    "groupName": "Inventory Group - Open exchange",
+    "groupTypeId": 1,
+    "inventoryIds": [
+        35132,
+        4107192
+    ]
+}
+```
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "groupTypeId": 1,
+        "created": 1719836234,
+        "modifiedDate": "2024-07-01T12:17:20.295+0000",
+        "owId": 201427,
+        "impressions": 2334725782,
+        "isAccountLevelExcluded": false,
+        "campaignWhitelistCount": 0,
+        "campaignBlacklistCount": 0,
+        "whiteListedCampaignIds": [],
+        "blackListedCampaignIds": [],
+        "publishers": 56,
+        "sharedCount": 0,
+        "uniques": 0,
+        "reach": 154976228,
+        "inventories": 0,
+        "deals": 0,
+        "contextualInventories": 0,
+        "count": 2,
+        "id": 174594,
+        "name": "Inventory Group - Open exchange",
+        "isShared": false
+    }
+}
+```
+
+### Add or Remove Mappings to an Inventory Group
+
+Add or Remove inventories (Open Exchange, Private Deals, Contextual) to a group or multiple groups with the following endpoints:
+
+* `POST` /api/v3/inv/group/addMappings
+* `POST` /api/v3/inv/group/removeMappings
+
+\
+**Request Body Schema: application/json**
+
+Inventories can be added/removed by filtering for results, inputting `dealIds`, contextual details, or `inentoryIds`.
+
+Add/Remove by filter:
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupIds` | array of integers | Group IDs to add mappings to |
+| `keywords` | array of strings | Filters by keyword | 
+| `countries` | array of integers | Filters by country |
+| `categories` | array of strings | Filter by category |
+| `inventoryTypes` | array of integers | Filter by inventory type |
+| `creativeSizes` | array of strings | Filter by creative size |
+| `creativeTypes` | array of integers | Filter by creative types |
+| `trafficTypes` | array of integers | Filter by traffic types |
+| `deviceTypes` | array of integers | Filter by device types |
+| `videoPlayerSizes` | array of integers | Filter by video player sizes |
+| `isAllInventories` | boolean | 
+
+\
+Add/Remove by Deal ID:
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupIds` | array of integers | Group IDs to add mappings to |
+| `dealIds` | array of integers | Deal IDs to add to group |
+
+\
+Add/Remove by Contextual Inventories:
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupIds` | array of integers | Group IDs to add mappings to |
+| `contextualKeywords` | array of strings | Names of Contextual Inventories |
+| `contextualUrls` | array of strings | URLs of Contextual Inventories |
+
+\
+Add/Remove by Inventory ID:
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupIds` | array of integers | Group IDs to add mappings to |
+| `inventoryIds` | array of integers | Inventory IDs to add to group |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "groupTypeId": 1,
+            "created": 1719983099,
+            "modifiedDate": "2024-07-03T07:35:45.800+0000",
+            "owId": 202017,
+            "impressions": 7927783118,
+            "isAccountLevelExcluded": false,
+            "whiteListedCampaignIds": null,
+            "blackListedCampaignIds": null,
+            "publishers": 59,
+            "sharedCount": 1,
+            "uniques": 0,
+            "reach": 558137549,
+            "inventories": 0,
+            "deals": 0,
+            "contextualInventories": 0,
+            "count": 2,
+            "id": 176130,
+            "name": "Open Exchange Inventories Group",
+            "isShared": true
+        }
+    ]
+}
+```
+
+### Add or Remove Customers From a Shared Inventory Group
+
+Add or remove customers from an inventory group by group ID with the following endpoint: 
+
+* `PATCH` /api/v3/inv/group/{groupId}/shared/customers/edit
+
+\
+**Path Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `groupId` | integer [required] | Group ID |
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `addOwIds` | array of integers | Organization Worskpace IDs to add to Inventory Group |
+| `removeOwIds` | array of integers | Organization Workspace IDs to remove from Inventory Group |
+
+\
+Request Sample 
+
+```json
+{
+    "addOWIds": [
+        200425,
+        200495,
+        200496
+    ],
+    "removeOWIds": [
+        200929,
+        200931,
+        200963,
+        200964
+    ]
+}
+```
+
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": "Your changes have been successfully saved."
+}
+```
+
+### Edit Inventory Group
+
+### Delete Inventory Group
+
+Delete an existing inventory group with the following endpoint:
+
+* `DELETE` /api/v3/inv/groups/{groupId}
+
+\
+**Path Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `groupId` | integer [required] | Group ID |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": "Inventory group deleted successfully."
+}
+```
 
 ## Private Marketplace (PMP) Deals Details
 
@@ -311,7 +683,7 @@ Response 500
 | `dealId` | string | PMP Deal ID |
 | `dealName` | string | PMP Deal name |
 | `description` | string | PMP Deal description |
-| `cpm` | integer | PMP deal CPM value |
+| `cpm` | integer | PMP deal Cost Per Mille (CPM) value |
 | `dealCurationTypeId` | integer | Curation type ID |
 | `creativeTypes` | array of integers | Creative type IDs |
 | `exchangeId` | integer | Exchange associated with PMP Deal |
@@ -432,6 +804,35 @@ Response 200
 
 
 </details>
+
+### Delete PMP Deal
+
+Delete an existing PMP Deal with the following endpoint:
+
+* `DELETE` /api/v3/inv/pmp/deals
+
+\
+**Query Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `ids` | list of integers [required] | PMP Deal IDs to delete |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": [
+        470,
+        471
+        ],
+        "message": "Deal/s deleted successfully"
+    }
+}
+```
 
 ## Programmatic Guarantee (PG) Deals Details
 
@@ -602,3 +1003,119 @@ Response 200 Sample
 ```
 
 ## PG Management
+
+### Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `dealId` | string | PG Deal ID |
+| `dealName` | string| PG Deal name |
+| `exchangeId` | integer | Exchange ID associated with PG Deal | 
+| `cpm` | integer | Cost Per Mille (CPM) value |
+| `statusId` | integer | Status ID of PG Deal |
+| `description` | string | Description or notes about the deal |
+| `paymentTypeId` | integer | Payment type ID of PG Deal
+
+### Create PG Deal
+
+Create a new PG Deal with the following endpoint:
+
+* `POST` /api/v3/inv/pg/deals/add
+
+\
+**Request Body Schema: application/json**
+
+Refer to [PG Deal resource properties](/Inventory-API-Guide.md#resource-properties-1) above for schema. 
+
+\
+Request Sample
+
+```json
+{
+    "dealId": "YT-Test-1234",
+    "dealName": "Test deal YT31",
+    "exchangeId": 11,
+    "statusId": 2,
+    "paymentTypeId": 1,
+    "description": "Test Deal"
+}
+```
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "message": "Deal Test deal YT31 created successfully",
+        "id": 2
+    }
+}
+```
+
+
+
+### Update PG Deal Details
+
+Update specific details of a PG Deal with the following endpoint:
+
+* `PATCH` /api/v3/inv/pg/deals/{id}
+
+\
+**Path Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `id` | integer [required] | PG Deal ID |
+
+\
+**Request Body Schema: application/json**
+
+Refer to [PG Deal resource properties](/Inventory-API-Guide.md#resource-properties-1) above for schema. 
+
+Request Sample
+
+```json
+{
+    "dealId": "PM-ABC-12345",
+    "dealName": "Premium Advertising Package",
+    "statusId": 2,
+    "description": "Comprehensive advertising package including display, video, and social media placements for maximum exposure.",
+    "cpm": 40,
+    "paymentTypeId": 2,
+    "exchangeId": 11
+}
+```
+
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": "PG deal updated successfully"
+}
+```
+
+### Delete PG Deal
+
+Delete an existing PG Deal with the following endpoint:
+
+* `DELETE` /api/v3/inv/pg/deals
+
+\
+**Query Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `ids` | list of integers [required] | Pg Deal IDs to delete |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": "PG Deal deleted successfully"
+}
+```

@@ -61,7 +61,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Authorization bearer token |
+| `Authorization` | string (required) | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string (required) | Workspace URL |
 
 \
@@ -153,7 +153,7 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
@@ -266,7 +266,7 @@ To upload matched audiences,  provide file columns for matching and all the nece
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token |
+| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -490,7 +490,7 @@ Before the audience can be used for campaign targeting it has to be processed an
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token |
+| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
