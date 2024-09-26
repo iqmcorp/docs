@@ -5,10 +5,10 @@ The master API uses the same Header Parameters for all endpoints:
 \
 **Header Parameter**
 
-| Property | Type | Description
+| Property | Type | Description |
 | --- | --- | --- |
-| `Authorization` | string [required] | Authorization Bearer Token
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header
+| `Authorization` | string [required] | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
 
 ## Get Geographical Data
 
