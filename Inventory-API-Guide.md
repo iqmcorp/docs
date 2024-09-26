@@ -767,6 +767,8 @@ Response 500
 }
 ```
 
+</details>
+
 ### Update PMP Deal
 
 Update any [resource property](#resource-properties) of an existing PMP Deal with its ID  with the following endpoint:
@@ -801,9 +803,6 @@ Response 200
     }
 }
 ```
-
-
-</details>
 
 ### Delete PMP Deal
 
