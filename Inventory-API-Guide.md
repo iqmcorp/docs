@@ -1,6 +1,6 @@
 # Inventory API
 
-IQM's advanced algorithm deterines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide advertisers a way to organize collecions or groups based on criteria such as ad format, placement type, targeting options, and other attributes. Private Marketplace (PMP) deals and Programmatic Guarantee (PG) deals are arranged so advertisers can purchase ad inventory. This page will cover common methods and endpoints associated with `Inventories`, `PMP Deals`, `PG Deals`, and `Groups`.  
+IQM's advanced algorithm deterines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide advertisers a way to organize collecions or groups based on criteria such as ad format, placement type, targeting options, and other attributes. Private Marketplace (PMP) deals and Programmatic Guarantee (PG) deals are arranged so advertisers can purchase ad inventory. This page will cover common methods and endpoints associated with `Inventories`, `PMP Deals`, `PG Deals`, and `Groups`.
 
 ## Authorization
 
@@ -13,7 +13,7 @@ Use the following header parameters for all requests:
 
 ## Get Inventory Details
 
-Inventories are collections of all inventory sources. 
+Inventories are collections of all inventory sources.
 
 Use the following endpoints to get details for various aspects of inventories, filtered by query parameters:
 
@@ -109,6 +109,174 @@ Response 500
 ```
 
 </details>
+
+### Get List of Blocked Inventories
+
+Blocklisted inventories refer to digital media placements or websites that are deemed inappropriate (adult content, hate speech, misaleading information) or of low quality (low engagement, poor user experience). Use the following endpoint to get a list of blocklisted inventories:
+
+* `GET` api/v3/inv/blocked-inventories
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `searchField` | string | Search result by keyword |
+| `inventoryIds` | string | Filter inventories by inventory ID |
+| `noOfEntries` | integer | Maximum number of entries per page, default: `200` |
+| `pageNo` | integer | Number of pages for retrieved data, default: `1` |
+
+\
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "globalBlockedInventoryData": [
+            {
+                "id": 35109,
+                "name": "Pluto TV - It's Free TV",
+                "publisher": "UNKNOWN",
+                "appId": "74519",
+                "inventoryType": "Other App",
+                "comment": "This is the comment for this inventory",
+                "impressions": 0,
+                "uniques": 0,
+                "videoPercentage": 0,
+                "displayPercentage": 0
+            }
+        ]
+    },
+    "globalBlockedInventoryIds": 1,
+    "filteredRecords": 13
+}
+```
+
+## Inventory Management
+
+Optimize inventories for specific campaigns, download detailed inventory files, or block inventories.
+
+### Campaign Inventory Optimization
+
+Inventories can be optimized for specific campaign IDs with the following endpoint: 
+
+* `POST` /api/v2/inv/inventories/includeExclude
+
+\
+**Sample Request Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `campaignId` | integer | Campaign ID to target for optimization |
+| `ids` | string | Comma separated strings of inventory IDs to include in or exclude from specified campaign |
+| `isExcluded` | integer | Include in campaign: `0`<br> Exclude from campaign: `1` |
+
+\
+Request Body Sample
+
+```json
+{
+    "campaignId": 168622,
+    "ids": "1,2,3,4",
+    "isExcluded": 0
+}
+```
+
+\
+Response 200
+
+```json
+{
+    "statusCode": 200,
+    "responseObject": {
+        "message": "Inventories Included."
+    }
+}
+```
+
+### Block Inventories
+
+Inventories can be blocked at the account level by ID or search field with the following endpoint:
+
+`POST` /api/v3/inv/inventories/block
+
+\
+**Sample Request Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `inventoryIds` | array of integers | Inventory IDs to block |
+| `searchField` | string | Block inventories by searched keyword |
+
+\
+Request Body Sample
+
+```json
+{
+    "inventoryIds": [
+        0,
+        1,
+        5
+    ]
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Inventories blocked successfully."
+}
+```
+
+### Get Inventory Lists in or from CSV Format
+
+Get a paginated list of various inventory details in or from CSV file format with the following endpoints:
+
+| Method/Endpoint | Path | Description |
+| ---- | ---- | --- |
+| `POST` api/v3/inv/inventories | /open-exchange/download | Generates CSV (or XLSX) file of inventory list filtered by query parameters or CSV upload: `multipartFile` |
+| | /csv/list | Gets list of inventory based on provided CSV file: `domainsFile` | 
+| | /csv/distributions | Gets distribution of inventory based on provided CSV file: `domainsFile` |
+| | /csv/count |  Gets inventory count based on provided CSV file: `domainsFile` |
+
+\
+**Request Body Schema: applicatin/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `keywords` | string | Filters by list of keywords |
+| `countries` | string | Filters by list of countries |
+| `categories` | string | Filters by categories |
+| `inventoryTypes` | string | Filters by inventory type |
+| `creativeSizes` | string | Filters by creative sizes |
+| `creativeDurations` | string | Filters by creative durations | 
+| `trafficTypes` | string | Filters by traffic type | 
+| `deviceTypes` | string| Filters by device type |
+| `exchanges` | string | Filters by exchanges | 
+| `videoPlayerSizes` | string | Filters by video player size |
+| `isCsvSearch` | boolean | `true` if CSV file uploaded for query, otherwise `false` |
+| `fileType` | string | File type to download: `csv` or `xlsx` |
+
+\
+Request Body Sample
+
+```json
+{
+    "multipartFile": "string"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "https://iqm-ephemeral-2aca615e13f8-stage.s3.amazonaws.com/inventory/download/csv/Yash%20org%202_1720435555550.csv?response-expires-Amz-Credential"
+}
+```
 
 ## Inventory Groups
 
@@ -255,7 +423,35 @@ Response 200 Sample (open exchange inventories)
 }
 ```
 
-## Group Inventory Management
+### Contextual Inventory
+
+Get recommended keywords or autocompleted keywords with the following endpoints:
+
+* `GET` /api/v3/inv/contextual/recommend
+* `GET` /api/v3/inv/contextual/autosuggest
+
+\
+**Query Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `keyword` | string | Suggestion or Recommendation will be made based on this keyword | 
+
+\
+Response 200 
+
+```json
+{
+    "success": true,
+    "data": [
+        "sport",
+        "business",
+        "play"
+    ]
+}
+```
+
+## Inventory Group Management
 
 Update details or delete group inventories.
 
@@ -453,6 +649,110 @@ Response 200 Sample
 
 ### Edit Inventory Group
 
+Edit an inventory group with the following endpoint:
+
+* `PATCH` /api/v3/inv/groups/{groupId}
+
+\
+**Path Parameters**
+
+| Path | Type | Description |
+| ---- | ---- | --- |
+| `groupId` | integer [required] | Group ID |
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `groupName` | string| Name of group |
+
+\
+Request Sample
+
+```json
+{
+    "groupName": "Open exchange Group - updated"
+}
+```
+
+Response 200 Sample
+
+```json
+{
+    "success": true,
+    "data": {
+        "groupTypeId": null,
+        "created": null,
+        "modifiedDate": null,
+        "owId": 0,
+        "impressions": 0,
+        "isAccountLevelExcluded": null,
+        "campaignWhitelistCount": 0,
+        "campaignBlacklistCount": 0,
+        "whiteListedCampaignIds": null,
+        "blackListedCampaignIds": null,
+        "publishers": 0,
+        "sharedCount": 0,
+        "uniques": 0,
+        "reach": 0,
+        "inventories": 0,
+        "deals": 0,
+        "contextualInventories": 0,
+        "count": 0,
+        "id": 176168,
+        "name": "Open exchange Group - updated",
+        "isShared": false
+    }
+}
+```
+
+<detail>
+<summary>More Responses</summary>
+
+Response 403
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+        "error": "Forbidden!"
+        }
+    ]
+}
+```
+
+Response 422
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Inventory group name can not have more than 255 characters.",
+            "field": "groupName"
+        }
+    ]
+}
+```
+
+Response 500
+
+```json
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "server encountered an error !"
+        }
+    ]
+}
+```
+
+</details>
+
+
 ### Delete Inventory Group
 
 Delete an existing inventory group with the following endpoint:
@@ -477,6 +777,8 @@ Response 200 Sample
 ```
 
 ## Private Marketplace (PMP) Deals Details
+
+Private Marketplace Deals are a type of programmatic advertising arrangement that allows advertisers to purchase ad inventory through a private, invitation-only auction. This section will cover common methods and endponts associated with PMP deals. 
 
 ### Get PMP Deals List
 
@@ -676,7 +978,11 @@ Response 500
 
 ## PMP Management
 
+Create, update, or delete PMP Deals using the methods and endpoints outlined in this section.
+
 ### Resource Properties
+
+Create or update PMP Deals using the following properties in the Request Body Schema.
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -834,6 +1140,8 @@ Response 200 Sample
 ```
 
 ## Programmatic Guarantee (PG) Deals Details
+
+A Programmatic Guarantee Deal is a direct negotiation between one publisher and one advertiser offering budget predictability and avoiding auction volatility by ensuring a fixed amount of ad inventory at a pre-negotiated price. This section will cover common methods and endpoints associated with PG Deals. 
 
 ### Get PG Deals List
 
@@ -1003,7 +1311,11 @@ Response 200 Sample
 
 ## PG Management
 
+Create, update, or delete PG Deals using the methods and endpoints outlined in this section.
+
 ### Resource Properties
+
+Create or update PG Deals using the following properties in the Request Body Schema.
 
 | Property | Type | Description |
 | ---- | ---- | --- |
@@ -1052,8 +1364,6 @@ Response 200 Sample
     }
 }
 ```
-
-
 
 ### Update PG Deal Details
 
