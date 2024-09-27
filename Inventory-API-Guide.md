@@ -1,6 +1,6 @@
 # Inventory API
 
-IQM's advanced algorithm deterines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide advertisers a way to organize collecions or groups based on criteria such as ad format, placement type, targeting options, and other attributes. Private Marketplace (PMP) deals and Programmatic Guarantee (PG) deals are arranged so advertisers can purchase ad inventory. This page will cover common methods and endpoints associated with `Inventories`, `PMP Deals`, `PG Deals`, and `Groups`.
+IQM's advanced algorithm deterines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide advertisers a way to organize collecions or groups based on criteria such as ad format, placement type, targeting options, and other attributes. Private Marketplace (PMP) deals and Programmatic Guarantee (PG) deals are arranged so advertisers can purchase ad inventory. This page will cover common methods and endpoints associated with **Inventories**, **PMP Deals**, **PG Deals**, and **Groups**.
 
 ## Authorization
 
@@ -280,7 +280,7 @@ Response 200
 
 ## Inventory Groups
 
-An inventory group refers to a collection or grouping of inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other attributes. There are three types of inventory group: `Open Exchange`, `PMP Deals`, and `Contextual Inventory`. This section will cover common methods and endpoints for managing inventory groups.
+An inventory group refers to a collection or grouping of inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other attributes. There are three types of inventory group: **Open Exchange**, **PMP Deals**, and **Contextual Inventory**. This section will cover common methods and endpoints for managing inventory groups.
 
 ### Get List of Inventory Groups
 
@@ -778,7 +778,7 @@ Response 200 Sample
 
 ## Private Marketplace (PMP) Deals Details
 
-Private Marketplace Deals are a type of programmatic advertising arrangement that allows advertisers to purchase ad inventory through a private, invitation-only auction. This section will cover common methods and endponts associated with PMP deals. 
+Private Marketplace Deals are a type of programmatic advertising arrangement that allows advertisers to purchase ad inventory through a private, invitation-only auction. This section will cover common methods and endponts associated with PMP deals.
 
 ### Get PMP Deals List
 
@@ -1141,7 +1141,7 @@ Response 200 Sample
 
 ## Programmatic Guarantee (PG) Deals Details
 
-A Programmatic Guarantee Deal is a direct negotiation between one publisher and one advertiser offering budget predictability and avoiding auction volatility by ensuring a fixed amount of ad inventory at a pre-negotiated price. This section will cover common methods and endpoints associated with PG Deals. 
+A Programmatic Guarantee Deal is a direct negotiation between one publisher and one advertiser offering budget predictability and avoiding auction volatility by ensuring a fixed amount of ad inventory at a pre-negotiated price. This section will cover common methods and endpoints associated with PG Deals.
 
 ### Get PG Deals List
 
