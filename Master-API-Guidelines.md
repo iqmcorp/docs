@@ -141,8 +141,8 @@ Get location details by location type and search filters with the following endp
 
 | Field | Type | Description |
 |---|---|---|
-| `searchField` | string | Search the result by keyword
-| `locationTypeIds` | string | Filters result by location type IDs, comma separated
+| `searchField` | string | Search the result by keyword |
+| `locationTypeIds` | string | Filters result by location type IDs, comma separated |
 
 \
 Response 200 Sample
@@ -276,14 +276,14 @@ The following endpoints can be used to get details and specs on various Creative
 
 | Method/Endpoint | Path | Description |
 | --- | --- | --- |
-| `GET` api/v3/master | /creativeTypes | Gets creative types
-|| /rtb-creative-types | Gets RTB creative types
-|| /creative-sizes | Gets creative sizes, including `standardDimensions`, `creativeDimensions`, and `videoPlayerSizes`
-|| /creative/video/skippability | Gets video skip ability parameters
-|| /creative/video/roll-position | Gets video roll-position parameters
-|| /creative/video/player-size | Gets video player-size parameters
-|| /creative/video/playback-method | Gets video playback-method parameters
-|| /creative/video/placement-type | Gets video placement-type parameters
+| `GET` api/v3/master | /static/creative-types | Gets creative types |
+|| /rtb-creative-types | Gets RTB creative types |
+|| /creative-sizes | Gets creative sizes, including `standardDimensions`, `creativeDimensions`, and `videoPlayerSizes` |
+|| /creative/video/skippability | Gets video skip ability parameters |
+|| /creative/video/roll-position | Gets video roll-position parameters |
+|| /creative/video/player-size | Gets video player-size parameters |
+|| /creative/video/playback-method | Gets video playback-method parameters |
+|| /creative/video/placement-type | Gets video placement-type parameters |
 
 
 \
@@ -331,20 +331,20 @@ The following endpoints can be used to get lists of various data:
 
 | Method/Endpoint | Path | Description |
 | --- | --- | --- |
-| `GET` /api | /network_types | Gets network types for targeting
-| | /device_os | Gets Device OS for targeting
-| | /manufacturers | Gets manufacturers for targeting
-|`GET` /api/v3/master | /traffic-types | Gets channels for the inventory app
-|| /timezones | Gets timezones
-|| /verticals/list | Gets values of verticals
-|| /segment/channel | Gets channels for the inventory app
-|| /inventory-types | Gets inventory types with ID and name
-|| /exchanges | Gets exchanges. Optional query parameters:<br>`exchangeIds` Filters for provided exchange IDs<br>`ids` Filters for provided exchange IDs, followed by other matching records<br>`pageNo` Page number for returned data, default: `1`<br>`noOfEnries` Maximum number of returned results per page<br>`sortBy` Sort the results by specific field<br> `order` Sorting order, supported values: `asc` or `desc`, default: `asc`<br>`searchField` Search the result by provided keyword
-|| /deal-curation-type | Gets deal curation types
-|`POST` /api/v3/master | /adcategories | Gets publisher ad categories. <br>Optional request body value: `adCategoryIds`, see next section for full schema
-|| /segment/dma | Gets paginated list of DMA code segment based on provided filters. Optional request body values: <br>`searchField` supported values: `name` or `abbreviation` <br>`parentSegmentIds` [array of integers] Filters for DMA code based on associated state ID <br>`segmentIds` [array of integers] Filters for DMA codes IDs<br>See following section for full schema 
-|| /segment/device-type | Gets device types based on provided filters<br>Optional request body values: <br>`segmentIds` [array of integers] Filters by device type IDs <br>See following section for full schema
-|| /inventory | Gets inventory. Optional request body values: <br>`publisherIds` [array of integers] Filters for publisher IDs <br>`inventoryIds` [array of integers] Filters for inventory IDs <br>See following section for full schema
+| `GET` /api | /network_types | Gets network types for targeting |
+| | /device_os | Gets Device OS for targeting |
+| | /manufacturers | Gets manufacturers for targeting |
+|`GET` /api/v3/master | /segment/channel | Gets channels for the inventory app |
+|| /timezones | Gets timezones |
+|| /verticals/list | Gets values of verticals |
+|| /segment/channel | Gets channels for the inventory app |
+|| /inventory-types | Gets inventory types with ID and name |
+|| /exchanges | Gets exchanges. Optional query parameters:<br>`exchangeIds` Filters for provided exchange IDs<br>`ids` Filters for provided exchange IDs, followed by other matching records<br>`pageNo` Page number for returned data, default: `1`<br>`noOfEnries` Maximum number of returned results per page<br>`sortBy` Sort the results by specific field<br> `order` Sorting order, supported values: `asc` or `desc`, default: `asc`<br>`searchField` Search the result by provided keyword |
+|| /deal-curation-type | Gets deal curation types |
+|`POST` /api/v3/master | /adcategories | Gets publisher ad categories. <br>Optional request body value: `adCategoryIds`, see next section for full schema |
+|| /segment/dma | Gets paginated list of DMA code segment based on provided filters. Optional request body values: <br>`searchField` supported values: `name` or `abbreviation` <br>`parentSegmentIds` [array of integers] Filters for DMA code based on associated state ID <br>`segmentIds` [array of integers] Filters for DMA codes IDs<br>See following section for full schema |
+|| /segment/device-type | Gets device types based on provided filters<br>Optional request body values: <br>`segmentIds` [array of integers] Filters by device type IDs <br>See following section for full schema |
+|| /inventory | Gets inventory. Optional request body values: <br>`publisherIds` [array of integers] Filters for publisher IDs <br>`inventoryIds` [array of integers] Filters for inventory IDs <br>See following section for full schema |
 
 \
 **Request Body Schema: application/json** [required]
@@ -353,11 +353,11 @@ For paginated list `POST` method endpoints
 
 | Property | Type | Description |
 | --- | --- | --- |
-| `pageNo` | integer [required] | Page number for returned data, default: `1`
-| `noOfEntries` | integer [required] | Maximum number of returned results per page
-| `sortBy` | string [optional] | Sort the results by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Default value: `-id`.
-| `searchField` | string [optional] | Search the result by provided keyword
-| `ids` | array of integers [optional] | Filter for specified IDs, matches will be returned first compared to other records
+| `pageNo` | integer [required] | Page number for returned data, default: `1` |
+| `noOfEntries` | integer [required] | Maximum number of returned results per page |
+| `sortBy` | string [optional] | Sort the results by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Default value: `-id` |
+| `searchField` | string [optional] | Search the result by provided keyword |
+| `ids` | array of integers [optional] | Filter for specified IDs, matches will be returned first compared to other records |
 
 \
 Response 200 Sample (exchanges)
