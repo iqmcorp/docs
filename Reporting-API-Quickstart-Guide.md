@@ -41,7 +41,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
 \
@@ -246,7 +246,7 @@ Available metrics are:
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -410,7 +410,7 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -448,7 +448,7 @@ At least one dimension is required.
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `x-iaa-api-token` | string | Advertiser API Token |
+| `X-IAA-API-TOKEN` | string | Advertiser API Token |
 
 **Request Body Schema: application/json**
 

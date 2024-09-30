@@ -33,10 +33,10 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 \
 **Header Parameters**
 
-| Property | Type| Example |
+| Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | `Basic N3BuaWJrdWpleTFvanJnbnNsbjU6MTIzNDU2` |
-| `X-IAA-HOST` | string | `api.iqm.com` |
+| `Authorization` | string  | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `X-IAA-HOST` | string | Workspace URL |
 
 \
 **Request Body Schema: application/json**
