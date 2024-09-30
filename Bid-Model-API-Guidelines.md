@@ -17,7 +17,7 @@ The **Include** and **Exclude** options allow the user to control where their ad
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -71,7 +71,7 @@ This API allows the user to optimize a campaign by updating the status of specif
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md)|
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -124,7 +124,7 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -239,7 +239,7 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -306,7 +306,7 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -566,7 +566,7 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
