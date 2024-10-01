@@ -73,6 +73,12 @@ These guidelines pages will help you navigate common methods and resources in th
 * [Programmatic Guarantee (PG) Deals](/Inventory-API-Guide.md#programmatic-guarantee-pg-deals-details)
 * [PG Deals Management](/Inventory-API-Guide.md#pg-management)
 
+#### [Reports API](/Reports-API-Guidelines.md)
+* [Get Report Details](/Reports-API-Guidelines.md#get-reports-details)
+* [Reports Management](/Reports-API-Guidelines.md#reports-management)
+* [Scheduling Management](/Reports-API-Guidelines.md#scheduling-management)
+* [Get More Report Details](/Reports-API-Guidelines.md#get-more-report-details)
+
 #### [Master API Guidelines](/Master-API-Guidelines.md)
 * [Get Geographical Data](/Master-API-Guidelines.md#get-geographical-data)
 * [Get Creative Data](/Master-API-Guidelines.md#get-creative-data)
@@ -118,8 +124,6 @@ Please refer to [MDN documentation on status codes](https://developer.mozilla.or
 The message rate limit is 20 requests per minute. Exceeding the limit will cause a 429 (too many requests) error.
 
 ## Best Practices
-
-The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error. 
 
 API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
 
