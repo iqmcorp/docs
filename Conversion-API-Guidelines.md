@@ -357,12 +357,12 @@ Create a pixel type conversion with the following endpoint:
         <td colspan="3"><code>piggybackData</code>
         <td>object</td>
                 <tr>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>&#8627;</td>
                     <td colspan="2"><code>url</td>
                     <td>string</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>&#8627;</td>
                     <td colspan="2"><code>type</td>
                     <td>integer</td>
                     <td><a href="#piggybackType">Piggyback type ID</a>
@@ -370,49 +370,49 @@ Create a pixel type conversion with the following endpoint:
         <td colspan="3"><code>conversionSetting</code>
         <td>object</td>
                 <tr>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td">&#8627;</td>
                     <td colspan="2"><code>conversionDuration</td>
                     <td>object</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">|</td>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>|</td>
+                    <td>&#8627;</td>
                     <td><code>view</td>
                     <td>integer</td>
                     <td>[<code>1</code>...<code>30</code>]
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">|</td>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>|</td>
+                    <td>&#8627;</td>
                     <td ><code>click</td>
                     <td>integer</td>
                     <td>[<code>7</code>...<code>60</code>]
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>&#8627;</td>
                     <td colspan="2"><code>repeatConversion</td>
                     <td>object</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">|</td>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>|</td>
+                    <td>&#8627;</td>
                     <td><code>count</td>
                     <td>integer</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">|</td>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>|</td>
+                    <td>&#8627;</td>
                     <td><code>frequency</td>
                     <td>integer</td>
                 </tr>
                       <tr>
-                    <td style="border-right: hidden">|</td>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>|</td>
+                    <td>&#8627;</td>
                     <td><code>unit</td>
                     <td>string</td>
                 </tr>
                   <tr>
-                    <td style="border-right: hidden">&#8627;</td>
+                    <td>&#8627;</td>
                     <td colspan="2"><code>crossModelling</td>
                     <td>boolean</td>
                 </tr>
