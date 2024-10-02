@@ -27,7 +27,7 @@ Get details about a conversion from its ID with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `conversionId` | integer | Conversion ID |
-| `typeId` | integer | Type of conversion for which the details will be returned <br>Pixel: `1` <br>Postback: `2` |
+| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) for which the details will be returned <br>Pixel: `1` <br>Postback: `2` |
 
 \
 Response 200
@@ -88,8 +88,8 @@ Get a list of conversions with details and filters with the following endpoint:
 | `pageNo` | integer | Page number for the data, default: `1` |
 | `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-created` | 
 | `conversionsId` | string | Conversion ID
-| `typeIds` | string | Filters by conversion type ID<br>Pixel: `1` <br>Postback: `2`
-| `statusIds` | string | Filters by conversion status ID<br>Active:`1` <br>Pending:`2` |
+| `typeIds` | string | Filters by [conversion type ID](#get-list-of-conversion-types)<br>Pixel: `1` <br>Postback: `2`
+| `statusIds` | string | Filters by [conversion status ID](#get-list-of-conversion-status)<br>Active:`1` <br>Pending:`2` |
 | `postbackPartnerIds` | string | Filters by postback conversion type IDs |
 
 \
