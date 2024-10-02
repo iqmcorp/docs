@@ -1,5 +1,7 @@
 # Conversions API
 
+IQM's Conversions API allows the user to manage and get details on conversions.
+
 ## Authorization
 
 Use the following header parameters for all requests:
@@ -256,6 +258,8 @@ Response 200
 
 ## Conversions Management
 
+This section covers the various methods and endpoints for managing conversions.
+
 ### Create Postback Conversion
 
 The following endpoint facilitates the insertion of postback type conversion records:
@@ -335,7 +339,9 @@ Create a pixel type conversion with the following endpoint:
     <tr>
         <td colspan="3"><code>attributionId</code></td>
         <td>string</td>
-        <td>Pixel conversion ID</td>
+        <td>
+        <a href="#attributionTypes">Attribution type ID</a>
+        </td>
     </tr>
     <tr>
         <td colspan="3"><code>customFields</code></td>
@@ -348,7 +354,7 @@ Create a pixel type conversion with the following endpoint:
         <td></td>
     </tr>    
     <tr>
-        <td colspan="3"><code>piggyBackData</code>
+        <td colspan="3"><code>piggybackData</code>
         <td>object</td>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
@@ -359,6 +365,7 @@ Create a pixel type conversion with the following endpoint:
                     <td style="border-right: hidden">&#8627;</td>
                     <td colspan="2"><code>type</td>
                     <td>integer</td>
+                    <td><a href="#piggybackType">Piggyback type ID</a>
                 </tr>
         <td colspan="3"><code>conversionSetting</code>
         <td>object</td>
@@ -470,3 +477,503 @@ Response 200
     }
 }
 ```
+
+### Delete Conversion
+
+This API provides a soft delete functionality for conversions with the following endpoint:
+
+* `DELETE` /api/v3/conversion/delete
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `conversionIds` | string | Comma separated conversion IDs to delete|
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Conversion has been deleted successfully!"
+}
+```
+
+
+### Update Postback Conversion
+
+Update the name of a postback type conversion with the following endpoint:
+
+* `PATCH` /api/v3/conversion/postback/update
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `id` | string | Postback Conversion ID |
+| `name` | string | New postback conversion name |
+
+\
+Request Sample
+
+```json
+{
+    "id": "3114",
+    "name": "Postback Conversion Update testing"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": 3114,
+        "name": "Postback Conversion Update testing"
+    }
+}
+```
+
+### Update Pixel Conversion
+
+Update the name and piggyback data of a pixel type conversion with the following endpoint: 
+
+* `PATCH` /api/v3/conversion/pixel/update
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `id` | string | Postback Conversion ID |
+| `name` | string | New postback conversion name |
+| `piggybackData` | object | 
+| &#8627;`url` | string |
+| &#8627;`type` | string | 
+
+\
+Request Sample
+
+```json
+{
+    "id": "3114",
+    "name": "Pixel Conversion Update testing",
+    "piggybackData": {
+        "url": "update piggybackData",
+        "type": "1"
+    }
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": 3114,
+        "name": "Pixel Conversion Update testing",
+        "piggybackData": {
+        "url": "update piggybackData",
+        "type": 1
+        }
+    }
+}
+```
+
+### Assign Conversion to a Campaign
+
+Assign a conversion to a campaign while validating conversion IDs and campaign IDs with the following endpoint:
+
+* `PATCH` /api/v3/conversion/assign-to/campaign
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `assignConversionToCampaign` | string | Map containing details list of `campaignId`s which need to be added/removed
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `conversionIdList` | array of integers | Conversion IDs to assign |
+| `addCampaignsList` | array of integers | Campaign IDs to assign conversions to |
+| `removeCampaignsList` | array of integers | Campaign IDs to remove assigned conversions from |
+
+\
+Request Sample
+
+```json
+{
+    "conversionIdList": [
+        3925
+    ],
+    "addCampaignsList": [
+        25396,
+        256374,
+        234567
+    ],
+    "removeCampaignsList": [
+        256321,
+        256432,
+        256433
+    ]
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "conversionIdsList": 3925,
+        "validAddCampaignIdsList": [
+            253396,
+            256374
+        ],
+        "invalidAddCampaignIdsList": [
+            234567
+        ],
+        "validRemoveCampaignIdsList": [
+            256321,
+            256432
+        ],
+        "invalidRemoveCampaignIdsList": [
+            256433
+        ]
+    }
+}
+```
+
+### Send Email for Pixel Integration
+
+Send an email containing information of integration pixel in html with the following endpoint:
+
+* `POST` /api/v3/conversion/pixel/send-email
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `conversionId` | string | Conversion ID
+| `recipients` | string | Comma separated emails to send pixel integration to |
+| `emailSubject` | string | Subject of email | 
+| `emailText` | string | Text of email | 
+
+\
+Request Sample 
+
+```json
+{
+    "conversionId": "3114",
+    "recipients": "username@gmail.com,anotherUser@yahoo.com",
+    "emailSubject": "Integrate Pixel Conversion",
+    "emailText": "Hello ${userName} has sent you a pixel code to integrate. Please follow the steps below to integrate the pixel code."
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Pixel conversion e-mail sent successfully."
+}
+```
+
+## Get More Conversion Details
+
+This section covers the methods and endpoints for getting more details and static lists about conversions. 
+
+### Get List of Partner Types for Postback Conversions
+
+Get list of partner details for postback converisions like logo and name with the folowing endpoint:
+
+* `GET` /api/v3/conversion/static/postback/partner-type
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+|`searchField` | string | Search results by keyword |
+| `partnerTypeIds` | string | Filters by partner type IDs |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "Kochava",
+                "logoUrl": "https://d2v0lj9tfbnmhu.cloudfront.net/assets/static/partners/kochava.com",
+                "order": 1,
+                "active": true
+            },
+            {
+                "id": 2,
+                "name": "Singular",
+                "logoUrl": "https://d2v0lj9tfbnmhu.cloudfront.net/assets/static/partners/singular.net",
+                "order": 2,
+                "active": true
+            },
+            {
+                "id": 3,
+                "name": "Appsflyer",
+                "logoUrl": "https://d2v0lj9tfbnmhu.cloudfront.net/assets/static/partners/appsflyer.com",
+                "order": 3,
+                "active": true
+            },
+            {
+                "id": 4,
+                "name": "Adjust",
+                "logoUrl": "https://d2v0lj9tfbnmhu.cloudfront.net/assets/static/partners/adjust.com",
+                "order": 4,
+                "active": true
+            }
+        ],
+        "totalRecords": 4,
+        "filteredRecords": 4
+    }
+}
+```
+
+### Get List of Pixel Conversion Advanced Setting Default Values
+
+Get a list and details about default values of advanced settings for pixel based conversions with the following endpoint: 
+
+* `GET` /api/v3/conversion/static/pixel/conversion-default-advanced-setting-data
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+        {
+            "id": 1,
+            "name": "post_click_interval",
+            "displayName": "Post Click Interval",
+            "value": "15",
+            "active": true
+        },
+        {
+            "id": 2,
+            "name": "post_view_interval",
+            "displayName": "Post View Interval",
+            "value": "28",
+            "active": true
+        },
+        {
+            "id": 3,
+            "name": "cross_device",
+            "displayName": "Cross Device",
+            "value": "true",
+            "active": true
+        }
+        ],
+        "totalRecords": 3,
+        "filteredRecords": 3
+    }
+}
+```
+
+### Get List of Conversion Types
+
+Get a list and details of conversion types with the following endpoint:
+
+* `GET` /api/v3/conversion/static/conversion-type
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+|`searchField` | string | Search results by keyword |
+| `conversionTypeIds` | string | Filters by conversion type IDs |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "pixel",
+                "displayName": "Pixel",
+                "order": 1,
+                "active": true
+            },
+            {
+                "id": 2,
+                "name": "postback",
+                "displayName": "Postback",
+                "order": 2,
+                "active": true
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 2
+    }
+}
+```
+
+### Get List of Conversion Status
+
+Get a list of conversion status with the following endpoint:
+
+* `GET` /api/v3/conversion/static/conversion-status
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+|`searchField` | string | Search results by keyword |
+| `statusIds` | string | Filters by status type IDs |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "active",
+                "displayName": "Active",
+                "order": 1,
+                "active": true
+            },
+            {
+                "id": 2,
+                "name": "pending",
+                "displayName": "Pending",
+                "order": 2,
+                "active": true
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 2
+    }
+}
+```
+
+### Get List of Conversion Piggyback Types
+
+<a id="piggybackType"></a>
+Get a list of conversion piggyback types with the following endpoint:
+
+* `GET` /api/v3/conversion/static/conversion-piggyback-type
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+|`searchField` | string | Search results by keyword |
+| `piggybackTypeIds` | string | Filters by piggyback type IDs |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "image_pixel",
+                "displayName": "Image Pixel",
+                "order": 1,
+                "active": true
+            },
+            {
+                "id": 2,
+                "name": "javascript_pixel",
+                "displayName": "Javascript Pixel",
+                "order": 2,
+                "active": true
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 2
+    }
+}
+```
+
+### Get List of Conversion Attribute Types
+
+<a id="attributionTypes"></a>
+Get a list of conversion attribute types with the following endpoint:
+
+* `GET` /api/v3/conversion/static/conversion-attribution-type
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+|`searchField` | string | Search results by keyword |
+| `attributionTypeIds` | string | Filters by attribution type IDs |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "hybrid",
+                "displayName": "Hybrid",
+                "order": 1,
+                "description": "Hybrid attribution combines both click-based and view-based methods to assign credit for a conversion either to an ad that was last clicked or to an ad that was last viewed.",
+                "active": true
+            },
+            {
+                "id": 3,
+                "name": "view_based",
+                "displayName": "View Based",
+                "order": 2,
+                "description": "View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion.",
+                "active": true
+            },
+            {
+                "id": 2,
+                "name": "click_based",
+                "displayName": "Click Based",
+                "order": 3,
+                "description": "Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action.",
+                "active": true
+            }
+        ],
+        "totalRecords": 3,
+        "filteredRecords": 3
+    }
+}
+```
+
