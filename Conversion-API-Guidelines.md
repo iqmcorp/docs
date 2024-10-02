@@ -176,7 +176,25 @@ Get a list of campaign details by conversion ID with the following endpoint:
 Response 200
 
 ```json
-
+{
+    "success": true,
+    "data": [
+        {
+            "campaignId": 1000,
+            "campaignName": "Campaign 1",
+            "creativeTypeId": 17, 
+            "status": "expired",
+            "startTime": 1888705936,
+            "endTime": 1669420800,
+            "ioId": 1,
+            "ioName": "Insertion Order Name",
+            "ioStatusId": 1,
+            "ioBudgetTypeId": 1
+        }
+    ], 
+    "totalRecords": 4,
+    "filterRecords": 1
+}
 ```
 
 ### Get Campaign Details by Conversion ID in Group or Basic
@@ -191,7 +209,7 @@ Get a list of campaign details by conversin ID in group details or basic details
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `conversionId` | integer | Conversion ID |
-| `owId` | integer | Organization Workspace ID | 
+| `owId` | integer | Organization Workspace ID |
 | `isGroup` | boolean | Flag for fetching group details (`true`) or basic details (`false`) |
 | `limit` | integer | Maximum number of entries returned, default: `20` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -302,21 +320,100 @@ Create a pixel type conversion with the following endpoint:
 \
 **Request Body Schema: application/json**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `name` | string | Name of pixel conversion |
-| `attribtionId` | string | 
-| `customFields` | array of strings | 
-| `financialMetrics` | string | 
-| `piggybackData` | object |
-| &#8627;`url` | string | Part of `piggyBackData` object |
-| &#8627;`type` | integer | Part of `piggyBackData` object |
-| `conversionSetting` | object | 
-| &#10236; `conversionDuration` | object | Part of `conversionSetting` |
-| &#10236;&#10236;`view` | integer | [`1`...`30`] Part of `convesionDuration` |
-| &#10236;&#10236;`click` | integer | [`7`...`60`] Part of `conversionDuration` |
-| &#10551;`repeatConversion` | object | Part of `conversionSetting` |
-| &#10551;&#10236; `count` | integer | Part of `repeatConversion` |
-| &#10551;&#10236; `frequency` | integer | Part of `repeatConversion` |
-| &#10551;&#10236; `unit` | integer | Part of `repeatConversion` |
-| &#10551; `crossModeling` | boolean | Part of `conversionSetting` |
+| Property | Subproperty | Type | Description |
+| ---- | ---- | --- | --- |
+| `name` || string | Name of pixel conversion |
+| `attribtionId` || string |
+| `customFields` || array of strings |
+| `financialMetrics` || string |
+| `piggybackData` || object | asdf
+| |`url` | string | Part of `piggyBackData` object |
+| |`type` | integer | Part of `piggyBackData` object |
+| `conversionSetting`| | object
+||`conversionDuration` | | object
+| |`view` || integer | [`1`...`30`] |
+| |`click` || integer | [`7`...`60`]  |
+||
+| `repeatConversion`| [object] |  |
+| `count` || integer | Part of `repeatConversion` |
+|  `frequency` || integer | Part of `repeatConversion` |
+|  `unit` || integer | Part of `repeatConversion` |
+||
+| |`crossModeling` || boolean | Part of `conversionSetting` | 
+||
+
+
+
+<table border="1">
+        <thead>
+    <tr>
+        <th class="tg-0pky" colspan="3">Property</th>
+        <th class="tg-0pky">Type</th>
+        <th class="tg-0pky">Description</th>
+    </tr></thead>
+    <tr>
+        <td colspan="3"><code>financialMetrics</code</td>
+        <td>string</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="3" style="border-bottom: dotted"><code>piggyBackData</code>
+        <td>object</td>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>url</td>
+                    <td>string</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>type</td>
+                    <td>integer</td>
+                </tr>
+        <td colspan="3" style="border-bottom: dotted"><code>conversionSetting</code>
+        <td>object</td>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>conversionDuration</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>view</td>
+                    <td>integer</td>
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td ><code>click</td>
+                    <td>integer</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>repeatConversion</td>
+                    <td>object</td>
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>count</td>
+                    <td>integer</td>
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>frequency</td>
+                    <td>integer</td>
+                </tr>
+                      <tr>
+                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>unit</td>
+                    <td>string</td>
+                </tr>
+                  <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>crossModelling</td>
+                    <td>boolean</td>
+                </tr>
+</table>
