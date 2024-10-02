@@ -320,44 +320,35 @@ Create a pixel type conversion with the following endpoint:
 \
 **Request Body Schema: application/json**
 
-| Property | Subproperty | Type | Description |
-| ---- | ---- | --- | --- |
-| `name` || string | Name of pixel conversion |
-| `attribtionId` || string |
-| `customFields` || array of strings |
-| `financialMetrics` || string |
-| `piggybackData` || object | asdf
-| |`url` | string | Part of `piggyBackData` object |
-| |`type` | integer | Part of `piggyBackData` object |
-| `conversionSetting`| | object
-||`conversionDuration` | | object
-| |`view` || integer | [`1`...`30`] |
-| |`click` || integer | [`7`...`60`]  |
-||
-| `repeatConversion`| [object] |  |
-| `count` || integer | Part of `repeatConversion` |
-|  `frequency` || integer | Part of `repeatConversion` |
-|  `unit` || integer | Part of `repeatConversion` |
-||
-| |`crossModeling` || boolean | Part of `conversionSetting` | 
-||
-
-
-
-<table border="1">
+<table>
         <thead>
     <tr>
         <th class="tg-0pky" colspan="3">Property</th>
         <th class="tg-0pky">Type</th>
         <th class="tg-0pky">Description</th>
-    </tr></thead>
+    </tr></thead> 
     <tr>
-        <td colspan="3"><code>financialMetrics</code</td>
+        <td colspan="3"><code>name</code></td>
+        <td>string</td>
+        <td>Name for pixel conversion</td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>attributionId</code></td>
+        <td>string</td>
+        <td>Pixel conversion ID</td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>customFields</code></td>
         <td>string</td>
         <td></td>
     </tr>
     <tr>
-        <td colspan="3" style="border-bottom: dotted"><code>piggyBackData</code>
+        <td colspan="3"><code>financialMetrics</code></td>
+        <td>string</td>
+        <td></td>
+    </tr>    
+    <tr>
+        <td colspan="3"><code>piggyBackData</code>
         <td>object</td>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
@@ -369,7 +360,7 @@ Create a pixel type conversion with the following endpoint:
                     <td colspan="2"><code>type</td>
                     <td>integer</td>
                 </tr>
-        <td colspan="3" style="border-bottom: dotted"><code>conversionSetting</code>
+        <td colspan="3"><code>conversionSetting</code>
         <td>object</td>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
@@ -377,16 +368,18 @@ Create a pixel type conversion with the following endpoint:
                     <td>object</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>view</td>
                     <td>integer</td>
+                    <td>[<code>1</code>...<code>30</code>]
                 </tr>
                     <tr>
-                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td ><code>click</td>
                     <td>integer</td>
+                    <td>[<code>7</code>...<code>60</code>]
                 </tr>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
@@ -394,19 +387,19 @@ Create a pixel type conversion with the following endpoint:
                     <td>object</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>count</td>
                     <td>integer</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>frequency</td>
                     <td>integer</td>
                 </tr>
                       <tr>
-                    <td style="border-right: hidden"></td>
+                    <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>unit</td>
                     <td>string</td>
@@ -417,3 +410,63 @@ Create a pixel type conversion with the following endpoint:
                     <td>boolean</td>
                 </tr>
 </table>
+
+\
+Request Sample
+
+```json
+{
+    "name": "PixelConversion",
+    "attributionId": "1",
+    "customFields": [
+        "field_1",
+        "field_2",
+        "field_3"
+    ],
+    "financialMetrics": "field_4",
+    "piggybackData": {
+        "url": "http://piggybackdata.com/url",
+        "type": 1
+    },
+    "conversionSetting": {
+        "conversionDuration": {
+            "view": 10,
+            "click": 10
+        },
+        "repeatConversion": {
+            "count": 1,
+            "frequency": 1,
+            "unit": "Day"
+        },
+        "crossModelling": true
+    }
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": 3213,
+        "name": "PixelConversion",
+        "postbackPartnerName": null,
+        "status": "Pending",
+        "type": "Pixel",
+        "created": 1687459918,
+        "totalConversions": 0,
+        "owId": 202017,
+        "createdByUowId": 108658,
+        "modifiedByUowId": 108658,
+        "uuid": "a574ca49cc244c3bb3089491a11aae43",
+        "attributedConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "attributedClickThroughConversions": 0,
+        "pixelFinancialMetric": "name",
+        "postbackPartnerLogoURL": null,
+        "pixelConversionScript": "<script src='https://pxl.stage.iqm.com/i/pixel/8f3165d0-b714-440e-bc1d-621127fa5fad?cv={CONVERSION_VALUE}' async></script>",
+        "partnerUrl": null
+    }
+}
+```
