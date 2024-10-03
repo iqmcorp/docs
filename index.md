@@ -79,6 +79,12 @@ These guidelines pages will help you navigate common methods and resources in th
 * [Scheduling Management](/Reports-API-Guidelines.md#scheduling-management)
 * [Get More Report Details](/Reports-API-Guidelines.md#get-more-report-details)
 
+#### [Conversions API](/Conversion-API-Guidelines.md)
+* [Get Conversions Details](/Conversion-API-Guidelines.md#get-conversion-details)
+* [Conversions Management](/Conversion-API-Guidelines.md#conversions-management)
+* [Get More Conversion Details](/Conversion-API-Guidelines.md#get-more-conversion-details)
+
+
 #### [Master API Guidelines](/Master-API-Guidelines.md)
 * [Get Geographical Data](/Master-API-Guidelines.md#get-geographical-data)
 * [Get Creative Data](/Master-API-Guidelines.md#get-creative-data)
