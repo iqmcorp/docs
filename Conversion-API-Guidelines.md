@@ -13,7 +13,173 @@ Use the following header parameters for all requests:
 
 ## Get Conversion Details
 
-This section covers the various methods and endpoints for getting conversion details and lists. 
+This section covers the various methods and endpoints for getting conversion details and lists.
+
+### Postback Conversion Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `id` | integer | Postback Conversion ID |
+| `name` | string | Postback Conversion name |
+| `uuid` | string | 
+| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) |
+| `owId` | integer | Organization Workspace ID |
+| `createdByUowId` | integer | Created by Organization Workspace User ID |
+| `modifiedByUowId` | integer | Modified by Organization Workspace User ID |
+| `statusId` | integer | [Status ID](#get-list-of-conversion-status)
+| `partnerTypeId` | intger | [Partner type ID](#get-list-of-partner-types-for-postback-conversions) |
+| `impressionUrl` | string | Impression URL |
+| `clickUrl` | string | Click URL |
+
+### Pixel Conversion Resource Properties
+
+<table>
+        <thead>
+    <tr>
+        <th class="tg-0pky" colspan="3">Property</th>
+        <th class="tg-0pky">Type</th>
+        <th class="tg-0pky">Description</th>
+    </tr></thead> 
+      <tr>
+        <td colspan="3"><code>id</code></td>
+        <td>integer</td>
+        <td>Pixel Conversion ID</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>uuid</code></td>
+        <td>string</td>
+        <td>Universally unique ID</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>typeId</code></td>
+        <td>integer</td>
+        <td><a href="#conversionType">Conversion type ID</a></td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>owId</code></td>
+        <td>integer</td>
+        <td>Organization Workspace ID</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>createdByUowId</code></td>
+        <td>integer</td>
+        <td>Created by Organization Workspace User ID</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>modifiedByUowId</code></td>
+        <td>integer</td>
+        <td>Modified by Organization Workspace User ID</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>statusId</code></td>
+        <td>integer</td>
+        <td><a href="#conversionStatus">Conversion status type ID</a></td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>status</code></td>
+        <td>string</td>
+        <td>Status name</td>
+    </tr>
+      <tr>
+        <td colspan="3"><code>created</code></td>
+        <td>integer</td>
+        <td>Unix epoch timestamp, in milleseconds</td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>name</code></td>
+        <td>string</td>
+        <td>Name for Pixel Conversion</td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>attributionId</code></td>
+        <td>string</td>
+        <td>
+        <a href="#attributionTypes">Attribution type ID</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>customFields</code></td>
+        <td>string</td>
+        <td>Allows user to pass additional data along with conversion details, which can be used for more detailed insights</td>
+    </tr>
+    <tr>
+        <td colspan="3"><code>financialMetrics</code></td>
+        <td>string</td>
+        <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
+    </tr>    
+    <tr>
+        <td colspan="3"><code>piggybackData</code>
+        <td>object</td>
+        <td></td>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>url</td>
+                    <td>string</td>
+                    <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>type</td>
+                    <td>integer</td>
+                    <td><a href="#piggybackType">Piggyback type ID</a>
+                </tr>
+        <td colspan="3"><code>conversionSetting</code>
+        <td>object</td>
+        <td>Advanced conversion settings</td>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>conversionDuration</td>
+                    <td>object</td>
+                    <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">|</td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>view</td>
+                    <td>integer</td>
+                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br>Post view interval, days: [<code>1</code>...<code>30</code>]
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden">|</td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td ><code>click</td>
+                    <td>integer</td>
+                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br>Post click interval, days: [<code>7</code>...<code>60</code>]
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>repeatConversion</td>
+                    <td>object</td>
+                    <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden">|</td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>count</td>
+                    <td>integer</td>
+                    <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
+                </tr>
+                    <tr>
+                    <td style="border-right: hidden">|</td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>frequency</td>
+                    <td>integer</td>
+                    <td>Counts 1 conversion per user for specified number based on selected unit </td>
+                </tr>
+                      <tr>
+                    <td style="border-right: hidden">|</td>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td><code>unit</td>
+                    <td>string</td>
+                    <td>Selected unit of conversion frequency</td>
+                </tr>
+                  <tr>
+                    <td style="border-right: hidden">&#8627;</td>
+                    <td colspan="2"><code>crossModelling</td>
+                    <td>boolean</td>
+                    <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
+                </tr>
+</table>
 
 ### Get Conversion Details by ID
 
@@ -346,20 +512,22 @@ Create a pixel type conversion with the following endpoint:
     <tr>
         <td colspan="3"><code>customFields</code></td>
         <td>string</td>
-        <td></td>
+        <td>Allows user to pass additional data along with conversion details, which can be used for more detailed insights</td>
     </tr>
     <tr>
         <td colspan="3"><code>financialMetrics</code></td>
         <td>string</td>
-        <td></td>
-    </tr>    
+        <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
+    </tr>
     <tr>
         <td colspan="3"><code>piggybackData</code>
         <td>object</td>
+        <td></td>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
                     <td colspan="2"><code>url</td>
                     <td>string</td>
+                    <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
                 </tr>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
@@ -369,52 +537,59 @@ Create a pixel type conversion with the following endpoint:
                 </tr>
         <td colspan="3"><code>conversionSetting</code>
         <td>object</td>
+        <td>Advanced conversion settings</td>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
                     <td colspan="2"><code>conversionDuration</td>
                     <td>object</td>
+                    <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
                 </tr>
                 <tr>
                     <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>view</td>
                     <td>integer</td>
-                    <td>[<code>1</code>...<code>30</code>]
+                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br>Post view interval, days: [<code>1</code>...<code>30</code>]
                 </tr>
                     <tr>
                     <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td ><code>click</td>
                     <td>integer</td>
-                    <td>[<code>7</code>...<code>60</code>]
+                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br>Post click interval, days: [<code>7</code>...<code>60</code>]
                 </tr>
                 <tr>
                     <td style="border-right: hidden">&#8627;</td>
                     <td colspan="2"><code>repeatConversion</td>
                     <td>object</td>
+                    <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
                 </tr>
                     <tr>
                     <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>count</td>
                     <td>integer</td>
+                    <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
                 </tr>
                     <tr>
                     <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>frequency</td>
                     <td>integer</td>
+                    <td>Counts 1 conversion per user for specified number based on selected unit </td>
                 </tr>
                       <tr>
                     <td style="border-right: hidden">|</td>
                     <td style="border-right: hidden">&#8627;</td>
                     <td><code>unit</td>
                     <td>string</td>
+                    <td>Selected unit of conversion frequency</td>
                 </tr>
                   <tr>
                     <td style="border-right: hidden">&#8627;</td>
                     <td colspan="2"><code>crossModelling</td>
                     <td>boolean</td>
+                    <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
                 </tr>
 </table>
 
@@ -795,6 +970,8 @@ Response 200
 
 ### Get List of Conversion Types
 
+<a id="conversionType"></a>
+
 Get a list and details of conversion types with the following endpoint:
 
 * `GET` /api/v3/conversion/static/conversion-type
@@ -837,6 +1014,8 @@ Response 200
 ```
 
 ### Get List of Conversion Status
+
+<a id="conversionStatus"></a>
 
 Get a list of conversion status with the following endpoint:
 
@@ -882,6 +1061,7 @@ Response 200
 ### Get List of Conversion Piggyback Types
 
 <a id="piggybackType"></a>
+
 Get a list of conversion piggyback types with the following endpoint:
 
 * `GET` /api/v3/conversion/static/conversion-piggyback-type
