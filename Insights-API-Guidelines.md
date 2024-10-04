@@ -1,5 +1,7 @@
 # Insights Guidelines
 
+Audience insights provide in-depth reports of audience characteristics, itnerests, and behaviors to give advertisers a deeper understanding of thier taret audience and create targeted and personalized advertising strategies. This page covers the various methods and endpoints for insights details and management, as well as Voter Level Data reports details and management.
+
 ## Authorization
 
 Use the following header parameters for all requests:
@@ -280,6 +282,169 @@ Reponse 200
 ```
 
 ## Insights Management
+
+### Create Insights for a Given Audience
+
+Create an insight report for a given audience ID with the following endpoint:
+
+* `POST` /api/v3/ins/insights/add
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `insightsTypeId` | integer | Insights type ID |
+| `sourceIds` | integer | Source IDs |
+
+\
+Request Sample
+
+```json
+{
+    "insightsTypeId": 1,
+    "sourceIds": [
+        567895,
+        925436,
+        123677
+    ]
+}
+```
+
+Response 200
+
+```json
+
+```
+
+### Delete Insights Record
+
+Delete records from the database for valid insights IDs passed in the following endpoint:
+
+* `DELETE` /api/v3/ins/insights/delete
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `insightsIds` | integer | Comma separated insights IDs to delete | 
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "deletedIds": [
+            35,
+            34
+        ],
+        "invalidIds": [
+            33,
+            1
+        ]
+    }
+}
+```
+
+### Regenerate Insights Report
+
+Regenerates an insights report if the insight fails with the following endpoint:
+
+* `POST` /api/v3/ins/insights/regenerate/{insightsId}
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `insightsIds` | array of integers | Insights IDs to regenerate |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Insights regenerated successfully."
+}
+```
+
+### Download Insights Report
+
+Download insights report for audience (pdf or xlsx) by passing multipart/form-data format with the following endpoint:
+
+* `POST` /api/v3/ins/insights/download
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `insightsId` | integer | Insights ID |
+| `fileType` | string | File type of report: `pdf` or `xlsx`
+
+\
+**Request Body Schema**
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `customLogoFile` | string | Multipart/form-data format
+
+\
+Request Sample
+
+```json
+{
+    "customLogoFile": "string"
+}
+```
+
+Response 200
+
+```json
+
+```
+
+### Send Insights Email
+
+Send an attached insights report file via email with the following endpoint:
+
+* `POST` /api/v3/ins/send-email
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `id` | integer | Insights ID |
+| `attachmentType` | string | File type of report: `pdf` or `xlsx` |
+| `recipientEmails` | string | Comma separated string of emails to send insights report to, up to 15 |
+
+\
+**Request Body Schema**
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `file` | string | Multipart/form-data format
+
+\
+Request Sample
+
+```json
+{
+    "file": "string"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Insights-1 pdf email sent successfully."
+}
+```
 
 ## Voter Level Data Reports
 
