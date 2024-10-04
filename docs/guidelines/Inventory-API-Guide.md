@@ -303,7 +303,7 @@ Get a list of inventory groups based on various filters and parameters with the 
 | `pageSize` | integer | Maximum number of entries per page |
 | `pageNo` | integer | Number of pages for retrieved data |
 | `owId` | integer | Organization Workspace ID |
-| `sortBy` | string | Sort entries by ascending (+) or descending (-) |
+| `sortBy` | string | Sort entries by ascending (`+`) or descending (`-`) |
 
 \
 Response 200 Sample
@@ -792,7 +792,7 @@ Get a list of PMP deals based on desired filters available for user with the fol
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `groupId` | integer | Filters PMP Deals by Group ID |
-| `active` | boolean | Filters for active (=`true`) or inactive (=`false`) deals |
+| `active` | boolean | Filters for active (`true`) or inactive (`false`) deals |
 | `searchKeywords` | array of strings | Strings used to search by `dealId`, `dealName`, or description |
 | `creativeTypes` | array of integers | Creative type IDs |
 | `exchanges` | array of integers | Exchanges IDs |
@@ -1131,8 +1131,8 @@ Response 200 Sample
     "success": true,
     "data": {
         "id": [
-        470,
-        471
+            470,
+            471
         ],
         "message": "Deal/s deleted successfully"
     }
