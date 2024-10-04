@@ -80,7 +80,7 @@ This API allows the user to optimize a campaign by updating the status of specif
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `advertiserId` | integer | Unique ID of advertiser |
-| `dspId` | integer | | 
+| `dspId` | integer | | Demand Side Platform ID
 | `owId` | integer | Organization workspace ID |
 | `uowId` | integer | User organization workspace ID |
 | `campaignId` | integer | Unique ID of campaign |
@@ -117,7 +117,7 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `ioId` | integer [required] | Unique identifier for insertion order | 
+| `ioId` | integer [required] | Insertion Order ID | 
 
 \
 **Header Parameters**
@@ -137,8 +137,8 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 | `addPriority` | object | Assign new priority to one or multiple campaigns, requires `priority` and `campaignIds` | 
 | `updatePriority` | object | Update assigned priority to one or multiple campaigns, requires `priority` and `campaignIds` |
 | `deletePriority` | object | Deletes assigned priority from one or multiple campaigns, requires `priority` and `campaignIds` |
-| `priority` | integer [required] | Assigned priority: [1 .. 10]
-| `campaignIds` | array of integers [required] | Array of unique campaign IDs |
+| `priority` | integer [required] | Assigned priority: [`1` .. `10`]
+| `campaignIds` | array of integers [required] | Campaign IDs |
 
 \
 Request Sample
@@ -232,7 +232,7 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `ioId` | integer [required] | Unique identifier for insertion order | 
+| `ioId` | integer [required] | Insertion Order ID | 
 
 \
 **Header Parameters**
@@ -247,8 +247,8 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `priority` | integer [required] | Assigned priority: [1 .. 10]
-| `campaignIds` | array of integers [required] | Array of unique campaign IDs |
+| `priority` | integer [required] | Assigned priority: [`1` .. `10`]
+| `campaignIds` | array of integers [required] | Campaign IDs |
 
 \
 Request Sample
@@ -293,13 +293,13 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `searchField` | string | Default: `""` |
-| `sortBy` | string | Default: `"-impressions"` |
-| `pageNo` | integer | Default: `1` |
-| `pageSize` | integer | Default: `50` |
-| `timeZoneId` | integer | ID of time zone |
-| `startDate` | integer | Unix timestamp of campaign start date |
-| `endDate` | integer | Unix timestamp of campaign end date |
+| `searchField` | string | Search results by keyword |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `"-impressions"` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `pageSize` | integer | Maximum number of entries returned, default: `50` |
+| `timeZoneId` | integer | Timezone ID |
+| `startDate` | integer | Unix epoch timestamp (in milliseconds) of campaign start date |
+| `endDate` | integer | Unix epoch timestamp (in milliseconds) of campaign end date |
 
 \
 **Header Parameters**
@@ -314,8 +314,8 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `name` | string | |
-| `fileName` | string| |
+| `name` | string | Report name |
+| `fileName` | string| File name |
 | `activeTable` | string | 
 | `columns` | object | Contains `label` and `value` properties
 | `label` | string | | 
@@ -412,21 +412,73 @@ This API will provide values of bid-model dimensions and sub-dimensions with the
 
 ### Resource Properties
 
-| Dimension ID | Dimension Name | Description |
-| :---: | --- | --- |
-| `1` | Creative |
-| `2` | Inventory |
-| `3` | Deal ID | Subdimension of Inventory
-| `4` | Open Exchange | Subdimension of Inventory
-| `5` | Publisher Category | Subdimension of Inventory
-| `6` | Device | |
-| `7` | Traffic Type | Subdimension of Device
-| `8` | Device Type | Subdimension of Device
-| `9` | Location | |
-| `10` | State | Subdimension of Location |
-| `11` | City | Subdimension of Location |
-| `12` | Zip | Subdimension of Location | 
-| `13` | Exchange | |
+<table>
+    <thead>
+    <tr>
+        <th class="tg-0pky" colspan="2">ID</th>
+        <th class="tg-0pky">Dimension Name</th>
+    </tr></thead> 
+    <tr>
+        <td colspan="2"><code>1</code></td>
+        <td>Creative</td>
+    </tr>
+    <tr>
+        <td colspan="2"><code>2</code>
+        <td>Inventory</td>
+                <tr>
+                    <td style="border-right: hidden">├━</td>
+                    <td><code>3</td>
+                    <td>Deal ID</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">├━</td>
+                    <td><code>4</td>
+                    <td>Open Exchange</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">└━</td>
+                    <td><code>5</td>
+                    <td>Publisher Category</td>
+                </tr>
+    <tr>
+        <td colspan="2"><code>6</code>
+        <td>Device</td>
+                <tr>
+                    <td style="border-right: hidden">├━</td>
+                    <td><code>7</td>
+                    <td>Traffic Type</td>
+                </tr>
+                 <tr>
+                    <td style="border-right: hidden">└━</td>
+                    <td><code>8</td>
+                    <td>Device Type</td>
+                </tr>
+    <tr>
+        <td colspan="2"><code>9</code></td>
+        <td>Location</td>
+    </tr>
+                <tr>
+                    <td style="border-right: hidden">├━</td>
+                    <td><code>10</td>
+                    <td>State</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">├━</td>
+                    <td><code>11</td>
+                    <td>City</td>
+                </tr>
+                <tr>
+                    <td style="border-right: hidden">└━</td>
+                    <td><code>12</td>
+                    <td>Zip</td>
+                </tr>
+    <tr>
+        <td colspan="2"><code>13</code></td>
+        <td>Exchange</td>
+    </tr>
+</table>
+
+
 
 \
 Response Sample
@@ -558,8 +610,8 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `startDate` | integer | Unix timestamp for campaign start date | 
-| `endDate` | integer | Unix timestamp for campaign end date |
+| `startDate` | integer | Unix epoch timestamp (in milliseconds) for campaign start date | 
+| `endDate` | integer | Unix epoch timestamp (in milliseconds) for campaign end date |
 
 \
 **Header Parameters**
