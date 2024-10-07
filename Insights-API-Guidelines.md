@@ -388,6 +388,7 @@ Download insights report for audience (pdf or xlsx) by passing multipart/form-da
 
 \
 **Request Body Schema**
+
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `customLogoFile` | string | Multipart/form-data format
@@ -404,7 +405,12 @@ Request Sample
 Response 200
 
 ```json
-
+{
+    "success": true,
+    "data": {
+        "insightsReportUrl": "https://domain.com/insights.pdf"
+    }
+}
 ```
 
 ### Send Insights Email
