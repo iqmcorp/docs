@@ -294,7 +294,7 @@ Create an insight report for a given audience ID with the following endpoint:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `insightsTypeId` | integer | Insights type ID |
+| `insightsTypeId` | integer | [Insights type ID](#get-list-of-insights-types) |
 | `sourceIds` | integer | Source IDs |
 
 \
@@ -314,7 +314,23 @@ Request Sample
 Response 200
 
 ```json
-
+{
+    "success": true,
+    "data": {
+        "invalidSourceIds": [],
+        "insightsData": [
+            {
+                "id": 1213,
+                "typeId": 1,
+                "statusId": 2,
+                "sourceName": "Data Trust NY 4 Cols",
+                "name": "Data Trust NY 4 Cols_insights",
+                "sourceId": 1099461,
+                "createdAt": 1728366883518
+            }
+        ]
+    }
+}
 ```
 
 ### Delete Insights Record
@@ -454,6 +470,33 @@ Response 200
 
 ## Voter Level Data Reports
 
+VLD reports offer insights about users targeted in current or prior political campaigns. These reports include ad exposure, engagement data, demographic data, and voting-history details, by voter. This section covers the methods and endpoints for managing VLD reports.
+
+### VLD Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `vldId` | integer | VLD ID |
+| `vldName` | string | VLD name |
+| `vldStatus` | integer | VLD status type ID |
+| `ioId` | integer | Insertion Order ID |
+| `ioName` | string | Insertion Order name |
+| `ioTypeId` | integer | Insertion Order type ID |
+| `vldCreatedOn` | integer | Unix epoch timestamp of creation date, in milliseconds |
+| `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` | integer | Campaign ID |
+| `campaignName` | string | Campaign name |
+| `campaignStatus` | string | Campaign status type |
+| `creativeTypeId` | integer | Creative type ID |
+| `vldReportCreatable` | boolean | 
+| `vldChargeableImps` | integer |
+| `vldChargedImps` | integer |
+| `vldChargeableCost` | integer |
+| `vldChargedCost` | integer |
+| `fundsAvailable` | boolean |
+| `effectiveVldRate` | integer |
+
 ### Get List of VLD Reports
 
 Get a list of VLD reports based on search filters with the following endpoint:
@@ -557,6 +600,59 @@ This API calculates the cost for the impressions for the Voter Level Data Report
 
 | Property | Type | Description |
 | ---- | ---- | --- |
+| `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` | integer | Campaign ID |
+
+\
+Request Sample
+
+```json
+{
+    "campaignId": 12345,
+    "vldStartDate": 1722311000,
+    "vldEndDate": 1722315000
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "vldId": 421,
+        "vldName": "532560_VLD_Insights_8",
+        "vldStatus": 2,
+        "ioId": 13690,
+        "ioName": "Test IMP IO",
+        "ioTypeId": 2,
+        "vldCreatedOn": 1728366784579,
+        "vldStartDate": 1722597600000,
+        "vldEndDate": 1727668800000,
+        "campaignId": 532560,
+        "campaignName": "Test campaign",
+        "campaignStatus": "expired",
+        "creativeTypeId": 11,
+        "vldReportCreatable": true,
+        "vldChargeableImps": 0,
+        "vldChargedImps": 1112,
+        "vldChargeableCost": 0.0,
+        "vldChargedCost": 5.56,
+        "fundsAvailable": true,
+        "effectiveVldRate": 5.0
+    }
+}
+```
+
+### Get Cost Assessment for VLD Report
+
+Calculates the cost for the impressions for the VLD report based on impressions and the mark up charged on the organization with the following endpoint:
+
+* `POST` /api/v3/ins/vld-reports/computation
+
+| Property | Type | Description |
+| ---- | ---- | --- |
 | `campaignId` | integer | Campaign ID |
 | `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds
@@ -566,7 +662,7 @@ Request Sample
 
 ```json
 {
-    "campaignId": 12345,
+    "campaignId": 1,
     "vldStartDate": 1722311000,
     "vldEndDate": 1722315000
 }
