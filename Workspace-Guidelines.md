@@ -26,14 +26,14 @@ Use the following header parameters for all requests:
 | `zipcode` | string | Zipcode
 | `isAvatarUrl` | boolean | 
 | `organizationLogo` | string | Logo image file | 
-| `industry` | string | Industry category |
-| `companySize` | integer | Number of employees at organization |
+| `industry` | string | Industry category <br>See [static details list](#industries) for supported values |
+| `companySize` | integer | Number of employees at organization <br>See [static details list](#company-size) for supported values |
 | `companyId` | string | Company ID |
 | `taxId` | string | Tax ID | 
 | `currency` | string | Currency type |
 | `dateFormat` | string | Date formate, e.g. "MM/DD/YYYY" |
 | `description` | string | Description of organization |
-| `expertize` | string | 
+| `expertize` | string | <br>See [static details list](#organization-expertise) for supported values
 
 ### Get Organization Details
 
@@ -73,6 +73,43 @@ Response 200
 ```
 
 ## Organization Management
+
+### Update Organization Profile
+
+Update organization profile details with the following endpoint:
+
+* `PATCH` /api/v3/ua/organization/update-profile
+
+**Request Body Schema: application/json**
+
+Refer to the [Organization Resource Properties](#organization-resource-properties) for schema. Include any properties to update in request body.
+
+\
+Request Sample
+
+```json
+{
+    "organizationName": "New Org Name",
+    "email": "neworgemail@org.com",
+    "website": "neworgwebsite.com"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391/1633180356403.png",
+        "message": "Profile updated successfully."
+    }
+}
+```
+
+### Add/Update Organization Payment Settings
+
+
 
 ## Workspace Management
 
@@ -212,8 +249,8 @@ Get a list of customers and their details with the following endpoint:
 | ---- | ---- | --- |
 | `owIds` | string | Comma separated Organization Workspace IDs whose customers need to be retrieved <br>If `owId` of advertiser is passed, endpoint will return advertiser details <br>If `owId` of workspace is passed, endpoint will return workspace and its advertisers details |
 | `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
-| `status` | string | Comma separated `owId` status IDs |
-| `customerType` | string | Comma separated customer type IDs |
+| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
+| `customerType` | string | Comma separated customer type IDs <br>See [static details list](#customer-type) for supported values |
 | `searchField` | string | Filters results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -647,6 +684,60 @@ Response 200
 
 ### Invite Customer to Platform
 
+Invite a customer to the platform (as workspace or advertiser) with the following endpoint: 
+
+* `POST` /api/v3/ua/customer/invite
+
+\
+**Request Body Schema: application/json**
+
+\
+Request Sample
+
+```json
+[
+    {
+        "email": "user1@iqm.com",
+        "name": "ORG - 1",
+        "password": "password@123",
+        "ownerUserName": "User-1",
+        "verticalId": 1,
+        "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/202753/Pd7Xx26_1721991655891.png",
+        "customerOperationDetails": {
+            "customerTypeId": 2,
+            "customerPaymentTypeId": 2,
+            "countryId": 30100001,
+            "adOpsAssigneeUserIds": [],
+            "sellerAssigneeUserIds": [
+                7184
+            ],
+            "labelIds": [
+                7,
+                8,
+                9
+            ]
+        }
+    }
+]
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "successfulEmails": [
+            "user1.g@iqm.com"
+        ],
+        "failedEmails": [
+            "user2.p@iqm.com"
+        ],
+        "message": "1 invitations sent successfully."
+    }
+}
+```
+
 ### Customer Signup
 
 Sign up a new customer with the following endpoint:
@@ -687,6 +778,62 @@ Response 200
 {
     "success": true,
     "data": "Customer sign up requested successfully."
+}
+```
+
+### Assign Customer to User
+
+Assign a customer to an existing user with the following endpoint:
+
+* `POST` /api/v3//ua/user/customer/assign
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owIds` | string | Comma separated OW IDs to assign to user |
+| `uowIds` | string | Comma separated user IDs to assign customers to |
+
+\
+Request Sample
+
+```json
+{
+    "owIds": "170,58,167,900",
+    "uowIds": "166"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Added Customer association to User successfully."
+}
+```
+
+### Unassign Customer from User
+
+* `POST` /api/v3/ua/user/customer/remove
+
+\
+Request Sample
+
+```json
+{
+    "owIds": "58",
+    "uowIds": "166"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Removed Customer association from User successfully."
 }
 ```
 
@@ -732,7 +879,19 @@ Get an overview of customer details with the following endpoint:
 
 * `GET` /api/v3/fa/customer/financial-details
 
-## Advertiser Details
+## Advertiser Management
+
+### Advertiser Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `advertiserName` | string | Advertiser name |
+| `website` | string | Advertiser website |
+| `chiefName` | string | 
+| `contactNumber` | string | Advertiser phone number |
+| `address` | string | Advertiser address |
+| `legalInfo` | string | Legal info for advertiser |
+| `links` | string | Associated links for advertiser |
 
 ### Get List of Advertiser Profile and Details
 
@@ -823,3 +982,629 @@ Response 200
 }
 ```
 
+### Add Advertiser Profile
+
+Add a new advertiser profile with the following endpoint:
+
+* `POST` /api/v3/ua/organization/advertiser/add
+
+\
+**Request Body Schema: application/json**
+
+Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for request schema.
+
+\
+Request Sample
+
+```json
+{
+    "advertiserName": "Nikon 1",
+    "website": "http://nikonindia.com",
+    "chiefName": "Nil Miles1",
+    "contactNumber": "+91 9876534210",
+    "address": "physical address",
+    "legalInfo": "legal info for advertiser",
+    "links": [
+        "www.nikon1.com",
+        "www.nikon1us.com"
+    ]
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Advertiser profile added successfully."
+}
+```
+
+### Edit Advertiser Profile
+
+Edit advertiser profile details with the following endpoint:
+
+* `PATCH` /api/v3/ua/organization/advertiser/4
+
+\
+**Request Body Schema: application/json**
+
+Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for request schema.
+
+\
+Request Sample
+
+```json
+{
+  "advertiserName": "Nikon 2",
+  "website": "http://nikonindia.com",
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Advertiser profile updated successfully."
+}
+```
+
+### Delete Advertiser Profile
+
+Delete an advertiser profile with the following endpoint:
+
+* `DELETE` /api/v3/ua/organization/advertiser/4
+
+\
+**Request Body Schema: application/json**
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Advertiser profile deleted successfully."
+}
+```
+
+## Finance Management
+
+### Get Customer Finance Details
+
+Get an over of a customer's finance details with the following endpoint:
+
+* `GET` /api/v3/fa/customer/financial-details
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `isFinanceRequest` | boolean | For Customer Management Tab: `false` <br>For Finance Tab: `true` |
+| `year` | inteer | Year for data | 
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "pendingCampaigns": 15,
+        "runningCampaigns": 10,
+        "totalCampaigns": 48,
+        "dataCost": 0,
+        "actualSpent": 0,
+        "credits": 0,
+        "balance": 30430.75,
+        "spent": 0,
+        "earning": 0
+    }
+}
+```
+
+### Get List of Payment Transactions for Organization
+
+Get a list of payment transactions for an organization with the following endpoint:
+
+* `GET` /api/v3/fa/payments/list
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `status` | string | Status type
+| `paymentType` | string | Payment Type |
+| `searchField` | string | Search results by keyword |
+| `limit` | integer | Maximum number of entries returned, default: `10` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "isPaymentInitiatorOrg": true,
+                "paymentId": 19,
+                "createdByUserEmail": "jinesh.p+nonihpcust2@iqm.com",
+                "paymentDate": 1632076200000,
+                "paymentAmount": 10000,
+                "paymentStatus": "Rejected",
+                "paymentMode": "PayPal",
+                "paymentType": "As Fund",
+                "invoiceId": 0,
+                "modifiedAt": 1637566978000,
+                "bankName": null,
+                "refundReason": null
+            },
+            {
+                "isPaymentInitiatorOrg": false,
+                "paymentId": 886,
+                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
+                "paymentDate": 1635791400000,
+                "paymentAmount": 10,
+                "paymentStatus": "Processing",
+                "paymentMode": "Check",
+                "paymentType": "Refund",
+                "invoiceId": 0,
+                "modifiedAt": 1635831910000,
+                "bankName": null,
+                "refundReason": "Testing"
+            },
+            {
+                "isPaymentInitiatorOrg": false,
+                "paymentId": 885,
+                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
+                "paymentDate": 1635791400000,
+                "paymentAmount": 10,
+                "paymentStatus": "Processing",
+                "paymentMode": "To Funds",
+                "paymentType": "Refund",
+                "invoiceId": 0,
+                "modifiedAt": 1635831695000,
+                "bankName": null,
+                "refundReason": "Testing"
+            },
+            {
+                "isPaymentInitiatorOrg": false,
+                "paymentId": 884,
+                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
+                "paymentDate": 1635791400000,
+                "paymentAmount": 10,
+                "paymentStatus": "Processing",
+                "paymentMode": "To Funds",
+                "paymentType": "Refund",
+                "invoiceId": 0,
+                "modifiedAt": 1635831127000,
+                "bankName": null,
+                "refundReason": "Testing"
+            },
+            {
+                "isPaymentInitiatorOrg": false,
+                "paymentId": 883,
+                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
+                "paymentDate": 1635791400000,
+                "paymentAmount": 10,
+                "paymentStatus": "Processing",
+                "paymentMode": "To Funds",
+                "paymentType": "Refund",
+                "invoiceId": 0,
+                "modifiedAt": 1635830983000,
+                "bankName": null,
+                "refundReason": "Testing"
+            }
+        ],
+        "totalRecords": 68,
+        "filteredRecords": 68
+    }
+}
+```
+
+## Static Details Lists
+
+### Organization Workspace Status
+
+* `GET` /api/v3/ua/static/organization-workspace-status
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `view` | string |
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "pending",
+            "id": 2,
+            "label": "Pending",
+            "order": 1
+        },
+        {
+            "name": "active",
+            "id": 1,
+            "label": "Active",
+            "order": 2
+        },
+        {
+            "name": "invited",
+            "id": 3,
+            "label": "Invited",
+            "order": 3
+        },
+        {
+            "name": "suspended",
+            "id": 4,
+            "label": "Suspended",
+            "order": 4
+        },
+        {
+            "name": "rejected",
+            "id": 5,
+            "label": "Rejected",
+            "order": 5
+        }
+    ]
+}
+```
+
+### Customer Type
+
+* `GET` /api/v3/ua/static/customer-type
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "self_served",
+            "id": 1,
+            "label": "Self Served",
+            "order": 2
+        },
+        {
+            "name": "managed_services",
+            "id": 2,
+            "label": "Managed Services ",
+            "order": 1
+        },
+        {
+            "name": "app_users",
+            "id": 3,
+            "label": "App Users",
+            "order": 3
+        },
+        {
+            "name": "advertisers",
+            "id": 4,
+            "label": "Advertisers",
+            "order": 4
+        },
+        {
+            "name": "workspaces",
+            "id": 5,
+            "label": "Workspaces",
+            "order": 5
+        }
+    ]
+}
+```
+
+### Customer Payment Type
+
+* `GET` /api/v3/ua/static/customer-payment-types
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 2,
+        "filteredRecords": 2,
+        "customerPaymentTypes": [
+            {
+                "name": "prepaid",
+                "id": 1,
+                "label": "PrePaid",
+                "order": 1
+            },
+            {
+                "name": "postpaid",
+                "id": 2,
+                "label": "PostPaid",
+                "order": 2
+            }
+        ]
+    }
+}
+```
+
+### Customer Account Type
+
+* `GET` /api/v3/ua/static/customer-account-types
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 2,
+        "filteredRecords": 2,
+        "customerAccountTypes": [
+            {
+                "name": "advertiser",
+                "id": 1,
+                "label": "Advertiser",
+                "order": 1
+            },
+            {
+                "name": "workspace",
+                "id": 2,
+                "label": "Workspace",
+                "order": 2
+            }
+        ]
+    }
+}
+```
+
+### Customer List Sortable Fields
+
+* `GET` /api/v3/ua/static/customer-list-sortable-field
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "label": "Status",
+            "field": "status",
+            "order": 1
+        },
+        {
+            "label": "Date of joining",
+            "field": "createdAt",
+            "order": 2
+        }
+    ]
+}
+```
+
+### Organization Expertise
+
+* `GET` /api/v3/ua/static/organization-expertize
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "account_administration",
+            "id": 1,
+            "label": "Account Administration",
+            "order": 1
+        },
+        {
+            "name": "campaign_optimization",
+            "id": 2,
+            "label": "Campaign Optimization",
+            "order": 2
+        },
+        {
+            "name": "creative_serivces",
+            "id": 3,
+            "label": "Creative Serivces",
+            "order": 3
+        },
+        {
+            "name": "audience_building",
+            "id": 4,
+            "label": "Audience Building",
+            "order": 4
+        },
+        {
+            "name": "inventory_management",
+            "id": 5,
+            "label": "Inventory Management",
+            "order": 5
+        },
+        {
+            "name": "finance_and_accounting",
+            "id": 6,
+            "label": "Finance & Accounting",
+            "order": 6
+        },
+        {
+            "name": "campaign_creation",
+            "id": 7,
+            "label": "Campaign Creation",
+            "order": 7
+        }
+    ]
+}
+```
+
+### Company Size
+
+* `GET` /api/v3/ua/static/company-size
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "1_10",
+            "id": 1,
+            "label": "1-10",
+            "order": 1
+        },
+        {
+            "name": "11_50",
+            "id": 2,
+            "label": "11-50",
+            "order": 2
+        },
+        {
+            "name": "51_200",
+            "id": 3,
+            "label": "51-200",
+            "order": 3
+        },
+        {
+            "name": "201_500",
+            "id": 4,
+            "label": "201-500",
+            "order": 4
+        },
+        {
+            "name": "501_1000",
+            "id": 5,
+            "label": "501-1000",
+            "order": 5
+        },
+        {
+            "name": "1001_5000",
+            "id": 6,
+            "label": "1001-5000",
+            "order": 6
+        },
+        {
+            "name": "5000+",
+            "id": 7,
+            "label": "5000+",
+            "order": 7
+        }
+    ]
+}
+```
+
+### Industries
+
+* `GET` /api/v3/ua/static/industries
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "accounting",
+            "id": 1,
+            "label": "Accounting ",
+            "order": 1
+        },
+        {
+            "name": "airlines/aviation",
+            "id": 2,
+            "label": "Airlines/Aviation",
+            "order": 2
+        },
+        {
+            "name": "alternative_dispute_resolution",
+            "id": 3,
+            "label": "Alternative Dispute Resolution",
+            "order": 3
+        },
+        {
+            "name": "alternative_medicine",
+            "id": 4,
+            "label": "Alternative Medicine",
+            "order": 4
+        },
+        {
+            "name": "animation",
+            "id": 5,
+            "label": "Animation",
+            "order": 5
+        },
+        {
+            "name": "apparel/fashion",
+            "id": 6,
+            "label": "Apparel/Fashion",
+            "order": 6
+        }
+        ...
+    ]
+}
+```
+
+### Media Budget
+
+* `GET` /api/v3/ua/static/media-budget
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "<50,000",
+            "id": 1,
+            "label": "< $50,000",
+            "order": 1
+        },
+        {
+            "name": "50,000_100,000",
+            "id": 2,
+            "label": "$50,000 - $100,000",
+            "order": 2
+        },
+        {
+            "name": "100,000_500,000",
+            "id": 3,
+            "label": "$100,000 - $500,000",
+            "order": 3
+        },
+        {
+            "name": "500,000_1,000,000",
+            "id": 4,
+            "label": "$500,000 - $1,000,000",
+            "order": 4
+        },
+        {
+            "name": "1,000,000_10,000,000",
+            "id": 5,
+            "label": "$1,000,000 - $10,000,000",
+            "order": 5
+        },
+        {
+            "name": ">10,000,000",
+            "id": 6,
+            "label": "> $10,000,000",
+            "order": 6
+        }
+    ]
+}
+```
