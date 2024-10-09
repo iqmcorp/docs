@@ -236,6 +236,13 @@ Response 200
 
 ## Customer Details
 
+### Customer Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `isUserAllowed` | boolean | 
+| `isWorkspaceOwner` | boolean | 
+
 ### Get Customer Details
 
 Get a list of customers and their details with the following endpoint:
@@ -753,8 +760,8 @@ Sign up a new customer with the following endpoint:
 | `organizationName` | string | Customer organization name
 | `userName` | string | Customer user name |
 | `industry` | integer | Industry type ID |
-| `companySize` | integer | Company size type ID |
-| `mediaBudget` | integer | 
+| `companySize` | integer | Company size type ID <br>See [static details list](#company-size) for supported values|
+| `mediaBudget` | integer | <br>See [static details list](#media-budget) for supported values
 | `budgetSpent` | integer | 
 
 \
@@ -1604,6 +1611,42 @@ Response 200
             "id": 6,
             "label": "> $10,000,000",
             "order": 6
+        }
+    ]
+}
+```
+
+### Verticals
+
+* `GET` /api/v3/ua/static/Verticals
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "name": "political",
+            "id": 1,
+            "label": "Political",
+            "order": 1,
+            "description": "This caters to advertisers from the political domain targeting users for for issue advocacy, persuasion, event promotion, fundraising and other type of campaigns"
+        },
+        {
+            "name": "healthcare",
+            "id": 2,
+            "label": "Healthcare",
+            "order": 2,
+            "description": "This caters to advertisers from domains such as pharmaceutical and medical equipment manufacturers targeting healthcare professionals."
+        },
+        {
+            "name": "specialty",
+            "id": 3,
+            "label": "Specialty",
+            "order": 11,
+            "description": "This caters to advertisers from niche domains such as automobiles, finance, retail, travel, B2B and others."
         }
     ]
 }
