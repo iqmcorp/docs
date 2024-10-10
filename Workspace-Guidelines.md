@@ -35,6 +35,58 @@ Use the following header parameters for all requests:
 | `description` | string | Description of organization |
 | `expertize` | string | <br>See [static details list](#organization-expertise) for supported values
 
+### Get List of Allowed Organizations
+
+Get a list of allowed organizations by customer type with the following endpoint:
+
+* `GET` /api/v3/ua/user/allowed-organizations
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `customerType` | string | Comma separated customer type IDs<br>See [static details list](#customer-type) for supported values |
+| `searchField` | string | Search results by keyword |
+| `limit` | integer | Maximum number of entries returned, default: `10` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `lastActive` <br>Supported values: `organizationName`, `title`, `dateOfJoining`, `lastActive` |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "owId": 200001,
+                "organizationName": "Super IQM Org",
+                "ownerUserEmail": "pratik.t+ihp@iqm.com",
+                "workspaceDomain": "app.stage.inhousebuying.com",
+                "customerType": "Workspace",
+                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/ihb_logo_scaled.png",
+                "dateOfJoining": null,
+                "title": null
+            },
+            {
+                "owId": 200002,
+                "organizationName": "IQM Corporation",
+                "ownerUserEmail": "kartik.g@iqm.com",
+                "workspaceDomain": "iqm.stage.inhousebuying.com",
+                "customerType": "Workspace",
+                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
+                "dateOfJoining": "2021-09-28",
+                "title": null
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 2
+    }
+}
+```
+
 ### Get Organization Details
 
 Get the profile information of an organization for logged in organization with the following endpoint:
@@ -68,6 +120,31 @@ Response 200
         "description": "",
         "verticalId": 1,
         "expertize": "1,2,3"
+    }
+}
+```
+
+### Check for Available Domain
+
+Check if a workspace domain is available with the following endpoint:
+
+* `GET` /api/v3/ua/organization/available-domain
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `workspaceSubDomain` | string | Name of domain to check |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "isAvailable": true
     }
 }
 ```
@@ -107,9 +184,9 @@ Response 200
 }
 ```
 
-### Add/Update Organization Payment Settings
+#### Update Organization Email
 
-
+* `PATCH` /api/v3/ua/organization/update-email
 
 ## Workspace Management
 
@@ -192,6 +269,38 @@ Response 422
 }
 ```
 
+### Validate Workspace Domain
+
+Validate a workspace for a given email with the following endpoint:
+
+* `POST` /api/v3/ua/user/workspace/validate
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `email` | string | Email |
+| `workspaceDomain` | string | Workspace domain name |
+
+\
+Request Sample
+
+```json
+{
+    "email": "user@ihp.com",
+    "workspaceDomain": "app.stage.inhousebuying.com"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true
+}
+```
+
 ### Get List of Workspaces
 
 Get a list of workspaces with the following endpoint:
@@ -242,6 +351,33 @@ Response 200
 | ---- | ---- | --- |
 | `isUserAllowed` | boolean | 
 | `isWorkspaceOwner` | boolean | 
+| `owId` | integer | Organization Workspace ID |
+| `organizationName` | string | Organization Name |
+| `workspaceName` | string | Workspace Name |
+| `workspaceDomain` | string | Worskpace Domain |
+| `owStatus` | string | Organization Worskpace status type |
+| `owStatusId` | integer | OW status type ID <br>See [static details list](#organization-workspace-status) for supported values |
+| `createdAt` | string | Creation timestamp |
+| `modifiedAt` | string | Modifcation timestamp |
+| `parentOrganizationName` | string | Parent organization name |
+| `tags` | array of strings | Customer type tags <br>See [static details list](#customer-type) for supported values |
+| `customersCount` | integer | Customer count |
+| `balance` | integer | Budget balance |
+| `contactPersonName` | string | Name of contact |
+| `contactPersonEmail` | string | Email of contact |
+| `approvedBy` | string | Name |
+| `approvedByEmail | string | email |
+| `logoUrl` | string | Logo URL
+| `activeCampaignsCount` | integer | Number of active campaigns associated with customer |
+| `industry` | integer | Industry type <br>See [static details list](#industries) for supported values |
+| `companySize` | integer | Company size <br>See [static details list](#company-size) for supported values |
+| `mediaBudget` | integer | Media Budget <br>See [static details list](#media-budget) for supported values |
+| `budgetSpent` | integer | Budget Spent |
+| `showFinance` | boolean | Show financial information |
+| `workspaceId` | integer | Workspace ID |
+| `lastAccess` | integer |
+| `verticalTypeId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
+| `onHoldReason` | | |
 
 ### Get Customer Details
 
@@ -347,6 +483,66 @@ Response 200
 }
 ```
 
+#### Get Basic Customer Details
+
+* `POST` /api/v3/ua/customer/basic/list
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `searchField` | string | Search results by keyword |
+| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `owIds` | array of integers | Organization Workspace IDs |
+| `owStatusIds` | array of integers | Filter by OW Status type IDs <br>See [static details list](#organization-workspace-status) for supported values|
+| `provideRunningCampaigns` | boolean | Get running campaign count (`true`), default: `false` |
+
+\
+Request Sample
+
+```json
+{
+    "owStatusIds": [
+        1,
+        2
+    ],
+    "pageNo": 1,
+    "noOfEntries": 20,
+    "owIds": [
+        20001
+    ],
+    "searchField": "Agency",
+    "provideRunningCampaigns": false
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "owId": 20001,
+                "organizationName": "AdAgencyABC 1",
+                "organizationLogo": "https://logo-bucket/avatar/123456.png",
+                "owStatus": "Active",
+                "owStatusId": 1,
+                "wsId": 2,
+                "runningCampaigns": 0,
+                "ownerUserName": "yourname 1",
+                "ownerUserEmail": "yourname@yourcompany1.com"
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 1
+    }
+}
+```
+
 ### Get Multi-level Customers List
 
 * `GET` /api/v3/ua/customers/list/multi-level
@@ -357,7 +553,7 @@ Response 200
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owIds` | string | Comma separated OW IDs of organizations whose customers need to be retrieved |
-| `status` | string | Comma separated `owId` status IDs |
+| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
 | `searchField` | string | Filters results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -452,6 +648,166 @@ Response 200
         ],
         "totalRecords": 3,
         "filteredRecords": 3
+    }
+}
+```
+
+### Get Immediate Customers List
+
+Get only immediate customers of provided OW IDs (if `owId` is not provided then the OW ID in the header will be passed) with the following endpoint:
+
+* `GET` /api/v3/ua/immediate/customers/list
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owIds` | string | Comma separated Organization Workspace IDs whose immediate customers need to be retrieved |
+| `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
+| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
+| `customerType` | string | Comma separated customer type IDs <br>See [static details list](#customer-type) for supported values |
+| `searchField` | string | Filters results by keyword |
+| `limit` | integer | Maximum number of entries returned, default: `10` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "isUserAllowed": false,
+                "owId": 500,
+                "organizationName": "Walmart Non IHB 1",
+                "workspaceName": "walmart1.stage.inhousebuying.com",
+                "workspaceDomain": "walmart1.stage.inhousebuying.com",
+                "owStatus": "Active",
+                "createdAt": "2021-09-05T22:55:10.000+00:00",
+                "parentOrganizationName": "Walmart 1",
+                "tags": [
+                    "Self Service",
+                    "Advertiser"
+                ],
+                "customersCount": 0,
+                "balance": 0,
+                "contactPersonName": null,
+                "contactPersonEmail": "kartik.g+wni1@iqm.com",
+                "approvedBy": "Walmart 1",
+                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
+                "activeCampaignsCount": 0
+            }
+        ],
+        "totalRecords": 1,
+        "filteredRecords": 1
+    }
+}
+```
+
+### Customer Operations Resource Properties
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `email` | string | Email
+| `name` | string | Customer name |
+| `password` | string | Customer password |
+| `onwerUserName` | string | Customer owner
+| `verticalId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
+| `logoUrl` | string | Logo URL |
+| `customerOperationDetails` | object | (workspace only) contains all following properties |
+| `customerTypeId` | integer | Customer type ID <br>See [static details list](#customer-type) for supported values |
+| `customerPaymentTypeId` | integer | Customer payment type ID <br>See [static details list](#customer-payment-type) for supported values |
+| `countryId` | integer | Country ID |
+| `adOpsAssigneeUserIds` | array of integers | 
+| `sellerAssigneeUserIds` | array of integers | 
+| `labelIds` | array of integers | 
+
+### Get Customer Operations Details
+
+* `GET` /api/v3/ua/customer-operations/details/{owId}
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "workspaceCustomerOperationDetails": {
+            "customerTypeId": 1,
+            "owId": 202879,
+            "customerPaymentTypeId": 2,
+            "countryId": 30100001,
+            "adOpsAssigneeUserIds": [
+                7184
+            ],
+            "sellerAssigneeUserIds": [
+                6900
+            ],
+            "labelIds": [
+                1,
+                3,
+                4
+            ],
+            "overridenFields": {
+                "customerTypeId": false,
+                "customerPaymentTypeId": false,
+                "countryId": false,
+                "adOpsAssigneeUserIds": false,
+                "sellerAssigneeUserIds": false,
+                "labelIds": false
+            }
+        }
+    }
+}
+```
+
+### Get Customer Operations Label List
+
+Get a list of labels for customer operations with the following endpoint:
+
+* `GET` /api/v3/ua/customer-operations/label/list
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `searchField` | string | Search results by keyword |
+| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` <br>Supported values: `id`, `name`, `startTime`, `endTime`, `totalBudget` |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "totalRecords": 36,
+        "filteredRecords": 36,
+        "operationalLabels": [
+            {
+                "label": "Test Label with 30 chars - 857",
+                "id": 29
+            },
+            {
+                "label": "Test Label with 30 characters.",
+                "id": 16
+            }
+        ]
     }
 }
 ```
@@ -567,6 +923,99 @@ Response 200
 }
 ```
 
+### Get List of User Assigned Customers
+
+* `GET` /api/v3/ua/user/assigned-customers
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `uowId` | string | Customers assigned to user Organization Workspace ID |
+| `limit` | integer | Maximum number of entries returned, default: `2` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br>Supported values: `createdAt`, `organizationName` |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "owId": 58,
+                "organizationName": "Amul",
+                "createdAt": 1629361572000,
+                "contactPersonName": "Amul",
+                "contactPersonEmail": "pratik.t+nonihp@iqm.com"
+            },
+            {
+                "owId": 169,
+                "organizationName": "Volkswagen India",
+                "createdAt": 1629346722000,
+                "contactPersonName": "Volkswagen India",
+                "contactPersonEmail": "shraddha.p+vw@iqm.com"
+            }
+        ],
+        "totalRecords": 3,
+        "filteredRecords": 2
+    }
+}
+```
+
+#### Get User's Remaining Customers
+
+* `GET` /api/v3/ua/user/remaining-customers
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `uowId` | string | Customers assigned to user Organization Workspace ID |
+| `owIds` | string | Organization Workspace IDs |
+| `limit` | integer | Maximum number of entries returned, default: `2` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br>Supported values: `contactPersonName`, `organizationName` |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "owId": 169,
+                "organizationName": "Volkswagen India",
+                "createdAt": 1629346722000,
+                "balance": 0,
+                "contactPersonName": "Volkswagen India",
+                "contactPersonEmail": "shraddha.p+vw@iqm.com",
+                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
+                "activeCampaignsCount": 0
+            },
+            {
+                "owId": 170,
+                "organizationName": "Coca-Cola",
+                "createdAt": 1629346703000,
+                "balance": 0,
+                "contactPersonName": "Coca-Cola",
+                "contactPersonEmail": "shraddha.p+cc@iqm.com",
+                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
+                "activeCampaignsCount": 0
+            }
+        ],
+        "totalRecords": 2,
+        "filteredRecords": 2
+    }
+}
+```
+
 ### Get List of Customer's Allowed Applications
 
 Get a list of a customer's allowed applications along with the allowed user's list with the following endpoint:
@@ -646,6 +1095,45 @@ Response 200
 }
 ```
 
+#### Get List of Remaining Apps for Customer
+
+* `GET` /api/v3/ua/customers/remaining-applications/list
+
+\
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | string | OW ID of Customer for which application list will be retrieved |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "appId": 6,
+            "appName": "Accounts",
+            "appIcon": "",
+            "orgName": "IHP",
+            "appType": "Default App",
+            "userCount": 0
+        },
+        {
+            "appId": 8,
+            "appName": "Audiences",
+            "appIcon": "",
+            "orgName": "IQM Corporation",
+            "appType": "Default App",
+            "userCount": 0
+        }
+        ...
+    ]
+}
+```
+
 ### Get List of Advertisers for Customer
 
 Get a list of advertisers for a given customer with the following endpoint:
@@ -686,6 +1174,31 @@ Response 200
 }
 ```
 
+### Get Customer Config Details
+
+Get customer configuration details with the following endpoint:
+
+* `GET` /api/v3/ua/customer/config/{customerOwId}
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `customerOwId` | integer | Customer Organization Workspace ID |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "isBidShadingEnabled": true,
+        "isTestCustomer": false
+    }
+}
+```
 
 ## Customer Management
 
@@ -697,6 +1210,8 @@ Invite a customer to the platform (as workspace or advertiser) with the followin
 
 \
 **Request Body Schema: application/json**
+
+Refer to [Customer Operations Resource Property table](#customer-operations-resource-properties) for request schema.
 
 \
 Request Sample
@@ -745,6 +1260,50 @@ Response 200
 }
 ```
 
+#### Resend Customer Invite
+
+* `POST` /api/v3/ua/customer/invite/re-send
+
+\
+Request Sample
+
+```json
+{
+    "inviteHash": "M7JoA2hYIUcKdVDM3g2KD/7+4FcOi9+slNVCW4NhEJgPMIxdvrj6ObD+gmCo6uikWqH6+LnHXnqXa7z2WVfw2FUI8ppsFOd8Ai1rnC0+gQiZWcgffqv2lggi0FZ3KiVERgAIFyJPIuV7fhi7AZksDka0VWHhNqHhX4R108psN73muXEaOrsf5uXlyQwzyYPpIeBq9eixIK+ytPQWBNMVKQBCczILN9l3MDheiiV94Jud1Tg/jrALspnF7KytcsfkgA5sQqWvK0K/LEl2TwAjMFl8fftW6d4xnwDb5Z0H"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Invitation resent successfully."
+}
+```
+
+#### Cancel Customer Invite
+
+* `DELETE` /api/v3/ua/customer/invite/cancel
+
+**Query Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | string | OW ID of Customer for which advertiser list will be retrieved |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Invitation cancelled successfully."
+}
+```
+
+
+
 ### Customer Signup
 
 Sign up a new customer with the following endpoint:
@@ -788,6 +1347,60 @@ Response 200
 }
 ```
 
+#### Get Customer Signup Form
+
+* `GET` /api/v3/ua/customer/signup-form
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "isCustomerVerificationEnable": true,
+        "customerFormDetails": [
+            {
+                "id": 1,
+                "field": "organizationName",
+                "label": "Organization name",
+                "isUserRequired": true
+            },
+            {
+                "id": 2,
+                "field": "userName",
+                "label": "Name of the user",
+                "isUserRequired": true
+            },
+            {
+                "id": 3,
+                "field": "industry",
+                "label": "Industry",
+                "isUserRequired": false
+            },
+            {
+                "id": 4,
+                "field": "companySize",
+                "label": "Company size",
+                "isUserRequired": true
+            },
+            {
+                "id": 5,
+                "field": "mediaBudget",
+                "label": "Media budget",
+                "isUserRequired": true
+            },
+            {
+                "id": 6,
+                "field": "budgetSpent",
+                "label": "Budget spent on programmatic",
+                "isUserRequired": false
+            }
+        ]
+    }
+}
+```
+
 ### Assign Customer to User
 
 Assign a customer to an existing user with the following endpoint:
@@ -821,7 +1434,7 @@ Response 200
 }
 ```
 
-### Unassign Customer from User
+#### Unassign Customer from User
 
 * `POST` /api/v3/ua/user/customer/remove
 
@@ -841,6 +1454,59 @@ Response 200
 {
     "success": true,
     "data": "Removed Customer association from User successfully."
+}
+```
+
+### Approve Customer
+
+Approve a customer and add app access with the following endpoint:
+
+* `PATCH` /api/v3/ua/customer/approve
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `appIds` | string | Comma separated application IDs to add or revoke customer access to |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 134562,
+    "appIds": "2,5,6,7,9,10,11"
+}
+```
+
+#### Reject Customer
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `statusReason` | string | Description of rejection reason |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 345216,
+    "statusReason": "Customer didn't provide correct details"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Customer rejected successfully."
 }
 ```
 
@@ -880,11 +1546,171 @@ Response 200
 }
 ```
 
-### Get Customer Financial Overview
+### Put Customer On-Hold
 
-Get an overview of customer details with the following endpoint:
+Change customer status (see [status list](#organization-workspace-status)) to 'on-hold' with provided reason with the following endpoint:
 
-* `GET` /api/v3/fa/customer/financial-details
+* `PATCH` /api/v3/ua/customer/hold
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `statusReason` | string | Description of reason to put customer on hold |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 54,
+    "statusReason": "Not paid payment for 3 months"
+}
+```
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Customer status changed to on-hold successfully."
+}
+```
+
+#### Re-Active Customer
+
+Change customer status to 'active' with the following endpoint:
+
+* `PATCH` /api/v3/ua/customer/re-activate
+
+\
+Request Sample
+
+```json
+{
+    "owId": 54
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Customer status changed to active successfully."
+}
+```
+
+### Add Label for Customer Operation
+
+Add a label for customer operations, which will be displayed in the labels list, with the following endpoint:
+
+* `POST` /api/v3/ua/customer-operations/label/add
+
+\
+**Request Body Schema: appication/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `labelName` | string | Label name |
+
+\
+Request Sample
+
+```json
+{
+    "labelName": "Test-case-high"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "labelId": 2,
+        "message": "label added successfully"
+    }
+}
+```
+
+### Enable Bid Shading for Customer
+
+Enable bid shading for given customer OW ID with the following endpoint:
+
+* `PATCH` /api/v3/ua/customer/enable-bid-shading/{customerOwId}
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `customerOwId` | integer | Customer Organization Workspace ID |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Bid Shading Enabled Successfully"
+}
+```
+
+### Update Customer Operations Details
+
+Update customer operations details with the following endpoint:
+
+* `PATCH` /api/v3/ua/customer-operations/{owId}
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `OwId` | integer | Customer Organization Workspace ID |
+
+**Request Body Schema: appliation/json**
+
+See the [Customer Operations Property table](#customer-operations-resource-properties) for request schema.
+
+\
+Request Sample
+
+```json
+{
+    "customerOperationsDetails": {
+        "customerTypeId": 0,
+        "customerPaymentTypeId": 0,
+        "countryId": 0,
+        "createdByUowId": 0,
+        "modifiedByUowId": 0,
+        "adOpsAssigneeUserIds": [
+            0
+        ],
+        "sellerAssigneeUserIds": [
+         0
+        ],
+        "labelIds": [
+         0
+        ]
+    },
+    "resetFields": {
+        "customerTypeId": true,
+        "customerPaymentTypeId": true,
+        "countryId": true,
+        "adOpsAssigneeUserIds": true,
+        "sellerAssigneeUserIds": true,
+        "labelIds": true
+    }
+}
+```
+
+
 
 ## Advertiser Management
 
@@ -1072,145 +1898,6 @@ Response 200
 {
     "success": true,
     "data": "Advertiser profile deleted successfully."
-}
-```
-
-## Finance Management
-
-### Get Customer Finance Details
-
-Get an over of a customer's finance details with the following endpoint:
-
-* `GET` /api/v3/fa/customer/financial-details
-
-\
-**Query Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | For Customer Management Tab: `false` <br>For Finance Tab: `true` |
-| `year` | inteer | Year for data | 
-
-\
-Response 200
-
-```json
-{
-    "success": true,
-    "data": {
-        "pendingCampaigns": 15,
-        "runningCampaigns": 10,
-        "totalCampaigns": 48,
-        "dataCost": 0,
-        "actualSpent": 0,
-        "credits": 0,
-        "balance": 30430.75,
-        "spent": 0,
-        "earning": 0
-    }
-}
-```
-
-### Get List of Payment Transactions for Organization
-
-Get a list of payment transactions for an organization with the following endpoint:
-
-* `GET` /api/v3/fa/payments/list
-
-\
-**Query Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `status` | string | Status type
-| `paymentType` | string | Payment Type |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-
-\
-Response 200
-
-```json
-{
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "isPaymentInitiatorOrg": true,
-                "paymentId": 19,
-                "createdByUserEmail": "jinesh.p+nonihpcust2@iqm.com",
-                "paymentDate": 1632076200000,
-                "paymentAmount": 10000,
-                "paymentStatus": "Rejected",
-                "paymentMode": "PayPal",
-                "paymentType": "As Fund",
-                "invoiceId": 0,
-                "modifiedAt": 1637566978000,
-                "bankName": null,
-                "refundReason": null
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 886,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "Check",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831910000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 885,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831695000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 884,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831127000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 883,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635830983000,
-                "bankName": null,
-                "refundReason": "Testing"
-            }
-        ],
-        "totalRecords": 68,
-        "filteredRecords": 68
-    }
 }
 ```
 
