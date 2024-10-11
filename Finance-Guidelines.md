@@ -577,6 +577,37 @@ Response 200
 }
 ```
 
+#### Update Customer Margin Details
+
+* `POST` /api/v3/fa/customer/edit-margin
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `marginTypeId` | integer | Margin type ID |
+| `marginValue` | integer | Margin value |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 202318,
+    "marginTypeId": 1,
+    "marginValue": 15
+}
+```
+
+\
+Response 200
+
+```json
+
+```
+
 ### Get Campaign Margin Details
 
 Get campaign margin details by campaign ID with the following endpoint:
@@ -609,6 +640,8 @@ Response 200
 }
 ```
 
+
+
 ### Get Customer PG Fees Details
 
 Get details for customer PG fees with the following endpoint:
@@ -634,6 +667,46 @@ Response 200
         "pgWorkspaceShare": 15
         }
     }
+}
+```
+
+#### Edit Customer PG Fees
+
+* `PATCH` /api/v3/fa/customer/{customerOwId}/pg-fees
+
+\
+**Path Parameters**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `customerOwId` | integer | Customer Organization Workspace ID |
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `pgCampaignFees` | integer | PG Campaign Fees |
+| `pgWorkspaceShare` | integer |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 202318,
+    "pgCampaignFees": 10,
+    "pgWorkspaceShare": 15
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "PG Fees details updated Successfully."
 }
 ```
 
@@ -675,6 +748,48 @@ Response 200 (vld flag)
         "vldEnabled": true,
         "vldMarkupType": "Percentage",
         "vldMarkupValue": 10
+    }
+}
+```
+
+#### Updates Customer VLD Details
+
+* `PATCH` /api/v3/fa/customer/vld-fees
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | OW ID of the customer to update details (required) |
+| `vldRate` | integer | VLD rate for workspace customer |
+| `vldEnabled` | boolean | Boolean flag to enable and disable VLD feature for advertiser customer |
+| `vldMarkupTypeId` | integer | VLD markup type ID to represent markup types absolute or percentage |
+| `vldMarkupValue` | integer | VLD markup value for advertiser customer |
+
+\
+Request Sample
+
+```json
+{
+    "id": 0,
+    "owId": 0,
+    "vldRate": 0,
+    "vldEnabled": true,
+    "vldMarkupType": "string",
+    "vldMarkupTypeId": 0,
+    "vldMarkupValue": 9999
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "VLD Rate updated successfully. The new rate applies only to newly created VLDs"
     }
 }
 ```
@@ -796,7 +911,7 @@ Response 200
 
 ### Download Invoice
 
-* `GET` /api/v3/fa/download-invoice/200485/79
+* `GET` /api/v3/fa/download-invoice/{owId}/{invoiceId}
 
 \
 **Query Parameters**
@@ -831,6 +946,437 @@ Response 200
 
 ```json
 
+```
+
+## Invoice Management
+
+### Update Invoice Settings
+
+* `PATCH` /api/v3/fa/invoice-settings/{invoiceId}
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `isWhiteLabel` | boolean | 
+
+### Delete Invoice Tax Data
+
+* `DELETE` /api/v3/fa/invoice-setings-tax-data
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `taxId` | integer | Tax ID |
+
+### Approve Invoice
+
+Update [invoice status](#invoice-status) with the following endpoint:
+
+* `PATCH` /api/v3/fa/invoice-approve/{invoiceId}
+
+\
+**Path Parameter**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `invoiceId` | integer | Invoice ID |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Invoice with the provided ID approved successfully"
+}
+```
+
+#### Cancel Invoice
+
+* `PATCH` /api/v3/fa/invoice-cancel/{invoiceId}
+
+\
+Response 200
+
+```json
+{
+    "actionNote": "cancelling invoice"
+}
+```
+
+### Mark Invoice as Paid
+
+* `POST` /api/v3/fa/pay-invoice
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `paymentAmount` | integer | Payment amount |
+| `paymentType` | integer | Payment type ID <br>See [static details list](#payment-types) for supported values |
+| `invoiceId` | integer | Invoice ID |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment added Successfully."
+}
+```
+
+### Email Invoice
+
+* `POST` /api/v3/fa/email-invoice/{owId}/{}
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Invoice e-mail sent successfully."
+}
+```
+
+## Credit Management
+
+### Add Credit to Customer
+
+* `POST` /api/v3/fa/customer/credit/add
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `creditAmount` | integer | Credit amount to add |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 23,
+    "creditAmount": 5000
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Credits offered Successfully."
+}
+```
+
+### Update Credit Offered to Customer
+
+* `PATCH` /api/v3/fa/customer/credit/edit
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `creditAmount` | integer | Credit amount to add |
+| `creditId` | integer | Credit ID |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 54,
+    "creditAmount": 4000,
+    "creditId": 3
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Credits updated Successfully."
+}
+```
+
+#### Revoke Credit Offered to Customer
+
+* `POST` /api/v3/fa/customer/credit/revoke
+
+\
+Request Sample
+
+```json
+{
+    "owId": 54,
+    "creditId": 2
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Credits revoked Successfully."
+}
+```
+
+### Claim Offered Credits
+
+* `POST` /api/v3/fa/credit/claim
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `creditId` | integer | Credit ID |
+| `customerName` | string | Customer Name |
+| `businessName` | string | Business Name |
+| `taxId` | string | Tax ID |
+| `contactPersonName` | string | Contact person name |
+| `contactPersonEmail` | string | Contact person email |
+| `incorporationPlace` | string | Incorporation location |
+| `address` | string | Address |
+
+\
+Request Sample
+
+```json
+{
+    "creditId": 4,
+    "customerName": "JP test ",
+    "businessName": "JP test org3",
+    "taxId": "123456",
+    "contactPersonName": "JP",
+    "contactPersonEmail": "jinesh.p+nonihpcust2@iqm.com",
+    "incorporationPlace": "Gujarat, India",
+    "address": "A-123, XYZ Complex, Ahmedabad, Gujarat, India - 380059"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Credits claimed."
+}
+```
+
+## Payment Management
+
+### Add Payment for Customer
+
+* `POST` /api/v3/fa/customer/payment/add
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Orginazation Workspace ID |
+| `paymentAmount` | integer | Payment amount |
+| `paymentDate` | string | Payment date in YYYY-MM-DD format |
+| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `transactionId` | integer | Transaction ID |
+| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
+| `paymentType` | integer | Payment type ID <br>See [static details list](#payment-types) for supported values |
+| `invoiceId` | Invoice ID (provide only of `paymentType` is 'against invoice')
+
+\
+Request Sample
+
+```json
+{
+    "owId": 123654,
+    "paymentAmount": 5000,
+    "paymentDate": "2025-12-01",
+    "paymentMode": 1,
+    "transactionId": 10,
+    "paymentProof": "image.png",
+    "paymentType": 2,
+    "invoiceId": 34
+}
+```
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment added Successfully."
+}
+```
+
+#### Edit Customer Payment
+
+* `PUT` /api/v3/fa/customer/payment/{}
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment updated Successfully."
+}
+```
+
+### Approve Payment
+
+Update payment status
+
+* `POST` /api/v3/fa/customer/payment/approve/{}
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `actionNote` | string | Description of payent status change |
+
+\
+Request Sample
+
+```json
+{
+    "owId": 200485,
+    "actionNote": "Payment paid partially"
+}
+```
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment approved Successfully."
+}
+```
+
+#### Cancel Payment
+
+* `POST` /api/v3/fa/customer/payment/cancel/{}
+
+#### Reject Payment
+
+* `POST` /api/v3/fa/customer/payment/reject/{}
+
+### Add Payment from Organization App
+
+* `POST` /api/v3/fa/payment/add-fund
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `paymentAmount` | integer | Payment amount |
+| `paymentDate` | string | Payment date in YYYY-MM-DD format |
+| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
+| `bankName` | string | Required only if `paymentMode` is 'check' or 'wire transfer' |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment Successful."
+}
+```
+
+### Payment with PayPal
+
+* `POST` /api/v3/fa/paypal/payment
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `paymentAmount` | integer | Payment amount |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-3YM2956846765604B"
+}
+```
+
+### Initiate Refund
+
+* `POST` /api/v3/fa/customer/payment/refund
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Orginazation Workspace ID |
+| `paymentAmount` | integer | Payment amount |
+| `paymentDate` | string | Payment date in YYYY-MM-DD format |
+| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `transactionId` | integer | Transaction ID |
+| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Refund Initiated."
+}
+```
+
+#### Approve Refund
+
+* `POST` /api/v3/fa/customer/payment/approve-refund/{}
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Refund successful."
+}
+```
+
+### Email Payment Receipt
+
+* `POST` /api/v3/fa/payment/email-receipt/{owId}/{}
+
+\
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment receipt e-mail sent successfully."
+}
 ```
 
 ## Static Details Lists
