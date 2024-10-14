@@ -26,7 +26,7 @@ To upload a Creative and create a Campaign, you must have the following:
 
 If you do not have any of the above, please follow the steps below:
 
-* See [Before You Begin](/index#before-you-begin) section to create an account and request a Client ID and Client Secret
+* See [Before You Begin](/docs/index.md#before-you-begin) section to create an account and request a Client ID and Client Secret
 * File requirements for creative file:
   * 2MB for JPG, JPEG, PNG
   * 750KB for GIF
@@ -67,7 +67,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
 \
@@ -159,7 +159,7 @@ To upload a creative, you must provide a creative type. Use the creative type li
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
@@ -234,7 +234,7 @@ When uploading a creative, you can provide a file and creative parameters like t
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 | `content-type` | string [required] | Media type of the resource |
 
@@ -332,7 +332,7 @@ To create a campaign, creative must be processed and approved, check for status 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -407,7 +407,7 @@ To create a campaign, specify the creative and targeting parameters using the AP
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -665,14 +665,14 @@ To run a campaign, it must be approved, check for status updates using:
 
 | Property | Type | Definition |
 | --- | --- | --- |
-| `campaign_id` | string [required] | Unique ID of Campaign
+| `campaign_id` | string [required] | Campaign ID
 
 \
 **Header Parameters**
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \

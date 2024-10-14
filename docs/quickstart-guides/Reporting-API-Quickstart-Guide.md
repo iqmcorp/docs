@@ -1,6 +1,6 @@
 # Quickstart Guide: Run a Report
 
-IQM’s REST API enables you to interact with most of IQM’s offerings. 
+IQM’s REST API enables you to interact with most of IQM’s offerings.
 
 Getting started with running your first reports is easy; just use the following endpoints:
 
@@ -41,7 +41,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
 \
@@ -246,7 +246,7 @@ Available metrics are:
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -358,6 +358,7 @@ Response 200
                ]
          }
       ]
+   }
 }
 
 ```
@@ -410,7 +411,7 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \

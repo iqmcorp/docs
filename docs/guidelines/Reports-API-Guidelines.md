@@ -2,7 +2,7 @@
 
 Get details and track data of various metrics of a campaign with this API. 
 
-See the quckstart guides on [creating a report](/Reporting-API-Quickstart-Guide.md) and [scheduling a report](/Schedule-Report-API-Quickstart-Guide.md). 
+See the quckstart guides on [creating a report](/docs/quickstart-guides/Reporting-API-Quickstart-Guide.md) and [scheduling a report](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md). 
 
 ## Authorization
 
@@ -10,7 +10,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Reports Details
@@ -233,7 +233,7 @@ Response 200
 
 This section covers the various methods and endpoints for managing reports.
 
-See the quickstart guide on creating a report [here](/Reporting-API-Quickstart-Guide.md).
+See the quickstart guide on creating a report [here](/docs/quickstart-guides/Reporting-API-Quickstart-Guide.md).
 
 ### Resource Properties
 
@@ -257,7 +257,7 @@ See the quickstart guide on creating a report [here](/Reporting-API-Quickstart-G
 
 ### Create Report
 
-Create a new report based on given fields (see [Resource Properties](/Reports-API-Guidelines.md#resource-properties)) with the following endpoint:
+Create a new report based on given fields (see [Resource Properties](#resource-properties)) with the following endpoint:
 
 * `POST` /api/v3/ra/report/add
 
@@ -679,7 +679,7 @@ Response 200
 
 This section covers the various methods and endpoints for managing scheduled reports. 
 
-See the quickstart guide on scheduling a report [here](/Schedule-Report-API-Quickstart-Guide.md).
+See the quickstart guide on scheduling a report [here](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md).
 
 ### Schedule a Report
 
@@ -875,7 +875,7 @@ Run a report and get a S3 file URL for download with the following endpoint:
 \
 **Request Body Schema: application/json**
 
-Refer to the [resource properties](/Reports-API-Guidelines.md#resource-properties) table for supported parameters.
+Refer to the [resource properties](#resource-properties) table for supported parameters.
 
 \
 Request Sample
