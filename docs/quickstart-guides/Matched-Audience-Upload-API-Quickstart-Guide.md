@@ -24,7 +24,7 @@ To upload Matched Audience, you must have the following:
 
 If you do not have any of the above, please follow the steps below:
 
-* See [Before You Begin](/index#before-you-begin) section to create an account and request a Client ID and Client Secret.
+* See [Before You Begin](/docs/index.md#before-you-begin) section to create an account and request a Client ID and Client Secret.
 * File requirements for audience matching
   * CSV or XLSX file for audience matching with maximum 1GB or 5M records
   * Without Voter ID / Email / Phone / Address in the file
@@ -61,7 +61,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string (required) | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string (required) | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string (required) | Workspace URL |
 
 \
@@ -153,7 +153,7 @@ To upload a matched audience, you must provide a list of mapping between IQM-all
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
@@ -266,7 +266,7 @@ To upload matched audiences,  provide file columns for matching and all the nece
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -490,7 +490,7 @@ Before the audience can be used for campaign targeting it has to be processed an
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string  | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string | Organization Workspace ID Header |
 
 \
