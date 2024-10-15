@@ -1,5 +1,7 @@
 # Organization, Workspace, And Customer Guidelines
 
+This page covers the common methods and endpoints for managing **Organizations**, **Workspaces**, **Customers** and **Advertisers**. **Organizations** are top-level descriptions of a company's profile, including its name, website, and location details. **Workspaces** operate within **organizations** and can be **Customers** or **Advertisers**. **Users** operate within **Workspaces** and can be assigned **Customers**.
+
 ## Authorization
 
 Use the following header parameters for all requests:
@@ -10,6 +12,8 @@ Use the following header parameters for all requests:
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Organization Details
+
+This section covers the methods and endpoints for getting **organization** lists and details.
 
 ### Organization Resource Properties
 
@@ -366,7 +370,7 @@ Response 200
 | `contactPersonName` | string | Name of contact |
 | `contactPersonEmail` | string | Email of contact |
 | `approvedBy` | string | Name |
-| `approvedByEmail | string | email |
+| `approvedByEmail` | string | Email |
 | `logoUrl` | string | Logo URL
 | `activeCampaignsCount` | integer | Number of active campaigns associated with customer |
 | `industry` | integer | Industry type <br>See [static details list](#industries) for supported values |
@@ -377,7 +381,7 @@ Response 200
 | `workspaceId` | integer | Workspace ID |
 | `lastAccess` | integer |
 | `verticalTypeId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
-| `onHoldReason` | | |
+| `onHoldReason` | string | Description of reason why Customer is in 'on-hold' status |
 
 ### Get Customer Details
 
@@ -398,7 +402,7 @@ Get a list of customers and their details with the following endpoint:
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
 | `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-runningCampaigns` |
-| `customerAccountType` | string | 
+| `customerAccountType` | string | Customer account type ID <br>See [static details list](#customer-account-type) for supported values |
 
 \
 Response 200
@@ -1321,7 +1325,7 @@ Sign up a new customer with the following endpoint:
 | `industry` | integer | Industry type ID |
 | `companySize` | integer | Company size type ID <br>See [static details list](#company-size) for supported values|
 | `mediaBudget` | integer | <br>See [static details list](#media-budget) for supported values
-| `budgetSpent` | integer | 
+| `budgetSpent` | integer | Budget spent |
 
 \
 Request Sample
