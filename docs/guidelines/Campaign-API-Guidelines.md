@@ -2,7 +2,7 @@
 
 This page will cover the common endpoints and methods for managing campaigns in IQM's rest API.
 
-Refer to the quickstart guide for instructions on [how to start a new campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md). 
+Refer to the quickstart guide for instructions on [how to start a new campaign](/docs/quickstart-guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md). 
 
 ## Get Campaign Details
 
@@ -29,42 +29,42 @@ Get a campaign's basic details and targeting details by ID with the following en
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
 
 | Property | Type | Description |
 |---|---|---|
-| `id` | integer | campaign ID |
-| `campaignName` | string | campaign Name |
-| `advertiserDomain` | string | campaign Advertiser Domain |
-| `creativeType` | integer | creative type ID |
-| `totalBudgetPacing` | boolean | false indicates off true indicates on |
-| `budgetDay` | integer | daily budget of campaign |
-| `budgetTotal` | integer | total budget fo campign |
-| `maxBid` | integer | max bid of budget for serving |
-| `status` | string | status of campaign |
-| `dspMargin` | integer | for dsp margin |
-| `platformMargin` | integer | for platform margin |
-| `userDealMargin` | integer | for user deal margin |
-| `spentScale` | boolean | spent scale for campaign |
-| `conversionType` | string | conversion type of campaign |
-| `spent` | integer | campaign spent |
-| `bidOptimization` | integer | bid optimization true/false |
-| `bidPacing` | boolean | bid pacing on/ off |
-| `impressionCapping` | integer | impressionCapping on/off |
-| `exchanges` | string | comma seprated exchange IDs |
-| `stateIds` | string | comma seprated state IDs |
-| `countryId` | integer | country ID |
-| `locationDetails` | Json | location by uploaded file with targeting type |
-| `campaignIabCategoryIds` | string | comma seprated campaign iab categories |
+| `id` | integer | Campaign ID |
+| `campaignName` | string | Campaign Name |
+| `advertiserDomain` | string | Campaign Advertiser Domain |
+| `creativeType` | integer | Creative type ID |
+| `totalBudgetPacing` | boolean | False indicates off true indicates on |
+| `budgetDay` | integer | Daily budget of campaign |
+| `budgetTotal` | integer | Total budget fo campign |
+| `maxBid` | integer | Max bid of budget for serving |
+| `status` | string | Status of campaign |
+| `dspMargin` | integer | For dsp margin |
+| `platformMargin` | integer | For platform margin |
+| `userDealMargin` | integer | For user deal margin |
+| `spentScale` | boolean | Spent scale for campaign |
+| `conversionType` | string | Conversion type of campaign |
+| `spent` | integer | Campaign spent |
+| `bidOptimization` | integer | Bid optimization true/false |
+| `bidPacing` | boolean | Bid pacing on/ off |
+| `impressionCapping` | integer | `impressionCapping` on/off |
+| `exchanges` | string | Comma seprated exchange IDs |
+| `stateIds` | string | Comma seprated state IDs |
+| `countryId` | integer | Country ID |
+| `locationDetails` | Json | Location by uploaded file with targeting type |
+| `campaignIabCategoryIds` | string | Comma seprated campaign iab categories |
 | `rejectionReason` | string | Reason of rejecting campaign |
-| `creativesPlacementMapping` | json | ad placement mapping with creatives. (present in case of audio and video campaigns) |
+| `creativesPlacementMapping` | json | Ad placement mapping with creatives. (present in case of audio and video campaigns) |
 | `organizationName` | string | Organization name |
 | `userName` | string | Name of user |
 | `userEmail` | string | Email of user |
-| `conversionIds` | string | comma separated conversions IDs. |
+| `conversionIds` | string | Comma separated conversions IDs |
 
 \
 Response 200 Sample
@@ -152,7 +152,7 @@ Other details can be fetched with a simple `GET` operation and filtered by vario
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -216,7 +216,7 @@ Update various aspects of a campaign, use the following Header Parameters for ea
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -310,7 +310,7 @@ Update the total budget, daily budget, and max bid of multiple campaigns wiht th
 | `maxBid` | integer | Max bid of campaign
 | `totalBudget` | integer | Total budget of campaign
 | `dailyBudget` | integer | Daily Budget of campaign
-| `totalBudgetUpdateType` | string | Used in the case of a total budget update. There are three possibilities for this parameter. <br>`change`: Replace total budget with given value.<br>`addition`: Add budget to the current total budget.<br>`distribution`: Distribute given total budget in selected campaigns equally.<br>Default value: `change`
+| `totalBudgetUpdateType` | string | Used in the case of a total budget update. There are three supported values: <br>`change`: Replace total budget with given value<br>`addition`: Add budget to the current total budget<br>`distribution`: Distribute given total budget in selected campaigns equally<br>Default value: `change`
 
 \
 Request Sample
@@ -377,7 +377,7 @@ See complete documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Get Campaign Count by Status
@@ -401,6 +401,7 @@ This API returns a count of campaigns for each status type with the following en
 
 \
 Request Sample
+
 ```json
 {
     "owIds": "all",
@@ -479,7 +480,7 @@ The campaign API allows the user to retrieve Insertion Order (IO) details with t
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
@@ -614,7 +615,7 @@ Get a list of campaign details grouped by Insertion Order ID (`ioId`) with suppo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -820,7 +821,7 @@ Get a list of campaigns with detailed report by Insertion Order ID (`ioId`) with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -1091,7 +1092,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -1257,7 +1258,7 @@ Update the details, end dates, and budgets of insertion orders with the followin
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
