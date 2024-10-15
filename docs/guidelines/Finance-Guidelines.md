@@ -1,5 +1,7 @@
 # Finance Guidelines
 
+This page covers the methods and endpoints associated with managing finance operations. In addition to general finance details and lists, there are sections coevering invoice, credit, and payment management. 
+
 ## Authorization
 
 Use the following header parameters for all requests:
@@ -284,12 +286,6 @@ Get an invoice for an organization with the following endpoint:
 * `GET` /api/v3/fa/invoice-settings
 
 \
-**Path Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-
-\
 Response 200
 
 ```json
@@ -371,7 +367,7 @@ Get a list of invoices by customer or organization with the following endpoints:
 | ---- | ---- | --- |
 | `status` | string | Status ID <br>See [static details list](#invoice-status) for supported values |
 | `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-invoiceId` <br>Supported values: `issuedOn`, `invoiceAmount`, `status` |
-| `isCustomerRequest` | boolean | (Organization endpoint only)
+| `isCustomerRequest` | boolean | (Organization endpoint only) Customer app request (default): `true` <br>Organization app request: `false`
 
 \
 Response 200
