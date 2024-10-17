@@ -13,7 +13,7 @@ Use the following header parameters for all requests:
 
 ## Organization Details
 
-This section covers the methods and endpoints for getting **organization** lists and details.
+An **organization** is any company that places advertisements. An organization's details include its name, website, and location details. This section covers the methods and endpoints for getting **organization** lists and details.
 
 ### Organization Resource Properties
 
@@ -28,7 +28,7 @@ This section covers the methods and endpoints for getting **organization** lists
 | `state` | integer | State ID of organization location |
 | `country` | integer | Country ID or organization location |
 | `zipcode` | string | Zipcode
-| `isAvatarUrl` | boolean | 
+| `isAvatarUrl` | boolean | Indicates whether organization has uploaded a logo. If `true`, a default avataor logo is generated when one hasn't been uploaded |
 | `organizationLogo` | string | Logo image file | 
 | `industry` | string | Industry category <br>See [static details list](#industries) for supported values |
 | `companySize` | integer | Number of employees at organization <br>See [static details list](#company-size) for supported values |
@@ -194,6 +194,8 @@ Response 200
 
 ## Workspace Management
 
+A **workspace** provides DSP service to another company, meaning it can have 'child' workspaces known as **Customers** (see [Multi-level Customers List](#get-multi-level-customers-list)). This section covers the methods and endpoints for managing workspace details.
+
 ### Create a Workspace
 
 Create a workspace by providing an invitation hash, workspace domain, and creator details with the following endpoint:
@@ -349,12 +351,14 @@ Response 200
 
 ## Customer Details
 
+A **customer** is an **advertiser** or **workspace** in a financial agreement with another workspace. For any given workspace, an advertiser is a customer. This section covers the methods and endpoints for getting lists and details of customers.
+
 ### Customer Resource Properties
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `isUserAllowed` | boolean | 
-| `isWorkspaceOwner` | boolean | 
+| `isUserAllowed` | boolean | Specifies if the organization is permitted (`true`) to log in for the currently logged-in user |
+| `isWorkspaceOwner` | boolean | Specifies if the organization owns the workspace; meaning, the org owner and the current org are the same |
 | `owId` | integer | Organization Workspace ID |
 | `organizationName` | string | Organization Name |
 | `workspaceName` | string | Workspace Name |
@@ -379,7 +383,7 @@ Response 200
 | `budgetSpent` | integer | Budget Spent |
 | `showFinance` | boolean | Show financial information |
 | `workspaceId` | integer | Workspace ID |
-| `lastAccess` | integer |
+| `lastAccess` | integer | Records the last time the org was accessed |
 | `verticalTypeId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
 | `onHoldReason` | string | Description of reason why Customer is in 'on-hold' status |
 
@@ -1714,9 +1718,9 @@ Request Sample
 }
 ```
 
-
-
 ## Advertiser Management
+
+An advertiser is a customer of a workspace that places advertisements. This section covers the methods and endpoints for managing advertiser details. 
 
 ### Advertiser Resource Properties
 
@@ -1916,7 +1920,7 @@ Response 200
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `view` | string |
+| `view` | string | Represents the tab from which request was made in customer app <br>Supported values: `customer`, `approval`, `finance` |
 
 Response 200
 

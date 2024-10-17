@@ -25,7 +25,7 @@ Get an over of a customer's finance details with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | For Customer Management Tab: `false` <br>For Finance Tab: `true` |
+| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br>For Customer Management Tab: `false` <br>For Finance Tab: `true` |
 | `year` | integer | Year for data | 
 
 \
@@ -515,7 +515,7 @@ Get an overview of customer's financial details with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean |
+| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br>For Customer Management Tab: `false` <br>For Finance Tab: `true`
 | `year` | integer | Year |
 
 \
@@ -684,7 +684,7 @@ Response 200
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
 | `pgCampaignFees` | integer | PG Campaign Fees |
-| `pgWorkspaceShare` | integer |
+| `pgWorkspaceShare` | integer | The share of PG fees applied to the campaign by the workspace |
 
 \
 Request Sample
