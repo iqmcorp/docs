@@ -171,8 +171,6 @@ Response 200
 }
 ```
 
-
-
 ### Get Report by ID
 
 Get report data by report ID with the following endpoint:
@@ -580,12 +578,12 @@ Edit a report's data based on given field with the following endpoint:
 | `startDate` | integer | Unix epoch timestamp of start date for report |
 | `endDate` | integer | Unix epoch timestamp of end date for report |
 | `reportName` | string | Updated report name |
-| `timezoneId` | integer | Timezone ID | 
-| `timezoneName` | string | Timezone Name | 
+| `timezoneId` | integer | Timezone ID |
+| `timezoneName` | string | Timezone Name |
 | `dimensions` | JSON | Dimensions to filter by in serialized JSON format |
-| `columns` | array of strings | List of metrics for the report obtained rom dimensions and metrics details API | 
+| `columns` | array of strings | List of metrics for the report obtained rom dimensions and metrics details API |
 | `requestType` | integer | ID for whether report is daily (`1`) or aggregated (`2`) |
-| `reportAggregated` | integer | ID for whether first report dimension is aggregated (`1`) or not (`0`) | 
+| `reportAggregated` | integer | ID for whether first report dimension is aggregated (`1`) or not (`0`) |
 |  `reportSchedulingEventDetails` | object | Contains parameters for updating scheduling details |
 | `eventId` | integer | ID for schedule event, part of `reportSchedulingEventDetails` object |
 | `deliveryFrequency` | integer | Delivery frequency type ID <br>Once: `1` <br>Daily: `2` <br>Weekly: `3` <br>Monthly: `4` <br>Part of `reportSchedulingEventDetails` |
@@ -677,7 +675,7 @@ Response 200
 
 ## Scheduling Management
 
-This section covers the various methods and endpoints for managing scheduled reports. 
+This section covers the various methods and endpoints for managing scheduled reports.
 
 See the quickstart guide on scheduling a report [here](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md).
 
@@ -693,7 +691,7 @@ Create and save a report scheule with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `reportId` | integer | Report  ID |
-| `subscriberEmails` | array of strings | List of emails to which the report will be sent | 
+| `subscriberEmails` | array of strings | List of emails to which the report will be sent |
 | `fileType` | integer | Report file type ID <br>CSV: `1` <br>XLS: `2` |
 | `deliveryFrequency` | integer | Delivery frequency type ID <br>Once: `1` <br>Daily: `2` <br>Weekly: `3` <br>Monthly: `4` |
 | `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br>Weekly delivery day: [`sunday`, `monday`, ...] <br>Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
@@ -749,7 +747,6 @@ Response 200
 Update a report schedule with the following endpoint:
 
 * `PATCH` /api/v3/ra/report/email/schedule/{reportId}
-
 
 \
 **Path Parameters**
@@ -861,7 +858,6 @@ Unsubscribe an email from a report schedule with the following endpoint:
 | ---- | ---- | --- |
 | `token` | string | Generated on the server when populating the email template dispatched to the end user. End user is able to unsubscribe the email address by opening the link in browser |
 
-
 ## Get More Report Details
 
 This section covers more endpoints for getting various details about reports.
@@ -960,7 +956,7 @@ Response 200
 }
 ```
 
-### Get Report Request Types 
+### Get Report Request Types
 
 Get a static list of report request type with the following endpoint:
 
@@ -1028,24 +1024,24 @@ Response 200
     "success": true,
     "data": [
         {
-        "name": "One Time Now",
-        "id": 1,
-        "label": "One time now"
+            "name": "One Time Now",
+            "id": 1,
+            "label": "One time now"
         },
         {
-        "name": "DAY",
-        "id": 2,
-        "label": "Daily until"
+            "name": "DAY",
+            "id": 2,
+            "label": "Daily until"
         },
         {
-        "name": "WEEK",
-        "id": 3,
-        "label": "Weekly until"
+            "name": "WEEK",
+            "id": 3,
+            "label": "Weekly until"
         },
         {
-        "name": "MONTH",
-        "id": 4,
-        "label": "Monthly until"
+            "name": "MONTH",
+            "id": 4,
+            "label": "Monthly until"
         }
     ]
 }
