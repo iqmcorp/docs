@@ -1019,6 +1019,17 @@ Response 200
 | `invoiceId` | integer | Invoice ID |
 
 \
+Request Sample
+
+```json
+{
+    "owId": 678345,
+    "paymentAmount": 10000,
+    "paymentType": 1,
+    "invoiceId": 23
+}
+```
+
 Response 200
 
 ```json
@@ -1030,9 +1041,31 @@ Response 200
 
 ### Email Invoice
 
-* `POST` /api/v3/fa/email-invoice/{owId}/{}
+* `POST` /api/v3/fa/email-invoice/{owId}/{invoiceId}
 
 \
+**Path Parameter**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `owId` | integer | Organization Workspace ID |
+| `invoiceId` | integer | Invoice ID |
+
+\
+**Request Body Schema: application/json**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `email` | string | Email to send invoice to |
+
+\
+Request Sample
+```json
+{
+    "email": "user@company.com"
+}
+```
+
 Response 200
 
 ```json
@@ -1238,7 +1271,14 @@ Response 200
 
 Update payment status
 
-* `POST` /api/v3/fa/customer/payment/approve/{}
+* `POST` /api/v3/fa/customer/payment/approve/{paymentId}
+
+\
+**Path Parameter**
+
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `paymentId` | integer | Payment ID |
 
 \
 **Request Body Schema: application/json**
@@ -1269,11 +1309,29 @@ Response 200
 
 #### Cancel Payment
 
-* `POST` /api/v3/fa/customer/payment/cancel/{}
+* `POST` /api/v3/fa/customer/payment/cancel/{paymentId}
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment cancelled Successfully."
+}
+```
 
 #### Reject Payment
 
-* `POST` /api/v3/fa/customer/payment/reject/{}
+* `POST` /api/v3/fa/customer/payment/reject/{paymentId}
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": "Payment rejected Successfully."
+}
+```
 
 ### Add Payment from Organization App
 

@@ -13,7 +13,7 @@ Use the following header parameters for all requests:
 
 ## Organization Details
 
-An **organization** is any company that places advertisements. An organization's details include its name, website, and location details. This section covers the methods and endpoints for getting **organization** lists and details.
+An **organization** is any company that places advertisements. An organization is created on customer invite, with details including its name, website, and location details. This section covers the methods and endpoints for getting **organization** lists and details.
 
 ### Organization Resource Properties
 
@@ -730,9 +730,9 @@ Response 200
 | `customerTypeId` | integer | Customer type ID <br>See [static details list](#customer-type) for supported values |
 | `customerPaymentTypeId` | integer | Customer payment type ID <br>See [static details list](#customer-payment-type) for supported values |
 | `countryId` | integer | Country ID |
-| `adOpsAssigneeUserIds` | array of integers | 
-| `sellerAssigneeUserIds` | array of integers | 
-| `labelIds` | array of integers | 
+| `adOpsAssigneeUserIds` | array of integers | User IDs assigned by the IQM AdOps Team
+| `sellerAssigneeUserIds` | array of integers | User IDs assigned by the client/seller team
+| `labelIds` | array of integers | Label ID
 
 ### Get Customer Operations Details
 
@@ -1728,7 +1728,7 @@ An advertiser is a customer of a workspace that places advertisements. This sect
 | ---- | ---- | --- |
 | `advertiserName` | string | Advertiser name |
 | `website` | string | Advertiser website |
-| `chiefName` | string | 
+| `chiefName` | string | Name of political person, with respect to the advertiser
 | `contactNumber` | string | Advertiser phone number |
 | `address` | string | Advertiser address |
 | `legalInfo` | string | Legal info for advertiser |
@@ -1963,6 +1963,8 @@ Response 200
 ```
 
 ### Customer Type
+
+Identifies what kind of services customer has chosen. 
 
 * `GET` /api/v3/ua/static/customer-type
 
