@@ -278,7 +278,36 @@ Get matched audience details by audience ID with the following endpoint:
 Reponse 200
 
 ```json
+{
+    "success": true,
+    "data": {
+        "matchedAudienceData": {
+            "audienceName": "Data Trust NY 4 Cols",
+            "matchRate": 90.0,
+            "uniques": 90,
+            "createdDate": 1728010319,
+            "fileTotalCount": 100,
+            "dataCost": 2.0,
+            "audienceStatusName": "Ready",
+            "s3FileName": "1728010319692_DataTrust_NY_4_Cols.csv"
+        }
+    }
+}
+```
 
+#### Get Matched Audience File URL
+
+* `GET` /api/v3/ins/audience/matched/download/{audienceId}
+
+Response 200
+
+```json
+{
+    "success": true,
+    "data": {
+        "audienceFileUrl": "https://iqm-data-lake-stage.s3.amazonaws.com/CAM-FILES/Client%3D202029/Audience%3D1099461/1728010319692_DataTrust_NY_4_Cols.csv?response-content-disposition=attachment%3Bfilename%3D1728010319692_DataTrust_NY_4_Cols.csv&response-content-type=application%2Foctet-stream&AWSAccessKeyId=ASIAZSYSEW2IDYRQV256&Signature=bg47k4d9Yr6XEp1%2B2AiQpG6UsH8%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEDwaCXVzLWVhc3QtMSJIMEYCIQDZQ0HdONURAdKClNDJtsxRy2Q%2FuhAVl8j8mkg%2BYySOXAIhALLGdASViJ%2BjqGbMUOeNGVzSKJmWlO4Rndg9%2FwYMeFCvKoQECKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAhoMNjU4Nzc4NjY2NjQwIgxTA4EPtZELcoAi5R4q2APj0QWXoTRXCAdw7rbtrcGELFLafSFSWkvl2TlAs%2BIXPNNRwL2y2ymFrmlCOxqFCs9DTWR%2FMRvZMmn7CiN%2ByOPem4C8Rp%2BKE6VSTBeMvQrjQIl1l3S0NxluwzOuBiv%2FA2q0%2F2ehoIPkOOl0ecoghzO8%2FZFVPvVjJkWCnm6c8x2MubJXVYZdiOWd2MHaUmMzsIRlvvl4s30JW9iNnHyOdIyHf6JQ2FbYmKSX4SVEPrv7j7kUv3Vr2iffNE%2BQfGYNtQLr7Yu6yjXpko6N6oZ0BpKsw%2BmwgywN%2FWgPBOQUcwZsexrjBkN9%2BMfRWwOKRS%2F6mn80VYRNV%2F2bA0jDzUBVUmATCjmPFx2tovoveIbb7dwm627ulG0yAkJYx4pvn6OFuFQiZ8YMpWd3e9Hdz44Jm01dGZ%2FluW17THYmmIMOmf3UUSSlxjHm6MuzfULBmspjtAFi5apazS8zUVxwMaK2UfcRkWV%2FQjvziaEHNdaI%2FEStWpzz8E9KRApKtPTsU%2BeXtv2ol1O1Z4GgKOqWRquxqr0qD7rwBX2UjE1Vwp86zcQAxZSj84Uqy%2BqVdh1HUX037Tnpt5DIu9zeHQLHDV2KtH9swuDZyjiNa3z8Mmt%2BSO%2F5wzxOgo8srPyYMIyO3rgGOqQBlVBy4y2GJAjMy2fEyseApwBtfXxXtvcet2hHcTZma1iyMjNL9u92XgsVjHY89iBT4cFAfrTn5c8lswph9%2FKyTm%2FoOQpoxPmkoKD5qs1TCuBFXFXMp4d2Clb%2FUkSmqS01aiEkX1%2FrkAF3klbwrC1%2FUKR6%2BaMAahquyYXskHrlqwBHQ9oizw64rkXNIZeSlbfajnNTVmTkhh3QqyEJw9CYZTNN4hk%3D&Expires=1729596011"
+    }
+}
 ```
 
 ## Insights Management
@@ -489,13 +518,13 @@ VLD reports offer insights about users targeted in current or prior political ca
 | `campaignName` | string | Campaign name |
 | `campaignStatus` | string | Campaign status type |
 | `creativeTypeId` | integer | Creative type ID |
-| `vldReportCreatable` | boolean | 
-| `vldChargeableImps` | integer |
-| `vldChargedImps` | integer |
-| `vldChargeableCost` | integer |
-| `vldChargedCost` | integer |
-| `fundsAvailable` | boolean |
-| `effectiveVldRate` | integer |
+| `vldReportCreatable` | boolean | Indicates if VLD report can be generated for the given campaign and date range (`true`)
+| `vldChargeableImps` | integer | The number of chargeable impressions for the requested VLD report
+| `vldChargedImps` | integer | The number of impressions for which the VLD report report is already generated
+| `vldChargeableCost` | integer | Cost to generate the VLD report
+| `vldChargedCost` | integer | Cost of VLD report that is alredy generated
+| `fundsAvailable` | boolean | Indicates if sufficient funds are available in the advertiser's account to generate the VLD report (`true`)
+| `effectiveVldRate` | integer | Margin rate set by the admin and workspace for genrating VLD report
 
 ### Get List of VLD Reports
 
@@ -621,29 +650,24 @@ Response 200
 {
     "success": true,
     "data": {
-        "vldId": 421,
-        "vldName": "532560_VLD_Insights_8",
-        "vldStatus": 2,
-        "ioId": 13690,
-        "ioName": "Test IMP IO",
-        "ioTypeId": 2,
-        "vldCreatedOn": 1728366784579,
-        "vldStartDate": 1722597600000,
-        "vldEndDate": 1727668800000,
-        "campaignId": 532560,
-        "campaignName": "Test campaign",
-        "campaignStatus": "expired",
-        "creativeTypeId": 11,
-        "vldReportCreatable": true,
-        "vldChargeableImps": 0,
-        "vldChargedImps": 1112,
-        "vldChargeableCost": 0.0,
-        "vldChargedCost": 5.56,
-        "fundsAvailable": true,
-        "effectiveVldRate": 5.0
+        "vldReportCreated": true,
+        "campaignId": 1,
+        "campaignName": "Campaign Name",
+        "campaignStatus": "running",
+        "vldStartDate": 1722311000,
+        "vldEndDate": 1722315000,
+        "vldChargeableImps": 1000,
+        "vldChargedImps": 100,
+        "vldChargeableCost": 1000,
+        "vldChargedCost": 100,
+        "fundsAvailable": true
     }
 }
 ```
+
+#### Compute Cost and Impressions for VLD Report Creation
+
+* `POST` /api/v3/ins/vld-reports/computation
 
 ### Get Cost Assessment for VLD Report
 
