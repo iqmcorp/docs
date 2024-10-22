@@ -296,7 +296,7 @@ Response Sample
 
 ### Change Campaign Budget
 
-Update the total budget, daily budget, and max bid of multiple campaigns wiht the following endpoint:
+Update the total budget, daily budget, and max bid of multiple campaigns with the following endpoint:
 
 * `PUT` /api/v2/cmp/campaigns/update_budget
 
