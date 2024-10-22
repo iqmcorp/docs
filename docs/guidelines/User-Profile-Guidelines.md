@@ -94,6 +94,7 @@ Response 422
     ]
 }
 ```
+
 </details>
 
 ## User Sign-Up
@@ -426,13 +427,13 @@ Get a list of users and details for a given workspace ID with the following endp
 \
 **Query Parameters**
 
-| Property | Type | Example | Description |
-| ---- | ---- | --- | --- |
-| `status` | string [required] | `status=1` | Status of user, default: `""` |
-| `pageNo` | integer [required] | `pageNo=1` | (optional) Page number (default: `1`) |
-| `limit` | integer [required] | `limit=10` | (optional) Page size (deafult: `10`) |
-| `sortBy` | string [required] | `sortBy=+displayName` | (optional) Sort the result set by specific field (deafult: `+displayName`) For ascending use plus(+) sign and for descending use minus(-) sign |
-| `searchField` | string [required] | `searchField=iqm` | (optional) Search keyword, default: `""` |
+| Property | Type | Description |
+| ---- | ---- | --- |
+| `status` | string | Status of user, default: `""` |
+| `searchField` | string | Search results by keyword |
+| `limit` | integer | Maximum number of entries returned, default: `10` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `+displayName` |
 
 \
 **Header Parameters**
@@ -529,13 +530,13 @@ See what applications a user has access to, use query parameters to filter resul
 \
 **Query Parameters**
 
-| Property | Type | Example | Description |
-| ---- | ---- | --- | --- |
-| `uowId` | integer [required] | `uowId=495` | User Organization Workspace ID |
-| `searchField` | string [required] | `searchField=iqm` | (optional) Search keyword |
-| `pageNo` | integer [required] | `pageNo=1` | (optional) Page number (default - 1) |
-| `limit` | integer [required] | `limit=10` | (optional) Page size (deafult - 10) |
-| `sortBy` | string [required] | `sortBy=+appName` | (optional) Sort by fields (deafult: `+appName`) Here minus(-) sign is for descending order and plus(+) sign for ascending order. Value can be from `appName`, `appType` |
+| Property | Type | Description |
+| ---- | ---- | --- | 
+| `uowId` | integer | User Organization Workspace ID |
+| `searchField` | string | Search results by keyword |
+| `limit` | integer | Maximum number of entries returned, default: `10` |
+| `pageNo` | integer | Page number for the data, default: `1` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `+appName` |
 
 \
 **Header Parameters**
