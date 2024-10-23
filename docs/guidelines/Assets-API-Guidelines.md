@@ -6,7 +6,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Assets Details
@@ -56,7 +56,7 @@ Response 200
 
 Get details of a single asset with the following endpoint:
 
-* `GET` /api/v3/asset/{assetId}
+* `GET` `/api/v3/asset/{assetId}`
 
 \
 **Query Parameters**
@@ -117,7 +117,7 @@ Response 200
 
 Update the details of an existing asset with the following endpoint:
 
-* `PATCH` /api/v3/asset/{assetId}
+* `PATCH` `/api/v3/asset/{assetId}`
 
 \
 **Path Parameters**
@@ -164,7 +164,7 @@ Response 200
 
 Delete single asset by ID with the following endpoint:
 
-* `DELETE` /api/v3/asset/{assetId}
+* `DELETE` `/api/v3/asset/{assetId}`
 
 \
 **Path Parameters**

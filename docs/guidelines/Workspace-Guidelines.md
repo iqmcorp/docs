@@ -8,7 +8,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Organization Details
@@ -30,14 +30,14 @@ An **organization** is any company that places advertisements. An organization i
 | `zipcode` | string | Zipcode
 | `isAvatarUrl` | boolean | Indicates whether organization has uploaded a logo. If `true`, a default avataor logo is generated when one hasn't been uploaded |
 | `organizationLogo` | string | Logo image file | 
-| `industry` | string | Industry category <br>See [static details list](#industries) for supported values |
-| `companySize` | integer | Number of employees at organization <br>See [static details list](#company-size) for supported values |
+| `industry` | string | Industry category <br />See [static details list](#industries) for supported values<br /> |
+| `companySize` | integer | Number of employees at organization <br />See [static details list](#company-size) for supported values<br /> |
 | `companyId` | string | Company ID |
 | `taxId` | string | Tax ID | 
 | `currency` | string | Currency type |
 | `dateFormat` | string | Date formate, e.g. "MM/DD/YYYY" |
 | `description` | string | Description of organization |
-| `expertize` | string | <br>See [static details list](#organization-expertise) for supported values
+| `expertize` | string | <br />See [static details list](#organization-expertise) for supported values<br />
 
 ### Get List of Allowed Organizations
 
@@ -50,11 +50,11 @@ Get a list of allowed organizations by customer type with the following endpoint
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `customerType` | string | Comma separated customer type IDs<br>See [static details list](#customer-type) for supported values |
+| `customerType` | string | Comma separated customer type IDs<br />See [static details list](#customer-type) for supported values<br /> |
 | `searchField` | string | Search results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `lastActive` <br>Supported values: `organizationName`, `title`, `dateOfJoining`, `lastActive` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `lastActive` <br />Supported values: `organizationName`, `title`, `dateOfJoining`, `lastActive`<br /> |
 
 \
 Response 200
@@ -364,11 +364,11 @@ A **customer** is an **advertiser** or **workspace** in a financial agreement wi
 | `workspaceName` | string | Workspace Name |
 | `workspaceDomain` | string | Worskpace Domain |
 | `owStatus` | string | Organization Worskpace status type |
-| `owStatusId` | integer | OW status type ID <br>See [static details list](#organization-workspace-status) for supported values |
+| `owStatusId` | integer | OW status type ID <br />See [static details list](#organization-workspace-status) for supported values<br /> |
 | `createdAt` | string | Creation timestamp |
 | `modifiedAt` | string | Modifcation timestamp |
 | `parentOrganizationName` | string | Parent organization name |
-| `tags` | array of strings | Customer type tags <br>See [static details list](#customer-type) for supported values |
+| `tags` | array of strings | Customer type tags <br />See [static details list](#customer-type) for supported values<br /> |
 | `customersCount` | integer | Customer count |
 | `balance` | integer | Budget balance |
 | `contactPersonName` | string | Name of contact |
@@ -377,14 +377,14 @@ A **customer** is an **advertiser** or **workspace** in a financial agreement wi
 | `approvedByEmail` | string | Email |
 | `logoUrl` | string | Logo URL
 | `activeCampaignsCount` | integer | Number of active campaigns associated with customer |
-| `industry` | integer | Industry type <br>See [static details list](#industries) for supported values |
-| `companySize` | integer | Company size <br>See [static details list](#company-size) for supported values |
-| `mediaBudget` | integer | Media Budget <br>See [static details list](#media-budget) for supported values |
+| `industry` | integer | Industry type <br />See [static details list](#industries) for supported values<br /> |
+| `companySize` | integer | Company size <br />See [static details list](#company-size) for supported values<br /> |
+| `mediaBudget` | integer | Media Budget <br />See [static details list](#media-budget) for supported values<br /> |
 | `budgetSpent` | integer | Budget Spent |
 | `showFinance` | boolean | Show financial information |
 | `workspaceId` | integer | Workspace ID |
 | `lastAccess` | integer | Records the last time the org was accessed |
-| `verticalTypeId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
+| `verticalTypeId` | integer | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
 | `onHoldReason` | string | Description of reason why Customer is in 'on-hold' status |
 
 ### Get Customer Details
@@ -398,15 +398,15 @@ Get a list of customers and their details with the following endpoint:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `owIds` | string | Comma separated Organization Workspace IDs whose customers need to be retrieved <br>If `owId` of advertiser is passed, endpoint will return advertiser details <br>If `owId` of workspace is passed, endpoint will return workspace and its advertisers details |
+| `owIds` | string | Comma separated Organization Workspace IDs whose customers need to be retrieved <br />If `owId` of advertiser is passed, endpoint will return advertiser details <br />If `owId` of workspace is passed, endpoint will return workspace and its advertisers details |
 | `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
-| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
-| `customerType` | string | Comma separated customer type IDs <br>See [static details list](#customer-type) for supported values |
+| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `customerType` | string | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
 | `searchField` | string | Filters results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
 | `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-runningCampaigns` |
-| `customerAccountType` | string | Customer account type ID <br>See [static details list](#customer-account-type) for supported values |
+| `customerAccountType` | string | Customer account type ID <br />See [static details list](#customer-account-type) for supported values<br /> |
 
 \
 Response 200
@@ -504,7 +504,7 @@ Response 200
 | `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
 | `pageNo` | integer | Page number for the data, default: `1` |
 | `owIds` | array of integers | Organization Workspace IDs |
-| `owStatusIds` | array of integers | Filter by OW Status type IDs <br>See [static details list](#organization-workspace-status) for supported values|
+| `owStatusIds` | array of integers | Filter by OW Status type IDs <br />See [static details list](#organization-workspace-status) for supported values<br />|
 | `provideRunningCampaigns` | boolean | Get running campaign count (`true`), default: `false` |
 
 \
@@ -561,7 +561,7 @@ Response 200
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owIds` | string | Comma separated OW IDs of organizations whose customers need to be retrieved |
-| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
+| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
 | `searchField` | string | Filters results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -673,8 +673,8 @@ Get only immediate customers of provided OW IDs (if `owId` is not provided then 
 | ---- | ---- | --- |
 | `owIds` | string | Comma separated Organization Workspace IDs whose immediate customers need to be retrieved |
 | `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
-| `status` | string | Comma separated `owId` status IDs <br>See [static details list](#organization-workspace-status) for supported values |
-| `customerType` | string | Comma separated customer type IDs <br>See [static details list](#customer-type) for supported values |
+| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `customerType` | string | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
 | `searchField` | string | Filters results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -724,11 +724,11 @@ Response 200
 | `name` | string | Customer name |
 | `password` | string | Customer password |
 | `onwerUserName` | string | Customer owner
-| `verticalId` | integer | Vertical type ID <br>See [static details list](#verticals) for supported values |
+| `verticalId` | integer | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
 | `logoUrl` | string | Logo URL |
 | `customerOperationDetails` | object | (workspace only) contains all following properties |
-| `customerTypeId` | integer | Customer type ID <br>See [static details list](#customer-type) for supported values |
-| `customerPaymentTypeId` | integer | Customer payment type ID <br>See [static details list](#customer-payment-type) for supported values |
+| `customerTypeId` | integer | Customer type ID <br />See [static details list](#customer-type) for supported values<br /> |
+| `customerPaymentTypeId` | integer | Customer payment type ID <br />See [static details list](#customer-payment-type) for supported values<br /> |
 | `countryId` | integer | Country ID |
 | `adOpsAssigneeUserIds` | array of integers | User IDs assigned by the IQM AdOps Team
 | `sellerAssigneeUserIds` | array of integers | User IDs assigned by the client/seller team
@@ -736,7 +736,7 @@ Response 200
 
 ### Get Customer Operations Details
 
-* `GET` /api/v3/ua/customer-operations/details/{owId}
+* `GET` `/api/v3/ua/customer-operations/details/{owId}`
 
 \
 **Path Parameters**
@@ -795,7 +795,7 @@ Get a list of labels for customer operations with the following endpoint:
 | `searchField` | string | Search results by keyword |
 | `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
 | `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` <br>Supported values: `id`, `name`, `startTime`, `endTime`, `totalBudget` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` <br />Supported values: `id`, `name`, `startTime`, `endTime`, `totalBudget`<br /> |
 
 \
 Response 200
@@ -943,7 +943,7 @@ Response 200
 | `uowId` | string | Customers assigned to user Organization Workspace ID |
 | `limit` | integer | Maximum number of entries returned, default: `2` |
 | `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br>Supported values: `createdAt`, `organizationName` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `createdAt`, `organizationName`<br /> |
 
 \
 Response 200
@@ -987,7 +987,7 @@ Response 200
 | `owIds` | string | Organization Workspace IDs |
 | `limit` | integer | Maximum number of entries returned, default: `2` |
 | `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br>Supported values: `contactPersonName`, `organizationName` |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `contactPersonName`, `organizationName`<br /> |
 
 \
 Response 200
@@ -1186,7 +1186,7 @@ Response 200
 
 Get customer configuration details with the following endpoint:
 
-* `GET` /api/v3/ua/customer/config/{customerOwId}
+* `GET` `/api/v3/ua/customer/config/{customerOwId}`
 
 \
 **Path Parameters**
@@ -1327,8 +1327,8 @@ Sign up a new customer with the following endpoint:
 | `organizationName` | string | Customer organization name
 | `userName` | string | Customer user name |
 | `industry` | integer | Industry type ID |
-| `companySize` | integer | Company size type ID <br>See [static details list](#company-size) for supported values|
-| `mediaBudget` | integer | <br>See [static details list](#media-budget) for supported values
+| `companySize` | integer | Company size type ID <br />See [static details list](#company-size) for supported values<br />|
+| `mediaBudget` | integer | <br />See [static details list](#media-budget) for supported values<br />
 | `budgetSpent` | integer | Budget spent |
 
 \
@@ -1650,7 +1650,7 @@ Response 200
 
 Enable bid shading for given customer OW ID with the following endpoint:
 
-* `PATCH` /api/v3/ua/customer/enable-bid-shading/{customerOwId}
+* `PATCH` `/api/v3/ua/customer/enable-bid-shading/{customerOwId}`
 
 \
 **Path Parameters**
@@ -1673,7 +1673,7 @@ Response 200
 
 Update customer operations details with the following endpoint:
 
-* `PATCH` /api/v3/ua/customer-operations/{owId}
+* `PATCH` `/api/v3/ua/customer-operations/{owId}`
 
 \
 **Path Parameters**
@@ -1920,7 +1920,7 @@ Response 200
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `view` | string | Represents the tab from which request was made in customer app <br>Supported values: `customer`, `approval`, `finance` |
+| `view` | string | Represents the tab from which request was made in customer app <br />Supported values: `customer`, `approval`, `finance` <br />|
 
 Response 200
 

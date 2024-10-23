@@ -7,7 +7,7 @@ The master API uses the same Header Parameters for all endpoints:
 
 | Property | Type | Description |
 | --- | --- | --- |
-| `Authorization` | string [required] | Authorization Bearer Token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization Bearer Token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace Id Header |
 
 ## Get Geographical Data
@@ -236,8 +236,8 @@ Response 200 Sample
 
 Get a list of carriers or states by country ID with the following endpoints:
 
-* `GET` /api/countries/{country_id}/carriers
-* `GET` /api/countries/{country_id}/states
+* `GET` `/api/countries/{country_id}/carriers`
+* `GET` `/api/countries/{country_id}/states`
 
 \
 **Path Parameters**
@@ -339,12 +339,12 @@ The following endpoints can be used to get lists of various data:
 || /verticals/list | Gets values of verticals |
 || /segment/channel | Gets channels for the inventory app |
 || /inventory-types | Gets inventory types with ID and name |
-|| /exchanges | Gets exchanges. Optional query parameters:<br>`exchangeIds`: Filters for provided exchange IDs<br>`ids`: Filters for provided exchange IDs, followed by other matching records<br>`pageNo`: Page number for returned data, default: `1`<br>`noOfEnries`: Maximum number of returned results per page<br>`sortBy`: Sort the results by specific field<br> `order`: Sorting order, supported values: `asc` or `desc`, default: `asc`<br>`searchField`: Search the result by provided keyword |
+|| /exchanges | Gets exchanges. Optional query parameters:<br />`exchangeIds`: Filters for provided exchange IDs<br />`ids`: Filters for provided exchange IDs, followed by other matching records<br />`pageNo`: Page number for returned data, default: `1`<br />`noOfEnries`: Maximum number of returned results per page<br />`sortBy`: Sort the results by specific field<br /> `order`: Sorting order, supported values: `asc` or `desc`, default: `asc`<br />`searchField`: Search the result by provided keyword<br /> |
 || /deal-curation-type | Gets deal curation types |
-|`POST` /api/v3/master | /adcategories | Gets publisher ad categories. <br>Optional request body value: `adCategoryIds`, see next section for full schema |
-|| /segment/dma | Gets paginated list of DMA code segment based on provided filters. Optional request body values: <br>`searchField` supported values: `name` or `abbreviation` <br>`parentSegmentIds` [array of integers]: Filters for DMA code based on associated state ID <br>`segmentIds` [array of integers]: Filters for DMA codes IDs<br>See following section for full schema |
-|| /segment/device-type | Gets device types based on provided filters<br>Optional request body values: <br>`segmentIds` [array of integers]: Filters by device type IDs <br>See following section for full schema |
-|| /inventory | Gets inventory. Optional request body values: <br>`publisherIds` [array of integers]: Filters for publisher IDs <br>`inventoryIds` [array of integers]: Filters for inventory IDs <br>See following section for full schema |
+|`POST` /api/v3/master | /adcategories | Gets publisher ad categories. <br />Optional request body value: `adCategoryIds`, see next section for full schema<br /> |
+|| /segment/dma | Gets paginated list of DMA code segment based on provided filters. Optional request body values: <br />`searchField` supported values: `name` or `abbreviation` <br />`parentSegmentIds` [array of integers]: Filters for DMA code based on associated state ID <br />`segmentIds` [array of integers]: Filters for DMA codes IDs<br />See following section for full schema |
+|| /segment/device-type | Gets device types based on provided filters<br />Optional request body values: <br />`segmentIds` [array of integers]: Filters by device type IDs <br />See following section for full schema<br /> |
+|| /inventory | Gets inventory. Optional request body values: <br />`publisherIds` [array of integers]: Filters for publisher IDs <br />`inventoryIds` [array of integers]: Filters for inventory IDs <br />See following section for full schema<br /> |
 
 \
 **Request Body Schema: application/json** [required]

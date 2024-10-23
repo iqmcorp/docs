@@ -8,7 +8,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Insights Details
@@ -56,7 +56,7 @@ Response 200
 
 Gets the data required for bidding insights of campaign by campaign ID in a given date range (2 weeks maximum), along with the rejection reasons and rejection bids per reason. Also gets total wins during the date range. Use the following endpoint:
 
-`GET` /api/v3/ins/campaign/bid-insights/{campaignId}
+`GET` `/api/v3/ins/campaign/bid-insights/{campaignId}`
 
 \
 **Path Parameters**
@@ -265,7 +265,7 @@ Response 200
 
 Get matched audience details by audience ID with the following endpoint:
 
-* `GET` /api/v3/ins/audience/matched/{audienceId}
+* `GET` `/api/v3/ins/audience/matched/{audienceId}`
 
 \
 **Path Parameters**
@@ -297,7 +297,7 @@ Reponse 200
 
 #### Get Matched Audience File URL
 
-* `GET` /api/v3/ins/audience/matched/download/{audienceId}
+* `GET` `/api/v3/ins/audience/matched/download/{audienceId}`
 
 Response 200
 
@@ -398,7 +398,7 @@ Response 200
 
 Regenerates an insights report if the insight fails with the following endpoint:
 
-* `POST` /api/v3/ins/insights/regenerate/{insightsId}
+* `POST` `/api/v3/ins/insights/regenerate/{insightsId}`
 
 \
 **Path Parameters**
@@ -724,7 +724,7 @@ Get a donwload link for a VLD insight report in CSV or XLSX format with the foll
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `fileTypeId` | integer | File type ID <br>XLSX: `1` <br>CSV: `2` |
+| `fileTypeId` | integer | File type ID <br />XLSX: `1` <br />CSV: `2` |
 | `vldId` | integer | VLD ID |
 
 \
