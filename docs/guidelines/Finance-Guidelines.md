@@ -8,7 +8,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Finance Details
@@ -25,7 +25,7 @@ Get an over of a customer's finance details with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br>For Customer Management Tab: `false` <br>For Finance Tab: `true` |
+| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true` |
 | `year` | integer | Year for data | 
 
 \
@@ -167,7 +167,7 @@ Get a list of payments by customer with the following endpoint:
 | `searchField` | string | Search results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` <br>Supported values: `paymentId`, `paymentDate`, `paymentAmount`, `organizationName`, `paymentType`, `paymentMode`, `paymentStatus`
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` <br />Supported values: `paymentId`, `paymentDate`, `paymentAmount`, `organizationName`, `paymentType`, `paymentMode`, `paymentStatus`
 
 \
 Response 200
@@ -365,9 +365,9 @@ Get a list of invoices by customer or organization with the following endpoints:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `status` | string | Status ID <br>See [static details list](#invoice-status) for supported values |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-invoiceId` <br>Supported values: `issuedOn`, `invoiceAmount`, `status` |
-| `isCustomerRequest` | boolean | (Organization endpoint only) Customer app request (default): `true` <br>Organization app request: `false`
+| `status` | string | Status ID <br />See [static details list](#invoice-status) for supported values |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-invoiceId` <br />Supported values: `issuedOn`, `invoiceAmount`, `status` |
+| `isCustomerRequest` | boolean | (Organization endpoint only) Customer app request (default): `true` <br />Organization app request: `false`
 
 \
 Response 200
@@ -413,8 +413,8 @@ Get a list of payment transactions for an organization with the following endpoi
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `status` | string |  Status ID <br>See [static details list]() for supported values |
-| `paymentType` | string | Payment type ID <br>See [static details list]() for supported values |
+| `status` | string |  Status ID <br />See [static details list](#payment-status) for supported values |
+| `paymentType` | string | Payment type ID <br />See [static details list](#payment-types) for supported values |
 | `searchField` | string | Search results by keyword |
 | `limit` | integer | Maximum number of entries returned, default: `10` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -515,7 +515,7 @@ Get an overview of customer's financial details with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br>For Customer Management Tab: `false` <br>For Finance Tab: `true`
+| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true`
 | `year` | integer | Year |
 
 \
@@ -549,7 +549,7 @@ Get customer margin details by margin type with the following endpoint:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `marginTypeIds` | string | Comma separated margin type IDs <br>See [static details list]() for supported values |
+| `marginTypeIds` | string | Comma separated margin type IDs <br />See static details list for supported values |
 | `owId` | integer | Organization Workspace ID |
 
 \
@@ -642,7 +642,7 @@ Response 200
 
 Get details for customer PG fees with the following endpoint:
 
-* `GET` /api/v3/fa/customer/{owId}/pg-fees
+* `GET` `/api/v3/fa/customer/{owId}/pg-fees`
 
 \
 **Path Parameters**
@@ -668,7 +668,7 @@ Response 200
 
 #### Edit Customer PG Fees
 
-* `PATCH` /api/v3/fa/customer/{customerOwId}/pg-fees
+* `PATCH` `/api/v3/fa/customer/{customerOwId}/pg-fees`
 
 \
 **Path Parameters**
@@ -710,7 +710,7 @@ Response 200
 
 Get finance details for customer VLD with the following endpoint:
 
-* `GET` /api/v3/fa/customer/{customerOwId}/vld-fees
+* `GET` `/api/v3/fa/customer/{customerOwId}/vld-fees`
 
 \
 **Path Parameters**
@@ -816,7 +816,7 @@ Response 200
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br>Organization app request: `false` |
+| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
 
 \
 Response 200
@@ -832,7 +832,7 @@ Response 200
 
 Get credit summary by workspace ID with the following endpoint:
 
-* `GET` /api/v3/fa/credit-summary/{owId}
+* `GET` `/api/v3/fa/credit-summary/{owId}`
 
 \
 **Path Parameters**
@@ -846,7 +846,7 @@ Get credit summary by workspace ID with the following endpoint:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br>Organization app request: `false` |
+| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
 
 \
 Response 200
@@ -907,14 +907,14 @@ Response 200
 
 ### Download Invoice
 
-* `GET` /api/v3/fa/download-invoice/{owId}/{invoiceId}
+* `GET` `/api/v3/fa/download-invoice/{owId}/{invoiceId}`
 
 \
 **Query Parameters**
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br>Organization app request: `false` |
+| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
 
 \
 Response 200
@@ -935,7 +935,7 @@ Get a PDF of payment receipt with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br>Organization app request: `false` |
+| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
 
 \
 Response 200
@@ -948,7 +948,7 @@ Response 200
 
 ### Update Invoice Settings
 
-* `PATCH` /api/v3/fa/invoice-settings/{invoiceId}
+* `PATCH` `/api/v3/fa/invoice-settings/{invoiceId}`
 
 \
 **Request Body Schema: application/json**
@@ -972,7 +972,7 @@ Response 200
 
 Update [invoice status](#invoice-status) with the following endpoint:
 
-* `PATCH` /api/v3/fa/invoice-approve/{invoiceId}
+* `PATCH` `/api/v3/fa/invoice-approve/{invoiceId}`
 
 \
 **Path Parameter**
@@ -993,7 +993,7 @@ Response 200
 
 #### Cancel Invoice
 
-* `PATCH` /api/v3/fa/invoice-cancel/{invoiceId}
+* `PATCH` `/api/v3/fa/invoice-cancel/{invoiceId}`
 
 \
 Response 200
@@ -1015,7 +1015,7 @@ Response 200
 | ---- | ---- | --- |
 | `owId` | integer | Organization Workspace ID |
 | `paymentAmount` | integer | Payment amount |
-| `paymentType` | integer | Payment type ID <br>See [static details list](#payment-types) for supported values |
+| `paymentType` | integer | Payment type ID <br />See [static details list](#payment-types) for supported values |
 | `invoiceId` | integer | Invoice ID |
 
 \
@@ -1041,7 +1041,7 @@ Response 200
 
 ### Email Invoice
 
-* `POST` /api/v3/fa/email-invoice/{owId}/{invoiceId}
+* `POST` `/api/v3/fa/email-invoice/{owId}/{invoiceId}`
 
 \
 **Path Parameter**
@@ -1221,10 +1221,10 @@ Response 200
 | `owId` | integer | Orginazation Workspace ID |
 | `paymentAmount` | integer | Payment amount |
 | `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
 | `transactionId` | integer | Transaction ID |
 | `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
-| `paymentType` | integer | Payment type ID <br>See [static details list](#payment-types) for supported values |
+| `paymentType` | integer | Payment type ID <br />See [static details list](#payment-types) for supported values |
 | `invoiceId` | Invoice ID (provide only of `paymentType` is 'against invoice')
 
 \
@@ -1255,7 +1255,7 @@ Response 200
 
 #### Edit Customer Payment
 
-* `PUT` /api/v3/fa/customer/payment/{}
+* `PUT` `/api/v3/fa/customer/payment/{}`
 
 \
 Response 200
@@ -1271,7 +1271,7 @@ Response 200
 
 Update payment status
 
-* `POST` /api/v3/fa/customer/payment/approve/{paymentId}
+* `POST` `/api/v3/fa/customer/payment/approve/{paymentId}`
 
 \
 **Path Parameter**
@@ -1309,7 +1309,7 @@ Response 200
 
 #### Cancel Payment
 
-* `POST` /api/v3/fa/customer/payment/cancel/{paymentId}
+* `POST` `/api/v3/fa/customer/payment/cancel/{paymentId}`
 
 Response 200
 
@@ -1322,7 +1322,7 @@ Response 200
 
 #### Reject Payment
 
-* `POST` /api/v3/fa/customer/payment/reject/{paymentId}
+* `POST` `/api/v3/fa/customer/payment/reject/{paymentId}`
 
 Response 200
 
@@ -1344,7 +1344,7 @@ Response 200
 | ---- | ---- | --- |
 | `paymentAmount` | integer | Payment amount |
 | `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
 | `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
 | `bankName` | string | Required only if `paymentMode` is 'check' or 'wire transfer' |
 
@@ -1391,7 +1391,7 @@ Response 200
 | `owId` | integer | Orginazation Workspace ID |
 | `paymentAmount` | integer | Payment amount |
 | `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br>See [static details list](#invoice-payment-mode-types) for supported values |
+| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
 | `transactionId` | integer | Transaction ID |
 | `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
 
@@ -1407,7 +1407,7 @@ Response 200
 
 #### Approve Refund
 
-* `POST` /api/v3/fa/customer/payment/approve-refund/{}
+* `POST` `/api/v3/fa/customer/payment/approve-refund/{}`
 
 \
 Response 200
@@ -1421,7 +1421,7 @@ Response 200
 
 ### Email Payment Receipt
 
-* `POST` /api/v3/fa/payment/email-receipt/{owId}/{}
+* `POST` `/api/v3/fa/payment/email-receipt/{owId}/{}`
 
 \
 Response 200

@@ -8,7 +8,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Conversion Details
@@ -108,84 +108,84 @@ This section covers the various methods and endpoints for getting conversion det
         <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
     </tr>    
     <tr>
-        <td colspan="3"><code>piggybackData</code>
+        <td colspan="3"><code>piggybackData</code></td>
         <td>object</td>
         <td></td>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>url</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>url</code></td>
                     <td>string</td>
                     <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td colspan="2"><code>type</td>
+                    <td>└━</td>
+                    <td colspan="2"><code>type</code></td>
                     <td>integer</td>
-                    <td><a href="#piggybackType">Piggyback type ID</a>
+                    <td><a href="#piggybackType">Piggyback type ID</a></td>
                 </tr>
-        <td colspan="3"><code>conversionSetting</code>
+        <td colspan="3"><code>conversionSetting</code></td>
         <td>object</td>
         <td>Advanced conversion settings</td>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>conversionDuration</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>conversionDuration</code></td>
                     <td>object</td>
                     <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>view</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>view</code></td>
                     <td>integer</td>
-                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br>Post view interval, days: [<code>1</code>...<code>30</code>]
+                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br />Post view interval, days: [<code>1</code>...<code>30</code>]</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">└━</td>
-                    <td ><code>click</td>
+                    <td>│</td>
+                    <td>└━</td>
+                    <td><code>click</code></td>
                     <td>integer</td>
-                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br>Post click interval, days: [<code>7</code>...<code>60</code>]
+                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [<code>7</code>...<code>60</code>]</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>repeatConversion</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>repeatConversion</code></td>
                     <td>object</td>
                     <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>count</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>count</code></td>
                     <td>integer</td>
                     <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>frequency</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>frequency</code></td>
                     <td>integer</td>
                     <td>Counts 1 conversion per user for specified number based on selected unit </td>
                 </tr>
                       <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">└━</td>
-                    <td><code>unit</td>
+                    <td>│</td>
+                    <td>└━</td>
+                    <td><code>unit</code></td>
                     <td>string</td>
                     <td>Selected unit of conversion frequency</td>
                 </tr>
                   <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td colspan="2"><code>crossModelling</td>
+                    <td>└━</td>
+                    <td colspan="2"><code>crossModelling</code></td>
                     <td>boolean</td>
                     <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
-                </tr>
+                </tr></tr>
 </table>
 
 ### Get Conversion Details by ID
 
 Get details about a conversion from its ID with the following endpoint:
 
-* `GET` /api/v3/conversion/{conversionId}
+* `GET` `/api/v3/conversion/{conversionId}`
 
 \
 **Path Parameters**
@@ -193,7 +193,7 @@ Get details about a conversion from its ID with the following endpoint:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `conversionId` | integer | Conversion ID |
-| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) for which the details will be returned <br>Pixel: `1` <br>Postback: `2` |
+| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) for which the details will be returned <br />Pixel: `1` <br />Postback: `2` |
 
 \
 Response 200
@@ -254,8 +254,8 @@ Get a list of conversions with details and filters with the following endpoint:
 | `pageNo` | integer | Page number for the data, default: `1` |
 | `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-created` | 
 | `conversionsId` | string | Conversion ID
-| `typeIds` | string | Filters by [conversion type ID](#get-list-of-conversion-types)<br>Pixel: `1` <br>Postback: `2`
-| `statusIds` | string | Filters by [conversion status ID](#get-list-of-conversion-status)<br>Active:`1` <br>Pending:`2` |
+| `typeIds` | string | Filters by [conversion type ID](#get-list-of-conversion-types)<br />Pixel: `1` <br />Postback: `2`
+| `statusIds` | string | Filters by [conversion status ID](#get-list-of-conversion-status)<br />Active:`1` <br />Pending:`2` |
 | `postbackPartnerIds` | string | Filters by postback conversion type IDs |
 
 \
@@ -520,77 +520,77 @@ Create a pixel type conversion with the following endpoint:
         <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
     </tr>
     <tr>
-        <td colspan="3"><code>piggybackData</code>
+        <td colspan="3"><code>piggybackData</code></td>
         <td>object</td>
         <td></td>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>url</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>url</code></td>
                     <td>string</td>
                     <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td colspan="2"><code>type</td>
+                    <td>└━</td>
+                    <td colspan="2"><code>type</code></td>
                     <td>integer</td>
-                    <td><a href="#piggybackType">Piggyback type ID</a>
+                    <td><a href="#piggybackType">Piggyback type ID</a></td>
                 </tr>
-        <td colspan="3"><code>conversionSetting</code>
+        <td colspan="3"><code>conversionSetting</code></td>
         <td>object</td>
         <td>Advanced conversion settings</td>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>conversionDuration</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>conversionDuration</code></td>
                     <td>object</td>
                     <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>view</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>view</code></td>
                     <td>integer</td>
-                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br>Post view interval, days: [<code>1</code>...<code>30</code>]
+                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br />Post view interval, days: [<code>1</code>...<code>30</code>]</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">└━</td>
-                    <td ><code>click</td>
+                    <td>│</td>
+                    <td>└━</td>
+                    <td><code>click</code></td>
                     <td>integer</td>
-                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br>Post click interval, days: [<code>7</code>...<code>60</code>]
+                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [<code>7</code>...<code>60</code>]</td>
                 </tr>
                 <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td colspan="2"><code>repeatConversion</td>
+                    <td>├━</td>
+                    <td colspan="2"><code>repeatConversion</code></td>
                     <td>object</td>
                     <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>count</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>count</code></td>
                     <td>integer</td>
                     <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
                 </tr>
                     <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>frequency</td>
+                    <td>│</td>
+                    <td>├━</td>
+                    <td><code>frequency</code></td>
                     <td>integer</td>
                     <td>Counts 1 conversion per user for specified number based on selected unit </td>
                 </tr>
                       <tr>
-                    <td style="border-right: hidden">│</td>
-                    <td style="border-right: hidden">└━</td>
-                    <td><code>unit</td>
+                    <td>│</td>
+                    <td>└━</td>
+                    <td><code>unit</code></td>
                     <td>string</td>
                     <td>Selected unit of conversion frequency</td>
                 </tr>
                   <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td colspan="2"><code>crossModelling</td>
+                    <td>└━</td>
+                    <td colspan="2"><code>crossModelling</code></td>
                     <td>boolean</td>
                     <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
-                </tr>
+                </tr></tr>
 </table>
 
 \

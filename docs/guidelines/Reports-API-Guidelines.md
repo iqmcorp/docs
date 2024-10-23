@@ -10,7 +10,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Reports Details
@@ -28,8 +28,8 @@ Get a list of reports with the following endpoints:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `customerIds` | string | Filters by comma separated customer IDs <br>Passing `all` gets all eligible customer's report, default: `all` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br>Supported values: `id`, `name`, `startDate`, `modifyDate`<br>Default: `-modifyDate` |
+| `customerIds` | string | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
 | `searchField` | string | Filters by searched keyword |
 | `limit` | integer | Maximum number of entries returned, default: `20` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -116,8 +116,8 @@ A list of reports can also be retrieved using the `POST` method with the followi
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `customerIds` | string | Filters by comma separated customer IDs <br>Passing `all` gets all eligible customer's report, default: `all` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br>Supported values: `id`, `name`, `startDate`, `modifyDate`<br>Default: `-modifyDate` |
+| `customerIds` | string | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
+| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
 | `searchField` | string | Filters by searched keyword |
 | `noOfEntries` | integer |Maximum number of entries returned, default: `20` |
 | `pageNo` | integer | Page number for the data, default: `1` |
@@ -175,7 +175,7 @@ Response 200
 
 Get report data by report ID with the following endpoint:
 
-* `GET` /api/v3/ra/report/{reportId}
+* `GET` `/api/v3/ra/report/{reportId}`
 
 **Path Parameters**
 
@@ -537,7 +537,7 @@ Response 200
 
 Delete a report and its scheduling data by ID with the following endpoint:
 
-* `DELETE` /api/v3/ra/report/{reportId}
+* `DELETE` `/api/v3/ra/report/{reportId}`
 
 \
 **Path Parameters**
@@ -560,7 +560,7 @@ Response 200
 
 Edit a report's data based on given field with the following endpoint:
 
-* `PATCH` /api/v3/ra/report/{reportId}
+* `PATCH` `/api/v3/ra/report/{reportId}`
 
 \
 **Path Parameters**
@@ -586,11 +586,11 @@ Edit a report's data based on given field with the following endpoint:
 | `reportAggregated` | integer | ID for whether first report dimension is aggregated (`1`) or not (`0`) |
 |  `reportSchedulingEventDetails` | object | Contains parameters for updating scheduling details |
 | `eventId` | integer | ID for schedule event, part of `reportSchedulingEventDetails` object |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br>Once: `1` <br>Daily: `2` <br>Weekly: `3` <br>Monthly: `4` <br>Part of `reportSchedulingEventDetails` |
-| `fileType` | integer | Report file type ID <br>CSV: `1` <br>XLS: `2` <br>Part of `reportSchedulingEventDetails` |
-| `subscriberEmails` | array of strings | List of emails to which the report will be sent. <br>Part of `reportSchedulingEventDetails` |
-| `eventEndDate` | integer | Unix epoch timestamp of report schedule event end date, in milliseconds. <br>Part of `reportSchedulingEventDetails` |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br>Weekly delivery day: [`sunday`, `monday`, ...] <br>Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br> Part of `reportSchedulingEventDetails` |
+| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` <br />Part of `reportSchedulingEventDetails`<br /> |
+| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` <br />Part of `reportSchedulingEventDetails`<br /> |
+| `subscriberEmails` | array of strings | List of emails to which the report will be sent. <br />Part of `reportSchedulingEventDetails`<br /> |
+| `eventEndDate` | integer | Unix epoch timestamp of report schedule event end date, in milliseconds. <br />Part of `reportSchedulingEventDetails`<br /> |
+| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br /> Part of `reportSchedulingEventDetails`<br /> |
 
 \
 Request Sample
@@ -692,9 +692,9 @@ Create and save a report scheule with the following endpoint:
 | ---- | ---- | --- |
 | `reportId` | integer | Report  ID |
 | `subscriberEmails` | array of strings | List of emails to which the report will be sent |
-| `fileType` | integer | Report file type ID <br>CSV: `1` <br>XLS: `2` |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br>Once: `1` <br>Daily: `2` <br>Weekly: `3` <br>Monthly: `4` |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br>Weekly delivery day: [`sunday`, `monday`, ...] <br>Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` |
+| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
+| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
 | `eventEndDate` | integer | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
 | `runningTotalEnabled` | boolean | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
 | `earliestCampaignStartDate` | integer | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
@@ -746,7 +746,7 @@ Response 200
 
 Update a report schedule with the following endpoint:
 
-* `PATCH` /api/v3/ra/report/email/schedule/{reportId}
+* `PATCH` `/api/v3/ra/report/email/schedule/{reportId}`
 
 \
 **Path Parameters**
@@ -763,9 +763,9 @@ Include whichever fields to be updated in the request body:
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `subscriberEmails` | array of strings | List of emails to which the report will be sent | 
-| `fileType` | integer | Report file type ID <br>CSV: `1` <br>XLS: `2` |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br>Once: `1` <br>Daily: `2` <br>Weekly: `3` <br>Monthly: `4` |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br>Weekly delivery day: [`sunday`, `monday`, ...] <br>Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` |
+| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
+| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
 | `eventEndDate` | integer | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
 | `runningTotalEnabled` | boolean | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
 | `earliestCampaignStartDate` | integer | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
@@ -811,7 +811,7 @@ Response 200
 
 Remove a report schedule with the following endpoing:
 
-* `DELETE` /api/v3/ra/report/email/schedule/{reportId}
+* `DELETE` `/api/v3/ra/report/email/schedule/{reportId}`
 
 \
 **Path Parameters**

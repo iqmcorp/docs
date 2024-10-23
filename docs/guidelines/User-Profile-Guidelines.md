@@ -15,7 +15,7 @@ Any customer or organization can send invitations to one or more users by provid
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -108,7 +108,7 @@ A user/customer can sign up and create a password to access the API using the fo
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 
 \
 **Request Body Schema: application json**
@@ -173,7 +173,7 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
 \
@@ -375,7 +375,7 @@ The user's profile display name and avatar can be updated with the following end
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -385,7 +385,7 @@ The user's profile display name and avatar can be updated with the following end
 | ---- | ---- | --- |
 | `displayName` | string [required] | User Name |
 | `userAvatar` | string [required] | If `removeUserProfile` set to -true, can remain null, otherwise: Image file uploaded for profile |
-| `removeUserProfile` | boolean [required] | default: -false <br>To remove profile image: -true |
+| `removeUserProfile` | boolean [required] | default: -false <br />To remove profile image: -true <br />|
 
 \
 Response 200 
@@ -440,7 +440,7 @@ Get a list of users and details for a given workspace ID with the following endp
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -543,7 +543,7 @@ See what applications a user has access to, use query parameters to filter resul
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -602,7 +602,7 @@ A user can be granted access to specified apps using the following endpoint:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \

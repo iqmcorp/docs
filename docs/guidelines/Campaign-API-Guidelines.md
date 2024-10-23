@@ -8,7 +8,7 @@ Refer to the quickstart guide for instructions on [how to start a new campaign](
 
 Get a campaign's basic details and targeting details by ID with the following endpoint:
 
-* `GET` /api/v2/cmp/campaign/{campaignId}
+* `GET` `/api/v2/cmp/campaign/{campaignId}`
 
 \
 **Path Parameters**
@@ -29,7 +29,7 @@ Get a campaign's basic details and targeting details by ID with the following en
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
@@ -152,7 +152,7 @@ Other details can be fetched with a simple `GET` operation and filtered by vario
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -215,7 +215,7 @@ Update various aspects of a campaign, use the following Header Parameters for ea
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -223,7 +223,7 @@ Update various aspects of a campaign, use the following Header Parameters for ea
 
 Change the name of a campaign with the following endpoint:
 
-* `PATCH` /api/v3/cmp/campaign/update-name/{campaignId}
+* `PATCH` `/api/v3/cmp/campaign/update-name/{campaignId}`
 
 \
 **Path Parameters**
@@ -309,7 +309,7 @@ Update the total budget, daily budget, and max bid of multiple campaigns with th
 | `maxBid` | integer | Max bid of campaign
 | `totalBudget` | integer | Total budget of campaign
 | `dailyBudget` | integer | Daily Budget of campaign
-| `totalBudgetUpdateType` | string | Used in the case of a total budget update. There are three possibilities for this parameter. <br>`change`: Replace total budget with given value.<br>`addition`: Add budget to the current total budget.<br>`distribution`: Distribute given total budget in selected campaigns equally.<br>Default value: `change`
+| `totalBudgetUpdateType` | string | Used in the case of a total budget update. There are three possibilities for this parameter. <br />`change`: Replace total budget with given value.<br />`addition`: Add budget to the current total budget.<br />`distribution`: Distribute given total budget in selected campaigns equally.<br />Default value: `change`
 
 \
 Request Sample
@@ -358,7 +358,7 @@ Response 200
 
 Any campaign property can be updated with the following endpoint:
 
-* `PATCH` /api/v2/cmp/campaign/{campaignId}
+* `PATCH` `/api/v2/cmp/campaign/{campaignId}`
 
 \
 **Request Body Schema: application/json**
@@ -376,7 +376,7 @@ See complete documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Get Campaign Count by Status
@@ -478,7 +478,7 @@ The campaign API allows the user to retrieve Insertion Order (IO) details with t
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Resource Properties
@@ -613,7 +613,7 @@ Get a list of campaign details grouped by Insertion Order ID (`ioId`) with suppo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -819,7 +819,7 @@ Get a list of campaigns with detailed report by Insertion Order ID (`ioId`) with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -1090,7 +1090,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)|
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -1238,9 +1238,9 @@ Update the details, end dates, and budgets of insertion orders with the followin
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| `PATCH` | /api/v3/cmp/io/{ioId} | Update details of specified IO. <br>See IO [resource properties](#resource-properties-1) above for supported values
-| `PATCH` | /api/v3/cmp/io/update-end-date | Update the end date for a given list of IOs. <br>See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOEndDate)
-| `PATCH` | /api/v3/cmp/io/update-budget | Update the budget for a given list of IOs. <br>See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOBudgetByIOList)
+| `PATCH` | `/api/v3/cmp/io/{ioId}` | Update details of specified IO. <br />See IO [resource properties](#resource-properties-1) above for supported values
+| `PATCH` | /api/v3/cmp/io/update-end-date | Update the end date for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOEndDate)
+| `PATCH` | /api/v3/cmp/io/update-budget | Update the budget for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOBudgetByIOList)
 
 \
 **Path Parameters** (where applicable)
@@ -1254,7 +1254,7 @@ Update the details, end dates, and budgets of insertion orders with the followin
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \

@@ -17,7 +17,7 @@ The **Include** and **Exclude** options allow the user to control where their ad
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
@@ -56,7 +56,7 @@ Response 200 Sample (`deviceType`)
 
 This API allows the user to optimize a campaign by updating the status of specified entities to either included or excluded with path parameters `campaignId` and `dimensionId`. Use the following endpoint:
 
-* `POST` /api/v3/bm/campaigns/{campaignId}/include-Exclude/dimensions/{dimensionId}
+* `POST` /api/v3/bm/campaigns/(campaignId)/include-Exclude/dimensions/(dimensionId)
 
 \
 **Path Parameters**
@@ -71,7 +71,7 @@ This API allows the user to optimize a campaign by updating the status of specif
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)|
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)|
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -110,7 +110,7 @@ Response 200 Sample (creatives)
 
 Assigning priority to campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Use the following endpoint to assign priority (ranging 1 to 10) to multiple `campaignId`s with the same API:
 
-* `PUT` /api/v3/bm/io/{ioId}/bid-models
+* `PUT` /api/v3/bm/io/(ioId)/bid-models
 
 \
 **Path Parameters**
@@ -124,7 +124,7 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -223,9 +223,9 @@ Response 500
 
 Add, update, or delete assigned priorities to multiple campaigns using the following endpoints:
 
-* `POST` /api/v3/bm/io/{ioId}/bid-models
-* `DELETE` /api/v3/bm/io/{ioId}/bid-models
-* `PATCH` /api/v3/bm/io/{ioId}/bid-models
+* `POST` /api/v3/bm/io/(ioId)/bid-models
+* `DELETE` /api/v3/bm/io/(ioId)/bid-models
+* `PATCH` /api/v3/bm/io/(ioId)/bid-models
 
 \
 **Path Parameters**
@@ -239,7 +239,7 @@ Add, update, or delete assigned priorities to multiple campaigns using the follo
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -278,7 +278,7 @@ Response 200
 
 Generate a detailed metrics for a specific campaign, segmented by dimension with the following endpoint:
 
-* `POST` api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}
+* `POST` api/v3/bm/campaigns/(campaignId)/reports/(dimensionId)
 
 \
 **Path Parameters**
@@ -306,7 +306,7 @@ Generate a detailed metrics for a specific campaign, segmented by dimension with
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \
@@ -412,73 +412,21 @@ This API will provide values of bid-model dimensions and sub-dimensions with the
 
 ### Resource Properties
 
-<table>
-    <thead>
-    <tr>
-        <th class="tg-0pky" colspan="2">ID</th>
-        <th class="tg-0pky">Dimension Name</th>
-    </tr></thead> 
-    <tr>
-        <td colspan="2"><code>1</code></td>
-        <td>Creative</td>
-    </tr>
-    <tr>
-        <td colspan="2"><code>2</code>
-        <td>Inventory</td>
-                <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>3</td>
-                    <td>Deal ID</td>
-                </tr>
-                <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>4</td>
-                    <td>Open Exchange</td>
-                </tr>
-                <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td><code>5</td>
-                    <td>Publisher Category</td>
-                </tr>
-    <tr>
-        <td colspan="2"><code>6</code>
-        <td>Device</td>
-                <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>7</td>
-                    <td>Traffic Type</td>
-                </tr>
-                 <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td><code>8</td>
-                    <td>Device Type</td>
-                </tr>
-    <tr>
-        <td colspan="2"><code>9</code></td>
-        <td>Location</td>
-    </tr>
-                <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>10</td>
-                    <td>State</td>
-                </tr>
-                <tr>
-                    <td style="border-right: hidden">├━</td>
-                    <td><code>11</td>
-                    <td>City</td>
-                </tr>
-                <tr>
-                    <td style="border-right: hidden">└━</td>
-                    <td><code>12</td>
-                    <td>Zip</td>
-                </tr>
-    <tr>
-        <td colspan="2"><code>13</code></td>
-        <td>Exchange</td>
-    </tr>
-</table>
-
-
+| ID | Dimension Name |
+| --- | ---|
+| `1` | Creative |
+| `2` | Inventory |
+| ├━ `3` | Deal ID |
+| ├━ `4` | Open Exchange |
+| └━ `5` | Publisher Category |
+| `6` | Device |  
+| ├━ `7` | Traffic Type |
+| └━ `8` | Device Type |
+| `9` | Location |
+| ├━ `10` | State |
+| ├━ `11` | City |
+| └━ `12` | Zip |
+| `13` | Exchange |
 
 \
 Response Sample
@@ -596,7 +544,7 @@ Response Sample
 
 Retrieves counts of dimensions for a specific campaign within a given date range with the following endpoint:
 
-* `GET` /api/v3/bm/campaigns/{campaignId}/dimensions/count
+* `GET` /api/v3/bm/campaigns/(camapaignId)/dimensions/count
 
 \
 **Path Parameters**
@@ -618,7 +566,7 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 \

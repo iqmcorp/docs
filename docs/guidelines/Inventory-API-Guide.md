@@ -8,7 +8,7 @@ Use the following header parameters for all requests:
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br>See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ## Get Inventory Details
@@ -170,7 +170,7 @@ Inventories can be optimized for specific campaign IDs with the following endpoi
 | ---- | ---- | --- |
 | `campaignId` | integer | Campaign ID to target for optimization |
 | `ids` | string | Comma separated strings of inventory IDs to include in or exclude from specified campaign |
-| `isExcluded` | integer | Include in campaign: `0`<br> Exclude from campaign: `1` |
+| `isExcluded` | integer | Include in campaign: `0`<br /> Exclude from campaign: `1` |
 
 \
 Request Body Sample
@@ -293,8 +293,8 @@ Get a list of inventory groups based on various filters and parameters with the 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `groupFilterId` | integer | Filters groups list. Supported values: <br>All Groups [default]: `0` <br>Share by Admin: `1` <br>Own Groups: `2` |
-| `groupTypeIds` | string | Filters groups list. Supported values: <br>Open Exchange: `1` <br>PMP: `2` <br>Contextual: `3` |
+| `groupFilterId` | integer | Filters groups list. Supported values: <br />All Groups [default]: `0` <br />Share by Admin: `1` <br />Own Groups: `2` |
+| `groupTypeIds` | string | Filters groups list. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
 | `ids` | string | Comma separated IDs
 | `provideAccountLevelExcludedGroup` | boolean | Flag to indicate whether to include account-level excluded group in response or not, default: `false` |
 | `includeStatistics` | boolean | Flag to indicate whether to include statistics in response or not, default: `true` |
@@ -354,7 +354,7 @@ Get more inventory groups details with the following endpoints:
 | Method/Endpoint | Path | Description |
 | ---- | ---- | --- |
 | `GET` /api/v3/inv/groups | /statistics | Get statistics of inventory groups
-| `GET` /api/v3/group/{groupId} | /shared/campaigns/list | Gets list of campaigns attached to the inventory group |
+| `GET` `/api/v3/group/{groupId}` | /shared/campaigns/list | Gets list of campaigns attached to the inventory group |
 | | /pmp-deals | Gets list of PMP Deals in an inventory group |
 | | /pmp-deals/csv | Gets CSV format list of PMP Deals in an inventory group |
 | | /open-exchange-inventories | Gets list of open exchange inventories for an inventory group
@@ -464,7 +464,7 @@ Add a new inventory group based on the provided request body.
 | Property | Type | Description |
 | ---- | ---- | --- |
 | `groupName` | integer | Desired name for group |
-| `groupTypeId` | integer | Group type. Supported values: <br>Open Exchange: `1` <br>PMP: `2` <br>Contextual: `3` |
+| `groupTypeId` | integer | Group type. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
 | `inventoryIds` | array of integers | Inventory to include in group |
 
 \
@@ -602,7 +602,7 @@ Response 200 Sample
 
 Add or remove customers from an inventory group by group ID with the following endpoint: 
 
-* `PATCH` /api/v3/inv/group/{groupId}/shared/customers/edit
+* `PATCH` `/api/v3/inv/group/{groupId}/shared/customers/edit`
 
 \
 **Path Parameters**
@@ -651,7 +651,7 @@ Response 200 Sample
 
 Edit an inventory group with the following endpoint:
 
-* `PATCH` /api/v3/inv/groups/{groupId}
+* `PATCH` `/api/v3/inv/groups/{groupId}`
 
 \
 **Path Parameters**
@@ -757,7 +757,7 @@ Response 500
 
 Delete an existing inventory group with the following endpoint:
 
-* `DELETE` /api/v3/inv/groups/{groupId}
+* `DELETE` `/api/v3/inv/groups/{groupId}`
 
 \
 **Path Parameters**
@@ -916,8 +916,8 @@ Get more PMP details with the following endpoints:
 
 | Method/Endpoint | Path | Description |
 | ---- | ---- | --- |
-| `GET` /api/v3/inv/pmp/deals | /{id} | Get PMP Deal details by ID |
-|| /{dealId}/associated-customers | Gets list of customers associated with campaigns for a PMP Deal |
+| `GET` /api/v3/inv/pmp/deals | `/{id}` | Get PMP Deal details by ID |
+|| `/{dealId}/associated-customers` | Gets list of customers associated with campaigns for a PMP Deal |
 || /count-by-status | Gets count of PMP deals for all statuses, supports query parameter `searchKeywords` |
 | `GET` /api/v3/inv/static | /deal-types | Gets list of deal types |
 | | /deal-status | Gets list of deal statuses |
@@ -1079,7 +1079,7 @@ Response 500
 
 Update any [resource property](#resource-properties) of an existing PMP Deal with its ID  with the following endpoint:
 
-* `PATCH` /api/v3/inv/pmp/deals/{id}
+* `PATCH` `/api/v3/inv/pmp/deals/{id}`
 
 \
 **Path Parameters**
@@ -1157,7 +1157,7 @@ Get a list of PG deals available for user with the following endpoint:
 | `searchField` | string | Search results by keyword |
 | `noOfEntries` | integer | Maximum number of deals to retrieve, default: `20` |
 | `pageNo` | integer |  Pages of retrieved details desired, default: `1` |
-| `sortBy` | string | Sort results by ascending (`+`) or descending (`-`), supported values: `id`, `dealName`, `cmp` <br>Default: `-id` |
+| `sortBy` | string | Sort results by ascending (`+`) or descending (`-`), supported values: `id`, `dealName`, `cmp` <br />Default: `-id` |
 | `ids` | array of integers | IDs of the primary key of PG Deals |
 | `paymentTypeIds` | array of integers | Payment type IDs |
 | `statusIds` | array of integers | Status IDs |
@@ -1270,7 +1270,7 @@ Response 500
 
 Get PG Deal details by specified ID including its associated campaign IDs with the following endpoint:
 
-* `GET` /api/v3/inv/pg/deals/{id}
+* `GET` `/api/v3/inv/pg/deals/{id}`
 
 \
 **Path Parameters**
@@ -1369,7 +1369,7 @@ Response 200 Sample
 
 Update specific details of a PG Deal with the following endpoint:
 
-* `PATCH` /api/v3/inv/pg/deals/{id}
+* `PATCH` `/api/v3/inv/pg/deals/{id}`
 
 \
 **Path Parameters**
