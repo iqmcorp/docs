@@ -137,37 +137,201 @@ export default {
     "prism": {
       "theme": {
         "plain": {
-          "color": "#393A34",
-          "backgroundColor": "#f6f8fa"
+          "color": "#000000",
+          "backgroundColor": "#ffffff"
         },
         "styles": [
           {
             "types": [
-              "comment",
-              "prolog",
-              "doctype",
-              "cdata"
+              "comment"
             ],
             "style": {
-              "color": "#999988",
-              "fontStyle": "italic"
+              "color": "rgb(0, 128, 0)"
             }
           },
           {
             "types": [
-              "namespace"
+              "builtin"
             ],
             "style": {
-              "opacity": 0.7
+              "color": "rgb(0, 112, 193)"
             }
           },
           {
             "types": [
+              "number",
+              "variable",
+              "inserted"
+            ],
+            "style": {
+              "color": "rgb(9, 134, 88)"
+            }
+          },
+          {
+            "types": [
+              "operator"
+            ],
+            "style": {
+              "color": "rgb(0, 0, 0)"
+            }
+          },
+          {
+            "types": [
+              "constant",
+              "char"
+            ],
+            "style": {
+              "color": "rgb(129, 31, 63)"
+            }
+          },
+          {
+            "types": [
+              "tag"
+            ],
+            "style": {
+              "color": "rgb(128, 0, 0)"
+            }
+          },
+          {
+            "types": [
+              "attr-name"
+            ],
+            "style": {
+              "color": "rgb(255, 0, 0)"
+            }
+          },
+          {
+            "types": [
+              "deleted",
+              "string"
+            ],
+            "style": {
+              "color": "rgb(163, 21, 21)"
+            }
+          },
+          {
+            "types": [
+              "changed",
+              "punctuation"
+            ],
+            "style": {
+              "color": "rgb(4, 81, 165)"
+            }
+          },
+          {
+            "types": [
+              "function",
+              "keyword"
+            ],
+            "style": {
+              "color": "rgb(0, 0, 255)"
+            }
+          },
+          {
+            "types": [
+              "class-name"
+            ],
+            "style": {
+              "color": "rgb(38, 127, 153)"
+            }
+          }
+        ]
+      },
+      "darkTheme": {
+        "plain": {
+          "color": "#9CDCFE",
+          "backgroundColor": "#1E1E1E"
+        },
+        "styles": [
+          {
+            "types": [
+              "prolog"
+            ],
+            "style": {
+              "color": "rgb(0, 0, 128)"
+            }
+          },
+          {
+            "types": [
+              "comment"
+            ],
+            "style": {
+              "color": "rgb(106, 153, 85)"
+            }
+          },
+          {
+            "types": [
+              "builtin",
+              "changed",
+              "keyword",
+              "interpolation-punctuation"
+            ],
+            "style": {
+              "color": "rgb(86, 156, 214)"
+            }
+          },
+          {
+            "types": [
+              "number",
+              "inserted"
+            ],
+            "style": {
+              "color": "rgb(181, 206, 168)"
+            }
+          },
+          {
+            "types": [
+              "constant"
+            ],
+            "style": {
+              "color": "rgb(100, 102, 149)"
+            }
+          },
+          {
+            "types": [
+              "attr-name",
+              "variable"
+            ],
+            "style": {
+              "color": "rgb(156, 220, 254)"
+            }
+          },
+          {
+            "types": [
+              "deleted",
               "string",
-              "attr-value"
+              "attr-value",
+              "template-punctuation"
             ],
             "style": {
-              "color": "#e3116c"
+              "color": "rgb(206, 145, 120)"
+            }
+          },
+          {
+            "types": [
+              "selector"
+            ],
+            "style": {
+              "color": "rgb(215, 186, 125)"
+            }
+          },
+          {
+            "types": [
+              "tag"
+            ],
+            "style": {
+              "color": "rgb(78, 201, 176)"
+            }
+          },
+          {
+            "types": [
+              "tag"
+            ],
+            "languages": [
+              "markup"
+            ],
+            "style": {
+              "color": "rgb(86, 156, 214)"
             }
           },
           {
@@ -176,152 +340,42 @@ export default {
               "operator"
             ],
             "style": {
-              "color": "#393A34"
+              "color": "rgb(212, 212, 212)"
             }
           },
           {
             "types": [
-              "entity",
-              "url",
-              "symbol",
-              "number",
-              "boolean",
-              "variable",
-              "constant",
-              "property",
-              "regex",
-              "inserted"
+              "punctuation"
+            ],
+            "languages": [
+              "markup"
             ],
             "style": {
-              "color": "#36acaa"
+              "color": "#808080"
             }
           },
           {
             "types": [
-              "atrule",
-              "keyword",
-              "attr-name",
-              "selector"
-            ],
-            "style": {
-              "color": "#00a4db"
-            }
-          },
-          {
-            "types": [
-              "function",
-              "deleted",
-              "tag"
-            ],
-            "style": {
-              "color": "#d73a49"
-            }
-          },
-          {
-            "types": [
-              "function-variable"
-            ],
-            "style": {
-              "color": "#6f42c1"
-            }
-          },
-          {
-            "types": [
-              "tag",
-              "selector",
-              "keyword"
-            ],
-            "style": {
-              "color": "#00009f"
-            }
-          }
-        ]
-      },
-      "darkTheme": {
-        "plain": {
-          "color": "#F8F8F2",
-          "backgroundColor": "#282A36"
-        },
-        "styles": [
-          {
-            "types": [
-              "prolog",
-              "constant",
-              "builtin"
-            ],
-            "style": {
-              "color": "rgb(189, 147, 249)"
-            }
-          },
-          {
-            "types": [
-              "inserted",
               "function"
             ],
             "style": {
-              "color": "rgb(80, 250, 123)"
+              "color": "rgb(220, 220, 170)"
             }
           },
           {
             "types": [
-              "deleted"
+              "class-name"
             ],
             "style": {
-              "color": "rgb(255, 85, 85)"
+              "color": "rgb(78, 201, 176)"
             }
           },
           {
             "types": [
-              "changed"
+              "char"
             ],
             "style": {
-              "color": "rgb(255, 184, 108)"
-            }
-          },
-          {
-            "types": [
-              "punctuation",
-              "symbol"
-            ],
-            "style": {
-              "color": "rgb(248, 248, 242)"
-            }
-          },
-          {
-            "types": [
-              "string",
-              "char",
-              "tag",
-              "selector"
-            ],
-            "style": {
-              "color": "rgb(255, 121, 198)"
-            }
-          },
-          {
-            "types": [
-              "keyword",
-              "variable"
-            ],
-            "style": {
-              "color": "rgb(189, 147, 249)",
-              "fontStyle": "italic"
-            }
-          },
-          {
-            "types": [
-              "comment"
-            ],
-            "style": {
-              "color": "rgb(98, 114, 164)"
-            }
-          },
-          {
-            "types": [
-              "attr-name"
-            ],
-            "style": {
-              "color": "rgb(241, 250, 140)"
+              "color": "rgb(209, 105, 105)"
             }
           }
         ]
