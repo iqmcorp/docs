@@ -6,10 +6,17 @@ IQM's Conversions API allows the user to manage and get details on conversions.
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child1">
+
+| Headers  | Description |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
+
+---
 
 ## Get Conversion Details
 
@@ -17,188 +24,79 @@ This section covers the various methods and endpoints for getting conversion det
 
 ### Postback Conversion Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | Postback Conversion ID |
-| `name` | string | Postback Conversion name |
-| `uuid` | string | 
-| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) |
-| `owId` | integer | Organization Workspace ID |
-| `createdByUowId` | integer | Created by Organization Workspace User ID |
-| `modifiedByUowId` | integer | Modified by Organization Workspace User ID |
-| `statusId` | integer | [Status ID](#get-list-of-conversion-status)
-| `partnerTypeId` | intger | [Partner type ID](#get-list-of-partner-types-for-postback-conversions) |
-| `impressionUrl` | string | Impression URL |
-| `clickUrl` | string | Click URL |
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Postback Conversion ID |
+| `name` <br /><span class="type-text">string</span> | Postback Conversion name |
+| `uuid` <br /><span class="type-text">string</span> | Universal user ID
+| `typeId` <br /><span class="type-text">integer</span> | [Conversion type ID](#get-list-of-conversion-types) |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `createdByUowId` <br /><span class="type-text">integer</span> | Created by Organization Workspace User ID |
+| `modifiedByUowId` <br /><span class="type-text">integer</span> | Modified by Organization Workspace User ID |
+| `statusId` <br /><span class="type-text">integer</span> | [Status ID](#get-list-of-conversion-status)
+| `partnerTypeId` <br /><span class="type-text">integer</span> | [Partner type ID](#get-list-of-partner-types-for-postback-conversions) |
+| `impressionUrl` <br /><span class="type-text">string</span> | Impression URL |
+| `clickUrl` <br /><span class="type-text">string</span> | Click URL |
+
+</div></div>
 
 ### Pixel Conversion Resource Properties
 
-<table>
-        <thead>
-    <tr>
-        <th class="tg-0pky" colspan="3">Property</th>
-        <th class="tg-0pky">Type</th>
-        <th class="tg-0pky">Description</th>
-    </tr></thead> 
-      <tr>
-        <td colspan="3"><code>id</code></td>
-        <td>integer</td>
-        <td>Pixel Conversion ID</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>uuid</code></td>
-        <td>string</td>
-        <td>Universally unique ID</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>typeId</code></td>
-        <td>integer</td>
-        <td><a href="#conversionType">Conversion type ID</a></td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>owId</code></td>
-        <td>integer</td>
-        <td>Organization Workspace ID</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>createdByUowId</code></td>
-        <td>integer</td>
-        <td>Created by Organization Workspace User ID</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>modifiedByUowId</code></td>
-        <td>integer</td>
-        <td>Modified by Organization Workspace User ID</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>statusId</code></td>
-        <td>integer</td>
-        <td><a href="#conversionStatus">Conversion status type ID</a></td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>status</code></td>
-        <td>string</td>
-        <td>Status name</td>
-    </tr>
-      <tr>
-        <td colspan="3"><code>created</code></td>
-        <td>integer</td>
-        <td>Unix epoch timestamp, in milleseconds</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>name</code></td>
-        <td>string</td>
-        <td>Name for Pixel Conversion</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>attributionId</code></td>
-        <td>string</td>
-        <td>
-        <a href="#attributionTypes">Attribution type ID</a>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>customFields</code></td>
-        <td>string</td>
-        <td>Allows user to pass additional data along with conversion details, which can be used for more detailed insights</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>financialMetrics</code></td>
-        <td>string</td>
-        <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
-    </tr>    
-    <tr>
-        <td colspan="3"><code>piggybackData</code></td>
-        <td>object</td>
-        <td></td>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>url</code></td>
-                    <td>string</td>
-                    <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
-                </tr>
-                <tr>
-                    <td>└━</td>
-                    <td colspan="2"><code>type</code></td>
-                    <td>integer</td>
-                    <td><a href="#piggybackType">Piggyback type ID</a></td>
-                </tr>
-        <td colspan="3"><code>conversionSetting</code></td>
-        <td>object</td>
-        <td>Advanced conversion settings</td>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>conversionDuration</code></td>
-                    <td>object</td>
-                    <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
-                </tr>
-                <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>view</code></td>
-                    <td>integer</td>
-                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br />Post view interval, days: [<code>1</code>...<code>30</code>]</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>└━</td>
-                    <td><code>click</code></td>
-                    <td>integer</td>
-                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [<code>7</code>...<code>60</code>]</td>
-                </tr>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>repeatConversion</code></td>
-                    <td>object</td>
-                    <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>count</code></td>
-                    <td>integer</td>
-                    <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>frequency</code></td>
-                    <td>integer</td>
-                    <td>Counts 1 conversion per user for specified number based on selected unit </td>
-                </tr>
-                      <tr>
-                    <td>│</td>
-                    <td>└━</td>
-                    <td><code>unit</code></td>
-                    <td>string</td>
-                    <td>Selected unit of conversion frequency</td>
-                </tr>
-                  <tr>
-                    <td>└━</td>
-                    <td colspan="2"><code>crossModelling</code></td>
-                    <td>boolean</td>
-                    <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
-                </tr></tr>
-</table>
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Pixel Conversion ID |
+| `uuid`  <br /><span class="type-text">string</span> | Universal user ID |
+| `typeId`  <br /><span class="type-text">integer</span> | [Conversion type ID](#get-list-of-conversion-types) |
+| `owId`  <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `createdByUowId`  <br /><span class="type-text">integer</span> | Created by Organization Workspace User ID |
+| `modifiedByUowId` <br /><span class="type-text">integer</span> | Modified by Organization Workspace User ID |
+| `statusId` <br /><span class="type-text">integer</span> | [Status ID](#get-list-of-conversion-status) |
+| `status` <br /><span class="type-text">string</span> | Status name |
+| `created` <br /><span class="type-text">integer</span> | Unix epoch timestamp of Pixel Conversion creation, in milliseconds |
+| `name` <br /><span class="type-text">string</span> | Name for Pixel Conversion |
+| `attributionId` <br /><span class="type-text">string</span> | [Attribution type ID](#get-list-of-conversion-attribute-types) |
+| `customFields` <br /><span class="type-text">string</span> | 	Allows user to pass additional data along with conversion details, which can be used for more detailed insights |
+| `financialMetrics` <br /><span class="type-text">string</span> | Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs |
+| `piggybackData` <br /><span class="type-text">object</span> | contains `url` and `type` attributes |
+| `url` <br /><span class="type-text">string</span> | Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform
+| `type` <br /><span class="type-text">integer</span> | [Piggyback type ID](#get-list-of-conversion-piggyback-types) |
+| `conversionSetting` <br /><span class="type-text">object</span> | Advanced conversion setting, containts `conversionDuration`, `repeatConversion`, and `crossModelling` attributes |
+| `conversionDuration` <br /><span class="type-text">object</span> | Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad, contains `view` and `click` attributes |
+| `view` <br /><span class="type-text">integer</span> | View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion <br />Post view interval, days: [`1`...`30`] |
+| `click`  <br /><span class="type-text">integer</span> | Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [`7`...`60`] |
+| `repeatConversion` <br /><span class="type-text">object</span> | Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign, contains `count`, `frequency`, and `unit` |
+| `count` <br /><span class="type-text">integer</span> | Counts all conversions per user [`0`] or just 1 conversion per user [`1`]
+| `frequency` <br /><span class="type-text">integer</span> | Counts 1 conversion per user for specified number based on selected unit |
+| `unit` <br /><span class="type-text">string</span> | Selected unit of conversion frequency |
+| `crossModelling` <br /><span class="type-text">boolean</span> | 	Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device |
+
+</div></div>
+
+---
 
 ### Get Conversion Details by ID
 
-Get details about a conversion from its ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/{conversionId}</span>
 
-* `GET` `/api/v3/conversion/{conversionId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get details about a conversion from its ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `conversionId` | integer | Conversion ID |
-| `typeId` | integer | [Conversion type ID](#get-list-of-conversion-types) for which the details will be returned <br />Pixel: `1` <br />Postback: `2` |
+| Path Parameter  |  |
+| ---- | --- |
+| `conversionId` <br /><span class="type-text">integer</span> | Conversion ID |
+| `typeId` <br /><span class="type-text">integer</span>| [Conversion type ID](#get-list-of-conversion-types) for which the details will be returned <br />Pixel: `1` <br />Postback: `2` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -238,30 +136,33 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Conversions
 
-Get a list of conversions with details and filters with the following endpoint: 
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversions/list</span>
 
-* `GET` /api/v3/conversions/list
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get a list of conversions with details and filters.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-created` | 
-| `conversionsId` | string | Conversion ID
-| `typeIds` | string | Filters by [conversion type ID](#get-list-of-conversion-types)<br />Pixel: `1` <br />Postback: `2`
-| `statusIds` | string | Filters by [conversion status ID](#get-list-of-conversion-status)<br />Active:`1` <br />Pending:`2` |
-| `postbackPartnerIds` | string | Filters by postback conversion type IDs |
+| Query Parameters | Description |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-created` | 
+| `conversionsId` <br /><span class="type-text">string</span> | Conversion ID
+| `typeIds` <br /><span class="type-text">string</span> | Filters by [conversion type ID](#get-list-of-conversion-types)<br />Pixel: `1` <br />Postback: `2`
+| `statusIds` <br /><span class="type-text">string</span> | Filters by [conversion status ID](#get-list-of-conversion-status)<br />Active:`1` <br />Pending:`2` |
+| `postbackPartnerIds` <br /><span class="type-text">string</span> | Filters by postback conversion type IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -293,23 +194,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Conversion Count by Type
 
-Get a count of conversions based on type with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/type-wise-count</span>
 
-* `GET` /api/v3/conversion/type-wise-count
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get a count of conversions based on type.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword | 
+| Query Parameter  |  |
+| ----  | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword | 
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -327,23 +231,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Campaign Details by Conversion ID
 
-Get a list of campaign details by conversion ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/attached/campaigns/list</span>
 
-* `GET` /api/v3/conversion/attached/campaigns/list
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get a list of campaign details by conversion ID.
 
-| Property | Type | Description |
+| Query Parameter | Type | Description |
 | ---- | ---- | --- |
 | `conversionId` | integer | Conversion ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -364,30 +271,32 @@ Response 200
     "filterRecords": 1
 }
 ```
+</div></div>
+
+---
 
 ### Get Campaign Details by Conversion ID in Group or Basic
 
-Get a list of campaign details by conversin ID in group details or basic details with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/allowed/campaign-list</span>
 
-* `GET` /api/v3/conversion/allowed/campaign-list
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get a list of campaign details by conversin ID in group details or basic details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `conversionId` | integer | Conversion ID |
-| `owId` | integer | Organization Workspace ID |
-| `isGroup` | boolean | Flag for fetching group details (`true`) or basic details (`false`) |
-| `limit` | integer | Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-ioId`, `-campaignId` |
-| `searchField` | string | Search results by keyword |
+| Query Parameters  |  |
+| ----  | --- |
+| `conversionId` <br /><span class="type-text">integer</span> | Conversion ID |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `isGroup` <br /><span class="type-text">boolean</span> | Flag for fetching group details (`true`) or basic details (`false`) |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-ioId`, `-campaignId` |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title=Response 200"
 {
     "success": true,
     "data": [
@@ -422,30 +331,33 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Conversions Management
 
 This section covers the various methods and endpoints for managing conversions.
 
 ### Create Postback Conversion
 
-The following endpoint facilitates the insertion of postback type conversion records:
+<span class="badge badge--success">POST</span><span class="path-text">/api/v3/conversion/postback/add</span>
 
-* `POST` /api/v3/conversion/postback/add
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Create postback type conversion records.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `name` | string | Name for postback conversion |
-| `partnerTypeId` | string | Partner type ID |
-| `impressionsUrl` | string | Impressions URL |
-| `clickUrl` | string | Click URL |
+| Request Schema | Description |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> | Name for postback conversion |
+| `partnerTypeId` <br /><span class="type-text">string</span> | Partner type ID |
+| `impressionsUrl` <br /><span class="type-text">string</span> | Impressions URL |
+| `clickUrl` <br /><span class="type-text">string</span>| Click URL |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "name": "testing postback",
     "partnerTypeId": "1",
@@ -454,9 +366,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -481,122 +391,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Create Pixel Conversion
 
-Create a pixel type conversion with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/conversion/pixel/add</span>
 
-* `POST` /api/v3/conversion/pixel/add
+<div class="container">
+  <div class="child1">
+
+Create a pixel type conversion.
 
 \
 **Request Body Schema: application/json**
 
-<table>
-        <thead>
-    <tr>
-        <th class="tg-0pky" colspan="3">Property</th>
-        <th class="tg-0pky">Type</th>
-        <th class="tg-0pky">Description</th>
-    </tr></thead> 
-    <tr>
-        <td colspan="3"><code>name</code></td>
-        <td>string</td>
-        <td>Name for pixel conversion</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>attributionId</code></td>
-        <td>string</td>
-        <td>
-        <a href="#attributionTypes">Attribution type ID</a>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>customFields</code></td>
-        <td>string</td>
-        <td>Allows user to pass additional data along with conversion details, which can be used for more detailed insights</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>financialMetrics</code></td>
-        <td>string</td>
-        <td>Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs</td>
-    </tr>
-    <tr>
-        <td colspan="3"><code>piggybackData</code></td>
-        <td>object</td>
-        <td></td>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>url</code></td>
-                    <td>string</td>
-                    <td>Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform</td>
-                </tr>
-                <tr>
-                    <td>└━</td>
-                    <td colspan="2"><code>type</code></td>
-                    <td>integer</td>
-                    <td><a href="#piggybackType">Piggyback type ID</a></td>
-                </tr>
-        <td colspan="3"><code>conversionSetting</code></td>
-        <td>object</td>
-        <td>Advanced conversion settings</td>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>conversionDuration</code></td>
-                    <td>object</td>
-                    <td>Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad</td>
-                </tr>
-                <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>view</code></td>
-                    <td>integer</td>
-                    <td> View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion<br />Post view interval, days: [<code>1</code>...<code>30</code>]</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>└━</td>
-                    <td><code>click</code></td>
-                    <td>integer</td>
-                    <td>Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [<code>7</code>...<code>60</code>]</td>
-                </tr>
-                <tr>
-                    <td>├━</td>
-                    <td colspan="2"><code>repeatConversion</code></td>
-                    <td>object</td>
-                    <td>Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>count</code></td>
-                    <td>integer</td>
-                    <td>Counts all conversions per user [<code>0</code>] or just 1 conversion per user [<code>1</code>]</td>
-                </tr>
-                    <tr>
-                    <td>│</td>
-                    <td>├━</td>
-                    <td><code>frequency</code></td>
-                    <td>integer</td>
-                    <td>Counts 1 conversion per user for specified number based on selected unit </td>
-                </tr>
-                      <tr>
-                    <td>│</td>
-                    <td>└━</td>
-                    <td><code>unit</code></td>
-                    <td>string</td>
-                    <td>Selected unit of conversion frequency</td>
-                </tr>
-                  <tr>
-                    <td>└━</td>
-                    <td colspan="2"><code>crossModelling</code></td>
-                    <td>boolean</td>
-                    <td>Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device</td>
-                </tr></tr>
-</table>
+Refer to the [Pixel Conversion resource properties](#pixel-conversion-resource-properties) table for request schema attributes. 
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "name": "PixelConversion",
     "attributionId": "1",
@@ -625,9 +440,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -653,57 +466,60 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete Conversion
 
-This API provides a soft delete functionality for conversions with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/conversion/delete</span>
 
-* `DELETE` /api/v3/conversion/delete
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+This API provides a soft delete functionality for conversions.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `conversionIds` | string | Comma separated conversion IDs to delete|
+| Query Paramaters  |  |
+| ----  | --- |
+| `conversionIds` <br /><span class="type-text">string</span> | Comma separated conversion IDs to delete|
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Conversion has been deleted successfully!"
 }
 ```
 
+</div></div>
+
+---
 
 ### Update Postback Conversion
 
-Update the name of a postback type conversion with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/conversion/postback/update</span>
 
-* `PATCH` /api/v3/conversion/postback/update
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Update the name of a postback type conversion.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | string | Postback Conversion ID |
-| `name` | string | New postback conversion name |
+| Request Schema  | |
+| ---- | --- |
+| `id` <br /><span class="type-text">string</span> | Postback Conversion ID |
+| `name` <br /><span class="type-text">string</span> | New postback conversion name |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": "3114",
     "name": "Postback Conversion Update testing"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -713,27 +529,30 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Update Pixel Conversion
 
-Update the name and piggyback data of a pixel type conversion with the following endpoint: 
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/conversion/pixel/update</span>
 
-* `PATCH` /api/v3/conversion/pixel/update
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Update the name and piggyback data of a pixel type conversion.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | string | Postback Conversion ID |
-| `name` | string | New postback conversion name |
-| `piggybackData` | object | 
-| &#8627;`url` | string |
-| &#8627;`type` | string | 
+| Request Schema  |  |
+| ----  | --- |
+| `id` <br /><span class="type-text">string</span>| Postback Conversion ID |
+| `name` <br /><span class="type-text">string</span> | New postback conversion name |
+| `piggybackData` <br /><span class="type-text">object</span> | contains `url` and `type` attributes
+| `url` <br /><span class="type-text">string</span> | Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform
+| `type` <br /><span class="type-text">string</span> | [Piggyback type ID](#get-list-of-conversion-types)
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": "3114",
     "name": "Pixel Conversion Update testing",
@@ -744,9 +563,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -760,32 +577,35 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Assign Conversion to a Campaign
 
-Assign a conversion to a campaign while validating conversion IDs and campaign IDs with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/conversion/assign-to/campaign</span>
 
-* `PATCH` /api/v3/conversion/assign-to/campaign
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Assign a conversion to a campaign while validating conversion IDs and campaign IDs.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `assignConversionToCampaign` | string | Map containing details list of `campaignId`s which need to be added/removed
+| Query Parameters  |  |
+| ----  | --- |
+| `assignConversionToCampaign` <br /><span class="type-text">string</span> | Map containing details list of `campaignId`s which need to be added/removed
 
 \
 **Request Body Schema: application/json**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `conversionIdList` | array of integers | Conversion IDs to assign |
-| `addCampaignsList` | array of integers | Campaign IDs to assign conversions to |
-| `removeCampaignsList` | array of integers | Campaign IDs to remove assigned conversions from |
+| Request Schema |  |
+| ---- | --- |
+| `conversionIdList` <br /><span class="type-text">array of integers</span> | Conversion IDs to assign |
+| `addCampaignsList` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign conversions to |
+| `removeCampaignsList` <br /><span class="type-text">array of integers</span> | Campaign IDs to remove assigned conversions from |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "conversionIdList": [
         3925
@@ -803,9 +623,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -828,26 +646,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Send Email for Pixel Integration
 
-Send an email containing information of integration pixel in html with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/conversion/pixel/send-email</span>
 
-* `POST` /api/v3/conversion/pixel/send-email
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Send an email containing information of integration pixel in html.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `conversionId` | string | Conversion ID
-| `recipients` | string | Comma separated emails to send pixel integration to |
-| `emailSubject` | string | Subject of email | 
-| `emailText` | string | Text of email | 
+| Request Schema |  |
+| ---- | --- |
+| `conversionId` <br /><span class="type-text">string</span> | Conversion ID
+| `recipients` <br /><span class="type-text">string</span> | Comma separated emails to send pixel integration to |
+| `emailSubject` <br /><span class="type-text">string</span> | Subject of email | 
+| `emailText` <br /><span class="type-text">string</span> | Text of email | 
 
-\
-Request Sample 
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "conversionId": "3114",
     "recipients": "username@gmail.com,anotherUser@yahoo.com",
@@ -856,14 +677,16 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Pixel conversion e-mail sent successfully."
 }
 ```
+
+</div></div>
+
+---
 
 ## Get More Conversion Details
 
@@ -871,22 +694,21 @@ This section covers the methods and endpoints for getting more details and stati
 
 ### Get List of Partner Types for Postback Conversions
 
-Get list of partner details for postback converisions like logo and name with the folowing endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/postback/partner-type</span>
 
-* `GET` /api/v3/conversion/static/postback/partner-type
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get list of partner details for postback converisions like logo and name.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-|`searchField` | string | Search results by keyword |
-| `partnerTypeIds` | string | Filters by partner type IDs |
+| Query Parameters |  |
+| ---- | --- |
+|`searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `partnerTypeIds` <br /><span class="type-text">string</span> | Filters by partner type IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -926,16 +748,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Pixel Conversion Advanced Setting Default Values
 
-Get a list and details about default values of advanced settings for pixel based conversions with the following endpoint: 
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/pixel/conversion-default-advanced-setting-data</span>
 
-* `GET` /api/v3/conversion/static/pixel/conversion-default-advanced-setting-data
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a list and details about default values of advanced settings for pixel based conversions.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -968,26 +796,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Conversion Types
 
 <a id="conversionType"></a>
 
-Get a list and details of conversion types with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/conversion-type</span>
 
-* `GET` /api/v3/conversion/static/conversion-type
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list and details of conversion types.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-|`searchField` | string | Search results by keyword |
-| `conversionTypeIds` | string | Filters by conversion type IDs |
+| Query Parameters |  |
+| ----  | --- |
+|`searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `conversionTypeIds` <br /><span class="type-text">string</span> | Filters by conversion type IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1013,26 +844,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Conversion Status
 
 <a id="conversionStatus"></a>
 
-Get a list of conversion status with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/conversion-status</span>
 
-* `GET` /api/v3/conversion/static/conversion-status
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of conversion status.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-|`searchField` | string | Search results by keyword |
-| `statusIds` | string | Filters by status type IDs |
+| Query Parameters |  |
+| ---- | --- |
+|`searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `statusIds` <br /><span class="type-text">string</span> | Filters by status type IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1058,26 +892,30 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Conversion Piggyback Types
 
 <a id="piggybackType"></a>
 
-Get a list of conversion piggyback types with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/conversion-piggyback-type</span>
 
-* `GET` /api/v3/conversion/static/conversion-piggyback-type
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of conversion piggyback types.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-|`searchField` | string | Search results by keyword |
-| `piggybackTypeIds` | string | Filters by piggyback type IDs |
 
-\
-Response 200
+| Query Parameters | Description |
+| ---- | --- |
+|`searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `piggybackTypeIds` <br /><span class="type-text">string</span> | Filters by piggyback type IDs |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1103,25 +941,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Conversion Attribute Types
 
 <a id="attributionTypes"></a>
-Get a list of conversion attribute types with the following endpoint:
 
-* `GET` /api/v3/conversion/static/conversion-attribution-type
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/static/conversion-attribution-type</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-|`searchField` | string | Search results by keyword |
-| `attributionTypeIds` | string | Filters by attribution type IDs |
+Get a list of conversion attribute types.
 
-\
-Response 200
+| Query Parameters  |  |
+| ----| --- |
+|`searchField` <br /><span class="type-text">string</span>| Search results by keyword |
+| `attributionTypeIds` <br /><span class="type-text">string</span> | Filters by attribution type IDs |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1157,3 +999,6 @@ Response 200
 }
 ```
 
+</div></div>
+
+---

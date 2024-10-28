@@ -16,11 +16,11 @@ hide_table_of_contents: true
 <table>
     <tr>
         <td><span class="code-text">Authorization</span> <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-        <td><span class="description-text">Authorization bearer token <br />See <a href="../Quickstart Guides/Authentication-Quickstart-Guide.md">Authentication Guide</a></span> </td>
+        <td>Authorization bearer token <br />See <a href="../Quickstart Guides/Authentication-Quickstart-Guide.md">Authentication Guide</a> </td>
     </tr>
     <tr>
         <td><span class="code-text">X-IAA-OW-ID</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-        <td><span class="description-text">Organization Workspace ID </td>
+        <td>Organization Workspace ID </td>
     </tr>
 </table>
 
@@ -32,10 +32,10 @@ hide_table_of_contents: true
 
 ### Get a List of All Assets
 
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/asset/list</span>
+
 <div class="container">
 <div class="child1">
-
-<span class="badge badge--success">GET</span> <span class="code-text">/api/v3/asset/list</span>
 
 <h4>Attributes</h4>
 
@@ -44,42 +44,42 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">id</span> <br /><span class="type-text">integer</span>
         </td>
-        <td><span class="description-text">Asset ID</span>
+        <td>Asset ID
         </td>
     </tr>
         <tr>
         <td>
             <span class="code-text">storagePath</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">File path of asset</span>
+        <td>File path of asset
         </td>
     </tr>
           <tr>
         <td>
             <span class="code-text">cdnUrl</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">URL of asset</span>
+        <td>URL of asset
         </td>
     </tr>
           <tr>
         <td>
             <span class="code-text">created</span> <br /><span class="type-text">integer</span>
         </td>
-        <td><span class="description-text">Unix epoch timestamp of asset creation, in milliseconds</span>
+        <td>Unix epoch timestamp of asset creation, in milliseconds
         </td>
     </tr>
           <tr>
         <td>
             <span class="code-text">modifiedDate</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">Date asset modified</span>
+        <td>Date asset modified
         </td>
     </tr>
           <tr>
         <td>
             <span class="code-text">disposable</span> <br /><span class="type-text">boolean</span>
         </td>
-        <td><span class="description-text"></span>
+        <td>
         </td>
     </tr>
 </table>
@@ -125,12 +125,12 @@ hide_table_of_contents: true
 
 ### Get Asset Details
 
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/asset/{assetId}</span>
+
 <div class="container">
 <div class="child1">
 
-<span class="description-text">Get attributes of a single asset by ID</span>
-
-<span class="badge badge--success">GET</span> <span class="code-text">/api/v3/asset/{assetId}</span>
+Get attributes of a single asset by ID
 
 <h4>Query Parameters</h4>
 
@@ -139,7 +139,7 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">assetId</span> <br /><span class="type-text">integer</span>
         </td>
-        <td><span class="description-text">Asset ID</td>
+        <td>Asset ID</td>
     </tr>
 </table>
 </div>
@@ -168,12 +168,12 @@ hide_table_of_contents: true
 
 ### Add Multiple Assets
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/asset</span>
+
 <div class="container">
 <div class="child1">
 
-<span class="description-text">Add multiple assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.</span>
-
-<span class="badge badge--warning">POST</span> <span class="code-text">/api/v3/asset</span>
+Add multiple assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
 
 <h4>Query Parameters</h4>
 
@@ -182,13 +182,13 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">filesMetaData</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">JSON string representing the metadata associated with the files</td>
+        <td>JSON string representing the metadata associated with the files</td>
     </tr>
     <tr>
         <td>
             <span class="code-text">files</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">Files to add</td>
+        <td>Files to add</td>
     </tr>
 </table>
 
@@ -213,12 +213,12 @@ hide_table_of_contents: true
 
 ### Update Asset Details
 
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/asset/{assetId}</span>
+
 <div class="container">
 <div class="child1">
 
-<span class="description-text">Update the details of an existing asset by ID</span>
-
-<span class="badge badge--info">PATCH</span> <span class="code-text">/api/v3/asset/{assetId}</span>
+Update the details of an existing asset by ID
 
 <h4>Path Parameters</h4>
 
@@ -227,7 +227,7 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">assetId</span> <br /><span class="type-text">integer</span>
         </td>
-        <td><span class="description-text">Asset ID</span>
+        <td>Asset ID
         </td>
     </tr>
 </table>
@@ -239,21 +239,21 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">storagePath</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text"></span>
+        <td>File path of assset
         </td>
     </tr>
        <tr>
         <td>
             <span class="code-text">cdnUrl</span> <br /><span class="type-text">string</span>
         </td>
-        <td><span class="description-text">Asset CDN URL</span>
+        <td>Asset CDN URL
         </td>
     </tr>
        <tr>
         <td>
             <span class="code-text">disposable</span> <br /><span class="type-text">boolean</span>
         </td>
-        <td><span class="description-text"></span>
+        <td>
         </td>
     </tr>
 </table>
@@ -287,12 +287,12 @@ hide_table_of_contents: true
 
 ### Delete Asset
 
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/asset/{assetId}</span>
+
 <div class="container">
 <div class="child1">
 
-<span class="description-text">Delete single asset by ID</span>
-
-<span class="badge badge--danger">DELETE</span> <span class="code-text">/api/v3/asset/{assetId}</span>
+Delete single asset by ID
 
 <h4>Path Parameters</h4>
 
@@ -301,7 +301,7 @@ hide_table_of_contents: true
         <td>
             <span class="code-text">assetId</span> <br /><span class="type-text">integer</span>
         </td>
-        <td><span class="description-text">Asset ID</span>
+        <td>Asset ID
         </td>
     </tr>
 </table>
