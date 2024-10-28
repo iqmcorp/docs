@@ -4,72 +4,83 @@ This page will cover the common endpoints and methods for managing campaigns in 
 
 Refer to the quickstart guide for instructions on [how to start a new campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md). 
 
+## Authorization
+
+---
+
+<div class="container">
+<div class="child1">
+
+<h4>Header Parameters</h4>
+
+<table>
+    <tr>
+        <td><span class="code-text">Authorization</span> <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+        <td>Authorization bearer token <br />See <a href="../Quickstart Guides/Authentication-Quickstart-Guide.md">Authentication Guide</a></td>
+    </tr>
+    <tr>
+        <td><span class="code-text">X-IAA-OW-ID</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+        <td>Organization Workspace ID </td>
+    </tr>
+</table>
+
+</div></div>
+
 ## Get Campaign Details
 
-Get a campaign's basic details and targeting details by ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/{campaignId}</span>
 
-* `GET` `/api/v2/cmp/campaign/{campaignId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get a campaign's basic details and targeting details by ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignId` | integer | Campaign's unique ID |
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
 
-\
-**Query Parameters**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `isSpentRequired` | boolean | Flag to get the campaign spent; default: `false`
+| Query Parameters |  |
+| ---- | --- |
+| <span class="code-text">isSpentRequired</span> <br /><span class="type-text">boolean</span> | Flag to get the campaign spent <br />Default: <span class="code-text">false</span>
 
-\
-**Header Parameters**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Attributes |  |
+|---|---|
+| `id` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignName` <br /><span class="type-text">string</span> | Campaign Name |
+| `advertiserDomain` <br /><span class="type-text">string</span> | Campaign Advertiser Domain |
+| `creativeType` <br /><span class="type-text">integer</span> | Creative type ID |
+| `totalBudgetPacing` <br /><span class="type-text">boolean</span> | False indicates off true indicates on |
+| `budgetDay` <br /><span class="type-text">integer</span> | Daily budget of campaign |
+| `budgetTotal` <br /><span class="type-text">integer</span> | Total budget for campign |
+| `maxBid` <br /><span class="type-text">integer</span> | Max bid of budget for serving |
+| `status` <br /><span class="type-text">string</span> | Status of campaign |
+| `dspMargin` <br /><span class="type-text">integer</span> | Campaign DSP Margin |
+| `platformMargin` <br /><span class="type-text">integer</span> | Campaign platform margin |
+| `userDealMargin` <br /><span class="type-text">integer</span> | Campaign user deal margin |
+| `spentScale` <br /><span class="type-text">boolean</span> | Spent scale for campaign |
+| `conversionType` <br /><span class="type-text">string</span> | Conversion type of campaign |
+| `spent` <br /><span class="type-text">integer</span> | Campaign spent |
+| `bidOptimization` <br /><span class="type-text">integer</span> | Bid optimization true/false |
+| `bidPacing` <br /><span class="type-text">boolean</span> | Bid pacing on/ off |
+| `impressionCapping` <br /><span class="type-text">integer</span> | Maximum impressions in one inventory |
+| `exchanges` <br /><span class="type-text">string</span> | Comma separated exchange IDs |
+| `stateIds` <br /><span class="type-text">string</span> | Comma separated state IDs |
+| `countryId` <br /><span class="type-text">integer</span> | Country ID |
+| `locationDetails` <br /><span class="type-text">json</span> | Location by uploaded file with targeting type |
+| `campaignIabCategoryIds` <br /><span class="type-text">string</span> | Comma separated campaign iab categories |
+| `rejectionReason` <br /><span class="type-text">string</span> | Reason of rejecting campaign |
+| `creativesPlacementMapping` <br /><span class="type-text">json</span> | Ad placement mapping with creatives (present in case of audio and video campaigns) |
+| `organizationName` <br /><span class="type-text">string</span> | Organization name |
+| `userName` <br /><span class="type-text">string</span> | Name of user |
+| `userEmail` <br /><span class="type-text">string</span> | Email of user |
+| `conversionIds` <br /><span class="type-text">string</span> | Comma separated conversions IDs |
 
-### Resource Properties
+</div> <div class="child2">
 
-| Property | Type | Description |
-|---|---|---|
-| `id` | integer | Campaign ID |
-| `campaignName` | string | Campaign Name |
-| `advertiserDomain` | string | Campaign Advertiser Domain |
-| `creativeType` | integer | Creative type ID |
-| `totalBudgetPacing` | boolean | False indicates off true indicates on |
-| `budgetDay` | integer | Daily budget of campaign |
-| `budgetTotal` | integer | Total budget for campign |
-| `maxBid` | integer | Max bid of budget for serving |
-| `status` | string | Status of campaign |
-| `dspMargin` | integer | Campaign DSP Margin |
-| `platformMargin` | integer | Campaign platform margin |
-| `userDealMargin` | integer | Campaign user deal margin |
-| `spentScale` | boolean | Spent scale for campaign |
-| `conversionType` | string | Conversion type of campaign |
-| `spent` | integer | Campaign spent |
-| `bidOptimization` | integer | Bid optimization true/false |
-| `bidPacing` | boolean | Bid pacing on/ off |
-| `impressionCapping` | integer | Maximum impressions in one inventory |
-| `exchanges` | string | Comma separated exchange IDs |
-| `stateIds` | string | Comma separated state IDs |
-| `countryId` | integer | Country ID |
-| `locationDetails` | Json | Location by uploaded file with targeting type |
-| `campaignIabCategoryIds` | string | Comma separated campaign iab categories |
-| `rejectionReason` | string | Reason of rejecting campaign |
-| `creativesPlacementMapping` | json | Ad placement mapping with creatives (present in case of audio and video campaigns) |
-| `organizationName` | string | Organization name |
-| `userName` | string | Name of user |
-| `userEmail` | string | Email of user |
-| `conversionIds` | string | Comma separated conversions IDs. |
 
-\
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "statusCode": 200,
     "responseObject": {
@@ -135,31 +146,28 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### More Campaign Details
 
 Other details can be fetched with a simple `GET` operation and filtered by various query parameters with the following endpoints:
 
 | Method | Endpoint | Description |
 | ---- | ---- | --- |
-| `GET` | /api/v2/cmp/campaigns/data | Returns list of campaigns based on set of filters and `conversionId` query parameter. See documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Getcampaigndata).
-| `GET` | /api/v2/cmp/campaigns/list | Returns a paginated list of campaigns with their basic details. See query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/GetCampaignList).
-| `GET` | /api/v2/cmp/campaign/budgetInfo | Get campaign budget info and graph details, see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/CampaignBudgetInfo). 
-| `GET` | /api/v2/cmp/campaigngroup/campaign/list | Get the list of existing campaign groups wiht associated campaigns (basic details), see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Campaignlistbycampaigngroup). 
-| `GET` | /api/v2/cmp/campaign/start | Get campaign start date
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigns/data</span> | Returns list of campaigns based on set of filters and `conversionId` query parameter. See documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Getcampaigndata).
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigns/list</span> | Returns a paginated list of campaigns with their basic details. See query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/GetCampaignList).
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaign/budgetInfo</span> | Get campaign budget info and graph details, see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/CampaignBudgetInfo). 
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigngroup/campaign/list</span> | Get the list of existing campaign groups wiht associated campaigns (basic details), see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Campaignlistbycampaigngroup). 
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaign/start</span> | Get campaign start date
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1"></div>
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-HOST` | string [required] | Workspace URL |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+  <div class="child2"></div>
 
-\
-Response 200 Sample (list of campaigns)
-
-```json
+```json title="Response 200 Sample (list of campaigns)"
 {
     "statusCode": 200,
     "recordsTotal": 2,
@@ -206,51 +214,42 @@ Response 200 Sample (list of campaigns)
 }
 ```
 
+</div></div>
+
+---
+
 ## Update Campaign
 
-Update various aspects of a campaign, use the following Header Parameters for each request:
-
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-HOST` | string [required] | Workspace URL |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+Update various aspects of a campaign.
 
 ### Change Campaign Name
 
-Change the name of a campaign with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/campaign/update-name/{campaignId}</span>
 
-* `PATCH` `/api/v3/cmp/campaign/update-name/{campaignId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Change the name of a campaign.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignId` | integer | Campaign's unique ID |
+| Path Parameters |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
 
-\
-**Request Body Schema: application/json**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignName` | string | New name for campaign
+| Request Schema |  |
+| ---- | --- |
+| `campaignName` <br /><span class="type-text">string</span> | New name for campaign
 
-\
-Request Sample
+</div>
+<div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "campaignName": "New Campaign Name"
 }
 ```
 
-Response 200
-
-```json
+```json title="Respons 200"
 {
     "success": true,
     "data": {
@@ -259,33 +258,37 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Change Campaign End Date
 
-Change the end date of multiple campaigns with the following endpoint:
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v2/cmp/campaigns/update-end-date</span>
 
-* `PUT` /api/v2/cmp/campaigns/update-end-date
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Change the end date of multiple campaigns.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `endDate` | integer | Unix timestamp of desired end date |
-| `campaignIds` | integer | IDs of campaigns to change end date |
+| Request Schema  |  |
+| ----  | --- |
+| `endDate` <br /><span class="type-text">integer</span> | Unix timestamp of desired end date |
+| `campaignIds` <br /><span class="type-text">integer</span> | IDs of campaigns to change end date |
 
-\
-Request Sample
+</div>
+<div class="child2">
 
-```json
+
+```json title="Request Sample"
 {
     "endDate": 1632132540,
     "campaignIds": 192476
 }
 ```
 
-Response Sample
 
-```json
+```json title="Response 200"
 {
     "statusCode": 200,
     "responseObject": {
@@ -294,27 +297,33 @@ Response Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Change Campaign Budget
 
-Update the total budget, daily budget, and max bid of multiple campaigns with the following endpoint:
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v2/cmp/campaigns/update_budget</span>
 
-* `PUT` /api/v2/cmp/campaigns/update_budget
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Update the total budget, daily budget, and max bid of multiple campaigns.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignIds` | string | Comma separated campaign IDs |
+
+| Request Schema  | Description |
+| ----  | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs |
 | `maxBid` | integer | Max bid of campaign
-| `totalBudget` | integer | Total budget of campaign
-| `dailyBudget` | integer | Daily Budget of campaign
-| `totalBudgetUpdateType` | string | Used in the case of a total budget update. There are three possibilities for this parameter. <br />`change`: Replace total budget with given value.<br />`addition`: Add budget to the current total budget.<br />`distribution`: Distribute given total budget in selected campaigns equally.<br />Default value: `change`
+| `totalBudget` <br /><span class="type-text">integer</span> | Total budget of campaign
+| `dailyBudget` <br /><span class="type-text">integer</span>| Daily Budget of campaign
+| `totalBudgetUpdateType` <br /><span class="type-text">string</span> | Used in the case of a total budget update. There are three possibilities for this parameter. <br /><span class="value-text">change</span>: Replace total budget with given value.<br /><span class="value-text">addition</span>: Add budget to the current total budget.<br /><span class="value-text">distribution</span>: Distribute given total budget in selected campaigns equally.<br />Default value: <span class="value-text">change</span>
 
-\
-Request Sample
+</div>
+<div class="child2">
 
-```json
+
+```json title="Request Sample"
 {
     "totalBudgetUpdateType": "change",
     "campaignIds": 192476,
@@ -322,9 +331,8 @@ Request Sample
 }
 ```
 
-Response 200
 
-```json
+```json title="Response 200"
 {
     "statusCode": 200,
     "responseObject": {
@@ -354,62 +362,60 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Update Campaign by Field
 
-Any campaign property can be updated with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v2/cmp/campaign/{campaignId}</span>
 
-* `PATCH` `/api/v2/cmp/campaign/{campaignId}`
+Any campaign property can be updated. 
 
 \
 **Request Body Schema: application/json**
 
-Refer to [resource properties](#resource-properties) at the beginning of this page. Include wichever fields need updating in the requst body detail.
+Refer to [resource properties](#resource-properties). Include wichever fields need updating in the requst body detail.
 
 If campaign is in `DRAFT` status, this API will automatically update status from `DRAFT` to `PENDING`. In all other cases status will not be updated.
 
 See complete documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/editCampaignPatch).
 
+---
+
 ## More Campaign Management
-
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
 
 ### Get Campaign Count by Status
 
-This API returns a count of campaigns for each status type with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/campaigns/count</span>
 
-* `POST` /api/v3/cmp/campaigns/count
+<div class="container">
+  <div class="child1">
+
+This API returns a count of campaigns for each status type.
 
 \
 **Request Body Schema: application/json**
 
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Comma separated, returns campaign counts for given OwIDs (can =`all`)
-| `ioIds`| string | Comma separated, returns campaign counts for given IO IDs (with `owIds`= `all`)
-| `campaignTypeIds` | string | Comma separated, returns campaign counts for given Campaign Type (`ioIds` also required)
-| `campaignExpiredAfterEpoch` | integer | Unix epoch timestamp (in milliseconds) expiration
-| `searchField` | string | Returns campaign counts for field matched campaign ID or Name
+| Request Schema |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Comma separated Organization Workspace IDs, returns campaign counts (supported: <span class="value-text">all</span>)
+| `ioIds`<br /><span class="type-text">string</span> | Comma separated Insertion Order IDs, returns campaign counts (with <span class="value-text">owIds</span> = <span class="value-text">all</span>)
+| `campaignTypeIds` <br /><span class="type-text">string</span> | Comma separated, returns campaign counts for given Campaign Type (<span class="value-text">ioIds</span> also required)
+| `campaignExpiredAfterEpoch` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) expiration
+| `searchField` <br /><span class="type-text">string</span> | Returns campaign counts for field matched campaign ID or Name
 
+</div><div class="child2">
 
-\
-Request Sample
-```json
+```json title="Request Sample"
 {
     "owIds": "all",
     "ioIds": "1,2,3"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -465,66 +471,62 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Get Insertion Order Details
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/basic/list</span>
+
+<div class="container">
+  <div class="child1">
 
 Insertion Orders specify the parameters or details of an advertising campaign.
 
-The campaign API allows the user to retrieve Insertion Order (IO) details with the following endpoint:
-
-* `POST` /api/v3/cmp/io/basic/list
-
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+The campaign API allows the user to retrieve Insertion Order (IO) details.
 
 ### Resource Properties
 
-| Property | Type | Description |
-|---|---|---|
-| `ioId` | integer | Insertion Order ID|
-| `ioName` | string | Insertion Order name|
+| Attributes  |  |
+|---|---|
+| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID|
+| `ioName` <br /><span class="type-text">string</span> | Insertion Order name|
 | `owId` | integer | Organization|
-| `createdByUowId` | integer | User Organization Worskpace ID associated with IO creation|
-| `modifiedByUowId` | integer | User Organization Worskpace ID associated with IO modification|
-| `ioStartTime` | integer | Unix epoch timestamp (in milliseconds) of IO start time|
-| `ioEndTime` | integer | Unix epoch timestamp (in milliseconds) of IO end time|
-| `ioTotalBudget` | integer | Budget of IO|
-| `ioTimeZoneId` | integer | Timezone ID|
-| `isAutoSumIoTotalBudget` | boolean | True: Keep IO budget same as total budget of all included campaigns|
-| `ioBudgetDistributionMethodId` | integer | Budget Distribution Method ID|
-| `ioBudgetTypeId` | integer | Budget type ID |
-| `ioTotalImpression` | integer | Number of impressions |
-| `ioStatusID` | integer | Status ID|
-| `ioNextPerformanceCheck` | integer | Unix epoch timestamp (in milliseconds) of next performance check|
-| `ioLastPriorityShift` | integer | Unix epoch timestamp (in milliseconds)|
-| `ioCurrentPriority` | integer | Current IO campaigns priority|
-| `isIoPrioritise` | integer | All child campaigns will be considered with or withot priority|
+| `createdByUowId` <br /><span class="type-text">integer</span> | User Organization Worskpace ID associated with IO creation|
+| `modifiedByUowId` <br /><span class="type-text">integer</span> | User Organization Worskpace ID associated with IO modification|
+| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time|
+| `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time|
+| `ioTotalBudget` <br /><span class="type-text">integer</span> | Budget of IO|
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID|
+| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | True: Keep IO budget same as total budget of all included campaigns|
+| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | Budget Distribution Method ID|
+| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | Budget type ID |
+| `ioTotalImpression` <br /><span class="type-text">integer</span> | Number of impressions |
+| `ioStatusID` <br /><span class="type-text">integer</span> | Status ID|
+| `ioNextPerformanceCheck` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of next performance check|
+| `ioLastPriorityShift` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds)|
+| `ioCurrentPriority` <br /><span class="type-text">integer</span> | Current IO campaigns priority|
+| `isIoPrioritise` <br /><span class="type-text">integer</span> | All child campaigns will be considered with or withot priority|
 
-\
-**Request Body Schema: application/json**
 
-| Property | Type | Description |
-|---|---|---|
-| `owIdList` | List of Integers | List of `owIds` for which IO details required. |
-| `ioIdList` | List of integers | List of `ioIds` for which IO details required . |
-| `ioBudgetTypeIdsList` | List of integers | List of `ioBudgetTypeIds` for which IO details are required . |
-| `ioStatusIdsList` | List of integers | List of `ioStatusIds` for which IO details are required . |
-| `ids` | List of integers | List of `ioIds` for which IO details required at the top . |
-| `isAllOWIds` | boolean | Flag for consider all the owId for IO details (`true` = consider all the owId for which user has access, `false` = consider only provided owIds). |
-| `pageNo` | integer | page number for required data. |
-| `noOfEntries` | integer | Number of records per page. |
-| `searchField` | String | Name of search field (supported values: `name` and `id`). |
-| `sortBy` | String | Comma separated names of the sorting field. Sorts by ascending (`+`) or descending (`-`). Supported values: `ioId`, `ioName`, `ioStartTime`, `ioEndTime`, `ioTotalBudget`. |
-| `offset` | integer | Offset is alternative of page number. Offset is number of records to be skipped |
+| Request Schema  | Description |
+|---|---|
+| `owIdList` <br /><span class="type-text">array of integers</span> | List of <span class="value-text">owIds</span> for which IO details required. |
+| `ioIdList` <br /><span class="type-text">array of integers</span> | List of <span class="value-text">ioIds</span> for which IO details required . |
+| `ioBudgetTypeIdsList` <br /><span class="type-text">array of integers</span> | List of <span class="value-text">ioBudgetTypeIds</span> for which IO details are required . |
+| `ioStatusIdsList` <br /><span class="type-text">array of integers</span> | List of <span class="value-text">ioStatusIds</span> for which IO details are required . |
+| `ids` <br /><span class="type-text">array of integers</span> | List of <span class="value-text">ioIds</span> for which IO details required at the top . |
+| `isAllOWIds` <br /><span class="type-text">boolean</span> | Flag for consider all the owId for IO details (<span class="value-text">true</span> = consider all the owId for which user has access, <span class="value-text">false</span> = consider only provided owIds). |
+| `pageNo` <br /><span class="type-text">integer</span> | page number for required data. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of records per page. |
+| `searchField` <br /><span class="type-text">string</span> | Name of search field (supported values: <span class="value-text">name</span> and <span class="value-text">id</span>). |
+| `sortBy` <br /><span class="type-text">string</span> | Comma separated names of the sorting field. Sorts by ascending (<span class="value-text">+</span>) or descending (<span class="value-text">-</span>) <br />Supported values: <span class="value-text">ioId</span>, <span class="value-text">ioName</span>, <span class="value-text">ioStartTime</span>, <span class="value-text">ioEndTime</span>, <span class="value-text">ioTotalBudget</span> |
+| `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "pageNo": 1,
     "noOfEntries": 20,
@@ -549,9 +551,7 @@ Request Sample
 }
 ```
 
-Response Sample
-
-```json
+```json title="Response Sample"
 {
     "success": true,
     "data": {
@@ -602,45 +602,40 @@ Response Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Campaign Details Grouped by Insertion Order ID
 
-Get a list of campaign details grouped by Insertion Order ID (`ioId`) with supported filters with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text"> /api/v3/cmp/io/campaign/basic/list</span>
 
-* `POST` /api/v3/cmp/io/campaign/basic/list
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
-
-\
-**Request Body Schema: application/json**
+Get a list of campaign details grouped by Insertion Order ID (<span class="value-text">ioId</span>) with supported filters.
 
 Optional parameters to filter/sort results
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) Supported values: `ioId`, `ioName`, `ioStartTime`, `ioEndTime`, `ioTotalBudget`, `campaignId`, `isRecordTargeted` |
-| `searchField` | string | Search the result by keyword |
-| `ioIdsList` | array of integers | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
-| `campaignTypeIds` | array of integers | Returns selected campaign type IDs e.g. 'advanced campaign' or 'PG campaign', 'records matching' |
-| `ids` | array of integers | Filters for Campaign IDs |
-| `ioIds` | array of integers | Filters for Insertion Order IDs |
-| `status` | array of string | Filters for types of Campaign Status |
-| `creativeTypeIds` | array of integers | Filters for Creative Type IDs |
-| `ioBudgetTypeIds` | array of integers | Filters for Budget Type IDs |
-| `owIds` | array of integers | Filters for customer Organization Workspace IDs |
-| `offset` | integer | Offset is alternative of page number. Offset is number of records to be skipped |
+| Request Schema|  |
+| ----  | --- |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) Supported values: `ioId`, `ioName`, `ioStartTime`, `ioEndTime`, `ioTotalBudget`, `campaignId`, `isRecordTargeted` |
+| `searchField` <br /><span class="type-text">string</span> | Search the result by keyword |
+| `ioIdsList` <br /><span class="type-text">array of integers</span> | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
+| `campaignTypeIds` <br /><span class="type-text">array of integers</span> | Returns selected campaign type IDs e.g. 'advanced campaign' or 'PG campaign', 'records matching' |
+| `ids` <br /><span class="type-text">array of integers</span> | Filters for Campaign IDs |
+| `ioIds` <br /><span class="type-text">array of integers</span> | Filters for Insertion Order IDs |
+| `status` <br /><span class="type-text">array of strings</span> | Filters for types of Campaign Status |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Creative Type IDs |
+| `ioBudgetTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Budget Type IDs |
+| `owIds` <br /><span class="type-text">array of integers</span> | Filters for customer Organization Workspace IDs |
+| `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "creativeTypeIds": [
         11,
@@ -673,9 +668,7 @@ Request Sample
 }
 ```
 
-Response 200 
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -808,43 +801,39 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Campaigns and Report Details by Insertion ID
 
-Get a list of campaigns with detailed report by Insertion Order ID (`ioId`) with supported filters with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/campaigns/list</span>
 
-* `POST` /api/v3/cmp/io/campaigns/list
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
-
-\
-**Request Body Schema: application/json**
+Get a list of campaigns with detailed report by Insertion Order ID (`ioId`) with supported filters.
 
 Optional parameters to filter/sort results
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `noOfEntries` | integer | The maximum number of returned results per page, default: `20` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`). Supported values: `clicks`, `impressions`, `bidImpressions`, `startCount`, `firstCount`, `midCount`, `thirdCount`, `completeCount`, `dataCost`, `spent`, `mediaSpent`, `winRate`, `VCR`, `eCPC`, `eCPM`, `eCPI`, `CTR`, `CVR`, `eCPCV`, `eCPV`, `budgetDay`, `budgetTotal`, `campaignId`, `campaignName`, `maxBid`, `startTime`, `endTime`, `campaignType`, `status`, `budgetDay`, `budgetTotal`, `reach`, `frequency`, `mappingDataCost`, `mappingSpent`, `percentageOfTotalSpent`, `organizationName`, `audioVideoViewed`, `campaignTimezone`, `pixalateViewAbility`, `ioName`, `ioId`, `targetImpression`, `creativesCount`, `pacingPercentage`, `dailyPacingPercentage`, `prebidCost`, `ioTotalImpressions`, `dailyImpressions`,`campaignPriority` ,`totalAttributedConversion`, `totalAttributedViewThroughConversion`,`totalAttributedClickThroughConversion`,`costPerAttributedConversion`,`totalAttributedConversionRate` |
-| `searchField` | string | Search the result by keyword |
-| `ioIdsList` | array of integers | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
-| `budgetTypeIdList` | array of integers | Filters for selected Budget Type IDs e.g. "impression based" or "budget based". Records matching the provided IDs will be returned |
-| `campaignIds` | array of integers | Filters for selected Campaign IDs. Records matching the provided IDs will be returned first, before others |
-| `timeZoneId` | integer | Filters campaigns for specified Timezone ID |
-| `campaignStatusList` | array of strings | Filters campaigns by specified Campaign Status |
-| `creativeTypeIds` | string | Filters campaigns by specified Creative Type ID |
-| `owIds` | string | Filters campaigns by specified customer Organization Workspace ID |
+| Request Schema  |  |
+| ----  | --- |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span> | The maximum number of returned results per page, default: `20` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`). Supported values: `clicks`, `impressions`, `bidImpressions`, `startCount`, `firstCount`, `midCount`, `thirdCount`, `completeCount`, `dataCost`, `spent`, `mediaSpent`, `winRate`, `VCR`, `eCPC`, `eCPM`, `eCPI`, `CTR`, `CVR`, `eCPCV`, `eCPV`, `budgetDay`, `budgetTotal`, `campaignId`, `campaignName`, `maxBid`, `startTime`, `endTime`, `campaignType`, `status`, `budgetDay`, `budgetTotal`, `reach`, `frequency`, `mappingDataCost`, `mappingSpent`, `percentageOfTotalSpent`, `organizationName`, `audioVideoViewed`, `campaignTimezone`, `pixalateViewAbility`, `ioName`, `ioId`, `targetImpression`, `creativesCount`, `pacingPercentage`, `dailyPacingPercentage`, `prebidCost`, `ioTotalImpressions`, `dailyImpressions`,`campaignPriority` ,`totalAttributedConversion`, `totalAttributedViewThroughConversion`,`totalAttributedClickThroughConversion`,`costPerAttributedConversion`,`totalAttributedConversionRate` |
+| `searchField` <br /><span class="type-text">string</span> | Search the result by keyword |
+| `ioIdsList` <br /><span class="type-text">array of integers</span> | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
+| `budgetTypeIdList` <br /><span class="type-text">array of integers</span> | Filters for selected Budget Type IDs e.g. "impression based" or "budget based". Records matching the provided IDs will be returned |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Filters for selected Campaign IDs. Records matching the provided IDs will be returned first, before others |
+| `timeZoneId` <br /><span class="type-text">integer</span> | Filters campaigns for specified Timezone ID |
+| `campaignStatusList` <br /><span class="type-text">array of strings</span> | Filters campaigns by specified Campaign Status |
+| `creativeTypeIds` <br /><span class="type-text">string</span> | Filters campaigns by specified Creative Type ID |
+| `owIds` <br /><span class="type-text">string</span> | Filters campaigns by specified customer Organization Workspace ID |
 
-\
-Request Sample
+</div>
+<div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "campaignStatusList": [
         "running"
@@ -870,9 +859,8 @@ Request Sample
 }
 ```
 
-Response 200
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1081,26 +1069,33 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Insertion Order Management
 
 Manage various aspects of an Insertion Order, use the following Header Parameters for each request:
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)|
-| `X-IAA-HOST` | string [required] | Workspace URL |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Header Parameters | Description |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)|
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
 
 ### Create an Insertion Order
 
-Create a new Insertion Order based on budget or impressions with the following endpoint:
+<span class="badge badge--success">POST</span><span class="path-text">/api/v3/cmp/io/add</span>
 
-* `POST` /api/v3/cmp/io/add
+<div class="container">
+  <div class="child1">
 
-Reference the [IO resource properties](#resource-properties-1) above for the value descriptions. Required values:
+Reference the [IO resource properties](#resource-properties) above for the value descriptions. Required values:
 
 * `ioName`
 * `ioStartTime`
@@ -1112,10 +1107,9 @@ Reference the [IO resource properties](#resource-properties-1) above for the val
 * `ioStatusId` (for impression-based IO)
 * `ioBudgetDistributionMethodId`
 
-\
-Sample Request (budget based IO)
+</div><div class="child2">
 
-```json
+```json title="Request Sample (budget based IO)" 
 {
     "ioName": "IO Name 1",
     "ioStartTime": 1690898148000,
@@ -1128,9 +1122,7 @@ Sample Request (budget based IO)
 }
 ```
 
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1148,27 +1140,30 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Duplicate an Insertion Order
 
-Duplicate a single IO, and all campaigns within that IO with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/duplicate</span>
 
-* `POST` /api/v3/cmp/io/duplicate
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Duplicate a single IO, and all campaigns within that IO.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `ioExistingCampaignIds` | array of integers | Campaign IDs within specified IO (`ioId`) |
-| `ioId` | integer | Specified IO to duplicate |
-| `ioTimeZoneId` | integer | Timezone ID |
-| `ioEndTime` | integer | Unix epoch of IO end time |
-| `ioStartTime` | integer | Unix epoch of IO start time |
+| Request Schema |  |
+| ---- | --- |
+| `ioExistingCampaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs within specified IO (`ioId`) |
+| `ioId` <br /><span class="type-text">integer</span> | Specified IO to duplicate |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch of IO end time |
+| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch of IO start time |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "ioStartTime": 1698295604000,
     "ioEndTime": 1698258600000,
@@ -1182,9 +1177,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1197,23 +1190,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete an Insertion Order
 
-Delete one or multiple IOs and all campaigns attached to them with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/delete</span>
 
-* `POST` /api/v3/cmp/io/delete
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Delete one or multiple IOs and all campaigns attached to them.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `ioIdsList` | array of integers | Insertion Order IDs |
 
-\
-Request Sample
+| Request Schema | Description |
+| ---- | --- |
+| `ioIdsList` <br /><span class="type-text">array of integers</span> | Insertion Order IDs |
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "ioIdsList": [
         1,
@@ -1223,14 +1220,16 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "3 Insertion Orders deleted successfully"
 }
 ```
+
+</div></div>
+
+---
 
 ### More Insertion Order Management
 
@@ -1238,29 +1237,21 @@ Update the details, end dates, and budgets of insertion orders with the followin
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| `PATCH` | `/api/v3/cmp/io/{ioId}` | Update details of specified IO. <br />See IO [resource properties](#resource-properties-1) above for supported values
-| `PATCH` | /api/v3/cmp/io/update-end-date | Update the end date for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOEndDate)
-| `PATCH` | /api/v3/cmp/io/update-budget | Update the budget for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOBudgetByIOList)
+| <span class="badge badge--info">PATCH</span> | <span class="path-text">/api/v3/cmp/io/{ioId}</span> | Update details of specified IO. <br />See IO [resource properties](#resource-properties-1) above for supported values
+| <span class="badge badge--info">PATCH</span> | <span class="path-text">/api/v3/cmp/io/update-end-date</span> | Update the end date for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOEndDate)
+| <span class="badge badge--info">PATCH</span> | <span class="path-text">/api/v3/cmp/io/update-budget</span> | Update the budget for a given list of IOs. <br />See [full documentation](https://api.iqm.com/docs?path=tag/Campaign-API/operation/updateIOBudgetByIOList)
 
-\
-**Path Parameters** (where applicable)
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `ioId` | integer | Insertion Order ID |
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+| Path Parameters | Description |
+| ----  | --- |
+| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+</div><div class="child2">
 
-\
-Request Sample (update details)
-
-```json
+```json title="Request Sample (update details)"
 {
     "ioName": "IO Name 1",
     "ioStartTime": 1690898148000,
@@ -1273,18 +1264,14 @@ Request Sample (update details)
 }
 ```
 
-Response 200 Sample (update details)
-
-```json
+```json title="Response 200 (update details)"
 {
     "success": true,
     "data": "IO Name 1 saved successfully."
 }
 ```
 
-Request Sample (update budget)
-
-```json
+```json title="Request Sample (update budget)"
 {
     "ioIdsList": [
         1,
@@ -1296,11 +1283,11 @@ Request Sample (update budget)
 }
 ```
 
-Response 200 Sample (update budget)
-
-```json
+```json title="Response 200 (update budget)"
 {
     "success": true,
     "data": "Budget updated successfully"
 }
 ```
+
+</div></div>

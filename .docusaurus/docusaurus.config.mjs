@@ -62,6 +62,13 @@ export default {
     ]
   ],
   "themeConfig": {
+    "docs": {
+      "sidebar": {
+        "hideable": true,
+        "autoCollapseCategories": false
+      },
+      "versionPersistence": "localStorage"
+    },
     "image": "img/docusaurus-social-card.jpg",
     "navbar": {
       "title": "My Site",
@@ -396,13 +403,6 @@ export default {
       "defaultMode": "light",
       "disableSwitch": false,
       "respectPrefersColorScheme": false
-    },
-    "docs": {
-      "versionPersistence": "localStorage",
-      "sidebar": {
-        "hideable": false,
-        "autoCollapseCategories": false
-      }
     },
     "blog": {
       "sidebar": {
