@@ -7,7 +7,7 @@ IQM's Conversions API allows the user to manage and get details on conversions.
 Use the following header parameters for all requests:
 
 <div class="container">
-  <div class="child1">
+  <div class="child3">
 
 | Headers  | Description |
 | ----  | --- |

@@ -1,4 +1,4 @@
-# Insights Guidelines
+# Insights API
 
 Audience insights provide in-depth reports of audience characteristics, itnerests, and behaviors to give advertisers a deeper understanding of thier taret audience and create targeted and personalized advertising strategies. This page covers the various methods and endpoints for insights details and management, as well as Voter Level Data reports details and management.
 
@@ -6,10 +6,15 @@ Audience insights provide in-depth reports of audience characteristics, itnerest
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
 
 ## Get Insights Details
 
