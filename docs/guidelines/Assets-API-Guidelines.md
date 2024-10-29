@@ -1,28 +1,16 @@
----
-hide_table_of_contents: true
----
-
-# Assets Guidelines
+# Assets API
 
 ## Authorization
 
----
+Use the following header parameters for all requests:
 
 <div class="container">
-<div class="child1">
+  <div class="child3">
 
-<h4>Header Parameters</h4>
-
-<table>
-    <tr>
-        <td><span class="code-text">Authorization</span> <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-        <td>Authorization bearer token <br />See <a href="../Quickstart Guides/Authentication-Quickstart-Guide.md">Authentication Guide</a> </td>
-    </tr>
-    <tr>
-        <td><span class="code-text">X-IAA-OW-ID</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-        <td>Organization Workspace ID </td>
-    </tr>
-</table>
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 </div></div>
 

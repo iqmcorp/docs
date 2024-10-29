@@ -1,4 +1,4 @@
-# Finance Guidelines
+# Finance API
 
 This page covers the methods and endpoints associated with managing finance operations. In addition to general finance details and lists, there are sections coevering invoice, credit, and payment management. 
 
@@ -6,32 +6,36 @@ This page covers the methods and endpoints associated with managing finance oper
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
 
 ## Finance Details
 
 ### Get Customer Finance Details
 
-Get an over of a customer's finance details with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/financial-details</span>
 
-* `GET` /api/v3/fa/customer/financial-details
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get an over of a customer's finance details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true` |
-| `year` | integer | Year for data | 
+| Query Parameters |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `isFinanceRequest` <br /><span class="type-text">boolean</span> | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true` |
+| `year` <br /><span class="type-text">integer</span> | Year for data | 
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -48,27 +52,30 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Payment Transactions for Organization
 
-Get a list of payment transactions for an organization with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/payments/list</span>
 
-* `GET` /api/v3/fa/payments/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of payment transactions for an organization.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `status` | string | Status type
-| `paymentType` | string | Payment Type |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
+| Query Parameters|  |
+| ---- | --- |
+| `status` <br /><span class="type-text">string</span> |  Status ID <br />See [static details list](#payment-status) for supported values |
+| `paymentType` <br /><span class="type-text">string</span> | Payment type ID <br />See [static details list](#payment-types) for supported values |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -150,29 +157,32 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Customer Payments
 
-Get a list of payments by customer with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/payments/list</span>
 
-* `GET` /api/v3/fa/customer/payments/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of payments by customer.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `status` | string | Status type
-| `paymentType` | string | Payment Type |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` <br />Supported values: `paymentId`, `paymentDate`, `paymentAmount`, `organizationName`, `paymentType`, `paymentMode`, `paymentStatus`
+| Query Parameters  |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `status` <br /><span class="type-text">string</span> | Status type
+| `paymentType` <br /><span class="type-text">string</span>| Payment Type |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` <br />Supported values: `paymentId`, `paymentDate`, `paymentAmount`, `organizationName`, `paymentType`, `paymentMode`, `paymentStatus` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -279,16 +289,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Invoice for Organization
 
-Get an invoice for an organization with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/invoice-settings</span>
 
-* `GET` /api/v3/fa/invoice-settings
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get an invoice for an organization.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -311,23 +327,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Invoice Payment Details
 
-Get invoice payment details by invoice ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/invoice-settings-payment-details</span>
 
-* `GET` /api/v3/fa/invoice-settings-payment-details
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get invoice payment details by invoice ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `invoiceId` | integer | Invoice ID |
+| Query Parameters  |  |
+| ----  | --- |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -353,26 +372,32 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Invoices for Customer or Organization
 
-Get a list of invoices by customer or organization with the following endpoints:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/invoice/list/{owId}</span>
 
-* `GET` /api/v3/fa/invoice/list/200485 [customer]
-* `GET` /api/v3/fa/invoice/list/200483 [organization]
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of invoices by customer or organization.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `status` | string | Status ID <br />See [static details list](#invoice-status) for supported values |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-invoiceId` <br />Supported values: `issuedOn`, `invoiceAmount`, `status` |
-| `isCustomerRequest` | boolean | (Organization endpoint only) Customer app request (default): `true` <br />Organization app request: `false`
+| Path Parameters  |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 
-\
-Response 200
+| Query Parameters  |  |
+| ----| --- |
+| `status` <br /><span class="type-text">string</span> | Status ID <br />See [static details list](#invoice-status) for supported values |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-invoiceId` <br />Supported values: `issuedOn`, `invoiceAmount`, `status` |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | (Organization endpoint only) Customer app request (default): `true` <br />Organization app request: `false`
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -402,160 +427,27 @@ Response 200
 }
 ```
 
+</div></div>
 
-
-Get a list of payment transactions for an organization with the following endpoint:
-
-* `GET` /api/v3/fa/payments/list
-
-\
-**Query Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `status` | string |  Status ID <br />See [static details list](#payment-status) for supported values |
-| `paymentType` | string | Payment type ID <br />See [static details list](#payment-types) for supported values |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-
-\
-Response 200
-
-```json
-{
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "isPaymentInitiatorOrg": true,
-                "paymentId": 19,
-                "createdByUserEmail": "jinesh.p+nonihpcust2@iqm.com",
-                "paymentDate": 1632076200000,
-                "paymentAmount": 10000,
-                "paymentStatus": "Rejected",
-                "paymentMode": "PayPal",
-                "paymentType": "As Fund",
-                "invoiceId": 0,
-                "modifiedAt": 1637566978000,
-                "bankName": null,
-                "refundReason": null
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 886,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "Check",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831910000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 885,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831695000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 884,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635831127000,
-                "bankName": null,
-                "refundReason": "Testing"
-            },
-            {
-                "isPaymentInitiatorOrg": false,
-                "paymentId": 883,
-                "createdByUserEmail": "jinesh.p+ihpcust@iqm.com",
-                "paymentDate": 1635791400000,
-                "paymentAmount": 10,
-                "paymentStatus": "Processing",
-                "paymentMode": "To Funds",
-                "paymentType": "Refund",
-                "invoiceId": 0,
-                "modifiedAt": 1635830983000,
-                "bankName": null,
-                "refundReason": "Testing"
-            }
-        ],
-        "totalRecords": 68,
-        "filteredRecords": 68
-    }
-}
-```
-
-
-Get an overview of customer's financial details with the following endpoint:
-
-* `GET` /api/v3/fa/customer/financial-details
-
-\
-**Query Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `isFinanceRequest` | boolean | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true`
-| `year` | integer | Year |
-
-\
-Response 200
-
-```json
-{
-    "success": true,
-    "data": {
-        "pendingCampaigns": 15,
-        "runningCampaigns": 10,
-        "totalCampaigns": 48,
-        "dataCost": 0,
-        "actualSpent": 0,
-        "credits": 0,
-        "balance": 30430.75,
-        "spent": 0,
-        "earning": 0
-    }
-}
-```
+---
 
 ### Get Customer Margin Details
 
-Get customer margin details by margin type with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/view-margin</span>
 
-* `GET` /api/v3/fa/customer/view-margin
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get customer margin details by margin type.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `marginTypeIds` | string | Comma separated margin type IDs <br />See static details list for supported values |
-| `owId` | integer | Organization Workspace ID |
+| Query Parameters | Description |
+| ---- | --- |
+| `marginTypeIds` <br /><span class="type-text">string</span> | Comma separated margin type IDs <br />See static details list for supported values |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -573,23 +465,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Update Customer Margin Details
 
-* `POST` /api/v3/fa/customer/edit-margin
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/edit-margin</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `marginTypeId` | integer | Margin type ID |
-| `marginValue` | integer | Margin value |
+| Request Schema | Description |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `marginTypeId` <br /><span class="type-text">integer</span> | Margin type ID |
+| `marginValue` <br /><span class="type-text">integer</span> | Margin value |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 202318,
     "marginTypeId": 1,
@@ -597,30 +492,30 @@ Request Sample
 }
 ```
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 
 ```
 
+</div></div>
+
+---
+
 ### Get Campaign Margin Details
 
-Get campaign margin details by campaign ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/custom/fa/list/campaign-margin-detail</span>
 
-* `GET` /api/v3/custom/fa/list/campaign-margin-detail
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get campaign margin details by campaign ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignIds` | string | Comma separated campaign IDs |
+| Query Parameters | Description |
+| ---- | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -636,25 +531,26 @@ Response 200
 }
 ```
 
+</div></div>
 
+---
 
 ### Get Customer PG Fees Details
 
-Get details for customer PG fees with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/{owId}/pg-fees</span>
 
-* `GET` `/api/v3/fa/customer/{owId}/pg-fees`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get details for customer PG fees.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
+| Path Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -666,30 +562,30 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Edit Customer PG Fees
 
-* `PATCH` `/api/v3/fa/customer/{customerOwId}/pg-fees`
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/customer/{customerOwId}/pg-fees</span>
 
-\
-**Path Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerOwId` | integer | Customer Organization Workspace ID |
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `pgCampaignFees` <br /><span class="type-text">integer</span> | PG Campaign Fees |
+| `pgWorkspaceShare` <br /><span class="type-text">integer</span> | The share of PG fees applied to the campaign by the workspace |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `pgCampaignFees` | integer | PG Campaign Fees |
-| `pgWorkspaceShare` | integer | The share of PG fees applied to the campaign by the workspace |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "owId": 202318,
     "pgCampaignFees": 10,
@@ -697,32 +593,33 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "PG Fees details updated Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Customer VLD Finance Details
 
-Get finance details for customer VLD with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/{customerOwId}/vld-fees</span>
 
-* `GET` `/api/v3/fa/customer/{customerOwId}/vld-fees`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get finance details for customer VLD.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerOwId` | integer | Customer Organization Workspace ID |
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -732,9 +629,7 @@ Response 200
 }
 ```
 
-Response 200 (vld flag)
-
-```json
+```json title="Response 200 (VLD flag)"
 {
     "success": true,
     "data": {
@@ -748,25 +643,28 @@ Response 200 (vld flag)
 }
 ```
 
+</div></div>
+
+---
+
 #### Updates Customer VLD Details
 
-* `PATCH` /api/v3/fa/customer/vld-fees
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/customer/vld-fees</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | OW ID of the customer to update details (required) |
-| `vldRate` | integer | VLD rate for workspace customer |
-| `vldEnabled` | boolean | Boolean flag to enable and disable VLD feature for advertiser customer |
-| `vldMarkupTypeId` | integer | VLD markup type ID to represent markup types absolute or percentage |
-| `vldMarkupValue` | integer | VLD markup value for advertiser customer |
+| Request Schema | Description |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | OW ID of the customer to update details (required) |
+| `vldRate` <br /><span class="type-text">integer</span> | VLD rate for workspace customer |
+| `vldEnabled` <br /><span class="type-text">boolean</span> | Boolean flag to enable and disable VLD feature for advertiser customer |
+| `vldMarkupTypeId` <br /><span class="type-text">integer</span> | VLD markup type ID to represent markup types absolute or percentage |
+| `vldMarkupValue` <br /><span class="type-text">integer</span> | VLD markup value for advertiser customer |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": 0,
     "owId": 0,
@@ -778,9 +676,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -790,14 +686,19 @@ Response 200
 }
 ```
 
-### Get Basic Details
+</div></div>
 
-* `GET` /api/v3/fa/basic/details
+---
 
-\
-Response 200
+### Get Basic Financial Details
 
-```json
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/basic/details</span>
+
+<div class="container">
+  <div class="child1"></div>
+<div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -806,52 +707,55 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Available Balance
 
-* `GET` /api/v3/fa/available-balance
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/available-balance</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
+| Query Parameters | |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | Customer app request (default): `true` <br />Organization app request: `false` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": 5855904.72
 }
 ```
 
+</div></div>
+
+---
+
 ### Credit Summary
 
-Get credit summary by workspace ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/credit-summary/{owId}</span>
 
-* `GET` `/api/v3/fa/credit-summary/{owId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get credit summary by workspace ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
+| Path Parameter |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 
-\
-**Query Parameters**
+| Query Parameters |  |
+| ---- | --- |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | Customer app request (default): `true` <br />Organization app request: `false` |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
+</div><div class="child2">
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -861,25 +765,28 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Offered Credits
 
-Get a list of offered credits to organization with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/credits/list</span>
 
-* `GET` /api/v3/fa/credits/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of offered credits to organization.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `limit` | integer | Maximum number of entries returned, default: `50` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` |
+| Query Parameters |  |
+| ---- | --- |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -905,123 +812,259 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Download Invoice
 
-* `GET` `/api/v3/fa/download-invoice/{owId}/{invoiceId}`
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/download-invoice/{owId}/{invoiceId}</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
+| Path Parameter |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
-\
-Response 200
+| Query Parameters | |
+| ---- | --- |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | Customer app request (default): `true` <br />Organization app request: `false` |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 
 ```
+
+</div></div>
+
+---
 
 ### Download Payment Receipt
 
-Get a PDF of payment receipt with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/payment/download-receipt/{paymentId}</span>
 
-* `GET` /api/v3/fa/payment/download-receipt/829
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a PDF of payment receipt.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `isCustomerRequest` | boolean | Customer app request (default): `true` <br />Organization app request: `false` |
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span> | Payment ID |
 
-\
-Response 200
+| Query Parameter | Description |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | Customer app request (default): `true` <br />Organization app request: `false` |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 
 ```
+
+</div></div>
+
+---
 
 ## Invoice Management
 
 ### Update Invoice Settings
 
-* `PATCH` `/api/v3/fa/invoice-settings/{invoiceId}`
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/invoice-settings/{invoiceId}</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `isWhiteLabel` | boolean | 
+| Query Parameter | |
+| ---- | --- |
+| `isWhiteLabel` <br /><span class="type-text">boolean</span> | 
+
+| Request Schema | |
+| ---- | --- |
+| `invoiceTitle` <br /><span class="type-text">string</span> | Invoice title |
+| `invoiceCompanyAddress` <br /><span class="type-text">string</span> | Invoice company address |
+| `email` <br /><span class="type-text">string</span> | Email |
+| `website` <br /><span class="type-text">string</span> | Website |
+| `invoiceDescription` <br /><span class="type-text">string</span> | Invoice description |
+| `termsAndConditions` <br /><span class="type-text">string</span> | Terms and conditions of invoice |
+| `paymentTerm` <br /><span class="type-text">string</span> | [Payment term ID](#invoice-payment-term) |
+| `invoiceFooter` <br /><span class="type-text">string</span> |
+| `paypalAcountId` <br /><span class="type-text">string</span> | PayPal account ID |
+| `chequeCompanyName` <br /><span class="type-text">string</span> | 
+| `chequeCompanyAddress` <br /><span class="type-text">string</span> |
+| `wireTransferCompanyName` <br /><span class="type-text">string</span> |
+| `bankName` <br /><span class="type-text">string</span> | Bank name
+| `accountNumber` <br /><span class="type-text">string</span> | Account number |
+| `bankAddress` <br /><span class="type-text">string</span> | Bank address | 
+| `companyTaxId` <br /><span class="type-text">string</span> | Company tax ID |
+| `companyTaxName` <br /><span class="type-text">string</span> | Company tax name |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "invoiceTitle": "The Alchemist",
+  "invoiceCompanyAddress": "42, 6th Avenue, New york, NY",
+  "email": "shraddha.p+alchemist@iqm.com",
+  "website": "www.alchemist.com",
+  "invoiceDescription": "Dear Customer, Greetings from The Alchemist, we are writing to provice you an electronic invoice for your use of services.",
+  "termsAndConditions": "Please make the payment in 30 days or your account might be put on hold",
+  "paymentTerm": "30",
+  "invoiceFooter": "The Alchemist | 12.234.56.789 | USA",
+  "paypalAccountId": "thealchemistfinance@paypal",
+  "chequeCompanyName": "The Alchemist Company",
+  "chequeCompanyAddress": "45, Fifth Avenue, NY, USA",
+  "wireTransferCompanyName": "The Alchemist",
+  "bankName": "JP Morgan Chase Bank",
+  "accountNumber": "670669295",
+  "bankAddress": "498 7th Avenue New York NY",
+  "companyTaxId": "202130INGST",
+  "companyTaxName": "GSTIN"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "invoiceId": 1,
+    "message": "Invoice details updated successfully"
+  }
+}
+```
+
+<details>
+<summary>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invoice does not belong to the logged in organization workspace"
+    }
+  ]
+}
+```
+
+```json title="Response"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invoice with the provided ID does not exists"
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
 
 ### Delete Invoice Tax Data
 
-* `DELETE` /api/v3/fa/invoice-setings-tax-data
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/fa/invoice-settings-tax-data</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `taxId` | integer | Tax ID |
+| Query Parameters | |
+| ---- | --- |
+| `taxId` <br /><span class="type-text">integer</span> | Tax ID |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Tax data deleted successfully"
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Tax ID is invalid"
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
 
 ### Approve Invoice
 
-Update [invoice status](#invoice-status) with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/invoice-approve/{invoiceId}</span>
 
-* `PATCH` `/api/v3/fa/invoice-approve/{invoiceId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameter**
+Update [invoice status](#invoice-status).
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `invoiceId` | integer | Invoice ID |
+| Path Parameter | Description |
+| --- | --- |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Invoice with the provided ID approved successfully"
 }
 ```
 
+</div></div>
+
+---
+
 #### Cancel Invoice
 
-* `PATCH` `/api/v3/fa/invoice-cancel/{invoiceId}`
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/invoice-cancel/{invoiceId}</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "actionNote": "cancelling invoice"
 }
 ```
 
+</div></div>
+
+---
+
 ### Mark Invoice as Paid
 
-* `POST` /api/v3/fa/pay-invoice
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/pay-invoice</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `paymentAmount` | integer | Payment amount |
-| `paymentType` | integer | Payment type ID <br />See [static details list](#payment-types) for supported values |
-| `invoiceId` | integer | Invoice ID |
+| Request Schema  |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentType` <br /><span class="type-text">integer</span> | Payment type ID <br />See [static details list](#payment-types) for supported values |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 678345,
     "paymentAmount": 10000,
@@ -1030,101 +1073,103 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment added Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Email Invoice
 
-* `POST` `/api/v3/fa/email-invoice/{owId}/{invoiceId}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/email-invoice/{owId}/{invoiceId}</span>
 
-\
-**Path Parameter**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `invoiceId` | integer | Invoice ID |
+| Path Parameter |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
-\
-**Request Body Schema: application/json**
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `email` | string | Email to send invoice to |
+| Request Schema | |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | Email to send invoice to |
 
-\
-Request Sample
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "email": "user@company.com"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Invoice e-mail sent successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ## Credit Management
 
 ### Add Credit to Customer
 
-* `POST` /api/v3/fa/customer/credit/add
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/credit/add</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `creditAmount` | integer | Credit amount to add |
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `creditAmount` <br /><span class="type-text">integer</span> | Credit amount to add |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 23,
     "creditAmount": 5000
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Credits offered Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Update Credit Offered to Customer
 
-* `PATCH` /api/v3/fa/customer/credit/edit
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/customer/credit/edit</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `creditAmount` | integer | Credit amount to add |
-| `creditId` | integer | Credit ID |
+| Request Schema | Description |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `creditAmount` <br /><span class="type-text">integer</span> | Credit amount to add |
+| `creditId` <br /><span class="type-text">integer</span> | Credit ID |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 54,
     "creditAmount": 4000,
@@ -1132,60 +1177,70 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Credits updated Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Revoke Credit Offered to Customer
 
-* `POST` /api/v3/fa/customer/credit/revoke
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/credit/revoke</span>
 
-\
-Request Sample
+<div class="container">
+  <div class="child1">
 
-```json
+| Request Schema | Description |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `creditId` <br /><span class="type-text">integer</span> | Credit ID |
+
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "owId": 54,
     "creditId": 2
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Credits revoked Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Claim Offered Credits
 
-* `POST` /api/v3/fa/credit/claim
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/credit/claim</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `creditId` | integer | Credit ID |
-| `customerName` | string | Customer Name |
-| `businessName` | string | Business Name |
-| `taxId` | string | Tax ID |
-| `contactPersonName` | string | Contact person name |
-| `contactPersonEmail` | string | Contact person email |
-| `incorporationPlace` | string | Incorporation location |
-| `address` | string | Address |
+| Request Schema |  |
+| ---- | --- |
+| `creditId` <br /><span class="type-text">integer</span> | Credit ID |
+| `customerName` <br /><span class="type-text">string</span> | Customer Name |
+| `businessName` <br /><span class="type-text">string</span> | Business Name |
+| `taxId` <br /><span class="type-text">string</span> | Tax ID |
+| `contactPersonName` <br /><span class="type-text">string</span> | Contact person name |
+| `contactPersonEmail` <br /><span class="type-text">string</span> | Contact person email |
+| `incorporationPlace` <br /><span class="type-text">string</span> | Incorporation location |
+| `address` <br /><span class="type-text">string</span> | Address |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "creditId": 4,
     "customerName": "JP test ",
@@ -1198,39 +1253,40 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Credits claimed."
 }
 ```
 
+</div></div>
+
+---
+
 ## Payment Management
 
 ### Add Payment for Customer
 
-* `POST` /api/v3/fa/customer/payment/add
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/add</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Orginazation Workspace ID |
-| `paymentAmount` | integer | Payment amount |
-| `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
-| `transactionId` | integer | Transaction ID |
-| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
-| `paymentType` | integer | Payment type ID <br />See [static details list](#payment-types) for supported values |
-| `invoiceId` | Invoice ID (provide only of `paymentType` is 'against invoice')
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Orginazation Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
+| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
+| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
+| `paymentType` <br /><span class="type-text">integer</span> | Payment type ID <br />See [static details list](#payment-types) for supported values |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only of `paymentType` is <span class="value-text">Against Invoice</span>) |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 123654,
     "paymentAmount": 5000,
@@ -1243,206 +1299,300 @@ Request Sample
 }
 ```
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment added Successfully."
 }
 ```
 
+</div>
+</div>
+
+---
+
 #### Edit Customer Payment
 
-* `PUT` `/api/v3/fa/customer/payment/{}`
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/fa/customer/payment/{paymentId}</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment updated Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Approve Payment
 
 Update payment status
 
-* `POST` `/api/v3/fa/customer/payment/approve/{paymentId}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/approve/{paymentId}</span>
 
-\
-**Path Parameter**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `paymentId` | integer | Payment ID |
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `actionNote` <br /><span class="type-text">string</span> | Description of payment status change |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `actionNote` | string | Description of payent status change |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "owId": 200485,
     "actionNote": "Payment paid partially"
 }
 ```
 
-Response 200
-
-```json
+```json title"Response 200"
 {
     "success": true,
     "data": "Payment approved Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Cancel Payment
 
-* `POST` `/api/v3/fa/customer/payment/cancel/{paymentId}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/cancel/{paymentId}</span>
 
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment cancelled Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Reject Payment
 
-* `POST` `/api/v3/fa/customer/payment/reject/{paymentId}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/reject/{paymentId}</span>
 
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment rejected Successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Add Payment from Organization App
 
-* `POST` /api/v3/fa/payment/add-fund
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/payment/add-fund</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `paymentAmount` | integer | Payment amount |
-| `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
-| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
-| `bankName` | string | Required only if `paymentMode` is 'check' or 'wire transfer' |
+| Request Schema |  |
+| ---- | --- |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
+| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
+| `bankName` <br /><span class="type-text">string</span> | Required only if `paymentMode` is <span class="value-text">Check</span> or <span class="value-text">Wire Transfer</span> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment Successful."
 }
 ```
 
+</div></div>
+
+---
+
 ### Payment with PayPal
 
-* `POST` /api/v3/fa/paypal/payment
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/paypal/payment</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `paymentAmount` | integer | Payment amount |
+| Request Schema |  |
+| ---- | --- |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-3YM2956846765604B"
 }
 ```
 
+</div></div>
+
+---
+
 ### Initiate Refund
 
-* `POST` /api/v3/fa/customer/payment/refund
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/refund</span>
 
-\
-**Request Body Schema: application/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Orginazation Workspace ID |
-| `paymentAmount` | integer | Payment amount |
-| `paymentDate` | string | Payment date in YYYY-MM-DD format |
-| `paymentMode` | integer | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
-| `transactionId` | integer | Transaction ID |
-| `paymentProof` | string | [optional] Proof of payment image (jpeg/png) |
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Orginazation Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> | Payment mode type ID <br />See [static details list](#invoice-payment-mode-types) for supported values |
+| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
+| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Refund Initiated."
 }
 ```
 
+</div></div>
+
+---
+
 #### Approve Refund
 
-* `POST` `/api/v3/fa/customer/payment/approve-refund/{}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/approve-refund/{paymentId}</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+| Path Parameter |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `actionNote` <br /><span class="type-text">string</span> | Description of status change |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "owId": 200485,
+  "actionNote": "Payment paid partially"
+}
+```
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Refund successful."
 }
 ```
 
+</div></div>
+
+---
+
 ### Email Payment Receipt
 
-* `POST` `/api/v3/fa/payment/email-receipt/{owId}/{}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/payment/email-receipt/{owId}/{paymentId}</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+| Path Parameter |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | Email to send receipt to |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+    "email": "example@business.com"
+}
+```
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Payment receipt e-mail sent successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ## Static Details Lists
 
 ### Payment Types
 
-* `GET` /api/v3/fa/static/payment-type
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/payment-type</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+Get a list of payment type IDs. 
+
+| Attributes |  |
+| ---- | --- |
+| <span class="value-text">As Fund</span> <br /><span class="type-text">ID: 1</span> | 
+| <span class="value-text">Against Invoice</span> <br /><span class="type-text">ID: 2</span> |
+| <span class="value-text">Refund</span> <br /><span class="type-text">ID: 3</span> |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1467,15 +1617,29 @@ Response 200
     ]
 }
 ```
+</div></div>
+
+---
 
 ### Payment Status
 
-* `GET` /api/v3/fa/static/payment-status
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/payment-status</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+Get a list of payment type IDs.
+
+| Attributes |  |
+| ---- | --- |
+| <span class="value-text">Processing</span> <br /><span class="type-text">ID: 1</span> | Payment in process |
+| <span class="value-text">Paid</span> <br /><span class="type-text">ID: 2</span> | Payment paid |
+| <span class="value-text">Rejected</span> <br /><span class="type-text">ID: 3</span> | Payment rejected |
+| <span class="value-text">Cancelled</span> <br /><span class="type-text">ID: 4</span> | Payment cancelled |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1507,14 +1671,28 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Invoice Payment Mode Types
 
-* `GET` /api/v3/fa/static/invoice-payment-modes
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/invoice-payment-modes</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+Get a list of payment mode type IDs. 
+
+| Attributes |  |
+| ---- | --- |
+| <span class="value-text">PayPal</span> <br /><span class="type-text">ID: 1</span> | Payment by PayPal |
+| <span class="value-text">Cheque</span> <br /><span class="type-text">ID: 2</span> | Payment by cheque |
+| <span class="value-text">Wire Transfer</span> <br /><span class="type-text">ID: 3</span> | Payment by wire transfer |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1540,14 +1718,32 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Invoice Status
 
-* `GET` /api/v3/fa/static/invoice-status
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/invoice-status</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+Get a list of invoice status type IDs. 
+
+| Attributes |  |
+| ---- | --- |
+| <span class="value-text">Pending</span> <br /><span class="type-text">ID: 1</span> | Invoice pending |
+| <span class="value-text">Partially Paid</span> <br /><span class="type-text">ID: 2</span> | Invoice partially paid |
+| <span class="value-text">Unpaid</span> <br /><span class="type-text">ID: 3</span> | Invoice not paid |
+| <span class="value-text">Paid</span> <br /><span class="type-text">ID: 4</span> | Invoice paid |
+| <span class="value-text">Overdue</span> <br /><span class="type-text">ID: 5</span> | Invoice payment overdue |
+| <span class="value-text">Processing</span> <br /><span class="type-text">ID: 7</span> | Invoice payment processing |
+| <span class="value-text">Cancelled</span> <br /><span class="type-text">ID: 8</span> | Invoice payment cancelled |
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1597,12 +1793,18 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Invoice Payment Term
 
-* `GET` /api/v3/fa/static/invoice-payment-terms
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/invoice-payment-terms</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
+
+  <div class="child2">
 
 ```json
 {
@@ -1660,14 +1862,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### PG Payment Type
 
-* `GET` /api/v3/fa/static/pg/payment-type
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/static/pg/payment-type</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1">
 
-```json
+Get a list of PG payment type IDs.  
+
+| Attributes |  |
+| ---- | --- |
+| <span class="value-text">Publisher</span> <br /><span class="type-text">ID: 1</span> | Publisher payment |
+| <span class="value-text">Platform</span> <br /><span class="type-text">ID: 2</span> | Platform payment |
+
+</div><div class="child2>
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1690,3 +1905,7 @@ Response 200
     }
 }
 ```
+
+</div></div>
+
+---

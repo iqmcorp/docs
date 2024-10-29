@@ -1,6 +1,4 @@
-
-
-# Bid Model API Guidelines
+# Bid Model API
 
 The Bid Model API allows users to optimize their advertising campaigns for better performance. The user can fine-tune metrics such as where their ads appear (Include/Exclude), campaign priority management, and dimensions by which a campaign is subdivided.
 
@@ -11,7 +9,7 @@ This page will cover the common endpoints and methods associated with the Bid Mo
 ---
 
 <div class="container">
-<div class="child1">
+<div class="child3">
 
 | Header Parameters | |
 | ---| --- |
