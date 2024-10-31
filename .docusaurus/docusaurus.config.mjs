@@ -71,10 +71,10 @@ export default {
     },
     "image": "img/docusaurus-social-card.jpg",
     "navbar": {
-      "title": "My Site",
+      "title": "IQM Docs",
       "logo": {
         "alt": "My Site Logo",
-        "src": "img/logo.svg"
+        "src": "img/iqm.png"
       },
       "items": [
         {

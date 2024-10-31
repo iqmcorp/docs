@@ -20,24 +20,24 @@ Use the following header parameters for all requests:
 
 ### Get a List of Insights
 
-Get a list of insights availabe in the database with the following endpoint:
+<span class="badge badge--primary">GET</span><span class="path-text">/api/v3/ins/insights/list</span>
 
-* `GET` /api/v3/ins/insights/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of insights availabe in the database.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `pageSize` | integer | Maximum number of entries per page, default: `20` |
-| `pageNo` | integer | Number of pages for retrieved data |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
 
-\
-Response 200
+| Query Parameters | Description |
+| ----  | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -57,31 +57,29 @@ Response 200
 }
 ```
 
+</div></div>
+
 ### Get Campaign Bidding Insights
 
-Gets the data required for bidding insights of campaign by campaign ID in a given date range (2 weeks maximum), along with the rejection reasons and rejection bids per reason. Also gets total wins during the date range. Use the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/{campaignId}</span>
 
-`GET` `/api/v3/ins/campaign/bid-insights/{campaignId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Gets the data required for bidding insights of campaign by campaign ID in a given date range (2 weeks maximum), along with the rejection reasons and rejection bids per reason. Also gets total wins during the date range.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignId` | integer | Campaign ID |
+| Path Parameters | Description |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
 
-\
-**Query Parameters**
+| Query Parameters | Description |
+| ----| --- |
+| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `dateRangeStart` | integer | Unix epoch timestamp, in milliseconds |
-| `dateRangeEnd` | integer | Unix epoch timestamp, in milliseconds |
+</div><div class="child2">
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -198,26 +196,29 @@ Response 422 (invalid start date)
 }
 ```
 
+</div></div>
+
+---
+
 ### Get a List of Eligible Audiences
 
-Get a list of eligible audiences which have 10k uniques (minimum) with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audience/list</span>
 
-`GET` /api/v3/ins/audience/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of eligible audiences which have 10k uniques (minimum).
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `pageSize` | integer | Maximum number of entries per page, default: `20` |
-| `pageNo` | integer | Number of pages for retrieved data |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
+| Query Parameters | Description |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -247,16 +248,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Insights Count by Type
 
-Get a count of insights by type ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/insights/type-wise-count</span>
 
-* `GET` /api/v3/ins/insights/type-wise-count
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a count of insights by type ID. See [list of insights type IDs](#get-list-of-insights-types). 
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -266,23 +273,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Matched Audience Details
 
-Get matched audience details by audience ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audience/matched/{audienceId}</span>
 
-* `GET` `/api/v3/ins/audience/matched/{audienceId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get matched audience details by audience ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `audienceId` | integer | Campaign ID |
+| Path Parameters | Description |
+| ----| --- |
+| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
 
-\
-Reponse 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -300,13 +310,19 @@ Reponse 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Get Matched Audience File URL
 
-* `GET` `/api/v3/ins/audience/matched/download/{audienceId}`
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audience/matched/download/{audienceId}</span>
 
-Response 200
+<div class="container">
+  <div class="child1"></div>
+  <div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -315,26 +331,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Insights Management
 
 ### Create Insights for a Given Audience
 
-Create an insight report for a given audience ID with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
 
-* `POST` /api/v3/ins/insights/add
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Create an insight report for a given audience ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `insightsTypeId` | integer | [Insights type ID](#get-list-of-insights-types) |
-| `sourceIds` | integer | Source IDs |
+| Request Schema |  |
+| ----  | --- |
+| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](#get-list-of-insights-types) |
+| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "insightsTypeId": 1,
     "sourceIds": [
@@ -345,9 +364,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -367,23 +384,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete Insights Record
 
-Delete records from the database for valid insights IDs passed in the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ins/insights/delete</span>
 
-* `DELETE` /api/v3/ins/insights/delete
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Delete records from the database for valid insights IDs passed.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `insightsIds` | integer | Comma separated insights IDs to delete | 
+| Query Parameters | Description |
+| ---- | --- |
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to delete | 
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -399,62 +419,63 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Regenerate Insights Report
 
-Regenerates an insights report if the insight fails with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/regenerate/{insightsId}</span>
 
-* `POST` `/api/v3/ins/insights/regenerate/{insightsId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Regenerates an insights report if the insight fails.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `insightsIds` | array of integers | Insights IDs to regenerate |
+| Path Parameters |  |
+| ---- | --- |
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to regenerate |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Insights regenerated successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Download Insights Report
 
-Download insights report for audience (pdf or xlsx) by passing multipart/form-data format with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
 
-* `POST` /api/v3/ins/insights/download
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Download insights report for audience (pdf or xlsx) by passing multipart/form-data format.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `insightsId` | integer | Insights ID |
-| `fileType` | string | File type of report: `pdf` or `xlsx`
+| Query Parameters | Description |
+| ---- | --- |
+| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
+| `fileType` <br /><span class="type-text">string</span> | File type of report: `pdf` or `xlsx`
 
-\
-**Request Body Schema**
+| Request Schema | Description |
+| ---- | --- |
+| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customLogoFile` | string | Multipart/form-data format
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "customLogoFile": "string"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -463,44 +484,47 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Send Insights Email
 
-Send an attached insights report file via email with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/send-email</span>
 
-* `POST` /api/v3/ins/send-email
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Send an attached insights report file via email.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | Insights ID |
-| `attachmentType` | string | File type of report: `pdf` or `xlsx` |
-| `recipientEmails` | string | Comma separated string of emails to send insights report to, up to 15 |
+| Query Parameters |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Insights ID |
+| `attachmentType` <br /><span class="type-text">string</span> | File type of report: `pdf` or `xlsx` |
+| `recipientEmails` <br /><span class="type-text">string</span> | Comma separated string of emails to send insights report to, up to 15 |
 
-\
-**Request Body Schema**
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `file` | string | Multipart/form-data format
+| Request Schema |  |
+| ---- | --- |
+| `file` <br /><span class="type-text">string</span> | Multipart/form-data format
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "file": "string"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Insights-1 pdf email sent successfully."
 }
 ```
+
+</div></div>
+
+---
 
 ## Voter Level Data Reports
 
@@ -508,49 +532,53 @@ VLD reports offer insights about users targeted in current or prior political ca
 
 ### VLD Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `vldId` | integer | VLD ID |
-| `vldName` | string | VLD name |
-| `vldStatus` | integer | VLD status type ID |
-| `ioId` | integer | Insertion Order ID |
-| `ioName` | string | Insertion Order name |
-| `ioTypeId` | integer | Insertion Order type ID |
-| `vldCreatedOn` | integer | Unix epoch timestamp of creation date, in milliseconds |
-| `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
-| `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` | integer | Campaign ID |
-| `campaignName` | string | Campaign name |
-| `campaignStatus` | string | Campaign status type |
-| `creativeTypeId` | integer | Creative type ID |
-| `vldReportCreatable` | boolean | Indicates if VLD report can be generated for the given campaign and date range (`true`)
-| `vldChargeableImps` | integer | The number of chargeable impressions for the requested VLD report
-| `vldChargedImps` | integer | The number of impressions for which the VLD report report is already generated
-| `vldChargeableCost` | integer | Cost to generate the VLD report
-| `vldChargedCost` | integer | Cost of VLD report that is alredy generated
-| `fundsAvailable` | boolean | Indicates if sufficient funds are available in the advertiser's account to generate the VLD report (`true`)
-| `effectiveVldRate` | integer | Margin rate set by the admin and workspace for genrating VLD report
+<div class="container">
+  <div class="child3">
+
+| Attributes  |  |
+| ---- | --- |
+| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `vldName` <br /><span class="type-text">string</span> | VLD name |
+| `vldStatus` <br /><span class="type-text">integer</span> | VLD status type ID |
+| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID |
+| `ioName` <br /><span class="type-text">string</span> | Insertion Order name |
+| `ioTypeId` <br /><span class="type-text">integer</span> | Insertion Order type ID |
+| `vldCreatedOn` <br /><span class="type-text">integer</span> | Unix epoch timestamp of creation date, in milliseconds |
+| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignName` <br /><span class="type-text">string</span> | Campaign name |
+| `campaignStatus` <br /><span class="type-text">string</span> | Campaign status type |
+| `creativeTypeId` <br /><span class="type-text">integer</span> | Creative type ID |
+| `vldReportCreatable` <br /><span class="type-text">boolean</span>| Indicates if VLD report can be generated for the given campaign and date range (`true`)
+| `vldChargeableImps` <br /><span class="type-text">integer</span> | The number of chargeable impressions for the requested VLD report
+| `vldChargedImps` <br /><span class="type-text">integer</span> | The number of impressions for which the VLD report report is already generated
+| `vldChargeableCost` <br /><span class="type-text">integer</span> | Cost to generate the VLD report
+| `vldChargedCost` <br /><span class="type-text">integer</span> | Cost of VLD report that is alredy generated
+| `fundsAvailable` <br /><span class="type-text">boolean</span> | Indicates if sufficient funds are available in the advertiser's account to generate the VLD report (`true`)
+| `effectiveVldRate` <br /><span class="type-text">integer</span> | Margin rate set by the admin and workspace for genrating VLD report
+
+</div></div>
 
 ### Get List of VLD Reports
 
-Get a list of VLD reports based on search filters with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/vld-reports</span>
 
-`GET` /api/v3/ins/vld-reports
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of VLD reports based on search filters.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `noOfEntries` | integer | Maximum number of entries per page, default: `200` |
-| `pageNo` | integer | Number of pages for retrieved data |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-vldId` |
+| Query Parameters | Description |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `200` |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-vldId` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -594,16 +622,20 @@ Response 200
 }
 ```
 
+</div></div>
+
 ### Get List of Campaigns Eligible for VLD Reports
 
-Get a list of campaign IDs by satus eligible for VLD report generation with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/vld/campaigns</span>
 
-* `GET` /api/v3/ins/vld/campaigns
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a list of campaign IDs by satus eligible for VLD report generation.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
   "success": true,
   "data": {
@@ -623,25 +655,28 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Generate VLD Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
+
+<div class="container">
+  <div class="child1">
 
 This API calculates the cost for the impressions for the Voter Level Data Reports based on the impressions and mark up charged on the organization and then creates the VLD reports with the following endpoint:
 
-* `POST` /api/v3/ins/vld-report
+| Request Schema | Description |
+| ---- | --- |
+| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
-| `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` | integer | Campaign ID |
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "campaignId": 12345,
     "vldStartDate": 1722311000,
@@ -649,9 +684,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -670,26 +703,35 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
+
 #### Compute Cost and Impressions for VLD Report Creation
 
-* `POST` /api/v3/ins/vld-reports/computation
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-reports/computation</span>
+
+---
 
 ### Get Cost Assessment for VLD Report
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-reports/computation</span>
+
+<div class="container">
+  <div class="child1">
+
 Calculates the cost for the impressions for the VLD report based on impressions and the mark up charged on the organization with the following endpoint:
 
-* `POST` /api/v3/ins/vld-reports/computation
+| Request Schema |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignId` | integer | Campaign ID |
-| `vldStartDate` | integer | Unix epoch timestamp of start date, in milliseconds |
-| `vldEndDate` | integer | Unix epoch timestamp of end date, in milliseconds
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "campaignId": 1,
     "vldStartDate": 1722311000,
@@ -697,9 +739,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -718,24 +758,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Download VLD Insight Report
 
-Get a donwload link for a VLD insight report in CSV or XLSX format with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report/download</span>
 
-* `POST` /api/v3/ins/vld-report/download
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Get a donwload link for a VLD insight report in CSV or XLSX format.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `fileTypeId` | integer | File type ID <br />XLSX: `1` <br />CSV: `2` |
-| `vldId` | integer | VLD ID |
+| Request Schema | Description |
+| ---- | --- |
+| `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: `1` <br />CSV: `2` |
+| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -744,23 +787,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete VLD Report
+
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ins/vld-report</span>
+
+<div class="container">
+  <div class="child1">
 
 Deletes VLD reports that are not marked as deleted and have a 'failed' status, requires user authorization and checks if the provided VLD IDs are valid. Use the following endpoint:
 
-* `DELETE` /api/v3/ins/vld-report
+| Query Parameters |  |
+| ---- | --- |
+| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
 
-\
-**Query Parameters**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `vldId` | integer | VLD ID |
-
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -769,18 +815,24 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Get More Insights Details
 
 ### Get List of Insights Types
 
-Get a list of insights types by ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/static/insights/type/list</span>
 
-* `GET` /api/v3/ins/static/insights/type/list
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a list of insights types by ID.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -804,16 +856,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Insights Status
 
-Get a list of insights status types with the following endpoing:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/static/insights/status/list</span>
 
-* `GET` /api/v3/ins/static/insights/status/list
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a list of insights status types.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -842,3 +900,6 @@ Response 200
     }
 }
 ```
+
+</div></div
+>

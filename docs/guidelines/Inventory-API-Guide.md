@@ -6,10 +6,15 @@ IQM's advanced algorithm deterines the most relevant ads to display to a user ba
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
 
 ## Get Inventory Details
 
@@ -17,37 +22,36 @@ Inventories are collections of all inventory sources.
 
 Use the following endpoints to get details for various aspects of inventories, filtered by query parameters:
 
-| Method/Endpoint | Path | Description |
+| Method | Path | Description |
 | ---- | ---- | --- |
-| `GET` /api/v3/inv | inventories/list | Gets list of inventory available to user |
-|| inventories/distributions | Gets distribution of inventory available for user across country and other parameters |
-|| inventories/count | Gets count of unique inventories, unique publishers, total number of impressions, and total reach of all inventories |
-|| inventory-group-types | Gets list of inventory group types |
+| <span class="badge badge--primary">GET</span>  | <span class="path-text">/api/v3/inv/inventories/list | Gets list of inventory available to user |
+|<span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/inventories/distributions | Gets distribution of inventory available for user across country and other parameters |
+|<span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/inventories/count | Gets count of unique inventories, unique publishers, total number of impressions, and total reach of all inventories |
+|<span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/inventory-group-types | Gets list of inventory group types |
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `keywords` | string | Keywords to search inventory list |
-| `countries` | string | Filter by country |
-| `categories` | string | Filter by category |
-| `inventoryTypes` | string | Filter by inventory type |
-| `creativeSizes` | string | Filter by creative size |
-| `creativeTypes` | string | Filter by creative type |
-| `creativeDurations` | string | Filter by creative duration |
-| `trafficTypes` | string | Filter by traffic type |
-| `deviceTypes` | string | Filter by device type |
-| `exchanges` | string | Filter by exchange |
-| `videoPlayerSizes` | string | Filter by video player size |
-| `noOfEntries` | integer | Maximum number of entries per page |
-| `pageNo` | integer | Number of pages for retrieved data |
-| `groupId` | integer | Group ID |
+| Query Parameters| Description |
+| ---- | --- |
+| `keywords` <br /><span class="type-text">string</span> | Keywords to search inventory list |
+| `countries` <br /><span class="type-text">string</span> | Filter by country |
+| `categories` <br /><span class="type-text">string</span> | Filter by category |
+| `inventoryTypes` <br /><span class="type-text">string</span> | Filter by inventory type |
+| `creativeSizes` <br /><span class="type-text">string</span> | Filter by creative size |
+| `creativeTypes` <br /><span class="type-text">string</span> | Filter by creative type |
+| `creativeDurations` <br /><span class="type-text">string</span>| Filter by creative duration |
+| `trafficTypes` <br /><span class="type-text">string</span> | Filter by traffic type |
+| `deviceTypes` <br /><span class="type-text">string</span> | Filter by device type |
+| `exchanges` <br /><span class="type-text">string</span> | Filter by exchange |
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by video player size |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
-\
-Response 200 Sample (inventory list)
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -110,26 +114,29 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
+
 ### Get List of Blocked Inventories
 
-Blocklisted inventories refer to digital media placements or websites that are deemed inappropriate (adult content, hate speech, misaleading information) or of low quality (low engagement, poor user experience). Use the following endpoint to get a list of blocklisted inventories:
+<span class="badge badge--primary">GET</span> <span class="path-text">api/v3/inv/blocked-inventories</span>
 
-* `GET` api/v3/inv/blocked-inventories
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Blocklisted inventories refer to digital media placements or websites that are deemed inappropriate (adult content, hate speech, misaleading information) or of low quality (low engagement, poor user experience).
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search result by keyword |
-| `inventoryIds` | string | Filter inventories by inventory ID |
-| `noOfEntries` | integer | Maximum number of entries per page, default: `200` |
-| `pageNo` | integer | Number of pages for retrieved data, default: `1` |
+| Query Parameters| Description |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search result by keyword |
+| `inventoryIds` <br /><span class="type-text">string</span> | Filter inventories by inventory ID |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `200` |
+| `pageNo`<br /><span class="type-text">integer</span> | Number of pages for retrieved data, default: `1` |
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -153,29 +160,30 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
 ## Inventory Management
 
 Optimize inventories for specific campaigns, download detailed inventory files, or block inventories.
 
 ### Campaign Inventory Optimization
 
-Inventories can be optimized for specific campaign IDs with the following endpoint: 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/inv/inventories/includeExclude</span>
 
-* `POST` /api/v2/inv/inventories/includeExclude
+<div class="container">
+  <div class="child1">
 
-\
-**Sample Request Schema: application/json**
+Inventories can be optimized for specific campaign IDs.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `campaignId` | integer | Campaign ID to target for optimization |
-| `ids` | string | Comma separated strings of inventory IDs to include in or exclude from specified campaign |
-| `isExcluded` | integer | Include in campaign: `0`<br /> Exclude from campaign: `1` |
+| Request Schema | Description |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID to target for optimization |
+| `ids` <br /><span class="type-text">string</span>| Comma separated strings of inventory IDs to include in or exclude from specified campaign |
+| `isExcluded` <br /><span class="type-text">integer</span> | Include in campaign: `0`<br /> Exclude from campaign: `1` |
 
-\
-Request Body Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "campaignId": 168622,
     "ids": "1,2,3,4",
@@ -183,10 +191,7 @@ Request Body Sample
 }
 ```
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "statusCode": 200,
     "responseObject": {
@@ -195,24 +200,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Block Inventories
 
-Inventories can be blocked at the account level by ID or search field with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/inventories/block</span>
 
-`POST` /api/v3/inv/inventories/block
+<div class="container">
+  <div class="child1">
 
-\
-**Sample Request Schema: application/json**
+Inventories can be blocked at the account level by ID or search field.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `inventoryIds` | array of integers | Inventory IDs to block |
-| `searchField` | string | Block inventories by searched keyword |
+| Request Schema | Description |
+| ---- | --- |
+| `inventoryIds` <br /><span class="type-text">array of integers</span> | Inventory IDs to block |
+| `searchField` <br /><span class="type-text">string</span> | Block inventories by searched keyword |
 
-\
-Request Body Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "inventoryIds": [
         0,
@@ -222,61 +230,64 @@ Request Body Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Inventories blocked successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Inventory Lists in or from CSV Format
 
-Get a paginated list of various inventory details in or from CSV file format with the following endpoints:
-
-| Method/Endpoint | Path | Description |
+| Method | Path | Description |
 | ---- | ---- | --- |
-| `POST` api/v3/inv/inventories | /open-exchange/download | Generates CSV (or XLSX) file of inventory list filtered by query parameters or CSV upload: `multipartFile` |
-| | /csv/list | Gets list of inventory based on provided CSV file: `domainsFile` | 
-| | /csv/distributions | Gets distribution of inventory based on provided CSV file: `domainsFile` |
-| | /csv/count |  Gets inventory count based on provided CSV file: `domainsFile` |
+| <span class="badge badge--success">POST</span>  | <span class="path-text">api/v3/inv/inventories/open-exchange/download</span> | Generates CSV (or XLSX) file of inventory list filtered by query parameters or CSV upload: `multipartFile` |
+|<span class="badge badge--success">POST</span> | <span class="path-text">api/v3/inv/inventories/csv/list</span> | Gets list of inventory based on provided CSV file: `domainsFile` | 
+| <span class="badge badge--success">POST</span>| <span class="path-text">api/v3/inv/inventories/csv/distributions</span> | Gets distribution of inventory based on provided CSV file: `domainsFile` |
+| <span class="badge badge--success">POST</span>| <span class="path-text">api/v3/inv/inventories/csv/count</span> |  Gets inventory count based on provided CSV file: `domainsFile` |
 
-\
-**Request Body Schema: applicatin/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `keywords` | string | Filters by list of keywords |
-| `countries` | string | Filters by list of countries |
-| `categories` | string | Filters by categories |
-| `inventoryTypes` | string | Filters by inventory type |
-| `creativeSizes` | string | Filters by creative sizes |
-| `creativeDurations` | string | Filters by creative durations | 
-| `trafficTypes` | string | Filters by traffic type | 
-| `deviceTypes` | string| Filters by device type |
-| `exchanges` | string | Filters by exchanges | 
-| `videoPlayerSizes` | string | Filters by video player size |
-| `isCsvSearch` | boolean | `true` if CSV file uploaded for query, otherwise `false` |
-| `fileType` | string | File type to download: `csv` or `xlsx` |
+Get a paginated list of various inventory details in or from CSV file format
 
-\
-Request Body Sample
+| Request Schema |  |
+| ---- | --- |
+| `keywords` <br /><span class="type-text">string</span> | Filters by list of keywords |
+| `countries` <br /><span class="type-text">string</span>| Filters by list of countries |
+| `categories` <br /><span class="type-text">string</span> | Filters by categories |
+| `inventoryTypes` <br /><span class="type-text">string</span> | Filters by inventory type |
+| `creativeSizes` <br /><span class="type-text">string</span> | Filters by creative sizes |
+| `creativeDurations` <br /><span class="type-text">string</span> | Filters by creative durations | 
+| `trafficTypes` <br /><span class="type-text">string</span> | Filters by traffic type | 
+| `deviceTypes` <br /><span class="type-text">string</span>| Filters by device type |
+| `exchanges` <br /><span class="type-text">string</span> | Filters by exchanges | 
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filters by video player size |
+| `isCsvSearch` <br /><span class="type-text">boolean</span> | `true` if CSV file uploaded for query, otherwise `false` |
+| `fileType` <br /><span class="type-text">string</span> | File type to download: `csv` or `xlsx` |
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "multipartFile": "string"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "https://iqm-ephemeral-2aca615e13f8-stage.s3.amazonaws.com/inventory/download/csv/Yash%20org%202_1720435555550.csv?response-expires-Amz-Credential"
 }
 ```
+
+</div></div>
+
+---
 
 ## Inventory Groups
 
@@ -284,31 +295,30 @@ An inventory group refers to a collection or grouping of inventory sources categ
 
 ### Get List of Inventory Groups
 
-Get a list of inventory groups based on various filters and parameters with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/groups/list</span>
 
-* `GET` /api/v3/inv/groups/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of inventory groups based on various filters and parameters.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupFilterId` | integer | Filters groups list. Supported values: <br />All Groups [default]: `0` <br />Share by Admin: `1` <br />Own Groups: `2` |
-| `groupTypeIds` | string | Filters groups list. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
-| `ids` | string | Comma separated IDs
-| `provideAccountLevelExcludedGroup` | boolean | Flag to indicate whether to include account-level excluded group in response or not, default: `false` |
-| `includeStatistics` | boolean | Flag to indicate whether to include statistics in response or not, default: `true` |
-| `excludeEmptyGroups` | boolean | Flag to indicate whether to include empty groups in response or not, default: `false` |
-| `searchField` | string | Searches by name |
-| `pageSize` | integer | Maximum number of entries per page |
-| `pageNo` | integer | Number of pages for retrieved data |
-| `owId` | integer | Organization Workspace ID |
-| `sortBy` | string | Sort entries by ascending (`+`) or descending (`-`) |
+| Query Parameters |  |
+| ---- | --- |
+| `groupFilterId` <br /><span class="type-text">integer</span> | Filters groups list. Supported values: <br />All Groups [default]: `0` <br />Share by Admin: `1` <br />Own Groups: `2` |
+| `groupTypeIds` <br /><span class="type-text">string</span> | Filters groups list. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
+| `ids` <br /><span class="type-text">string</span> | Comma separated IDs
+| `provideAccountLevelExcludedGroup` <br /><span class="type-text">boolean</span> | Flag to indicate whether to include account-level excluded group in response or not, default: `false` |
+| `includeStatistics` <br /><span class="type-text">boolean</span> | Flag to indicate whether to include statistics in response or not, default: `true` |
+| `excludeEmptyGroups` <br /><span class="type-text">boolean</span> | Flag to indicate whether to include empty groups in response or not, default: `false` |
+| `searchField` <br /><span class="type-text">string</span>| Searches by name |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `sortBy` <br /><span class="type-text">string</span> | Sort entries by ascending (`+`) or descending (`-`) |
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -347,37 +357,43 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Get More Inventory Groups Details
 
 Get more inventory groups details with the following endpoints:
 
-| Method/Endpoint | Path | Description |
+| Method | Path | Description |
 | ---- | ---- | --- |
-| `GET` /api/v3/inv/groups | /statistics | Get statistics of inventory groups
-| `GET` `/api/v3/group/{groupId}` | /shared/campaigns/list | Gets list of campaigns attached to the inventory group |
-| | /pmp-deals | Gets list of PMP Deals in an inventory group |
-| | /pmp-deals/csv | Gets CSV format list of PMP Deals in an inventory group |
-| | /open-exchange-inventories | Gets list of open exchange inventories for an inventory group
-| | /open-exchange-inventories/distributions | Gets distribution of open exchange inventories in an inventory group |
-| | /open-exchange-inventories/count | Gets count of open exchange inventories in an inventory group |
-| | /contextual-inventories | Gets list of contextual inventories for an inventory group |
-| | /contextual-inventories/csv | Gets CSV format list of contextual inventories for an inventory group |
-| | /contextual-inventories/count | Gets count of contextual inventories for an inventory group | 
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/statistics</span> | Get statistics of inventory groups
+| <span class="badge badge--primary">GET</span>  | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/shared/campaigns/list</span> | Gets list of campaigns attached to the inventory group |
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/pmp-deals</span> | Gets list of PMP Deals in an inventory group |
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/pmp-deals/csv</span> | Gets CSV format list of PMP Deals in an inventory group |
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/open-exchange-inventories</span> | Gets list of open exchange inventories for an inventory group
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/open-exchange-inventories/distributions</span> | Gets distribution of open exchange inventories in an inventory group |
+| <span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/open-exchange-inventories/count</span> | Gets count of open exchange inventories in an inventory group |
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/contextual-inventories</span> | Gets list of contextual inventories for an inventory group |
+| <span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/contextual-inventories/csv</span> | Gets CSV format list of contextual inventories for an inventory group |
+|<span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/groups/api/v3/group/{groupId}/contextual-inventories/count</span> | Gets count of contextual inventories for an inventory group |
 
-\
-**Path Parameters**
+<div class="container">
+  <div class="child1">
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `groupId` | integer [required] | Group ID |
-| `searchField` | string | Search inventory group by name |
-| `noOfEntries` | integer | Maximum number of entries per page, default: `50` |
-| `pageNo` | integer | Number of pages for retrieved data |
+| Path Parameter |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
-\
-Response 200 Sample (open exchange inventories)
+| Query Parameters ||
+| --- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search inventory group by name |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `50` |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200 (open exchange inventories)"
 {
     "success": true,
     "data": {
@@ -423,24 +439,27 @@ Response 200 Sample (open exchange inventories)
 }
 ```
 
+</div></div>
+
+---
+
 ### Contextual Inventory
 
-Get recommended keywords or autocompleted keywords with the following endpoints:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/contextual/recommend</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/contextual/autosuggest</span>
 
-* `GET` /api/v3/inv/contextual/recommend
-* `GET` /api/v3/inv/contextual/autosuggest
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get recommended keywords or autocompleted keywords.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `keyword` | string | Suggestion or Recommendation will be made based on this keyword | 
+| Query Parameters |  |
+| ---- | --- |
+| `keyword` <br /><span class="type-text">string</span> | Suggestion or Recommendation will be made based on this keyword | 
 
-\
-Response 200 
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -451,26 +470,32 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Inventory Group Management
 
 Update details or delete group inventories.
 
 ### Create a New Inventory Group
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/groups</span>
+
+<div class="container">
+  <div class="child1">
+
 Add a new inventory group based on the provided request body.
 
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
+| `inventoryIds` <br /><span class="type-text">array of integers</span> | Inventory to include in group |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupName` | integer | Desired name for group |
-| `groupTypeId` | integer | Group type. Supported values: <br />Open Exchange: `1` <br />PMP: `2` <br />Contextual: `3` |
-| `inventoryIds` | array of integers | Inventory to include in group |
+</div><div class="child2">
 
-\
-**Request Sample**
-
-```json
+```json title="Request Sample"
 {
     "groupName": "Inventory Group - Open exchange",
     "groupTypeId": 1,
@@ -481,10 +506,7 @@ Add a new inventory group based on the provided request body.
 }
 ```
 
-\
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -513,63 +535,76 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Add or Remove Mappings to an Inventory Group
 
-Add or Remove inventories (Open Exchange, Private Deals, Contextual) to a group or multiple groups with the following endpoints:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/group/addMappings</span>
+<br /><span class="badge badge--success">POST</span><span class="path-text">/api/v3/inv/group/removeMappings</span>
 
-* `POST` /api/v3/inv/group/addMappings
-* `POST` /api/v3/inv/group/removeMappings
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Add or Remove inventories (Open Exchange, Private Deals, Contextual) to a group or multiple groups.
 
 Inventories can be added/removed by filtering for results, inputting `dealIds`, contextual details, or `inentoryIds`.
 
-Add/Remove by filter:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupIds` | array of integers | Group IDs to add mappings to |
-| `keywords` | array of strings | Filters by keyword | 
-| `countries` | array of integers | Filters by country |
-| `categories` | array of strings | Filter by category |
-| `inventoryTypes` | array of integers | Filter by inventory type |
-| `creativeSizes` | array of strings | Filter by creative size |
-| `creativeTypes` | array of integers | Filter by creative types |
-| `trafficTypes` | array of integers | Filter by traffic types |
-| `deviceTypes` | array of integers | Filter by device types |
-| `videoPlayerSizes` | array of integers | Filter by video player sizes |
-| `isAllInventories` | boolean | 
+<details>
+<summary>Add/Remove by filter</summary>
 
-\
-Add/Remove by Deal ID:
+| Request Schema  |  |
+| ----  | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> | Group IDs to add mappings to |
+| `keywords` <br /><span class="type-text">array of integers</span>  | Filters by keyword | 
+| `countries` <br /><span class="type-text">array of integers</span>  | Filters by country |
+| `categories` <br /><span class="type-text">array of integers</span>  | Filter by category |
+| `inventoryTypes` <br /><span class="type-text">array of integers</span>  | Filter by inventory type |
+| `creativeSizes` <br /><span class="type-text">array of integers</span>  | Filter by creative size |
+| `creativeTypes` <br /><span class="type-text">array of integers</span>  | Filter by creative types |
+| `trafficTypes` <br /><span class="type-text">array of integers</span>  | Filter by traffic types |
+| `deviceTypes` <br /><span class="type-text">array of integers</span>  | Filter by device types |
+| `videoPlayerSizes` <br /><span class="type-text">array of integers</span>  | Filter by video player sizes |
+| `isAllInventories` | <br /><span class="type-text">boolean</span>  | 
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupIds` | array of integers | Group IDs to add mappings to |
-| `dealIds` | array of integers | Deal IDs to add to group |
+</details>
 
-\
-Add/Remove by Contextual Inventories:
+<details>
+<summary>Add/Remove by Deal ID</summary>
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupIds` | array of integers | Group IDs to add mappings to |
-| `contextualKeywords` | array of strings | Names of Contextual Inventories |
-| `contextualUrls` | array of strings | URLs of Contextual Inventories |
+| Request Schema |  |
+| ----  | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span>  | Group IDs to add mappings to |
+| `dealIds` <br /><span class="type-text">array of integers</span>  | Deal IDs to add to group |
 
-\
-Add/Remove by Inventory ID:
+</details>
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupIds` | array of integers | Group IDs to add mappings to |
-| `inventoryIds` | array of integers | Inventory IDs to add to group |
+<details>
+<summary>Add/Remove by Contextual Inventories</summary>
 
-\
-Response 200 Sample
+| Request Schema |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span>  | Group IDs to add mappings to |
+| `contextualKeywords` <br /><span class="type-text">array of strings</span>  | Names of Contextual Inventories |
+| `contextualUrls` <br /><span class="type-text">array of strings</span>  | URLs of Contextual Inventories |
 
-```json
+</details>
+
+<details>
+<summary>Add/Remove by Inventory ID</summary>
+
+| Request Schema  |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> | Group IDs to add mappings to |
+| `inventoryIds` <br /><span class="type-text">array of integers</span>  | Inventory IDs to add to group |
+
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -598,31 +633,31 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Add or Remove Customers From a Shared Inventory Group
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/inv/group/{groupId}/shared/customers/edit</span>
+
+<div class="container">
+  <div class="child1">
 
 Add or remove customers from an inventory group by group ID with the following endpoint: 
 
-* `PATCH` `/api/v3/inv/group/{groupId}/shared/customers/edit`
+| Path Parameters |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
-\
-**Path Parameters**
+| Request Schema |  |
+| ---- | --- |
+| `addOwIds` <br /><span class="type-text">array of integers</span> | Organization Worskpace IDs to add to Inventory Group |
+| `removeOwIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to remove from Inventory Group |
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `groupId` | integer [required] | Group ID |
+</div><div class="child2">
 
-\
-**Request Body Schema: application/json**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `addOwIds` | array of integers | Organization Worskpace IDs to add to Inventory Group |
-| `removeOwIds` | array of integers | Organization Workspace IDs to remove from Inventory Group |
-
-\
-Request Sample 
-
-```json
+```json title="Request Sample"
 {
     "addOWIds": [
         200425,
@@ -638,47 +673,43 @@ Request Sample
 }
 ```
 
-Response 200 Sample
-
-```json
+```json "Response 200"
 {
     "success": true,
     "data": "Your changes have been successfully saved."
 }
 ```
 
+</div></div>
+
+---
+
 ### Edit Inventory Group
 
-Edit an inventory group with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/inv/groups/{groupId}</span>
 
-* `PATCH` `/api/v3/inv/groups/{groupId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Edit an inventory group.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `groupId` | integer [required] | Group ID |
+| Path Parameters  |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ----  | --- |
+| `groupName` <br /><span class="type-text">string</span> | Name of group |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupName` | string| Name of group |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "groupName": "Open exchange Group - updated"
 }
 ```
 
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -710,9 +741,7 @@ Response 200 Sample
 <details>
 <summary>More Responses</summary>
 
-Response 403
-
-```json
+```json title="Response 403"
 {
     "success": false,
     "errorObjects": [
@@ -723,9 +752,7 @@ Response 403
 }
 ```
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -737,9 +764,7 @@ Response 422
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
     "success": false,
     "errorObjects": [
@@ -752,29 +777,35 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
 
 ### Delete Inventory Group
 
-Delete an existing inventory group with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/inv/groups/{groupId}</span>
 
-* `DELETE` `/api/v3/inv/groups/{groupId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Delete an existing inventory group.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `groupId` | integer [required] | Group ID |
+| Path Parameters | Description |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Inventory group deleted successfully."
 }
 ```
+
+</div></div>
+
+---
 
 ## Private Marketplace (PMP) Deals Details
 
@@ -782,31 +813,30 @@ Private Marketplace Deals are a type of programmatic advertising arrangement tha
 
 ### Get PMP Deals List
 
-Get a list of PMP deals based on desired filters available for user with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/pmp/deals/list</span>
 
-* `POST` /api/v3/pmp/deals/list
+<div class="container">
+  <div class="child1">
+ 
+Get a list of PMP deals based on desired filters available for user.
 
-\
-**Request Body Schema: application/json**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `groupId` | integer | Filters PMP Deals by Group ID |
+| Request Schema  |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Filters PMP Deals by Group ID |
 | `active` | boolean | Filters for active (`true`) or inactive (`false`) deals |
-| `searchKeywords` | array of strings | Strings used to search by `dealId`, `dealName`, or description |
-| `creativeTypes` | array of integers | Creative type IDs |
-| `exchanges` | array of integers | Exchanges IDs |
-| `ids` | array of integers | PMP Deal IDs |
-| `dealStatuses` | array of strings | Deal statuses, allowed values: `inUse`, `unUsed`, and `inActive` |
-| `owIds` | array of integers | Organization Workspace IDs |
-| `pageNo` | integer | Pages of retrieved details desired, default: `1` |
-| `noOfEntries` | integer | Maximum number of deals to retrieve, default: `50` |
-| `sortBy` | string | Ascending= `+dealId`, descending= `-dealId` |
+| `searchKeywords` <br /><span class="type-text">array of strings</span> | Strings used to search by `dealId`, `dealName`, or description |
+| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs |
+| `exchanges` <br /><span class="type-text">array of integers</span> | Exchanges IDs |
+| `ids` <br /><span class="type-text">array of integers</span> | PMP Deal IDs |
+| `dealStatuses` <br /><span class="type-text">array of strings</span> | Deal statuses, allowed values: `inUse`, `unUsed`, and `inActive` |
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `pageNo` <br /><span class="type-text">integer</span> | Pages of retrieved details desired, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span>| Maximum number of deals to retrieve, default: `50` |
+| `sortBy` <br /><span class="type-text">string</span>| Ascending= `+dealId`, descending= `-dealId` |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "groupId": 1,
     "active": true,
@@ -842,9 +872,7 @@ Request Sample
 }
 ```
 
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -882,9 +910,8 @@ Response 200 Sample
 
 <details>
 <summary>More Responses</summary>
-Response 422
 
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -895,9 +922,7 @@ Response 422
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
     "success": false,
     "errorObjects": [
@@ -910,30 +935,33 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
+
 ### Get More PMP Details
 
 Get more PMP details with the following endpoints:
 
-| Method/Endpoint | Path | Description |
+| Method | Path |  |
 | ---- | ---- | --- |
-| `GET` /api/v3/inv/pmp/deals | `/{id}` | Get PMP Deal details by ID |
-|| `/{dealId}/associated-customers` | Gets list of customers associated with campaigns for a PMP Deal |
-|| /count-by-status | Gets count of PMP deals for all statuses, supports query parameter `searchKeywords` |
-| `GET` /api/v3/inv/static | /deal-types | Gets list of deal types |
-| | /deal-status | Gets list of deal statuses |
+| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v3/inv/pmp/deals/{id}</span> | Get PMP Deal details by ID |
+|<span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/pmp/deals/{dealId}/associated-customers</span> | Gets list of customers associated with campaigns for a PMP Deal |
+|<span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/pmp/deals/count-by-status</span> | Gets count of PMP deals for all statuses, supports query parameter `searchKeywords` |
+| <span class="badge badge--primary">GET</span>  | <span class="path-text">/api/v3/inv/static/deal-types</span> | Gets list of deal types |
+| <span class="badge badge--primary">GET</span>| <span class="path-text">/api/v3/inv/static/deal-status</span> | Gets list of deal statuses |
 
-\
-**Path Parameters** (where applicable)
+<div class="container">
+  <div class="child1">
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | PMP Deal ID |
-| `dealId` | integer | PMP Deal ID |
+| Path Parameters |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span>| PMP Deal ID |
+| `dealId` <br /><span class="type-text">integer</span> | PMP Deal ID |
 
-\
-Response Sample 200 (count by status)
+</div><div class="child2">
 
-```json
+```json title="Response 200 (count by status)"
 {
     "success": true,
     "data": {
@@ -948,9 +976,7 @@ Response Sample 200 (count by status)
 <details>
 <summary>More Responses</summary>
 
-Response 403
-
-```json
+```json title="Response 403"
 {
     "success": false,
     "errorObjects": [
@@ -961,9 +987,7 @@ Response 403
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
     "success": false,
     "errorObjects": [
@@ -976,6 +1000,10 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
+
 ## PMP Management
 
 Create, update, or delete PMP Deals using the methods and endpoints outlined in this section.
@@ -984,26 +1012,35 @@ Create, update, or delete PMP Deals using the methods and endpoints outlined in 
 
 Create or update PMP Deals using the following properties in the Request Body Schema.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `dealId` | string | PMP Deal ID |
-| `dealName` | string | PMP Deal name |
-| `description` | string | PMP Deal description |
-| `cpm` | integer | PMP deal Cost Per Mille (CPM) value |
-| `dealCurationTypeId` | integer | Curation type ID |
-| `creativeTypes` | array of integers | Creative type IDs |
-| `exchangeId` | integer | Exchange associated with PMP Deal |
-| `assignToCustomers` | array of integers | Customer Organization Workspace IDs |
-| `active` | boolean | Deal status, active= `true`, inactive= `false` |
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PMP Deal ID |
+| `dealName` <br /><span class="type-text">string</span> | PMP Deal name |
+| `description` <br /><span class="type-text">string</span> | PMP Deal description |
+| `cpm` <br /><span class="type-text">integer</span> | PMP deal Cost Per Mille (CPM) value |
+| `dealCurationTypeId` <br /><span class="type-text">integer</span> | Curation type ID |
+| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange associated with PMP Deal |
+| `assignToCustomers` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs |
+| `active` <br /><span class="type-text">boolean</span> | Deal status, active= `true`, inactive= `false` |
+
+</div></div>
 
 ### Create PMP Deal
 
+<span class="badge badge--success">POST</span> <span class="path-text">api/v3/inv/pmp/deals/add</span>
+
+<div class="container">
+  <div class="child1">
+
 Create a new PMP Deal using the above [resource properties](#resource-properties) as the request schema
 
-\
-**Request Sample**
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "dealId": "DIewkFZALX1taoLjQg6Gge1dD6YvZYO4RChUKmOLk",
     "dealName": "Deal test123",
@@ -1018,9 +1055,7 @@ Create a new PMP Deal using the above [resource properties](#resource-properties
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1033,9 +1068,7 @@ Response 200
 <details>
 <summary>More Responses</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
     "success": false,
     "errorObjects": [
@@ -1047,9 +1080,7 @@ Response 400
 }
 ```
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -1060,9 +1091,7 @@ Response 422
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
     "success": false,
     "errorObjects": [
@@ -1075,32 +1104,37 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
+
 ### Update PMP Deal
 
-Update any [resource property](#resource-properties) of an existing PMP Deal with its ID  with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/inv/pmp/deals/{id}</span>
 
-* `PATCH` `/api/v3/inv/pmp/deals/{id}`
+<div class="container">
+  <div class="child1">
+
+Update any [resource property](#resource-properties) of an existing PMP Deal with its ID  with the following endpoint:
 
 \
 **Path Parameters**
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | PMP Deal ID
+| Path Parameters |  |
+| ----| --- |
+| `id` <br /><span class="type-text">integer</span> | PMP Deal ID
 
-\
-Request Sample
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "dealName": "New Deal Name"
 }
 
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1110,23 +1144,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete PMP Deal
 
-Delete an existing PMP Deal with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/inv/pmp/deals</span>
 
-* `DELETE` /api/v3/inv/pmp/deals
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Delete an existing PMP Deal.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `ids` | list of integers [required] | PMP Deal IDs to delete |
 
-\
-Response 200 Sample
+| Query Parameters |  |
+| ---- | --- |
+| `ids` <br /><span class="type-text">list of integers</span> | PMP Deal IDs to delete |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1139,34 +1177,37 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ## Programmatic Guarantee (PG) Deals Details
 
 A Programmatic Guarantee Deal is a direct negotiation between one publisher and one advertiser offering budget predictability and avoiding auction volatility by ensuring a fixed amount of ad inventory at a pre-negotiated price. This section will cover common methods and endpoints associated with PG Deals.
 
 ### Get PG Deals List
 
-Get a list of PG deals available for user with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/pg/deals/list</span>
 
-* `GET` /api/v3/inv/pg/deals/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of PG deals available for user.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `noOfEntries` | integer | Maximum number of deals to retrieve, default: `20` |
-| `pageNo` | integer |  Pages of retrieved details desired, default: `1` |
-| `sortBy` | string | Sort results by ascending (`+`) or descending (`-`), supported values: `id`, `dealName`, `cmp` <br />Default: `-id` |
-| `ids` | array of integers | IDs of the primary key of PG Deals |
-| `paymentTypeIds` | array of integers | Payment type IDs |
-| `statusIds` | array of integers | Status IDs |
-| `exchangeIds` | array of integers | Exchange IDs |
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of deals to retrieve, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> |  Pages of retrieved details desired, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sort results by ascending (`+`) or descending (`-`), supported values: `id`, `dealName`, `cmp` <br />Default: `-id` |
+| `ids` <br /><span class="type-text">array of integers</span> | IDs of the primary key of PG Deals |
+| `paymentTypeIds` <br /><span class="type-text">array of integers</span> | Payment type IDs |
+| `statusIds` <br /><span class="type-text">array of integers</span> | Status IDs |
+| `exchangeIds` <br /><span class="type-text">array of integers</span> | Exchange IDs |
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1225,9 +1266,7 @@ Response 200 Sample
 <details>
 <summary>More Responses</summary>
 
-Response 401
-
-```json
+```json title="Response 401"
 {
     "success": false,
     "errorObjects": [
@@ -1238,9 +1277,7 @@ Response 401
 }
 ```
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -1251,9 +1288,7 @@ Response 422
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
     "success": false,
     "errorObjects": [
@@ -1266,23 +1301,29 @@ Response 500
 
 </details>
 
+</div></div>
+
+---
+
 ### Get More PG Deals Details
 
-Get PG Deal details by specified ID including its associated campaign IDs with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/pg/deals/{id}</span>
 
-* `GET` `/api/v3/inv/pg/deals/{id}`
+<div class="container">
+  <div class="child1">
+
+Get PG Deal details by specified ID including its associated campaign IDs.
 
 \
 **Path Parameters**
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | PG Deal ID
+| Path Parameters  |  |
+| ----  | --- |
+| `id` <br /><span class="type-text">integer</span> | PG Deal ID
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1309,6 +1350,10 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ## PG Management
 
 Create, update, or delete PG Deals using the methods and endpoints outlined in this section.
@@ -1317,31 +1362,37 @@ Create, update, or delete PG Deals using the methods and endpoints outlined in t
 
 Create or update PG Deals using the following properties in the Request Body Schema.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `dealId` | string | PG Deal ID |
-| `dealName` | string| PG Deal name |
-| `exchangeId` | integer | Exchange ID associated with PG Deal | 
-| `cpm` | integer | Cost Per Mille (CPM) value |
-| `statusId` | integer | Status ID of PG Deal |
-| `description` | string | Description or notes about the deal |
-| `paymentTypeId` | integer | Payment type ID of PG Deal
+<div class="container">
+  <div class="child3">
+
+| Attributes  |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PG Deal ID |
+| `dealName` <br /><span class="type-text">string</span>| PG Deal name |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG Deal | 
+| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal |
+| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
+| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID of PG Deal
+
+</div></div>
+
+---
 
 ### Create PG Deal
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/pg/deals/add</span>
+
+<div class="container">
+  <div class="child1">
+
 Create a new PG Deal with the following endpoint:
 
-* `POST` /api/v3/inv/pg/deals/add
+Refer to [PG Deal resource properties](#resource-properties-1) above for schema. 
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-Refer to [PG Deal resource properties](/Inventory-API-Guide.md#resource-properties-1) above for schema. 
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "dealId": "YT-Test-1234",
     "dealName": "Test deal YT31",
@@ -1352,10 +1403,7 @@ Request Sample
 }
 ```
 
-\
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1365,27 +1413,28 @@ Response 200 Sample
 }
 ```
 
+</div></div>
+
+---
+
 ### Update PG Deal Details
 
-Update specific details of a PG Deal with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/inv/pg/deals/{id}</span>
 
-* `PATCH` `/api/v3/inv/pg/deals/{id}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Update specific details of a PG Deal.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer [required] | PG Deal ID |
+| Path Parameters |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | PG Deal ID |
 
-\
-**Request Body Schema: application/json**
+Refer to [PG Deal resource properties](#resource-properties-1) above for request schema. 
 
-Refer to [PG Deal resource properties](/Inventory-API-Guide.md#resource-properties-1) above for schema. 
+</div><div class="child2">
 
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "dealId": "PM-ABC-12345",
     "dealName": "Premium Advertising Package",
@@ -1397,34 +1446,39 @@ Request Sample
 }
 ```
 
-Response 200 Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "PG deal updated successfully"
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete PG Deal
 
-Delete an existing PG Deal with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/inv/pg/deals</span>
 
-* `DELETE` /api/v3/inv/pg/deals
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Delete an existing PG Deal.
 
-| Path | Type | Description |
-| ---- | ---- | --- |
-| `ids` | list of integers [required] | Pg Deal IDs to delete |
+| Query Parameters |  |
+| ---- | --- |
+| `ids` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Comma separated PG Deal IDs to delete |
 
-\
-Response 200 Sample
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "PG Deal deleted successfully"
 }
 ```
+
+</div></div>
+
+---
