@@ -1,75 +1,79 @@
-# User Profile Guidelines
+# User Management API
 
 IQM's REST API allows you to manage users and their profiles in several different ways.
 
 This page will go over the common endpoints associated with user management.
 
+## Authorization
+
+Use the following header parameters for all requests:
+
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
+
 ## Send User Invitation
 
-Any customer or organization can send invitations to one or more users by providing their names and emails using the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/invite</span>
 
-* `POST` /api/v3/ua/user/invite
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+Any customer or organization can send invitations to one or more users by providing their names and emails.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Request Schema | |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `name` <br /><span class="type-text">string</span> | User's name
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type| Example |
-| ---- | ---- | --- |
-| `email` | string [required] | User's email |
-| `name` | string [required] | User's name
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "email": "shraddha.p@iqm.com",
     "name": "Shradda Patel"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "1 invitations sent successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ## Validate User Invite
 
-The invited user will receive an email with a link and a hash which can be validated using this endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/invite/validate</span>
 
-* `POST` /api/v3/ua/invite/validate
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+The invited user will receive an email with a link and a hash which can be validated.
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `inviteHash` | string [required] | Unique invite hash sent to invited user
+| Request Schema|  |
+| ----  | --- |
+| `inviteHash` <br /><span class="type-text">string</span> | Unique invite hash sent to invited user
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "inviteHash": "8HQfsQcychjhvCmuuiFvVCIgqq9cJG/gh6HgmPZXxGE4od7a7tsMmh/O9+ia2Lw0FOelX3h8jTKJXR+0hUAkGXYA0cIITS13BxyrWoeBmRTnWTKxHtS+Ff41POwt/yDMY2iHXUsG86ehmWeeIi3HNMikhH5yY6BvNFnEfxq3zIdiouD3Fp/loPO9qazxU1qxZvNOOv8FZEZTzORVnJ8+ADjyZ/Zjs1dNhSFE"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -81,9 +85,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -97,40 +99,35 @@ Response 422
 
 </details>
 
+</div></div>
+
+---
+
 ## User Sign-Up
 
-A user/customer can sign up and create a password to access the API using the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/sign-up</span>
 
-* `POST` /api/v3/ua/sign-up
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
+A user/customer can sign up and create a password to access the API.
 
-\
-**Request Body Schema: application json**
+| Request Schema | |
+| ----  | --- |
+| `email` <br /><span class="type-text">string</span>| User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `email` | string [required] | User's email |
-| `password` | string [required] | User's password |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "email": "kartik.g@iqm.com",
     "password": "123456"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -146,9 +143,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 403
-
-```json
+```json title="Response 403"
 {
     "success": false,
     "errorObjects": [
@@ -162,33 +157,28 @@ Response 403
 
 </details>
 
+</div></div>
+
+---
+
 ## Login
 
-Once the user/customer logs in, the API will send an OAuth compliant response with OW ID which can be used for further API communications. Use the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
-* `POST` /api/v3/ua/login
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+Once the user/customer logs in, the API will send an OAuth compliant response with OW ID which can be used for further API communications.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-HOST` | string [required] | Workspace URL |
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> |  [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `grantType` | string[required] |  [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string [required] | User's email |
-| `password` | string [required] | User's password |
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "grantType": "password",
     "email": "pratik.t+ihp@iqm.com",
@@ -196,9 +186,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -215,9 +203,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
     "success": false,
     "data": {
@@ -234,9 +220,7 @@ Response 400
 }
 ```
 
-Response 403
-
-```json
+```json title="Response 403"
 {
     "success": false,
     "errorObjects": [
@@ -249,49 +233,56 @@ Response 403
 
 </details>
 
+</div></div>
+
+---
+
 ## User Logout
 
-The user can log out from the API using the following endpoing:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/logout</span>
 
-* `POST` /api/v3/ua/logout
+<div class="container">
+  <div class="child1">
 
-\
-Response Sample
+The user can log out from the API.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": "User logged out successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ## Change Password
 
-The user can update their password with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/update-password</span>
 
-* `POST` /api/v3/ua/user/update-password
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+The user can update their password.
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `email` | string [required] | User's email |
-| `password` | string [required] | User's password |
+| Request Schema|  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "email": "kartik.g@iqm.com",
     "password": "123456"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Password changed successfully."
@@ -301,9 +292,8 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 403
 
-```json
+```json title="Response 403"
 {
     "success": true,
     "data": {
@@ -315,23 +305,24 @@ Response 403
 
 </details>
 
+</div></div>
+
 ## Reset Password Email
 
-The user can send a link to reset a password to a specified email using the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/reset-password</span>
 
-* `POST` /api/v3/ua/user/reset-password
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+The user can send a link to reset a password to a specified email.
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `email` | string [required] | User's email |
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | User's email |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "email": "kartik@iqm.com"
 }
@@ -349,9 +340,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 404
-
-```json
+```json title="Response 404"
 {
     "success": false,
     "errorObjects": [
@@ -364,33 +353,28 @@ Response 404
 
 </details>
 
+</div></div>
+
+---
+
 ## Update User Profile
 
-The user's profile display name and avatar can be updated with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/user/update-profile</span>
 
-* `PATCH` /api/v3/ua/user/update-profile
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+The user's profile display name and avatar can be updated.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Request Schema  |  |
+| ----  | --- |
+| `displayName` <br /><span class="type-text">string</span> | User Name |
+| `userAvatar` <br /><span class="type-text">string</span> | If `removeUserProfile` set to `true`, can remain null, otherwise: Image file uploaded for profile |
+| `removeUserProfile` <br /><span class="type-text">boolean</span> | default: `false` <br />To remove profile image `true`|
 
-\
-**Request Body Schema: application/x-www-form-urlencoded**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `displayName` | string [required] | User Name |
-| `userAvatar` | string [required] | If `removeUserProfile` set to -true, can remain null, otherwise: Image file uploaded for profile |
-| `removeUserProfile` | boolean [required] | default: -false <br />To remove profile image: -true <br />|
-
-\
-Response 200 
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -403,9 +387,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -418,59 +400,51 @@ Response 422
 
 </details>
 
+</div></div>
+
+---
+
 ## Get List of Users
 
-Get a list of users and details for a given workspace ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/users/list</span>
 
-* `GET` /api/v3/ua/users/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of users and details for a given workspace ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `status` | string | Status of user, default: `""` |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `+displayName` |
+| Query Parameters | |
+| ---- | --- |
+| `status` <br /><span class="type-text">string</span> | Status of user, default: `""` |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `+displayName` |
 
-\
-**Header Parameters**
+| Attributes  |  |
+| ---  | --- |
+| `userId` <br /><span class="type-text">integer</span> | Unique user ID |
+| `firstName` <br /><span class="type-text">string</span> | User's first name |
+| `lastName` <br /><span class="type-text">string</span> | User's last name |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `displayName` <br /><span class="type-text">string</span> | User's display name |
+| `status` <br /><span class="type-text">string</span> | User's status |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID |
+| `userAvatar` <br /><span class="type-text">string</span> | Image file uploaded for profile |
+| `createdAt` <br /><span class="type-text">integer</span> | Unix timestamp in Milliseconds when account was created |
+| `uowId` <br /><span class="type-text">integer</span> | User Organization Workspace ID |
+| `customersCount` <br /><span class="type-text">integer</span> | Count of customers assigned to user |
+| `organizationName` <br /><span class="type-text">string</span> | Organization associated with user |
+| `invitedOn` <br /><span class="type-text">integer</span> | Unix timestamp in Milliseconds when user was invited to create account |
+| `isOrganizationOwnerUSer` <br /><span class="type-text">boolean</span> | User is owner of organization (`true`) or not (`false`) |
+| `isModifactionAllowed` <br /><span class="type-text">boolean</span> | User is allowed to modify (`true`) or not (`false`) |
+| `invitedByUserName` <br /><span class="type-text">string</span> | Name of user that invited user |
+| `invitedByUserEmail` <br /><span class="type-text">string</span> | Email of user that invited user |
+| `isAssignActionAllowed` <br /><span class="type-text">boolean</span> | User is allowed to assign (`true`) or not (`false`) |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+</div><div class="child2">
 
-\
-**Resource Properties**
-
-| Property | Type | Description |
-| --- | --- | --- |
-| `userId` | integer | Unique user ID |
-| `firstName` | string | User's first name |
-| `lastName` | string | User's last name |
-| `email` | string | User's email |
-| `displayName` | string | User's display name |
-| `status` | string | User's status |
-| `statusId` | integer | Status ID |
-| `userAvatar` | string | Image file uploaded for profile |
-| `createdAt` | integer | Unix timestamp in Milliseconds when account was created |
-| `uowId` | integer | User Organization Workspace ID |
-| `customersCount` | integer | Count of customers assigned to user |
-| `organizationName` | string | Organization associated with user |
-| `invitedOn` | integer | Unix timestamp in Milliseconds when user was invited to create account |
-| `isOrganizationOwnerUSer` | boolean | User is owner of organization (`true`) or not (`false`) |
-| `isModifactionAllowed` | boolean | User is allowed to modify (`true`) or not (`false`) |
-| `invitedByUserName` | string | Name of user that invited user |
-| `invitedByUserEmail` | string | Email of user that invited user |
-| `isAssignActionAllowed` | boolean | User is allowed to assign (`true`) or not (`false) |
-
-\
-Response Sample
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -521,35 +495,30 @@ Response Sample
 }
 ```
 
+</div></div>
+
+---
+
 ## User App Access List
 
-See what applications a user has access to, use query parameters to filter results with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/user/applications/list</span>
 
-* `GET` /api/v3/ua/user/applications/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+See what applications a user has access to, use query parameters to filter results.
 
-| Property | Type | Description |
-| ---- | ---- | --- | 
-| `uowId` | integer | User Organization Workspace ID |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `+appName` |
+| Query Parameters|  |
+| ---- | --- | 
+| `uowId` <br /><span class="type-text">integer</span> | User Organization Workspace ID |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `+appName` |
 
-\
-**Header Parameters**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
-
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -576,9 +545,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 422
-
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -591,33 +558,28 @@ Response 422
 
 </details>
 
+</div></div>
+
+---
+
 ## Add App Access for User
 
-A user can be granted access to specified apps using the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/application/add</span>
 
-* `POST` /api/v3/ua/user/application/add
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+A user can be granted access to specified apps.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Request Schema |  |
+| ---- | --- |
+| `userID` <br /><span class="type-text">integer</span> | User's ID |
+| `appIds` <br /><span class="type-text">string</span> | Application ID |
+| `accessLevel` <br /><span class="type-text">string</span> | Level of access granted to user |
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `userID` | integer [required] | User's ID |
-| `appIds` | string [required] | Application ID |
-| `accessLevel` | string [required] | Level of access granted to user |
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "userId": 431,
     "appIds": "1",
@@ -625,9 +587,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Application access added successfully."
@@ -637,9 +597,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 403 
-
-```json
+```json title="Response 403"
 {
     "success": false,
     "errorObjects": [
@@ -651,3 +609,7 @@ Response 403
 ```
 
 </details>
+
+</div></div>
+
+---

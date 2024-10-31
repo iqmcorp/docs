@@ -2,16 +2,21 @@
 
 Get details and track data of various metrics of a campaign with this API. 
 
-See the quckstart guides on [creating a report](/docs/quickstart-guides/Reporting-API-Quickstart-Guide.md) and [scheduling a report](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md). 
+See the quckstart guides on [creating a report](/docs/Quickstart%20Guides/Reporting-API-Quickstart-Guide.md) and [scheduling a report](/docs/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide.md).
 
 ## Authorization
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
 
 ## Get Reports Details
 
@@ -19,25 +24,47 @@ This section covers the various methods and endpoints for getting lists and deta
 
 ### Get a List of Reports
 
-Get a list of reports with the following endpoints:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/reports/list</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/reports/list</span>
 
-* `GET` /api/v3/ra/reports/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of reports.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerIds` | string | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
-| `searchField` | string | Filters by searched keyword |
-| `limit` | integer | Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
+<span class="badge badge--primary">GET</span> method:
 
-\
-Response 200
+| Query Parameters |  |
+| ----  | --- |
+| `customerIds` <br /><span class="type-text">string</span> | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
+| `searchField` <br /><span class="type-text">string</span> | Filters by searched keyword |
+| `limit` <br /><span class="type-text">integer</span>| Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
 
-```json
+<span class="badge badge--success">POST</span> method:
+
+| Request Schema |  |
+| ---- | --- |
+| `customerIds` <br /><span class="type-text">string</span> | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
+| `searchField` <br /><span class="type-text">string</span> | Filters by searched keyword |
+| `noOfEntries` <br /><span class="type-text">integer</span> |Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+    "customerIds": "123,234,345",
+    "pageNo": 1,
+    "noOfEntries": 30,
+    "sortBy": "+id",
+    "searchField": "search field"
+}
+```
+
+```json title=Response 200"
 {
     "success": true,
     "data": {
@@ -105,88 +132,26 @@ Response 200
 }
 ```
 
-### Get Report Details by `POST` Method
+</div></div>
 
-A list of reports can also be retrieved using the `POST` method with the following endpoint:
-
-* `POST` /api/v3/ra/reports/list
-
-\
-**Request Body Schema**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerIds` | string | Filters by comma separated customer IDs <br />Passing `all` gets all eligible customer's report, default: `all`<br /> |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`) <br />Supported values: `id`, `name`, `startDate`, `modifyDate`<br />Default: `-modifyDate` |
-| `searchField` | string | Filters by searched keyword |
-| `noOfEntries` | integer |Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-
-\
-Request Sample
-
-```json
-{
-    "customerIds": "123,234,345",
-    "pageNo": 1,
-    "noOfEntries": 30,
-    "sortBy": "+id",
-    "searchField": "search field"
-}
-```
-
-Response 200
-
-```json
-{
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "id": 1,
-                "reportName": "Campaign by Gender by Device type",
-                "startDate": 1650177200,
-                "endDate": 1666938296,
-                "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
-                "customerIds": null,
-                "customerDetails": null,
-                "timezoneId": 11,
-                "reportSchedulingEventDetails": {
-                    "eventId": 29,
-                    "deliveryFrequency": 3,
-                    "fileType": 2,
-                    "subscriberEmails": [
-                        "demoUser1@gmail.com",
-                        "demoUser2@iqm.com"
-                    ],
-                    "eventEndDate": 1671148799999,
-                    "deliveryDay": "Friday"
-                }
-            }
-            ...
-        ],
-        "totalRecords": 3,
-        "filteredRecords": 3
-    }
-}
-```
+---
 
 ### Get Report by ID
 
-Get report data by report ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/{reportId}</span>
 
-* `GET` `/api/v3/ra/report/{reportId}`
+<div class="container">
+  <div class="child1">
 
-**Path Parameters**
+Get report data by report ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID |
+| Path Parameters |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -227,42 +192,55 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Reports Management
 
 This section covers the various methods and endpoints for managing reports.
 
-See the quickstart guide on creating a report [here](/docs/quickstart-guides/Reporting-API-Quickstart-Guide.md).
+See the quickstart guide on creating a report [here](/docs/Quickstart%20Guides/Reporting-API-Quickstart-Guide.md).
 
 ### Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | Gets data for this report ID |
-| `dimensions` | JSON string | Represents dimension details serialized as a string |
-| `columns` | array of strings | Metrics for showing serving result |
-| `customerIds` | array of integers | Gets data for these customer IDs |
-| `filters` | JSON string | Serialized string. Supports: `campaignId`, `creativeTypeId`, and `campaignStatus` |
-| `searchField` | string | Filters data by keyword |
-| `requestType` | integer | Denotes Daily (`1`) or Aggregate (`2`) report request |
-| `reportAggregated` | string | Identifies whether report is Aggregated (`1`) or not (`0`) |
-| `startDate` | integer | Unix epoch timestamp, milliseconds |
-| `endDate` | integer | Unix epoch timestamp, milliseconds |
-| `timezoneId` | integer | Timezone ID |
-| `timezoneName` | string | Timezone name |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-impressions` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `noOfEntries` | integer | Maximum number of entries returned, default: `50` |
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Gets data for this report ID |
+| `dimensions` <br /><span class="type-text">serialized JSON string</span> | Represents dimension details serialized as a string |
+| `columns` <br /><span class="type-text">array of strings</span> | Metrics for showing serving result |
+| `customerIds` <br /><span class="type-text">array of integers</span> | Gets data for these customer IDs |
+| `filters` <br /><span class="type-text">serialized JSON string</span> | Serialized string. Supports: `campaignId`, `creativeTypeId`, and `campaignStatus` |
+| `searchField` <br /><span class="type-text">string</span> | Filters data by keyword |
+| `requestType` <br /><span class="type-text">integer</span> | Denotes Daily (`1`) or Aggregate (`2`) report request |
+| `reportAggregated` <br /><span class="type-text">string</span> | Identifies whether report is Aggregated (`1`) or not (`0`) |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp, milliseconds |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp, milliseconds |
+| `timezoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `timezoneName` <br /><span class="type-text">string</span> | Timezone name |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-impressions` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
+
+</div></div>
+
+---
 
 ### Create Report
 
-Create a new report based on given fields (see [Resource Properties](#resource-properties)) with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">api/v3/ra/report/add</span>
 
-* `POST` /api/v3/ra/report/add
+<div class="container">
+  <div class="child1">
 
-\
-Sample Request Body
+Create a new report based on given fields (see [Resource Properties](#resource-properties)).
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "reportName": "Campaign by Gender by Device type with customer and filtering",
     "customerIds": [
@@ -312,31 +290,32 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Execute a Report
 
-Once a report is created, execute it with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">api/v3/ra/report/execute</span>
 
-* `POST` api/v3/ra/report/execute
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Once a report is created, execute it with this endpoint.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `id` | integer | Executes report by report ID |
+| Request Schema|  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Executes report by report ID |
 
-\
-Request Body Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": 1001
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -533,69 +512,80 @@ Response 200
 }
 ```
 
+</div></div>
+
+--- 
+
 ### Delete a Report
 
-Delete a report and its scheduling data by ID with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ra/report/{reportId}</span>
 
-* `DELETE` `/api/v3/ra/report/{reportId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Delete a report and its scheduling data by ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID |
+| Path Parameters |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Report with id 123 deleted successfully"
 }
 ```
 
+</div></div>
+
+---
+
 ### Edit a Report
 
-Edit a report's data based on given field with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ra/report/{reportId}</span>
 
-* `PATCH` `/api/v3/ra/report/{reportId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Edit a report's data based on given field.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID |
+| Path Parameter | |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `customerIds` <br /><span class="type-text">array of integers</span> | Customer IDs to add to report. Parameter only available to update by workspace users or users with customers | 
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for report |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for report |
+| `reportName` <br /><span class="type-text">string</span> | Updated report name |
+| `timezoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `timezoneName` <br /><span class="type-text">string</span> | Timezone Name |
+| `dimensions` <br /><span class="type-text">serialized JSON string</span> | Dimensions to filter by in serialized JSON format |
+| `columns` <br /><span class="type-text">array of strings</span> | List of metrics for the report obtained rom dimensions and metrics details API |
+| `requestType` <br /><span class="type-text">integer</span> | ID for whether report is daily (`1`) or aggregated (`2`) |
+| `reportAggregated` <br /><span class="type-text">integer</span> | ID for whether first report dimension is aggregated (`1`) or not (`0`) |
+|  `reportSchedulingEventDetails` <br /><span class="type-text">object</span> | Contains parameters for updating scheduling details |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerIds` | array of integers | Customer IDs to add to report. Parameter only available to update by workspace users or users with customers | 
-| `startDate` | integer | Unix epoch timestamp of start date for report |
-| `endDate` | integer | Unix epoch timestamp of end date for report |
-| `reportName` | string | Updated report name |
-| `timezoneId` | integer | Timezone ID |
-| `timezoneName` | string | Timezone Name |
-| `dimensions` | JSON | Dimensions to filter by in serialized JSON format |
-| `columns` | array of strings | List of metrics for the report obtained rom dimensions and metrics details API |
-| `requestType` | integer | ID for whether report is daily (`1`) or aggregated (`2`) |
-| `reportAggregated` | integer | ID for whether first report dimension is aggregated (`1`) or not (`0`) |
-|  `reportSchedulingEventDetails` | object | Contains parameters for updating scheduling details |
-| `eventId` | integer | ID for schedule event, part of `reportSchedulingEventDetails` object |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` <br />Part of `reportSchedulingEventDetails`<br /> |
-| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` <br />Part of `reportSchedulingEventDetails`<br /> |
-| `subscriberEmails` | array of strings | List of emails to which the report will be sent. <br />Part of `reportSchedulingEventDetails`<br /> |
-| `eventEndDate` | integer | Unix epoch timestamp of report schedule event end date, in milliseconds. <br />Part of `reportSchedulingEventDetails`<br /> |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br /> Part of `reportSchedulingEventDetails`<br /> |
+<details>
+<summary><span class="code-text">reportSchedulingEventDetails</span> attributes</summary>
 
-\
-Request Sample
+| Attributes | |
+| --- | --- |
+| `eventId` <br /><span class="type-text">integer</span> | ID for schedule event, part of `reportSchedulingEventDetails` object |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` <br />Part of `reportSchedulingEventDetails`<br /> |
+| `fileType` <br /><span class="type-text">integer</span> | Report file type ID <br />CSV: `1` <br />XLS: `2` <br />Part of `reportSchedulingEventDetails`<br /> |
+| `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent. <br />Part of `reportSchedulingEventDetails`<br /> |
+| `eventEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of report schedule event end date, in milliseconds. <br />Part of `reportSchedulingEventDetails`<br /> |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br /> Part of `reportSchedulingEventDetails`<br /> |
 
-```json
+</details>
+
+</div><div class="child2">
+
+```json title="Request Sample"
 {
    "startDate":1727798981000,
    "endDate":1730304581000,
@@ -618,18 +608,15 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Report with id 123 updated successfully"
 }
 ```
 
-Response 422
 
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -640,69 +627,73 @@ Response 422
 }
 ```
 
+</div></div>
+
+---
+
 ### Duplicate a Report
 
-Create a copy of a report with its ID and the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/report/duplicate</span>
 
-* `POST` /api/v3/report/duplicate
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Create a copy of a report with its ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID to duplicate |
-| `reportName` | string | Name for duplicated report |
+| Request Schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID to duplicate |
+| `reportName` <br /><span class="type-text">string</span> | Name for duplicated report |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": 123,
     "reportName": "Report name"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Report duplicated successfully with id 124"
 }
 ```
 
+</div></div>
+
+---
+
 ## Scheduling Management
 
 This section covers the various methods and endpoints for managing scheduled reports.
 
-See the quickstart guide on scheduling a report [here](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md).
+See the quickstart guide on scheduling a report [here](/docs/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide.md).
 
 ### Schedule a Report
 
-Create and save a report scheule with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/email/schedule</span>
 
-`POST` /api/v3/ra/report/email/schedule
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Create and save a report scheule.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report  ID |
-| `subscriberEmails` | array of strings | List of emails to which the report will be sent |
-| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
-| `eventEndDate` | integer | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
-| `runningTotalEnabled` | boolean | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
-| `earliestCampaignStartDate` | integer | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
+| Request Schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report  ID |
+| `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent |
+| `fileType` <br /><span class="type-text">integer</span>| Report file type ID <br />CSV: `1` <br />XLS: `2` |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `eventEndDate` <br /><span class="type-text">integer</span> | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
+| `runningTotalEnabled` <br /><span class="type-text">boolean</span> | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
+| `earliestCampaignStartDate` <br /><span class="type-text">integer</span> | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "reportId": 1234,
     "subscriberEmails": [
@@ -718,9 +709,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -742,37 +731,39 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Update a Report Schedule
 
-Update a report schedule with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ra/report/email/schedule/{reportId}</span>
 
-* `PATCH` `/api/v3/ra/report/email/schedule/{reportId}`
+<div class="container">
+  <div class="child1">
+
+Update a report schedule.
+
+| Path Parameters  |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
 
 \
-**Path Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID |
-
-\
-**Request Body Schema: application/json**
-
 Include whichever fields to be updated in the request body:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `subscriberEmails` | array of strings | List of emails to which the report will be sent | 
-| `fileType` | integer | Report file type ID <br />CSV: `1` <br />XLS: `2` |
-| `deliveryFrequency` | integer | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
-| `deliveryDay` | string | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
-| `eventEndDate` | integer | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
-| `runningTotalEnabled` | boolean | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
-| `earliestCampaignStartDate` | integer | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
+| Request Schema |  |
+| ---- | --- |
+| `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent | 
+| `fileType` <br /><span class="type-text">integer</span> | Report file type ID <br />CSV: `1` <br />XLS: `2` |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `eventEndDate` <br /><span class="type-text">integer</span> | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
+| `runningTotalEnabled` <br /><span class="type-text">boolean</span> | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
+| `earliestCampaignStartDate` <br /><span class="type-text">integer</span> | [Required with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
 
-\
-Request Sample
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "subscriberEmails": [
         "sample_email1@example.com",
@@ -782,9 +773,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -807,23 +796,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete Report Schedule
 
-Remove a report schedule with the following endpoing:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ra/report/email/schedule/{reportId}</span>
 
-* `DELETE` `/api/v3/ra/report/email/schedule/{reportId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Remove a report schedule.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `reportId` | integer | Report ID |
+| Path Parameters  |  |
+| ----  | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -832,31 +824,55 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Unsubscribe an Email from All Scheduled Reports
 
-Unsubscribe an email from all scheduled reports or an organization with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/email/schedule/unsubscribe-all</span>
 
-* `GET` /api/v3/ra/report/email/schedule/unsubscribe-all
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Unsubscribe an email from all scheduled reports or an organization.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `token` | string | Generated on the server when populating the email template dispatched to the end user. End user is able to unsubscribe the email address by opening the link in browser |
+| Query Parameters | |
+| ---- | --- |
+| `token` <br /><span class="type-text">string</span> | Generated on the server when populating the email template dispatched to the end user. End user is able to unsubscribe the email address by opening the link in browser |
+
+</div><div class="child2">
+
+```json title="Response 200"
+
+```
+
+</div></div>
+
+---
 
 ### Unsubscribe an Email from a Report Schedule
 
-Unsubscribe an email from a report schedule with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/email/schedule/unsubscribe</span>
 
-* `GET` /api/v3/ra/report/email/schedule/unsubscribe
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Unsubscribe an email from a report schedule.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `token` | string | Generated on the server when populating the email template dispatched to the end user. End user is able to unsubscribe the email address by opening the link in browser |
+| Query Parameters | |
+| ---- | --- |
+| `token` <br /><span class="type-text">string</span> | Generated on the server when populating the email template dispatched to the end user. End user is able to unsubscribe the email address by opening the link in browser |
+
+</div><div class="child2">
+
+```json title="Response 200"
+
+```
+
+</div></div>
+
+---
 
 ## Get More Report Details
 
@@ -864,27 +880,24 @@ This section covers more endpoints for getting various details about reports.
 
 ### Get URL for Report Download
 
-Run a report and get a S3 file URL for download with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/download</span>
 
-* `POST` /api/v3/ra/report/download
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Run a report and get a S3 file URL for download.
 
-Refer to the [resource properties](#resource-properties) table for supported parameters.
+Refer to the [resource properties](#resource-properties) table for request schema supported parameters.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "id": 123
 }
 ```
 
-Response 200
-
-```json
+```json title-"Response 200"
 {
     "success": true,
     "data": {
@@ -893,27 +906,30 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get a List of Conversion's Custom Fields
 
-Get a list of conversion's custom fields by filter parameters with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/conversion/custom-field/list</span>
 
-* `POST` /api/v3/ra/conversion/custom-field/list
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Get a list of conversion's custom fields by filter parameters.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | array of integers | Filters list by customer IDs, default is all assigned customers |
-| `searchField` | string | Filters by keyword or ID | 
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
+| Request Schema |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">array of integers</span> | Filters list by customer IDs, default is all assigned customers |
+| `searchField` <br /><span class="type-text">string</span> | Filters by keyword or ID | 
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-id` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span>| Maximum number of entries returned, default: `20` |
 
-\
-Request Body Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "customerIds": [
         123,
@@ -927,9 +943,7 @@ Request Body Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -956,16 +970,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Report Request Types
 
-Get a static list of report request type with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/rb/static/report-request-type</span>
 
-* `GET` /api/v3/rb/static/report-request-type
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a static list of report request type.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -983,16 +1003,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Report File Types
 
-Get a static list of report file types with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/rb/static/report-file-type</span>
 
-* `GET` /api/v3/rb/static/report-file-type
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a static list of report file types.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1010,16 +1036,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Report Delivery Frequency Types
 
-Get a static list of report delivery frequency types with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/rb/static/report-delivery-frequency</span>
 
-* `GET` /api/v3/rb/static/report-delivery-frequency
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get a static list of report delivery frequency types.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1047,16 +1079,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Dimensions and Metrics Details
 
-Get dimensions and metrics information grouped by category (see [complete table](https://help.iqm.com/en/articles/7826036-dimensions-and-metrics)) with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/dimension-metrics/detail</span>
 
-* `GET` /api/v3/ra/report/dimension-metrics/detail
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get dimensions and metrics information grouped by category (see [complete table](https://help.iqm.com/en/articles/7826036-dimensions-and-metrics)).
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1169,77 +1207,4 @@ Response 200
 }
 ```
 
-## Error Handling
-
-This section will cover definitions and examples of common error codes encountered
-
-### Status codes
-
-We use standard HTTP status codes. The error codes you’ll most likely see are:
-
-| Code | Definition |
-| ---  |--- |
-| 200 | OK |
-| 201 | Created |
-| 400 | Bad Request |
-| 403 | Forbidden |
-| 408 | Request Timeout |
-| 412 | Precondition Failed |
-| 422 | Unprocessable Entity |
-| 500 | Internal Service Error|
-
-Please refer to [MDN documentation on status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
-
-### Examples
-
-Response 400
-
-```json
-{
-    "timestamp": "2024-09-30T22:01:35.725+0000",
-    "status": 400,
-    "error": "Bad Request",
-    "message": "JSON parse error: Unexpected character ('k' (code 107)): was expecting double-quote to start field name; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('k' (code 107)): was expecting double-quote to start field name\n at [Source: (PushbackInputStream); line: 2, column: 2]",
-    "path": "/api/v3/report/by-campaign"
-}
-```
-
-Response 403
-
-```json
-{
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "Forbidden!"
-        }
-    ]
-}
-```
-
-Response 422 Sample (report download)
-
-```json
-{
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "Please select columns for report download",
-            "field": "columns"
-        }
-    ]
-}
-```
-
-Response 500
-
-```json
-{
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "server encountered an error !"
-        }
-    ]
-}
-```
+</div></div>
