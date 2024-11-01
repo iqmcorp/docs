@@ -35,7 +35,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string  | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string  | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string | Workspace URL |
 
 \
