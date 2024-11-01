@@ -3,232 +3,232 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug', '576'),
+    path: '/docs/__docusaurus/debug',
+    component: ComponentCreator('/docs/__docusaurus/debug', 'e58'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/config',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/config', '6c0'),
+    path: '/docs/__docusaurus/debug/config',
+    component: ComponentCreator('/docs/__docusaurus/debug/config', '2ce'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/content',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/content', '780'),
+    path: '/docs/__docusaurus/debug/content',
+    component: ComponentCreator('/docs/__docusaurus/debug/content', '11b'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/globalData',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/globalData', '84f'),
+    path: '/docs/__docusaurus/debug/globalData',
+    component: ComponentCreator('/docs/__docusaurus/debug/globalData', 'f13'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/metadata',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/metadata', 'aed'),
+    path: '/docs/__docusaurus/debug/metadata',
+    component: ComponentCreator('/docs/__docusaurus/debug/metadata', 'bff'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/registry',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/registry', '58f'),
+    path: '/docs/__docusaurus/debug/registry',
+    component: ComponentCreator('/docs/__docusaurus/debug/registry', '830'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/__docusaurus/debug/routes',
-    component: ComponentCreator('/Auth-Docusaurus-Test/__docusaurus/debug/routes', '8ab'),
+    path: '/docs/__docusaurus/debug/routes',
+    component: ComponentCreator('/docs/__docusaurus/debug/routes', '13e'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog', 'dde'),
+    path: '/docs/blog',
+    component: ComponentCreator('/docs/blog', 'e9e'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/archive',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/archive', '888'),
+    path: '/docs/blog/archive',
+    component: ComponentCreator('/docs/blog/archive', '5ff'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/authors',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/authors', 'ae8'),
+    path: '/docs/blog/authors',
+    component: ComponentCreator('/docs/blog/authors', '164'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/authors/all-sebastien-lorber-articles',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/authors/all-sebastien-lorber-articles', 'cc0'),
+    path: '/docs/blog/authors/all-sebastien-lorber-articles',
+    component: ComponentCreator('/docs/blog/authors/all-sebastien-lorber-articles', '5f1'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/authors/yangshun',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/authors/yangshun', '6a9'),
+    path: '/docs/blog/authors/yangshun',
+    component: ComponentCreator('/docs/blog/authors/yangshun', 'f7a'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/first-blog-post',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/first-blog-post', '730'),
+    path: '/docs/blog/first-blog-post',
+    component: ComponentCreator('/docs/blog/first-blog-post', '451'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/long-blog-post',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/long-blog-post', '767'),
+    path: '/docs/blog/long-blog-post',
+    component: ComponentCreator('/docs/blog/long-blog-post', '135'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/mdx-blog-post',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/mdx-blog-post', '498'),
+    path: '/docs/blog/mdx-blog-post',
+    component: ComponentCreator('/docs/blog/mdx-blog-post', '369'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/tags',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/tags', '25f'),
+    path: '/docs/blog/tags',
+    component: ComponentCreator('/docs/blog/tags', 'a37'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/tags/docusaurus',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/tags/docusaurus', 'ca5'),
+    path: '/docs/blog/tags/docusaurus',
+    component: ComponentCreator('/docs/blog/tags/docusaurus', '987'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/tags/facebook',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/tags/facebook', '6cb'),
+    path: '/docs/blog/tags/facebook',
+    component: ComponentCreator('/docs/blog/tags/facebook', 'a94'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/tags/hello',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/tags/hello', '45f'),
+    path: '/docs/blog/tags/hello',
+    component: ComponentCreator('/docs/blog/tags/hello', '941'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/tags/hola',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/tags/hola', 'c4b'),
+    path: '/docs/blog/tags/hola',
+    component: ComponentCreator('/docs/blog/tags/hola', 'ae4'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/blog/welcome',
-    component: ComponentCreator('/Auth-Docusaurus-Test/blog/welcome', 'c2c'),
+    path: '/docs/blog/welcome',
+    component: ComponentCreator('/docs/blog/welcome', 'f3f'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/markdown-page',
-    component: ComponentCreator('/Auth-Docusaurus-Test/markdown-page', 'c78'),
+    path: '/docs/markdown-page',
+    component: ComponentCreator('/docs/markdown-page', 'c78'),
     exact: true
   },
   {
-    path: '/Auth-Docusaurus-Test/docs',
-    component: ComponentCreator('/Auth-Docusaurus-Test/docs', '909'),
+    path: '/docs/docs',
+    component: ComponentCreator('/docs/docs', '0ca'),
     routes: [
       {
-        path: '/Auth-Docusaurus-Test/docs',
-        component: ComponentCreator('/Auth-Docusaurus-Test/docs', 'c2e'),
+        path: '/docs/docs',
+        component: ComponentCreator('/docs/docs', '8af'),
         routes: [
           {
-            path: '/Auth-Docusaurus-Test/docs',
-            component: ComponentCreator('/Auth-Docusaurus-Test/docs', 'd75'),
+            path: '/docs/docs',
+            component: ComponentCreator('/docs/docs', '19f'),
             routes: [
               {
-                path: '/Auth-Docusaurus-Test/docs/Authorization-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Authorization-Guide', 'cef'),
+                path: '/docs/docs/Authorization-Guide',
+                component: ComponentCreator('/docs/docs/Authorization-Guide', '29f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Assets-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Assets-API-Guidelines', '475'),
+                path: '/docs/docs/Guidelines/Assets-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Assets-API-Guidelines', 'aba'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Bid-Model-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Bid-Model-API-Guidelines', '95d'),
+                path: '/docs/docs/Guidelines/Bid-Model-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Bid-Model-API-Guidelines', 'ac5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Campaign-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Campaign-API-Guidelines', '74e'),
+                path: '/docs/docs/Guidelines/Campaign-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Campaign-API-Guidelines', 'db7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Conversion-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Conversion-API-Guidelines', '419'),
+                path: '/docs/docs/Guidelines/Conversion-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Conversion-API-Guidelines', '81e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Finance-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Finance-Guidelines', '06c'),
+                path: '/docs/docs/Guidelines/Finance-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Finance-Guidelines', 'a74'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Insights-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Insights-API-Guidelines', '6cb'),
+                path: '/docs/docs/Guidelines/Insights-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Insights-API-Guidelines', '4fd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Inventory-API-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Inventory-API-Guide', 'ca2'),
+                path: '/docs/docs/Guidelines/Inventory-API-Guide',
+                component: ComponentCreator('/docs/docs/Guidelines/Inventory-API-Guide', '3a4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Master-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Master-API-Guidelines', 'af5'),
+                path: '/docs/docs/Guidelines/Master-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Master-API-Guidelines', 'c0e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Reports-API-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Reports-API-Guidelines', '669'),
+                path: '/docs/docs/Guidelines/Reports-API-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Reports-API-Guidelines', 'b8e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/User-Profile-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/User-Profile-Guidelines', '45c'),
+                path: '/docs/docs/Guidelines/User-Profile-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/User-Profile-Guidelines', '81c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Guidelines/Workspace-Guidelines',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Guidelines/Workspace-Guidelines', '92c'),
+                path: '/docs/docs/Guidelines/Workspace-Guidelines',
+                component: ComponentCreator('/docs/docs/Guidelines/Workspace-Guidelines', '33e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/intro',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/intro', 'dac'),
+                path: '/docs/docs/intro',
+                component: ComponentCreator('/docs/docs/intro', '2ea'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Quickstart Guides/Authentication-Quickstart-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Quickstart Guides/Authentication-Quickstart-Guide', '0c3'),
+                path: '/docs/docs/Quickstart Guides/Authentication-Quickstart-Guide',
+                component: ComponentCreator('/docs/docs/Quickstart Guides/Authentication-Quickstart-Guide', '5fb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide', 'c45'),
+                path: '/docs/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide', '7a1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Quickstart Guides/Reporting-API-Quickstart-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Quickstart Guides/Reporting-API-Quickstart-Guide', 'b4a'),
+                path: '/docs/docs/Quickstart Guides/Reporting-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/docs/Quickstart Guides/Reporting-API-Quickstart-Guide', 'd82'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide', '905'),
+                path: '/docs/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide', 'd14'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/Auth-Docusaurus-Test/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide',
-                component: ComponentCreator('/Auth-Docusaurus-Test/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide', 'b7a'),
+                path: '/docs/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide', '123'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               }
@@ -239,8 +239,8 @@ export default [
     ]
   },
   {
-    path: '/Auth-Docusaurus-Test/',
-    component: ComponentCreator('/Auth-Docusaurus-Test/', '38b'),
+    path: '/docs/',
+    component: ComponentCreator('/docs/', '6fa'),
     exact: true
   },
   {
