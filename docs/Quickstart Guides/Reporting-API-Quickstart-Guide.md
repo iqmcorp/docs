@@ -41,7 +41,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Property | Type | Description |
 | ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-HOST` | string [required] | Workspace URL |
 
 \
@@ -247,7 +247,7 @@ Available metrics are:
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
@@ -413,7 +413,7 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 | Property | Type| Description |
 | ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)|
+| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)|
 | `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
 
 \
