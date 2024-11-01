@@ -8,7 +8,7 @@ export default {
   "tagline": "Dinosaurs are cool",
   "favicon": "img/favicon.ico",
   "url": "https://conjaytech.github.io",
-  "baseUrl": "/Auth-Docusaurus-Test/",
+  "baseUrl": "/docs/",
   "organizationName": "facebook",
   "projectName": "docusaurus",
   "onBrokenLinks": "throw",
