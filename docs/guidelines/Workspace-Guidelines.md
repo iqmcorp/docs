@@ -1,4 +1,4 @@
-# Organization, Workspace, And Customer Guidelines
+# Workspace API
 
 This page covers the common methods and endpoints for managing **Organizations**, **Workspaces**, **Customers** and **Advertisers**. **Organizations** are top-level descriptions of a company's profile, including its name, website, and location details. **Workspaces** operate within **organizations** and can be **Customers** or **Advertisers**. **Users** operate within **Workspaces** and can be assigned **Customers**.
 
@@ -6,10 +6,16 @@ This page covers the common methods and endpoints for managing **Organizations**
 
 Use the following header parameters for all requests:
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+<div class="container">
+  <div class="child3">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div></div>
+
 
 ## Organization Details
 
@@ -17,49 +23,55 @@ An **organization** is any company that places advertisements. An organization i
 
 ### Organization Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `organizationName` | string | Organization Name |
-| `email` | string | Organization email | 
-| `website` | string | Organization website |
-| `contactNumber` | string | Organization phone number | 
-| `address` | string | Organization address | 
-| `city` | string | Organization city location |
-| `state` | integer | State ID of organization location |
-| `country` | integer | Country ID or organization location |
-| `zipcode` | string | Zipcode
-| `isAvatarUrl` | boolean | Indicates whether organization has uploaded a logo. If `true`, a default avataor logo is generated when one hasn't been uploaded |
-| `organizationLogo` | string | Logo image file | 
-| `industry` | string | Industry category <br />See [static details list](#industries) for supported values<br /> |
-| `companySize` | integer | Number of employees at organization <br />See [static details list](#company-size) for supported values<br /> |
-| `companyId` | string | Company ID |
-| `taxId` | string | Tax ID | 
-| `currency` | string | Currency type |
-| `dateFormat` | string | Date formate, e.g. "MM/DD/YYYY" |
-| `description` | string | Description of organization |
-| `expertize` | string | <br />See [static details list](#organization-expertise) for supported values<br />
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ----| --- |
+| `organizationName` <br /><span class="type-text">string</span> | Organization Name |
+| `email` <br /><span class="type-text">string</span> | Organization email | 
+| `website` <br /><span class="type-text">string</span> | Organization website |
+| `contactNumber` <br /><span class="type-text">string</span> | Organization phone number | 
+| `address` <br /><span class="type-text">string</span> | Organization address | 
+| `city` <br /><span class="type-text">string</span> | Organization city location |
+| `state` <br /><span class="type-text">integer</span> | State ID of organization location |
+| `country` <br /><span class="type-text">integer</span> | Country ID or organization location |
+| `zipcode` <br /><span class="type-text">string</span> | Zipcode
+| `isAvatarUrl` <br /><span class="type-text">boolean</span> | Indicates whether organization has uploaded a logo. If `true`, a default avataor logo is generated when one hasn't been uploaded |
+| `organizationLogo` <br /><span class="type-text">string</span> | Logo image file | 
+| `industry` <br /><span class="type-text">string</span> | Industry category <br />See [static details list](#industries) for supported values<br /> |
+| `companySize` <br /><span class="type-text">integer</span> | Number of employees at organization <br />See [static details list](#company-size) for supported values<br /> |
+| `companyId` <br /><span class="type-text">string</span> | Company ID |
+| `taxId` <br /><span class="type-text">string</span> | Tax ID | 
+| `currency` <br /><span class="type-text">string</span> | Currency type |
+| `dateFormat` <br /><span class="type-text">string</span> | Date formate, e.g. "MM/DD/YYYY" |
+| `description` <br /><span class="type-text">string</span> | Description of organization |
+| `expertize` <br /><span class="type-text">string</span> | <br />See [static details list](#organization-expertise) for supported values
+
+</div></div>
+
+---
 
 ### Get List of Allowed Organizations
 
-Get a list of allowed organizations by customer type with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/user/allowed-organizations</span>
 
-* `GET` /api/v3/ua/user/allowed-organizations
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of allowed organizations by customer type.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerType` | string | Comma separated customer type IDs<br />See [static details list](#customer-type) for supported values<br /> |
-| `searchField` | string | Search results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `lastActive` <br />Supported values: `organizationName`, `title`, `dateOfJoining`, `lastActive`<br /> |
+| Query Parameters |  |
+| ---- | --- |
+| `customerType` <br /><span class="type-text">string</span> | Comma separated customer type IDs<br />See [static details list](#customer-type) for supported values<br /> |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `lastActive` <br />Supported values: `organizationName`, `title`, `dateOfJoining`, `lastActive`<br /> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -91,16 +103,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Organization Details
 
-Get the profile information of an organization for logged in organization with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/organization/view-profile</span>
 
-* `GET` /api/v3/ua/organization/view-profile
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+Get the profile information of an organization for logged in organization.
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -128,23 +146,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Check for Available Domain
 
-Check if a workspace domain is available with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/organization/available-domain</span>
 
-* `GET` /api/v3/ua/organization/available-domain
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Check if a workspace domain is available.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `workspaceSubDomain` | string | Name of domain to check |
+| Query Parameters |  |
+| ---- | --- |
+| `workspaceSubDomain` <br /><span class="type-text">string</span> | Name of domain to check |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -153,22 +174,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Organization Management
 
 ### Update Organization Profile
 
-Update organization profile details with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/organization/update-profile</span>
 
-* `PATCH` /api/v3/ua/organization/update-profile
+<div class="container">
+  <div class="child1">
 
-**Request Body Schema: application/json**
+Update organization profile details.
 
 Refer to the [Organization Resource Properties](#organization-resource-properties) for schema. Include any properties to update in request body.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "organizationName": "New Org Name",
     "email": "neworgemail@org.com",
@@ -176,9 +201,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -188,9 +211,13 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Update Organization Email
 
-* `PATCH` /api/v3/ua/organization/update-email
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/organization/update-email</span>
 
 ## Workspace Management
 
@@ -198,23 +225,22 @@ A **workspace** provides DSP service to another company, meaning it can have 'ch
 
 ### Create a Workspace
 
-Create a workspace by providing an invitation hash, workspace domain, and creator details with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/workspace</span>
 
-* `POST` /api/v3/ua/workspace
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Create a workspace by providing an invitation hash, workspace domain, and creator details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `domain` | string | Domain name of workspace |
-| `creatorEmail` | string | Creator email |
-| `inviteHash` | string | Invite Hash |
+| Request Schema |  |
+| ----  | --- |
+| `domain` <br /><span class="type-text">string</span> | Domain name of workspace |
+| `creatorEmail` <br /><span class="type-text">string</span> | Creator email |
+| `inviteHash` <br /><span class="type-text">string</span>| Invite Hash |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "domain": "app",
     "creatorEmail": "kartik.g@iqm.com",
@@ -222,49 +248,49 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "message": "Workspace created successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Update Workspace Domain
 
-Update a workspace domain with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/organization/workspace-domain</span>
 
-* `PATCH` /api/v3/ua/organization/workspace-domain
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Update a workspace domain.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `workspaceSubDomain` | string | New workspace domain name |
+| Request Schema |  |
+| ---- | --- |
+| `workspaceSubDomain` <br /><span class="type-text">string</span> | New workspace domain name |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "workspaceSubDomain": "jptest"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Workspace domain update successfully."
 }
 ```
 
-Response 422
+<details>
+<summary>More Responses</summary>
 
-```json
+```json title="Response 422"
 {
     "success": false,
     "errorObjects": [
@@ -275,55 +301,61 @@ Response 422
 }
 ```
 
+</details>
+
+</div></div>
+
+---
+
 ### Validate Workspace Domain
 
-Validate a workspace for a given email with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/workspace/validate</span>
 
-* `POST` /api/v3/ua/user/workspace/validate
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Validate a workspace for a given email.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `email` | string | Email |
-| `workspaceDomain` | string | Workspace domain name |
+| Request Schema |  |
+| ----| --- |
+| `email` <br /><span class="type-text">string</span> | Email |
+| `workspaceDomain` <br /><span class="type-text">string</span> | Workspace domain name |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "email": "user@ihp.com",
     "workspaceDomain": "app.stage.inhousebuying.com"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Workspaces
 
-Get a list of workspaces with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/workspaces/list</span>
 
-* `GET` /api/v3/ua/customers/workspaces/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of workspaces.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Filter results by keyword|
+| Query Parameters |  |
+| ----| --- |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by keyword|
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -349,69 +381,79 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Customer Details
 
 A **customer** is an **advertiser** or **workspace** in a financial agreement with another workspace. For any given workspace, an advertiser is a customer. This section covers the methods and endpoints for getting lists and details of customers.
 
 ### Customer Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `isUserAllowed` | boolean | Specifies if the organization is permitted (`true`) to log in for the currently logged-in user |
-| `isWorkspaceOwner` | boolean | Specifies if the organization owns the workspace; meaning, the org owner and the current org are the same |
-| `owId` | integer | Organization Workspace ID |
-| `organizationName` | string | Organization Name |
-| `workspaceName` | string | Workspace Name |
-| `workspaceDomain` | string | Worskpace Domain |
-| `owStatus` | string | Organization Worskpace status type |
-| `owStatusId` | integer | OW status type ID <br />See [static details list](#organization-workspace-status) for supported values<br /> |
-| `createdAt` | string | Creation timestamp |
-| `modifiedAt` | string | Modifcation timestamp |
-| `parentOrganizationName` | string | Parent organization name |
-| `tags` | array of strings | Customer type tags <br />See [static details list](#customer-type) for supported values<br /> |
-| `customersCount` | integer | Customer count |
-| `balance` | integer | Budget balance |
-| `contactPersonName` | string | Name of contact |
-| `contactPersonEmail` | string | Email of contact |
-| `approvedBy` | string | Name |
-| `approvedByEmail` | string | Email |
-| `logoUrl` | string | Logo URL
-| `activeCampaignsCount` | integer | Number of active campaigns associated with customer |
-| `industry` | integer | Industry type <br />See [static details list](#industries) for supported values<br /> |
-| `companySize` | integer | Company size <br />See [static details list](#company-size) for supported values<br /> |
-| `mediaBudget` | integer | Media Budget <br />See [static details list](#media-budget) for supported values<br /> |
-| `budgetSpent` | integer | Budget Spent |
-| `showFinance` | boolean | Show financial information |
-| `workspaceId` | integer | Workspace ID |
-| `lastAccess` | integer | Records the last time the org was accessed |
-| `verticalTypeId` | integer | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
-| `onHoldReason` | string | Description of reason why Customer is in 'on-hold' status |
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ---- | --- |
+| `isUserAllowed` <br /><span class="type-text">boolean</span> | Specifies if the organization is permitted (`true`) to log in for the currently logged-in user |
+| `isWorkspaceOwner` <br /><span class="type-text">boolean</span> | Specifies if the organization owns the workspace; meaning, the org owner and the current org are the same |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `organizationName` <br /><span class="type-text">string</span> | Organization Name |
+| `workspaceName` <br /><span class="type-text">string</span> | Workspace Name |
+| `workspaceDomain` <br /><span class="type-text">string</span> | Worskpace Domain |
+| `owStatus` <br /><span class="type-text">string</span> | Organization Worskpace status type |
+| `owStatusId` <br /><span class="type-text">integer</span>| OW status type ID <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `createdAt` <br /><span class="type-text">string</span> | Creation timestamp |
+| `modifiedAt` <br /><span class="type-text">string</span> | Modifcation timestamp |
+| `parentOrganizationName` <br /><span class="type-text">string</span>| Parent organization name |
+| `tags` <br /><span class="type-text">array of strings</span> | Customer type tags <br />See [static details list](#customer-type) for supported values<br /> |
+| `customersCount` <br /><span class="type-text">integer</span> | Customer count |
+| `balance` <br /><span class="type-text">integer</span> | Budget balance |
+| `contactPersonName` <br /><span class="type-text">string</span> | Name of contact |
+| `contactPersonEmail` <br /><span class="type-text">string</span> | Email of contact |
+| `approvedBy` <br /><span class="type-text">string</span> | Name |
+| `approvedByEmail` <br /><span class="type-text">string</span> | Email |
+| `logoUrl` <br /><span class="type-text">string</span> | Logo URL
+| `activeCampaignsCount` <br /><span class="type-text">integer</span>| Number of active campaigns associated with customer |
+| `industry` <br /><span class="type-text">integer</span> | Industry type <br />See [static details list](#industries) for supported values<br /> |
+| `companySize` <br /><span class="type-text">integer</span> | Company size <br />See [static details list](#company-size) for supported values<br /> |
+| `mediaBudget` <br /><span class="type-text">integer</span> | Media Budget <br />See [static details list](#media-budget) for supported values<br /> |
+| `budgetSpent` <br /><span class="type-text">integer</span> | Budget Spent |
+| `showFinance` <br /><span class="type-text">boolean</span> | Show financial information |
+| `workspaceId` <br /><span class="type-text">integer</span> | Workspace ID |
+| `lastAccess` <br /><span class="type-text">integer</span> | Records the last time the org was accessed |
+| `verticalTypeId` <br /><span class="type-text">integer</span> | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
+| `onHoldReason` <br /><span class="type-text">string</span>| Description of reason why Customer is in 'on-hold' status |
+
+</div></div>
+
+---
 
 ### Get Customer Details
 
-Get a list of customers and their details with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/list</span>
 
-* `GET` /api/v3/ua/customers/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of customers and their details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Comma separated Organization Workspace IDs whose customers need to be retrieved <br />If `owId` of advertiser is passed, endpoint will return advertiser details <br />If `owId` of workspace is passed, endpoint will return workspace and its advertisers details |
-| `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
-| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
-| `customerType` | string | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
-| `searchField` | string | Filters results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-runningCampaigns` |
-| `customerAccountType` | string | Customer account type ID <br />See [static details list](#customer-account-type) for supported values<br /> |
+| Query Parameters |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span>| Comma separated Organization Workspace IDs whose customers need to be retrieved <br />If `owId` of advertiser is passed, endpoint will return advertiser details <br />If `owId` of workspace is passed, endpoint will return workspace and its advertisers details |
+| `childOwIds` <br /><span class="type-text">string</span> | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
+| `status` <br /><span class="type-text">string</span> | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `customerType` <br /><span class="type-text">string</span> | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
+| `searchField` <br /><span class="type-text">string</span>| Filters results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-runningCampaigns` |
+| `customerAccountType` <br /><span class="type-text">string</span> | Customer account type ID <br />See [static details list](#customer-account-type) for supported values<br /> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -491,26 +533,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Get Basic Customer Details
 
-* `POST` /api/v3/ua/customer/basic/list
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/basic/list</span>
 
-\
-**Request Body Schema: appication/json**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `owIds` | array of integers | Organization Workspace IDs |
-| `owStatusIds` | array of integers | Filter by OW Status type IDs <br />See [static details list](#organization-workspace-status) for supported values<br />|
-| `provideRunningCampaigns` | boolean | Get running campaign count (`true`), default: `false` |
+| Request Schema  |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `owStatusIds` <br /><span class="type-text">array of integers</span> | Filter by OW Status type IDs <br />See [static details list](#organization-workspace-status) for supported values<br />|
+| `provideRunningCampaigns` <br /><span class="type-text">boolean</span> | Get running campaign count (`true`), default: `false` |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owStatusIds": [
         1,
@@ -526,9 +571,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -551,26 +594,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Multi-level Customers List
 
-* `GET` /api/v3/ua/customers/list/multi-level
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/list/multi-level</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Comma separated OW IDs of organizations whose customers need to be retrieved |
-| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
-| `searchField` | string | Filters results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `+superParentOrganizationId` |
+| Query Parameters  |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Comma separated OW IDs of organizations whose customers need to be retrieved |
+| `status` <br /><span class="type-text">string</span> | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `searchField` <br /><span class="type-text">string</span> | Filters results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span>| Sorts by ascending (`+`) or descending (`-`), default: `+superParentOrganizationId` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -660,30 +706,33 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Immediate Customers List
 
-Get only immediate customers of provided OW IDs (if `owId` is not provided then the OW ID in the header will be passed) with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/immediate/customers/list</span>
 
-* `GET` /api/v3/ua/immediate/customers/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get only immediate customers of provided OW IDs (if `owId` is not provided then the OW ID in the header will be passed).
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Comma separated Organization Workspace IDs whose immediate customers need to be retrieved |
-| `childOwIds` | string | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
-| `status` | string | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
-| `customerType` | string | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
-| `searchField` | string | Filters results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: |
+| Query Parameters |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Comma separated Organization Workspace IDs whose immediate customers need to be retrieved |
+| `childOwIds` <br /><span class="type-text">string</span> | Comma separated OW IDs of organization which will only be provided in response (to filter second level customers only) |
+| `status` <br /><span class="type-text">string</span> | Comma separated `owId` status IDs <br />See [static details list](#organization-workspace-status) for supported values<br /> |
+| `customerType` <br /><span class="type-text">string</span> | Comma separated customer type IDs <br />See [static details list](#customer-type) for supported values<br /> |
+| `searchField` <br /><span class="type-text">string</span> | Filters results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -716,39 +765,57 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Customer Operations Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `email` | string | Email
-| `name` | string | Customer name |
-| `password` | string | Customer password |
-| `onwerUserName` | string | Customer owner
-| `verticalId` | integer | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
-| `logoUrl` | string | Logo URL |
-| `customerOperationDetails` | object | (workspace only) contains all following properties |
-| `customerTypeId` | integer | Customer type ID <br />See [static details list](#customer-type) for supported values<br /> |
-| `customerPaymentTypeId` | integer | Customer payment type ID <br />See [static details list](#customer-payment-type) for supported values<br /> |
-| `countryId` | integer | Country ID |
-| `adOpsAssigneeUserIds` | array of integers | User IDs assigned by the IQM AdOps Team
-| `sellerAssigneeUserIds` | array of integers | User IDs assigned by the client/seller team
-| `labelIds` | array of integers | Label ID
+<div class="container">
+  <div class="child3">
+
+| Attributes |  |
+| ----| --- |
+| `email` <br /><span class="type-text">string</span> | Email
+| `name` <br /><span class="type-text">string</span> | Customer name |
+| `password` <br /><span class="type-text">string</span> | Customer password |
+| `onwerUserName` <br /><span class="type-text">string</span> | Customer owner
+| `verticalId` <br /><span class="type-text">integer</span> | Vertical type ID <br />See [static details list](#verticals) for supported values<br /> |
+| `logoUrl` <br /><span class="type-text">string</span>| Logo URL |
+| `customerOperationDetails`  <br /><span class="type-text">object</span> | (workspace only) contains all following properties |
+
+<Details>
+<summary><span class="code-text">customerOperationDetails</span> properties</summary>
+
+| Attributes | |
+| --- | ---|
+| `customerTypeId` <br /><span class="type-text">integer</span> | Customer type ID <br />See [static details list](#customer-type) for supported values<br /> |
+| `customerPaymentTypeId` <br /><span class="type-text">integer</span> | Customer payment type ID <br />See [static details list](#customer-payment-type) for supported values<br /> |
+| `countryId` <br /><span class="type-text">integer</span> | Country ID |
+| `adOpsAssigneeUserIds` <br /><span class="type-text">array of integers</span> | User IDs assigned by the IQM AdOps Team
+| `sellerAssigneeUserIds` <br /><span class="type-text">array of integers</span> | User IDs assigned by the client/seller team
+| `labelIds` <br /><span class="type-text">array of integers</span> | Label ID
+
+</details>
+
+</div></div>
+
+---
 
 ### Get Customer Operations Details
 
-* `GET` `/api/v3/ua/customer-operations/details/{owId}`
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customer-operations/details/{owId}</span>
 
-\
-**Path Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
+| Path Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -781,26 +848,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Customer Operations Label List
 
-Get a list of labels for customer operations with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customer-operations/label/list</span>
 
-* `GET` /api/v3/ua/customer-operations/label/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of labels for customer operations.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `searchField` | string | Search results by keyword |
-| `noOfEntries` | integer | Maximum number of entries returned, default: `20` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-id` <br />Supported values: `id`, `name`, `startTime`, `endTime`, `totalBudget`<br /> |
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-id` <br />Supported values: `id`, `name`, `startTime`, `endTime`, `totalBudget`<br /> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -820,23 +890,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Count of Customers by Status
 
-Get a count of customers by status and OW ID with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/count</span>
 
-* `GET` /api/v3/ua/customers/count
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a count of customers by status and OW ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Filter results by comma separated OW IDs |
+| Query Parameters|  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Filter results by comma separated OW IDs |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -879,26 +952,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Users for Selected Customer
 
-Get list of users for the given customer (organization) with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/users/list</span>
 
-* `GET` /api/v3/ua/customers/users/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get list of users for the given customer (organization).
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | string | OW ID of Customer for which user list will be retrieved |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-displayName` |
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">string</span> | OW ID of Customer for which user list will be retrieved |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span>| Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-displayName` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -931,24 +1007,27 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of User Assigned Customers
 
-* `GET` /api/v3/ua/user/assigned-customers
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/user/assigned-customers</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `uowId` | string | Customers assigned to user Organization Workspace ID |
-| `limit` | integer | Maximum number of entries returned, default: `2` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `createdAt`, `organizationName`<br /> |
+| Query Parameters|  |
+| ----  | --- |
+| `uowId` <br /><span class="type-text">string</span> | Customers assigned to user Organization Workspace ID |
+| `limit`<br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `2` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `createdAt`, `organizationName`<br /> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -974,25 +1053,28 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Get User's Remaining Customers
 
-* `GET` /api/v3/ua/user/remaining-customers
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/user/remaining-customers</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `uowId` | string | Customers assigned to user Organization Workspace ID |
-| `owIds` | string | Organization Workspace IDs |
-| `limit` | integer | Maximum number of entries returned, default: `2` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `contactPersonName`, `organizationName`<br /> |
+| Query Parameters |  |
+| ---- | --- |
+| `uowId` <br /><span class="type-text">string</span> | Customers assigned to user Organization Workspace ID |
+| `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `2` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span>| Sorts by ascending (`+`) or descending (`-`)<br />Supported values: `contactPersonName`, `organizationName`<br /> |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1024,26 +1106,29 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Customer's Allowed Applications
 
-Get a list of a customer's allowed applications along with the allowed user's list with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/applications/list</span>
 
-* `GET` /api/v3/ua/customers/applications/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of a customer's allowed applications along with the allowed user's list.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | string | OW ID of Customer for which application list will be retrieved |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
-| `sortBy` | string | Sorts by ascending (`+`) or descending (`-`), default: `-appName` |
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">string</span>| OW ID of Customer for which application list will be retrieved |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span>| Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-appName` |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1103,21 +1188,24 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Get List of Remaining Apps for Customer
 
-* `GET` /api/v3/ua/customers/remaining-applications/list
+<span class="badge badge--primary">GET</span>  <span class="path-text">/api/v3/ua/customers/remaining-applications/list</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | string | OW ID of Customer for which application list will be retrieved |
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">string</span> | OW ID of Customer for which application list will be retrieved |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1142,23 +1230,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get List of Advertisers for Customer
 
-Get a list of advertisers for a given customer with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customers/advertisers/list</span>
 
-* `GET` /api/v3/ua/customers/advertisers/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of advertisers for a given customer.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | string | OW ID of Customer for which advertiser list will be retrieved |
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">string</span> | OW ID of Customer for which advertiser list will be retrieved |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1182,23 +1273,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Get Customer Config Details
 
-Get customer configuration details with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customer/config/{customerOwId}</span>
 
-* `GET` `/api/v3/ua/customer/config/{customerOwId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Get customer configuration details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerOwId` | integer | Customer Organization Workspace ID |
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1208,23 +1302,26 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Customer Management
 
 ### Invite Customer to Platform
 
-Invite a customer to the platform (as workspace or advertiser) with the following endpoint: 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/invite</span>
 
-* `POST` /api/v3/ua/customer/invite
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Invite a customer to the platform (as workspace or advertiser).
 
 Refer to [Customer Operations Resource Property table](#customer-operations-resource-properties) for request schema.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 [
     {
         "email": "user1@iqm.com",
@@ -1251,9 +1348,7 @@ Request Sample
 ]
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1268,73 +1363,82 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 #### Resend Customer Invite
 
-* `POST` /api/v3/ua/customer/invite/re-send
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/invite/re-send</span>
 
-\
-Request Sample
+<div class="container">
+  <div class="child1">
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "inviteHash": "M7JoA2hYIUcKdVDM3g2KD/7+4FcOi9+slNVCW4NhEJgPMIxdvrj6ObD+gmCo6uikWqH6+LnHXnqXa7z2WVfw2FUI8ppsFOd8Ai1rnC0+gQiZWcgffqv2lggi0FZ3KiVERgAIFyJPIuV7fhi7AZksDka0VWHhNqHhX4R108psN73muXEaOrsf5uXlyQwzyYPpIeBq9eixIK+ytPQWBNMVKQBCczILN9l3MDheiiV94Jud1Tg/jrALspnF7KytcsfkgA5sQqWvK0K/LEl2TwAjMFl8fftW6d4xnwDb5Z0H"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Invitation resent successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Cancel Customer Invite
 
-* `DELETE` /api/v3/ua/customer/invite/cancel
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ua/customer/invite/cancel</span>
 
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | string | OW ID of Customer for which advertiser list will be retrieved |
+| Query Parameters  |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">string</span> | OW ID of Customer for which advertiser list will be retrieved |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Invitation cancelled successfully."
 }
 ```
 
+</div></div>
 
+---
 
 ### Customer Signup
 
-Sign up a new customer with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/signup</span>
 
-* `POST` /api/v3/ua/customer/signup
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Sign up a new customer.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `email` | string | Customer email |
-| `organizationName` | string | Customer organization name
-| `userName` | string | Customer user name |
-| `industry` | integer | Industry type ID |
-| `companySize` | integer | Company size type ID <br />See [static details list](#company-size) for supported values<br />|
-| `mediaBudget` | integer | <br />See [static details list](#media-budget) for supported values<br />
-| `budgetSpent` | integer | Budget spent |
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | Customer email |
+| `organizationName` <br /><span class="type-text">string</span> | Customer organization name
+| `userName` <br /><span class="type-text">string</span> | Customer user name |
+| `industry` <br /><span class="type-text">integer</span> | Industry type ID |
+| `companySize` <br /><span class="type-text">integer</span> | Company size type ID <br />See [static details list](#company-size) for supported values<br />|
+| `mediaBudget` <br /><span class="type-text">integer</span> | <br />See [static details list](#media-budget) for supported values<br />
+| `budgetSpent` <br /><span class="type-text">integer</span> | Budget spent |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "email": "email@domain.com",
     "organizationName": "Organisation Name",
@@ -1346,23 +1450,27 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Customer sign up requested successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Get Customer Signup Form
 
-* `GET` /api/v3/ua/customer/signup-form
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/customer/signup-form</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1409,135 +1517,150 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Assign Customer to User
 
-Assign a customer to an existing user with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3//ua/user/customer/assign</span>
 
-* `POST` /api/v3//ua/user/customer/assign
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Assign a customer to an existing user.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owIds` | string | Comma separated OW IDs to assign to user |
-| `uowIds` | string | Comma separated user IDs to assign customers to |
+| Request Schema  |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Comma separated OW IDs to assign to user |
+| `uowIds` <br /><span class="type-text">string</span>| Comma separated user IDs to assign customers to |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owIds": "170,58,167,900",
     "uowIds": "166"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Added Customer association to User successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Unassign Customer from User
 
-* `POST` /api/v3/ua/user/customer/remove
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/user/customer/remove
+</span>
 
-\
-Request Sample
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Request Sample"
 {
     "owIds": "58",
     "uowIds": "166"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Removed Customer association from User successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Approve Customer
 
-Approve a customer and add app access with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer/approve</span>
 
-* `PATCH` /api/v3/ua/customer/approve
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Approve a customer and add app access.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `appIds` | string | Comma separated application IDs to add or revoke customer access to |
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `appIds` <br /><span class="type-text">string</span> | Comma separated application IDs to add or revoke customer access to |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 134562,
     "appIds": "2,5,6,7,9,10,11"
 }
 ```
 
+</div></div>
+
+---
+
 #### Reject Customer
 
-\
-**Request Body Schema: appication/json**
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer/reject</span>
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `statusReason` | string | Description of rejection reason |
+<div class="container">
+  <div class="child1">
 
-\
-Request Sample
+| Request Schema  |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `statusReason` <br /><span class="type-text">string</span> | Description of rejection reason |
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
     "owId": 345216,
     "statusReason": "Customer didn't provide correct details"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Customer rejected successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Add or Revoke Customer App Access
 
-Add or revoke customer access to specified apps with the following endpoints:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/application/add</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/application/revoke</span>
 
-* `POST` /api/v3/ua/customer/application/add
-* `POST` /api/v3/ua/customer/application/revoke
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Add or revoke customer access to specified apps.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `appIds` | string | Comma separated application IDs to add or revoke customer access to |
-| `accessLevel` | string | Gives customer `full` or `limited` access to added applications |
+| Request Schema  |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `appIds`<br /><span class="type-text">string</span> | Comma separated application IDs to add or revoke customer access to |
+| `accessLevel` <br /><span class="type-text">string</span>| Gives customer `full` or `limited` access to added applications |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 2,
     "appIds": "1,2",
@@ -1545,98 +1668,101 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Application access added successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Put Customer On-Hold
 
-Change customer status (see [status list](#organization-workspace-status)) to 'on-hold' with provided reason with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer/hold</span>
 
-* `PATCH` /api/v3/ua/customer/hold
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Change customer status (see [status list](#organization-workspace-status)) to 'on-hold' with provided reason.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `owId` | integer | Organization Workspace ID |
-| `statusReason` | string | Description of reason to put customer on hold |
+| Request Schema |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `statusReason` <br /><span class="type-text">string</span>| Description of reason to put customer on hold |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "owId": 54,
     "statusReason": "Not paid payment for 3 months"
 }
 ```
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Customer status changed to on-hold successfully."
 }
 ```
 
+</div></div>
+
+---
+
 #### Re-Active Customer
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer/re-activate</span>
+
+<div class="container">
+  <div class="child1">
 
 Change customer status to 'active' with the following endpoint:
 
-* `PATCH` /api/v3/ua/customer/re-activate
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "owId": 54
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Customer status changed to active successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Add Label for Customer Operation
 
-Add a label for customer operations, which will be displayed in the labels list, with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer-operations/label/add</span>
 
-* `POST` /api/v3/ua/customer-operations/label/add
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: appication/json**
+Add a label for customer operations, which will be displayed in the labels list.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `labelName` | string | Label name |
+| Request Schema |  |
+| ---- | --- |
+| `labelName` <br /><span class="type-text">string</span> | Label name |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "labelName": "Test-case-high"
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1646,50 +1772,54 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Enable Bid Shading for Customer
 
-Enable bid shading for given customer OW ID with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer/enable-bid-shading/{customerOwId}</span>
 
-* `PATCH` `/api/v3/ua/customer/enable-bid-shading/{customerOwId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Enable bid shading for given customer OW ID.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `customerOwId` | integer | Customer Organization Workspace ID |
+| Path Parameters |  |
+| ----| --- |
+| `customerOwId` <br /><span class="type-text">integer</span>| Customer Organization Workspace ID |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Bid Shading Enabled Successfully"
 }
 ```
 
+</div></div>
+
+---
+
 ### Update Customer Operations Details
 
-Update customer operations details with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/customer-operations/{owId}</span>
 
-* `PATCH` `/api/v3/ua/customer-operations/{owId}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Update customer operations details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `OwId` | integer | Customer Organization Workspace ID |
-
-**Request Body Schema: appliation/json**
+| Path Parameters| Description |
+| --- | --- |
+| `OwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
 
 See the [Customer Operations Property table](#customer-operations-resource-properties) for request schema.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Schema"
 {
     "customerOperationsDetails": {
         "customerTypeId": 0,
@@ -1718,42 +1848,59 @@ Request Sample
 }
 ```
 
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Customer operation details updated successfully"
+  }
+}
+```
+
+</div></div>
+
+---
+
 ## Advertiser Management
 
 An advertiser is a customer of a workspace that places advertisements. This section covers the methods and endpoints for managing advertiser details. 
 
 ### Advertiser Resource Properties
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `advertiserName` | string | Advertiser name |
-| `website` | string | Advertiser website |
-| `chiefName` | string | Name of political person, with respect to the advertiser
-| `contactNumber` | string | Advertiser phone number |
-| `address` | string | Advertiser address |
-| `legalInfo` | string | Legal info for advertiser |
-| `links` | string | Associated links for advertiser |
+<div class="container">
+  <div class="child3">
+
+| Property |  |
+| ---- | --- |
+| `advertiserName` <br /><span class="type-text">string</span> | Advertiser name |
+| `website` <br /><span class="type-text">string</span> | Advertiser website |
+| `chiefName` <br /><span class="type-text">string</span>| Name of political person, with respect to the advertiser
+| `contactNumber` <br /><span class="type-text">string</span> | Advertiser phone number |
+| `address` <br /><span class="type-text">string</span> | Advertiser address |
+| `legalInfo` <br /><span class="type-text">string</span>| Legal info for advertiser |
+| `links` <br /><span class="type-text">string</span> | Associated links for advertiser |
+
+</div></div>
 
 ### Get List of Advertiser Profile and Details
 
-Get a list of advertiser profiles and their details with the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/organization/advertisers/list</span>
 
-* `GET` /api/v3/ua/organization/advertisers/list
+<div class="container">
+  <div class="child1">
 
-\
-**Query Parameters**
+Get a list of advertiser profiles and their details.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `advertiserIds` | string | Comma separated advertiser IDs |
-| `searchField` | string | Filters results by keyword |
-| `limit` | integer | Maximum number of entries returned, default: `10` |
-| `pageNo` | integer | Page number for the data, default: `1` |
+| Query Parameters |  |
+| ---- | --- |
+| `advertiserIds` <br /><span class="type-text">string</span> | Comma separated advertiser IDs |
+| `searchField` <br /><span class="type-text">string</span> | Filters results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
 
-\
-Response 200
+</div><divv class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -1823,21 +1970,24 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Add Advertiser Profile
 
-Add a new advertiser profile with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/organization/advertiser/add</span>
 
-* `POST` /api/v3/ua/organization/advertiser/add
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Add a new advertiser profile.
 
 Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for request schema.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
     "advertiserName": "Nikon 1",
     "website": "http://nikonindia.com",
@@ -1852,79 +2002,94 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Advertiser profile added successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Edit Advertiser Profile
 
-Edit advertiser profile details with the following endpoint:
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/ua/organization/advertiser/{advertiserId}</span>
 
-* `PATCH` /api/v3/ua/organization/advertiser/4
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Edit advertiser profile details.
+
+| Path Parameters |  |
+| ---- | --- |
+| `advertiserId` <br /><span class="type-text">integer</span> | Advertiser ID |
 
 Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for request schema.
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
   "advertiserName": "Nikon 2",
   "website": "http://nikonindia.com",
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": "Advertiser profile updated successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ### Delete Advertiser Profile
 
-Delete an advertiser profile with the following endpoint:
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ua/organization/advertiser/{advertiserId}</span>
 
-* `DELETE` /api/v3/ua/organization/advertiser/4
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+Delete an advertiser profile.
 
-Response 200
+| Path Parameters |  |
+| ---- | --- |
+| `advertiserId` <br /><span class="type-text">integer</span> | Advertiser ID |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": "Advertiser profile deleted successfully."
 }
 ```
 
+</div></div>
+
+---
+
 ## Static Details Lists
 
 ### Organization Workspace Status
 
-* `GET` /api/v3/ua/static/organization-workspace-status
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/organization-workspace-status</span>
 
-\
-**Query Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `view` | string | Represents the tab from which request was made in customer app <br />Supported values: `customer`, `approval`, `finance` <br />|
+| Query Parameters |  |
+| ----  | --- |
+| `view` <br /><span class="type-text">string</span> | Represents the tab from which request was made in customer app <br />Supported values: `customer`, `approval`, `finance` <br />|
 
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -1962,16 +2127,22 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Customer Type
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/customer-type</span>
+
+<div class="container">
+  <div class="child1">
 
 Identifies what kind of services customer has chosen. 
 
-* `GET` /api/v3/ua/static/customer-type
+</div><div class="child2">
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2009,14 +2180,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Customer Payment Type
 
-* `GET` /api/v3/ua/static/customer-payment-types
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/customer-payment-types</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -2040,14 +2217,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Customer Account Type
 
-* `GET` /api/v3/ua/static/customer-account-types
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/customer-account-types</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -2071,14 +2254,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Customer List Sortable Fields
 
-* `GET` /api/v3/ua/static/customer-list-sortable-field
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/customer-list-sortable-field</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2096,14 +2285,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Organization Expertise
 
-* `GET` /api/v3/ua/static/organization-expertize
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/organization-expertize</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2153,14 +2348,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Company Size
 
-* `GET` /api/v3/ua/static/company-size
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/company-size</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2210,14 +2411,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Industries
 
-* `GET` /api/v3/ua/static/industries
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/industries</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2262,14 +2469,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Media Budget
 
-* `GET` /api/v3/ua/static/media-budget
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/media-budget</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2313,14 +2526,20 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ### Verticals
 
-* `GET` /api/v3/ua/static/Verticals
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ua/static/Verticals</span>
 
-\
-Response 200
+<div class="container">
+  <div class="child1"></div>
 
-```json
+  <div class="child2">
+
+```json title="Response 200"
 {
     "success": true,
     "data": [
@@ -2348,3 +2567,5 @@ Response 200
     ]
 }
 ```
+
+</div></div>
