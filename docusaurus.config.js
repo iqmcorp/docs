@@ -116,7 +116,7 @@ const config = {
               },
               {
                 label: "API Guidelines",
-                to: "/docs/docs/intro",
+                to: "/",
               },
               {
                 label: "API Docs",
