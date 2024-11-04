@@ -1,5 +1,5 @@
 ---
-format: md
+title: Matched Audience Upload
 ---
 
 # Quickstart Guide: Matched Audience Upload
@@ -28,7 +28,7 @@ To upload Matched Audience, you must have the following:
 
 If you do not have any of the above, please follow the steps below:
 
-* See [Before You Begin](/docs/intro.md#before-you-begin) section to create an account and request a Client ID and Client Secret.
+* See [Before You Begin](/docs/#before-you-begin) section to create an account and request a Client ID and Client Secret.
 * File requirements for audience matching
   * CSV or XLSX file for audience matching with maximum 1GB or 5M records
   * Without Voter ID / Email / Phone / Address in the file
