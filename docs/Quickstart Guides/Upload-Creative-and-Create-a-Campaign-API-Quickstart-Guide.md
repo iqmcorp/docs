@@ -1,15 +1,14 @@
 # Quickstart Guide: Upload Creative and Create a Campaign
 
-IQM’s REST API enables you to interact with most of IQM’s offerings. 
+IQM’s REST API enables you to interact with most of IQM’s offerings.
 
 Use the following endpoints to start uploading your first Creative:
 
-* `POST` /api/v3/ua/login
-* `GET` /api/v3/master/creativeTypes
-* `POST` /api/v2/crt/add/image/banner/creative
-* `GET` `/api/v2/crt/creatives/details?creativeIds={creativeId}`
-* `POST` /api/v2/cmp/campaigns/add
-* `GET` `/api/v2/cmp/campaign/{campaignId}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/crt/creatives/details?creativeIds={creativeId}</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/add</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/{campaignId}</span>
 
 ## About IQM Campaign & Creative
 
@@ -60,29 +59,27 @@ This quick start will help you to create a Campaign and upload Creative.  At a m
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), a unique identifier for each organization. This ID will be used for any further API communications.
 
-* `POST` /api/v3/ua/login
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-\
-**Header Parameters**
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-HOST` | string [required] | Workspace URL |
+<div class="container">
+  <div class="child1">
 
-\
-**Request Body Schema: application/json**
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `grantType` | string [required] | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string [required] | Your user account email |
-| `password` | string [required] | Your user accout password |
+| Request Schema  |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Schema"
 {
    "grantType": "password",
    "email": "pratik.t+ihp@iqm.com",
@@ -90,9 +87,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
    "success": true,
    "data":
@@ -110,9 +105,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
    "success": false,
    "data":
@@ -131,9 +124,7 @@ Response 400
 }
 ```
 
-Response 403
-
-```json
+```json title="Response 403"
 {
    "success": false,
    "errorObjects":
@@ -146,27 +137,29 @@ Response 403
 ```
 </details>
 
-\
-For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
+</div></div>
+
+---
 
 ### Step 2: Request creative types
 
 To upload a creative, you must provide a creative type. Use the creative type list endpoint to request a full list of allowed creative types.
 
-* `GET` /api/v3/master/creativeTypes
+For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
 
-\
-**Header Parameters**
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
-```json
+</div><div class="child2">
+
+```json tite="Response 200"
 {
  "success": true,
  "data": [
@@ -207,9 +200,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 500
-
-```json
+```json title="Response 500"
 {
  "statusCode": 500,
  "responseObject": {
@@ -221,38 +212,35 @@ Response 500
 
 </details>
 
-\
-For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
+</div></div>
+
+---
 
 ### Step 3: Upload creative
 
 When uploading a creative, you can provide a file and creative parameters like tracking pixel and click URL
 
-* `POST` /api/v2/crt/add/image/banner/creative
-
-\
-**Header Parameters**
-
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
-| `content-type` | string [required] | Media type of the resource |
-
-\
-**Request Body Schema: application/x-www-form-urlencoded**
-
-| Property | Type | Definition |
-| ---- | ---- | --- |
-| `creativeFiles` | string [required] | File - image file as multipart form data |
-|  `creativeImageMetadata` | object [required] | (creativeImageMetadata) |
-
 Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
-\
-Request Sample (Form Data)
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
 
-```
+<div class="container">
+  <div class="child1">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+| `content-type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Media type of the resource |
+
+| Request Schema | |
+| ----| --- |
+| `creativeFiles` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | File - image file as multipart form data |
+|  `creativeImageMetadata` <br /><span class="type-text">object</span> <span class="required-text">required</span>  | (creativeImageMetadata) |
+
+</div><div class="child2">
+
+```application title="Request Sample (Form Data)"
 ------WebKitFormBoundaryyTwoz48E2hTuXZoX
 Content-Disposition: form-data; name="dspId"
 
@@ -295,9 +283,7 @@ x}¼=Þà×àËðûñ§ð7ðCø12ÁàJ#p    ùM}NÂ5Â a¨B4#º�
 J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅÝuc·×î¦jÝêê/?ó¾·ÇOkiMÙ^ìÞÜ½ÏöÅìëþ�þKC­VmIí·:A¬>¢þ|sCÃ~ýáFiãðÄ×úlo²nÚÓLm.9IShow more
 ```
 
-Response 201
-
-```json
+```json title="Response 201"
 {
  "statusCode": 201,
  "responseObject": {
@@ -307,6 +293,8 @@ Response 201
 }
 ```
 
+</div></div>
+
 For further information see the complete API Documentation:
 
 * [Add Image Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddImageCreative)
@@ -315,31 +303,31 @@ For further information see the complete API Documentation:
 
 * [Add HTML Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddHtmlCreative)
 
+---
+
 ### Step 4: Check the creative status
 
 To create a campaign, creative must be processed and approved, check for status updates using:
 
-* `GET` `/api/v2/crt/creatives/details?creativeIds={creativeId}`
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/crt/creatives/details?creativeIds={creativeId}</span>
 
-\
-**Path Parameters**
+For further information see the complete [Creative Details API Documentation](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid)
 
-| Property | Type | Definition |
-| --- | --- | --- |
-| `creative_id` | string [required] | Unique ID of Creative |
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+| Path Parameter  |  |
+| --- | --- |
+| `creative_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Unique ID of Creative |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Headers |  |
+| ----| --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
  "statusCode": 200,
  "responseObject": [
@@ -395,90 +383,89 @@ Response 200
 }
 ```
 
-For further information see the complete [Creative Details API Documentation](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid)
+</div></div>
+
+---
 
 ### Step 5: Create a Campaign
 
 To create a campaign, specify the creative and targeting parameters using the API: 
 
-* `POST` /api/v2/cmp/campaigns/add
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/add</span>
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | integer [required] | Organization Worskpace ID Header |
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
-\
-**Request Body Schema: application/json**
 
-| Field | Type | Description |
-|---|---|---|
-| `advertiserDomain` | string | add domain |
-| `budgetDay` | integer | Daily budget |
-| `budgetTotal` | integer | Total budget |
-| `campaignName` | string | name of campaign |
-| `campaignType` | integer | Campaign type ID |
-| `creativeIds` | string | Comma separated creative IDs |
-| `creativeType` | integer | Creative type ID |
-| `isAgreementChecked` | boolean | agreement check |
-| `maxBid` | integer | max bid |
-| `startTime` | integer | campaign start time |
-| `timezone` | integer | timezone ID |
-| `bidOptimization` [optional] | boolean | Optimize bid price based on analysis |
-| `bidPacing` [optional] | boolean | Budget is spent equally every hour |
-| `impressionCapping` [optional] | integer | Maximum impressions in one inventory |
-| `maxDayClicks` [optional] | integer | Maximum daily clicks |
-| `totalClicks` [optional] | integer | Total clicks |
-| `maxDayImpressions` [optional] | integer | Maximum daily impressions |
-| `totalImpressions` [optional] | integer | Total impressions |
-| `maxDayConversions` [optional] | integer | Maximum daily conversions |
-| `totalConversions` [optional] | integer | Total conversions |
-| `conversionType` [optional] | string | User conversion type. Allowed values: 'install', 'non-install' |
-| `appURL` [optional] | string | If conversion type is install, specify URL of inventory |
-| `targetCPI` [optional] | integer | Cost per install if conversion type is install. |
-| `carriers` [optional] | string | Carrier targeting. Value in form of string of comma separated IDs of targeted carrier(s) |
-| `networkType` [optional] | string | Network targeting. Value in form of string of comma separated IDs of targeted network(s) |
-| `deviceType` [optional] | string | Device targeting. Value in form of string of comma separated IDs of targeted device type(s) |
-| `trafficType` [optional] | string | Traffic type targeting. Value in form of string of comma separated IDs of targeted traffic type(s) |
-| `manufacturer` [optional] | string | Manufacturer targeting. Value in form of string of comma separated IDs of targeted manufacturer type(s) |
-| `os` [optional] | string | OS targeting. Value in form of string of comma separated IDs of targeted OS |
-| `osVersion` [optional] | string | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS |
-| `exchanges` [optional] | string | Targeted exchanges. Value in form of string of comma separated IDs of exchanges |
-| `prebidAudienceSegmentIdList` [optional] | array | Prebid Audience Segment IDs to attach campaign to segment IDs |
-| `publisherAdCategory` [optional] | string | Target Publisher ad category. Value in form of string of comma separated IDs |
-| `ioId` | integer | Target Insertion OrderId in which this campaign belongs |
-| `userDealId` [optional] | string | User specific deal IDs. Value in form of string of comma separated deal IDs |
-| `groupDealId` [optional] | string | Group of selected deals. Value in form of string of comma separated deal IDs |
-| `politicalAdvertiserClientId` [optional] | integer | ID of political advertiser in case of campaign is political campaign |
-| `stateIds` [optional] | string | State Target. Value in form of string of comma separated IDs |
-| `countryId` | string | Country Target |
-| `dmaIds` [optional] deprecated | string | DMA Target. Value in form of string of comma separated IDs |
-| `senateDistrictIds` [optional] deprecated | string | Senate districts Target. Value in form of string of comma separated IDs |
-| `congressionalDistrictIds` [optional] deprecated | string | Congressional districts Target. Value in form of string of comma separated IDs |
-| `houseDistrictIds` [optional] deprecated | string | House districts Target. Value in form of string of comma separated IDs |
-| `geoRadiusDetails` [optional] deprecated | string | To target custom ares in circle or polygon. Value in form of JSON |
-| `zipcodes` [optional] deprecated | string | ZipCode Target. Value in form of string of comma separated IDs |
-| `locationFileIds` [optional] | string | Target location by uploading file. Value in form of string of comma separated csv file ids.(pre uploaded) |
-| `ageRangeIds` [optional] | string | Target age range. Value in form of string of comma separated IDs |
-| `genderIds` [optional] | string | Target gender. Value in form of string of comma-separated IDs |
-| `interestIds` [optional] | string | Target user interest. Value in form of a string of comma-separated IDs |
-| `incomeRangeIds` [optional] | string | Target user income range. Value in form of a string of comma-separated IDs |
-| `languageIds` [optional] | string | Target user language. Value in form of a string of comma-separated IDs |
-| `ethnicityIds` [optional] | string | Target user ethnicity. Value in form of a string of comma-separated ID |
-| `schedule` [optional] | string[][] | key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] |
-| `conversionIds` [optional] | string | Target pixel conversions. Value in form of a string of comma-separated ID |
-| `isAdvanceAudioVideoTargeted` | boolean | To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted |
-| `isBidPacing` | boolean | To indicate whether the bid shading is enabled. |
-| `creativeAdvanceTargeting` | JSON Map: string to integer | Map of Creative advanced targeting group to list of creative advance targeting segment IDs |
-| `campaignEstimatorMetaData` | JSON | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
+| Request Schema  |  |
+|---|---|
+| `advertiserDomain` <br /><span class="type-text">string</span> | add domain |
+| `budgetDay` <br /><span class="type-text">integer</span> | Daily budget |
+| `budgetTotal` <br /><span class="type-text">integer</span> | Total budget |
+| `campaignName` <br /><span class="type-text">string</span> | name of campaign |
+| `campaignType` <br /><span class="type-text">integer</span> | Campaign type ID |
+| `creativeIds` <br /><span class="type-text">string</span> | Comma separated creative IDs |
+| `creativeType` <br /><span class="type-text">integer</span> | Creative type ID |
+| `isAgreementChecked` <br /><span class="type-text">boolean</span> | agreement check |
+| `maxBid` <br /><span class="type-text">integer</span> | max bid |
+| `startTime` <br /><span class="type-text">integer</span> | campaign start time |
+| `timezone` <br /><span class="type-text">integer</span> | timezone ID |
+| `bidOptimization` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span> | Optimize bid price based on analysis |
+| `bidPacing` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span> | Budget is spent equally every hour |
+| `impressionCapping` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Maximum impressions in one inventory |
+| `maxDayClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Maximum daily clicks |
+| `totalClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Total clicks |
+| `maxDayImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Maximum daily impressions |
+| `totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Total impressions |
+| `maxDayConversions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Maximum daily conversions |
+| `totalConversions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Total conversions |
+| `conversionType` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | User conversion type. Allowed values: 'install', 'non-install' |
+| `appURL` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | If conversion type is install, specify URL of inventory |
+| `targetCPI` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Cost per install if conversion type is install. |
+| `carriers` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Carrier targeting. Value in form of string of comma separated IDs of targeted carrier(s) |
+| `networkType` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Network targeting. Value in form of string of comma separated IDs of targeted network(s) |
+| `deviceType` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Device targeting. Value in form of string of comma separated IDs of targeted device type(s) |
+| `trafficType` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Traffic type targeting. Value in form of string of comma separated IDs of targeted traffic type(s) |
+| `manufacturer` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Manufacturer targeting. Value in form of string of comma separated IDs of targeted manufacturer type(s) |
+| `os` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | OS targeting. Value in form of string of comma separated IDs of targeted OS |
+| `osVersion` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | OS version targeting. Value in form of string of comma separated IDs of targeted OS version based on targeted OS |
+| `exchanges` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Targeted exchanges. Value in form of string of comma separated IDs of exchanges |
+| `prebidAudienceSegmentIdList` array <span class="required-text">optional</span> | Prebid Audience Segment IDs to attach campaign to segment IDs |
+| `publisherAdCategory` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target Publisher ad category. Value in form of string of comma separated IDs |
+| `ioId` <br /><span class="type-text">integer</span>| Target Insertion OrderId in which this campaign belongs |
+| `userDealId` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | User specific deal IDs. Value in form of string of comma separated deal IDs |
+| `groupDealId` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Group of selected deals. Value in form of string of comma separated deal IDs |
+| `politicalAdvertiserClientId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | ID of political advertiser in case of campaign is political campaign |
+| `stateIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | State Target. Value in form of string of comma separated IDs |
+| `countryId` <br /><span class="type-text">string</span> | Country Target |
+| `dmaIds` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | DMA Target. Value in form of string of comma separated IDs |
+| `senateDistrictIds` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Senate districts Target. Value in form of string of comma separated IDs |
+| `congressionalDistrictIds` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Congressional districts Target. Value in form of string of comma separated IDs |
+| `houseDistrictIds` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | House districts Target. Value in form of string of comma separated IDs |
+| `geoRadiusDetails` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | To target custom ares in circle or polygon. Value in form of JSON |
+| `zipcodes` [deprecated] <br /><span class="type-text">string</span> <span class="required-text">optional</span> | ZipCode Target. Value in form of string of comma separated IDs |
+| `locationFileIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target location by uploading file. Value in form of string of comma separated csv file ids.(pre uploaded) |
+| `ageRangeIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target age range. Value in form of string of comma separated IDs |
+| `genderIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target gender. Value in form of string of comma-separated IDs |
+| `interestIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target user interest. Value in form of a string of comma-separated IDs |
+| `incomeRangeIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target user income range. Value in form of a string of comma-separated IDs |
+| `languageIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target user language. Value in form of a string of comma-separated IDs |
+| `ethnicityIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target user ethnicity. Value in form of a string of comma-separated ID |
+| `schedule` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] |
+| `conversionIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Target pixel conversions. Value in form of a string of comma-separated ID |
+| `isAdvanceAudioVideoTargeted` <br /><span class="type-text">boolean</span> | To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted |
+| `isBidPacing` <br /><span class="type-text">boolean</span> | To indicate whether the bid shading is enabled. |
+| `creativeAdvanceTargeting` <br /><span class="type-text">JSON Map: string to integer</span> | Map of Creative advanced targeting group to list of creative advance targeting segment IDs |
+| `campaignEstimatorMetaData` <br /><span class="type-text">JSON</span> | Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta |
 
-\
-Scheduling Example
+</div><div class="child2">
 
-```json
+```json title="Scheduling Example"
 "scheduling": {
     "0": [
       [
@@ -493,9 +480,7 @@ Scheduling Example
 }
 ```
 
-GeoRadiusDetails example (below is the common format for whitelist and blacklist both)
-
-```json
+```json title="GeoRadiusDetails Example"
 "whiteListedGeoRadiusDetails" : [
         {
             "unit": "mile",
@@ -578,9 +563,7 @@ GeoRadiusDetails example (below is the common format for whitelist and blacklist
 ]
 ```
 
-Request Sample
-
-```json
+```json title="Request Sample"
 {
  "campaignName": "Test Campaign",
  "maxBid": 10,
@@ -616,9 +599,11 @@ Request Sample
 }
 ```
 
-Response 201
+<details>
 
-```json
+<summary>More Response Samples</summary>
+
+```json title="Response 201"
 {
  "statusCode": 201,
  "responseObject": {
@@ -629,9 +614,7 @@ Response 201
 }
 ```
 
-Response 400
-
-```json
+```json title="Response 400"
 {
  "statusCode": 412,
  "responseObject": {
@@ -641,9 +624,7 @@ Response 400
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
  "statusCode": 500,
  "responseObject": {
@@ -653,33 +634,33 @@ Response 500
 }
 ```
 
+</div></div>
+
 For further information see the complete [Campaign Creation API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/saveCampaign)
 
-### Step 5: Check the campaign status
+### Step 6: Check the campaign status
 
 To run a campaign, it must be approved, check for status updates using: 
 
-* `GET` `/api/v2/cmp/campaign/{campaignId}`
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/{campaignId}</span>
 
-\
-**Path Parameters**
+For further information see the complete [Campaign Details API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign)
 
-| Property | Type | Definition |
-| --- | --- | --- |
-| `campaign_id` | string [required] | Campaign ID
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+| Path Parameter  |  |
+| ---  | --- |
+| `campaign_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Campaign ID
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID`  <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
  "statusCode": 200,
  "responseObject": {
@@ -743,7 +724,9 @@ Response 200
 }
 ```
 
-For further information see the complete [Campaign Details API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign)
+</div></div>
+
+---
 
 ## Best Practices
 

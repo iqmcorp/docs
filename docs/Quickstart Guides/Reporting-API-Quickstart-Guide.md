@@ -4,10 +4,10 @@ IQM’s REST API enables you to interact with most of IQM’s offerings.
 
 Getting started with running your first reports is easy; just use the following endpoints:
 
-* `POST` /api/v3/ua/login
-* `GET` /api/v2/adv/static/timezones
-* `GET` /api/v3/ra/report/dimension-metrics/detail
-* `POST` /api/v3/ra/report/execute
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/adv/static/timezones</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/dimension-metrics/detail</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/execute</span>
 
 ## About IQM Reports
 
@@ -32,31 +32,29 @@ This quick start will help you run a basic IQM report.  At a minimum, you must l
 
 ### Step 1: Log in
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
-* `POST` /api/v3/ua/login
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-\
-**Header Parameters**
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
-| `X-IAA-HOST` | string [required] | Workspace URL |
+| Request Schema |  |
+| ----| --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `grantType` | string [required] | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string [required] | Your user account email |
-| `password` | string [required] | Your user accout password |
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
    "grantType": "password",
    "email": "pratik.t+ihp@iqm.com",
@@ -64,9 +62,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
    "success": true,
    "data":
@@ -84,9 +80,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
    "success": false,
    "data":
@@ -105,9 +99,7 @@ Response 400
 }
 ```
 
-Response 403
-
-```json
+```json title="Response 403"
 {
    "success": false,
    "errorObjects":
@@ -121,8 +113,8 @@ Response 403
 
 </details>
 
-\
-For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
+</div></div>
+
 
 ### Step 2: Request dimensions and metrics
 
@@ -131,7 +123,12 @@ Choose the dimensions and metrics you want to see in your report. This API offer
 
 Reports will be in table format. The metrics comprise the columns, and the dimensions comprise the rows. Necessary information about campaigns is found in the columns.
 
-Available dimensions are:
+For more information see this [help article about Conversions](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform).
+
+<details>
+<summary>See dimensions & metrics</summary>
+
+Available dimensions:
 
 * Insertion Order specifics
   * Insertion Order
@@ -190,7 +187,7 @@ Available dimensions are:
   * Customer
   * Customer ID
 
-Available metrics are:
+Available metrics:
 
 * Budget
   * Daily budget
@@ -238,22 +235,22 @@ Available metrics are:
   * Attributed Conversion Rate
   * ROAS
 
-   For more information see this [help article about Conversions](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform).
+  </details>
 
-* `GET` /api/v3/ra/report/dimension-metrics/detail
 
-\
-**Header Parameters**
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/dimension-metrics/detail</span>
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
-| `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
+<div class="container">
+  <div class="child1">
 
-\
-Response 200
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span>|  Organization Workspace ID Header |
 
-```json
+</div><div class="child2">
+
+```json title="Response 200"
 {
    "success": true,
    "data":
@@ -367,9 +364,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 403
-
-```json
+```json title="Response 403"
 {
    "success": false,
    "errorObjects":
@@ -381,9 +376,7 @@ Response 403
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
    "success": false,
    "errorObjects":
@@ -397,6 +390,8 @@ Response 500
 
 </details>
 
+</div></div>
+
 \
 For further information see the complete [Dimension and Metrics Details API Documentation](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails).
 
@@ -406,20 +401,19 @@ After you’ve chosen your metrics and dimensions, choose the time zone to targe
 
 Use the Timeszones API to generate a list of time zone IDs to refer to in API calls. Use these IDs to target time zones in your report.
 
-* `GET` /api/v2/adv/static/timezones
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/adv/static/timezones</span>
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)|
-| `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)|
+| `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> |  Organization Workspace ID Header |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
    "statusCode":200,
    "responseObject":[
@@ -431,6 +425,8 @@ Response 200
    ]
 }
 ```
+
+</div></div>
 
 For further information see the complete [Timezone API documentation](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones).
 
@@ -444,37 +440,35 @@ All columns are optional, but you must include some for running the report.
 
 At least one dimension is required.
 
-* `POST` /api/v3/ra/report/execute
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/execute</span>
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `X-IAA-API-TOKEN` | string | Advertiser API Token |
+| Headers |  |
+| ----  | --- |
+| `X-IAA-API-TOKEN` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Advertiser API Token |
 
-**Request Body Schema: application/json**
 
-| Property | Type | Example |
-| ---- | ---- | --- |
-| `startDate` | integer | `int64` - Unix timestamp |
-| `endDate` | integer | `int64` - Unix timestamp | 
-| `dimensions` | string | List of dimensions for the report obtained from dimensions and metrics details API |
-| `customerIds` | Array of integers | `int32` List of customers IDs to include in the report, leave empty array [ ] to include all, optional for workspace users only. |
-| `columns` | Array of strings | List of metrics for the report obtained from dimensions and metrics details API | 
-| `timezoneId` | integer | `int32` Timezone ID from the timezones API |
-| `requestType` | integer | `int32` ID to identify if the report request is Daily ["1"] or Aggregated ["2"]. |
-| `reportAggregated` | string | Field to identify if the first report dimension is Aggregated ["1"] or not ["0"]. |
-|`timezoneName` | string | Timezone name from timezones API |
+| Request Schema  |  |
+| ---- | --- |
+| `startDate` <br /><span class="type-text">integer</span> | `int64` - Unix timestamp |
+| `endDate` <br /><span class="type-text">integer</span> | `int64` - Unix timestamp | 
+| `dimensions` <br /><span class="type-text">string</span> | List of dimensions for the report obtained from dimensions and metrics details API |
+| `customerIds` <br /><span class="type-text">array of integers</span> | `int32` List of customers IDs to include in the report, leave empty array [ ] to include all, optional for workspace users only. |
+| `columns` <br /><span class="type-text">array of strings</span> | List of metrics for the report obtained from dimensions and metrics details API | 
+| `timezoneId` <br /><span class="type-text">integer</span> | `int32` Timezone ID from the timezones API |
+| `requestType` <br /><span class="type-text">integer</span>| `int32` ID to identify if the report request is Daily ["1"] or Aggregated ["2"]. |
+| `reportAggregated` <br /><span class="type-text">string</span> | Field to identify if the first report dimension is Aggregated ["1"] or not ["0"]. |
+|`timezoneName` <br /><span class="type-text">string</span> | Timezone name from timezones API |
 | `filters` | object | Filter values to filter dimensions |
-| `pageNo` | integer | `int32` Pagination parameter, page number. |
-| `noOfEntries` | integer | `int32` Pagination paramter, records per page. |
-| `sortBy` | string | Dimension or metric to sort by, if prefixed by “-” then descending: “-impressions”. |
+| `pageNo` <br /><span class="type-text">integer</span> | `int32` Pagination parameter, page number. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | `int32` Pagination paramter, records per page. |
+| `sortBy` <br /><span class="type-text">string</span> | Dimension or metric to sort by, if prefixed by “-” then descending: “-impressions”. |
 
-\
-Request Sample
+</div><div class="child2">
 
-```json
+```json title="Request Sample"
 {
    "customerIds":[
       
@@ -503,9 +497,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
    "success":true,
    "data":{
@@ -893,6 +885,8 @@ Response 200
    }
 }
 ```
+
+</div></div>
 
 For further information see the complete [Execute Report Data API](https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportDatas).
 

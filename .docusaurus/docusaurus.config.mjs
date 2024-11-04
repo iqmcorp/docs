@@ -6,7 +6,7 @@
 export default {
   "title": "My Site",
   "tagline": "Dinosaurs are cool",
-  "favicon": "img/favicon.ico",
+  "favicon": "img/IQM-Q.ico",
   "url": "https://conjaytech.github.io",
   "baseUrl": "/docs/",
   "organizationName": "facebook",
@@ -38,22 +38,7 @@ export default {
       "classic",
       {
         "docs": {
-          "sidebarPath": "./sidebars.js",
-          "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/"
-        },
-        "blog": {
-          "showReadingTime": true,
-          "feedOptions": {
-            "type": [
-              "rss",
-              "atom"
-            ],
-            "xslt": true
-          },
-          "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-          "onInlineTags": "warn",
-          "onInlineAuthors": "warn",
-          "onUntruncatedBlogPosts": "warn"
+          "sidebarPath": "./sidebars.js"
         },
         "theme": {
           "customCss": "./src/css/custom.css"
@@ -81,12 +66,7 @@ export default {
           "type": "docSidebar",
           "sidebarId": "tutorialSidebar",
           "position": "left",
-          "label": "Tutorial"
-        },
-        {
-          "to": "/blog",
-          "label": "Blog",
-          "position": "left"
+          "label": "Docs"
         },
         {
           "href": "https://github.com/facebook/docusaurus",

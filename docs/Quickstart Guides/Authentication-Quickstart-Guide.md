@@ -4,38 +4,32 @@ To gain access to IQM's API and its services, first the user must sign up and lo
 
 ## Sign Up
 
-Sign up for an account by providing an email address and desired password with the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/sign-up</span>
 
-* `POST` /api/v3/ua/sign-up
+Sign up for an account by providing an email address and desired password.
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string [required] | Basic |
+| Headers | |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Email address of user |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Desired password of user |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `email` | string [required] | Email address of user |
-| `password` | string [required] | Desired password of user |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
-"email": "user1@iqm.com",
-"password": "123456"
+    "email": "user1@iqm.com",
+    "password": "123456"
 }
 ```
 
-Response 200 
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -48,33 +42,33 @@ Response 200
 }
 ```
 
+</div></div>
+
+---
+
 ## Log In
 
-Once a user has created an account, they can perform the login. This API will send OAuth compliant response with OW Id which can be used for any further API communications. Use the following endpoint:
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
-* `POST` /api/v3/ua/login
+<div class="container">
+  <div class="child1">
 
-\
-**Header Parameters**
+Once a user has created an account, they can perform the login. This API will send OAuth compliant response with OW Id which can be used for any further API communications.
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `Authorization` | string | Basic |
-| `X-IAA-HOST` | string | Workspace URL |
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Basic |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span>| Workspace URL |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `grantType` | string [required] | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string [required] | Your user account email |
-| `password` | string [required] | Your user accout password |
+</div><div class="child2">
 
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
     "grantType": "password",
     "email": "user1@iqm.com",
@@ -82,10 +76,7 @@ Request Sample
 }
 ```
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
     "success": true,
     "data": {
@@ -98,3 +89,5 @@ Response 200
     }
 }
 ```
+
+</div></div>

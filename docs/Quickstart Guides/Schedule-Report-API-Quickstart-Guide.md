@@ -2,10 +2,10 @@
 
 IQM's API allows you to create report scheduling events.
 
-Scheduling reports is easy; just use the following endpoint:
+Scheduling reports is easy; just use the following endpoints:
 
-* `POST` /api/v3/ua/login
-* `POST` /api/v3/ra/report/email/schedule
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/email/schedule</span>
 
 ## About IQM Reports
 
@@ -28,49 +28,112 @@ This quick start guide will help you create a report scheduling event. At a mini
 
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
-* `POST` /api/v3/ua/login
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
-\
-**Header Parameters**
+<div class="container">
+  <div class="child1">
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string  | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
-| `X-IAA-HOST` | string | Workspace URL |
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
-\
-**Request Body Schema: application/json**
+| Request Schema |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string (required) | Your user account email |
-| `password` | string (required) | Your user accout password |
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details>
+<summary>More Response Samples</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
 
 ### Step 2: Schedule a Report
 
 Decide the delivery frequency, day, and end date of scheduled reports. This API will save the delivery information and return a success message.
 
-* `POST /api/v3/ra/report/email/schedule`
+For further information see the complete [Save Report Scheduling Event API Documentation](https://api.iqm.com/docs?path=tag/Report-API/operation/saveReportScheduleEvent).
 
-\
-**Request Body Schema: application/json**
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/email/schedule`</span>
 
-| Property | Type | Description |
-|---|---|---|
-| `reportId` | integer [required] | The unique report ID, event will be created on this report ID. |
-| `subscriberEmails` | Array of strings [required] | List of emails to which the report will be sent. |
-| `fileType` | integer [required] | Report file type ID. The report will be sent in the selected file format. E.g. [1 = CSV, 2 = XLS] |
-| `deliveryFrequency` | integer [required] | Delivery frequency type ID for the emails to be sent. E.g. [1 = Once, 2 = Daily, 3 = Weekly, 4 = Monthly] |
-| `deliveryDay` | string [required] | If delivery is not 'Once', specify the day/date when the report should be sent. E.g. [Day: "Sunday", "Monday", ...] or [Monthly: "First", "Last", "1", "2", ..., "29"] |
-| `eventEndDate` | integer [Required] | If delivery is not "Once", this should be a long, TIME EPOCH in UNIX format, in milliseconds. This is event's end date, Scheduled report will be stopped after the `eventEndDate` is exceeded. |
-| `runningTotalEnabled` | boolean [Optional] | Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension. If this is true the start-date for the report duration should be the EARLIEST campaign start date, so the report-time-period will be from the Earliest-campaign-start-date to the report-end-date. |
-| `earliestCampaignDate` | integer [Required] | With `runningTotalEnabled` as `true`, this should be a long TIME EPOCH in UNIX format, in milliseconds. This is campaign's EARLIEST start date from the selected campaigns, which will be set as the start date of the report-time-period. |
+<div class="container">
+  <div class="child1">
 
-\
-Request Sample
+| Request Schema |  |
+|---|---|
+| `reportId` <br /><span class="type-text">integer</span> | The unique report ID, event will be created on this report ID. |
+| `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent. |
+| `fileType` <br /><span class="type-text">integer</span> | Report file type ID. The report will be sent in the selected file format. E.g. [1 = CSV, 2 = XLS] |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID for the emails to be sent. E.g. [1 = Once, 2 = Daily, 3 = Weekly, 4 = Monthly] |
+| `deliveryDay` <br /><span class="type-text">string</span> | If delivery is not 'Once', specify the day/date when the report should be sent. E.g. [Day: "Sunday", "Monday", ...] or [Monthly: "First", "Last", "1", "2", ..., "29"] |
+| `eventEndDate` <br /><span class="type-text">integer</span> | If delivery is not "Once", this should be a long, TIME EPOCH in UNIX format, in milliseconds. This is event's end date, Scheduled report will be stopped after the `eventEndDate` is exceeded. |
+| `runningTotalEnabled` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span> | Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension. If this is true the start-date for the report duration should be the EARLIEST campaign start date, so the report-time-period will be from the Earliest-campaign-start-date to the report-end-date. |
+| `earliestCampaignDate` <br /><span class="type-text">integer</span> | With `runningTotalEnabled` as `true`, this should be a long TIME EPOCH in UNIX format, in milliseconds. This is campaign's EARLIEST start date from the selected campaigns, which will be set as the start date of the report-time-period. |
 
-```json
+</div><div class="child2">
+
+```json title="Request Sample"
 {
   "reportId": 1235,
   "subscriberEmails": [
@@ -86,9 +149,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
   "success": true,
   "data": {
@@ -110,4 +171,6 @@ Response 200
 }
 ```
 
-For further information see the complete [Save Report Scheduling Event API Documentation](https://api.iqm.com/docs?path=tag/Report-API/operation/saveReportScheduleEvent).
+</div></div>
+
+
