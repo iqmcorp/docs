@@ -1,3 +1,7 @@
+---
+title: Schedule a Report
+---
+
 # Quickstart Guide: Schedule a Report
 
 IQM's API allows you to create report scheduling events.

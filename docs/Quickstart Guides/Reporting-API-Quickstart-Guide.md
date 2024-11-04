@@ -1,3 +1,7 @@
+---
+title: Run a Report
+---
+
 # Quickstart Guide: Run a Report
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.

@@ -2,7 +2,7 @@
 
 This page will cover the common endpoints and methods for managing campaigns in IQM's rest API.
 
-Refer to the quickstart guide for instructions on [how to start a new campaign](/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md). 
+Refer to the quickstart guide for instructions on [how to start a new campaign](/docs/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide). 
 
 ## Authorization
 
@@ -13,12 +13,14 @@ Use the following header parameters for all requests:
 
 | Headers  |  |
 | ----  | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide) |
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 </div></div>
 
-## Get Campaign Details
+## Campaign Details
+
+### Get Campaign Details by ID
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/{campaignId}</span>
 
@@ -142,67 +144,343 @@ Get a campaign's basic details and targeting details by ID.
 
 ---
 
-### More Campaign Details
+### Get List of Campaigns
 
-Other details can be fetched with a simple `GET` operation and filtered by various query parameters with the following endpoints:
-
-| Method | Endpoint | Description |
-| ---- | ---- | --- |
-| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigns/data</span> | Returns list of campaigns based on set of filters and `conversionId` query parameter. See documentation [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Getcampaigndata).
-| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigns/list</span> | Returns a paginated list of campaigns with their basic details. See query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/GetCampaignList).
-| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaign/budgetInfo</span> | Get campaign budget info and graph details, see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/CampaignBudgetInfo). 
-| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaigngroup/campaign/list</span> | Get the list of existing campaign groups wiht associated campaigns (basic details), see query parameters [here](https://api.iqm.com/docs?path=tag/Campaign-API/operation/Campaignlistbycampaigngroup). 
-| <span class="badge badge--primary">GET</span> | <span class="path-text">/api/v2/cmp/campaign/start</span> | Get campaign start date
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaigns/data</span>
 
 <div class="container">
-  <div class="child1"></div>
+  <div class="child1">
 
-  <div class="child2"></div>
+Returns list of campaigns based on set of filters and `conversionId` query parameter.
 
-```json title="Response 200 Sample (list of campaigns)"
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-created` | 
+| `conversionId` <br /><span class="type-text">integer</span> | Targeted campaign will be returned at top of list |
+| `status` <br /><span class="type-text">string</span> | Filter by multiple statuses |
+| `owIds` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
+
+</div><div class="child2">
+
+```json title="Response 200"
 {
-    "statusCode": 200,
-    "recordsTotal": 2,
-    "pageNumber": 1,
-    "pageSize": 10,
-    "draw": 0,
-    "recordsFiltered": 2,
+  "statusCode": 200,
+  "responseObject": {
+    "totalRecords": 1498,
     "data": [
+      {
+        "id": 176881,
+        "name": "Campaign to test duplicate  copy",
+        "creativeTypeId": 14,
+        "campaignType": "CPV",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620024156,
+        "modifiedDate": 1621571575,
+        "conversionId": 18
+      },
+      {
+        "id": 176880,
+        "name": "Campaign to test duplicate update",
+        "creativeTypeId": 14,
+        "campaignType": "CPV",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620024050,
+        "modifiedDate": 1621571575,
+        "conversionId": 18
+      },
+      {
+        "id": 176879,
+        "name": "to test campaign duplication",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620023582,
+        "modifiedDate": 1620024188
+      },
+      {
+        "id": 176148,
+        "name": "campaign to test inventory group and all device type",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1618990887,
+        "modifiedDate": 1618992828
+      },
+      {
+        "id": 173357,
+        "name": "test cb",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "running",
+        "advertiserId": 100001,
+        "created": 1617170692,
+        "modifiedDate": 1619433624
+      },
+      {
+        "id": 173353,
+        "name": "test cb",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "running",
+        "advertiserId": 100001,
+        "created": 1617163055,
+        "modifiedDate": 1619433624
+      },
+      {
+        "id": 173318,
+        "name": "test cb1",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "running",
+        "advertiserId": 100001,
+        "created": 1617130075,
+        "modifiedDate": 1619433624
+      },
+      {
+        "id": 173317,
+        "name": "test cb",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "running",
+        "advertiserId": 100001,
+        "created": 1617126490,
+        "modifiedDate": 1619433624
+      },
+      {
+        "id": 173316,
+        "name": "test old cb",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "running",
+        "advertiserId": 100001,
+        "created": 1617125771,
+        "modifiedDate": 1619433624
+      },
+      {
+        "id": 169459,
+        "name": "test daily",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1611734667,
+        "modifiedDate": 1618992828
+      }
+    ],
+    "filteredRecords": 1039
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get List of Campaigns with Basic Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaigns/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Returns a paginated list of campaigns with their basic details.
+
+| Query Parameters |  |
+| ---- | --- |
+| `search_field` <br /><span class="type-text">string</span> | Search results by keyword |
+| `no_of_entries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
+| `pgno` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `order` <br /><span class="type-text">string</span> | Sorts by ascending (`asc`) or descending (`desc`) | 
+| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by creative type ID |
+| `created_time_of_creative` <br /><span class="type-text">string</span> | Filter by creative creation time |
+| `status` <br /><span class="type-text">string</span> | Filter by multiple statuses <br />Supported values: `running`, `pending`, `paused`, `draft`, `rejected`, `expired` |
+| `ow_ids` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "recordsTotal": 1,
+  "pageNumber": 1,
+  "pageSize": 50,
+  "draw": 0,
+  "recordsFiltered": 1,
+  "data": [
+    {
+      "id": "214269",
+      "name": "Name Edit Test_UI",
+      "status": "pending",
+      "owId": 1000,
+      "uowId": 1,
+      "advertiser_email": null,
+      "advertiser_id": 0,
+      "campaign_type": "CPM",
+      "creative_type": "HTML",
+      "dsp_id": 0,
+      "start_date": 1632873600,
+      "end_date": 1632829200,
+      "creative_type_id": 13,
+      "total_budget": 1000
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
+### Get Campaign Budget Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/budgetInfo</span>
+
+<div class="container">
+  <div class="child1">
+
+Get campaign budget info and graph details.
+
+| Query Parameters |  |
+| ---- | --- |
+| `budgetTotal` <br /><span class="type-text">integer</span> | Campaign total budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
+| `dailyBudget` <br /><span class="type-text">integer</span> |Campaign daily budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
+| `fixedDailyBudget` <br /><span class="type-text">boolean</span> | Flag to indicate whether daily budget is fixed or not |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign start time | 
+| `endTime` <br /><span class="type-text">integer</span> | Campaign end time  <br />Note: can be null if fixed daily budget, start time, and end time are provided |
+| `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign time zone
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "campaignId": 168930,
+    "budgetTotal": 30000,
+    "actualSpent": 0,
+    "dailyBudget": 5000,
+    "fixedDailyBudget": false,
+    "startTime": 1610211600,
+    "endTime": 1610686800,
+    "timezone": 371,
+    "graphInfo": [
+      {
+        "date": "2021-01-08T18:30:00.000+0000",
+        "amount": 131.0083085876,
+        "type": "spent"
+      },
+      {
+        "date": "2021-01-09T18:30:00.000+0000",
+        "amount": 86.1821112588,
+        "type": "spent"
+      },
+      {
+        "date": "2021-01-10T18:30:00.000+0000",
+        "amount": 127.31636722319996,
+        "type": "spent"
+      },
+      {
+        "date": "2021-01-11T18:30:00.000+0000",
+        "amount": 9885.01,
+        "type": "projected"
+      },
+      {
+        "date": "2021-01-12T18:30:00.000+0000",
+        "amount": 9885.01,
+        "type": "projected"
+      },
+      {
+        "date": "2021-01-13T18:30:00.000+0000",
+        "amount": 9885.01,
+        "type": "projected"
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get List of Campaign Groups and Associated Campaigns
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaigngroup/campaign/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get the list of existing campaign groups wiht associated campaigns (basic details).
+
+| Query Parameters |  |
+| ---- | --- |
+| `creative_type_ids` <br /><span class="type-text">string</span> | Filter with comma separated creative type IDs |
+| `owIds`  <br /><span class="type-text">string</span> | Filter with comma separated Organization Workspace IDs |
+| `includeChild` <br /><span class="type-text">string</span> | Include campaign group child |
+| `status ` <br /><span class="type-text">string</span> | Filter with comma separated statuses |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": [
+    {
+      "id": 264,
+      "name": "My group",
+      "created": 1549978603,
+      "uowId": 123,
+      "owId": 456,
+      "lastModified": 1549978603,
+      "rootParentId": "264",
+      "campaignCount": 22,
+      "campaings": [
         {
-            "id": "537599",
-            "name": "TestCampaign",
-            "status": "pending",
-            "owId": 203578,
-            "uowId": 188494,
-            "userEmail": "user5@iqm.com",
-            "advertiser_email": null,
-            "advertiser_id": 0,
-            "campaign_type": "CPM",
-            "creative_type": "Image",
-            "dsp_id": 0,
-            "start_date": 1726518001,
-            "end_date": 1727668800,
-            "creative_type_id": 11,
-            "total_budget": 50000.0
+          "id": 3270,
+          "name": "Test Campaign - 1011",
+          "status": "running",
+          "creativeTypeId": 11
         },
         {
-            "id": "537123",
-            "name": "Test1",
-            "status": "pending",
-            "owId": 203578,
-            "uowId": 188494,
-            "userEmail": "user5@iqm.com",
-            "advertiser_email": null,
-            "advertiser_id": 0,
-            "campaign_type": "CPM",
-            "creative_type": "Image",
-            "dsp_id": 0,
-            "start_date": 1727755200,
-            "end_date": 1730347200,
-            "creative_type_id": 11,
-            "total_budget": 9900.0
+          "id": 3303,
+          "name": "Test Campaign - 1011",
+          "status": "pending",
+          "creativeTypeId": 17
         }
-    ]
+      ]
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
+### Get Campaign Start Date
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/start</span>
+
+<div class="container">
+  <div class="child1">
+
+Get campaign start date
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "start_time": 1632286201
+  }
 }
 ```
 
@@ -1074,7 +1352,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 
 | Header Parameters | Description |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/Authentication-Quickstart-Guide.md)|
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)|
 | `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
