@@ -11,10 +11,10 @@ This page will cover the common endpoints and methods associated with the Bid Mo
 <div class="container">
 <div class="child3">
 
-| Header Parameters | |
-| ---| --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See <a href="../Quickstart Guides/Authentication-Quickstart-Guide.md">Authentication Guide</a> |
-| `X-IAA-OW-ID`  <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 </div></div>
 

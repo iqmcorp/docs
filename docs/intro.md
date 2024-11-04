@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # IQM API
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.
@@ -28,67 +32,94 @@ An hour after running a campaign, you can generate reports on it.
 
 These guides will help you to perform the most essential tasks using the API of the IQM platform:
 
-* [Sign Up and Authentication](/docs/quickstart-guides/Authentication-Quickstart-Guide.md)
-* [Create a Report](/docs/quickstart-guides/Reporting-API-Quickstart-Guide.md)
-* [Schedule a Report](/docs/quickstart-guides/Schedule-Report-API-Quickstart-Guide.md)
-* [Upload a Matched Audience](/docs/quickstart-guides/Matched-Audience-Upload-API-Quickstart-Guide.md)
-* [Upload a Creative and Create a Campaign](/docs/quickstart-guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
+* [Sign Up and Authentication](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)
+* [Create a Report](/docs/Quickstart%20Guides/Reporting-API-Quickstart-Guide.md)
+* [Schedule a Report](/docs/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide.md)
+* [Upload a Matched Audience](/docs/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide.md)
+* [Upload a Creative and Create a Campaign](/docs/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide.md)
 
 ## Guidelines
 
 These guidelines pages will help you navigate common methods and resources in the various endpoints available.
 
 
-#### [User & Profile Management](/docs/guidelines/User-Profile-Guidelines.md)
+#### [User & Profile Management](/docs/Guidelines/User-Profile-Guidelines.md)
 
-* [Send User Invitation](/docs/guidelines/User-Profile-Guidelines.md#send-user-invitation)
-* [User Sign Up](/docs/guidelines/User-Profile-Guidelines.md#user-sign-up)
-* [Change User Password](/docs/guidelines/User-Profile-Guidelines.md#change-password)
-* [Update User Profile](/docs/guidelines/User-Profile-Guidelines.md#update-user-profile)
-* [Get List of Users](/docs/guidelines/User-Profile-Guidelines.md#get-list-of-users)
-* [User Application Access](/docs/guidelines/User-Profile-Guidelines.md#user-app-access-list)
+* [Send User Invitation](/docs/Guidelines/User-Profile-Guidelines.md#send-user-invitation)
+* [User Sign Up](/docs/Guidelines/User-Profile-Guidelines.md#user-sign-up)
+* [Change User Password](/docs/Guidelines/User-Profile-Guidelines.md#change-password)
+* [Update User Profile](/docs/Guidelines/User-Profile-Guidelines.md#update-user-profile)
+* [Get List of Users](/docs/Guidelines/User-Profile-Guidelines.md#get-list-of-users)
+* [User Application Access](/docs/Guidelines/User-Profile-Guidelines.md#user-app-access-list)
 
-#### [Campaign API](/docs/guidelines/Campaign-API-Guidelines.md)
+#### [Workspace API](/docs/Guidelines/Workspace-Guidelines.md)
+* [Organization Details](/docs/Guidelines/Workspace-Guidelines.md#organization-details)
+* [Organization Management](/docs/Guidelines/Workspace-Guidelines.md#organization-management)
+* [Workspace Management](/docs/Guidelines/Workspace-Guidelines.md#workspace-management)
+* [Customer Details](/docs/Guidelines/Workspace-Guidelines.md#customer-details)
+* [Customer Management](/docs/Guidelines/Workspace-Guidelines.md#customer-details)
+* [Advertiser Management](/docs/Guidelines/Workspace-Guidelines.md#advertiser-management)
+* [Static Details Lists](/docs/Guidelines/Workspace-Guidelines.md#static-details-lists)
 
-* [Get Campaign Details](/docs/guidelines/Campaign-API-Guidelines.md#get-campaign-details)
-* [Update Campaign](/docs/guidelines/Campaign-API-Guidelines.md#update-campaign)
-* [More Campaign Management](/docs/guidelines/Campaign-API-Guidelines.md#more-campaign-management)
-* [Get Insertion Order Details](/docs/guidelines/Campaign-API-Guidelines.md#get-insertion-order-details)
-* [Insertion Order Management](/docs/guidelines/Campaign-API-Guidelines.md#insertion-order-management)
+#### [Campaign API](/docs/Guidelines/Campaign-API-Guidelines.md)
 
-#### [Bid Model API](/docs/guidelines/Bid-Model-API-Guidelines.md)
+* [Get Campaign Details](/docs/Guidelines/Campaign-API-Guidelines.md#get-campaign-details)
+* [Update Campaign](/docs/Guidelines/Campaign-API-Guidelines.md#update-campaign)
+* [More Campaign Management](/docs/Guidelines/Campaign-API-Guidelines.md#more-campaign-management)
+* [Get Insertion Order Details](/docs/Guidelines/Campaign-API-Guidelines.md#get-insertion-order-details)
+* [Insertion Order Management](/docs/Guidelines/Campaign-API-Guidelines.md#insertion-order-management)
 
-* [Include/Exclude Management](/docs/guidelines/Bid-Model-API-Guidelines.md#includeexclude-management)
-* [Campaign Priority Management](/docs/guidelines/Bid-Model-API-Guidelines.md#campaign-priority-management)
-* [Generate Metrics Report For a Given Campaign and Dimension](/docs/guidelines/Bid-Model-API-Guidelines.md#get-metrics-report-for-a-given-campaign-and-dimension)
-* [Get List of Bid Model Dimensions](/docs/guidelines/Bid-Model-API-Guidelines.md#get-list-of-bid-model-dimensions)
+#### [Bid Model API](/docs/Guidelines/Bid-Model-API-Guidelines.md)
 
-#### [Inventory API](/docs/guidelines/Inventory-API-Guide.md)
-* [Get Inventory Details](/docs/guidelines/Inventory-API-Guide.md#get-inventory-details)
-* [Inventory Management](/docs/guidelines/Inventory-API-Guide.md#inventory-management)
-* [Inventory Groups](/docs/guidelines/Inventory-API-Guide.md#inventory-groups)
-* [Inventory Group Management](/docs/guidelines/Inventory-API-Guide.md#inventory-group-management)
-* [Private Marketplace (PMP) Deals](/docs/guidelines/Inventory-API-Guide.md#private-marketplace-pmp-deals-details)
-* [PMP Deals Management](/docs/guidelines/Inventory-API-Guide.md#pmp-management)
-* [Programmatic Guarantee (PG) Deals](/docs/guidelines/Inventory-API-Guide.md#programmatic-guarantee-pg-deals-details)
-* [PG Deals Management](/docs/guidelines/Inventory-API-Guide.md#pg-management)
+* [Include/Exclude Management](/docs/Guidelines/Bid-Model-API-Guidelines.md#includeexclude-management)
+* [Campaign Priority Management](/docs/Guidelines/Bid-Model-API-Guidelines.md#campaign-priority-management)
+* [Generate Metrics Report For a Given Campaign and Dimension](/docs/Guidelines/Bid-Model-API-Guidelines.md#get-metrics-report-for-a-given-campaign-and-dimension)
+* [Get List of Bid Model Dimensions](/docs/Guidelines/Bid-Model-API-Guidelines.md#get-list-of-bid-model-dimensions)
 
-#### [Reports API](/docs/guidelines/Reports-API-Guidelines.md)
-* [Get Report Details](/docs/guidelines/Reports-API-Guidelines.md#get-reports-details)
-* [Reports Management](/docs/guidelines/Reports-API-Guidelines.md#reports-management)
-* [Scheduling Management](/docs/guidelines/Reports-API-Guidelines.md#scheduling-management)
-* [Get More Report Details](/docs/guidelines/Reports-API-Guidelines.md#get-more-report-details)
+#### [Inventory API](/docs/Guidelines/Inventory-API-Guide.md)
+* [Get Inventory Details](/docs/Guidelines/Inventory-API-Guide.md#get-inventory-details)
+* [Inventory Management](/docs/Guidelines/Inventory-API-Guide.md#inventory-management)
+* [Inventory Groups](/docs/Guidelines/Inventory-API-Guide.md#inventory-groups)
+* [Inventory Group Management](/docs/Guidelines/Inventory-API-Guide.md#inventory-group-management)
+* [Private Marketplace (PMP) Deals](/docs/Guidelines/Inventory-API-Guide.md#private-marketplace-pmp-deals-details)
+* [PMP Deals Management](/docs/Guidelines/Inventory-API-Guide.md#pmp-management)
+* [Programmatic Guarantee (PG) Deals](/docs/Guidelines/Inventory-API-Guide.md#programmatic-guarantee-pg-deals-details)
+* [PG Deals Management](/docs/Guidelines/Inventory-API-Guide.md#pg-management)
 
-#### [Conversions API](/docs/guidelines/Conversion-API-Guidelines.md)
-* [Get Conversions Details](/docs/guidelines/Conversion-API-Guidelines.md#get-conversion-details)
-* [Conversions Management](/docs/guidelines/Conversion-API-Guidelines.md#conversions-management)
-* [Get More Conversion Details](/docs/guidelines/Conversion-API-Guidelines.md#get-more-conversion-details)
+#### [Assets API](/docs/Guidelines/Assets-API-Guidelines.md)
+* [Get Assets Details](/docs/Guidelines/Assets-API-Guidelines.md#get-assets-details)
+* [Assets Managemnt](/docs/Guidelines/Assets-API-Guidelines.md#assets-management)
+
+#### [Reports API](/docs/Guidelines/Reports-API-Guidelines.md)
+* [Get Report Details](/docs/Guidelines/Reports-API-Guidelines.md#get-reports-details)
+* [Reports Management](/docs/Guidelines/Reports-API-Guidelines.md#reports-management)
+* [Scheduling Management](/docs/Guidelines/Reports-API-Guidelines.md#scheduling-management)
+* [Get More Report Details](/docs/Guidelines/Reports-API-Guidelines.md#get-more-report-details)
+
+#### [Insights API](/docs/Guidelines/Insights-API-Guidelines.md)
+* [Get Insights Details](/docs/Guidelines/Insights-API-Guidelines.md#get-insights-details)
+* [Insights Management](/docs/Guidelines/Insights-API-Guidelines.md#insights-management)
+* [Voter Level Data Reports](/docs/Guidelines/Insights-API-Guidelines.md#voter-level-data-reports)
+* [Get More Insights Details](/docs/Guidelines/Insights-API-Guidelines.md#get-more-insights-details)
 
 
-#### [Master API Guidelines](/docs/guidelines/Master-API-Guidelines.md)
-* [Get Geographical Data](/docs/guidelines/Master-API-Guidelines.md#get-geographical-data)
-* [Get Creative Data](/docs/guidelines/Master-API-Guidelines.md#get-creative-data)
-* [Get More Data](/docs/guidelines/Master-API-Guidelines.md#get-more-data)
+#### [Conversions API](/docs/Guidelines/Conversion-API-Guidelines.md)
+* [Get Conversions Details](/docs/Guidelines/Conversion-API-Guidelines.md#get-conversion-details)
+* [Conversions Management](/docs/Guidelines/Conversion-API-Guidelines.md#conversions-management)
+* [Get More Conversion Details](/docs/Guidelines/Conversion-API-Guidelines.md#get-more-conversion-details)
+
+#### [Finance API](/docs/Guidelines/Finance-Guidelines.md)
+* [Finance Details](/docs/Guidelines/Finance-Guidelines.md#finance-details)
+* [Invoice Management](/docs/Guidelines/Finance-Guidelines.md#invoice-management)
+* [Credit Management](/docs/Guidelines/Finance-Guidelines.md#credit-management)
+* [Payment Management](/docs/Guidelines/Finance-Guidelines.md#payment-management)
+* [Static Details Lists](/docs/Guidelines/Finance-Guidelines.md#static-details-lists)
+
+
+#### [Master API Guidelines](/docs/Guidelines/Master-API-Guidelines.md)
+* [Get Geographical Data](/docs/Guidelines/Master-API-Guidelines.md#get-geographical-data)
+* [Get Creative Data](/docs/Guidelines/Master-API-Guidelines.md#get-creative-data)
+* [Get More Data](/docs/Guidelines/Master-API-Guidelines.md#get-more-data)
 
 
 
@@ -98,11 +129,11 @@ Data resources are accessed via standard HTTP requests in UTF-8 format to an API
 
 | Method | Action |
 |---|---|
-| GET | Retrieves Resources |
-| POST | Creates Resources |
-| PUT | Changes or replaces resources |
-| DELETE | Deletes Resources |
-| PATCH | Applies partial modification to a resources |
+| <span class="badge badge--primary">GET</span> | Retrieves Resources |
+| <span class="badge badge--success">POST</span> | Creates Resources |
+| <span class="badge badge--warning">PUT</span> | Changes or replaces resources |
+| <span class="badge badge--danger">DELETE</span> | Deletes Resources |
+| <span class="badge badge--info">PATCH</span> | Applies partial modification to a resources |
 
 Please refer to [MDN documentation on methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
 

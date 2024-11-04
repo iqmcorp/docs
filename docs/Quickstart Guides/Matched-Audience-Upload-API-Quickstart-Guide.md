@@ -8,10 +8,10 @@ IQM’s REST API enables you to interact with most of IQM’s offerings.
 
 Getting started with uploading your first matched audience is easy; just use the following endpoints:
 
-* `POST` /api/v3/ua/login
-* `POST` /api/v3/audience/static/matched/column-list
-* `POST` /api/v2/audience/matched/add
-* `GET` `/api/v2/audience/matched/{matched_audience_Id}`
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/{matched_audience_Id}</span>
 
 ## About IQM Matched Audience
 
@@ -56,31 +56,29 @@ This quick start will help you to create a matched audience.  At a minimum, you 
 
 ### Step 1: Log in
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
 To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), a unique identifier for each organization. This ID will be used for any further API communications.
 
-* `POST` /api/v3/ua/login
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
-\
-**Header Parameters**
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string (required) | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-HOST` | string (required) | Workspace URL |
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| Your user accout password |
 
-\
-**Request Body Schema: application/json**
+</div><div class="child2">
 
-| Property | Type | Description |
-| ---- | ---- | --- |
-| `grantType` | string (required) | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
-| `email` | string (required) | Your user account email |
-| `password` | string (required) | Your user accout password |
-
-\
-Request Sample
-
-```json
+```json title="Request Sample"
 {
    "grantType": "password",
    "email": "pratik.t+ihp@iqm.com",
@@ -88,9 +86,7 @@ Request Sample
 }
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
    "success": true,
    "data":
@@ -104,12 +100,11 @@ Response 200
    }
 }
 ```
+
 <details>
 <summary>More Response Samples</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
    "success": false,
    "data":
@@ -128,9 +123,7 @@ Response 400
 }
 ```
 
-Response 403
-
-```json
+```json title="Response 403"
 {
    "success": false,
    "errorObjects":
@@ -144,27 +137,29 @@ Response 403
 
 </details>
 
-\
-For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
+</div></div>
+
+---
 
 ### Step 2: Request column list
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
+
+<div class="container">
+  <div class="child1">
+
 To upload a matched audience, you must provide a list of mapping between IQM-allowed fields and columns in your file. Use the column list endpoint to request a full list of allowed columns for mapping.
 
-* `POST` /api/v3/audience/static/matched/column-list
+For further information see the complete [Matched Audience Fields API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields).
 
-\
-**Header Parameters**
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
+</div><div class="child2">
 
-\
-Response 200
-
-```json
+```json title="Response 200"
 {
    "statusCode":200,
    "responseObject":{
@@ -258,53 +253,59 @@ Response 200
 }
 ```
 
-For further information see the complete [Matched Audience Fields API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields).
+</div></div>
+
+---
 
 ### Step 3: Upload matched audience
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
+
+<div class="container">
+  <div class="child3">
+
 To upload matched audiences,  provide file columns for matching and all the necessary parameters.
 
-* `POST` /api/v2/audience/matched/add
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> |  Organization Workspace ID Header |
 
-\
-**Header Parameters**
-
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | string |  Organization Workspace ID Header |
+</div></div>
 
 \
 **Payload (Form Data)**
 
 Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
 
+<div class="container">
+  <div class="child4">
 
 <table>
   <tr>
    <td>
-      <strong>columns * </strong><code> string</code><code><em> (FormData)</em></code>
+      <strong>columns * </strong><br /><span class="type-text">string (FormData)</span>
    </td>
    <td>Matched audience file columns mapped with system fields. 
 This supports a few columns mapping as follows:<ol><li> FirstName, LastName, State, Zip - SampleValue: 
-   <pre>`{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</pre></li>
+   <var>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
    <li>LastName, StreetAddress, State, Zip - SampleValue: 
-   <pre>`{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</pre></li>
+   <var>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
    <li>StreetAddress, State, Zip - SampleValue: 
-   <pre>`{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</pre></li>
+   <var>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
    <li>NPI_ID - SampleValue: 
-   <pre>`{ "NPI_ID_VALUE": "NPI_ID" }`</pre></li>
+   <var>{ "NPI_ID_VALUE": "NPI_ID" }</var></li>
    <li>VoterId - SampleValue: 
-   <pre>`{ "LALVOTERID": "Voters_ID" }`</pre></li>
+   <var>{ "LALVOTERID": "Voters_ID" }</var></li>
    <li>Phone - SampleValue: 
-   <pre>`{ "Phone": "Phone" }`</pre></li>
+   <var>{ "Phone": "Phone" }</var></li>
    <li>Email - SampleValue: 
-   <pre>`{ "Email": "Email" }`</pre></li>
-   <li>FullAddress - SampleValue: <pre>`{ "FullAddress": "Residence_FullAddress" }`</pre></li></ol></td>
+   <var>{ "Email": "Email" }</var></li>
+   <li>FullAddress - SampleValue: <var>{ "FullAddress": "Residence_FullAddress" }</var></li></ol></td>
    </tr>
 <tr>
    <td>
-      columnSettings <code>string</code> <code><em>(FormData)</em></code>
+      <strong>columnSettings</strong> <br /><span class="type-text">string (FormData)</span>
    </td>
    <td>
 Matched audience columns setting as per the selected columns for matching. Column setting should be as per the selected column as follows:
@@ -312,34 +313,32 @@ Matched audience columns setting as per the selected columns for matching. Colum
       <li>LastName, StreetAddress, State, Zip - NOT REQUIRED.</li>
       <li>StreetAddress, State, Zip - NOT REQUIRED.</li>
       <li>LastName, StreetAddress, State, Zip -NOT REQUIRED.</li>
-      <li>VoterId (It must be supported voter's data partners id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner)) - SampleValue:<pre>`{ "Voters_ID": "voterbase_id" }`</pre></li>
-      <li>NPI_Id (It must be supported healthcare data partners id [see API documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience)) - SampleValue:<pre>`{ "NPI_ID": "healthcare_id" }`</pre></li>
-      <li>Phone (It must be supported data format's id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats)) - SampleValue:<pre>`{ "Phone": "SHA1" }`</pre></li>
-      <li>Email (It must be supported data format's id [see API documentation](https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats))- SampleValue:<pre>`{ "Email": "SHA256" }`</pre></li>
+      <li>VoterId (It must be supported voter's data partners id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner">see API documentation</a>) - SampleValue: <var>{ "Voters_ID": "voterbase_id" }</var></li>
+      <li>NPI_Id (It must be supported healthcare data partners id <a href="https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience">see API documentation</a>) - SampleValue: <var>{ "NPI_ID": "healthcare_id" }</var></li>
+      <li>Phone (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API documentation</a>) - SampleValue: <var>{ "Phone": "SHA1" }</var></li>
+      <li>Email (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API doucmentation</a>)- SampleValue: <var>{ "Email": "SHA256" }</var></li>
       <li>FullAddress - NOT REQUIRED.</li></ol>
    </td>
    </tr>
   <tr>
-   <td><strong>audienceName *</strong><code>string</code><code><em>(FormData)</em></code></td>
+   <td><strong>audienceName *</strong><br /><span class="type-text">string (FormData)</span></td>
    <td>Name of matched audience</td>
    </tr>
   <tr>
-   <td><strong>metadata *</strong><code>string</code><code><em>(FormData)</em></code></td>
+   <td><strong>metadata *</strong><br /><span class="type-text">string (FormData)</span></td>
    <td>Matched audience sample data with system fields</td>
    </tr>
   <tr>
-   <td><strong>fileTotalCount *</strong><code>integer($int32)</code><code><em>(FormData)</em></code></td>
+   <td><strong>fileTotalCount *</strong><br /><span class="type-text">integer($int32) (FormData)</span></td>
    <td>Total number of records in the uploaded audience file</td>
    </tr>
   <tr>
-   <td><strong>isSingleColumnEnabled *</strong><code>boolean</code><code><em>(FormData)</em></code></td>
+   <td><strong>isSingleColumnEnabled *</strong><br /><span class="type-text">boolean (FormData)</span></td>
    <td>Flag to indicate if the mapping is single column enabled, if the voterId/phone/email/full-address the primary column mapping than this should be true, and false otherwise. <em>Default value</em> : false</td>
   </tr>
 </table>
 
-Request Sample (FormData)
-
-```
+``` title="Request Sample (FormData)"
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
 Content-Disposition: form-data; name="file"; filename="matched-audience-example.csv"
 Content-Type: text/csv
@@ -367,9 +366,7 @@ Content-Disposition: form-data; name="fileTotalCount"
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ--
 ```
 
-Response 200
-
-```json
+```json title="Response 200"
 {
    "statusCode": 200,
    "responseObject": {
@@ -382,9 +379,7 @@ Response 200
 <details>
 <summary>More Response Samples</summary>
 
-Response 400
-
-```json
+```json title="Response 400"
 {
    "statusCode": 400,
    "responseObject": {
@@ -394,9 +389,7 @@ Response 400
 }
 ```
 
-Response 500
-
-```json
+```json title="Response 500"
 {
    "statusCode": 500,
    "responseObject": {
@@ -407,34 +400,34 @@ Response 500
 ```
 </details>
 
+</div></div>
+
 \
 For further information see the complete [Matched Audience Upload API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience).
 
 ### Step 4: Check audience status
 
-Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. To get audience details use the following endpoint:
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/{matched_audience_Id}</span>
 
-* `GET` `/api/v2/audience/matched/{matched_audience_Id}`
+<div class="container">
+  <div class="child1">
 
-\
-**Path Parameters**
+Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. Use this endpoint to get audience details. 
 
-| Path | Type| Description |
-| ---- | ---- | --- |
-| `mathced_audience_id` | string [required] | |
+For further information see the complete [Matched Audience Details API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails).
 
-\
-**Header Parameters**
+| Path Parameters|  |
+| ----  | --- |
+| `matched_audience_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | |
 
-| Property | Type| Description |
-| ---- | ---- | --- |
-| `Authorization` | string  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
-| `X-IAA-OW-ID` | string | Organization Workspace ID Header |
+| Headers|  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">string</span> | Organization Workspace ID Header |
 
-\
-Response 200
+</div><div class="child2">
 
-```json
+```json title="Response 200"
 {
    "statusCode": 200,
    "responseObject": {
@@ -470,7 +463,7 @@ Response 200
  }
 ```
 
-For further information see the complete [Matched Audience Details API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails).
+</div></div>
 
 ## Best Practices
 
