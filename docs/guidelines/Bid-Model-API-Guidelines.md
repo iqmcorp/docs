@@ -66,7 +66,7 @@ The **Include** and **Exclude** options allow the user to control where their ad
 <div class="container">
   <div class="child1">
 
-Optimize a campaign by updating the status of specified entities to be either included or excluded with path parameters <span class="code-text">campaignId</span> and <span class="code-text">dimensionId`</span>
+Optimize a campaign by updating the status of specified entities to be either included or excluded with path parameters `campaignId` and `dimensionId`
 
 | Path                                                                                    |                        |
 | --------------------------------------------------------------------------------------- | ---------------------- |
