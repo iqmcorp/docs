@@ -9,8 +9,8 @@ export default {
   "favicon": "img/IQM-Q.ico",
   "url": "https://conjaytech.github.io",
   "baseUrl": "/docs/",
-  "organizationName": "facebook",
-  "projectName": "docusaurus",
+  "organizationName": "IQM",
+  "projectName": "API Guidelines",
   "onBrokenLinks": "ignore",
   "onBrokenMarkdownLinks": "warn",
   "i18n": {
@@ -38,6 +38,7 @@ export default {
       "classic",
       {
         "docs": {
+          "routeBasePath": "/",
           "sidebarPath": "./sidebars.js"
         },
         "theme": {
@@ -80,46 +81,28 @@ export default {
       "style": "dark",
       "links": [
         {
-          "title": "Docs",
+          "title": "IQM",
           "items": [
             {
-              "label": "Tutorial",
-              "to": "/docs/intro"
-            }
-          ]
-        },
-        {
-          "title": "Community",
-          "items": [
-            {
-              "label": "Stack Overflow",
-              "href": "https://stackoverflow.com/questions/tagged/docusaurus"
+              "label": "Website",
+              "to": "https://iqm.com/"
             },
             {
-              "label": "Discord",
-              "href": "https://discordapp.com/invite/docusaurus"
+              "label": "API Guidelines",
+              "to": "/"
             },
             {
-              "label": "Twitter",
-              "href": "https://twitter.com/docusaurus"
-            }
-          ]
-        },
-        {
-          "title": "More",
-          "items": [
-            {
-              "label": "Blog",
-              "to": "/blog"
+              "label": "API Docs",
+              "to": "https://api.iqm.com/docs"
             },
             {
-              "label": "GitHub",
-              "href": "https://github.com/facebook/docusaurus"
+              "label": "Help Center",
+              "to": "https://help.iqm.com/en/"
             }
           ]
         }
       ],
-      "copyright": "Copyright © 2024 My Project, Inc. Built with Docusaurus."
+      "copyright": "Copyright © 2024 IQM API docs. Built with Docusaurus."
     },
     "prism": {
       "theme": {

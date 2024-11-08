@@ -612,52 +612,6 @@ Filter campaign list by the following parameters:
 
 ---
 
-### Get List of Campaigns by Inventory Group
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/listByInventorygroup/{group_id}</span>
-
-<div class="container">
-  <div class="child1">
-
-Get a list of campaigns for inventory group targeting.
-
-| Path Parameters |  |
-| ---- | --- |
-| `group_id` <br /><span class="type-text">string</span> | Inventory group ID |
-
-| Query Parameters |  |
-| ---- | --- |
-| `searchField` <br /><span class="type-text">string</span> | Search results by ID or name |
-| `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
-| `provideOnlyTargetedCampaigns` <br /><span class="type-text">integer</span> | List only targeted campaigns: `1` <br />List all campaigns: `0` |
-
-</div><div class="child2">
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "totalRecords": 49,
-    "data": [
-      {
-        "id": 68304,
-        "name": "test budget",
-        "included": 0,
-        "excluded": 0,
-        "status": "pending",
-        "created": 1598966720
-      }
-    ],
-    "filteredRecords": 1
-  }
-}
-```
-
-</div></div>
-
----
-
 ### Get Campaign Budget Details
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/budgetInfo</span>
@@ -730,63 +684,9 @@ Get campaign budget info and graph details.
 
 ---
 
-### Get List of Campaign Groups and Associated Campaigns
+### Get List of Campaign Groups
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaigngroup/campaign/list</span>
-
-<div class="container">
-  <div class="child1">
-
-Get the list of existing campaign groups wiht associated campaigns (basic details).
-
-| Query Parameters |  |
-| ---- | --- |
-| `creative_type_ids` <br /><span class="type-text">string</span> | Filter with comma separated creative type IDs |
-| `owIds`  <br /><span class="type-text">string</span> | Filter with comma separated Organization Workspace IDs |
-| `includeChild` <br /><span class="type-text">string</span> | Include campaign group child |
-| `status ` <br /><span class="type-text">string</span> | Filter with comma separated statuses |
-
-</div><div class="child2">
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": [
-    {
-      "id": 264,
-      "name": "My group",
-      "created": 1549978603,
-      "uowId": 123,
-      "owId": 456,
-      "lastModified": 1549978603,
-      "rootParentId": "264",
-      "campaignCount": 22,
-      "campaings": [
-        {
-          "id": 3270,
-          "name": "Test Campaign - 1011",
-          "status": "running",
-          "creativeTypeId": 11
-        },
-        {
-          "id": 3303,
-          "name": "Test Campaign - 1011",
-          "status": "pending",
-          "creativeTypeId": 17
-        }
-      ]
-    }
-  ]
-}
-```
-
-</div></div>
-
----
-
-#### Get List of Campaign Groups
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/camp/campaigngroup/list</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/campaigngroup/list</span>
 
 <div class="container">
   <div class="child1">
@@ -1321,14 +1221,14 @@ Create a new PG campaign for advertiser.
 | `creativeTargeting` <br /><span class="type-text">object</span> | Object containing creative targeting details |
 | <div class="border"><span class="type-text">Object properties |
 | <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span> | Creative type ID |
-| <div class="border">`creativeIds` <br /><span class="type-text">string</span> | IDs of creatives attached to this campaign |
+| <div class="border">`creativeIds` <br /><span class="type-text">array of integers</span> | IDs of creatives attached to this campaign |
 | `inventoryTargeting` <br /><span class="type-text">object</span> |
 | <div class="border"><span class="type-text">Object properties |
-| <div class="border">`pgDealIds` <br /><span class="type-text">string</span> | PG Deal IDs attached to this campaign |
+| <div class="border">`pgDealIds` <br /><span class="type-text">array of integers</span> | PG Deal IDs attached to this campaign |
 | `conversionTargeting`  <br /><span class="type-text">object</span> | Object containing campaign conversion targeting details |
 | <div class="border"><span class="type-text">Object properties  |
 | <div class="border">`conversionTypeId` <br /><span class="type-text">integer</span> | Conversion type ID attached to this campaign |
-| <div class="border">`conversionIds` <br /><span class="type-text">string</span> | IDs of conversions attached to this campaign |
+| <div class="border">`conversionIds` <br /><span class="type-text">array of integers</span> | IDs of conversions attached to this campaign |
 | `politicalAdvertiserClientId` <br /><span class="type-text">integer</span> | Advertiser client ID if user is political advertiser |
 | `countryId` <br /><span class="type-text">integer</span> | ID of targeted country |
 
@@ -1350,14 +1250,23 @@ Create a new PG campaign for advertiser.
   },
   "creativeTargeting": {
     "creativeTypeId": 11,
-    "creativeIds": "[644506]"
+    "creativeIds": [
+      644506
+    ]
   },
   "inventoryTargeting": {
-    "pgDealIds": "[30,12]"
+    "pgDealIds": [
+      30,
+      12
+    ]
   },
   "conversionTargeting": {
     "conversionTypeId": 1,
-    "conversionIds": "[465,687,987]"
+    "conversionIds": [
+      465,
+      687,
+      987
+    ]
   },
   "politicalAdvertiserClientId": 989898,
   "countryId": 23
@@ -1805,8 +1714,8 @@ Update the total budget, daily budget, and max bid of multiple campaigns.
 
 | Request Schema | |
 | --- | --- |
-| `conversionIds` <br /><span class="type-text">integer</span> | Conversion IDs |
-| `campaignIds` <br /><span class="type-text">integer</span> | Campaign IDs to target |
+| `conversionIds` <br /><span class="type-text">string</span> | Conversion IDs | Comma separated Conversion IDs |
+| `campaignIds` <br /><span class="type-text">string</span> | Campaign IDs to target | Comma separated campaign IDs |
 
 </div><div class="child2">
 
@@ -1862,6 +1771,7 @@ PG campaigns cannot be used for audience targeting.
 
 | Request Schema | | 
 | --- | --- |
+| `{campaignId}` <br /><span class="type-text">integer</span> | Campaign ID for which to pass `includedAudienceList`, `excludedAudienceList`, and `removeAudience` |
 | `includedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to include in targetting |
 | `excludedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to exclude from targetting |
 | `removeAudience` <br /><span class="type-text">array of integers</span> | Audience IDs to remove |

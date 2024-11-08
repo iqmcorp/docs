@@ -108,121 +108,126 @@ export default [
     exact: true
   },
   {
+    path: '/docs/i',
+    component: ComponentCreator('/docs/i', '9df'),
+    exact: true
+  },
+  {
     path: '/docs/markdown-page',
     component: ComponentCreator('/docs/markdown-page', 'c78'),
     exact: true
   },
   {
-    path: '/docs/docs',
-    component: ComponentCreator('/docs/docs', 'df6'),
+    path: '/docs/',
+    component: ComponentCreator('/docs/', 'de8'),
     routes: [
       {
-        path: '/docs/docs',
-        component: ComponentCreator('/docs/docs', '129'),
+        path: '/docs/',
+        component: ComponentCreator('/docs/', '51d'),
         routes: [
           {
-            path: '/docs/docs',
-            component: ComponentCreator('/docs/docs', 'dab'),
+            path: '/docs/',
+            component: ComponentCreator('/docs/', 'ab5'),
             routes: [
               {
-                path: '/docs/docs/Guidelines/Assets-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Assets-API-Guidelines', 'aba'),
+                path: '/docs/Guidelines/Assets-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Assets-API-Guidelines', '217'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Bid-Model-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Bid-Model-API-Guidelines', 'ac5'),
+                path: '/docs/Guidelines/Bid-Model-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Bid-Model-API-Guidelines', 'fda'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Campaign-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Campaign-API-Guidelines', 'db7'),
+                path: '/docs/Guidelines/Campaign-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Campaign-API-Guidelines', 'c79'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Conversion-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Conversion-API-Guidelines', '81e'),
+                path: '/docs/Guidelines/Conversion-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Conversion-API-Guidelines', '6fe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Finance-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Finance-Guidelines', 'a74'),
+                path: '/docs/Guidelines/Finance-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Finance-Guidelines', '05c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Insights-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Insights-API-Guidelines', '4fd'),
+                path: '/docs/Guidelines/Insights-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Insights-API-Guidelines', '93f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Inventory-API-Guide',
-                component: ComponentCreator('/docs/docs/Guidelines/Inventory-API-Guide', '3a4'),
+                path: '/docs/Guidelines/Inventory-API-Guide',
+                component: ComponentCreator('/docs/Guidelines/Inventory-API-Guide', '7d9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Master-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Master-API-Guidelines', 'c0e'),
+                path: '/docs/Guidelines/Master-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Master-API-Guidelines', '865'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Reports-API-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Reports-API-Guidelines', 'b8e'),
+                path: '/docs/Guidelines/Reports-API-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Reports-API-Guidelines', 'b4c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/User-Profile-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/User-Profile-Guidelines', '81c'),
+                path: '/docs/Guidelines/User-Profile-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/User-Profile-Guidelines', '4cc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Guidelines/Workspace-Guidelines',
-                component: ComponentCreator('/docs/docs/Guidelines/Workspace-Guidelines', '33e'),
+                path: '/docs/Guidelines/Workspace-Guidelines',
+                component: ComponentCreator('/docs/Guidelines/Workspace-Guidelines', 'c39'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/intro',
-                component: ComponentCreator('/docs/docs/intro', '2ea'),
+                path: '/docs/Quickstart Guides/Authentication-Quickstart-Guide',
+                component: ComponentCreator('/docs/Quickstart Guides/Authentication-Quickstart-Guide', '6b0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Quickstart Guides/Authentication-Quickstart-Guide',
-                component: ComponentCreator('/docs/docs/Quickstart Guides/Authentication-Quickstart-Guide', '5fb'),
+                path: '/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide', '382'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide',
-                component: ComponentCreator('/docs/docs/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide', '7a1'),
+                path: '/docs/Quickstart Guides/Reporting-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/Quickstart Guides/Reporting-API-Quickstart-Guide', '1fb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Quickstart Guides/Reporting-API-Quickstart-Guide',
-                component: ComponentCreator('/docs/docs/Quickstart Guides/Reporting-API-Quickstart-Guide', 'd82'),
+                path: '/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide', 'b19'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide',
-                component: ComponentCreator('/docs/docs/Quickstart Guides/Schedule-Report-API-Quickstart-Guide', 'd14'),
+                path: '/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide',
+                component: ComponentCreator('/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide', 'cc6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/docs/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide',
-                component: ComponentCreator('/docs/docs/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide', '123'),
+                path: '/docs/',
+                component: ComponentCreator('/docs/', '698'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               }
@@ -231,11 +236,6 @@ export default [
         ]
       }
     ]
-  },
-  {
-    path: '/docs/',
-    component: ComponentCreator('/docs/', '6fa'),
-    exact: true
   },
   {
     path: '*',
