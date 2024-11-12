@@ -27,6 +27,10 @@ This section covers the various methods and endpoints for getting conversion det
 <div class="container">
   <div class="child3">
 
+  <details>
+
+<summary>See Property Table</summary>
+
 | Attributes |  |
 | ---- | --- |
 | `id` <br /><span class="type-text">integer</span> | Postback Conversion ID |
@@ -41,12 +45,18 @@ This section covers the various methods and endpoints for getting conversion det
 | `impressionUrl` <br /><span class="type-text">string</span> | Impression URL |
 | `clickUrl` <br /><span class="type-text">string</span> | Click URL |
 
+</details>
 </div></div>
+
 
 ### Pixel Conversion Resource Properties
 
 <div class="container">
   <div class="child3">
+
+<details>
+
+<summary>See Property Table</summary>
 
 | Attributes |  |
 | ---- | --- |
@@ -64,19 +74,23 @@ This section covers the various methods and endpoints for getting conversion det
 | `customFields` <br /><span class="type-text">string</span> | 	Allows user to pass additional data along with conversion details, which can be used for more detailed insights |
 | `financialMetrics` <br /><span class="type-text">string</span> | Allows user to pass additional financial data along with conversion details, which can then be used to calculate ROAs |
 | `piggybackData` <br /><span class="type-text">object</span> | contains `url` and `type` attributes |
-| `url` <br /><span class="type-text">string</span> | Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform
-| `type` <br /><span class="type-text">integer</span> | [Piggyback type ID](#get-list-of-conversion-piggyback-types) |
-| `conversionSetting` <br /><span class="type-text">object</span> | Advanced conversion setting, containts `conversionDuration`, `repeatConversion`, and `crossModelling` attributes |
-| `conversionDuration` <br /><span class="type-text">object</span> | Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad, contains `view` and `click` attributes |
-| `view` <br /><span class="type-text">integer</span> | View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion <br />Post view interval, days: [`1`...`30`] |
-| `click`  <br /><span class="type-text">integer</span> | Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [`7`...`60`] |
-| `repeatConversion` <br /><span class="type-text">object</span> | Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign, contains `count`, `frequency`, and `unit` |
-| `count` <br /><span class="type-text">integer</span> | Counts all conversions per user [`0`] or just 1 conversion per user [`1`]
-| `frequency` <br /><span class="type-text">integer</span> | Counts 1 conversion per user for specified number based on selected unit |
-| `unit` <br /><span class="type-text">string</span> | Selected unit of conversion frequency |
-| `crossModelling` <br /><span class="type-text">boolean</span> | 	Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device |
+| <div class="border"><span class="type-text">Object properties | |
+| <div class="border">`url` <br /><span class="type-text">string</span> | Additional URL that can be added to a pixel conversion to send conversion information to a third-party platform
+| <div class="border">`type` <br /><span class="type-text">integer</span> | [Piggyback type ID](#get-list-of-conversion-piggyback-types) |
+| `conversionSetting` <br /><span class="type-text">object</span> | Advanced conversion setting, contains `conversionDuration`, `repeatConversion`, and `crossModelling` attributes |
+| <div class="border"><span class="type-text">Object properties | |
+| <div class="border">`conversionDuration` <br /><span class="type-text">object</span> | Determines the length of time after a user clicks or views (or both: hybrid) an ad that a conversion can be attributed to that ad, contains `view` and `click` attributes |
+| <div class="secondBorder">`view` <br /><span class="type-text">integer</span> | View-based attribution gives credit to an ad that a user saw, but did not necessarily interact with, before making a conversion <br />Post view interval, days: [`1`...`30`] |
+| <div class="secondBorder">`click`  <br /><span class="type-text">integer</span> | Click-based attribution assigns credit for a conversion to the last ad that a user clicked on before making a purchase or taking an action <br />Post click interval, days: [`7`...`60`] |
+| <div class="border">`repeatConversion` <br /><span class="type-text">object</span> | Allows for multiple conversions from the same user to be tracked and attributed to the same ad or campaign, contains `count`, `frequency`, and `unit` |
+| <div class="secondBorder">`count` <br /><span class="type-text">integer</span> | Counts all conversions per user [`0`] or just 1 conversion per user [`1`]
+| <div class="secondBorder">`frequency` <br /><span class="type-text">integer</span> | Counts 1 conversion per user for specified number based on selected unit |
+| <div class="secondBorder">`unit` <br /><span class="type-text">string</span> | Selected unit of conversion frequency |
+| <div class="border">`crossModelling` <br /><span class="type-text">boolean</span> | 	Machine learning technique used to attribute conversion to ads that may not have received direct clicks or views from the same device |
 
 </div></div>
+
+</details>
 
 ---
 
@@ -142,14 +156,14 @@ Get details about a conversion from its ID.
 
 ### Get List of Conversions
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversions/list</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/conversion/list</span>
 
 <div class="container">
   <div class="child1">
 
 Get a list of conversions with details and filters.
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20` |
@@ -244,9 +258,9 @@ Get a count of conversions based on type.
 
 Get a list of campaign details by conversion ID.
 
-| Query Parameter | Type | Description |
-| ---- | ---- | --- |
-| `conversionId` | integer | Conversion ID |
+| Query Parameter  ||
+| ---- | --- |
+| `conversionId` <br /><span class="type-text">integer</span> | Conversion ID |
 
 </div><div class="child2">
 
@@ -403,9 +417,6 @@ Create postback type conversion records.
   <div class="child1">
 
 Create a pixel type conversion.
-
-\
-**Request Body Schema: application/json**
 
 Refer to the [Pixel Conversion resource properties](#pixel-conversion-resource-properties) table for request schema attributes. 
 
@@ -593,9 +604,6 @@ Assign a conversion to a campaign while validating conversion IDs and campaign I
 | Query Parameters  |  |
 | ----  | --- |
 | `assignConversionToCampaign` <br /><span class="type-text">string</span> | Map containing details list of `campaignId`s which need to be added/removed
-
-\
-**Request Body Schema: application/json**
 
 | Request Schema |  |
 | ---- | --- |

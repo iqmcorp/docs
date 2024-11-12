@@ -413,6 +413,9 @@ The user's profile display name and avatar can be updated.
 
 Get a list of users and details for a given workspace ID.
 
+<details>
+<summary>See Query Parameters</summary>
+
 | Query Parameters | |
 | ---- | --- |
 | `status` <br /><span class="type-text">string</span> | Status of user, default: `""` |
@@ -420,6 +423,11 @@ Get a list of users and details for a given workspace ID.
 | `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `+displayName` |
+
+</details>
+
+<details>
+<summary>See User Attributes</summary>
 
 | Attributes  |  |
 | ---  | --- |
@@ -441,6 +449,8 @@ Get a list of users and details for a given workspace ID.
 | `invitedByUserName` <br /><span class="type-text">string</span> | Name of user that invited user |
 | `invitedByUserEmail` <br /><span class="type-text">string</span> | Email of user that invited user |
 | `isAssignActionAllowed` <br /><span class="type-text">boolean</span> | User is allowed to assign (`true`) or not (`false`) |
+
+</details>
 
 </div><div class="child2">
 

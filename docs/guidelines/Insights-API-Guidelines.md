@@ -28,7 +28,7 @@ Use the following header parameters for all requests:
 Get a list of insights availabe in the database.
 
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ----  | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `20` |
@@ -68,11 +68,11 @@ Get a list of insights availabe in the database.
 
 Gets the data required for bidding insights of campaign by campaign ID in a given date range (2 weeks maximum), along with the rejection reasons and rejection bids per reason. Also gets total wins during the date range.
 
-| Path Parameters | Description |
+| Path Parameters |  |
 | ---- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ----| --- |
 | `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
 | `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
@@ -209,7 +209,7 @@ Response 422 (invalid start date)
 
 Get a list of eligible audiences which have 10k uniques (minimum).
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `20` |
@@ -286,7 +286,7 @@ Get a count of insights by type ID. See [list of insights type IDs](#get-list-of
 
 Get matched audience details by audience ID.
 
-| Path Parameters | Description |
+| Path Parameters |  |
 | ----| --- |
 | `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
 
@@ -397,7 +397,7 @@ Create an insight report for a given audience ID.
 
 Delete records from the database for valid insights IDs passed.
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to delete | 
 
@@ -458,12 +458,12 @@ Regenerates an insights report if the insight fails.
 
 Download insights report for audience (pdf or xlsx) by passing multipart/form-data format.
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
 | `fileType` <br /><span class="type-text">string</span> | File type of report: `pdf` or `xlsx`
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
 
@@ -535,6 +535,9 @@ VLD reports offer insights about users targeted in current or prior political ca
 <div class="container">
   <div class="child3">
 
+<details>
+<summary>See Resource Properties Table</summary>
+
 | Attributes  |  |
 | ---- | --- |
 | `vldId` <br /><span class="type-text">integer</span> | VLD ID |
@@ -558,6 +561,8 @@ VLD reports offer insights about users targeted in current or prior political ca
 | `fundsAvailable` <br /><span class="type-text">boolean</span> | Indicates if sufficient funds are available in the advertiser's account to generate the VLD report (`true`)
 | `effectiveVldRate` <br /><span class="type-text">integer</span> | Margin rate set by the admin and workspace for genrating VLD report
 
+</details>
+
 </div></div>
 
 ### Get List of VLD Reports
@@ -569,7 +574,7 @@ VLD reports offer insights about users targeted in current or prior political ca
 
 Get a list of VLD reports based on search filters.
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: `200` |
@@ -668,7 +673,7 @@ Get a list of campaign IDs by satus eligible for VLD report generation.
 
 This API calculates the cost for the impressions for the Voter Level Data Reports based on the impressions and mark up charged on the organization and then creates the VLD reports with the following endpoint:
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
@@ -771,7 +776,7 @@ Calculates the cost for the impressions for the VLD report based on impressions 
 
 Get a donwload link for a VLD insight report in CSV or XLSX format.
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: `1` <br />CSV: `2` |
 | `vldId` <br /><span class="type-text">integer</span> | VLD ID |

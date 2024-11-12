@@ -59,7 +59,7 @@ For the following endpoints the same request body schema (shown below) can be us
 }
 ```
 
-```json title="Response 200 (country list)
+```json title="Response 200 (country list)"
 {
     "success": true,
     "data": {
@@ -86,7 +86,7 @@ For the following endpoints the same request body schema (shown below) can be us
 
 ### Get Location Types
 
-<span class="badge badge--primary">GET</span> <span class="path-text">pa/api/v3/master/segment/locationtypeth</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/segment/locationtype</span>
 
 <div class="container">
   <div class="child1">
@@ -217,7 +217,7 @@ Get location details by location type and search filters.
 <div class="container">
   <div class="child1">
 
-Get a static list of time zones IDs.
+Get a static list of timezones IDs.
 
 </div><div class="child2">
 

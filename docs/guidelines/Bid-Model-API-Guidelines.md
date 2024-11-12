@@ -18,6 +18,176 @@ This page will cover the common endpoints and methods associated with the Bid Mo
 
 </div></div>
 
+## Get Bid Modelling Details
+
+### Get Campaign Dimension Counts
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/{camapaignId}/dimensions/count</span>
+
+<div class="container">
+  <div class="child1">
+
+Retrieves counts of dimensions for a specific campaign within a given date range.
+
+| Path Parameters     |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The campaign ID for which the report is being generated |
+
+| Query Parameters  |     |
+| --- | --- |
+| <span class="code-text">startDate</span> <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for campaign start date |
+| <span class="code-text">endDate</span>   <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for campaign end date   |
+
+
+</div><div class="child2">
+
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creative": 2,
+    "dealId": 0,
+    "openExchange": 0,
+    "publisherCategory": 0,
+    "trafficType": 2,
+    "deviceType": 4,
+    "state": 0,
+    "city": 0,
+    "zip": 0,
+    "exchange": 18
+  }
+}
+```
+
+<details>
+<summary>More Responses</summary>
+
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Missing required parameter: 'startDate'. Type: long",
+      "field": "startDate"
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "No campaign found with given campaign Id"
+    }
+  ]
+}
+```
+
+```json title="Respone 500"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "server encountered an error !"
+    }
+  ]
+}
+```
+
+</details></div></div>
+
+---
+
+### Get Dimension Specific Spending for a Campaign
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent</span>
+
+<div class="container">
+  <div class="child1">
+
+Get details on total spent by dimension for a campaign.
+
+| Path Parameters     |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The campaign ID |
+| `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Dimension ID <br />See static [list of dimension IDs](#get-list-of-bid-model-dimensions) |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "entityWiseSpent": {
+      "1": 5.1,
+      "2": 5.76,
+      "3": 5.34
+    }
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Total and Dimension Specific Count of Modelled Items for a Campaign
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/{campaignId}/bid-models/count</span>
+
+<div class="container">
+  <div class="child1">
+
+Get details on total and dimension specific counts of modelled items for a specified campaign.
+
+| Path Parameters     |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The campaign ID |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalCount": 7,
+    "dimensionWiseCount": [
+      {
+        "dimensionId": 1,
+        "count": 5
+      },
+      {
+        "dimensionId": 7,
+        "count": 1
+      },
+      {
+        "dimensionId": 13,
+        "count": 1
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
 ## Include/Exclude Management
 
 <br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/deviceType/includeExclude</span>
@@ -27,13 +197,15 @@ This page will cover the common endpoints and methods associated with the Bid Mo
 <div class="container">
   <div class="child1">
 
-The **Include** and **Exclude** options allow the user to control where their ads appear.
+The **Include** and **Exclude** options allow the user to control where their ads appear. 
 
-| Attributes                                                                             |                                                                                                                       |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| <span class="code-text">ids</span> <br /><span class="type-text">string</span>         | ID of entity                                                                                                          |
+For IDs see endpoint documentation for [device type](https://api.iqm.com/docs?path=tag/Master-API/operation/getMasterSegmentDeviceType), [exchanges](https://api.iqm.com/docs?path=tag/Master-API/operation/getExchanges), and [traffic source](https://api.iqm.com/docs?path=tag/Master-API/operation/getTrafficTypes) in the [Master API](/docs/Guidelines/Master-API-Guidelines).
+
+|Attributes | |
+| --- | --- |
+| <span class="code-text">ids</span> <br /><span class="type-text">string</span> | ID of entity |
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span> | Allow targeted entity: <span class="code-text">0</span> <br />Block targeted entity: <span class="code-text">1</span> |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign ID                                                                                                           |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign ID   |
 
 </div>
   <div class="child2">
@@ -66,21 +238,21 @@ The **Include** and **Exclude** options allow the user to control where their ad
 <div class="container">
   <div class="child1">
 
-Optimize a campaign by updating the status of specified entities to be either included or excluded with path parameters `campaignId` and `dimensionId`
+Optimize a campaign by updating the status of specified entities to be either included or excluded with path parameters `campaignId` and `dimensionId`.
 
-| Path                                                                                    |                        |
-| --------------------------------------------------------------------------------------- | ---------------------- |
+| Path  ||
+| --- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | Campaign ID  |
+| <span class="code-text">dimensionId</span> <br /><span class="type-text">integer</span> | Dimension ID <br />See static [list of dimension IDs](#get-list-of-bid-model-dimensions) |
+
+| Attributes    |  |
+| ---- | --- |
+| <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> | Unique ID of advertiser  |
+| <span class="code-text">dspId</span> <br /><span class="type-text">integer</span>       | Demand Side Platform ID  |
+| <span class="code-text">owId</span> <br /><span class="type-text">integer</span>        | Organization workspace ID   |
+| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span>       | User organization workspace ID |
 | <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | Unique ID of campaign  |
-| <span class="code-text">dimensionId</span> <br /><span class="type-text">integer</span> | Unique ID of dimension |
-
-| Attributes                                                                              |                                                                                                    |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> | Unique ID of advertiser                                                                            |
-| <span class="code-text">dspId</span> <br /><span class="type-text">integer</span>       | Demand Side Platform ID                                                                            |
-| <span class="code-text">owId</span> <br /><span class="type-text">integer</span>        | Organization workspace ID                                                                          |
-| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span>       | User organization workspace ID                                                                     |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | Unique ID of campaign                                                                              |
-| <span class="code-text">ids</span> <br /><span class="type-text">string</span>          | Creative ID                                                                                        |
+| <span class="code-text">ids</span> <br /><span class="type-text">string</span>          | Creative ID  |
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span>  | Target entity:<span class="code-text">0</span> <br />Block entity:<span class="code-text">1</span> |
 
 </div>
@@ -111,36 +283,98 @@ Optimize a campaign by updating the status of specified entities to be either in
 <div class="container">
   <div class="child1">
 
-Assigning priority to campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Assign priority (ranging 1 to 10) to multiple <span class="code-text">campaignId</span>.
+Assigning priority to campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Assign priority (ranging 1 to 10) to multiple `campaignIds`.
 
-| Path                                                                             |                    |
-| -------------------------------------------------------------------------------- | ------------------ |
+| Path  |     |
+| ---- | --- |
 | <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
 
-| Attributes                                                                                                                                   |                                                                                            |
-| -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| <span class="code-text">addPriority</span> <br /><span class="type-text">object</span>                                                       | Assign new priority to one or multiple campaigns                                           |
-| <span class="code-text">updatePriority</span> <br /><span class="type-text">object</span>                                                    | Update assigned priority to one or multiple campaigns                                      |
-| <span class="code-text">deletePriority</span> <br /><span class="type-text">object</span>                                                    | Deletes assigned priority from one or multiple campaigns                                   |
-| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span>             | Assigned priority: [<span class="code-text">1</span> .. <span class="code-text">10</span>] |
-| <span class="code-text">campaignIds</span><br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs                                                                               |
+| Attributes    |   |
+| ---- | --- |
+| `bidModelRequests` <br /><span class="type-text">array of objects</span> | Objects containing bid model actions |
+| <div class="border"><span class="type-text">Object properties | |
+| <div class="border">`action` <br /><span class="type-text">string</span> | Specifies bid model action: `ADD`, `UPDATE`, `DELETE` |
+| <div class="border">`bidModelData` <br /><span class="type-text">object</span> | Object containing bid model data: `id`, `priority`, `bidMultiplier`, `spendRatio`, `spendRatioTypeId` |
+| <div class="border">`dimensionEntityMappings` <br /><span class="type-text">array of objects</span> | Object containing entity mappings: `campaignId`, `dimensionId`, `entityId`, `bidModelDataId` |
+| <div class="border">`bidModelDataIds` <br /><span class="type-text">array of integers</span> |
+| `baseBid` <br /><span class="type-text">integer</span> |
+| `excludeDimensionEntityMappings` <br /><span class="type-text">object</span> | Object cointaining dimension entity mappings to exclude: `advertiserId`, `dspId`, `owId`, `uowId`, `campaignId`, `ids`, `isExcluded`, `dimensionId` |
+
+<details>
+
+<summary><code>bidModelData</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `id` <br /><span class="type-text">integer</span> |
+| `priority` <br /><span class="type-text">integer</span> | Assigned priority: [`1` .. `10`] |
+| `bidMultiplier` <br /><span class="type-text">integer</span> | Bid Multiplier [`0.1` .. `100`] |
+| `spendRatio` <br /><span class="type-text">integer</span> | Spend ratio [`0` .. `100`] |
+| `spendRatioTypeId` <br /><span class="type-text">integer</span> | Spend ratio type ID [`1`, `2`] |
+
+</details>
+
+<details>
+
+<summary><code>dimensionEntityMappings</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `dimensionId`  <br /><span class="type-text">integer</span> | Dimension ID |
+| `entityId` <br /><span class="type-text">integer</span> | Entity ID |
+| `bidModelDataId` <br /><span class="type-text">integer</span> | Bid model data ID |
+
+</details>
+
+<details>
+
+<summary><code>excludeDimensionEntityMappings</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `advertiserId` <br /><span class="type-text">integer</span> | Advertiser ID |
+| `dspId` <br /><span class="type-text">integer</span> | DSP ID |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `uowId` <br /><span class="type-text">integer</span> | Universal Organization Workspace ID |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `ids` <br /><span class="type-text">string</span> | Comma separated IDs |
+| `isExcluded` <br /><span class="type-text">boolean</span> |
+| `dimensionId` <br /><span class="type-text">integer</span> | Dimension ID |
+
+</details>
 
 </div>
   <div class="child2">
 
 ```json title="Request Sample"
 {
-  "addPriority": {
-    "campaignIds": [465913, 453423],
-    "priority": 9
-  },
-  "updatePriority": {
-    "campaignIds": [465925],
-    "priority": 9
-  },
-  "deletePriority": {
-    "campaignIds": [465464, 434232]
-  }
+  "bidModelRequests": [
+    {
+      "action": "ADD",
+      "bidModelData": {
+        "priority": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "campaignId": 1
+        }
+      ]
+    },
+    {
+      "action": "UPDATE",
+      "bidModelData": {
+        "id": 3677,
+        "priority": 2
+      }
+    },
+    {
+      "action": "DELETE",
+      "bidModelDataIds": [
+        893
+      ]
+    }
+  ]
 }
 ```
 
@@ -202,14 +436,14 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 Add, update, or delete assigned priorities to multiple campaigns.
 
-| Path                                                                             |                    |
-| -------------------------------------------------------------------------------- | ------------------ |
+| Path  | |
+| --- | --- |
 | <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
 
-| Attributes                                                                                                                                    |                                                                                            |
-| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span>              | Assigned priority: [<span class="code-text">1</span> .. <span class="code-text">10</span>] |
-| <span class="code-text">campaignIds</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs                                                                               |
+| Attributes  |  |
+| --- | --- |
+| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Assigned priority: [`1` .. `10`] |
+| <span class="code-text">campaignIdList</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs   |
 
 </div>
 <div class="child2">
@@ -217,7 +451,12 @@ Add, update, or delete assigned priorities to multiple campaigns.
 ```json title="Request Sample"
 {
   "priority": 1,
-  "campaignIdList": [123456, 234567, 345678, 456789]
+  "campaignIdList": [
+    123456, 
+    234567, 
+    345678, 
+    456789
+  ]
 }
 ```
 
@@ -241,117 +480,35 @@ Add, update, or delete assigned priorities to multiple campaigns.
 
 Generate a detailed metrics for a specific campaign, segmented by dimension.
 
-<table>
-    <th>Path parameters</th>
-    <tr>
-        <td>
-            <span class="code-text">campaignId</span><br /><span class="type-text">integer</span> <span class="required-text">required</span>
-        </td>
-        <td>
-            Campaign ID
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span class="code-text">dimensionId</span><br /><span class="type-text">integer</span> <span class="required-text">required</span>
-            </td>
-        <td>
-            Dimension ID
-        <td>
-</table>
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID
+| `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Dimension ID
 
-<table>
-    <th>Query parameter</th>
-    <tr>
-        <td>
-            <span class="code-text">searchField</span><br /><span class="type-text">string</span>
-        </td>
-        <td>
-            Search results by keyword
-        </td>
-    </tr>
-        <tr>
-        <td>
-            <span class="code-text">sortBy</span><br /><span class="type-text">string</span>
-        </td>
-        <td>
-            Sorts by ascending (<span class="code-text">+</span>) or descending (<span class="code-text">-</span>) <br />Default: <span class="code-text">"-impressions"</span>
-        </td>
-    </tr>
-        <tr>
-        <td>
-            <span class="code-text">pageNo</span><br /><span class="type-text">integer</span>
-        </td>
-        <td>
-            Page number for the data <br />Default: <span class="code-text">1</span>
-        </td>
-    </tr>
-        <tr>
-        <td>
-            <span class="code-text">pageSize</span><br /><span class="type-text">integer</span>
-        </td>
-        <td>
-            Maximum number of results returned <br />Default: <span class="code-text">50</span>
-        </td>
-    </tr>
-        <tr>
-        <td>
-            <span class="code-text">timeZoneId</span><br /><span class="type-text">integer</span>
-        </td>
-        <td>
-            Timezone ID
-        </td>
-    </tr>
-           <tr>
-        <td>
-            <span class="code-text">startDate</span><br /><span class="type-text">integer</span>
-        </td>
-        <td>
-            Unix epoch timestamp of campaign start date, in milliseconds
-        </td>
-    </tr>
-           <tr>
-        <td>
-            <span class="code-text">endDate</span><br /><span class="type-text">integer</span>
-        </td>
-        <td>
-             Unix epoch timestamp of campaign start date, in milliseconds
-        </td>
-    </tr>
-</table>
+<details>
+<summary>See Query Parameters</summary>
 
-<table>
-  <th>Request Attributes</th>
-    <tr>
-    <td><span class="code-text">fileName</span><br /><span class="type-text">string</span></td>
-    <td>File name</td>
-  </tr>
-    <tr>
-    <td><span class="code-text">columns</span><br /><span class="type-text">object</span>
-    </td>  
-    <td>Object containing <span class="code-text">label</span> and <span class="code-text">value</span></td>
-    </tr>
-    <tr>
-    <td><span class="code-text">label</span><br /><span class="type-text">string</span></td>
-    <td>Serves as the header row in the downloaded CSV/XLSX file, each label corresponds to a data field, displayed as the column header in the file</td>
-  </tr>
-    <tr>
-    <td><span class="code-text">value</span><br /><span class="type-text">string</span></td>
-    <td>Represents the data key used to retrieve values from the result map sourced from the database, ensures each column in the CSV/XLSX file accurately reflects the relevant data, with applied formatting and time-zone adjustments as needed</td>
-  </tr>
-    <tr>
-    <td><span class="code-text">fileType</span><br /><span class="type-text">string</span></td>
-    <td>File type ID</td>
-  </tr>
-    <tr>
-    <td><span class="code-text">token</span><br /><span class="type-text">string</span></td>
-    <td>Access token</td>
-  </tr>
-    <tr>
-    <td><span class="code-text">download</span><br /><span class="type-text">boolean</span></td>
-    <td>Generate download URL: <span class="code-text">true</span> </td>
-  </tr>
-</table>
+| Query Parameters | |
+| --- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) <br />Default: `-impressions` |
+| `pageNo` <br /><span class="type-text">integer</span> |  Page number for the data <br />Default: `1` |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of results returned <br />Default: `50` |
+| `timeZoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of campaign start date, in milliseconds |
+| `endDate`  <br /><span class="type-text">integer</span> | Unix epoch timestamp of campaign end date, in milliseconds |
+
+</details>
+
+| Request Schema | |
+| --- | --- |
+| `fileName` <br /><span class="type-text">string</span> | File name |
+| `columns` <br /><span class="type-text">object</span> | Object containing `label` and `value` |
+| `label` <br /><span class="type-text">string</span> | Serves as the header row in the downloaded CSV/XLSX file, each label corresponds to a data field, displayed as the column header in the file
+| `value` <br /><span class="type-text">string</span> | Represents the data key used to retrieve values from the result map sourced from the database, ensures each column in the CSV/XLSX file accurately reflects the relevant data, with applied formatting and time-zone adjustments as needed |
+| `fileType` <br /><span class="type-text">string</span> | File type: `csv` or `xlsx` |
+| `token` <br /><span class="type-text">string</span> | Access token | 
+| `download` <br /><span class="type-text">boolean</span> | Generate download URL: `true` |
 
 </div>
 <div class="child2">
@@ -436,8 +593,6 @@ Generate a detailed metrics for a specific campaign, segmented by dimension.
   <div class="child1">
 
 This API will provide values of bid-model dimensions and sub-dimensions.
-
-### Resource Properties
 
 | Attributes      |     |
 | ------- | ------------------ |
@@ -572,99 +727,3 @@ This API will provide values of bid-model dimensions and sub-dimensions.
 
 ---
 
-## Get Campaign Dimension Counts
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/{camapaignId}/dimensions/count</span>
-
-<div class="container">
-  <div class="child1">
-
-Retrieves counts of dimensions for a specific campaign within a given date range.
-
-\
-**Path Parameters**
-
-| Path Parameters     |                                               |
-| ------------ | ------------------------------------------------------- |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The campaign ID for which the report is being generated |
-
-\
-**Query Parameters**
-
-| Query Parameters  |                                                    |
-| ----------- | -------------------------------------------------------------- |
-| <span class="code-text">startDate</span> <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for campaign start date |
-| <span class="code-text">endDate</span>   <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for campaign end date   |                                                                             |
-
-
-</div><div class="child2">
-
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "creative": 2,
-    "dealId": 0,
-    "openExchange": 0,
-    "publisherCategory": 0,
-    "trafficType": 2,
-    "deviceType": 4,
-    "state": 0,
-    "city": 0,
-    "zip": 0,
-    "exchange": 18
-  }
-}
-```
-
-<details>
-<summary>More Responses</summary>
-
-
-```json title="Response 400"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Missing required parameter: 'startDate'. Type: long",
-      "field": "startDate"
-    }
-  ]
-}
-```
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "No campaign found with given campaign Id"
-    }
-  ]
-}
-```
-
-```json title="Respone 500"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "server encountered an error !"
-    }
-  ]
-}
-```
-
-</details></div></div>

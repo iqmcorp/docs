@@ -33,6 +33,24 @@ Get an over of a customer's finance details.
 | `isFinanceRequest` <br /><span class="type-text">boolean</span> | Represents whether request came from finance tab in customer app<br />For Customer Management Tab: `false` <br />For Finance Tab: `true` |
 | `year` <br /><span class="type-text">integer</span> | Year for data | 
 
+
+<details>
+<summary>See Resource Properties Table</summary>
+
+| Attributes | |
+| --- | --- |
+| `pendingCampaigns` <br /><span class="type-text">integer</span> | Number of campaigns in `pending` status (see [Campaign API](/docs/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status) for more info on statuses) |
+| `runningCampaigns` <br /><span class="type-text">integer</span> | Number of campaigns in `running` status (see [Campaign API](/docs/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status) for more info on statuses) |
+| `totalCampaigns`  <br /><span class="type-text">integer</span> | Total number of campaigns associated with customer |
+| `dataCost` <br /><span class="type-text">integer</span> |
+| `actualSpent` <br /><span class="type-text">integer</span> | Amount spent by customer
+| `credits` <br /><span class="type-text">integer</span> | Customer credits
+| `balance` <br /><span class="type-text">integer</span> |
+| `spent` <br /><span class="type-text">integer</span> |
+| `earning` <br /><span class="type-text">integer</span> |
+
+</details>
+
 </div><div class="child2">
 
 ```json title="Response 200"
@@ -72,6 +90,26 @@ Get a list of payment transactions for an organization.
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `limit` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `10` |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+
+<details>
+<summary>See Resource Properties Table</summary>
+
+| Attributes | |
+| --- | --- |
+| `isPaymentInitiatorOrg` <br /><span class="type-text">boolean</span> |
+| `paymentId` <br /><span class="type-text">integer</span> | Payment ID
+| `createdByUserEmail` <br /><span class="type-text">string</span> | Email of user who created payment |
+| `paymentDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of payment date, in milliseconds |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentStatus` <br /><span class="type-text">string</span> | [Payment status](#payment-status) |
+| `paymentMode` <br /><span class="type-text">string</span> | [Payment mode](#invoice-payment-mode-types) |
+| `paymentType` <br /><span class="type-text">string</span> | [Payment type](#payment-types) |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
+| `modifiedAt` <br /><span class="type-text">integer</span> | Unix epoch timestamp of modification date, in milliseconds |
+| `bankName` <br /><span class="type-text">string</span> | Bank associated with payment, if applicable, otherwise: `null` |
+| `refundReason` <br /><span class="type-text">string</span> | Reason for refund, if applicable, otherwise: `null` |
+
+</details>
 
 </div><div class="child2">
 
@@ -302,6 +340,29 @@ Get a list of payments by customer.
 
 Get an invoice for an organization.
 
+<details>
+<summary>See Resource Properties Table</summary>
+
+| Attributes | |
+| --- | --- |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `invoiceTitle` <br /><span class="type-text">string</span> | Invoice title |
+| `invoiceCompanyName` <br /><span class="type-text">string</span> | Company name associated with invoice |
+| `invoiceCompanyAddress` <br /><span class="type-text">string</span> | Address associated with company |
+| `email` <br /><span class="type-text">string</span> | Company email |
+| `website` <br /><span class="type-text">string</span> | Company website |
+| `invoiceDescription` <br /><span class="type-text">string</span> | Invoice description |
+| `paypalId` <br /><span class="type-text">integer</span> | PayPal ID |
+| `chequeTransferId` <br /><span class="type-text">integer</span> | Cheque transfer ID |
+| `wireTransferId` <br /><span class="type-text">integer</span> | Wire transfer ID |
+| `termsAndConditions` <br /><span class="type-text">string</span> | Terms and conditions of invoice |
+| `paymentTerm` <br /><span class="type-text">string</span> | Payment term of invoice |
+| `invoiceFooter` <br /><span class="type-text">string</span> | Invoice footer details |
+| `createdAt` <br /><span class="type-text">string</span> | Creation date of invoice |
+
+</details>
+
 </div><div class="child2">
 
 ```json title="Response 200"
@@ -440,7 +501,7 @@ Get a list of invoices by customer or organization.
 
 Get customer margin details by margin type.
 
-| Query Parameters | Description |
+| Query Parameters | |
 | ---- | --- |
 | `marginTypeIds` <br /><span class="type-text">string</span> | Comma separated margin type IDs <br />See static details list for supported values |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
@@ -476,7 +537,7 @@ Get customer margin details by margin type.
 <div class="container">
   <div class="child1">
 
-| Request Schema | Description |
+| Request Schema |  |
 | ----  | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `marginTypeId` <br /><span class="type-text">integer</span> | Margin type ID |
@@ -509,7 +570,7 @@ Get customer margin details by margin type.
 
 Get campaign margin details by campaign ID.
 
-| Query Parameters | Description |
+| Query Parameters |  |
 | ---- | --- |
 | `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs |
 
@@ -555,8 +616,8 @@ Get details for customer PG fees.
     "success": true,
     "data": {
         "organizationPgFeesDetails": {
-        "pgCampaignFees": 10,
-        "pgWorkspaceShare": 15
+            "pgCampaignFees": 10,
+            "pgWorkspaceShare": 15
         }
     }
 }
@@ -654,7 +715,7 @@ Get finance details for customer VLD.
 <div class="container">
   <div class="child1">
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | OW ID of the customer to update details (required) |
 | `vldRate` <br /><span class="type-text">integer</span> | VLD rate for workspace customer |
@@ -855,7 +916,7 @@ Get a PDF of payment receipt.
 | ---- | --- |
 | `paymentId` <br /><span class="type-text">integer</span> | Payment ID |
 
-| Query Parameter | Description |
+| Query Parameter |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `isCustomerRequest` <br /><span class="type-text">boolean</span> | Customer app request (default): `true` <br />Organization app request: `false` |
@@ -892,7 +953,7 @@ Get a PDF of payment receipt.
 | `invoiceDescription` <br /><span class="type-text">string</span> | Invoice description |
 | `termsAndConditions` <br /><span class="type-text">string</span> | Terms and conditions of invoice |
 | `paymentTerm` <br /><span class="type-text">string</span> | [Payment term ID](#invoice-payment-term) |
-| `invoiceFooter` <br /><span class="type-text">string</span> |
+| `invoiceFooter` <br /><span class="type-text">string</span> | Invoice footer details |
 | `paypalAcountId` <br /><span class="type-text">string</span> | PayPal account ID |
 | `chequeCompanyName` <br /><span class="type-text">string</span> | 
 | `chequeCompanyAddress` <br /><span class="type-text">string</span> |
@@ -1161,7 +1222,7 @@ Update [invoice status](#invoice-status).
 <div class="container">
   <div class="child1">
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `creditAmount` <br /><span class="type-text">integer</span> | Credit amount to add |
@@ -1195,7 +1256,7 @@ Update [invoice status](#invoice-status).
 <div class="container">
   <div class="child1">
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `creditId` <br /><span class="type-text">integer</span> | Credit ID |

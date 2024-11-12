@@ -119,15 +119,15 @@ export default [
   },
   {
     path: '/docs/',
-    component: ComponentCreator('/docs/', 'de8'),
+    component: ComponentCreator('/docs/', '58f'),
     routes: [
       {
         path: '/docs/',
-        component: ComponentCreator('/docs/', '51d'),
+        component: ComponentCreator('/docs/', 'dc4'),
         routes: [
           {
             path: '/docs/',
-            component: ComponentCreator('/docs/', 'ab5'),
+            component: ComponentCreator('/docs/', 'd86'),
             routes: [
               {
                 path: '/docs/Guidelines/Assets-API-Guidelines',
@@ -179,7 +179,7 @@ export default [
               },
               {
                 path: '/docs/Guidelines/Reports-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Reports-API-Guidelines', 'b4c'),
+                component: ComponentCreator('/docs/Guidelines/Reports-API-Guidelines', '38b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
