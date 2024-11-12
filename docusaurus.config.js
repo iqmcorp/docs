@@ -13,7 +13,7 @@ const config = {
   favicon: "img/IQM-Q.ico",
 
   // Set the production url of your site here
-  url: "https://conjaytech.github.io",
+  url: "https://iqmcorp.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/docs/",
