@@ -87,7 +87,7 @@ const config = {
         title: "IQM Docs",
         logo: {
           alt: "My Site Logo",
-          src: "img/iqm.png",
+          src: "img/IQM.png",
         },
         items: [
           {
