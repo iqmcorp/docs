@@ -32,7 +32,7 @@ Use the following endpoints to get details for various aspects of inventories, f
 <div class="container">
   <div class="child1">
 
-| Query Parameters| Description |
+| Query Parameters|  |
 | ---- | --- |
 | `keywords` <br /><span class="type-text">string</span> | Keywords to search inventory list |
 | `countries` <br /><span class="type-text">string</span> | Filter by country |
@@ -127,7 +127,7 @@ Response 500
 
 Blocklisted inventories refer to digital media placements or websites that are deemed inappropriate (adult content, hate speech, misaleading information) or of low quality (low engagement, poor user experience).
 
-| Query Parameters| Description |
+| Query Parameters|  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search result by keyword |
 | `inventoryIds` <br /><span class="type-text">string</span> | Filter inventories by inventory ID |
@@ -175,7 +175,7 @@ Optimize inventories for specific campaigns, download detailed inventory files, 
 
 Inventories can be optimized for specific campaign IDs.
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | Campaign ID to target for optimization |
 | `ids` <br /><span class="type-text">string</span>| Comma separated strings of inventory IDs to include in or exclude from specified campaign |
@@ -213,7 +213,7 @@ Inventories can be optimized for specific campaign IDs.
 
 Inventories can be blocked at the account level by ID or search field.
 
-| Request Schema | Description |
+| Request Schema |  |
 | ---- | --- |
 | `inventoryIds` <br /><span class="type-text">array of integers</span> | Inventory IDs to block |
 | `searchField` <br /><span class="type-text">string</span> | Block inventories by searched keyword |
@@ -317,6 +317,50 @@ Get a list of inventory groups based on various filters and parameters.
 | `sortBy` <br /><span class="type-text">string</span> | Sort entries by ascending (`+`) or descending (`-`) |
 
 </div><div class="child2">
+
+```ts title="TypeScript Request Sample"
+export const getInventoryGroupList = async (
+  params: UseInventoryGroupsListParams
+) => {
+  const {
+    searchField = "",
+    groupType,
+    pageSize,
+    ids,
+    sortBy,
+    includeStatistics,
+    provideAccountLevelExcludedGroup,
+    groupFilterId,
+    owId,
+    excludeEmptyGroups,
+    pageNo,
+  } = params;
+
+  try {
+    const res: AxiosResponse<WithResponse<InventoryGroupListResponse>> =
+      await getInstance().get("/v3/inv/groups/list", {
+        params: {
+          searchField,
+          groupTypeIds: groupType,
+          pageNo,
+          noOfEntries: pageSize,
+          sortBy,
+          includeStatistics,
+          provideAccountLevelExcludedGroup,
+          groupFilterId,
+          owId,
+          ids,
+          ...(typeof excludeEmptyGroups === "boolean"
+            ? { excludeEmptyGroups }
+            : {}),
+        },
+      });
+    return res.data;
+  } catch (e) {
+    return Promise.reject((e as AxiosError).response?.data);
+  }
+}
+```
 
 ```json title="Response 200"
 {
@@ -790,7 +834,7 @@ Edit an inventory group.
 
 Delete an existing inventory group.
 
-| Path Parameters | Description |
+| Path Parameters |  |
 | ---- | --- |
 | `groupId` <br /><span class="type-text">integer</span> | Group ID |
 
