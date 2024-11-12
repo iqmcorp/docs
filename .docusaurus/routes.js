@@ -119,61 +119,61 @@ export default [
   },
   {
     path: '/docs/',
-    component: ComponentCreator('/docs/', '58f'),
+    component: ComponentCreator('/docs/', '417'),
     routes: [
       {
         path: '/docs/',
-        component: ComponentCreator('/docs/', 'dc4'),
+        component: ComponentCreator('/docs/', '283'),
         routes: [
           {
             path: '/docs/',
-            component: ComponentCreator('/docs/', 'd86'),
+            component: ComponentCreator('/docs/', '9e1'),
             routes: [
               {
                 path: '/docs/Guidelines/Assets-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Assets-API-Guidelines', '217'),
+                component: ComponentCreator('/docs/Guidelines/Assets-API-Guidelines', '1d7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Bid-Model-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Bid-Model-API-Guidelines', 'fda'),
+                component: ComponentCreator('/docs/Guidelines/Bid-Model-API-Guidelines', 'edb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Campaign-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Campaign-API-Guidelines', 'c79'),
+                component: ComponentCreator('/docs/Guidelines/Campaign-API-Guidelines', 'de0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Conversion-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Conversion-API-Guidelines', '6fe'),
+                component: ComponentCreator('/docs/Guidelines/Conversion-API-Guidelines', '0d0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Finance-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Finance-Guidelines', '05c'),
+                component: ComponentCreator('/docs/Guidelines/Finance-Guidelines', 'd96'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Insights-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Insights-API-Guidelines', '93f'),
+                component: ComponentCreator('/docs/Guidelines/Insights-API-Guidelines', 'e9b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Inventory-API-Guide',
-                component: ComponentCreator('/docs/Guidelines/Inventory-API-Guide', '7d9'),
+                component: ComponentCreator('/docs/Guidelines/Inventory-API-Guide', '804'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Master-API-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Master-API-Guidelines', '865'),
+                component: ComponentCreator('/docs/Guidelines/Master-API-Guidelines', '5e8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -185,13 +185,13 @@ export default [
               },
               {
                 path: '/docs/Guidelines/User-Profile-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/User-Profile-Guidelines', '4cc'),
+                component: ComponentCreator('/docs/Guidelines/User-Profile-Guidelines', '52a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/docs/Guidelines/Workspace-Guidelines',
-                component: ComponentCreator('/docs/Guidelines/Workspace-Guidelines', 'c39'),
+                component: ComponentCreator('/docs/Guidelines/Workspace-Guidelines', '7b8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
