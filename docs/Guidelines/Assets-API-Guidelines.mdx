@@ -82,8 +82,6 @@ Use the following header parameters for all requests:
 ```ts 
 export interface paths {
     "/api/v3/asset/list": {
-        parameters: {
-        };
         get: operations["getAllAssets"]
     }
 }
@@ -94,37 +92,25 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "X-IAA-OW-ID"?: string;
-            };
+            }
         };
         responses: {
-            
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": unknown;
-                };
-            };
-            
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            id: number;
+                            storagePath: string;
+                            cdnUrl: string;
+                            created: number;
+                            modifiedDate: string;
+                            disposable: boolean
+                        }[]
+                    }
+                }
+            }
+        }
     }
 }
 ```
@@ -144,16 +130,10 @@ export interface operations {
 
 Get attributes of a single asset by ID
 
-<h4>Query Parameters</h4>
+| Path Parameters | |
+| --- | --- |
+| `assetId` <br /><span class="type-text">integer</span> | Asset ID |
 
-<table>
-    <tr>
-        <td>
-            <span class="code-text">assetId</span> <br /><span class="type-text">integer</span>
-        </td>
-        <td>Asset ID</td>
-    </tr>
-</table>
 </div>
 
 <div class="child2">
@@ -181,9 +161,7 @@ Get attributes of a single asset by ID
 ```ts
 export interface paths {
   "/api/v3/asset/{assetId}": {
-        parameters: {
-        };
-        get: operations["getAssetDetails"];
+        get: operations["getAssetDetails"]
     }
 }
 
@@ -196,19 +174,26 @@ export interface operations {
             };
             path: {
                 assetId: number;
-            };
+            }
         };
         responses: {
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            id: number;
+                            storagePath: string;
+                            cdnUrl: string;
+                            created: number;
+                            modifiedDate: string;
+                            disposable: boolean
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -229,7 +214,7 @@ export interface operations {
 
 Add multiple assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- |
 | `filesMetaData` <br /><span class="type-text">integer</span> | JSON string representing the metadata associated with the files |
 | `files` <br /><span class="type-text">string</span> | Files to add |
@@ -258,8 +243,6 @@ Add multiple assets to the system. Request accepts an array of multipart file ob
 ```ts
 export interface paths {
     "/api/v3/asset": {
-        parameters: {
-        };
         post: operations["addAssets"];
     };
 }
@@ -268,40 +251,38 @@ export interface operations {
     addAssets: {
         parameters: {
             query: {
-                
                 filesMetadata: string;
                 files: string[];
             };
             header?: {
                 Authorization?: string;
                 "X-IAA-OW-ID"?: string;
-            };
+            }
         };
-        responses: {
-            
+        responses: { 
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": unknown;
-                };
+                    "application/json": {
+                        statusCode: number;
+                        responseObject: {
+                            files: {
+                                assetID: number;
+                                assetCDNURL: string
+                            }
+                        }
+                    }
+                }
             };
-            
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
                 Authorization?: string;
                 "X-IAA-OW-ID"?: string;
                 };
                 path: {
-                    
-                    assetId: number;
-                };
-            };
-        };
+                    assetId: number
+                }
+            }
+        }
     }
 }
 ```
@@ -363,10 +344,8 @@ Update the details of an existing asset by ID
 ```ts
 export interface paths {
     "/api/v3/asset/{assetId}": {
-        parameters: {
-        };
-        patch: operations["updateAssetDetails"];
-    };
+        patch: operations["updateAssetDetails"]
+    }
 }
 
 
@@ -379,7 +358,7 @@ export interface operations {
             };
             path: {
                 assetId: number;
-            };
+            }
         };
         requestBody: {
             content: {
@@ -387,22 +366,24 @@ export interface operations {
                     storagePath?: string;
                     cdnUrl?: string;
                     disposable?: boolean;
-                };
-            };
+                }
+            }
         };
         responses: {
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": unknown;
-                };
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            statusCode: number;
+                            responseObject: {
+                                message: string
+                            }
+                        }
+                    }
+                }
             };
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
                     "application/json": {
                         success?: boolean;
@@ -412,11 +393,11 @@ export interface operations {
                             field?: string;
                         }[];
                         data?: Record<string, never>;
-                    };
-                };
-            };
-        };
-    };
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -460,10 +441,8 @@ Delete single asset by ID
 ```ts
 export interface paths {
     "/api/v3/asset/{assetId}": {
-        parameters: {
-        };
-        delete: operations["deleteAsset"];
-    };
+        delete: operations["deleteAsset"]
+    }
 }
 
 export interface operations {
@@ -474,34 +453,27 @@ export interface operations {
                 "X-IAA-OW-ID"?: string;
             };
             path: {
-                
                 assetId: number;
-            };
+            }
         };
         responses: {
-            
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": unknown;
-                };
+                    "application/json": {
+                        success: boolean;
+                        data: string
+                    }
+                }
             };
-            
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
+                    Authorization?: string;
+                    "X-IAA-OW-ID"?: string;
                 };
                 path: {
-                    
                     assetId: number;
-                };
-            };
+                }
+            }
         }
     }
 }
