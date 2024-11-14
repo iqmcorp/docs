@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Bid Model API
 
 The Bid Model API allows users to optimize their advertising campaigns for better performance. The user can fine-tune metrics such as where their ads appear (Include/Exclude), campaign priority management, and dimensions by which a campaign is subdivided.
@@ -41,6 +44,8 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -109,7 +114,103 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 }
 ```
 
-</details></div></div>
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/dimensions/count": {
+    get: operations["getDimensionWiseServeCount"]
+  }
+}
+
+
+export interface operations {
+ getDimensionWiseServeCount: {
+    parameters: {
+      query: {
+        startDate: number;
+        endDate: number;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              creative: number;
+              dealId: number;
+              openExchange: number;
+              publisherCategory: number;
+              trafficType: number;
+              deviceType: number;
+              state: number;
+              city: number;
+              zip: number;
+              exchange: number;
+            }
+          }
+        };
+      };
+      400: {
+        content: {
+          "application:json": {
+            success: boolean
+            errorObjects: {
+              error: string;
+              field: string;
+            }[]
+          }
+        }
+      }
+      403: {
+        content: {
+          "application/json": {
+            success: boolean
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+      422: {
+       content: {
+          "application/json": {
+            success: boolean
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+      500: {
+        content: {
+          "application/json": {
+            success: boolean
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+    };
+  }
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ---
 
@@ -129,6 +230,9 @@ Get details on total spent by dimension for a campaign.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
   "success": true,
@@ -141,6 +245,47 @@ Get details on total spent by dimension for a campaign.
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent": {
+    get: operations["getDimensionWiseEntitySpentForCampaign"];
+  };
+}
+
+export interface operations {
+  getDimensionWiseEntitySpentForCampaign: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+        dimensionId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              entityWiseSpent: {
+                dimensionId: number
+              }
+            }
+          }
+        }
+      }
+    };
+  };
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -160,6 +305,9 @@ Get details on total and dimension specific counts of modelled items for a speci
 | `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The campaign ID |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -183,6 +331,51 @@ Get details on total and dimension specific counts of modelled items for a speci
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/bid-models/count": {
+    get: operations["getModelledItemsCount"];
+  };
+}
+
+export interface operations {
+  getModelledItemsCount: {
+    parameters: {
+      query?: {
+        dimensionId?: number;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalCount: number;
+              dimensionWiseCount: {
+                dimensionId: number;
+                count: number
+              }[]
+            }
+          }
+        }
+      }
+    };
+  };
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -210,6 +403,9 @@ For IDs see endpoint documentation for [device type](https://api.iqm.com/docs?pa
 </div>
   <div class="child2">
 
+  <Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
   "ids": "15",
@@ -226,6 +422,67 @@ For IDs see endpoint documentation for [device type](https://api.iqm.com/docs?pa
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/deviceType/includeExclude": {
+    post: operations["DeviceType-includeExclude"];
+  }
+/**
+ * Substitute exchange or trafficsource endpoints
+ * @example {
+ * 
+ *  "/api/v2/cmp/exchange/includeExclude": {
+ *    post: operations["Exchange-includeExclude"];
+ *  }
+ *
+ *  or
+ *
+ * "/api/v2/cmp/trafficsource/includeExclude": {
+ *    post: operations["Trafficsource-includeExclude"];
+ *  };
+ *}
+ */
+}
+
+export interface operations {
+ "DeviceType-includeExclude": {
+    parameters: {
+      header: {
+        Authorization: string;
+          "X-Iaa-Host": string;
+          "X-IAA-OW-ID": number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ids: string;
+          isExcluded: number;
+          campaignId: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json;charset=UTF-8": {
+            statusCode: number;
+            responseObject: {
+              message: string;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -247,16 +504,19 @@ Optimize a campaign by updating the status of specified entities to be either in
 
 | Attributes    |  |
 | ---- | --- |
-| <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> | Unique ID of advertiser  |
-| <span class="code-text">dspId</span> <br /><span class="type-text">integer</span>       | Demand Side Platform ID  |
-| <span class="code-text">owId</span> <br /><span class="type-text">integer</span>        | Organization workspace ID   |
-| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span>       | User organization workspace ID |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | Unique ID of campaign  |
-| <span class="code-text">ids</span> <br /><span class="type-text">string</span>          | Creative ID  |
+| <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Advertiser ID  |
+| <span class="code-text">dspId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | Demand Side Platform ID  |
+| <span class="code-text">owId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>       | Organization workspace ID   |
+| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | User organization workspace ID |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Unique ID of campaign  |
+| <span class="code-text">ids</span> <br /><span class="type-text">string</span> <span class="required-text">optional</span>         | Creative ID  |
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span>  | Target entity:<span class="code-text">0</span> <br />Block entity:<span class="code-text">1</span> |
 
 </div>
   <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample (creatives)"
 {
@@ -271,6 +531,57 @@ Optimize a campaign by updating the status of specified entities to be either in
   "data": "Creatives successfully targeted for the campaign."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/include-exclude/dimensions/{dimensionId}": {
+    post: operations["toggleCampaignDimensionStatus"];
+  };
+}
+
+export interface operations {
+ toggleCampaignDimensionStatus: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+        dimensionId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: number;
+          dspId?: number;
+          owId?: number;
+          uowId?: number;
+          campaignId?: number;
+          ids?: string;
+          isExcluded?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -293,7 +604,7 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 | ---- | --- |
 | `bidModelRequests` <br /><span class="type-text">array of objects</span> | Objects containing bid model actions |
 | <div class="border"><span class="type-text">Object properties</span></div> | |
-| <div class="border">`action` <br /><span class="type-text">string</span></div> | Specifies bid model action: `ADD`, `UPDATE`, `DELETE` |
+| <div class="border">`action` <br /><span class="type-text">enum</span></div> | Specifies bid model action: `ADD`, `UPDATE`, `DELETE` |
 | <div class="border">`bidModelData` <br /><span class="type-text">object</span></div> | Object containing bid model data: `id`, `priority`, `bidMultiplier`, `spendRatio`, `spendRatioTypeId` |
 | <div class="border">`dimensionEntityMappings` <br /><span class="type-text">array of objects</span></div> | Object containing entity mappings: `campaignId`, `dimensionId`, `entityId`, `bidModelDataId` |
 | <div class="border">`bidModelDataIds` <br /><span class="type-text">array of integers</span></div> |
@@ -346,6 +657,9 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 </div>
   <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -421,7 +735,111 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 }
 ```
 
-</details></div></div>
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/io/{ioId}/bid-models": {
+    put: operations["managePriorityToCampaign"];
+  }
+}
+
+export interface operations {
+  managePriorityToCampaign: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Insertion Order": string;
+        ioId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelRequests?: {
+            bidModelData?: {
+              id?: number;
+              priority?: number;
+              bidMultiplier?: number;
+              spendRatio?: number;
+              spendRatioTypeId?: number;
+            };
+            dimensionEntityMappings?: {
+              campaignId?: number;
+              dimensionId?: number;
+              entityId?: number;
+              bidModelDataId?: number;
+            }[];
+            action: "ADD" | "UPDATE" | "DELETE";
+            bidModelDataIds?: number[];
+          }[];
+          baseBid?: number;
+          excludeDimensionEntityMappings?: {
+            advertiserId?: number;
+            dspId?: number;
+            owId?: number;
+            uowId?: number;
+            campaignId?: number;
+            ids?: string;
+            isExcluded?: number;
+            dimensionId?: number;
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            succes: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            succes: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+      500: {
+        content: {
+          "application/json": {
+            succes: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ---
 
@@ -436,7 +854,11 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 
 Add, update, or delete assigned priorities to multiple campaigns.
 
-| Path  | |
+| Query Parameters   | <span class="badge badge--danger">DELETE</span> only|
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs
+
+| Path Parameters  | |
 | --- | --- |
 | <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
 
@@ -447,6 +869,9 @@ Add, update, or delete assigned priorities to multiple campaigns.
 
 </div>
 <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -466,6 +891,111 @@ Add, update, or delete assigned priorities to multiple campaigns.
   "data": "Priority Updated Successfully"
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/bm/io/{ioId}/bid-models": {
+    post: operations["addPriorityToCampaign"];
+    delete: operations["deletePriorityToCampaign"];
+    patch: operations["updatePriorityToCampaign"];
+  };
+}
+
+export interface operations {
+  addPriorityToCampaign: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Insertion Order": string;
+        ioId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: number;
+          campaignIds: number[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+  deletePriorityToCampaign: {
+    parameters: {
+      query?: {
+        campaignIds?: string;
+      };
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Insertion Order": string;
+        ioId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+  updatePriorityToCampaign: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Insertion Order": string;
+        ioId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: number;
+          campaignIds: number[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -513,11 +1043,12 @@ Generate a detailed metrics for a specific campaign, segmented by dimension.
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-  "name": "Nisha T",
   "fileName": "Stage Shared Advertiser_deal_id_1708536470049",
-  "activeTable": "deal_id",
   "columns": [
     {
       "label": "Deal ID",
@@ -528,7 +1059,6 @@ Generate a detailed metrics for a specific campaign, segmented by dimension.
       "value": "eCPM"
     }
   ],
-  "calledApp": "bidModel",
   "fileType": "csv",
   "token": "fd5b502b-3c49-4703-83d9-df1b397011a2",
   "download": true
@@ -580,7 +1110,102 @@ Generate a detailed metrics for a specific campaign, segmented by dimension.
 }
 ```
 
-</details></div></div>
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}": {
+    post: operations["fetchCampaignMetricsByDimension"];
+  };
+}
+
+export interface operations {
+  fetchCampaignMetricsByDimension: {
+    parameters: {
+      query?: {
+        searchField?: string;
+        sortBy?: string;
+        pageNo?: number;
+        pageSize?: number;
+        timeZoneId?: number;
+        startDate?: number;
+        endDate?: number;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+        dimensionId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          fileName: string;
+          columns: {
+            label: string;
+            value: string
+          }[];
+          fileType: string;
+          token: string;
+          download: boolean
+        }
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success?: boolean;
+            data?: {
+              url: string
+            }
+          };
+        };
+      };
+      401: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        }
+      };
+      422: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        }
+      };
+      500: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        }
+      };
+    }
+  }
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ---
 
@@ -613,6 +1238,8 @@ This API will provide values of bid-model dimensions and sub-dimensions.
 </div>
  <div class="child2">
 
+ <Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -722,6 +1349,50 @@ This API will provide values of bid-model dimensions and sub-dimensions.
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/static/dimensions": {
+    get: operations["getDimensions"];
+  };
+}
+
+export interface operations {
+ getDimensions: {
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              dimensions: {
+                name: string;
+                id: number;
+                label: string;
+                order: number;
+                modellingEnabled: boolean
+                subdimensions?: {
+                  name:string;
+                  id: number;
+                  lable: string;
+                  order: number;
+                  modellingEnabled: boolean
+                }[]
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
