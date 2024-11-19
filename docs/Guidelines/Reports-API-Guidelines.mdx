@@ -61,83 +61,222 @@ Get a list of reports.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "customerIds": "123,234,345",
-    "pageNo": 1,
-    "noOfEntries": 30,
-    "sortBy": "+id",
-    "searchField": "search field"
+  "customerIds": "123,234,345",
+  "pageNo": 1,
+  "noOfEntries": 30,
+  "sortBy": "+id",
+  "searchField": "search field"
 }
 ```
 
 ```json title=Response 200"
 {
-    "success": true,
-    "data": {
-        "data": [
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 1,
+        "reportName": "Campaign by Gender by Device type",
+        "startDate": 1650177200,
+        "endDate": 1666938296,
+        "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+        "customerIds": null,
+        "customerDetails": null,
+        "timezoneId": 11,
+        "reportSchedulingEventDetails": {
+          "eventId": 29,
+          "deliveryFrequency": 3,
+          "fileType": 2,
+          "subscriberEmails": [
+            "demoUser1@gmail.com",
+            "demoUser2@iqm.com"
+          ],
+          "eventEndDate": 1671148799999,
+          "deliveryDay": "Friday"
+        }
+      },
+      {
+        "id": 2,
+        "reportName": "Campaigns by Zip Codes with filters",
+        "startDate": 1660521600,
+        "endDate": 1668470399,
+        "dimensions": "[{\"filter\": \"campaign\"}, {\"value\": [123, 234, 345, 456], \"filter\": \"zip5\"}]",
+        "customerIds": null,
+        "customerDetails": null,
+        "timezoneId": 12,
+        "reportSchedulingEventDetails": {}
+      },
+      {
+        "id": 3,
+        "reportName": "Creatives by Income Ranges and Operating System with filters",
+        "startDate": 1660521600,
+        "endDate": 1668470399,
+        "timezoneId": 11,
+        "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
+        "customerIds": [
+            200,
+            201
+        ],
+        "customerDetails": [
             {
-                "id": 1,
-                "reportName": "Campaign by Gender by Device type",
-                "startDate": 1650177200,
-                "endDate": 1666938296,
-                "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
-                "customerIds": null,
-                "customerDetails": null,
-                "timezoneId": 11,
-                "reportSchedulingEventDetails": {
-                    "eventId": 29,
-                    "deliveryFrequency": 3,
-                    "fileType": 2,
-                    "subscriberEmails": [
-                        "demoUser1@gmail.com",
-                        "demoUser2@iqm.com"
-                    ],
-                    "eventEndDate": 1671148799999,
-                    "deliveryDay": "Friday"
-                }
-            },
-            {
-                "id": 2,
-                "reportName": "Campaigns by Zip Codes with filters",
-                "startDate": 1660521600,
-                "endDate": 1668470399,
-                "dimensions": "[{\"filter\": \"campaign\"}, {\"value\": [123, 234, 345, 456], \"filter\": \"zip5\"}]",
-                "customerIds": null,
-                "customerDetails": null,
-                "timezoneId": 12,
-                "reportSchedulingEventDetails": {}
-            },
-            {
-                "id": 3,
-                "reportName": "Creatives by Income Ranges and Operating System with filters",
-                "startDate": 1660521600,
-                "endDate": 1668470399,
-                "timezoneId": 11,
-                "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
-                "customerIds": [
-                    200,
-                    201
-                ],
-                "customerDetails": [
-                    {
-                        "owId": 200,
-                        "organizationName": "Test Organization",
-                        "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/200/1637314301025.png",
-                        "statusId": 1,
-                        "status": "Active",
-                        "supportEmail": "demoSupport@gmail.com",
-                        "timezone": 29
-                    }
-                ],
-                "reportSchedulingEventDetails": {}
+                "owId": 200,
+                "organizationName": "Test Organization",
+                "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/200/1637314301025.png",
+                "statusId": 1,
+                "status": "Active",
+                "supportEmail": "demoSupport@gmail.com",
+                "timezone": 29
             }
         ],
-        "totalRecords": 3,
-        "filteredRecords": 3
-    }
+        "reportSchedulingEventDetails": {}
+      }
+    ],
+    "totalRecords": 3,
+    "filteredRecords": 3
+  }
 }
 ```
+
+  </TabItem>
+  <TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/reports/list": {
+    parameters: {};
+    get: operations["getReportList"];
+    post: operations["fetchReportList"];
+  };
+}
+
+export interface operations {
+  getReportList: {
+    parameters: {
+      query?: {
+        customerIds?: string;
+        sortBy?: string;
+        searchField?: string;
+        limit?: number;
+        pageNo?: number;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                id: number;
+                reportName: string;
+                startDate: number;
+                endDate: number;
+                dimensions: string;
+                customerIds: number[];
+                customerDetails: {
+                  owId: number;
+                  organizationName: string;
+                  organizationLogo: string;
+                  statusId: number;
+                  status: string;
+                  supportEmail: string;
+                  timezone: number
+                }[];
+                timezoneId: number;
+                reportSchedulingEventDetails: {
+                  eventId: number;
+                  deliveryFrequency: number;
+                  fileType: number;
+                  subscriberEmails: string[];
+                  eventEndDate: number;
+                  deliveryDay: string;
+                }
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+  fetchReportList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          owId?: number;
+          customerIds?: string;
+          uowId?: number;
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string
+          order?: "asc" | "desc";
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                id: number;
+                reportName: string;
+                startDate: number;
+                endDate: number;
+                dimensions: string;
+                customerIds: number[];
+                customerDetails: {
+                  owId: number;
+                  organizationName: string;
+                  organizationLogo: string;
+                  statusId: number;
+                  status: string;
+                  supportEmail: string;
+                  timezone: number
+                }[];
+                timezoneId: number;
+                reportSchedulingEventDetails: {
+                  eventId: number;
+                  deliveryFrequency: number;
+                  fileType: number;
+                  subscriberEmails: string[];
+                  eventEndDate: number;
+                  deliveryDay: string;
+                }
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -158,46 +297,106 @@ Get report data by report ID.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "id": 123,
-        "reportName": "Campaign by Gender by Device type",
-        "startDate": 1650177000,
-        "endDate": 1666938000,
-        "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
-        "columns": [
-            "gender",
-            "deviceType",
-            "campaignId",
-            "campaignName",
-            "startTime",
-            "endTime",
-            "maxBid",
-            "budgetDay",
-            "budgetTotal",
-            "impressions",
-            "clicks"
-        ],
-        "timezoneId": 29,
-        "requestType": 1,
-        "reportSchedulingEventDetails": {
-            "eventId": 18,
-            "deliveryFrequency": 3,
-            "fileType": 2,
-            "subscriberEmails": [
-                "demoUser1@gmail.com",
-                "demoUser2@iqm.com"
-            ],
-            "eventEndDate": 1671148799,
-            "deliveryDay": "Friday",
-            "runningTotalEnabled": 0,
-            "earliestCampaignStartDate": 0
-        }
+  "success": true,
+  "data": {
+    "id": 123,
+    "reportName": "Campaign by Gender by Device type",
+    "startDate": 1650177000,
+    "endDate": 1666938000,
+    "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+    "columns": [
+      "gender",
+      "deviceType",
+      "campaignId",
+      "campaignName",
+      "startTime",
+      "endTime",
+      "maxBid",
+      "budgetDay",
+      "budgetTotal",
+      "impressions",
+      "clicks"
+    ],
+    "timezoneId": 29,
+    "requestType": 1,
+    "reportSchedulingEventDetails": {
+      "eventId": 18,
+      "deliveryFrequency": 3,
+      "fileType": 2,
+      "subscriberEmails": [
+        "demoUser1@gmail.com",
+        "demoUser2@iqm.com"
+      ],
+      "eventEndDate": 1671148799,
+      "deliveryDay": "Friday",
+      "runningTotalEnabled": 0,
+      "earliestCampaignStartDate": 0
     }
+  }
 }
 ```
+
+  </TabItem>
+  <TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/ra/report/{reportId}": {
+    parameters: {};
+    get: operations["getReport"];
+  };
+}
+
+export interface operations {
+  getReport: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        reportId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              id: number;
+              reportName: string;
+              startDate: number;
+              endDate: number;
+              dimensions: string;
+              columns: string[];
+              timezoneId: number;
+              requestType: number;
+              reportSchedulingEventDetails: {
+                eventId: number;
+                deliveryFrequency: number;
+                fileType: number;
+                subscriberEmails: string[];
+                eventEndDate: number;
+                deliveryDay: string;
+                runningTotalEnabled: number;
+                earliestCampaignStartDate: number;
+              }
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -252,6 +451,9 @@ Create a new report based on given fields (see [Resource Properties](#resource-p
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "reportName": "Campaign by Gender by Device type with customer and filtering",
@@ -302,6 +504,82 @@ Response 200
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/add": {
+    parameters: {};
+    post: operations["saveReport"];
+  };
+}
+
+export interface operations {
+  saveReport: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: number;
+          reportName?: string;
+          startDate?: number;
+          endDate?: number;
+          dimensions?: string;
+          customerIds?: number[];
+          columns?: string[];
+          timezoneId?: number;
+          requestType?: number;
+          reportAggregated?: string;
+          owId?: number;
+          createdByUOWId?: number;
+          modifiedByUOWId?: number;
+          timezoneName?: string;
+          organizationName?: string;
+          customerDetails?: {
+            owId?: number;
+            organizationName?: string;
+            organizationLogo?: string;
+            statusId?: number;
+            status?: string;
+            supportEmail?: string;
+            timezone?: number;
+            organizationType?: string;
+          }[];
+          reportSchedulingEventDetails?: {
+            earliestCampaignStartDate?: number;
+            reportId?: number;
+            deliveryFrequency?: number;
+            fileType?: number;
+            subscriberEmails?: string[];
+            eventEndDate?: number;
+            deliveryDay?: string;
+            runningTotalEnabled?: boolean;
+          };
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: number;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -318,211 +596,350 @@ Once a report is created, execute it with this endpoint.
 | Request Schema|  |
 | ---- | --- |
 | `id` <br /><span class="type-text">integer</span> | Executes report by report ID |
+| `dimensions` <br /><span class="type-text">JSON string</span> | Dimensions to filter by in serialized JSON format |
+| `columns` <br /><span class="type-text">array of strings</span> | List of metrics for the report obtained rom dimensions and metrics details API |
+| `customerIds` <br /><span class="type-text">array of integers</span> | Customer IDs to add to report |
+| `filters` <br /><span class="type-text">JSON string</span> | Supports `campaignId`, `campaignStatus`, and `creativeTypeId` filtering |
+| `searchField` <br /><span class="type-text">string</span> | Filters by searched keyword |
+| `requestType` <br /><span class="type-text">integer</span> | ID for whether report is daily (`1`) or aggregated (`2`)
+| `reportAggregated` <br /><span class="type-text">string</span> | ID for whether first report dimension is aggregated (`1`) or not (`0`) |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for report |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for report |
+| `timezoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `timezoneName` <br /><span class="type-text">string</span> | Timezone name |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `+impressions`
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "id": 1001
+  "id": 1001
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "total": {
-            "CTR": 0.26809,
-            "date": null,
-            "deviceTypeId": null,
-            "VCR": 51.452171,
-            "budgetDay": null,
-            "gender": null,
-            "budgetPacing": null,
-            "dataCost": 0,
-            "totalRecords": 135,
-            "campaignTimezone": null,
-            "eCPM": 4.503114298538752,
-            "bidImpressions": 4678583,
-            "startTime": null,
-            "mediaSpent": 8485.86672119556,
-            "eCPC": 1.6797044182889074,
-            "deviceType": null,
-            "startCount": 351095,
-            "campaignType": null,
-            "campaignId": null,
-            "spent": 8485.86672119556,
-            "impressions": 1884444,
-            "eCPCV": 0.021560143713093907,
-            "completeCount": 180646,
-            "budgetTotal": null,
-            "maxBid": null,
-            "clicks": 5052,
-            "endTime": null,
-            "campaignName": null,
-            "status": null
-        },
-        "data": [
-            {
-                "CTR": 0.2796,
-                "date": "2022-01-30",
-                "deviceTypeId": 20300001,
-                "VCR": 0,
-                "budgetDay": 0.07,
-                "gender": "Unknown",
-                "budgetPacing": true,
-                "dataCost": 0,
-                "totalRecords": null,
-                "campaignTimezone": "America/Costa_Rica",
-                "eCPM": 2.9999999999999996,
-                "bidImpressions": 628344,
-                "startTime": 1643428296,
-                "mediaSpent": 457.09799999999996,
-                "eCPC": 1.073,
-                "deviceType": "Mobile",
-                "startCount": 0,
-                "campaignType": "cpm",
-                "campaignId": 15474,
-                "spent": 457.09799999999996,
-                "impressions": 152366,
-                "eCPCV": 0,
-                "completeCount": 0,
-                "budgetTotal": 1549,
-                "maxBid": 3,
-                "clicks": 426,
-                "endTime": 1644192000,
-                "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
-                "status": "expired"
-            },
-            {
-                "CTR": 0.2122,
-                "date": "2022-01-30",
-                "deviceTypeId": 20300001,
-                "VCR": 0,
-                "budgetDay": 0.21,
-                "gender": "Unknown",
-                "budgetPacing": true,
-                "dataCost": 0,
-                "totalRecords": null,
-                "campaignTimezone": "America/Costa_Rica",
-                "eCPM": 2.9999999999999996,
-                "bidImpressions": 271620,
-                "startTime": 1643423160,
-                "mediaSpent": 418.48799999999994,
-                "eCPC": 1.4138108108108107,
-                "deviceType": "Mobile",
-                "startCount": 0,
-                "campaignType": "cpm",
-                "campaignId": 15472,
-                "spent": 418.48799999999994,
-                "impressions": 139496,
-                "eCPCV": 0,
-                "completeCount": 0,
-                "budgetTotal": 1548,
-                "maxBid": 3,
-                "clicks": 296,
-                "endTime": 1644192000,
-                "campaignName": "Costa Rica Universidad Latina Profile: All Gender: All Ages: 18 to 75 Geo: All Costa Rica",
-                "status": "expired"
-            },
-            {
-                "CTR": 0.1065,
-                "date": "2022-01-30",
-                "deviceTypeId": 20300001,
-                "VCR": 0,
-                "budgetDay": 0.43,
-                "gender": "Unknown",
-                "budgetPacing": true,
-                "dataCost": 0,
-                "totalRecords": null,
-                "campaignTimezone": "America/Costa_Rica",
-                "eCPM": 3.000024952590078,
-                "bidImpressions": 239865,
-                "startTime": 1643431623,
-                "mediaSpent": 360.68699999999995,
-                "eCPC": 2.8178671874999996,
-                "deviceType": "Mobile",
-                "startCount": 0,
-                "campaignType": "cpm",
-                "campaignId": 15477,
-                "spent": 360.68699999999995,
-                "impressions": 120228,
-                "eCPCV": 0,
-                "completeCount": 0,
-                "budgetTotal": 1551,
-                "maxBid": 3,
-                "clicks": 128,
-                "endTime": 1644192000,
-                "campaignName": "Costa Rica TICOS AL DIA 24-25 ENE Profile: All Gender: All Ages: 18 to 25 and 60+ and over Geo: Heredia, Alajuela, Cartago and San Jose",
-                "status": "expired"
-            },
-            {
-                "CTR": 0.3118,
-                "date": "2022-01-31",
-                "deviceTypeId": 20300001,
-                "VCR": 0,
-                "budgetDay": 0.07,
-                "gender": "Unknown",
-                "budgetPacing": true,
-                "dataCost": 0,
-                "totalRecords": null,
-                "campaignTimezone": "America/Costa_Rica",
-                "eCPM": 2.9999999999999996,
-                "bidImpressions": 280562,
-                "startTime": 1643428296,
-                "mediaSpent": 219.36299999999997,
-                "eCPC": 0.9621184210526315,
-                "deviceType": "Mobile",
-                "startCount": 0,
-                "campaignType": "cpm",
-                "campaignId": 15474,
-                "spent": 219.36299999999997,
-                "impressions": 73121,
-                "eCPCV": 0,
-                "completeCount": 0,
-                "budgetTotal": 1549,
-                "maxBid": 3,
-                "clicks": 228,
-                "endTime": 1644192000,
-                "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
-                "status": "expired"
-            },
-            {
-                "CTR": 0.3154,
-                "date": "2022-01-30",
-                "deviceTypeId": 20300001,
-                "VCR": 0,
-                "budgetDay": 1,
-                "gender": "Unknown",
-                "budgetPacing": true,
-                "dataCost": 0,
-                "totalRecords": null,
-                "campaignTimezone": "America/Costa_Rica",
-                "eCPM": 3,
-                "bidImpressions": 233754,
-                "startTime": 1643131598,
-                "mediaSpent": 211.161,
-                "eCPC": 0.9511756756756757,
-                "deviceType": "Mobile",
-                "startCount": 0,
-                "campaignType": "cpm",
-                "campaignId": 15455,
-                "spent": 211.161,
-                "impressions": 70387,
-                "eCPCV": 0,
-                "completeCount": 0,
-                "budgetTotal": 1749,
-                "maxBid": 3,
-                "clicks": 222,
-                "endTime": 1644192000,
-                "campaignName": "Costa Rica MEMES COMPILADOS Profile: Undecided Gender: All Ages: 18 to 35 Geo: Heredia, Alajuela, Cartago, San Jose",
-                "status": "expired"
-            }
-        ],
-        "totalRecords": 135
-    }
+  "success": true,
+  "data": {
+    "total": {
+      "CTR": 0.26809,
+      "date": null,
+      "deviceTypeId": null,
+      "VCR": 51.452171,
+      "budgetDay": null,
+      "gender": null,
+      "budgetPacing": null,
+      "dataCost": 0,
+      "totalRecords": 135,
+      "campaignTimezone": null,
+      "eCPM": 4.503114298538752,
+      "bidImpressions": 4678583,
+      "startTime": null,
+      "mediaSpent": 8485.86672119556,
+      "eCPC": 1.6797044182889074,
+      "deviceType": null,
+      "startCount": 351095,
+      "campaignType": null,
+      "campaignId": null,
+      "spent": 8485.86672119556,
+      "impressions": 1884444,
+      "eCPCV": 0.021560143713093907,
+      "completeCount": 180646,
+      "budgetTotal": null,
+      "maxBid": null,
+      "clicks": 5052,
+      "endTime": null,
+      "campaignName": null,
+      "status": null
+    },
+    "data": [
+      {
+        "CTR": 0.2796,
+        "date": "2022-01-30",
+        "deviceTypeId": 20300001,
+        "VCR": 0,
+        "budgetDay": 0.07,
+        "gender": "Unknown",
+        "budgetPacing": true,
+        "dataCost": 0,
+        "totalRecords": null,
+        "campaignTimezone": "America/Costa_Rica",
+        "eCPM": 2.9999999999999996,
+        "bidImpressions": 628344,
+        "startTime": 1643428296,
+        "mediaSpent": 457.09799999999996,
+        "eCPC": 1.073,
+        "deviceType": "Mobile",
+        "startCount": 0,
+        "campaignType": "cpm",
+        "campaignId": 15474,
+        "spent": 457.09799999999996,
+        "impressions": 152366,
+        "eCPCV": 0,
+        "completeCount": 0,
+        "budgetTotal": 1549,
+        "maxBid": 3,
+        "clicks": 426,
+        "endTime": 1644192000,
+        "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
+        "status": "expired"
+      },
+      {
+        "CTR": 0.2122,
+        "date": "2022-01-30",
+        "deviceTypeId": 20300001,
+        "VCR": 0,
+        "budgetDay": 0.21,
+        "gender": "Unknown",
+        "budgetPacing": true,
+        "dataCost": 0,
+        "totalRecords": null,
+        "campaignTimezone": "America/Costa_Rica",
+        "eCPM": 2.9999999999999996,
+        "bidImpressions": 271620,
+        "startTime": 1643423160,
+        "mediaSpent": 418.48799999999994,
+        "eCPC": 1.4138108108108107,
+        "deviceType": "Mobile",
+        "startCount": 0,
+        "campaignType": "cpm",
+        "campaignId": 15472,
+        "spent": 418.48799999999994,
+        "impressions": 139496,
+        "eCPCV": 0,
+        "completeCount": 0,
+        "budgetTotal": 1548,
+        "maxBid": 3,
+        "clicks": 296,
+        "endTime": 1644192000,
+        "campaignName": "Costa Rica Universidad Latina Profile: All Gender: All Ages: 18 to 75 Geo: All Costa Rica",
+        "status": "expired"
+      },
+      {
+        "CTR": 0.1065,
+        "date": "2022-01-30",
+        "deviceTypeId": 20300001,
+        "VCR": 0,
+        "budgetDay": 0.43,
+        "gender": "Unknown",
+        "budgetPacing": true,
+        "dataCost": 0,
+        "totalRecords": null,
+        "campaignTimezone": "America/Costa_Rica",
+        "eCPM": 3.000024952590078,
+        "bidImpressions": 239865,
+        "startTime": 1643431623,
+        "mediaSpent": 360.68699999999995,
+        "eCPC": 2.8178671874999996,
+        "deviceType": "Mobile",
+        "startCount": 0,
+        "campaignType": "cpm",
+        "campaignId": 15477,
+        "spent": 360.68699999999995,
+        "impressions": 120228,
+        "eCPCV": 0,
+        "completeCount": 0,
+        "budgetTotal": 1551,
+        "maxBid": 3,
+        "clicks": 128,
+        "endTime": 1644192000,
+        "campaignName": "Costa Rica TICOS AL DIA 24-25 ENE Profile: All Gender: All Ages: 18 to 25 and 60+ and over Geo: Heredia, Alajuela, Cartago and San Jose",
+        "status": "expired"
+      },
+      {
+        "CTR": 0.3118,
+        "date": "2022-01-31",
+        "deviceTypeId": 20300001,
+        "VCR": 0,
+        "budgetDay": 0.07,
+        "gender": "Unknown",
+        "budgetPacing": true,
+        "dataCost": 0,
+        "totalRecords": null,
+        "campaignTimezone": "America/Costa_Rica",
+        "eCPM": 2.9999999999999996,
+        "bidImpressions": 280562,
+        "startTime": 1643428296,
+        "mediaSpent": 219.36299999999997,
+        "eCPC": 0.9621184210526315,
+        "deviceType": "Mobile",
+        "startCount": 0,
+        "campaignType": "cpm",
+        "campaignId": 15474,
+        "spent": 219.36299999999997,
+        "impressions": 73121,
+        "eCPCV": 0,
+        "completeCount": 0,
+        "budgetTotal": 1549,
+        "maxBid": 3,
+        "clicks": 228,
+        "endTime": 1644192000,
+        "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
+        "status": "expired"
+      },
+      {
+        "CTR": 0.3154,
+        "date": "2022-01-30",
+        "deviceTypeId": 20300001,
+        "VCR": 0,
+        "budgetDay": 1,
+        "gender": "Unknown",
+        "budgetPacing": true,
+        "dataCost": 0,
+        "totalRecords": null,
+        "campaignTimezone": "America/Costa_Rica",
+        "eCPM": 3,
+        "bidImpressions": 233754,
+        "startTime": 1643131598,
+        "mediaSpent": 211.161,
+        "eCPC": 0.9511756756756757,
+        "deviceType": "Mobile",
+        "startCount": 0,
+        "campaignType": "cpm",
+        "campaignId": 15455,
+        "spent": 211.161,
+        "impressions": 70387,
+        "eCPCV": 0,
+        "completeCount": 0,
+        "budgetTotal": 1749,
+        "maxBid": 3,
+        "clicks": 222,
+        "endTime": 1644192000,
+        "campaignName": "Costa Rica MEMES COMPILADOS Profile: Undecided Gender: All Ages: 18 to 35 Geo: Heredia, Alajuela, Cartago, San Jose",
+        "status": "expired"
+      }
+    ],
+    "totalRecords": 135
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/execute": {
+    parameters: {};
+    post: operations["executeReportData"];
+  };
+}
+
+export interface operations {
+  executeReportData: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: number;
+          reportName?: string;
+          startDate?: number;
+          endDate?: number;
+          dimensions?: string;
+          customerIds?: number[];
+          columns?: string[];
+          timezoneId?: number;
+          requestType?: number;
+          reportAggregated?: string;
+          owId?: number;
+          createdByUOWId?: number;
+          modifiedByUOWId?: number;
+          timezoneName?: string;
+          organizationName?: string;
+          resultType?: string;
+          fileType?: number;
+          filters?: {
+            [key: string]: Record<string, never>[];
+          };
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              total: {
+                CTR: number;
+                date: number;
+                deviceTypeId: number;
+                VCR: number;
+                budgetDay: string;
+                gender: string;
+                budgetPacing: boolean;
+                dataCost: number;
+                totalRecords: number;
+                campaignTimezone: string;
+                eCPM: number;
+                bidImpressions: number;
+                startTime: number;
+                mediaSpent: number;
+                eCPC: number;
+                deviceType: string;
+                startCount: number;
+                campaignType: string;
+                spent: number;
+                impressions: number;
+                eCPCV: number;
+                completeCount: number;
+                budgetTotal: number;
+                maxBid: number;
+                clicks: number;
+                endTime: number;
+                campaignName: string;
+                status: string;
+              };
+              data: {
+                           CTR: number;
+                date: number;
+                deviceTypeId: number;
+                VCR: number;
+                budgetDay: string;
+                gender: string;
+                budgetPacing: boolean;
+                dataCost: number;
+                totalRecords: number;
+                campaignTimezone: string;
+                eCPM: number;
+                bidImpressions: number;
+                startTime: number;
+                mediaSpent: number;
+                eCPC: number;
+                deviceType: string;
+                startCount: number;
+                campaignType: string;
+                spent: number;
+                impressions: number;
+                eCPCV: number;
+                completeCount: number;
+                budgetTotal: number;
+                maxBid: number;
+                clicks: number;
+                endTime: number;
+                campaignName: string;
+                status: string;
+              }[];
+              totalRecords: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -543,12 +960,50 @@ Delete a report and its scheduling data by ID.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Report with id 123 deleted successfully"
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/{reportId}": {
+    parameters: {};
+    delete: operations["deleteReport"];
+  };
+}
+
+export interface operations {
+  DeleteReport: {
+    parameters: {
+      header: {
+        "X-IAA-API-TOKEN": string;
+        "Base-Url": string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        }
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -591,11 +1046,14 @@ Edit a report's data based on given field.
 | `fileType` <br /><span class="type-text">integer</span> | Report file type ID <br />CSV: `1` <br />XLS: `2` <br />Part of `reportSchedulingEventDetails`<br /> |
 | `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent. <br />Part of `reportSchedulingEventDetails`<br /> |
 | `eventEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of report schedule event end date, in milliseconds. <br />Part of `reportSchedulingEventDetails`<br /> |
-| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br /> Part of `reportSchedulingEventDetails`<br /> |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequency` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] <br /> Part of `reportSchedulingEventDetails`<br /> |
 
 </details>
 
 </div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -639,6 +1097,65 @@ Edit a report's data based on given field.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/{reportId}": {
+    parameters: {};
+    patch: operations["updateReport"];
+  };
+}
+
+export interface operations {
+  UpdateReport: {
+    parameters: {
+      header: {
+        Accept: string;
+        "X-IAA-API-TOKEN": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          customerIds?: number[];
+          startDate?: number;
+          endDate?: number;
+          reportName?: string;
+          timezoneId?: number;
+          timezoneName?: string;
+          dimensions?: string;
+          columns?: string[];
+          requestType?: number;
+          reportAggregated?: number;
+          reportSchedulingEventDetails?: {
+            eventId?: number;
+            deliveryFrequency?: number;
+            fileType?: number;
+            subscriberEmails?: string[];
+            eventEndDate?: number;
+            deliveryDay?: string;
+          }        
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  }
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -659,6 +1176,9 @@ Create a copy of a report with its ID.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "id": 123,
@@ -672,6 +1192,49 @@ Create a copy of a report with its ID.
     "data": "Report duplicated successfully with id 124"
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/ra/report/duplicate": {
+    parameters: {};
+    post: operations["duplicateReport"];
+  };
+}
+
+export interface operations {
+  duplicateReport: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: number;
+          reportName?: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -698,50 +1261,109 @@ Create and save a report scheule.
 | `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent |
 | `fileType` <br /><span class="type-text">integer</span>| Report file type ID <br />CSV: `1` <br />XLS: `2` |
 | `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
-| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequency` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthly delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
 | `eventEndDate` <br /><span class="type-text">integer</span> | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
 | `runningTotalEnabled` <br /><span class="type-text">boolean</span> | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
 | `earliestCampaignStartDate` <br /><span class="type-text">integer</span> | [<span class="required-text">Required</span> with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "reportId": 1234,
-    "subscriberEmails": [
-        "sample_email1@example.com",
-        "sample_email2@example.com"
-    ],
-    "fileType": 2,
-    "deliveryFrequency": 4,
-    "eventEndDate": 1670674106000,
-    "deliveryDay": "4",
-    "runningTotalEnabled": true,
-    "earliestCampaignStartDate": 1670674108900
+  "reportId": 1234,
+  "subscriberEmails": [
+    "sample_email1@example.com",
+    "sample_email2@example.com"
+  ],
+  "fileType": 2,
+  "deliveryFrequency": 4,
+  "eventEndDate": 1670674106000,
+  "deliveryDay": "4",
+  "runningTotalEnabled": true,
+  "earliestCampaignStartDate": 1670674108900
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "scheduledData": {
-            "earliestCampaignStartDate": 0,
-            "reportId": 1234,
-            "deliveryFrequency": 4,
-            "fileType": 1,
-            "subscriberEmails": [
-                "sample_email@sample.com",
-                "sample_email2@sample.com"
-            ],
-            "eventEndDate": 1696270980000,
-            "deliveryDay": "5",
-            "runningTotalEnabled": false
-        },
-        "message": "Report schedule has been successfully updated."
-    }
+  "success": true,
+  "data": {
+    "scheduledData": {
+      "earliestCampaignStartDate": 0,
+      "reportId": 1234,
+      "deliveryFrequency": 4,
+      "fileType": 1,
+      "subscriberEmails": [
+        "sample_email@sample.com",
+        "sample_email2@sample.com"
+      ],
+      "eventEndDate": 1696270980000,
+      "deliveryDay": "5",
+      "runningTotalEnabled": false
+    },
+    "message": "Report schedule has been successfully updated."
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/email/schedule": {
+    parameters: {};
+    post: operations["saveReportScheduleEvent"];
+  };
+}
+
+export interface operations {
+  saveReportScheduleEvent: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          earliestCampaignStartDate?: number;
+          reportId?: number;
+          deliveryFrequency?: number;
+          fileType?: number;
+          subscriberEmails?: string[];
+          eventEndDate?: number;
+          deliveryDay?: string;
+          runningTotalEnabled?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              scheduledData: {
+                earliestCampaignStartDate: string;
+                reportId: number;
+                deliveryFrequency: number;
+                fileType: number;
+                subscriberEmails: string[];
+                eventEndDate: number;
+                deliveryDay: number;
+                runningTotalEnabled: boolean;
+              };
+              message: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -768,45 +1390,108 @@ Include whichever fields to be updated in the request body:
 | `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the report will be sent | 
 | `fileType` <br /><span class="type-text">integer</span> | Report file type ID <br />CSV: `1` <br />XLS: `2` |
 | `deliveryFrequency` <br /><span class="type-text">integer</span> | Delivery frequency type ID <br />Once: `1` <br />Daily: `2` <br />Weekly: `3` <br />Monthly: `4` |
-| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequecy` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
+| `deliveryDay` <br /><span class="type-text">string</span> | [Required, if `deliveryFrequency` is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [`sunday`, `monday`, ...] <br />Monthely delivery day: [`first`, `last`, `2`,`3`, ... `29`] |
 | `eventEndDate` <br /><span class="type-text">integer</span> | [Required if `deliveryFrequency` is not "once"] Unix epoch timestamp, time when scheduled report will stop
 | `runningTotalEnabled` <br /><span class="type-text">boolean</span> | Flag to indicate if the 'Total' Running is enabled for the report. Only supported with 'Campaign' dimension. If `true`, start date for report will be earliest campaign start date, ending with report end date |
 | `earliestCampaignStartDate` <br /><span class="type-text">integer</span> | [<span class="required-text">Required</span> with `runningTotalEnabled` as `true`] Unix epoch timestamp, milliseconds. This is the campaign's earliest start date from the selected campaigns, which will be set as the start date of the report-time-period |
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "subscriberEmails": [
-        "sample_email1@example.com",
-        "sample_email2@example.com",
-        "sample_email3@example.com"
-    ]
+  "subscriberEmails": [
+    "sample_email1@example.com",
+    "sample_email2@example.com",
+    "sample_email3@example.com"
+  ]
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "scheduledData": {
-            "earliestCampaignStartDate": 0,
-            "reportId": 1234,
-            "deliveryFrequency": 4,
-            "fileType": 1,
-            "subscriberEmails": [
-                "sample_email1@example.com",
-                "sample_email2@example.com",
-                "sample_email3@example.com"
-            ],
-            "eventEndDate": 1696270980000,
-            "deliveryDay": "4",
-            "runningTotalEnabled": false
-        },
-        "message": "Report schedule has been successfully updated."
-    }
+  "success": true,
+  "data": {
+    "scheduledData": {
+      "earliestCampaignStartDate": 0,
+      "reportId": 1234,
+      "deliveryFrequency": 4,
+      "fileType": 1,
+      "subscriberEmails": [
+        "sample_email1@example.com",
+        "sample_email2@example.com",
+        "sample_email3@example.com"
+      ],
+      "eventEndDate": 1696270980000,
+      "deliveryDay": "4",
+      "runningTotalEnabled": false
+    },
+    "message": "Report schedule has been successfully updated."
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/email/schedule/{reportId}": {
+    parameters: {};
+    patch: operations["updateReportScheduleEvent"];
+  };
+}
+
+export interface operations {
+  updateReportScheduleEvent: {
+    parameters: {
+      path: {
+        reportId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          earliestCampaignStartDate?: number;
+          reportId?: number;
+          deliveryFrequency?: number;
+          fileType?: number;
+          subscriberEmails?: string[];
+          eventEndDate?: number;
+          deliveryDay?: string;
+          runningTotalEnabled?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              scheduledData: {
+                earliestCampaignStartDate: number;
+                reportId: number;
+                deliveryFrequency: number;
+                fileType: number;
+                subscriberEmails: string[];
+                eventEndDate: number;
+                deliveryDay: string;
+                runningTotalEnabled: boolean;
+              }
+              message: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -827,6 +1512,9 @@ Remove a report schedule.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -835,6 +1523,42 @@ Remove a report schedule.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/email/schedule/{reportId}": {
+    parameters: {};
+    delete: operations["deleteReportScheduleEvent"];
+  };
+}
+
+export interface operations {
+  deleteReportScheduleEvent: {
+    parameters: {
+      path: {
+        reportId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              message: string
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -903,6 +1627,9 @@ Refer to the [resource properties](#resource-properties) table for request schem
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "id": 123
@@ -917,6 +1644,72 @@ Refer to the [resource properties](#resource-properties) table for request schem
     }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/download": {
+    parameters: {};
+    post: operations["downloadReport"];
+  };
+}
+
+export interface operations {
+  DownloadReport: {
+    parameters: {
+      header: {
+        "x-iaa-api-token": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          url: string;
+          fileName: string;
+          method: string;
+          headers: {
+            "Base-Url": string;
+          };
+          data: {
+            id: string;
+            page_number: number;
+            total_count: number;
+            request_type: string;
+            sort_by: string;
+            dataPath: string;
+            dateRange: {
+              start: number;
+              end: number;
+            };
+            sort_type: string;
+          };
+          columns: {
+            label: string;
+            value: string;
+          }[];
+          token: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              url: string
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -941,46 +1734,107 @@ Get a list of conversion's custom fields by filter parameters.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "customerIds": [
-        123,
-        234,
-        345
-    ],
-    "pageNo": 1,
-    "noOfEntries": 30,
-    "sortBy": "+id",
-    "searchField": "Pixel"
+  "customerIds": [
+    123,
+    234,
+    345
+  ],
+  "pageNo": 1,
+  "noOfEntries": 30,
+  "sortBy": "+id",
+  "searchField": "Pixel"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "totalRecords": 10,
-        "filterRecords": 3,
-        "customFieldData": [
-            {
-                "id": 3114,
-                "pixelName": "Pixel Conversion 1",
-                "customFieldName": "sample_one"
-            },
-            {
-                "id": 3114,
-                "pixelName": "Pixel Conversion 1",
-                "customFieldName": "sample_two"
-            },
-            {
-                "id": 3221,
-                "pixelName": "Pixel Conversion 2",
-                "customFieldName": "product_sales"
-            }
-        ]
-    }
+  "success": true,
+  "data": {
+    "totalRecords": 10,
+    "filterRecords": 3,
+    "customFieldData": [
+      {
+        "id": 3114,
+        "pixelName": "Pixel Conversion 1",
+        "customFieldName": "sample_one"
+      },
+      {
+        "id": 3114,
+        "pixelName": "Pixel Conversion 1",
+        "customFieldName": "sample_two"
+      },
+      {
+        "id": 3221,
+        "pixelName": "Pixel Conversion 2",
+        "customFieldName": "product_sales"
+      }
+    ]
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/ra/conversion/custom-field/list": {
+    parameters: {};
+    post: operations["getConversionCustomFieldsDetailsList"];
+  };
+}
+
+export interface operations {
+  getConversionCustomFieldsDetailsList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          owIds?: number[];
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filterRecords: number;
+              customFieldData: {
+                id: number;
+                pixelName: string;
+                customFieldName: string;
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -996,6 +1850,9 @@ Get a list of conversion's custom fields by filter parameters.
 Get a static list of report request type.
 
 </div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1015,6 +1872,40 @@ Get a static list of report request type.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/rb/static/report-request-type": {
+    parameters: {};
+    get: operations["getRequestType"];
+  };
+}
+
+export interface operations {
+  getRequestType: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1030,23 +1921,60 @@ Get a static list of report file types.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-        "name": "csv",
-        "id": 1,
-        "label": "CSV"
-        },
-        {
-        "name": "xlsx",
-        "id": 2,
-        "label": "XLS"
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "csv",
+      "id": 1,
+      "label": "CSV"
+    },
+    {
+      "name": "xlsx",
+      "id": 2,
+      "label": "XLS"
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/rb/static/report-file-type": {
+    parameters: {};
+    get: operations["getFileType"];
+  };
+}
+
+export interface operations {
+  getFileType: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            sucess: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+            }[]
+          }
+        };
+      };
+    };
+  }
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1063,33 +1991,70 @@ Get a static list of report delivery frequency types.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-            "name": "One Time Now",
-            "id": 1,
-            "label": "One time now"
-        },
-        {
-            "name": "DAY",
-            "id": 2,
-            "label": "Daily until"
-        },
-        {
-            "name": "WEEK",
-            "id": 3,
-            "label": "Weekly until"
-        },
-        {
-            "name": "MONTH",
-            "id": 4,
-            "label": "Monthly until"
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "One Time Now",
+      "id": 1,
+      "label": "One time now"
+    },
+    {
+      "name": "DAY",
+      "id": 2,
+      "label": "Daily until"
+    },
+    {
+      "name": "WEEK",
+      "id": 3,
+      "label": "Weekly until"
+    },
+    {
+      "name": "MONTH",
+      "id": 4,
+      "label": "Monthly until"
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/rb/static/report-delivery-frequency": {
+    parameters: {};
+    get: operations["getDeliveryFrequency"];
+  };
+}
+
+export interface operations {
+  getDeliveryFrequency: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1106,117 +2071,203 @@ Get dimensions and metrics information grouped by category (see [complete table]
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "metrics": [
-            {
-                "Budget": [
-                    {
-                        "id": 1,
-                        "label": "Daily Budget",
-                        "order": 1,
-                        "fieldDataType": "currencyUSD",
-                        "aggregationType": "sum",
-                        "description": "Amount up to which you allow platform to spend on average each day",
-                        "defaultEnabled": false,
-                        "key": "dailyBudget",
-                        "dependentDimensions": [
-                            1,
-                            2,
-                            43,
-                            44
-                        ]
-                    },
-                    {
-                        "id": 2,
-                        "label": "Total Budget",
-                        "order": 2,
-                        "defaultEnabled": false,
-                        "key": "totalBudget",
-                        "dependentDimensions": [
-                            1,
-                            2,
-                            43,
-                            44
-                        ]
-                    }
-                ]
-            },
-            {
-                "Counts": [
-                    {
-                        "id": 5,
-                        "label": "Impressions",
-                        "order": 1,
-                        "defaultEnabled": true,
-                        "key": "impressions",
-                        "dependentDimensions": null
-                    }
-                ]
-            }
-        ],
-        "dimensions": [
-            {
-                "Campaign Specifics": [
-                    {
-                        "id": 1,
-                        "label": "Campaign",
-                        "order": 1,
-                        "isFilterSupported": true,
-                        "isRowToColumn": false,
-                        "isCustomerDependent": true,
-                        "fieldDataType": "text",
-                        "description": "Campaign Name",
-                        "groupId": 1,
-                        "key": "campaign"
-                    },
-                    {
-                        "id": 2,
-                        "label": "Campaign ID",
-                        "order": 2,
-                        "isFilterSupported": true,
-                        "isRowToColumn": false,
-                        "isCustomerDependent": true,
-                        "fieldDataType": "text",
-                        "description": "Unique system-generated number assigned to each Campaign",
-                        "groupId": 1,
-                        "key": "campaignId"
-                    }
-                ]
-            },
-            {
-                "Locations": [
-                    {
-                        "id": 34,
-                        "label": "Country",
-                        "order": 1,
-                        "isFilterSupported": true,
-                        "isRowToColumn": false,
-                        "isCustomerDependent": false,
-                        "fieldDataType": "country",
-                        "description": "Country the ad ran in",
-                        "groupId": 29,
-                        "key": "country"
-                    },
-                    {
-                        "id": 35,
-                        "label": "State",
-                        "order": 2,
-                        "isFilterSupported": true,
-                        "isRowToColumn": false,
-                        "isCustomerDependent": false,
-                        "fieldDataType": "regionCode",
-                        "description": "State the ad ran in",
-                        "groupId": 30,
-                        "key": "state"
-                    }
-                ]
-            }
+  "success": true,
+  "data": {
+    "metrics": [
+      {
+        "Budget": [
+          {
+            "id": 1,
+            "label": "Daily Budget",
+            "order": 1,
+            "fieldDataType": "currencyUSD",
+            "aggregationType": "sum",
+            "description": "Amount up to which you allow platform to spend on average each day",
+            "defaultEnabled": false,
+            "key": "dailyBudget",
+            "dependentDimensions": [
+              1,
+              2,
+              43,
+              44
+            ]
+          },
+          {
+            "id": 2,
+            "label": "Total Budget",
+            "order": 2,
+            "defaultEnabled": false,
+            "key": "totalBudget",
+            "dependentDimensions": [
+              1,
+              2,
+              43,
+              44
+            ]
+          }
         ]
-    }
+      },
+      {
+        "Counts": [
+          {
+            "id": 5,
+            "label": "Impressions",
+            "order": 1,
+            "defaultEnabled": true,
+            "key": "impressions",
+            "dependentDimensions": null
+          }
+        ]
+      }
+    ],
+    "dimensions": [
+      {
+        "Campaign Specifics": [
+          {
+            "id": 1,
+            "label": "Campaign",
+            "order": 1,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": true,
+            "fieldDataType": "text",
+            "description": "Campaign Name",
+            "groupId": 1,
+            "key": "campaign"
+          },
+          {
+            "id": 2,
+            "label": "Campaign ID",
+            "order": 2,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": true,
+            "fieldDataType": "text",
+            "description": "Unique system-generated number assigned to each Campaign",
+            "groupId": 1,
+            "key": "campaignId"
+          }
+        ]
+      },
+      {
+        "Locations": [
+          {
+            "id": 34,
+            "label": "Country",
+            "order": 1,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": false,
+            "fieldDataType": "country",
+            "description": "Country the ad ran in",
+            "groupId": 29,
+            "key": "country"
+          },
+          {
+            "id": 35,
+            "label": "State",
+            "order": 2,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": false,
+            "fieldDataType": "regionCode",
+            "description": "State the ad ran in",
+            "groupId": 30,
+            "key": "state"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/dimension-metrics/detail": {
+    parameters: {};
+    get: operations["getDimensionAndMetricDetails"];
+  };
+}
+
+export interface operations {
+  getDimensionAndMetricDetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              metrics: {
+                budget: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType:string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                counts: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+              }[];
+              dimensions: {
+                Campaign Specifics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  isFilterSupported: boolean;
+                  isRowToColumn: boolean;
+                  isCustomerDependent: boolean;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: number;
+                  key: string;
+                }[];
+                Locations: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  isFilterSupported: boolean;
+                  isRowToColumn: boolean;
+                  isCustomerDependent: boolean;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: number;
+                  key: string;
+                }[]
+              }
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
