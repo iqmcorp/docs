@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Workspace API
 
 This page covers the common methods and endpoints for managing **Organizations**, **Workspaces**, **Customers** and **Advertisers**. **Organizations** are top-level descriptions of a company's profile, including its name, website, and location details. **Workspaces** operate within **organizations** and can be **Customers** or **Advertisers**. **Users** operate within **Workspaces** and can be assigned **Customers**.
@@ -71,37 +74,111 @@ Get a list of allowed organizations by customer type.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "owId": 200001,
-                "organizationName": "Super IQM Org",
-                "ownerUserEmail": "pratik.t+ihp@iqm.com",
-                "workspaceDomain": "app.stage.inhousebuying.com",
-                "customerType": "Workspace",
-                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/ihb_logo_scaled.png",
-                "dateOfJoining": null,
-                "title": null
-            },
-            {
-                "owId": 200002,
-                "organizationName": "IQM Corporation",
-                "ownerUserEmail": "kartik.g@iqm.com",
-                "workspaceDomain": "iqm.stage.inhousebuying.com",
-                "customerType": "Workspace",
-                "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
-                "dateOfJoining": "2021-09-28",
-                "title": null
-            }
-        ],
-        "totalRecords": 2,
-        "filteredRecords": 2
-    }
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "owId": 200001,
+        "organizationName": "Super IQM Org",
+        "ownerUserEmail": "pratik.t+ihp@iqm.com",
+        "workspaceDomain": "app.stage.inhousebuying.com",
+        "customerType": "Workspace",
+        "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/ihb_logo_scaled.png",
+        "dateOfJoining": null,
+        "title": null
+      },
+      {
+        "owId": 200002,
+        "organizationName": "IQM Corporation",
+        "ownerUserEmail": "kartik.g@iqm.com",
+        "workspaceDomain": "iqm.stage.inhousebuying.com",
+        "customerType": "Workspace",
+        "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/logo/iqm.png",
+        "dateOfJoining": "2021-09-28",
+        "title": null
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 2
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/allowed-organizations": {
+    parameters: {};
+    get: operations["GetallowedOrganizationsList"];
+  };
+}
+
+export interface operations {
+  GetallowedOrganizationsList: {
+    parameters: {
+      query: {
+        customerType: string;
+        searchField: string;
+        pageNo: number;
+        limit: number;
+        sortBy: string;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        Authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                owId: number;
+                organizationName: string;
+                ownerUserEmail: string;
+                workspaceDomain: string;
+                customerType: string;
+                logoUrl: string;
+                dateOfJoining: string | null;
+                title: string | null;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            };
+          };
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -118,33 +195,95 @@ Get the profile information of an organization for logged in organization.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "organizationName": "JP test org1",
-        "email": "jinesh.p+jptest1@iqm.com",
-        "website": "www.jptest1.com",
-        "contactNumber": "+91 123987456",
-        "address": "A-123, ABC complex",
-        "city": "Ahmedabad",
-        "state": 1672,
-        "country": 113,
-        "zipcode": "382418",
-        "isAvatarUrl": false,
-        "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391.png",
-        "industry": "Advertising",
-        "companySize": 2,
-        "companyId": "A-123456",
-        "taxId": "JP123456",
-        "currency": "Dollar ($)",
-        "dateFormat": "DD/MM/YYYY",
-        "description": "",
-        "verticalId": 1,
-        "expertize": "1,2,3"
-    }
+  "success": true,
+  "data": {
+    "organizationName": "JP test org1",
+    "email": "jinesh.p+jptest1@iqm.com",
+    "website": "www.jptest1.com",
+    "contactNumber": "+91 123987456",
+    "address": "A-123, ABC complex",
+    "city": "Ahmedabad",
+    "state": 1672,
+    "country": 113,
+    "zipcode": "382418",
+    "isAvatarUrl": false,
+    "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391.png",
+    "industry": "Advertising",
+    "companySize": 2,
+    "companyId": "A-123456",
+    "taxId": "JP123456",
+    "currency": "Dollar ($)",
+    "dateFormat": "DD/MM/YYYY",
+    "description": "",
+    "verticalId": 1,
+    "expertize": "1,2,3"
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/organization/view-profile": {
+    parameters: {};
+    get: operations["getOrganizationProfile"];
+  };
+}
+
+export interface operations {
+  getOrganizationProfile: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              organizationName: string;
+              email: string;
+              website: string;
+              contactNumber: string;
+              address: string;
+              city: string;
+              state: number;
+              country: number;
+              zipcode: string;
+              isAvatarUrl: boolean;
+              organizationLogo: string;
+              industry: string;
+              companySize: number;
+              companyId: string;
+              taxId: string;
+              currency: string;
+              dateFormat: string;
+              description: string;
+              verticalId: number;
+              expertize: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -193,23 +332,89 @@ Refer to the [Organization Resource Properties](#organization-resource-propertie
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "organizationName": "New Org Name",
-    "email": "neworgemail@org.com",
-    "website": "neworgwebsite.com"
+  "organizationName": "New Org Name",
+  "email": "neworgemail@org.com",
+  "website": "neworgwebsite.com"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391/1633180356403.png",
-        "message": "Profile updated successfully."
-    }
+  "success": true,
+  "data": {
+    "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391/1633180356403.png",
+    "message": "Profile updated successfully."
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/update-profile": {
+    parameters: {};
+    patch: operations["UpdateUserProfile"];
+  };
+}
+
+export interface operations {
+  UpdateUserProfile: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+        Authorization: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          displayName: string;
+          userAvatar: string;
+          removeUserProfile: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              userAvatar: string;
+              message: string;
+            };
+          };
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1321,47 +1526,119 @@ Refer to [Customer Operations Resource Property table](#customer-operations-reso
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 [
-    {
-        "email": "user1@iqm.com",
-        "name": "ORG - 1",
-        "password": "password@123",
-        "ownerUserName": "User-1",
-        "verticalId": 1,
-        "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/202753/Pd7Xx26_1721991655891.png",
-        "customerOperationDetails": {
-            "customerTypeId": 2,
-            "customerPaymentTypeId": 2,
-            "countryId": 30100001,
-            "adOpsAssigneeUserIds": [],
-            "sellerAssigneeUserIds": [
-                7184
-            ],
-            "labelIds": [
-                7,
-                8,
-                9
-            ]
-        }
+  {
+    "email": "user1@iqm.com",
+    "name": "ORG - 1",
+    "password": "password@123",
+    "ownerUserName": "User-1",
+    "verticalId": 1,
+    "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/202753/Pd7Xx26_1721991655891.png",
+    "customerOperationDetails": {
+      "customerTypeId": 2,
+      "customerPaymentTypeId": 2,
+      "countryId": 30100001,
+      "adOpsAssigneeUserIds": [],
+      "sellerAssigneeUserIds": [
+        7184
+      ],
+      "labelIds": [
+        7,
+        8,
+        9
+      ]
     }
+  }
 ]
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "successfulEmails": [
-            "user1.g@iqm.com"
-        ],
-        "failedEmails": [
-            "user2.p@iqm.com"
-        ],
-        "message": "1 invitations sent successfully."
-    }
+"success": true,
+"data": {
+  "successfulEmails": [
+    "user1.g@iqm.com"
+  ],
+  "failedEmails": [
+    "user2.p@iqm.com"
+  ],
+  "message": "1 invitations sent successfully."
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/customer/invite": {
+    parameters: {};
+    post: operations["sendInvitations"];
+  };
+}
+
+export interface operations {
+  sendInvitations: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: number;
+          invitedUserOWId?: number;
+          email?: string;
+          password?: string;
+          name?: string;
+          ownerUserName?: string;
+          owId?: number;
+          uowId?: number;
+          modifiedByUOWId?: number;
+          status?: number;
+          expiresAt?: number;
+          modifiedAt?: string;
+          invitationUserType?: string;
+          verticalId?: number;
+          logoUrl?: string;
+          serviceType?: number;
+          customerOperationDetails?: {
+            customerTypeId?: number;
+            customerPaymentTypeId?: number;
+            countryId?: number;
+            createdByUowId?: number;
+            modifiedByUowId?: number;
+            adOpsAssigneeUserIds?: number[];
+            sellerAssigneeUserIds?: number[];
+            labelIds?: number[];
+          };
+        }[];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              successfulEmails: string[];
+              failedEmails: string[];
+              message: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1899,75 +2176,135 @@ Get a list of advertiser profiles and their details.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "id": 5,
-                "advertiserName": "Nikon 3",
-                "website": "http://nikon3india.com",
-                "chiefName": "Nil Miles3",
-                "contactNumber": "+91 9876534210",
-                "address": null,
-                "legalInfo": null,
-                "links": []
-            },
-            {
-                "id": 3,
-                "advertiserName": "Nikon 1",
-                "website": "http://nikonindia.com",
-                "chiefName": "Nil Miles1",
-                "contactNumber": "+91 9876534210",
-                "address": null,
-                "legalInfo": null,
-                "links": [
-                    "www.nikon1.com",
-                    "www.nikon1us.com"
-                ]
-            },
-            {
-                "id": 4,
-                "advertiserName": "Nikon_2",
-                "website": "http://nikon_2india.com",
-                "chiefName": "Nil Miles2",
-                "contactNumber": "+91 9876534210",
-                "address": null,
-                "legalInfo": null,
-                "links": [
-                    "www.nikon_2.com"
-                ]
-            },
-            {
-                "id": 1,
-                "advertiserName": "Nikon",
-                "website": "http://nikonindia.com",
-                "chiefName": "Nil Miles",
-                "contactNumber": "+91 9999999999",
-                "address": null,
-                "legalInfo": null,
-                "links": [
-                    "www.nikon.com",
-                    "www.nikonus.com"
-                ]
-            },
-            {
-                "id": 2,
-                "advertiserName": "Nike",
-                "website": "http://nikeindia.com",
-                "chiefName": "Nike",
-                "contactNumber": "+91 9999988888",
-                "address": null,
-                "legalInfo": null,
-                "links": []
-            }
-        ],
-        "totalRecords": 5,
-        "filteredRecords": 5
-    }
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 5,
+        "advertiserName": "Nikon 3",
+        "website": "http://nikon3india.com",
+        "chiefName": "Nil Miles3",
+        "contactNumber": "+91 9876534210",
+        "address": null,
+        "legalInfo": null,
+        "links": []
+      },
+      {
+        "id": 3,
+        "advertiserName": "Nikon 1",
+        "website": "http://nikonindia.com",
+        "chiefName": "Nil Miles1",
+        "contactNumber": "+91 9876534210",
+        "address": null,
+        "legalInfo": null,
+        "links": [
+            "www.nikon1.com",
+            "www.nikon1us.com"
+        ]
+      },
+      {
+        "id": 4,
+        "advertiserName": "Nikon_2",
+        "website": "http://nikon_2india.com",
+        "chiefName": "Nil Miles2",
+        "contactNumber": "+91 9876534210",
+        "address": null,
+        "legalInfo": null,
+        "links": [
+            "www.nikon_2.com"
+        ]
+      },
+      {
+        "id": 1,
+        "advertiserName": "Nikon",
+        "website": "http://nikonindia.com",
+        "chiefName": "Nil Miles",
+        "contactNumber": "+91 9999999999",
+        "address": null,
+        "legalInfo": null,
+        "links": [
+            "www.nikon.com",
+            "www.nikonus.com"
+        ]
+      },
+      {
+        "id": 2,
+        "advertiserName": "Nike",
+        "website": "http://nikeindia.com",
+        "chiefName": "Nike",
+        "contactNumber": "+91 9999988888",
+        "address": null,
+        "legalInfo": null,
+        "links": []
+      }
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 5
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/organization/advertisers/list": {
+    parameters: {};
+    get: operations["Listadvertiserprofile"];
+  };
+}
+
+export interface operations {
+  Listadvertiserprofile: {
+    parameters: {
+      query: {
+        searchField: string;
+        pageNo: number;
+        limit: number;
+        advertiserIds: string;
+      };
+      header: {
+        Authorization: string;
+        "X-IAA-OW-ID": number;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                id: number;
+                advertiserName: string;
+                website: string;
+                chiefName: string;
+                contactNumber: string;
+                address: string | null;
+                legalInfo: string | null;
+                links: string[];
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1986,27 +2323,81 @@ Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for r
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "advertiserName": "Nikon 1",
-    "website": "http://nikonindia.com",
-    "chiefName": "Nil Miles1",
-    "contactNumber": "+91 9876534210",
-    "address": "physical address",
-    "legalInfo": "legal info for advertiser",
-    "links": [
-        "www.nikon1.com",
-        "www.nikon1us.com"
-    ]
+  "advertiserName": "Nikon 1",
+  "website": "http://nikonindia.com",
+  "chiefName": "Nil Miles1",
+  "contactNumber": "+91 9876534210",
+  "address": "physical address",
+  "legalInfo": "legal info for advertiser",
+  "links": [
+    "www.nikon1.com",
+    "www.nikon1us.com"
+  ]
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": "Advertiser profile added successfully."
+  "success": true,
+  "data": "Advertiser profile added successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/organization/advertiser/add": {
+    parameters: {};
+    post: operations["Addadvertiserprofile"];
+  };
+}
+
+export interface operations {
+  Addadvertiserprofile: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-IAA-OW-ID": number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserName: string;
+          website: string;
+          chiefName: string;
+          contactNumber: string;
+          address: string;
+          legalInfo: string;
+          links: string[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2029,6 +2420,9 @@ Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for r
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
   "advertiserName": "Nikon 2",
@@ -2042,6 +2436,60 @@ Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for r
     "data": "Advertiser profile updated successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/organization/advertiser/{advertiserId}": {
+    parameters: {};
+    patch: operations["Editadvertiserprofile"];
+  };
+}
+
+export interface operations {
+  Editadvertiserprofile: {
+    parameters: {
+      path: {
+        advertiserId: number;
+      };
+      header: {
+        Authorization: string;
+        "X-IAA-OW-ID": number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserName: string;
+          website: string;
+          chiefName: string;
+          contactNumber: string;
+          address: string;
+          legalInfo: string;
+          links: string[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2062,12 +2510,53 @@ Delete an advertiser profile.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Advertiser profile deleted successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/organization/advertiser/{advertiserId}": {
+    parameters: {};
+    delete: operations["Deleteadvertiserprofile"];
+  };
+}
+
+export interface operations {
+  Deleteadvertiserprofile: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-IAA-OW-ID": number;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2192,29 +2681,74 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "totalRecords": 2,
-        "filteredRecords": 2,
-        "customerPaymentTypes": [
-            {
-                "name": "prepaid",
-                "id": 1,
-                "label": "PrePaid",
-                "order": 1
-            },
-            {
-                "name": "postpaid",
-                "id": 2,
-                "label": "PostPaid",
-                "order": 2
-            }
-        ]
-    }
+  "success": true,
+  "data": {
+    "totalRecords": 2,
+    "filteredRecords": 2,
+    "customerPaymentTypes": [
+      {
+        "name": "prepaid",
+        "id": 1,
+        "label": "PrePaid",
+        "order": 1
+      },
+      {
+        "name": "postpaid",
+        "id": 2,
+        "label": "PostPaid",
+        "order": 2
+      }
+    ]
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/static/customer-payment-types": {
+    parameters: {};
+    get: operations["getCustomerPaymentType"];
+  };
+}
+
+export interface operations {
+  getCustomerPaymentType: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              customerPaymentTypes: {
+                name: string;
+                id: number;
+                label: string;
+                order: number;
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2297,55 +2831,100 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-            "name": "account_administration",
-            "id": 1,
-            "label": "Account Administration",
-            "order": 1
-        },
-        {
-            "name": "campaign_optimization",
-            "id": 2,
-            "label": "Campaign Optimization",
-            "order": 2
-        },
-        {
-            "name": "creative_serivces",
-            "id": 3,
-            "label": "Creative Serivces",
-            "order": 3
-        },
-        {
-            "name": "audience_building",
-            "id": 4,
-            "label": "Audience Building",
-            "order": 4
-        },
-        {
-            "name": "inventory_management",
-            "id": 5,
-            "label": "Inventory Management",
-            "order": 5
-        },
-        {
-            "name": "finance_and_accounting",
-            "id": 6,
-            "label": "Finance & Accounting",
-            "order": 6
-        },
-        {
-            "name": "campaign_creation",
-            "id": 7,
-            "label": "Campaign Creation",
-            "order": 7
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "account_administration",
+      "id": 1,
+      "label": "Account Administration",
+      "order": 1
+    },
+    {
+      "name": "campaign_optimization",
+      "id": 2,
+      "label": "Campaign Optimization",
+      "order": 2
+    },
+    {
+      "name": "creative_serivces",
+      "id": 3,
+      "label": "Creative Serivces",
+      "order": 3
+    },
+    {
+      "name": "audience_building",
+      "id": 4,
+      "label": "Audience Building",
+      "order": 4
+    },
+    {
+      "name": "inventory_management",
+      "id": 5,
+      "label": "Inventory Management",
+      "order": 5
+    },
+    {
+      "name": "finance_and_accounting",
+      "id": 6,
+      "label": "Finance & Accounting",
+      "order": 6
+    },
+    {
+      "name": "campaign_creation",
+      "id": 7,
+      "label": "Campaign Creation",
+      "order": 7
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/static/organization-expertize": {
+    parameters: {};
+    get: operations["OrganizationExpertize"];
+  };
+}
+
+export interface operations {
+  OrganizationExpertize: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2360,55 +2939,96 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-            "name": "1_10",
-            "id": 1,
-            "label": "1-10",
-            "order": 1
-        },
-        {
-            "name": "11_50",
-            "id": 2,
-            "label": "11-50",
-            "order": 2
-        },
-        {
-            "name": "51_200",
-            "id": 3,
-            "label": "51-200",
-            "order": 3
-        },
-        {
-            "name": "201_500",
-            "id": 4,
-            "label": "201-500",
-            "order": 4
-        },
-        {
-            "name": "501_1000",
-            "id": 5,
-            "label": "501-1000",
-            "order": 5
-        },
-        {
-            "name": "1001_5000",
-            "id": 6,
-            "label": "1001-5000",
-            "order": 6
-        },
-        {
-            "name": "5000+",
-            "id": 7,
-            "label": "5000+",
-            "order": 7
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "1_10",
+      "id": 1,
+      "label": "1-10",
+      "order": 1
+    },
+    {
+      "name": "11_50",
+      "id": 2,
+      "label": "11-50",
+      "order": 2
+    },
+    {
+      "name": "51_200",
+      "id": 3,
+      "label": "51-200",
+      "order": 3
+    },
+    {
+      "name": "201_500",
+      "id": 4,
+      "label": "201-500",
+      "order": 4
+    },
+    {
+      "name": "501_1000",
+      "id": 5,
+      "label": "501-1000",
+      "order": 5
+    },
+    {
+      "name": "1001_5000",
+      "id": 6,
+      "label": "1001-5000",
+      "order": 6
+    },
+    {
+      "name": "5000+",
+      "id": 7,
+      "label": "5000+",
+      "order": 7
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/static/company-size": {
+    parameters: {};
+    get: operations["Companysize"];
+  };
+}
+
+export interface operations {
+  Companysize: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2423,50 +3043,936 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-            "name": "accounting",
-            "id": 1,
-            "label": "Accounting ",
-            "order": 1
-        },
-        {
-            "name": "airlines/aviation",
-            "id": 2,
-            "label": "Airlines/Aviation",
-            "order": 2
-        },
-        {
-            "name": "alternative_dispute_resolution",
-            "id": 3,
-            "label": "Alternative Dispute Resolution",
-            "order": 3
-        },
-        {
-            "name": "alternative_medicine",
-            "id": 4,
-            "label": "Alternative Medicine",
-            "order": 4
-        },
-        {
-            "name": "animation",
-            "id": 5,
-            "label": "Animation",
-            "order": 5
-        },
-        {
-            "name": "apparel/fashion",
-            "id": 6,
-            "label": "Apparel/Fashion",
-            "order": 6
-        }
-        ...
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "accounting",
+      "id": 1,
+      "label": "Accounting ",
+      "order": 1
+    },
+    {
+      "name": "airlines/aviation",
+      "id": 2,
+      "label": "Airlines/Aviation",
+      "order": 2
+    },
+    {
+      "name": "alternative_dispute_resolution",
+      "id": 3,
+      "label": "Alternative Dispute Resolution",
+      "order": 3
+    },
+    {
+      "name": "alternative_medicine",
+      "id": 4,
+      "label": "Alternative Medicine",
+      "order": 4
+    },
+    {
+      "name": "animation",
+      "id": 5,
+      "label": "Animation",
+      "order": 5
+    },
+    {
+      "name": "apparel/fashion",
+      "id": 6,
+      "label": "Apparel/Fashion",
+      "order": 6
+    },
+    {
+      "name": "architecture/planning",
+      "id": 7,
+      "label": "Architecture/Planning",
+      "order": 7
+    },
+    {
+      "name": "arts/crafts",
+      "id": 8,
+      "label": "Arts/Crafts",
+      "order": 8
+    },
+    {
+      "name": "automotive",
+      "id": 9,
+      "label": "Automotive",
+      "order": 9
+    },
+    {
+      "name": "aviation/aerospace",
+      "id": 10,
+      "label": "Aviation/Aerospace",
+      "order": 10
+    },
+    {
+      "name": "banking/mortgage",
+      "id": 11,
+      "label": "Banking/Mortgage",
+      "order": 11
+    },
+    {
+      "name": "biotechnology/greentech",
+      "id": 12,
+      "label": "Biotechnology/Greentech",
+      "order": 12
+    },
+    {
+      "name": "broadcast_media",
+      "id": 13,
+      "label": "Broadcast Media",
+      "order": 13
+    },
+    {
+      "name": "building_materials",
+      "id": 14,
+      "label": "Building Materials",
+      "order": 14
+    },
+    {
+      "name": "business_supplies/equipment",
+      "id": 15,
+      "label": "Business Supplies/Equipment",
+      "order": 15
+    },
+    {
+      "name": "capital_markets/hedge_fund/private_equity",
+      "id": 16,
+      "label": "Capital Markets/Hedge Fund/Private Equity",
+      "order": 16
+    },
+    {
+      "name": "chemicals",
+      "id": 17,
+      "label": "Chemicals",
+      "order": 17
+    },
+    {
+      "name": "civic/social_organization",
+      "id": 18,
+      "label": "Civic/Social Organization",
+      "order": 18
+    },
+    {
+      "name": "civil_engineering",
+      "id": 19,
+      "label": "Civil Engineering",
+      "order": 19
+    },
+    {
+      "name": "commercial_real_estate",
+      "id": 20,
+      "label": "Commercial Real Estate",
+      "order": 20
+    },
+    {
+      "name": "computer_games",
+      "id": 21,
+      "label": "Computer Games",
+      "order": 21
+    },
+    {
+      "name": "computer_hardware",
+      "id": 22,
+      "label": "Computer Hardware",
+      "order": 22
+    },
+    {
+      "name": "computer_networking",
+      "id": 23,
+      "label": "Computer Networking",
+      "order": 23
+    },
+    {
+      "name": "computer_software/engineering",
+      "id": 24,
+      "label": "Computer Software/Engineering",
+      "order": 24
+    },
+    {
+      "name": "computer/network_security",
+      "id": 25,
+      "label": "Computer/Network Security",
+      "order": 25
+    },
+    {
+      "name": "construction",
+      "id": 26,
+      "label": "Construction",
+      "order": 26
+    },
+    {
+      "name": "consumer_electronics",
+      "id": 27,
+      "label": "Consumer Electronics",
+      "order": 27
+    },
+    {
+      "name": "consumer_goods",
+      "id": 28,
+      "label": "Consumer Goods",
+      "order": 28
+    },
+    {
+      "name": "consumer_services",
+      "id": 29,
+      "label": "Consumer Services",
+      "order": 29
+    },
+    {
+      "name": "cosmetics",
+      "id": 30,
+      "label": "Cosmetics",
+      "order": 30
+    },
+    {
+      "name": "dairy",
+      "id": 31,
+      "label": "Dairy",
+      "order": 31
+    },
+    {
+      "name": "defense/space",
+      "id": 32,
+      "label": "Defense/Space",
+      "order": 32
+    },
+    {
+      "name": "design",
+      "id": 33,
+      "label": "Design",
+      "order": 33
+    },
+    {
+      "name": "e-learning",
+      "id": 34,
+      "label": "E-Learning",
+      "order": 34
+    },
+    {
+      "name": "education_management",
+      "id": 35,
+      "label": "Education Management",
+      "order": 35
+    },
+    {
+      "name": "electrical/electronic_manufacturing",
+      "id": 36,
+      "label": "Electrical/Electronic Manufacturing",
+      "order": 36
+    },
+    {
+      "name": "entertainment/movie_production",
+      "id": 37,
+      "label": "Entertainment/Movie Production",
+      "order": 37
+    },
+    {
+      "name": "environmental_services",
+      "id": 38,
+      "label": "Environmental Services",
+      "order": 38
+    },
+    {
+      "name": "events_services",
+      "id": 39,
+      "label": "Events Services",
+      "order": 39
+    },
+    {
+      "name": "executive_office",
+      "id": 40,
+      "label": "Executive Office",
+      "order": 40
+    },
+    {
+      "name": "facilities_services",
+      "id": 41,
+      "label": "Facilities Services",
+      "order": 41
+    },
+    {
+      "name": "farming",
+      "id": 42,
+      "label": "Farming",
+      "order": 42
+    },
+    {
+      "name": "financial_services",
+      "id": 43,
+      "label": "Financial Services",
+      "order": 43
+    },
+    {
+      "name": "fine_art",
+      "id": 44,
+      "label": "Fine Art",
+      "order": 44
+    },
+    {
+      "name": "fishery",
+      "id": 45,
+      "label": "Fishery",
+      "order": 45
+    },
+    {
+      "name": "food_production",
+      "id": 46,
+      "label": "Food Production",
+      "order": 46
+    },
+    {
+      "name": "food/beverages",
+      "id": 47,
+      "label": "Food/Beverages",
+      "order": 47
+    },
+    {
+      "name": "fundraising",
+      "id": 48,
+      "label": "Fundraising",
+      "order": 48
+    },
+    {
+      "name": "furniture",
+      "id": 49,
+      "label": "Furniture",
+      "order": 49
+    },
+    {
+      "name": "gambling/casinos",
+      "id": 50,
+      "label": "Gambling/Casinos",
+      "order": 50
+    },
+    {
+      "name": "glass/ceramics/concrete",
+      "id": 51,
+      "label": "Glass/Ceramics/Concrete",
+      "order": 51
+    },
+    {
+      "name": "government_administration",
+      "id": 52,
+      "label": "Government Administration",
+      "order": 52
+    },
+    {
+      "name": "government_relations",
+      "id": 53,
+      "label": "Government Relations",
+      "order": 53
+    },
+    {
+      "name": "graphic_design/web_design",
+      "id": 54,
+      "label": "Graphic Design/Web Design",
+      "order": 54
+    },
+    {
+      "name": "health/fitness",
+      "id": 55,
+      "label": "Health/Fitness",
+      "order": 55
+    },
+    {
+      "name": "higher_education/acadamia",
+      "id": 56,
+      "label": "Higher Education/Acadamia",
+      "order": 56
+    },
+    {
+      "name": "hospital/health_care",
+      "id": 57,
+      "label": "Hospital/Health Care",
+      "order": 57
+    },
+    {
+      "name": "hospitality",
+      "id": 58,
+      "label": "Hospitality",
+      "order": 58
+    },
+    {
+      "name": "human_resources/hr",
+      "id": 59,
+      "label": "Human Resources/HR",
+      "order": 59
+    },
+    {
+      "name": "import/export",
+      "id": 60,
+      "label": "Import/Export",
+      "order": 60
+    },
+    {
+      "name": "individual/family_services",
+      "id": 61,
+      "label": "Individual/Family Services",
+      "order": 61
+    },
+    {
+      "name": "industrial_automation",
+      "id": 62,
+      "label": "Industrial Automation",
+      "order": 62
+    },
+    {
+      "name": "information_services",
+      "id": 63,
+      "label": "Information Services",
+      "order": 63
+    },
+    {
+      "name": "information_technology/it",
+      "id": 64,
+      "label": "Information Technology/IT",
+      "order": 64
+    },
+    {
+      "name": "insurance",
+      "id": 65,
+      "label": "Insurance",
+      "order": 65
+    },
+    {
+      "name": "international_affairs",
+      "id": 66,
+      "label": "International Affairs",
+      "order": 66
+    },
+    {
+      "name": "international_trade/development",
+      "id": 67,
+      "label": "International Trade/Development",
+      "order": 67
+    },
+    {
+      "name": "internet",
+      "id": 68,
+      "label": "Internet",
+      "order": 68
+    },
+    {
+      "name": "investment_banking/venture",
+      "id": 69,
+      "label": "Investment Banking/Venture",
+      "order": 69
+    },
+    {
+      "name": "investment_management/hedge_fund/private_equity",
+      "id": 70,
+      "label": "Investment Management/Hedge Fund/Private Equity",
+      "order": 70
+    },
+    {
+      "name": "judiciary",
+      "id": 71,
+      "label": "Judiciary",
+      "order": 71
+    },
+    {
+      "name": "law_enforcement",
+      "id": 72,
+      "label": "Law Enforcement",
+      "order": 72
+    },
+    {
+      "name": "law_practice/law_firms",
+      "id": 73,
+      "label": "Law Practice/Law Firms",
+      "order": 73
+    },
+    {
+      "name": "legal_services",
+      "id": 74,
+      "label": "Legal Services",
+      "order": 74
+    },
+    {
+      "name": "legislative_office",
+      "id": 75,
+      "label": "Legislative Office",
+      "order": 75
+    },
+    {
+      "name": "leisure/travel",
+      "id": 76,
+      "label": "Leisure/Travel",
+      "order": 76
+    },
+    {
+      "name": "library",
+      "id": 77,
+      "label": "Library",
+      "order": 77
+    },
+    {
+      "name": "logistics/procurement",
+      "id": 78,
+      "label": "Logistics/Procurement",
+      "order": 78
+    },
+    {
+      "name": "luxury_goods/jewelry",
+      "id": 79,
+      "label": "Luxury Goods/Jewelry",
+      "order": 79
+    },
+    {
+      "name": "machinery",
+      "id": 80,
+      "label": "Machinery",
+      "order": 80
+    },
+    {
+      "name": "management_consulting",
+      "id": 81,
+      "label": "Management Consulting",
+      "order": 81
+    },
+    {
+      "name": "maritime",
+      "id": 82,
+      "label": "Maritime",
+      "order": 82
+    },
+    {
+      "name": "market_research",
+      "id": 83,
+      "label": "Market Research",
+      "order": 83
+    },
+    {
+      "name": "marketing/advertising/sales",
+      "id": 84,
+      "label": "Marketing/Advertising/Sales",
+      "order": 84
+    },
+    {
+      "name": "mechanical_or_industrial_engineering",
+      "id": 85,
+      "label": "Mechanical or Industrial Engineering",
+      "order": 85
+    },
+    {
+      "name": "media_production",
+      "id": 86,
+      "label": "Media Production",
+      "order": 86
+    },
+    {
+      "name": "medical_equipment",
+      "id": 87,
+      "label": "Medical Equipment",
+      "order": 87
+    },
+    {
+      "name": "medical_practice",
+      "id": 88,
+      "label": "Medical Practice",
+      "order": 88
+    },
+    {
+      "name": "mental_health_care",
+      "id": 89,
+      "label": "Mental Health Care",
+      "order": 89
+    },
+    {
+      "name": "military_industry",
+      "id": 90,
+      "label": "Military Industry",
+      "order": 90
+    },
+    {
+      "name": "mining/metals",
+      "id": 91,
+      "label": "Mining/Metals",
+      "order": 91
+    },
+    {
+      "name": "motion_pictures/film",
+      "id": 92,
+      "label": "Motion Pictures/Film",
+      "order": 92
+    },
+    {
+      "name": "museums/institutions",
+      "id": 93,
+      "label": "Museums/Institutions",
+      "order": 93
+    },
+    {
+      "name": "music",
+      "id": 94,
+      "label": "Music",
+      "order": 94
+    },
+    {
+      "name": "nanotechnology",
+      "id": 95,
+      "label": "Nanotechnology",
+      "order": 95
+    },
+    {
+      "name": "newspapers/journalism",
+      "id": 96,
+      "label": "Newspapers/Journalism",
+      "order": 96
+    },
+    {
+      "name": "non-profit/volunteering",
+      "id": 97,
+      "label": "Non-Profit/Volunteering",
+      "order": 97
+    },
+    {
+      "name": "oil/energy/solar/greentech",
+      "id": 98,
+      "label": "Oil/Energy/Solar/Greentech",
+      "order": 98
+    },
+    {
+      "name": "online_publishing",
+      "id": 99,
+      "label": "Online Publishing",
+      "order": 99
+    },
+    {
+      "name": "other_industry",
+      "id": 100,
+      "label": "Other Industry",
+      "order": 100
+    },
+    {
+      "name": "outsourcing/offshoring",
+      "id": 101,
+      "label": "Outsourcing/Offshoring",
+      "order": 101
+    },
+    {
+      "name": "package/freight_delivery",
+      "id": 102,
+      "label": "Package/Freight Delivery",
+      "order": 102
+    },
+    {
+      "name": "packaging/containers",
+      "id": 103,
+      "label": "Packaging/Containers",
+      "order": 103
+    },
+    {
+      "name": "paper/forest_products",
+      "id": 104,
+      "label": "Paper/Forest Products",
+      "order": 104
+    },
+    {
+      "name": "performing_arts",
+      "id": 105,
+      "label": "Performing Arts",
+      "order": 105
+    },
+    {
+      "name": "pharmaceuticals",
+      "id": 106,
+      "label": "Pharmaceuticals",
+      "order": 106
+    },
+    {
+      "name": "philanthropy",
+      "id": 107,
+      "label": "Philanthropy",
+      "order": 107
+    },
+    {
+      "name": "photography",
+      "id": 108,
+      "label": "Photography",
+      "order": 108
+    },
+    {
+      "name": "plastics",
+      "id": 109,
+      "label": "Plastics",
+      "order": 109
+    },
+    {
+      "name": "political_organization",
+      "id": 110,
+      "label": "Political Organization",
+      "order": 110
+    },
+    {
+      "name": "primary/secondary_education",
+      "id": 111,
+      "label": "Primary/Secondary Education",
+      "order": 111
+    },
+    {
+      "name": "printing",
+      "id": 112,
+      "label": "Printing",
+      "order": 112
+    },
+    {
+      "name": "professional_training",
+      "id": 113,
+      "label": "Professional Training",
+      "order": 113
+    },
+    {
+      "name": "program_development",
+      "id": 114,
+      "label": "Program Development",
+      "order": 114
+    },
+    {
+      "name": "public_relations/pr",
+      "id": 115,
+      "label": "Public Relations/PR",
+      "order": 115
+    },
+    {
+      "name": "public_safety",
+      "id": 116,
+      "label": "Public Safety",
+      "order": 116
+    },
+    {
+      "name": "publishing_industry",
+      "id": 117,
+      "label": "Publishing Industry",
+      "order": 117
+    },
+    {
+      "name": "railroad_manufacture",
+      "id": 118,
+      "label": "Railroad Manufacture",
+      "order": 118
+    },
+    {
+      "name": "ranching",
+      "id": 119,
+      "label": "Ranching",
+      "order": 119
+    },
+    {
+      "name": "real_estate/mortgage",
+      "id": 120,
+      "label": "Real Estate/Mortgage",
+      "order": 120
+    },
+    {
+      "name": "recreational_facilities/services",
+      "id": 121,
+      "label": "Recreational Facilities/Services",
+      "order": 121
+    },
+    {
+      "name": "religious_institutions",
+      "id": 122,
+      "label": "Religious Institutions",
+      "order": 122
+    },
+    {
+      "name": "renewables/environment",
+      "id": 123,
+      "label": "Renewables/Environment",
+      "order": 123
+    },
+    {
+      "name": "research_industry",
+      "id": 124,
+      "label": "Research Industry",
+      "order": 124
+    },
+    {
+      "name": "restaurants",
+      "id": 125,
+      "label": "Restaurants",
+      "order": 125
+    },
+    {
+      "name": "retail_industry",
+      "id": 126,
+      "label": "Retail Industry",
+      "order": 126
+    },
+    {
+      "name": "security/investigations",
+      "id": 127,
+      "label": "Security/Investigations",
+      "order": 127
+    },
+    {
+      "name": "semiconductors",
+      "id": 128,
+      "label": "Semiconductors",
+      "order": 128
+    },
+    {
+      "name": "shipbuilding",
+      "id": 129,
+      "label": "Shipbuilding",
+      "order": 129
+    },
+    {
+      "name": "sporting_goods",
+      "id": 130,
+      "label": "Sporting Goods",
+      "order": 130
+    },
+    {
+      "name": "sports",
+      "id": 131,
+      "label": "Sports",
+      "order": 131
+    },
+    {
+      "name": "staffing/recruiting",
+      "id": 132,
+      "label": "Staffing/Recruiting",
+      "order": 132
+    },
+    {
+      "name": "supermarkets",
+      "id": 133,
+      "label": "Supermarkets",
+      "order": 133
+    },
+    {
+      "name": "telecommunications",
+      "id": 134,
+      "label": "Telecommunications",
+      "order": 134
+    },
+    {
+      "name": "textiles",
+      "id": 135,
+      "label": "Textiles",
+      "order": 135
+    },
+    {
+      "name": "think_tanks",
+      "id": 136,
+      "label": "Think Tanks",
+      "order": 136
+    },
+    {
+      "name": "tobacco",
+      "id": 137,
+      "label": "Tobacco",
+      "order": 137
+    },
+    {
+      "name": "translation/localization",
+      "id": 138,
+      "label": "Translation/Localization",
+      "order": 138
+    },
+    {
+      "name": "transportation",
+      "id": 139,
+      "label": "Transportation",
+      "order": 139
+    },
+    {
+      "name": "utilities",
+      "id": 140,
+      "label": "Utilities",
+      "order": 140
+    },
+    {
+      "name": "venture_capital/vc",
+      "id": 141,
+      "label": "Venture Capital/VC",
+      "order": 141
+    },
+    {
+      "name": "veterinary",
+      "id": 142,
+      "label": "Veterinary",
+      "order": 142
+    },
+    {
+      "name": "warehousing",
+      "id": 143,
+      "label": "Warehousing",
+      "order": 143
+    },
+    {
+      "name": "wholesale",
+      "id": 144,
+      "label": "Wholesale",
+      "order": 144
+    },
+    {
+      "name": "wine/spirits",
+      "id": 145,
+      "label": "Wine/Spirits",
+      "order": 145
+    },
+    {
+      "name": "wireless",
+      "id": 146,
+      "label": "Wireless",
+      "order": 146
+    },
+    {
+      "name": "writing/editing",
+      "id": 147,
+      "label": "Writing/Editing",
+      "order": 147
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/static/industries": {
+    parameters: {};
+    get: operations["Industries"];
+  };
+}
+
+export interface operations {
+  Industries: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2481,49 +3987,91 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
+
 {
-    "success": true,
-    "data": [
-        {
-            "name": "<50,000",
-            "id": 1,
-            "label": "< $50,000",
-            "order": 1
-        },
-        {
-            "name": "50,000_100,000",
-            "id": 2,
-            "label": "$50,000 - $100,000",
-            "order": 2
-        },
-        {
-            "name": "100,000_500,000",
-            "id": 3,
-            "label": "$100,000 - $500,000",
-            "order": 3
-        },
-        {
-            "name": "500,000_1,000,000",
-            "id": 4,
-            "label": "$500,000 - $1,000,000",
-            "order": 4
-        },
-        {
-            "name": "1,000,000_10,000,000",
-            "id": 5,
-            "label": "$1,000,000 - $10,000,000",
-            "order": 5
-        },
-        {
-            "name": ">10,000,000",
-            "id": 6,
-            "label": "> $10,000,000",
-            "order": 6
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "<50,000",
+      "id": 1,
+      "label": "< $50,000",
+      "order": 1
+    },
+    {
+      "name": "50,000_100,000",
+      "id": 2,
+      "label": "$50,000 - $100,000",
+      "order": 2
+    },
+    {
+      "name": "100,000_500,000",
+      "id": 3,
+      "label": "$100,000 - $500,000",
+      "order": 3
+    },
+    {
+      "name": "500,000_1,000,000",
+      "id": 4,
+      "label": "$500,000 - $1,000,000",
+      "order": 4
+    },
+    {
+      "name": "1,000,000_10,000,000",
+      "id": 5,
+      "label": "$1,000,000 - $10,000,000",
+      "order": 5
+    },
+    {
+      "name": ">10,000,000",
+      "id": 6,
+      "label": "> $10,000,000",
+      "order": 6
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/static/media-budget": {
+    parameters: {};
+    get: operations["Mediabudget"];
+  };
+}
+
+export interface operations {
+  Mediabudget: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2538,33 +4086,74 @@ Identifies what kind of services customer has chosen.
 
   <div class="child2">
 
+  <Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-            "name": "political",
-            "id": 1,
-            "label": "Political",
-            "order": 1,
-            "description": "This caters to advertisers from the political domain targeting users for for issue advocacy, persuasion, event promotion, fundraising and other type of campaigns"
-        },
-        {
-            "name": "healthcare",
-            "id": 2,
-            "label": "Healthcare",
-            "order": 2,
-            "description": "This caters to advertisers from domains such as pharmaceutical and medical equipment manufacturers targeting healthcare professionals."
-        },
-        {
-            "name": "specialty",
-            "id": 3,
-            "label": "Specialty",
-            "order": 11,
-            "description": "This caters to advertisers from niche domains such as automobiles, finance, retail, travel, B2B and others."
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "name": "political",
+      "id": 1,
+      "label": "Political",
+      "order": 1,
+      "description": "This caters to advertisers from the political domain targeting users for for issue advocacy, persuasion, event promotion, fundraising and other type of campaigns"
+    },
+    {
+      "name": "healthcare",
+      "id": 2,
+      "label": "Healthcare",
+      "order": 2,
+      "description": "This caters to advertisers from domains such as pharmaceutical and medical equipment manufacturers targeting healthcare professionals."
+    },
+    {
+      "name": "specialty",
+      "id": 3,
+      "label": "Specialty",
+      "order": 11,
+      "description": "This caters to advertisers from niche domains such as automobiles, finance, retail, travel, B2B and others."
+    }
+  ]
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/ua/static/verticals": {
+    parameters: {};
+    get: operations["getVerticals"];
+  };
+}
+
+export interface operations {
+  getVerticals: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+              description: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 </div></div>
