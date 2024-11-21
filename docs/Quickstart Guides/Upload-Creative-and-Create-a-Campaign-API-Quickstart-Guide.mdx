@@ -1,0 +1,1514 @@
+---
+title: Create a Campaign
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Quickstart Guide: Upload Creative and Create a Campaign
+
+IQM’s REST API enables you to interact with most of IQM’s offerings.
+
+The following endpoints will be used to upload a creative, create an insertion order, create a PG deal, and start a campaign:
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+
+## About IQM Campaign & Creative
+
+The IQM APIs provide access to create Insertion Orders, PG Deals, Campaigns and upload Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. You can use the APIs to connect to applications of your choice.
+
+Once an Insertion Order and PG Deal are created, an uploaded and processed Creative can be used for creating and running advertising Campaigns.
+
+## Before you begin
+
+To upload a Creative and create a Campaign, you must have the following:
+
+1. An Account On the IQM platform
+1. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX file to upload Creative
+
+If you do not have any of the above, please follow the steps below:
+
+* See [Before You Begin](/docs/intro.md#before-you-begin) section to create an account and request a Client ID and Client Secret
+* File requirements for creative file:
+  * 2MB for JPG, JPEG, PNG
+  * 750KB for GIF
+  * 400MB for MOV, MP4
+  * 100MB for MP3, WAV, OGG, MPEG
+
+For more information on [VAST](https://www.iab.com/guidelines/vast/) and DAAST XML format specifications, please see:
+
+* [https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/)
+
+Sample CSV file: [https://app.iqm.com/creatives/u/0/sample.CSV](https://app.iqm.com/creatives/u/0/sample.CSV)
+
+## Upload Creative and create a Campaign using the IQM API
+
+This quick start will help you to create a Campaign and upload Creative.  At a minimum, you must log in, upload creative, and create a campaign. Once you have accomplished these basics, you can continue learning more about our API through the [documentation](https://app.iqm.com/docs).
+
+1. Log In
+    * Optional if you have already logged in and have a token
+1. Request Creative Types
+    * 2.1: Request Creative Types (Optional if you know what you need or have already requested before)
+    * 2.2: Upload Creative (Optional if you have already uploaded before)
+    * 2.3: Check Creative status
+1. Create Insertion Order 
+    * Optional if already created
+1. Create PG Deal
+    * 4.1: Request Exchange List 
+    * 4.2: Create PG Deal
+1. Create a Campaign
+    * 5.1 Create a Campaign using Creative, provide necessary targeting parameters
+    * 5.2 Check Campaign's status
+
+### Step 1: Log in
+
+To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), a unique identifier for each organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token <br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema  |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Schema"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
+}
+```
+
+<details>
+<summary>More Response Samples</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/login": {
+    parameters: {};
+    post: operations["Login"];
+  };
+}
+
+export interface operations {
+  Login: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          grantType: string;
+          email: string;
+          password: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+              expires_in: number;
+              owId: number;
+            };
+          };
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              status: string;
+              reason: string;
+              supportEmail: string;
+            };
+            errorObjects: {
+              error: string;
+              reason: string;
+            }[];
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Step 2: Upload Creative
+
+#### Step 2.1 Request creative types
+
+To upload a creative, you must provide a creative type. Use the creative type list endpoint to request a full list of allowed creative types.
+
+For further information see the complete [Creative Types API Documentation](https://app.iqm.com/docs?path=tag/Master-API/operation/getCreativeTypes_1)
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+
+<div class="container">
+  <div class="child1">
+
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 17,
+        "name": "Audio",
+        "rtbTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "rtbTypeId": 4
+      },
+      {
+        "id": 14,
+        "name": "Video",
+        "rtbTypeId": 3
+      },
+      {
+        "id": 13,
+        "name": "HTML",
+        "rtbTypeId": 1
+      },
+      {
+        "id": 11,
+        "name": "Image",
+        "rtbTypeId": 1
+      }
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 5
+  }
+}
+```
+
+<details>
+<summary>More Response Samples</summary>
+
+```json title="Response 500"
+{
+  "statusCode": 500,
+  "responseObject": {
+    "errorMsg": "Internal server error",
+    "errorCode": 500
+  }
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/master/creativeTypes": {
+    parameters: {};
+
+    get: operations["getCreativeTypes_1"];
+  };
+}
+
+export interface operations {
+  getCreativeTypes_1: {
+    parameters: {
+      query?: {
+        creativeTypeIds?: string;
+        ids?: string;
+        pageNo?: number;
+        noOfEntries?: number;
+        sortBy?: string;
+        order?: string;
+        searchField?: string;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              id: number;
+              label: string;
+              rtbTypeId: string;
+            }[];
+            totalRecords: number;
+            filteredRecords: number;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+#### Step 2.2 Upload creative
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
+
+<div class="container">
+  <div class="child1">
+
+When uploading a creative, you can provide a file and creative parameters like tracking pixel and click URL.
+
+Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
+
+| Headers  |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+| `content-type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Media type of the resource |
+
+| Request Schema | |
+| ----| --- |
+| `creativeFiles` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | File - image file as multipart form data |
+|  `creativeImageMetadata` <br /><span class="type-text">object</span> <span class="required-text">required</span>  | (creativeImageMetadata) |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```application title="Request Sample (Form Data)"
+------WebKitFormBoundaryyTwoz48E2hTuXZoX
+Content-Disposition: form-data; name="dspId"
+
+------WebKitFormBoundaryyTwoz48E2hTuXZoX
+Content-Disposition: form-data; name="advertiserId"
+
+------WebKitFormBoundaryyTwoz48E2hTuXZoX
+Content-Disposition: form-data; name="creativeImageMetadata"
+
+{"8a9ab848-b302-40a6-bea1-17f7aca6f362":{"originalFileName":"Screenshot 2023-12-28 at 2.51.28 PM.png","creativeName":"Creative","clickUrl":"https://iqm.com","width":408,"height":364}}
+------WebKitFormBoundaryyTwoz48E2hTuXZoX
+Content-Disposition: form-data; name="creativeFiles"; filename="8a9ab848-b302-40a6-bea1-17f7aca6f362.png"
+Content-Type: image/png
+
+PNG
+
+IHDRlñ8¯Z
+±iCCPICC ProfileHTéÿôÐNèM"@J-té *!    J)ØÅ\
+*" ¬èRDÁFµcÁÂ¢ØûYDÔu±`Cå
+p»ûÎ{ï¼{Îû;÷¿÷þsæs²[(ÌÈHDþÞ´¸øn g±9b!#<< 2mÿ.îhÂÞ´Èõï÷ÿ«¨pybP8ÂÉ\1'
+ác¾çEPõßhD8Á=«Mpê¿àäIFã'c¢"ë'±Ù¢THæËIEò¶pùóöÈÊÊæ"Ü°9#Dx"?=ù/yRÿ3YÍNóÔ^&ïÃ
+3Ùùÿçãøß)®a()MX¤/è^FvÉ¡aÓÌçNÆOr4 z9bfÂ4sÙ>Aòµ¡ÁÓÂ÷cÉóHXQÓÌûFN³(;B^+EÄdL3[4SW-÷§ñXòüiQ±ÓË  fqFdÐLSîI#äýóþÞ3uýä{Ïÿe¿||­$-*@¾wöLÿ<c&§8NÞçã;-J¼åµáòx^¦¿Ü/Î¯ /äÌÚpù3LgO3 \ÀÙ|+B  Ø _ÂËLl-ÌñSÓ$4rÒx4c3fokïÀÄ¹z-ÞQ'Ï#D½2ã[Û{Çøøøñ_àu'@lñ/@yK'8RQî=qÁ _%ä     ô0ÖÀ87à|A Q ,²,ËÀjPJÀf°Tj°Ôàh'ÀYp\×ÁmðÈÀ x   FÀ0A"CHÒL +È¢C/E@ñP
+    )´Z
+@¥P´jCÐYè2ÔÝú¡aè-ôFÁ$X
+Ö�Má90fÀAp¼N�sà¸ÞÃ5ð¸>
+_�oÃ2ø%<(e²FÑQLT*¡V Qe¨TªÕº¡^¡>£±h
+¶F»¡ÐÑh:½½]®G·¢Ï£o¢ûÑ#èï2Fc�qÅ°0qTÌL¦SiÁ\ÀÜÆb>`±X*Öë
+ÀÆcÓ±K±°»°ÍØ3Ø>ìvÃiâ¬pî¸0'ÁávâàNãnàqð
+x}¼=Þà×àËðûñ§ð7ðCø12ÁàJ#p    ùM}NÂ5Â a¨B4#º£éÄÕÄrbñññ¡Â|¾Â*�r�C
+ú>TI$&)$%m$ÕÎîÞÉdS²9,!o$7Ï?)RmY\Å­7_+LJ
+Ê*]Sz¥LP6Uf*³W(W*w(ßUU¡¨Ø©©d©lPÙ¯rYå¹*NÕTÕW«Z¨ºWõêE1¢0)ÊZÊ>ÊÊ VÍL¥®V¢vP­WmD]U}®zzz¥úIuE5¥²¨ÔMÔ#Ô;Ô/³tg1fñf­Õ4ëÆ¬Ú^<bfÛ_4i¾[4Û4k¡µ,µæk-ÑÚ­uAë¶¶6G»XûöXÇR'Bg©Î^Q]=]]¡îNÝsº¯ô¨z^zézÛôNé
+ëSô=ôùúÛôOë¿ ©Ó´LZ9í<mÄ@Ç À@j°Ç ×`ÌÐÌ0Úpa³ác#¢Ý(ÅhQÑ±¾qñ2ãFã&ºIÉn¦f¦±¦ëLÛLi±Ì
+ÌÍÍ=ÍsÌkÌoY`-è»,®[Âi×¬`+'+¾Õ.«¾ÙÙ.³³kfßµ&Y3¬s­­ûm¨6Á6klÚl^Ï10gËî9ßmm3m÷Ù>´Sµ
+´[c×i÷ÖÞÒc_iËìàç°Ò¡ÝáÍ\«¹¼¹»çÞs¤88®sìrüæäì$rjrv6vNr®r¾KW£Ó7Ð/¹`\¼]Vºpùìêä*q=âú§µ[Û~·çóÌæñæí7ànèÎvßã.ó y$yüì!ó4ðd{Öx>õ2òâzÕz
+1,é×Þ¶Þ"ïïLWæræ¿O±O¯¯ªo´o�ï?C¿T¿F¿Gÿ¥þg0A[î²tYVk$Ð9pyàù RPdPEÐÓ`Ë`Qpg²5äQ¨I¨ ´-±Â¶=7
+Ï   ?>;?|~åügvË"º#)#÷G~òÚõ0Ú<ZÝ£Óó1Ö'¶4V7'nyÜÕx­x~|{.!&¡6atïí
+ï,4[·ðò"­EN.VZÌ^|4 ´?é+;]ÃMf%W%p\/î6î0ÏWÊJqO)Myêº5u8Í3­,íÉ¯à¿IH¯NÿQ1Ù�ÏJÊê¨
+2ç³õ²ó²ûVÂ"¡,Ç5g{Î(HT+Ä
+Åí5d@êKöçzäVæ~Z³ähJ ¯'ß2}þP_Á/KÑK9K»,[½¬9cùÐä]+V®\å¿ª~5quÆê_×Ø®)]ó~mìÚÎBÝÂU�?øÿÐX¤X$*º»Îm]õèù?ö®wX¿sý÷bnñÛ²¯8®üd÷SùOãS6önrÚ´{3v³`ó-[êKUJ
+J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅÝuc·×î¦jÝêê/?ó¾·ÇOkiMÙ^ìÞÜ½ÏöÅìëþ�þKC­VmIí·:A¬>¢þ|sCÃ~ýáFiãðÄ×úlo²nÚÓLm.9IShow more
+```
+
+```json title="Response 201"
+{
+ "statusCode": 201,
+ "responseObject": {
+   "data": [148971],
+   "message": "Image Creative(s) Added successfully"
+ }
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/crt/add/image/banner/creative": {
+    parameters: {};
+    post: operations["AddImageCreative"];
+  };
+}
+
+export interface operations {
+  AddImageCreative: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": string;
+        Authorization: string;
+        "content-type": "multipart/form-data";
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          creativeFiles: string;
+          creativeImageMetadata: {
+            "50b0edfc14f011eab703f36c2a7f7251": {
+              originalFileName: string;
+              clickUrl: string;
+              pixelUrl: string[];
+            };
+            "4c49c1bc14f011eaaa9ceb9a07a6934f": {
+              originalFileName: string;
+              clickUrl: string;
+            };
+          };
+        };
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              data: number[];
+              message: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+For further information see the complete API Documentation:
+
+* [Add Image Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddImageCreative)
+
+* [Audio/Video Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/Audio/VideoCreative)
+
+* [Add HTML Creative](https://app.iqm.com/docs?path=tag/Creative-API/operation/AddHtmlCreative)
+
+---
+
+#### Step 2.3 Check the creative status
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
+
+<div class="container">
+  <div class="child1">
+
+To create a campaign, creative must be processed and approved. This api checks a creative's status. Use the `creativeId` (6 digit number under `data` parameter in response) retrieved from the previous step to get its details. 
+
+For further information see the complete [Creative Details API Documentation](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid).
+
+| Headers |  |
+| ----| --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Request Schema || 
+| --- | --- |
+| `creativeIds` <br /><span class="type-text">array of integers</span> | Creative ID |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+  "creativeIds": [
+    123456
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 676384,
+        "name": "banner",
+        "creativeTypeId": 11,
+        "creativeType": "Image",
+        //highlight-next-line
+        "status": "pending",
+        "createdAt": 1726086249544,
+        "modifiedAt": 1726086257,
+        "owId": 203578,
+        "organizationName": "User's Org",
+        "organizationLogo": "https://web-asset.png",
+        "previewFlag": 1,
+        "creativeScreenshotSource": "1726086249396.jpg",
+        "creativeCardSource": "https://Screenshots/1726086249396.jpg",
+        "creativeThumbnailSource": "https://1726086249396.jpg",
+        "duration": 0,
+        "pixelUrls": [],
+        "clickUrl": "http://iqm.com",
+        "height": 750,
+        "width": 1700
+      }
+    ],
+    "totalRecords": 1,
+    "filteredRecords": 1
+  }
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/crt/basic/list": {
+    parameters: {};
+    post: operations["getCreativeBasicDetailList"];
+  };
+}
+
+export interface operations {
+  getCreativeBasicDetailList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          owIds?: number[];
+          isAllOwIds?: boolean;
+          ids?: number[];
+          creativeIds?: number[];
+          //highlight-next-line
+          status?: number[];
+          creativeTypeIds?: number[];
+          responseFields?: string[];
+          campaignId?: number;
+          allOwIds?: boolean;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc"
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            sucess: boolean;
+            data: {
+              data: {
+                id: number;
+                name: string;
+                creativeTypeId: number;
+                creativeType: string;
+                status: string;
+                createdAt: number;
+                modifiedAt: number;
+                owId: number;
+                organizationName: string;
+                organizationLogo: string;
+                previewFlag: number;
+                creativeScreenshotSource: string;
+                creativeCardSource: string;
+                creativeThumbnailSource: string;
+                duration: number;
+                pixelUrls: string[];
+                clickUrl: string;
+                height: number;
+                width: number
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Step 3: Create Insertion Order
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
+
+<div class="container">
+<div class="child1">
+
+Before a campaign can be started an Insertion Order must be created. An Insertion Order is a contractual agreement that outlines the terms and conditions for one or more advertising campaigns. Once created, a campaign can be created and assigned to an Insertion Order. [Read more about Insertion Orders](https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order).
+
+The minimum required values for IO creation are as listed below. See a complete [table of resource properties](../Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties) for all supported values. 
+
+| Request Schema | |
+| --- | --- |
+| `ioName` <br /><span class="type-text">string</span> | Insertion Order name |
+| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time |
+| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time |
+| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget |
+| `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](../Guidelines/Campaign-API-Guidelines#get-io-status-list) |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | IO timezone ID |
+| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If `true` Keeps IO budget same as total budget of all included campaigns |
+| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [IO budget type ID](../Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)
+| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](../Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods) |
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample (budget based IO)" 
+{
+    "ioName": "IO Name 1",
+    "ioStartTime": 1690898148000,
+    "ioEndTime": 1690898888000,
+    "ioTotalBudget": 1000,
+    "ioTimeZoneId": 29,
+    "isAutoSumIoTotalBudget": true,
+    "ioBudgetTypeId": 1,
+    "ioBudgetDistributionMethodId": 1
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "ioId": 123456,
+        "ioName": "IO Name 1",
+        "ioStartTime": 1690898148000,
+        "ioEndTime": 1690898888000,
+        "ioTotalBudget": 0,
+        "ioTimeZoneId": 29,
+        "ioBudgetTypeId": 1,
+        "ioBudgetDistributionMethodId": 1,
+        "isAutoSumIoTotalBudget": true,
+        "ioTotalImpressions": null
+    }
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/add": {
+    parameters: {};
+    post: operations["createCampaignIO"];
+  };
+}
+
+export interface operations {
+  createCampaignIO: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioId?: number;
+          ioName: string;
+          owId?: number;
+          createdByUowId?: number;
+          modifiedByUowId?: number;
+          ioStartTime?: number;
+          ioEndTime?: number;
+          ioTotalBudget?: number;
+          ioTimeZoneId?: number;
+          isAutoSumIoTotalBudget?: boolean;
+          ioBudgetDistributionMethodId?: number;
+          ioBudgetTypeId?: number;
+          ioTotalImpressions?: number;
+          ioStatusId?: number;
+          ioNextPerformanceCheck?: number;
+          ioLastPriorityShift?: number;
+          ioCurrentPriority?: number;
+          isIoPrioritise?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              ioId: number;
+              ioName: string;
+              ioStartTime: number;
+              ioEndTime: number;
+              ioTotalBudget: number;
+              ioTimeZoneId: number;
+              ioBudgetTypeId: number;
+              ioBudgetDistributionMethodId: number;
+              isAutoSumIoTotalBudget: boolean;
+              ioTotalImpressions: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Step 4: Create PG Deal
+
+Before a campaign can be created, a Programmatic Guarantee (PG) Deal must be created first. A PG Deal is a direct negotiation between one publisher and one advertiser with a fixed amount of ad inventory at a pre-negotiated price. [Read more about PG Deals](https://help.iqm.com/en/articles/9613540-what-is-a-programmatic-guaranteed-pg-deal). 
+
+#### Step 4.1 Request Exchange List
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+
+<div class="container">
+<div class="child1">
+
+To create a PG Deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
+
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 90,
+        "name": "Aniview",
+        "urlName": "aniview"
+      },
+      {
+        "id": 89,
+        "name": "LoopMe",
+        "urlName": "loopme"
+      },
+      {
+        "id": 88,
+        "name": "One Tag",
+        "urlName": "onetag"
+      },
+      {
+        "id": 87,
+        "name": "Share Through",
+        "urlName": "sharethrough"
+      },
+      {
+        "id": 84,
+        "name": "Vidazoo",
+        "urlName": "vidazoo"
+      },
+      {
+        "id": 80,
+        "name": "Equativ",
+        "urlName": "equativ"
+      },
+      {
+        "id": 78,
+        "name": "Magnite",
+        "urlName": "magnite"
+      },
+      {
+        "id": 77,
+        "name": "Verve",
+        "urlName": "verve"
+      },
+      {
+        "id": 76,
+        "name": "Infolink",
+        "urlName": "infolink"
+      },
+      {
+        "id": 75,
+        "name": "Beachfront",
+        "urlName": "beachfront"
+      },
+      {
+        "id": 74,
+        "name": "Teads",
+        "urlName": "teads"
+      },
+      {
+        "id": 73,
+        "name": "Outbrain",
+        "urlName": "outbrain"
+      },
+      {
+        "id": 72,
+        "name": "Telaria",
+        "urlName": "telaria"
+      },
+      {
+        "id": 71,
+        "name": "33 Across",
+        "urlName": "ttacross"
+      },
+      {
+        "id": 69,
+        "name": "Media.net",
+        "urlName": "mnet"
+      },
+      {
+        "id": 66,
+        "name": "Unruly",
+        "urlName": "unruly"
+      },
+      {
+        "id": 47,
+        "name": "Index Exchange",
+        "urlName": "indexch"
+      },
+      {
+        "id": 46,
+        "name": "Triton Digital",
+        "urlName": "tdigital"
+      },
+      {
+        "id": 45,
+        "name": "Publisher Direct",
+        "urlName": "pbd"
+      },
+      {
+        "id": 41,
+        "name": "Column6",
+        "urlName": "adigital"
+      },
+      {
+        "id": 39,
+        "name": "Google DoubleClick",
+        "urlName": "adx"
+      },
+      {
+        "id": 37,
+        "name": "SpotXchange",
+        "urlName": "spotx"
+      },
+      {
+        "id": 19,
+        "name": "OpenX",
+        "urlName": "openx"
+      },
+      {
+        "id": 16,
+        "name": "Pubmatic",
+        "urlName": "pubmatic"
+      },
+      {
+        "id": 11,
+        "name": "Smaato",
+        "urlName": "smaato"
+      },
+      {
+        "id": 1,
+        "name": "iQM",
+        "urlName": "test"
+      }
+    ],
+    "totalRecords": 26,
+    "filteredRecords": 26
+  }
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/master/exchanges": {
+    parameters: {};
+    get: operations["getExchanges"];
+  };
+}
+
+export interface operations {
+  getExchanges: {
+    parameters: {
+      query?: {
+        exchangeIds?: string;
+        ids?: string;
+        pageNo?: number;
+        noOfEntries?: number;
+        sortBy?: string;
+        order?: string;
+        searchField?: string;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                id: number;
+                name: string;
+                urlName: string;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+#### Step 4.2 Create PG Deal
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/pg/deals/add</span>
+
+<div class="container">
+<div class="child1">
+
+Once an exchange is selected, use the `exchangeId` from the response to create a PG deal. 
+
+| Attributes  |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PG Deal ID |
+| `dealName` <br /><span class="type-text">string</span>| PG Deal name |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG Deal | 
+| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal <br />Active: `1` <br />Inactive: `2` |
+| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
+| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID of PG Deal
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+    "dealId": "YT-Test-1234",
+    "dealName": "Test deal YT31",
+    "exchangeId": 11,
+    "statusId": 2,
+    "paymentTypeId": 1,
+    "description": "Test Deal"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "Deal Test deal YT31 created successfully",
+        "id": 2
+    }
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+### Step 5: Create a Campaign
+
+#### Step 5.1 Create Campaign
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Once a creative is approved, an Insertion Order is created, and a PG deal is created, a campaign can be created. Use the following schema to define the desired targeting parameters of the new campaign. Use the `creativeTypeId` identified in step 2.1, the `creativeId` from the response in step 2.3, and the `ioId` from step 3, and the `pgDealId` returned (`id`) in step 4.2 to create the campaign.   
+
+:::info
+
+Make sure that `budgetTypeId` of campaign matches `ioBudgetTypeId` from step 3. 
+
+:::
+
+For further information see the complete [Campaign Creation API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/saveCampaign).
+
+| Headers |  |
+| ----  | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+
+| Request Schema | |
+| --- | --- |
+| `pgCampaignInfo` <br /><span class="type-text">object</span> | Object containing campaign information |
+| <div class="border"><span class="type-text"> Object properties</span></div> | |
+| <div class="border">`campaignName` <br /><span class="type-text">string</span></div> | Name of campaign |
+| <div class="border">`ioId` <br /><span class="type-text">integer</span></div> | Insertion Order ID |
+| <div class="border">`timeZoneId` <br /><span class="type-text">integer</span></div> | Timezone ID |
+| <div class="border">`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign |
+| <div class="border"> `budgetTotal` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign |
+| <div class="border">`maxBid` <br /><span class="type-text">integer</span></div> | Maximum allowed bid price for campaign |
+| <div class="border">`startTime` <br /><span class="type-text">integer</span></div> | Unix epoch start time of campaign, in milliseconds
+| <div class="border">`endTime`  <br /><span class="type-text">integer</span></div> | Unix epoch end time of campaign, in milliseconds | 
+| <div class="border">`budgetTypeId` <br /><span class="type-text">integer</span></div> | Budget type ID of given campaign (impression-based or dollar-based) |
+| <div class="border">`campaignTypeId` <br /><span class="type-text">integer</span></div> | Campaign type ID |
+| <div class="border">`advertiserDomain` <br /><span class="type-text">string</span></div> | Domain of the advertiser user |
+| `creativeTargeting` <br /><span class="type-text">object</span> | Object containing creative targeting details |
+| <div class="border"><span class="type-text">Object properties</span></div> |
+| <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span></div> | Creative type ID |
+| <div class="border">`creativeIds` <br /><span class="type-text">array of integers</span></div> | IDs of creatives attached to this campaign |
+| `inventoryTargeting` <br /><span class="type-text">object</span> |
+| <div class="border"><span class="type-text">Object properties</span></div> |
+| <div class="border">`pgDealIds` <br /><span class="type-text">array of integers</span></div> | PG Deal IDs attached to this campaign |
+| `conversionTargeting`  <br /><span class="type-text">object</span> | Object containing campaign conversion targeting details |
+| <div class="border"><span class="type-text">Object properties</span></div>  |
+| <div class="border">`conversionTypeId` <br /><span class="type-text">integer</span></div> | Conversion type ID attached to this campaign |
+| <div class="border">`conversionIds` <br /><span class="type-text">array of integers</span></div> | IDs of conversions attached to this campaign |
+| `politicalAdvertiserClientId` <br /><span class="type-text">integer</span> | Advertiser client ID if user is political advertiser |
+| `countryId` <br /><span class="type-text">integer</span> | ID of targeted country |
+
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+  "pgCampaignInfo": {
+    "campaignName": "test imps PG campaign",
+    //highlight-next-line
+    "ioId": 95179,
+    "timeZoneId": 29,
+    "totalImpressions": 12345,
+    "maxBid": 8,
+    "startTime": 1715662337,
+    "endTime": 1717128000,
+    //highlight-next-line
+    "budgetTypeId": 2,
+    "campaignTypeId": 2,
+    "advertiserDomain": "https://www.xyz.com"
+  },
+  "creativeTargeting": {
+    //highlight-start
+    "creativeTypeId": 11,
+    "creativeIds": [
+      644506
+    ]
+    //highlight-end
+  },
+  "inventoryTargeting": {
+    //highlight-start
+    "pgDealIds": [
+      30,
+      12
+    ]
+    //highlight-end
+  },
+  "conversionTargeting": {
+    "conversionTypeId": 1,
+    "conversionIds": [
+      465,
+      687,
+      987
+    ]
+  },
+  "politicalAdvertiserClientId": 989898,
+  "countryId": 23
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "PG Campaign Created successfully",
+    "campaignId": 2
+  }
+}
+```
+
+<details>
+<summary>More Response Samples</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid campaign Type provided"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/pg/campaigns/add": {
+    parameters: {};
+    post: operations["addPGCampaign"];
+  };
+}
+
+export interface operations {
+  addPGCampaign: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          countryId?: number;
+          politicalAdvertiserClientId?: number;
+          conversionTargeting?: {
+            conversionTypeId?: number;
+            conversionIds: number[];
+          };
+          creativeTargeting: {
+            //highlight-start
+            creativeTypeId: number;
+            creativeIds: number[];
+            //highlight-end
+          };
+          inventoryTargeting: {
+            //highlight-start
+            pgDealIds: number[];
+            paymentTypeId?: number;
+            //highlight-end
+          };
+          pgCampaignInfo: {
+            campaignName: string;
+            timeZoneId: number;
+            spendingBudget?: number;
+            maxBid: number;
+            startTime: number;
+            endTime?: number;
+            totalImpressions?: number;
+            advertiserDomain: string;
+            //highlight-next-line
+            ioId: number;
+            //highlight-next-line
+            budgetTypeId: number;
+            campaignTypeId?: number;
+            owId?: number;
+            uowId?: number;
+            creativeTypeId?: number;
+            status?: string;
+            configObj?: string;
+            totalBudget?: number;
+            pgFeesPercentage?: number;
+          };
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              message: string;
+              campaignId: number;
+            }
+          }
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+#### Step 5.2: Check Campaign Status
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+
+
+<div class="container">
+  <div class="child1">
+
+To run a campaign, it must be approved. Use the `campaignId` returned from the last step to check the created campaign's status. 
+
+For further information see the complete [Campaign Details API Documentation](https://app.iqm.com/docs?path=tag/Campaign-API/operation/getCampaign).
+
+| Path Parameter  |  |
+| ---  | --- |
+| `campaign_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Campaign ID
+
+| Headers |  |
+| ---- | --- |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `X-IAA-OW-ID`  <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "owId": 1,
+    "parentOrganizationName": "IQM Corporation",
+    "id": 25859,
+    "uowId": 9216,
+    "campaignName": "Test Campaign",
+    "advertiserDomain": "https://iqm.com",
+    "creativeType": 11,
+    "campaignType": 1,
+    "totalBudgetPacing": false,
+    "isTvAd": false,
+    "budgetDay": 10.0,
+    "budgetTotal": 100.0,
+    "maxBid": 10.0,
+    "timezone": 433,
+    "startTime": 1703794800,
+    "endTime": 1704614400,
+    //highlight-next-line
+    "status": "pending",
+    "dspMargin": 0,
+    "platformMargin": 0,
+    "userDealMargin": 0,
+    "spentScale": false,
+    "creativeIds": "148971",
+    "conversionType": "None",
+    "bidOptimization": true,
+    "bidPacing": true,
+    "impressionCapping": 0,
+    "maxDayImpressions": 0,
+    "maxDayClicks": 0,
+    "maxDayConversions": 0,
+    "totalImpressions": 0,
+    "totalClicks": 0,
+    "totalConversions": 0,
+    "deviceType": "13,15,11,12",
+    "trafficType": "11,12",
+    "exchanges": "55,61,58,41,39,47,59,1,54,56,45,16,11,37,57,50,46,53,60",
+    "isLocationWithOrFilter": true,
+    "countryId": "30100001",
+    "locationDetails": {},
+    "isCampaignFromNewPlatform": true,
+    "organizationName": "IQM Corporation 1",
+    "userEmail": "domo@iqm.com",
+    "userName": "Domo Integration",
+    "conversionTypeId": 0,
+    "isUnapprovedAudienceTargeted": false,
+    "isAllAudienceUnapproved": false,
+    "createDate": 1703794110,
+    "ioId": 2695,
+    "ioName": "Sanity test Io",
+    "prebidAudienceSegmentIdList": [],
+    "budgetTypeId": 1,
+    "isAdvanceAudioVideoTargeted": false,
+    "isEstimatorAvailable": true,
+    "isEditAccess": true,
+    "isApprovalAccess": false,
+    "isMarginSet": true,
+    "isParentInvoiceTemplateSet": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaign/{campaign_id}": {
+    parameters: {};
+    get: operations["Getcampaigndetails"];
+  };
+}
+
+export interface operations {
+  Getcampaigndetails: {
+    parameters: {
+      query: {
+        isSpentRequired: boolean;
+      };
+      header: {
+        "X-IAA-OW-ID": string;
+        Authorization: string;
+      };
+      path: {
+        campaign_id: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              owId: number;
+              parentOrganizationName: string;
+              id: number;
+              uowId: number;
+              campaignName: string;
+              advertiserDomain: string;
+              creativeType: number;
+              campaignType: number;
+              totalBudgetPacing: boolean;
+              isTvAd: boolean;
+              budgetDay: number;
+              budgetTotal: number;
+              maxBid: number;
+              timezone: number;
+              startTime: number;
+              endTime: number;
+              //highlight-next-line
+              status: string;
+              dspMargin: number;
+              platformMargin: number;
+              userDealMargin: number;
+              spentScale: boolean;
+              creativeIds: string;
+              spent: number;
+              conversionType: string;
+              bidOptimization: boolean;
+              bidPacing: boolean;
+              impressionCapping: number;
+              deviceType: string;
+              trafficType: string;
+              exchanges: string;
+              countryId: string;
+              locationDetails: Record<string, never>;
+              isCampaignFromNewPlatform: boolean;
+              organizationName: string;
+              userName: string;
+              isEditAccess: boolean;
+              isApprovalAccess: boolean;
+              isMarginSet: boolean;
+              isParentInvoiceTemplateSet: boolean;
+              isUnapprovedAudienceTargeted: boolean;
+              isAllAudienceUnapproved: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+
+## Best Practices
+
+The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error.
+
+API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
+
+The maximum data size per page is 1K rows.
