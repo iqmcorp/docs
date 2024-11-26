@@ -589,6 +589,8 @@ export interface operations {
 
 ## Campaign Priority Management
 
+### Assign Priority to Multiple Campaigns
+
 <span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
 
 <div class="container">
@@ -843,7 +845,7 @@ export interface operations {
 
 ---
 
-### Further Campaign Priority Management
+### More Priority Management for Multiple Campaigns
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
 <br /><span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
@@ -998,6 +1000,559 @@ export interface operations {
 </TabItem></Tabs>
 
 </div></div>
+
+---
+
+## Bid Modelling Management
+
+### Add Bid Modelling
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+<div class="container">
+<div class="child1">
+
+Add bid modelling for different dimensions. Validates and calculates others as bid modelling as well.
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Request Schema ||
+| --- | --- |
+| `bidModelling` <br /><span class="type-text">object</span> | Object containing `bidModelData` and `dimensionEntityMappings` |
+| <div class="border"><span class="type-text">Object properties</span></div> | |
+| <div class="border">`bidModelData` <br /><span class="type-text">object</span></div> | Object containing bid model data: `id`, `priority`, `spendRatio`, `spendRatioTypeId`, and `bidMultiplier` |
+| <div class="border">`dimensionEntityMappings` <br /><span class="type-text">array of objects</span></div> | Object containing entity mappings: `campaignId`, `dimensionId`, `entityId`, `bidModelDataId` |
+
+<details>
+
+<summary><code>bidModelData</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `id` <br /><span class="type-text">integer</span> |
+| `priority` <br /><span class="type-text">integer</span> | Assigned priority: [`1` .. `10`] |
+| `bidMultiplier` <br /><span class="type-text">integer</span> | Bid Multiplier [`0.1` .. `100`] |
+| `spendRatio` <br /><span class="type-text">integer</span> | Spend ratio [`0` .. `100`] |
+| `spendRatioTypeId` <br /><span class="type-text">integer</span> | Spend ratio type ID [`1`, `2`] |
+
+</details>
+
+<details>
+
+<summary><code>dimensionEntityMappings</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `dimensionId`  <br /><span class="type-text">integer</span> | Dimension ID |
+| `entityId` <br /><span class="type-text">integer</span> | Entity ID |
+| `bidModelDataId` <br /><span class="type-text">integer</span> | Bid model data ID |
+
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelling": [
+    {
+      "bidModelData": {
+        "id": 1,
+        "priority": 1,
+        "spendRatio": 100,
+        "spendRatioTypeId": 1,
+        "bidMultiplier": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "dimensionId": 1,
+          "entityId": 583002
+        }
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
+    post: operations["addBidModellingOfDimensionForCampaign"];
+  };
+}
+
+export interface operations {
+  addBidModellingOfDimensionForCampaign: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelling: {
+            bidModelData?: {
+              id?: number;
+              priority?: number;
+              bidMultiplier?: number;
+              spendRatio?: number;
+              spendRatioTypeId?: number;
+            };
+            dimensionEntityMappings?: {
+              campaignId?: number;
+              dimensionId?: number;
+              entityId?: number;
+              bidModelDataId?: number;
+            }[];
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/mediaType": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+### Update Bid Modelling Actions
+
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+<div class="container">
+<div class="child1">
+
+Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modelling. 
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Request Schema | |
+| --- | --- |
+| `bidModelRequests` <br /><span class="type-text">array of objects</span> | Object to update bid modelling, each request contains: `action`, `bidModelData`, `dimensionEntityMappings`, and `bidModelDataIds`  |
+| <div class="border"><span class="type-text">Object properties</span></div> | |
+| <div class="border">`action` <br /><span class="type-text">string</span></div> | Desired action for request: `ADD`, `UPDATE`, or `DELETE` |
+| <div class="border">`bidModelData` <br /><span class="type-text">object</span></div> | Object containing bid model data, see [previous section](#add-bid-modelling) for attributes |
+| <div class="border">`dimensionEntityMappings` <br /><span class="type-text">array of objects</span></div> | Object containing dimension entity mapping data, see [previous section](#add-bid-modelling) for attributes |
+| <div class="border">`bidModelDataIds` <br /><span class="type-text">array of integers</span></div> | Bid model data IDs targeted for `DELETE` action |
+| `baseBid` <br /><span class="type-text">integer</span> |
+| `excludeDimensionEntityMappings`  <br /><span class="type-text">object</span> | Object cointaining dimension entity mappings to exclude, see [previous section](#assign-priority-to-multiple-campaigns) for attributes |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelRequests": [
+    {
+      "action": "ADD",
+      "bidModelData": {
+        "priority": 1,
+        "bidMultiplier": 1,
+        "spendRatio": 1,
+        "spendRatioTypeId": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "dimensionId": 1,
+          "entityId": 640245
+        }
+      ]
+    },
+    {
+      "action": "ADD",
+      "bidModelData": {
+        "priority": 1,
+        "bidMultiplier": 1,
+        "spendRatio": 1,
+        "spendRatioTypeId": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "dimensionId": 1,
+          "entityId": -1
+        }
+      ]
+    },
+    {
+      "action": "UPDATE",
+      "bidModelData": {
+        "id": 883,
+        "priority": 1,
+        "bidMultiplier": 1,
+        "spendRatio": 1,
+        "spendRatioTypeId": 1
+      }
+    },
+    {
+      "action": "UPDATE",
+      "bidModelData": {
+        "id": 894,
+        "priority": 1,
+        "bidMultiplier": 1,
+        "spendRatio": 1,
+        "spendRatioTypeId": 1
+      }
+    },
+    {
+      "action": "DELETE",
+      "bidModelDataIds": [
+        893
+      ]
+    }
+  ],
+  "baseBid": 3.1,
+  "excludeDimensionEntityMappings": [
+    {
+      "dimensionId": 1,
+      "ids": "1,2,3",
+      "isExcluded": 0
+    },
+    {
+      "dimensionId": 2,
+      "ids": "1,2,3",
+      "isExcluded": 1
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bid Modelling updated successfully!"
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
+    parameters: {};
+    put: operations["manageBidModelling"];
+  };
+}
+
+export interface operations {
+  manageBidModelling: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Campaign Id": string;
+        campaignId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelRequests?: {
+            bidModelData?: {
+              id?: number;
+              priority?: number;
+              bidMultiplier?: number;
+              spendRatio?: number;
+              spendRatioTypeId?: number;
+            };
+            dimensionEntityMappings?: {
+              campaignId?: number;
+              dimensionId?: number;
+              entityId?: number;
+              bidModelDataId?: number;
+            }[];
+            action: "ADD" | "UPDATE" | "DELETE";
+            bidModelDataIds?: number[];
+          }[];
+          baseBid?: number;
+          excludeDimensionEntityMappings?: {
+            advertiserId?: number;
+            dspId?: number;
+            owId?: number;
+            uowId?: number;
+            campaignId?: number;
+            ids?: string;
+            isExcluded?: number;
+            dimensionId?: number;
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+### Update Bid Modelling Dimensions
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+<div class="container">
+<div class="child1">
+
+Update bid modelling for different dimensions.
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Request Schema ||
+| --- | --- |
+| `bidModelData` <br /><span class="type-text">object</span> | Object containing bid model data: `id`, `priority`, `spendRatio`, `spendRatioTypeId`, and `bidMultiplier` |
+
+<details>
+
+<summary><code>bidModelData</code> object</summary>
+
+| attributes | |
+| --- | --- |
+| `id` <br /><span class="type-text">integer</span> |
+| `priority` <br /><span class="type-text">integer</span> | Assigned priority: [`1` .. `10`] |
+| `bidMultiplier` <br /><span class="type-text">integer</span> | Bid Multiplier [`0.1` .. `100`] |
+| `spendRatio` <br /><span class="type-text">integer</span> | Spend ratio [`0` .. `100`] |
+| `spendRatioTypeId` <br /><span class="type-text">integer</span> | Spend ratio type ID [`1`, `2`] |
+
+</details>
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelData": [
+    {
+      "id": 1,
+      "priority": 1,
+      "spendRatio": 50,
+      "spendRatioTypeId": 1,
+      "bidMultiplier": 1
+    },
+    {
+      "id": 1,
+      "priority": 10,
+      "spendRatio": 50,
+      "spendRatioTypeId": 1,
+      "bidMultiplier": 1
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bid Modelling updated successfully!"
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/bm/campaigns/{campaignId}/bid-models": {
+    parameters: {};
+    patch: operations["updateBidModellingForCampaign"];
+  };
+}
+
+export interface operations {
+  updateBidModellingForCampaign: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        "Campaign Id": string;
+        campaignId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelData?: {
+            id?: number;
+            priority?: number;
+            bidMultiplier?: number;
+            spendRatio?: number;
+            spendRatioTypeId?: number;
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+### Delete Bid Modelling Data
+
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+<div class="container">
+<div class="child1">
+
+Delete all bid modelling for a campaign or dimension, or based on bid modelling data IDs.
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Query Parameters | |
+| --- | --- |
+| `dimensionIds` <br /><span class="type-text">string</span> | Comma separated dimension IDs to delete bid modelling data for |
+| `bidModelDataIds` <br /><span class="type-text">string</span> | Comma separated bid model data IDs to delete |
+| `campaignId` <br /><span class="type-text">string</span> | Campaign ID to delete bid modelling data for |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bid Modelling deleted successfully!"
+}
+```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
+    parameters: {};
+    delete: operations["deleteBidModelling"];
+  };
+}
+
+export interface operations {
+  deleteBidModelling: {
+    parameters: {
+      query?: {
+        dimensionIds?: string;
+        bidModelDataIds?: string;
+        campaignId?: number;
+      };
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
 
 ---
 
