@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Campaign API
 
 This page will cover the common endpoints and methods for managing campaigns in IQM's rest API.
@@ -36,14 +39,14 @@ Use the following header parameters for all requests:
 | `uowId` <br /><span class="type-text">integer</span> | Universal Organization Workspace ID |
 | `campaignName` <br /><span class="type-text">string</span> | Campaign Name |
 | `advertiserDomain` <br /><span class="type-text">string</span> | Campaign Advertiser Domain |
-| `creativeType` <br /><span class="type-text">integer</span> | Creative type ID |
-| `campaignType` <br /><span class="type-text">integer</span> | Campaign type ID |
+| `creativeType` <br /><span class="type-text">integer</span> | Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) |
+| `campaignType` <br /><span class="type-text">integer</span> | [Campaign type ID](#get-campaign-count-with-campaign-type) |
 | `totalBudgetPacing` <br /><span class="type-text">boolean</span> | Budget is spent equally every hour: `true` |
 | `isTvAd` <br /><span class="type-text">boolean</span> | Specifies if campaign is TV ad: `true` |
 | `budgetDay` <br /><span class="type-text">integer</span> | Daily budget of campaign |
 | `budgetTotal` <br /><span class="type-text">integer</span> | Total budget for campign |
 | `maxBid` <br /><span class="type-text">integer</span> | Max bid of budget for serving |
-| `timezone` <br /><span class="type-text">integer</span> | Timezone ID |
+| `timezone` <br /><span class="type-text">integer</span> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `startTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp of campaign start date, in milliseconds |
 | `endTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp of campaign end date, in milliseconds |
 | `status` <br /><span class="type-text">string</span> | Status of campaign |
@@ -64,14 +67,14 @@ Use the following header parameters for all requests:
 | `totalImpressions` <br /><span class="type-text">integer</span> | Total conversions |
 | `totalClicks` <br /><span class="type-text">integer</span> | Total clicks |
 | `totalConversions` <br /><span class="type-text">integer</span> | Total conversions |
-| `deviceType` <br /><span class="type-text">string</span> | Comma separated device type IDs |
-| `trafficType` <br /><span class="type-text">string</span> | Comma separated traffic type IDs |
+| `deviceType` <br /><span class="type-text">string</span> | Comma separated device type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-type) |
+| `trafficType` <br /><span class="type-text">string</span> | Comma separated traffic type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-traffic-types) |
 | `exchanges` <br /><span class="type-text">string</span> | Comma separated exchange IDs |
 | `isLocationWithOrFilter` <br /><span class="type-text">boolean</span> |
 | `stateIds` <br /><span class="type-text">string</span> | Comma separated state IDs |
 | `countryId` <br /><span class="type-text">integer</span> | Country ID |
 | `locationDetails` <br /><span class="type-text">json</span> | Location by uploaded file with targeting type |
-| `isCampaignFromNewPlatform` <br /><span class="type-text">boolean</span> |
+| `isCampaignFromNewPlatform` <br /><span class="type-text">boolean</span> | Indicates if campaign is from the old platform |
 | `campaignIabCategoryIds` <br /><span class="type-text">string</span> | Comma separated campaign iab categories |
 | `rejectionReason` <br /><span class="type-text">string</span> | Reason of rejecting campaign |
 | `creativesPlacementMapping` <br /><span class="type-text">json</span> | Ad placement mapping with creatives (present in case of audio and video campaigns) |
@@ -80,22 +83,123 @@ Use the following header parameters for all requests:
 | `userEmail` <br /><span class="type-text">string</span> | Email of user |
 | `conversionTypeId` <br /><span class="type-text">integer</span> | Conversion type ID |
 | `conversionIds` <br /><span class="type-text">string</span> | Comma separated conversions IDs |
-| `isUnapprovedAudienceTargeted` <br /><span class="type-text">boolean</span> |
-| `isAllAudienceUnapproved` <br /><span class="type-text">boolean</span> |
+| `isUnapprovedAudienceTargeted` <br /><span class="type-text">boolean</span> | Indicates if at least one unapproved audience is targeted in campaign |
+| `isAllAudienceUnapproved` <br /><span class="type-text">boolean</span> | Indicates if all tartgeted audiences are unapproved |
 | `createDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of campaign creation date, in milliseconds |
 | `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID |
 | `ioName` <br /><span class="type-text">string</span> | Insertion Order name |
 | `prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> | Prebid audience segment IDs to attach campaign to segment IDs |
-| `campaignTypeId` <br /><span class="type-text">integer</span> | Campaign type ID |
-| `budgetTypeId` <br /><span class="type-text">integer</span> | Budget type ID |
-| `isEstimatorAvailable` <br /><span class="type-text">boolean</span> |
-| `isAdvancedAudioVideoTargeted` <br /><span class="type-text">boolean</span> | `true` indicates advanced targeting is enabled |
-| `isEditAccess` <br /><span class="type-text">boolean</span> |
-| `isMarginSet` <br /><span class="type-text">boolean</span> |
-| `isApprovalAccess` <br /><span class="type-text">boolean</span> |
-| `isParentInvoiceTemplateSet` <br /><span class="type-text">boolean</span> |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign type ID](#get-campaign-count-with-campaign-type) |
+| `budgetTypeId` <br /><span class="type-text">integer</span> | [Budget type ID](#get-list-of-campaign-budget-types) |
+| `isEstimatorAvailable` <br /><span class="type-text">boolean</span> | Indicates if campaign estimator is available |
+| `isAdvanceAudioVideoTargeted` <br /><span class="type-text">boolean</span> | `true` indicates advanced targeting is enabled |
+| `isEditAccess` <br /><span class="type-text">boolean</span> | Indicates if user has edit access for the requested resources |
+| `isMarginSet` <br /><span class="type-text">boolean</span> | Indicates if margin is set for the workspace/customer |
+| `isApprovalAccess` <br /><span class="type-text">boolean</span> | Indicates if user has access to approve |
+| `isParentInvoiceTemplateSet` <br /><span class="type-text">boolean</span> | Indicates if client has set the invoice template |
 
-</details>
+
+
+<details>
+<summary>`locationDetails` example</summary>
+
+```json
+"locationDetails": {
+  "1010": {
+      "fileName": "bulk-location-example(10)(2).csv",
+      "fileType": "location",
+      "validLocations": [
+          {
+              "latitude": 40.7128,
+              "longitude": -74.006,
+              "radius": 0.5,
+              "address": "1 Murray Street, New York, NY 10007, USA",
+              "locationId": 48374,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          },
+          {
+              "latitude": 36.7783,
+              "longitude": -119.4179,
+              "radius": 1.0,
+              "address": "Center stage, 2630 Croydon Drive, Sanger, CA 93657, USA",
+              "locationId": 48375,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          }
+      ],
+      "id": 1010
+  },
+  "1011": {
+      "fileName": "bulk-addresses-example (4)(1).csv",
+      "fileType": "address",
+      "validLocations": [
+          {
+              "latitude": 35.7831443,
+              "longitude": -78.6388985,
+              "radius": 0.5,
+              "address": "16 West Jones Street,Raleigh,NC,27601",
+              "locationId": 48376,
+              "isIncluded": false,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          },
+          {
+              "latitude": 35.7803163,
+              "longitude": -78.5326985,
+              "radius": 1.34,
+              "address": "1002 Lyndhurst Falls Ln,Knightdale,NC,27545",
+              "locationId": 48377,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          },
+          {
+              "latitude": 35.8440052,
+              "longitude": -78.6580243,
+              "radius": 1.2,
+              "address": "4604 Gramercy Ct,Raleigh,NC,27609",
+              "locationId": 48378,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          },
+          {
+              "latitude": 35.8074803,
+              "longitude": -78.6582902,
+              "radius": 1.5,
+              "address": "2612 Dover Rd,Raleigh,NC,27608",
+              "locationId": 48379,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          },
+          {
+              "latitude": 35.7950389,
+              "longitude": -78.65665039999999,
+              "radius": 1.0,
+              "address": "820 Graham St ,Raleigh,NC,27605",
+              "locationId": 48380,
+              "isIncluded": true,
+              "cdId": 0,
+              "sdId": 0,
+              "hdId": 0
+          }
+      ],
+      "id": 1011
+  }
+}
+```
+
+</details></details>
 
 </div></div>
 
@@ -121,6 +225,8 @@ Get a campaign's basic details and targeting details by ID.
 
 </div> <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -188,6 +294,105 @@ Get a campaign's basic details and targeting details by ID.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaign/{campaignId}": {
+    get: operations["getCampaign"];
+  }
+}
+
+export interface operations {
+  getCampaign: {
+    parameters: {
+      query?: {
+        isSpentRequired?: boolean;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              owId: number;
+              parentOrganizationName: string;
+              id: number;
+              uowId: number;
+              campaignName: string;
+              advertiserDomain: string;
+              creativeType: number;
+              campaignType: number;
+              totalBudgetPacing: boolean;
+              isTvAd: boolean;
+              budgetDay: number;
+              budgetTotal: number;
+              maxBid: number;
+              timezone: number;
+              startTime: number;
+              endTime: number;
+              status: string;
+              dspMargin: number;
+              platformMargin: number;
+              userDealMargin: number;
+              spentScale: boolean;
+              creativeIds: string;
+              conversionType: string;
+              bidOptimization: boolean;
+              bidPacing: boolean;
+              isBidShading: boolean;
+              impressionCapping: number;
+              maxDayImpressions: number;
+              maxDayClicks: number;
+              maxDayConversions: number;
+              totalImpressions: number;
+              totalClicks: number;
+              totalConversions: number;
+              deviceType: string;
+              trafficType: string;
+              exchanges: string;
+              isLocationWithOrFilter: boolean;
+              countryId: string;
+              locationDetails: {}
+              isCampaignFromNewPlatform: boolean;
+              organizationName: string;
+              userEmail: string;
+              userName: string;
+              conversionTypeId: number;
+              isUnapprovedAudienceTargeted: boolean;
+              isAllAudienceUnapproved: boolean;
+              createDate: number;
+              ioId: number;
+              ioName: number;
+              prebidAudienceSegmentIdList: number[];
+              campaignTypeId: number;
+              budgetTypeId: number;
+              isAdvanceAudioVideoTargeted: boolean;
+              isEstimatorAvailable: boolean;
+              isEditAccess: boolean;
+              isMarginSet: boolean;
+              isApprovalAccess: boolean;
+              isParentInvoiceTemplateSet: boolean;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -212,6 +417,9 @@ Returns list of campaigns based on set of filters and `conversionId` query param
 | `owIds` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -327,6 +535,64 @@ Returns list of campaigns based on set of filters and `conversionId` query param
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaigns/data": {
+    get: operations["Getcampaigndata"];
+  };
+}
+
+export interface operations {
+  Getcampaigndata: {
+    parameters: {
+      query: {
+        searchField: string;
+        pageNo: number;
+        limit: number;
+        sortBy: string;
+        conversionId: number;
+        status: string;
+        owIds: number;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        "X-Iaa-Host": string;
+        authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              totalRecords: number;
+              data: {
+                id: number;
+                name: string;
+                creativeTypeId: number;
+                campaignType: string;
+                status: string;
+                advertiserId: number;
+                created: number;
+                modifiedDate: number;
+                conversionId?: number;
+              }[];
+              filteredRecords: number;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -346,12 +612,15 @@ Returns a paginated list of campaigns with their basic details.
 | `no_of_entries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `50` |
 | `pgno` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
 | `order` <br /><span class="type-text">string</span> | Sorts by ascending (`asc`) or descending (`desc`) | 
-| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by creative type ID |
+| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | `created_time_of_creative` <br /><span class="type-text">string</span> | Filter by creative creation time |
 | `status` <br /><span class="type-text">string</span> | Filter by multiple statuses <br />Supported values: `running`, `pending`, `paused`, `draft`, `rejected`, `expired` |
 | `ow_ids` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -382,6 +651,73 @@ Returns a paginated list of campaigns with their basic details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaigns/list": {
+    parameters: {};
+    get: operations["GetCampaignList"];
+  };
+}
+
+export interface operations {
+  GetCampaignList: {
+    parameters: {
+      query: {
+        creative_type_ids: string;
+        created_time_of_creative: string;
+        sort_by: string;
+        order: string;
+        no_of_entries: number;
+        pgno: number;
+        search_field: string;
+        status: string;
+        ow_ids: string;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        "x-iaa-host": string;
+        authorization: string;
+      };
+    };
+    responses: {
+      default: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            recordsTotal: number;
+            pageNumber: number;
+            pageSize: number;
+            draw: number;
+            recordsFiltered: number;
+            data: {
+              id: string;
+              name: string;
+              status: string;
+              owId: number;
+              uowId: number;
+              advertiser_email: string | null;
+              advertiser_id: number;
+              campaign_type: string;
+              creative_type: string;
+              dsp_id: number;
+              start_date: number;
+              end_date: number;
+              creative_type_id: number;
+              total_budget: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -404,13 +740,16 @@ Returns a paginated list of campaigns with their basic details.
 | `owIds` <br /><span class="type-text">array of integers</span> | Filters results by provided OW IDs |
 | `status` <br /><span class="type-text">array of strings</span> | Filters results by provided campaign statuses |
 | `responseFields` <br /><span class="type-text">array of strings</span> | Choose which values to return in response, supported: `id`, `campaignId`, `name`,`creativeTypeId`, `status`, `startTime`, `endTime`, `createdAt`, `modifiedAt`, `owId`, `organizationName`, `organizationLogo` |
-| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters results by provided creative type IDs |
-| `campaignTypeIds` <br /><span class="type-text">array of integers</span> | Filters results by provided campaign type IDs |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters results by provided creative type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
+| `campaignTypeIds` <br /><span class="type-text">array of integers</span> | Filters results by provided [campaign type IDs](#get-campaign-count-with-campaign-type) |
 | `isAllOwIds` <br /><span class="type-text">boolean</span> | Filters records with all allowed OW IDs if `true`, prioritizes records over `owIds` |
 | `ids` <br /><span class="type-text">array of integers</span> | Prioritizes results of provided campaign group IDs over other records
 | `ioIdsList` <br /><span class="type-text">array of integers</span> | Filters results by provided Insertion Order IDs |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -474,6 +813,82 @@ Returns a paginated list of campaigns with their basic details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/basic/list": {
+    post: operations["getCampaignBasicDetailList"];
+  };
+}
+
+export interface operations {
+  getCampaignBasicDetailList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignIds?: number[];
+          owIds?: number[];
+          isAllOwIds?: boolean;
+          status?: string[];
+          creativeTypeIds?: number[];
+          ids?: number[];
+          responseFields?: string[];
+          ioIdsList?: number[];
+          campaignTypeIds?: number[];
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc"
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                campaignId: number;
+                name: string;
+                creativeTypeId: number;
+                campaignTypeId: number;
+                status: string;
+                startTime: number;
+                endTime: number;
+                createdAt: number;
+                modifiedAt: number;
+                owId: number;
+                organizationName: string;
+                organizationLogo: string;
+                ioId: number;
+                ioStatusId: number;
+                timezoneId: number;
+                ioBudgetTypeId: number;
+                ioName: string;
+              }[];
+              totalRecords: number;
+              filteredRecords: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -492,16 +907,21 @@ Filter campaign list by the following parameters:
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20`, maximum: `500` |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by specified field |
 | `order`  <br /><span class="type-text">string</span> | Sorting order, ascending (`asc`) or descending (`desc`) |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Filter results by campaign IDs |
 | `owIds` <br /><span class="type-text">array of integers</span> | Filter results by Organization Workspace IDs |
 | `status` <br /><span class="type-text">array of strings</span> | Filter results by statuses |
-| `creativeTypeIds` <br /><span class="type-text">string</span> | Filter results by creative type IDs |
-| `campaignTypeIds` <br /><span class="type-text">array of integers</span> | Filter results by campaign type IDs |
+| `created` <br /><span class="type-text">integer</span> | Date created, unix epoch
+| `isBasicInfo` <br /><span class="type-text">boolean</span> |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filter results by creative type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
+| `campaignTypeIds` <br /><span class="type-text">array of integers</span> | Filter results by [campaign type IDs](#get-campaign-count-with-campaign-type) |
 | `ids` <br /><span class="type-text">array of integers</span> | Prioritizes results of provided campaign IDs over other records |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -608,6 +1028,100 @@ Filter campaign list by the following parameters:
 ```
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/customer/campaigns/list": {
+    post: operations["getCampaignDetails"];
+  };
+}
+
+export interface operations {
+  getCampaignDetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          owIds?: string;
+          creativeTypeIds?: string;
+          creativeTypeIdsList?: number[];
+          status?: string;
+          created?: number;
+          isBasicInfo?: boolean;
+          campaignTypeIds?: number[];
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              data: {
+                owId: number;
+                parentOrganizationName: string;
+                id: number;
+                name: string;
+                creativeType: string;
+                budgetTotal: number;
+                budgetDay: number;
+                maxBid: number;
+                startTime: number;
+                uowId: number;
+                status: string;
+                created: number;
+                modifiedDate: number;
+                userName: string;
+                timeZoneName: string;
+                endTime: number;
+                totalSpent: number;
+                organizationName: string;
+                useremail: string;
+                budgetTypeId: number;
+                impression: number;
+                campaignTypeId: number;
+                pgPaymentTypeId: number;
+                totalImpressions: number;
+                isParentInvoiceTemplateSet: boolean;
+                isApprovalAccess: boolean;
+                isMarginSet: boolean;
+              }[];
+              filteredRecords: number
+            }
+          }
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -631,6 +1145,9 @@ Get campaign budget info and graph details.
 | `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign time zone
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -680,6 +1197,64 @@ Get campaign budget info and graph details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaign/budgetInfo": {
+    parameters: {};
+    get: operations["CampaignBudgetInfo"];
+  };
+}
+
+export interface operations {
+  CampaignBudgetInfo: {
+    parameters: {
+      query: {
+        budgetTotal: number;
+        dailyBudget: number;
+        fixedDailyBudget: boolean;
+        startTime: number;
+        endTime: number;
+        timezone: number;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        "X-Iaa-Host": string;
+        authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              campaignId: number;
+              budgetTotal: number;
+              actualSpent: number;
+              dailyBudget: number;
+              fixedDailyBudget: boolean;
+              startTime: number;
+              endTime: number;
+              timezone: number;
+              graphInfo: {
+                date: string;
+                amount: number;
+                type: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -698,7 +1273,7 @@ Filter campaign list by the following parameters:
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: `20`, maximum: `500` |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: `1` |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by specified field |
 | `order`  <br /><span class="type-text">string</span> | Sorting order, ascending (`asc`) or descending (`desc`) |
 | `campaignGroupIds` <br /><span class="type-text">array of integers</span> | Filter results by campaign group IDs |
 | `owIds` <br /><span class="type-text">array of integers</span> | Filter results by Organization Workspace IDs |
@@ -706,6 +1281,9 @@ Filter campaign list by the following parameters:
 | `ids` <br /><span class="type-text">array of integers</span> | Prioritizes results of provided campaign group IDs over other records |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -761,6 +1339,75 @@ Filter campaign list by the following parameters:
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/campaigngroup/list": {
+    parameters: {};
+    post: operations["getCampaignGroupList"];
+  };
+}
+
+export interface operations {
+ getCampaignGroupList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchField?: string;
+          noOfEntries?: number;
+          pageNo?: number;
+          sortBy?: string;
+          order?: string;
+          campaignGroupIds?: number[];
+          owIds?: number[];
+          isAllOwIds?: boolean;
+          ids?: number[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                groupId: number;
+                groupName: string;
+                createdDate: number;
+                owId: number;
+              }[]
+              totalRecords: number;
+              filteredRecords: number
+            }
+          }
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -784,6 +1431,9 @@ This API returns a count of campaigns for each status type.
 | `searchField` <br /><span class="type-text">string</span> | Returns campaign counts for field matched campaign ID or Name |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -848,6 +1498,17 @@ This API returns a count of campaigns for each status type.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+
+export interface operations {
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -863,14 +1524,22 @@ Returns values of campaign types with count of campaigns.
 
 | Request Schema |  |
 | ---- | --- |
-| `budgetTypeIds` <br /><span class="type-text">array of integers</span> | Filters results for selected budget type ID: dollar-based campaign or impression-based campaign |
+| `budgetTypeIds` <br /><span class="type-text">array of integers</span> | Filters results for selected [budget type ID](#get-list-of-campaign-budget-types): dollar-based campaign or impression-based campaign |
 | `statusList` <br /><span class="type-text">array of strings</span> | Filters results for types of campaign statuses |
 | `countRequired` <br /><span class="type-text">boolean</span> | Returns campaigns count with campaign type if `true` |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Filters results for selected campaign IDs |
 | `ioIds` <br /><span class="type-text">array of integers</span> | Filters results for selected Insertion Order IDs |
-| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters results for creative type IDs |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters results for creative type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
+
+| Attributes | |
+| --- | --- |
+| `Advanced` <br /><span class="type-text">ID: 1</span> | Campaign with audience, impressions, and bid optimization settings |
+| `PG` <br /><span class="type-text">ID: 2</span> | Campaign associated with PG deal |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -917,6 +1586,58 @@ Returns values of campaign types with count of campaigns.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/campaign-type/count": {
+    parameters: {};
+    post: operations["getCampaignsCountWithCampaignType"];
+  };
+}
+
+export interface operations {
+  getCampaignsCountWithCampaignType: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          budgetTypeIds?: number[];
+          statusList?: string[];
+          countRequired?: boolean;
+          campaignIds?: number[];
+          ioIds?: number[];
+          creativeTypeIds?: number[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              campaignTypeDetails: {
+                id: number;
+                order: number;
+                name: string;
+                label: string;
+                count: number
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -933,11 +1654,14 @@ Get a count of campaigns by creative type ID and given Organization Workspace ID
 | Query Parameters | |
 | --- | --- |
 | `sortType` <br /><span class="type-text">string</span> | Sort by ascending (`asc`) or descending (`desc`) |
-| `creativeTypeIds` <br /><span class="type-text">integer</span> | Comma separated creative type IDs, supported values: <br />Image: `11` <br />HTML: `13` <br />Video: `14` <br />Ticker Banner: `16` <br />Audio: `17` <br />GOTV: `18` |
+| `creativeTypeIds` <br /><span class="type-text">integer</span> | Comma separated creative type IDs, supported values: <br />Image: `11` <br />HTML: `13` <br />Video: `14` <br />Ticker Banner: `16` <br />Audio: `17` <br />GOTV: `18` (see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) ) |
 | `searchField` <br /><span class="type-text">string</span> | Filter records by search keyword |
 | `owIds` <br /><span class="type-text">integer</span> | Filter results by comma separated Organization Workspace IDs |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -965,6 +1689,53 @@ Get a count of campaigns by creative type ID and given Organization Workspace ID
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaigns/count": {
+    parameters: {};
+    get: operations["CampaignCountbycreativetype"];
+  };
+}
+
+export interface operations {
+  CampaignCountbycreativetype: {
+    parameters: {
+      query: {
+        sortType: string;
+        creativeTypeIds: string;
+        searchField: string;
+        owIds: string;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        "X-Iaa-Host": string;
+        authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              order: number;
+              status_key: string;
+              status_label: string;
+              status_count: number;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -984,6 +1755,9 @@ Get a count of campaigns by creative type ID and given Organization Workspace ID
 | `statusList` <br /><span class="type-text">array of strings</span> | 
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1028,6 +1802,65 @@ Get a count of campaigns by creative type ID and given Organization Workspace ID
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/creative-types/count": {
+    parameters: {};
+    post: operations["getCampaignCountWithCreativeTypeByIoIds"];
+  };
+}
+
+export interface operations {
+  getCampaignCountWithCreativeTypeByIoIds: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioIds?: number[];
+          owIds?: number[];
+          status?: string;
+          statusList?: string[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              count: number;
+              creativeType: number;
+              creativeTypeId: number;
+            }[]
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 <details>
 <summary>More Response Samples</summary>
 
@@ -1059,6 +1892,9 @@ Get campaign start date
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
   "statusCode": 200,
@@ -1067,6 +1903,44 @@ Get campaign start date
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaign/start": {
+    parameters: {};
+    get: operations["Getcampaignstartdate"];
+  };
+}
+
+export interface operations {
+  Getcampaignstartdate: {
+    parameters: {
+      header: {
+        authorization: string;
+        "x-iaa-ow-id": number;
+        "x-iaa-host": string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              start_time: number;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1094,6 +1968,9 @@ Get a paginated list of campaign's start dates with supported filters.
 | `owIds` <br /><span class="type-text">array of integers</span> | Filters for specified customer OW IDs |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1128,6 +2005,68 @@ Get a paginated list of campaign's start dates with supported filters.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/startDate/list": {
+    parameters: {};
+    post: operations["getCampaignStartDateList"];
+  };
+  "/api/v3/cmp/endDate/list": {
+    parameters: {};
+    post: operations["getCampaignEndDateList"];
+  };
+}
+
+export interface operations {
+  getCampaignStartDateList: {
+/**
+ * or
+ * 
+ * getCampaignEndDateList : {
+*/
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          owIds?: number[];
+          isAllOwIds?: boolean;
+          ids?: string[];
+          startDate?: string;
+          endDate?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc" 
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: string[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1152,6 +2091,9 @@ Get report data by campaign IDs and other filters.
 | `campaignIds` <br /><span class="type-text">integer</span> | Fiter results by comma separated campaign IDs |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1185,6 +2127,64 @@ Get report data by campaign IDs and other filters.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/campaigns/report/data": {
+    parameters: {};
+
+    get: operations["GetCampaignReportData"];
+  };
+}
+
+export interface operations {
+  GetCampaignReportData: {
+    parameters: {
+      query: {
+        status: string;
+        sortBy: string;
+        limit: string;
+        pageNo: string;
+        searchField: string;
+        conversionId: string;
+        campaignIds: string;
+      };
+      header: {
+        authorization: string;
+        "x-iaa-ow-id": string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json;charset=UTF-8": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              data: {
+                id: number;
+                name: string;
+                status: string;
+                clicks: number;
+                impression: number;
+                conversionCount: number;
+                uniqueCount: number;
+                creativeType: string;
+              }[];
+              filteredRecords: number;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1209,18 +2209,18 @@ Create a new PG campaign for advertiser.
 | <div class="border"><span class="type-text"> Object properties</span></div> | |
 | <div class="border">`campaignName` <br /><span class="type-text">string</span></div> | Name of campaign |
 | <div class="border">`ioId` <br /><span class="type-text">integer</span></div> | Insertion Order ID |
-| <div class="border">`timeZoneId` <br /><span class="type-text">integer</span></div> | Timezone ID |
+| <div class="border">`timeZoneId` <br /><span class="type-text">integer</span></div> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | <div class="border">`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign |
 | <div class="border"> `budgetTotal` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign |
 | <div class="border">`maxBid` <br /><span class="type-text">integer</span></div> | Maximum allowed bid price for campaign |
 | <div class="border">`startTime` <br /><span class="type-text">integer</span></div> | Unix epoch start time of campaign, in milliseconds
 | <div class="border">`endTime`  <br /><span class="type-text">integer</span></div> | Unix epoch end time of campaign, in milliseconds | 
-| <div class="border">`budgetTypeId` <br /><span class="type-text">integer</span></div> | Budget type ID of given campaign (impression-based or dollar-based) |
-| <div class="border">`campaignTypeId` <br /><span class="type-text">integer</span></div> | Campaign type ID |
+| <div class="border">`budgetTypeId` <br /><span class="type-text">integer</span></div> | [Budget type ID](#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based) |
+| <div class="border">`campaignTypeId` <br /><span class="type-text">integer</span></div> |[Campaign type ID](#get-campaign-count-with-campaign-type) |
 | <div class="border">`advertiserDomain` <br /><span class="type-text">string</span></div> | Domain of the advertiser user |
 | `creativeTargeting` <br /><span class="type-text">object</span> | Object containing creative targeting details |
 | <div class="border"><span class="type-text">Object properties</span></div> |
-| <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span></div> | Creative type ID |
+| <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span></div> | Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | <div class="border">`creativeIds` <br /><span class="type-text">array of integers</span></div> | IDs of creatives attached to this campaign |
 | `inventoryTargeting` <br /><span class="type-text">object</span> |
 | <div class="border"><span class="type-text">Object properties</span></div> |
@@ -1233,6 +2233,9 @@ Create a new PG campaign for advertiser.
 | `countryId` <br /><span class="type-text">integer</span> | ID of targeted country |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1299,6 +2302,98 @@ Create a new PG campaign for advertiser.
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/pg/campaigns/add": {
+    parameters: {};
+    post: operations["addPGCampaign"];
+  };
+  "/api/v2/cmp/campaigns/draft/add": {
+    parameters: {};
+    post: operations["saveDraftCampaign"];
+  };
+}
+
+export interface operations {
+  addPGCampaign: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          countryId?: number;
+          politicalAdvertiserClientId?: number;
+          conversionTargeting?: {
+            conversionTypeId?: number;
+            conversionIds: number[];
+          };
+          creativeTargeting: {
+            creativeTypeId: number;
+            creativeIds: number[];
+          };
+          inventoryTargeting: {
+            pgDealIds: number[];
+            paymentTypeId?: number;
+          };
+          pgCampaignInfo: {
+            campaignName: string;
+            timeZoneId: number;
+            spendingBudget?: number;
+            maxBid: number;
+            startTime: number;
+            endTime?: number;
+            totalImpressions?: number;
+            advertiserDomain: string;
+            ioId: number;
+            budgetTypeId: number;
+            campaignTypeId?: number;
+            owId?: number;
+            uowId?: number;
+            creativeTypeId?: number;
+            status?: string;
+            configObj?: string;
+            totalBudget?: number;
+            pgFeesPercentage?: number;
+          };
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              message: string;
+              campaignId: number
+            }
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1321,7 +2416,7 @@ Update attributes of a created or draft PG Campaign by campaign ID.
 | `pgCampaignInfo` <br /><span class="type-text">object</span> | Object containing campaign information |
 | <div class="border"><span class="type-text"> Object properties</span></div> | |
 | <div class="border">`campaignName` <br /><span class="type-text">string</span></div> | Name of campaign |
-| <div class="border">`timeZoneId` <br /><span class="type-text">integer</span></div> | Timezone ID |
+| <div class="border">`timeZoneId` <br /><span class="type-text">integer</span></div> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | <div class="border">`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign |
 | <div class="border"> `budgetTotal` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></div> | Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign |
 | <div class="border">`maxBid` <br /><span class="type-text">integer</span></div> | Maximum allowed bid price for campaign |
@@ -1329,7 +2424,7 @@ Update attributes of a created or draft PG Campaign by campaign ID.
 | <div class="border">`endTime`  <br /><span class="type-text">integer</span></div> | Unix epoch end time of campaign, in milliseconds | 
 | `creativeTargeting` <br /><span class="type-text">object</span> | Object containing creative targeting details |
 | <div class="border"><span class="type-text">Object properties</span></div> |
-| <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span></div> | Creative type ID |
+| <div class="border">`creativeTypeId` <br /><span class="type-text">integer</span></div> | Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | <div class="border">`creativeIds` <br /><span class="type-text">string</span></div> | IDs of creatives attached to this campaign |
 | `inventoryTargeting` <br /><span class="type-text">object</span> |
 | <div class="border"><span class="type-text">Object properties</span></div> |
@@ -1344,6 +2439,9 @@ Update attributes of a created or draft PG Campaign by campaign ID.
 </details>
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1382,6 +2480,92 @@ Update attributes of a created or draft PG Campaign by campaign ID.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/pg/campaigns/{campaignId}": {
+    parameters: {};
+    patch: operations["editPGCampaign"];
+  };
+  "/api/v3/cmp/pg/campaigns/draft/{campaignId}": {
+    parameters: {};
+    patch: operations["editDraftPGCampaign"];
+  };
+}
+
+export interface operations {
+  editPGCampaign: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId?: number;
+          countryId?: number;
+          politicalAdvertiserClientId?: number;
+          conversionTargeting?: {
+            conversionTypeId?: number;
+            conversionIds: number[];
+          };
+          creativeTargeting?: {
+            creativeTypeId: number;
+            creativeIds: number[];
+          };
+          inventoryTargeting?: {
+            pgDealIds: number[];
+            paymentTypeId?: number;
+          };
+          pgCampaignInfo?: {
+            campaignName: string;
+            timeZoneId: number;
+            spendingBudget?: number;
+            maxBid: number;
+            startTime: number;
+            endTime?: number;
+            totalImpressions?: number;
+            advertiserDomain: string;
+            ioId: number;
+            budgetTypeId: number;
+            campaignTypeId?: number;
+            owId?: number;
+            uowId?: number;
+            creativeTypeId?: number;
+            status?: string;
+            configObj?: string;
+            totalBudget?: number;
+            pgFeesPercentage?: number;
+          };
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              message: string;
+              campaignId: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1409,13 +2593,13 @@ If campaign is in `DRAFT` status, this API will automatically update status from
 |`id`	<br /><span class="type-text">integer</span> |	Campaign ID
 |`campaignName`	<br /><span class="type-text">string</span> |	Campaign name
 |`advertiserDomain`	<br /><span class="type-text">string</span> |	Advertiser domain
-|`creativeType`	<br /><span class="type-text">integer</span> |	Creative type ID
-|`campaignType`	<br /><span class="type-text">integer</span> |	Campaign type ID
-|`totalBudgetPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour
+|`creativeType`	<br /><span class="type-text">integer</span> |	Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) |
+|`campaignType`	<br /><span class="type-text">integer</span> |	[Campaign type ID](#get-campaign-count-with-campaign-type)
+|`totalBudgetPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
 |`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for campaign serving daily
 |`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for campaign serving period
 |`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
-|`timezone`	<br /><span class="type-text">integer</span> |	Timezone ID for campaign
+|`timezone`	<br /><span class="type-text">integer</span> |	Timezone ID for campaign, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones)
 |`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
 |`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
 |`status`	<br /><span class="type-text">string</span> |	Status of campaign
@@ -1429,9 +2613,9 @@ If campaign is in `DRAFT` status, this API will automatically update status from
 |`platformMargin`	<br /><span class="type-text">integer</span> |	Campaign platform margin number
 |`userDealMargin`	<br /><span class="type-text">integer</span> |	Campaign user deal margin number
 |`bidStrategyFlag`	<br /><span class="type-text">boolean</span> |	Bid statergy allowed or not for user
-|`bidOptimization` <br /><span class="type-text">boolean</span> |	Optimize bid price based on analysis.
-|`bidPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour.
-|`impressionCapping` <br /><span class="type-text">integer</span> |	Maximum impressions in one inventory.
+|`bidOptimization` <br /><span class="type-text">boolean</span> |	Optimize bid price based on analysis: `true`
+|`bidPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
+|`impressionCapping` <br /><span class="type-text">integer</span> |	Maximum impressions in one inventory
 |`maxDayClicks` <br /><span class="type-text">integer</span> |	Maximum daily clicks
 |`totalClicks` <br /><span class="type-text">integer</span> |	Total clicks
 |`maxDayImpressions` <br /><span class="type-text">integer</span> |	Maximum daily impressions
@@ -1442,32 +2626,32 @@ If campaign is in `DRAFT` status, this API will automatically update status from
 |`creativeIds`	<br /><span class="type-text">string</span> |	Targeted creative ids
 |`targetCPI`	<br /><span class="type-text">integer</span> |	Target CPI for Campaign Serving
 |`conversionType` <br /><span class="type-text">string</span> |	User conversion type <br/> Allowed values: `install`, `non-install` |
-|`conversionTypeId` <br /><span class="type-text">integer</span> |	Conversion type Id which represents the type of conversion attached to it. This parameter is mandatory with conversionIds
+|`conversionTypeId` <br /><span class="type-text">integer</span> |	Conversion type Id which represents the type of conversion attached to it: Pixel (`1`) or Postback (`2`)
 |`appURL` <br /><span class="type-text">string</span> |	If conversion type is install, specify URL of inventory
 |`targetCPI` <br /><span class="type-text">integer</span> |	Cost per install if conversion type is install
 | `technologyFlag`	<br /><span class="type-text">boolean</span> |	Technology enabled or disblebed based on policy of user
-|`carriers` <br /><span class="type-text">string</span> |	Carrier targeting. Value in form of String of comma separated IDs of targeted carrier(s)
+|`carriers` <br /><span class="type-text">string</span> |	Comma separated carrier IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id)
 |`networkType` <br /><span class="type-text">string</span> |	Network targeting. Value in form of String of comma separated IDs of targeted network(s)
-|`deviceType` <br /><span class="type-text">string</span> |	Device targeting. Value in form of String of comma separated IDs of targeted device type(s)
-|`trafficType` <br /><span class="type-text">string</span> |	Traffic type targeting. Value in form of String of comma separated IDs of targeted traffic type(s)
-|`manufacturer` <br /><span class="type-text">string</span> |	Manufacturer targeting. Value in form of String of comma separated IDs of targeted manufacturer type(s)
-|`os` <br /><span class="type-text">string</span> |	OS targeting. Value in form of String of comma separated IDs of targeted OS
+|`deviceType` <br /><span class="type-text">string</span> |	Comma separated device type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-type)
+|`trafficType` <br /><span class="type-text">string</span> |	Comma separated traffic type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-traffic-types)
+|`manufacturer` <br /><span class="type-text">string</span> |	Comma separated manufacturer IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting)
+|`os` <br /><span class="type-text">string</span> |	Comma separated OS IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-os-for-targeting)
 |`osVersion` <br /><span class="type-text">string</span> |	OS version targeting. Value in form of String of comma separated IDs of targeted OS version based on targeted OS
-|`exchanges` <br /><span class="type-text">string</span> |	Targeted exchanges. Value in form of String of comma separated IDs of exchanges
+|`exchanges` <br /><span class="type-text">string</span> |	Comma separated exchanges IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-exchanges)
 |`prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> |	Prebid Audience Segment IDs to attach campaign to segment IDs
 |`device` <br /><span class="type-text">string</span> |	Targeted devices as string
-|`publisherAdCategory` <br /><span class="type-text">string</span> |	Target Publisher ad category. Value in form of String of comma separated IDs
+|`publisherAdCategory` <br /><span class="type-text">string</span> |	Comma separated publisher ad category IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-publisher-ad-categories)
 |`userDealId` <br /><span class="type-text">string</span> |	User specific deal IDs. Value in form of String of comma separated deal IDs
 |`groupDealId` <br /><span class="type-text">string</span> |	Group of selected deals. Value in form of String of comma separated deal IDs
 |`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> |	ID of political advertiser in case of campaign is political campaign
-|`stateIds` <br /><span class="type-text">string</span> |	State Target (It will be considered as White list State Target). Value in form of String of comma separated IDs.
+|`stateIds` <br /><span class="type-text">string</span> |	Comma separated state IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-state-segment)
 |`locationFileIds` <br /><span class="type-text">string</span> |	Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
-|`ageRangeIds` <br /><span class="type-text">string</span> |	Target age range. Value in form of string of comma separated IDs
-|`genderIds` <br /><span class="type-text">string</span> |	Target gender. Value in form of String of comma-separated IDs
-|`interestIds` <br /><span class="type-text">string</span> |	Target user interest. Value in form of a string of comma-separated IDs
-|`incomeRangeIds` <br /><span class="type-text">string</span> |	Target user income range. Value in form of a string of comma-separated IDs
-|`languageIds` <br /><span class="type-text">string</span> |	Target user language. Value in form of a string of comma-separated IDs
-|`ethnicityIds` <br /><span class="type-text">string</span> |	Target user ethnicity. Value in form of a string of comma-separated ID
+|`ageRangeIds` <br /><span class="type-text">string</span> |	Comma separated age range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-age-segment)
+|`genderIds` <br /><span class="type-text">string</span> |	Comma separated gender IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-gender-segment)
+|`interestIds` <br /><span class="type-text">string</span> |	Comma separated interest IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-interest-segment)
+|`incomeRangeIds` <br /><span class="type-text">string</span> |	Comma separated income range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-income-range-segment)
+|`languageIds` <br /><span class="type-text">string</span> |	Comma separated language IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-language-segment)
+|`ethnicityIds` <br /><span class="type-text">string</span> |	Comma separated ethnicity IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-ethnicity-segment)
 |`schedule` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
 |`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target iab categories. Value in form of a string of comma-separated ID. Only super user can update iab categories
 |`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video creative segment is targeted
@@ -1478,6 +2662,9 @@ If campaign is in `DRAFT` status, this API will automatically update status from
 </details>
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1555,13 +2742,273 @@ If campaign is in `DRAFT` status, this API will automatically update status from
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaign/{campaignId}": {
+    parameters: {};
+    patch: operations["editCampaignPatch"];
+  };
+}
+
+export interface operations {
+   editCampaignPatch: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        campaignId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: number;
+          dspId?: number;
+          owId?: number;
+          uowId?: number;
+          id?: number;
+          campaignName?: string;
+          advertiserDomain?: string;
+          creativeType?: number;
+          campaignType?: number;
+          totalBudgetPacing?: boolean;
+          budgetDay?: number;
+          budgetTotal?: number;
+          maxBid?: number;
+          timezone?: number;
+          startTime?: number;
+          endTime?: number;
+          status?: string;
+          created?: number;
+          excludeFromPlatformServing?: boolean;
+          forTest?: boolean;
+          modifiedDate?: string;
+          dspMarginJson?: string;
+          platformMarginJson?: string;
+          dspMargin?: number;
+          platformMargin?: number;
+          userDealMargin?: number;
+          isAgreementChecked?: boolean;
+          spentScale?: boolean;
+          creativeIds?: string;
+          targetCPI?: number;
+          conversionType?: string;
+          conversionTypeId?: number;
+          appURL?: string;
+          bidOptimization?: boolean;
+          bidPacing?: boolean;
+          impressionCapping?: number;
+          maxDayImpressions?: number;
+          maxDayClicks?: number;
+          maxDayConversions?: number;
+          totalImpressions?: number;
+          totalClicks?: number;
+          totalConversions?: number;
+          bidStrategyFlag?: boolean;
+          ioId?: number;
+          prebidAudienceSegmentIdList?: number[];
+          isBidShading?: boolean;
+          carriers?: string;
+          networkType?: string;
+          deviceType?: string;
+          trafficType?: string;
+          manufacturer?: string;
+          device?: string;
+          os?: string;
+          osVersion?: string;
+          technologyFlag?: boolean;
+          exchanges: string;
+          whiteListedDeviceId?: string;
+          whiteListedIp?: string;
+          whiteListedAppId?: string;
+          whiteListedPackageName?: string;
+          whiteListedSiteDomain?: string;
+          blackListedDeviceId?: string;
+          blackListedIp?: string;
+          blackListedAppId?: string;
+          blackListedPackageName?: string;
+          blackListedSiteDomain?: string;
+          advancedFlag?: boolean;
+          userDealId?: string;
+          groupDealId?: string;
+          publisherAdCategory: string;
+          campaignIabCategoryIds?: string;
+          stateIds?: string;
+          whiteListedStateIds?: string;
+          blackListedStateIds?: string;
+          countryId?: number;
+          dmaIds?: string;
+          whiteListedDmaIds?: string;
+          blackListedDmaIds?: string;
+          zipcodes?: string;
+          whiteListedZipcodes?: string;
+          blackListedZipcodes?: string;
+          geoRadiusDetails?: {
+            latitude?: number;
+            longitude?: number;
+            radius?: number;
+            address?: string;
+            stateShortName?: string;
+            countryShortName?: string;
+            locationId?: number;
+            rejectionReason?: string;
+            polypath?: Record<string, never>;
+            placemarkName?: string;
+            isIncluded?: boolean;
+            cid?: string;
+            sid?: string;
+            type?: string;
+            unit?: string;
+            cdId?: number;
+            sdId?: number;
+            hdId?: number;
+          }[];
+          whiteListedGeoRadiusDetails?: {
+            latitude?: number;
+            longitude?: number;
+            radius?: number;
+            address?: string;
+            stateShortName?: string;
+            countryShortName?: string;
+            locationId?: number;
+            rejectionReason?: string;
+            polypath?: Record<string, never>;
+            placemarkName?: string;
+            isIncluded?: boolean;
+            cid?: string;
+            sid?: string;
+            type?: string;
+            unit?: string;
+            cdId?: number;
+            sdId?: number;
+            hdId?: number;
+          }[];
+          blackListedGeoRadiusDetails?: {
+            latitude?: number;
+            longitude?: number;
+            radius?: number;
+            address?: string;
+            stateShortName?: string;
+            countryShortName?: string;
+            locationId?: number;
+            rejectionReason?: string;
+            polypath?: Record<string, never>;
+            placemarkName?: string;
+            isIncluded?: boolean;
+            cid?: string;
+            sid?: string;
+            type?: string;
+            unit?: string;
+            cdId?: number;
+            sdId?: number;
+            hdId?: number;
+          }[];
+          gotvLocationId?: number;
+          congressionalDistrictIds?: string;
+          whiteListedCongressionalDistrictIds?: string;
+          blackListedCongressionalDistrictIds?: string;
+          senateDistrictIds?: string;
+          whiteListedSenateDistrictIds?: string;
+          blackListedSenateDistrictIds?: string;
+          houseDistrictIds?: string;
+          whiteListedHouseDistrictIds?: string;
+          blackListedHouseDistrictIds?: string;
+          locationFileIds?: string;
+          whiteListedLocationIds?: string;
+          blackListedLocationIds?: string;
+          radiusUpdatedLocations?: {
+            [key: string]: number;
+          };
+          removedLocationIds?: string;
+          whiteListedCityIds?: string;
+          blackListedCityIds?: string;
+          whiteListedCountyIds?: string;
+          blackListedCountyIds?: string;
+          blackListedInventoryGroupIds?: string;
+          whiteListedInventoryGroupIds?: string;
+          inventoryKeywords?: string[];
+          inventoryUrls?: string[];
+          pmpDealIds?: number[];
+          blackListedAudienceIds?: string;
+          whiteListedAudienceIds?: string;
+          blackListedCustomAudienceIds?: string;
+          whiteListedCustomAudienceIds?: string;
+          politicalAdvertiserClientId?: number;
+          scheduling?: {
+            [key: string]: Record<string, never>;
+          };
+          ageRangeIds?: string;
+          genderIds?: string;
+          languageIds?: string;
+          incomeRangeIds?: string;
+          ethnicityIds?: string;
+          interestIds?: string;
+          demographicTargetingFlag?: boolean;
+          whiteListedAudienceSegmentGroupIds?: string;
+          blackListedAudienceSegmentGroupIds?: string;
+          blackListedConversionTagIds?: string;
+          whiteListedConversionTagIds?: string;
+          conversionIds?: string;
+          creativesPlacementMapping?: {
+            [key: string]: number;
+          };
+          isTvAd?: boolean;
+          creativeAdvanceTargeting?: {
+            [key: string]: number[];
+          };
+          budgetTypeId?: number;
+          campaignEstimatorMetaData?: {
+            reachMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            landScapeMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            sliderMeta?: {
+              [key: string]: Record<string, never>;
+            };
+          };
+          customAudienceTargeted?: boolean;
+          advanceAudioVideoTargeted?: boolean;
+          isAdvanceAudioVideoTargeted?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              data: number;
+              message: string;
+              status: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
 
 #### Change Campaign Name
 
-<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/campaign/update-name/\{campaignId\}</span>
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/campaign/update-name/\{campaign_Id\}</span>
 
 <div class="container">
   <div class="child1">
@@ -1570,7 +3017,7 @@ Change the name of a campaign.
 
 | Path Parameters |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaign_Id` <br /><span class="type-text">integer</span> | Campaign ID |
 
 
 | Request Schema |  |
@@ -1579,6 +3026,9 @@ Change the name of a campaign.
 
 </div>
 <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1594,6 +3044,54 @@ Change the name of a campaign.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/campaign/update-name/{campaign_id}": {
+    parameters: {};
+    patch: operations["UpdateCampaignName"];
+  };
+}
+
+export interface operations {
+  UpdateCampaignName: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+        "X-IAA-OW-ID": number;
+      };
+      path: {
+        campaign_id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignName: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json;charset=UTF-8": {
+            success: boolean;
+            data: {
+              message: string;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1616,6 +3114,8 @@ Change the end date of multiple campaigns.
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1634,13 +3134,59 @@ Change the end date of multiple campaigns.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/cmp/campaigns/update-end-date": {
+    parameters: {};
+    put: operations["Campaignenddateupdate"];
+  };
+}
+
+export interface operations {
+  Campaignenddateupdate: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+        "X-Iaa-Host": string;
+        authorization: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          endDate: number;
+          campaignIds: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              status: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
 
 #### Change Campaign Budget
 
-<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v2/cmp/campaigns/update_budget</span>
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v2/cmp/campaigns/update-budget</span>
 
 <div class="container">
   <div class="child1">
@@ -1648,7 +3194,7 @@ Change the end date of multiple campaigns.
 Update the total budget, daily budget, and max bid of multiple campaigns.
 
 
-| Request Schema  | Description |
+| Request Schema  |  |
 | ----  | --- |
 | `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs |
 | `maxBid` | integer | Max bid of campaign
@@ -1659,6 +3205,8 @@ Update the total budget, daily budget, and max bid of multiple campaigns.
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1699,6 +3247,67 @@ Update the total budget, daily budget, and max bid of multiple campaigns.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v2/cmp/campaigns/update-budget": {
+    parameters: {};
+    put: operations["Campaignbudgetupdate"];
+  };
+}
+
+export interface operations {
+   Campaignbudgetupdate: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+        "X-Iaa-Host": string;
+        authorization: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          totalBudgetUpdateType: string;
+          campaignIds: number;
+          dailyBudget: number;
+          maxBid: number;
+          totalBudget: number
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              reason: {
+                errorMessage: string;
+                id: string;
+                campaignName: string;
+              }[];
+              modified_data: {
+                campaingId: number;
+                maxBid: number;
+                totalBudget: number;
+                dailyBudget: number;
+                endDate: number;
+              }[];
+              status: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1719,6 +3328,9 @@ Update the total budget, daily budget, and max bid of multiple campaigns.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Schema"
 {
   "conversionIds": "123, 321",
@@ -1734,6 +3346,17 @@ Update the total budget, daily budget, and max bid of multiple campaigns.
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+
+export interface operations {
+```
+
+</TabItem></Tabs>
 
 <details>
 <summary>More Response Samples</summary>
@@ -1771,12 +3394,15 @@ PG campaigns cannot be used for audience targeting.
 
 | Request Schema | | 
 | --- | --- |
-| `\{campaignId\}` <br /><span class="type-text">integer</span> | Campaign ID for which to pass `includedAudienceList`, `excludedAudienceList`, and `removeAudience` |
+| `{campaignId}` <br /><span class="type-text">string</span> | Campaign ID for which to pass `includedAudienceList`, `excludedAudienceList`, and `removeAudience` |
 | `includedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to include in targetting |
 | `excludedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to exclude from targetting |
 | `removeAudience` <br /><span class="type-text">array of integers</span> | Audience IDs to remove |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Schema"
 {
@@ -1833,6 +3459,73 @@ PG campaigns cannot be used for audience targeting.
 ```
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/target/audience": {
+    parameters: {};
+    post: operations["CampaignAudienceTargetingList"];
+  };
+}
+
+export interface operations {
+  CampaignAudienceTargetingList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          [key: string]: {
+            includedAudienceList?: number[];
+            excludedAudienceList?: number[];
+            removedAudienceList?: number[];
+          };
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              message: string
+            }
+          }
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1854,6 +3547,9 @@ Assign or remove multiple PMP deals to/from campaigns.
 | `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/de-assign to/from campaigns |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1916,6 +3612,83 @@ Assign or remove multiple PMP deals to/from campaigns.
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/cmp/pmp/campaigns/mappings": {
+    parameters: {};
+    patch: operations["managePMPDealCampaignMappings"];
+  };
+}
+
+export interface operations {
+  managePMPDealCampaignMappings: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: {
+            action: string;
+            campaignIds: number[];
+            pmpDealIds: number[];
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1937,6 +3710,9 @@ Assign or remove multiple PG deals to/from campaigns.
 | `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/de-assign to/from campaigns |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -2008,6 +3784,83 @@ Assign or remove multiple PG deals to/from campaigns.
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/pg/campaigns/mappings": {
+    parameters: {};
+    patch: operations["managePgDealCampaignMappings"];
+  };
+}
+
+export interface operations {
+  managePgDealCampaignMappings: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: {
+            action: string;
+            campaignIds: number[];
+            pgDealIds: number[];
+          }[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success?: boolean;
+            errorObjects?: {
+              error?: string;
+              reason?: string;
+              field?: string;
+            }[];
+            data?: Record<string, never>;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -2025,12 +3878,26 @@ Assign or remove multiple PG deals to/from campaigns.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
   "success": true,
   "data": "Email reminder resend successfully to set margin."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+
+export interface operations {
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2079,12 +3946,12 @@ Insertion Orders specify the parameters or details of an advertising campaign.
 | `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time|
 | `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time|
 | `ioTotalBudget` <br /><span class="type-text">integer</span> | Budget of IO|
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID|
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones)|
 | `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If `true` Keeps IO budget same as total budget of all included campaigns|
 | `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | Budget Distribution Method ID|
-| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | Budget type ID |
+| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [Budget type ID](#get-list-of-campaign-budget-types) |
 | `ioTotalImpression` <br /><span class="type-text">integer</span> | Number of impressions |
-| `ioStatusID` <br /><span class="type-text">integer</span> | Status ID|
+| `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](#get-io-status-list) |
 | `ioNextPerformanceCheck` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of next performance check|
 | `ioLastPriorityShift` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds)|
 | `ioCurrentPriority` <br /><span class="type-text">integer</span> | Current IO campaigns priority|
@@ -2107,8 +3974,8 @@ Get a list of Insertion Order (IO) details.
 |---|---|
 | `owIdList` <br /><span class="type-text">array of integers</span> | List of Organization Workspace IDs for which IO details required |
 | `ioIdList` <br /><span class="type-text">array of integers</span> | List of Insertion Order IDs for which IO details required |
-| `ioBudgetTypeIdsList` <br /><span class="type-text">array of integers</span> | List of budget type IDs for which IO details are required |
-| `ioStatusIdsList` <br /><span class="type-text">array of integers</span> | List of Insertion Order status IDs for which IO details are required |
+| `ioBudgetTypeIdsList` <br /><span class="type-text">array of integers</span> | List of [budget type IDs](#get-list-of-campaign-budget-types) for which IO details are required |
+| `ioStatusIdsList` <br /><span class="type-text">array of integers</span> | List of Insertion Order [status IDs](#get-io-status-list) for which IO details are required |
 | `ids` <br /><span class="type-text">array of integers</span> | Prioritizes specified IO IDs before others in returned data |
 | `isAllOWIds` <br /><span class="type-text">boolean</span> | Filters records with all allowed OW IDs if `true`, prioritizes records over `owIds` |
 | `pageNo` <br /><span class="type-text">integer</span> | page number for required data |
@@ -2118,6 +3985,9 @@ Get a list of Insertion Order (IO) details.
 | `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -2195,6 +4065,78 @@ Get a list of Insertion Order (IO) details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/basic/list": {
+    parameters: {};
+    post: operations["getIOBasicDetailsList"];
+  };
+}
+
+export interface operations {
+  getIOBasicDetailsList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          owIdList?: number[];
+          ids?: number[];
+          ioIdList?: number[];
+          ioBudgetTypeIdsList?: number[];
+          ioStatusIdsList?: number[];
+          allOWIds?: boolean;
+          allOwIds?: boolean;
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+          isAllOwIds?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              ioBasicDetailsList: {
+                ioId: number;
+                ioName: string;
+                ioStartTime: number;
+                ioEndTime: number;
+                ioTimeZoneId: number;
+                ioTotalBudget: number;
+                ioBudgetDistributionMethodId: number;
+                ioBudgetTypeId: number;
+                ioStatusId: number;
+                ioTotalImpressions: number;
+                isBudgetAutoSum: boolean
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -2217,10 +4159,13 @@ Get an advanced list of Insertion Order details.
 | `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
 | `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for returned data, in milliseconds |
 | `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for returned data, in milliseconds |
-| `budgetTypeIds` <br /><span class="type-text">string</span> | Comma separated budget type IDs to include in data |
-| `ioStatusIds` <br /><span class="type-text">string</span> | Comma separated status IDs to include in data |
+| `budgetTypeIds` <br /><span class="type-text">string</span> | Comma separated [budget type IDs](#get-list-of-campaign-budget-types) to include in data |
+| `ioStatusIds` <br /><span class="type-text">string</span> | Comma separated [status IDs](#get-io-status-list) to include in data |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -2594,13 +4539,300 @@ Get an advanced list of Insertion Order details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/advanced/list": {
+    parameters: {};
+    get: operations["getIOListWithReportData"];
+  };
+}
+
+export interface operations {
+  getIOListWithReportData: {
+    parameters: {
+      query?: {
+        searchField?: string;
+        pageSize?: number;
+        offset?: number;
+        pageNo?: number;
+        sortBy?: string;
+        startDate?: number;
+        endDate?: number;
+        budgetTypeIds?: string;
+        timeZoneId?: number;
+        ioStatusIds?: string;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              recordsTotal: {
+                prebidCost: number;
+                clicks: number;
+                totalCount: number;
+                winRate: number;
+                logoURL: string;
+                avatarURL: string;
+                budgetDay: number;
+                budgetSpent: number;
+                budgetTotal: number;
+                dataCost: number;
+                mediaBudget: number;
+                owId: number;
+                orgId: number;
+                impressions: number;
+                industry: number;
+                mediaSpent: number;
+                spent: number;
+                organizationBidShadingSaving: null;
+                workspaceSpent: number;
+                platformSpent: number;
+                customerSpent: number;
+                platformMediaEarning: number;
+                platformBidShadingEarning: number;
+                platformTotalEarning: number;
+                workspaceBidShadingEarning: number;
+                workspaceTotalEarning: number;
+                organizationName: string;
+                companySize: number;
+                workspaceName: string;
+                workspaceId: number;
+                workspaceDomain: null;
+                workspaceOrganizationName: string;
+                bidImpressions: number;
+                startCount: number;
+                firstCount: number;
+                midCount: number;
+                thirdCount: number;
+                completeCount: number;
+                audioVideoActualBids: number;
+                audioVideoActualImpressions: number;
+                eCPC: number;
+                eCPM: number;
+                eCPI: number;
+                eCPCV: number;
+                eCPV: number;
+                totalAttributedConversion: number;
+                totalAttributedViewThroughConversion: number;
+                totalAttributedClickThroughConversion: number;
+                costPerAttributedConversion: number;
+                totalAttributedConversionRate: number;
+                reach: null;
+                frequency: null;
+                date: null;
+                campaignId: number;
+                campaignName: string;
+                maxBid: null;
+                startTime: number;
+                endTime: number;
+                campaignType: null;
+                status: null;
+                mappingDataCost: number;
+                mappingSpent: number;
+                campaignTimezone: null;
+                creativeType: null;
+                budgetPacing: boolean;
+                isCampaignFromNewPlatform: boolean;
+                percentageOfTotalSpent: number;
+                uowId: number;
+                audioVideoViewed: number;
+                ioId: number;
+                ioName: null;
+                ioTimezone: number;
+                ioBudgetDistributionMethod: number;
+                ioStartTime: number;
+                ioEndTime: number;
+                ioTotalBudget: number;
+                isAutoSumIoTotalBudget: boolean;
+                ioBudgetTypeId: number;
+                ioTotalImpressions: null;
+                ioStatusId: number;
+                exchangeId: number;
+                exchangeName: string;
+                budgetTypeId: number;
+                targetImpression: null;
+                dailyImpression: null;
+                creativesCount: number;
+                campaignsCount: number;
+                pacingPercentage: number;
+                actualSpent: number;
+                expectedSpent: number;
+                campaignDuration: null;
+                remainingDuration: null;
+                dailyPacingPercentage: null;
+                expectedDailySpent: null;
+                actualDailySpent: null;
+                ioPacingPercentage: null;
+                ioActualSpent: number;
+                ioExpectedSpent: number;
+                ioDuration: null;
+                ioRemainingDuration: number;
+                budgetTotalCombined: null;
+                budgetDayCombined: null;
+                ioTotalBudgetCombined: null;
+                campaignPriority: null;
+                bidModelDataId: null;
+                baseBid: null;
+                dailyCampaignDuration: null;
+                dailyRemainingDuration: null;
+                campaignTypeId: null;
+                workspaceVLDInsightsEarnings: null;
+                platformVLDInsightsEarnings: null;
+                isEligibleForVLDInsightsReport: null;
+                vldInsightsCost: null;
+                ioTimeZoneName: null;
+                CTR: number;
+                VCR: number;
+                CVR: number;
+              }
+              recordsList: {
+                prebidCost: number;
+                clicks: number;
+                totalCount: number;
+                winRate: number;
+                logoURL: null;
+                avatarURL: null;
+                budgetDay: number;
+                budgetSpent: number;
+                budgetTotal: number;
+                dataCost: number;
+                mediaBudget: number;
+                owId: number;
+                orgId: number;
+                impressions: number;
+                industry: number;
+                mediaSpent: number;
+                spent: number;
+                organizationBidShadingSaving: null;
+                workspaceSpent: number;
+                platformSpent: number;
+                customerSpent: number;
+                platformMediaEarning: number;
+                platformBidShadingEarning: number;
+                platformTotalEarning: number;
+                workspaceBidShadingEarning: number;
+                workspaceTotalEarning: number;
+                organizationName: string;
+                companySize: number;
+                workspaceName: string;
+                workspaceId: number;
+                workspaceDomain: null;
+                workspaceOrganizationName: string;
+                bidImpressions: number;
+                startCount: number;
+                firstCount: number;
+                midCount: number;
+                thirdCount: number;
+                completeCount: number;
+                audioVideoActualBids: number;
+                audioVideoActualBids: number;
+                eCPC: number;
+                eCPM: number;
+                eCPI: number;
+                eCPCV: number;
+                eCPV: number;
+                totalAttributedConversion: number;
+                totalAttributedViewThroughConversion: number;
+                totalAttributedClickThroughConversion: number;
+                costPerAttributedConversion: number;
+                totalAttributedConversionRate: number;
+                reach: null;
+                frequency: null;
+                date: null;
+                campaignId: number;
+                campaignName: string;
+                maxBid: null;
+                startTime: number;
+                endTime: number;
+                campaignType: null;
+                status: null;
+                mappingDataCost: number;
+                mappingSpent: number;
+                campaignTimezone: null;
+                creativeType: null;
+                budgetPacing: boolean;
+                isCampaignFromNewPlatform: boolean;
+                percentageOfTotalSpent: number;
+                uowId: number;
+                audioVideoViewed: number;
+                ioId: number;
+                ioName: null;
+                ioTimezone: number;
+                ioBudgetDistributionMethod: number;
+                ioStartTime: number;
+                ioEndTime: number;
+                ioTotalBudget: number;
+                isAutoSumIoTotalBudget: boolean;
+                ioBudgetTypeId: number;
+                ioTotalImpressions: null;
+                ioStatusId: number;
+                exchangeId: number;
+                exchangeName: string;
+                budgetTypeId: number;
+                targetImpression: null;
+                dailyImpression: null;
+                creativesCount: number;
+                campaignsCount: number;
+                pacingPercentage: number;
+                actualSpent: number;
+                expectedSpent: number;
+                campaignDuration: null;
+                remainingDuration: null;
+                dailyPacingPercentage: null;
+                expectedDailySpent: null;
+                actualDailySpent: null;
+                ioPacingPercentage: null;
+                ioActualSpent: number;
+                ioExpectedSpent: number;
+                ioDuration: null;
+                ioRemainingDuration: number;
+                budgetTotalCombined: null;
+                budgetDayCombined: null;
+                ioTotalBudgetCombined: null;
+                campaignPriority: null;
+                bidModelDataId: null;
+                baseBid: null;
+                dailyCampaignDuration: null;
+                dailyRemainingDuration: null;
+                campaignTypeId: null;
+                workspaceVLDInsightsEarnings: null;
+                platformVLDInsightsEarnings: null;
+                isEligibleForVLDInsightsReport: null;
+                vldInsightsCost: null;
+                ioTimeZoneName: null;
+                CTR: number;
+                VCR: number;
+                CVR: number;
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
 
 ### Get IO Campaign Budget and Details
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/campaign/budget-impressions/info</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/campaign/budget-impression/info</span>
 
 <div class="container">
   <div class="child1">
@@ -2612,6 +4844,9 @@ Get a IO campaign's budget and spending details.
 | `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID to retreive details for |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -2626,6 +4861,51 @@ Get a IO campaign's budget and spending details.
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/campaign/budget-impression/info": {
+    parameters: {};
+    get: operations["getBudgetAndImpressionInfoByIOId"];
+  };
+}
+
+export interface operations {
+  getBudgetAndImpressionInfoByIOId: {
+    parameters: {
+      query: {
+        ioId: number;
+      };
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalAllocatedBudget: number;
+              totalSpentBudget: number;
+              totalAllocatedImpression: number;
+              totalSpentImpression: number;
+              totalImpressions: number;
+              totalBudget: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -2653,12 +4933,15 @@ Optional parameters to filter/sort results
 | `ids` <br /><span class="type-text">array of integers</span> | Filters for Campaign IDs |
 | `ioIds` <br /><span class="type-text">array of integers</span> | Filters for Insertion Order IDs |
 | `status` <br /><span class="type-text">array of strings</span> | Filters for types of Campaign Status |
-| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Creative Type IDs |
-| `ioBudgetTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Budget Type IDs |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Creative Type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
+| `ioBudgetTypeIds` <br /><span class="type-text">array of integers</span> | Filters for [Budget Type IDs](#get-list-of-campaign-budget-types) |
 | `owIds` <br /><span class="type-text">array of integers</span> | Filters for customer Organization Workspace IDs |
 | `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -2826,6 +5109,96 @@ Optional parameters to filter/sort results
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/campaign/basic/list": {
+    parameters: {};
+    post: operations["getIoMappedWithCampaignsDetails"];
+  };
+}
+
+export interface operations {
+  getIoMappedWithCampaignsDetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          status?: string[];
+          creativeTypeIds?: number[];
+          owIds?: number[];
+          ioIds?: number[];
+          ids?: number[];
+          campaignIds?: number[];
+          campaignTypeIds?: number[];
+          ioBudgetTypeIds?: number[];
+          paymentTypeId?: number;
+          includeTargetedAudienceList?: boolean;
+          campaignExpiredAfterEpoch?: number;
+          allOwIds?: boolean;
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              ioCampaignsList: {
+                ioId: number;
+                ioname: string;
+                ioBudgetTypeId: number;
+                created: number;
+                lastModified: number;
+                owId: number;
+                uowId: number;
+                campaignCount: number;
+                campaigns: {
+                  id: number;
+                  campaignId: number;
+                  name: string;
+                  creativeTypeId: number;
+                  campaignTypeId: number;
+                  status: string;
+                  startTime: number;
+                  endTime: number;
+                  createdAt: number;
+                  modifiedAt: nmber;
+                  owId: number;
+                  timezoneId: number;
+                  targetedAudienceIds: number[];
+                  }[]
+                }[]
+              }
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -2848,13 +5221,16 @@ Get a list of Insertion Order details along with campaign details attached to th
 | `ioIds` <br /><span class="type-text">array of integers</span> | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Filters results by provided campaign IDs |
 | `status` <br /><span class="type-text">array of strings</span> | Filters for types of Campaign Status |
-| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Creative Type IDs |
+| `creativeTypeIds` <br /><span class="type-text">array of integers</span> | Filters for Creative Type IDs, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | `owIds` <br /><span class="type-text">array of integers</span> | Filters for customer Organization Workspace IDs |
 | `isAllOwIds` <br /><span class="type-text">object</span> | Filters records with all allowed OW IDs if `true`, prioritizes records over `owIds` |
 | `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Returns IOs with start date greater than date provided |
 | `endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Returns IOs with start date less than date provided |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -2943,6 +5319,97 @@ Get a list of Insertion Order details along with campaign details attached to th
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/campaign/served/list": {
+    parameters: {};
+    post: operations["getServedIoMappedWithCampaignsDetails"];
+  };
+}
+
+export interface operations {
+  getServedIoMappedWithCampaignsDetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          status?: string[];
+          creativeTypeIds?: number[];
+          owIds?: number[];
+          ioIds?: number[];
+          ids?: number[];
+          campaignIds?: number[];
+          campaignTypeIds?: number[];
+          ioBudgetTypeIds?: number[];
+          paymentTypeId?: number;
+          includeTargetedAudienceList?: boolean;
+          campaignExpiredAfterEpoch?: number;
+          startDate?: number;
+          endDate?: number;
+          allOwIds?: boolean;
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              ioCampaignsList: {
+                ioId: number;
+                ioName: string;
+                ioBudgetTypeId: number;
+                ioStatusId: number;
+                created: number;
+                lastModified: number;
+                owId: number;
+                uowId: number;
+                campaignCount: number;
+                campaigns: {
+                  creativeTypeId: number;
+                  id: number;
+                  name: string;
+                  owId: number;
+                  status: string;
+                  lastModified: number;
+                  uowId: number;
+                  organizationName: string;
+                  organizationLogo: string;
+                }[]
+              }
+            }
+            totalRecords: number;
+            filteredRecords: number;
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 
@@ -2966,11 +5433,11 @@ Optional parameters to filter/sort results
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`) (See supported values in collapsible section below table.) |
 | `searchField` <br /><span class="type-text">string</span> | Search the result by keyword |
 | `ioIdsList` <br /><span class="type-text">array of integers</span> | Filter by Insertion Order IDs. Records matching provided IDs will be returned first, before others |
-| `budgetTypeIdList` <br /><span class="type-text">array of integers</span> | Filters for selected Budget Type IDs e.g. "impression based" or "budget based". Records matching the provided IDs will be returned |
+| `budgetTypeIdList` <br /><span class="type-text">array of integers</span> | Filters for selected [Budget Type IDs](#get-list-of-campaign-budget-types) e.g. "impression based" or "budget based". Records matching the provided IDs will be returned |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Filters for selected Campaign IDs. Records matching the provided IDs will be returned first, before others |
-| `timeZoneId` <br /><span class="type-text">integer</span> | Filters campaigns for specified Timezone ID |
+| `timeZoneId` <br /><span class="type-text">integer</span> | Filters campaigns for specified Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `campaignStatusList` <br /><span class="type-text">array of strings</span> | Filters campaigns by specified Campaign Status |
-| `creativeTypeIds` <br /><span class="type-text">string</span> | Filters campaigns by specified Creative Type ID |
+| `creativeTypeIds` <br /><span class="type-text">string</span> | Filters campaigns by specified Creative Type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | `owIds` <br /><span class="type-text">string</span> | Filters campaigns by specified customer Organization Workspace ID |
 
 <details>
@@ -2982,6 +5449,9 @@ Optional parameters to filter/sort results
 
 </div>
 <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -3219,6 +5689,254 @@ Optional parameters to filter/sort results
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/campaigns/list": {
+    parameters: {};
+    post: operations["getCampaignIODetailsByIoId"];
+  };
+}
+
+export interface operations {
+  getCampaignIODetailsByIoId: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioIdsList?: number[];
+          campaignStatusList?: string[];
+          creativeTypeIds?: string;
+          owIds?: string;
+          campaignIds?: string;
+          ids?: number[];
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          timeZoneId: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success:boolean;
+            filteredRecords: number;
+            recordsTotal: {
+              clicks: number;
+              totalCount: number;
+              winRate: number;
+              logoURL: string;
+              avatarURL: string;
+              budgetDay: number;
+              budgetSpent: number;
+              budgetTotal: number;
+              dataCost: number;
+              mediaBudget: number;
+              owId: number;
+              orgId: number;
+              impressions: number;
+              industry: number;
+              mediaSpent: number;
+              workspaceSpent: number;
+              platformSpent: number;
+              customerSpent: number;
+              platformEarning: number;
+              workspaceEarning: number;
+              organizationName: string;
+              companySize: number;
+              workspaceName: string;
+              workspaceId: number;
+              workspaceDomain: null;
+              workspaceOrganizationName: string;
+              bidImpressions: number;
+              startCount: number;
+              firstCount: number;
+              midCount: number;
+              thirdCount: number;
+              completeCount: number;
+              audioVideoActualBids: number;
+              audioVideoActualImpressions: number;
+              eCPC: number;
+              eCPM: number;
+              eCPI: number;
+              eCPCV: number;
+              eCPV: number;
+              totalAttributedConversion: number;
+              totalAttributedViewThroughConversion: number;
+              totalAttributedClickThroughConversion: number;
+              costPerAttributedConversion: number;
+              totalAttributedConversionRate: number;
+              reach: number;
+              frequency: number;
+              date: null;
+              campaignId: number;
+              campaignName: string;
+              maxBid: null;
+              startTime: number;
+              endTime: number;
+              campaignType: null;
+              status: null;
+              mappingDataCost: number;
+              mappingSpent: number;
+              campaignTimezone: null;
+              creativeType: null;
+              budgetPacing: boolean;
+              isCampaignFromNewPlatform: boolean;
+              percentageOfTotalSpent: number;
+              uowId: number;
+              audioVideoViewed: number;
+              ioId: number;
+              ioName: null;
+              ioTimezone: number;
+              ioBudgetDistributionMethod: number;
+              ioStartTime: number;
+              ioEndTime: number;
+              ioTotalBudget: number;
+              isAutoSumIoTotalBudget: boolean;
+              ioBudgetTypeId: number;
+              ioTotalImpressions: null;
+              ioStatusId: number;
+              exchangeId: number;
+              exchangeName: string;
+              budgetTypeId: number;
+              targetImpression: null;
+              dailyImpression: null;
+              creativesCount: number;
+              pacingPercentage: number;
+              actualSpent: number;
+              expectedSpent: number;
+              campaignDuration: null;
+              remainingDuration: null;
+              dailyPacingPercentage: null;
+              expectedDailySpent: null;
+              actualDailySpent: null;
+              budgetTotalCombined: null;
+              budgetDayCombined: null;
+              ioTotalBudgetCombined: null;
+              campaignPriority: null;
+              CTR: number;
+              VCR: number;
+              CVR: number;
+            }
+            recordsList: {
+              clicks: number;
+              totalCount: number;
+              winRate: number;
+              logoURL: string;
+              avatarURL: string;
+              budgetDay: number;
+              budgetSpent: number;
+              budgetTotal: number;
+              dataCost: number;
+              mediaBudget: number;
+              owId: number;
+              orgId: number;
+              impressions: number;
+              industry: number;
+              mediaSpent: number;
+              spent: number;
+              workspaceSpent: number;
+              platformSpent: number;
+              customerSpent: number;
+              platformEarning: number;
+              workspaceEarning: number;
+              organizationName: string;
+              companySize: number;
+              workspaceName: string;
+              workspaceId: number;
+              workspaceDomain: null;
+              workspaceOrganizationName: string;
+              bidImpressions: number;
+              startCount: number;
+              firstCount: number;
+              midCount: number;
+              thirdCount: number;
+              completeCount: number;
+              audioVideoActualBids: number;
+              audioVideoActualImpressions: number;
+              eCPC: number;
+              eCPM: number;
+              eCPI: number;
+              eCPCV: number;
+              eCPV: number;
+              totalAttributedConversion: number;
+              totalAttributedViewThroughConversion: number;
+              totalAttributedClickThroughConversion: number;
+              costPerAttributedConversion: number;
+              totalAttributedConversionRate: number;
+              reach: number;
+              frequency: number;
+              date: null;
+              campaignId: number;
+              campaignName: string;
+              maxBid: null;
+              startTime: number;
+              endTime: number;
+              campaignType: null;
+              status: null;
+              mappingDataCost: number;
+              mappingSpent: number;
+              campaignTimezone: null;
+              creativeType: null;
+              budgetPacing: boolean;
+              isCampaignFromNewPlatform: boolean;
+              percentageOfTotalSpent: number;
+              uowId: number;
+              audioVideoViewed: number;
+              ioId: number;
+              ioName: null;
+              ioTimezone: number;
+              ioBudgetDistributionMethod: number;
+              ioStartTime: number;
+              ioEndTime: number;
+              ioTotalBudget: number;
+              isAutoSumIoTotalBudget: boolean;
+              ioBudgetTypeId: number;
+              ioTotalImpressions: null;
+              pacingPercentage: number;
+              actualSpent: number;
+              expectedSpent: number;
+              campaignDuration: number;
+              remainingDuration: number;
+              dailyPacingPercentage: number;
+              expectedDailySpent: number;
+              expectedDailySpent: number;
+              actualDailySpent: number;
+              ioStatusId: number;
+              exchangeId: number;
+              creativesCount: number;
+              exchangeName: string;
+              budgetTypeId: number;
+              targetImpression: null;
+              dailyImpression: number;
+              budgetTotalCombined: number;
+              budgetDayCombined: number;
+              campaignPriority: number;
+              ioTotalBudgetCombined: number;
+              CTR: number;
+              VCR: number;
+              CVR: number;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3241,7 +5959,7 @@ Create a downloadable report of campaign details based on Insertion Order.
 | `owIds` <br /><span class="type-text">array of integers</span> | Filter results by Organization Workspace IDs |
 | `ioIds` <br /><span class="type-text">array of integers</span> | Report will include provided campaign IO IDs |
 | `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs to include in report |
-| `timeZoneId` <br /><span class="type-text">integer</span> | Filters data in report for provided timezone ID |
+| `timeZoneId` <br /><span class="type-text">integer</span> | Filters data in report for provided timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `campaignStatus` <br /><span class="type-text">string</span> | Comma separated campaign statuses to include in report |
 | `creativeTypeIds` <br /><span class="type-text">string</span> | Filters report for provided creative type campaign IDs only |
 | `columns` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Column names to display in report as specified by `label` and `value` properties |
@@ -3251,6 +5969,9 @@ Create a downloadable report of campaign details based on Insertion Order.
 | `fileName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Specifies file name for download |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -3365,6 +6086,79 @@ Create a downloadable report of campaign details based on Insertion Order.
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/campaigns/list/download": {
+    parameters: {};
+    post: operations["downloadCampaignsReport"];
+  };
+}
+
+export interface operations {
+  downloadCampaignsReport: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          startDate?: number;
+          endDate?: number;
+          ioIdsList?: number[];
+          timezoneId?: number;
+          campaignStatus?: string;
+          creativeTypeIds?: string;
+          owIds?: string;
+          conversionIds?: string;
+          fileType?: string;
+          fileName?: string;
+          campaignIds?: string;
+          owIdsList?: number[];
+          campaignTypeIds?: number[];
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              url: string
+            }
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3390,6 +6184,9 @@ Create a downloadable report of campaign details based on Insertion Order.
 | `endDate`  <br /><span class="type-text">string</span> | Filters for IOs with a date less than the one specified |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -3424,6 +6221,107 @@ Create a downloadable report of campaign details based on Insertion Order.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/startDate/list": {
+    parameters: {};
+    post: operations["getIOStartDateList"];
+  };
+  "/api/v3/cmp/io/endDate/list": {
+    parameters: {};
+    post: operations["getIOEndDateList"];
+  };
+}
+
+
+export interface operations {
+  getIOStartDateList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          owIds?: number[];
+          isAllOwIds?: boolean;
+          ids?: string[];
+          startDate?: string;
+          endDate?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc"
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              ioStartDateList: string[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+  getIOEndDateList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[];
+          owIdList?: number[];
+          ids?: string[];
+          startDate?: string;
+          endDate?: string;
+          pagination?: string;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+          order?: "asc" | "desc";
+          offset?: number;
+          isAllOwIds?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              getIOEndDateList: string[];
+              totalRecords: number;
+              filteredRecords: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3450,7 +6348,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 <div class="container">
   <div class="child1">
 
-Reference the [IO resource properties](#resource-properties) above for the value descriptions. Required values:
+Reference the [IO resource properties](#insertion-order-resource-properties) above for the value descriptions. Required values:
 
 * `ioName`
 * `ioStartTime`
@@ -3463,6 +6361,9 @@ Reference the [IO resource properties](#resource-properties) above for the value
 * `ioBudgetDistributionMethodId`
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample (budget based IO)" 
 {
@@ -3495,6 +6396,79 @@ Reference the [IO resource properties](#resource-properties) above for the value
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/add": {
+    parameters: {};
+    post: operations["createCampaignIO"];
+  };
+}
+
+export interface operations {
+  createCampaignIO: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioId?: number;
+          ioName: string;
+          owId?: number;
+          createdByUowId?: number;
+          modifiedByUowId?: number;
+          ioStartTime?: number;
+          ioEndTime?: number;
+          ioTotalBudget?: number;
+          ioTimeZoneId?: number;
+          isAutoSumIoTotalBudget?: boolean;
+          ioBudgetDistributionMethodId?: number;
+          ioBudgetTypeId?: number;
+          ioTotalImpressions?: number;
+          ioStatusId?: number;
+          ioNextPerformanceCheck?: number;
+          ioLastPriorityShift?: number;
+          ioCurrentPriority?: number;
+          isIoPrioritise?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              ioId: number;
+              ioName: string;
+              ioStartTime: number;
+              ioEndTime: number;
+              ioTotalBudget: number;
+              ioTimeZoneId: number;
+              ioBudgetTypeId: number;
+              ioBudgetDistributionMethodId: number;
+              isAutoSumIoTotalBudget: boolean;
+              ioTotalImpressions: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3519,13 +6493,16 @@ Update various attributes of a given Insertion Order.
 | `ioStartTime`<br /><span class="type-text">integer</span> |  Unix epoch timestamp (in milliseconds) of IO start time |
 | `ioEndTime` <br /><span class="type-text">integer</span> |  Unix epoch timestamp (in milliseconds) of IO end time |
 | `ioTotalBudget` <br /><span class="type-text">integer</span> | Budget of IO |
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `ioTotalImpressions` <br /><span class="type-text">integer</span> | Number of impressions |
 | `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If `true` Keeps IO budget same as total budget of all included campaigns |
  
 </div><div class="child2">
 
-```json title="Request Sample (update details)"
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
+```json title="Request Sample"
 {
     "ioName": "IO Name 1",
     "ioStartTime": 1690898148000,
@@ -3538,31 +6515,63 @@ Update various attributes of a given Insertion Order.
 }
 ```
 
-```json title="Response 200 (update details)"
+```json title="Response 200"
 {
     "success": true,
     "data": "IO Name 1 saved successfully."
 }
 ```
 
-```json title="Request Sample (update budget)"
-{
-    "ioIdsList": [
-        1,
-        2,
-        3
-    ],
-    "budget": 169089.909,
-    "budgetUpdateType": "add"
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/{ioId}": {
+    parameters: {};
+    patch: operations["editIODetails"];
+  };
+}
+
+export interface operations {
+  editIODetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+      path: {
+        ioId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioName?: string;
+          ioEndTime?: number;
+          ioStartTime?: number;
+          ioTotalBudget?: number;
+          isAutoSumIoTotalBudget?: boolean;
+          ioTimeZoneId?: number;
+          ioTotalImpressions?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: strin
+          }
+        };
+      };
+    };
+  };
 }
 ```
 
-```json title="Response 200 (update budget)"
-{
-    "success": true,
-    "data": "Budget updated successfully"
-}
-```
+</TabItem></Tabs>
 
 </div></div>
 
@@ -3581,10 +6590,13 @@ Update the end date for a list of IOs from either an advertiser profile or a wor
 | --- | --- |
 | `ioIdsList` <br /><span class="type-text">array of integers</span> | IO IDs to update |
 | `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end time, in milliseconds |
-| `ioTimezoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `ioTimezoneId` <br /><span class="type-text">integer</span> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `ioOwId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Insertion Order Workspace ID (if updating as a workspace profile) |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -3633,6 +6645,71 @@ Update the end date for a list of IOs from either an advertiser profile or a wor
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/update-end-date": {
+    parameters: {};
+    patch: operations["updateIOEndDate"];
+  };
+}
+
+export interface operations {
+  updateIOEndDate: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioIdsList?: number[];
+          ioEndTime?: number;
+          ioTimezoneId?: number;
+          ioOwId?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[]
+          }
+        };
+      };
+      422: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string
+            }[]
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3656,6 +6733,9 @@ Update budget for a given list of IOs for either a dollar-based budget or an imp
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
   "ioIdsList": [
@@ -3676,6 +6756,56 @@ Update budget for a given list of IOs for either a dollar-based budget or an imp
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/update-budget": {
+    parameters: {};
+    patch: operations["updateIOBudgetByIOList"];
+  };
+}
+
+export interface operations {
+  updateIOBudgetByIOList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioIdsList?: number[];
+          budget?: number;
+          budgetUpdateType?: string;
+          ioOwId?: number;
+          ioBudgetTypeId?: number;
+          ioTotalImpressions?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3693,11 +6823,14 @@ Duplicate a single IO, and all campaigns within that IO.
 | ---- | --- |
 | `ioExistingCampaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs within specified IO (`ioId`) |
 | `ioId` <br /><span class="type-text">integer</span> | Specified IO to duplicate |
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | Timezone ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones) |
 | `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch of IO end time |
 | `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch of IO start time |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -3718,13 +6851,65 @@ Duplicate a single IO, and all campaigns within that IO.
     "success": true,
     "data": {
         "duplicatedCampaignIds": [
-        12345,
-        54321
+          12345,
+          54321
         ],
         "duplicatedIOId": 271
     }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/io/duplicate": {
+    parameters: {};
+    post: operations["duplicateIO"];
+  };
+}
+
+export interface operations {
+  duplicateIO: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioExistingCampaignIds?: number[];
+          ioId?: number;
+          ioTimeZoneId?: number;
+          ioEndTime?: number;
+          ioStartTime?: number;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              duplicatedCampaignIds: number[];
+              duplicatedIOId: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -3746,6 +6931,9 @@ Delete one or multiple IOs and all campaigns attached to them.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "ioIdsList": [
@@ -3763,6 +6951,52 @@ Delete one or multiple IOs and all campaigns attached to them.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+ "/api/v3/cmp/io/delete": {
+    parameters: {};
+    post: operations["updateIOStatusToDelete"];
+  };
+}
+
+export interface operations {
+  updateIOStatusToDelete: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          ioIdsList: number[];
+          owIdsList?: number[];
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3779,6 +7013,9 @@ Delete one or multiple IOs and all campaigns attached to them.
 Get list of IO statuses and their corresponding details. 
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -3810,6 +7047,53 @@ Get list of IO statuses and their corresponding details.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/static/io/status/list": {
+    parameters: {};
+    get: operations["getIOStatusTypeList"];
+  };
+}
+
+export interface operations {
+  getIOStatusTypeList: {
+    parameters: {
+      header?: {
+        "X-IAA-OW-ID"?: string;
+        Authorization?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              ioStatusList: {
+                name: string;
+                id: number;
+                label: string;
+                order: number              
+              }[];
+              totalRecords: number;
+              filteredRecords: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3823,7 +7107,15 @@ Get list of IO statuses and their corresponding details.
 
 Gets list of budget types. 
 
+| Attributes | |
+| --- | --- |
+| Budget <br /><span class="type-text">ID: 1</span> | Campaigns/Insertion Orders with set budget amount, [read more](https://help.iqm.com/en/articles/8481053-what-is-a-budget-vs-impression-based-io) |
+| Impression <br /><span class="type-text">ID: 2</span> | Campaigns/Insertion Orders with set target for impressions to generate, [read more](https://help.iqm.com/en/articles/8481053-what-is-a-budget-vs-impression-based-io) |
+
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -3849,6 +7141,48 @@ Gets list of budget types.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/static/campaign/budget-type": {
+    parameters: {};
+    get: operations["getBudgetTypeList"];
+  };
+}
+
+export interface operations {
+  getBudgetTypeList: {
+    parameters: {};
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              totalRecords: number;
+              filteredRecords: number;
+              budgetTypeData: {
+                id: number;
+                name: string;
+                label: string;
+                order: number;
+              }[]
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -3863,6 +7197,9 @@ Gets list of budget types.
 Get list of budget distribution methods. 
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -3887,6 +7224,53 @@ Get list of budget distribution methods.
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/cmp/static/budget-distribution-method/list": {
+    parameters: {};
+    get: operations["getStaticBudgetDistributionList"];
+  };
+}
+
+export interface operations {
+  getStaticBudgetDistributionList: {
+    parameters: {
+      query?: {
+        budgetDistributionMethod?: number;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              budgetDistributionMethodData: {
+                name: string;
+                id: number;
+                label: string;
+                order: number;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 

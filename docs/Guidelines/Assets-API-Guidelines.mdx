@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Assets API
 
 ## Authorization
@@ -38,6 +41,9 @@ Use the following header parameters for all requests:
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
   "success": true,
@@ -70,6 +76,47 @@ Use the following header parameters for all requests:
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts 
+export interface paths {
+    "/api/v3/asset/list": {
+        get: operations["getAllAssets"]
+    }
+}
+
+export interface operations {
+    getAllAssets: {
+        parameters: {
+            header?: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+            }
+        };
+        responses: {
+            200: {
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            id: number;
+                            storagePath: string;
+                            cdnUrl: string;
+                            created: number;
+                            modifiedDate: string;
+                            disposable: boolean
+                        }[]
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -83,19 +130,16 @@ Use the following header parameters for all requests:
 
 Get attributes of a single asset by ID
 
-<h4>Query Parameters</h4>
+| Path Parameters | |
+| --- | --- |
+| `assetId` <br /><span class="type-text">integer</span> | Asset ID |
 
-<table>
-    <tr>
-        <td>
-            <span class="code-text">assetId</span> <br /><span class="type-text">integer</span>
-        </td>
-        <td>Asset ID</td>
-    </tr>
-</table>
 </div>
 
 <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -110,6 +154,50 @@ Get attributes of a single asset by ID
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/asset/{assetId}": {
+        get: operations["getAssetDetails"]
+    }
+}
+
+export interface operations {
+ getAssetDetails: {
+        parameters: {
+            header?: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+            };
+            path: {
+                assetId: number;
+            }
+        };
+        responses: {
+            200: {
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            id: number;
+                            storagePath: string;
+                            cdnUrl: string;
+                            created: number;
+                            modifiedDate: string;
+                            disposable: boolean
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -126,13 +214,16 @@ Get attributes of a single asset by ID
 
 Add multiple assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- |
 | `filesMetaData` <br /><span class="type-text">integer</span> | JSON string representing the metadata associated with the files |
 | `files` <br /><span class="type-text">string</span> | Files to add |
 
 </div>
 <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -145,6 +236,58 @@ Add multiple assets to the system. Request accepts an array of multipart file ob
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+    "/api/v3/asset": {
+        post: operations["addAssets"];
+    };
+}
+
+export interface operations {
+    addAssets: {
+        parameters: {
+            query: {
+                filesMetadata: string;
+                files: string[];
+            };
+            header?: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+            }
+        };
+        responses: { 
+            200: {
+                content: {
+                    "application/json": {
+                        statusCode: number;
+                        responseObject: {
+                            files: {
+                                assetID: number;
+                                assetCDNURL: string
+                            }
+                        }
+                    }
+                }
+            };
+            401: {
+                content: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+                };
+                path: {
+                    assetId: number
+                }
+            }
+        }
+    }
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -172,6 +315,9 @@ Update the details of an existing asset by ID
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
   "storagePath": "string",
@@ -191,6 +337,73 @@ Update the details of an existing asset by ID
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+    "/api/v3/asset/{assetId}": {
+        patch: operations["updateAssetDetails"]
+    }
+}
+
+
+export interface operations {
+      updateAssetDetails: {
+        parameters: {
+            header?: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+            };
+            path: {
+                assetId: number;
+            }
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    storagePath?: string;
+                    cdnUrl?: string;
+                    disposable?: boolean;
+                }
+            }
+        };
+        responses: {
+            200: {
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        data: {
+                            statusCode: number;
+                            responseObject: {
+                                message: string
+                            }
+                        }
+                    }
+                }
+            };
+            401: {
+                content: {
+                    "application/json": {
+                        success?: boolean;
+                        errorObjects?: {
+                            error?: string;
+                            reason?: string;
+                            field?: string;
+                        }[];
+                        data?: Record<string, never>;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -212,11 +425,60 @@ Delete single asset by ID
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
   "success": true,
   "data": "Asset deleted successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+    "/api/v3/asset/{assetId}": {
+        delete: operations["deleteAsset"]
+    }
+}
+
+export interface operations {
+    deleteAsset: {
+        parameters: {
+            header?: {
+                Authorization?: string;
+                "X-IAA-OW-ID"?: string;
+            };
+            path: {
+                assetId: number;
+            }
+        };
+        responses: {
+            200: {
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        data: string
+                    }
+                }
+            };
+            401: {
+                content: {
+                    Authorization?: string;
+                    "X-IAA-OW-ID"?: string;
+                };
+                path: {
+                    assetId: number;
+                }
+            }
+        }
+    }
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
