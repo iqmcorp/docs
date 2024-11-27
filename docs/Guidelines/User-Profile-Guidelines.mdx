@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # User Management API
 
 IQM's REST API allows you to manage users and their profiles in several different ways.
@@ -34,19 +37,69 @@ Any customer or organization can send invitations to one or more users by provid
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "email": "shraddha.p@iqm.com",
-    "name": "Shradda Patel"
+  "email": "shraddha.p@iqm.com",
+  "name": "Shradda Patel"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": "1 invitations sent successfully."
+  "success": true,
+  "data": "1 invitations sent successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/invite": {
+    parameters: {};
+    post: operations["SendUserInvitations"];
+  };
+}
+
+export interface operations {
+  SendUserInvitations: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+
+        Authorization: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          email: string;
+          name: string;
+        }[];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -67,6 +120,9 @@ The invited user will receive an email with a link and a hash which can be valid
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "inviteHash": "8HQfsQcychjhvCmuuiFvVCIgqq9cJG/gh6HgmPZXxGE4od7a7tsMmh/O9+ia2Lw0FOelX3h8jTKJXR+0hUAkGXYA0cIITS13BxyrWoeBmRTnWTKxHtS+Ff41POwt/yDMY2iHXUsG86ehmWeeIi3HNMikhH5yY6BvNFnEfxq3zIdiouD3Fp/loPO9qazxU1qxZvNOOv8FZEZTzORVnJ8+ADjyZ/Zjs1dNhSFE"
@@ -75,10 +131,10 @@ The invited user will receive an email with a link and a hash which can be valid
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "isExpired": true
-    }
+  "success": true,
+  "data": {
+    "isExpired": true
+  }
 }
 ```
 
@@ -87,17 +143,73 @@ The invited user will receive an email with a link and a hash which can be valid
 
 ```json title="Response 422"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "Provided invitation has is incorrect.",
-            "field": "inviteHash"
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Provided invitation has is incorrect.",
+      "field": "inviteHash"
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/invite/validate": {
+    parameters: {};
+    post: operations["ValidateInvite"];
+  };
+}
+
+export interface operations {
+  ValidateInvite: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          inviteHash: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              isExpired: boolean;
+            };
+          };
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+              field: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -120,6 +232,9 @@ A user/customer can sign up and create a password to access the API.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
     "email": "kartik.g@iqm.com",
@@ -129,14 +244,14 @@ A user/customer can sign up and create a password to access the API.
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "access_token": "d90fa7de-534c-4652-ad8f-c4f6f70461ac",
-        "refresh_token": "2e379c6f-959d-498f-8319-ff13ebef6bfe",
-        "scope": "read write",
-        "token_type": "bearer",
-        "expires_in": 35999
-        }
+  "success": true,
+  "data": {
+    "access_token": "d90fa7de-534c-4652-ad8f-c4f6f70461ac",
+    "refresh_token": "2e379c6f-959d-498f-8319-ff13ebef6bfe",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999
+  }
 }
 ```
 
@@ -145,17 +260,83 @@ A user/customer can sign up and create a password to access the API.
 
 ```json title="Response 403"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "User is not allowed to create a password.",
-            "reason": "User is not invited or invitation is processed or invitation is expired."
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to create a password.",
+      "reason": "User is not invited or invitation is processed or invitation is expired."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/sign-up": {
+    parameters: {};
+    post: operations["UserSign-up/PasswordCreation"];
+  };
+}
+
+export interface operations {
+  UserSign-up/PasswordCreation: {
+    parameters: {
+      header: {
+        Authorization: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          email: string;
+          password: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+
+              expires_in: number;
+            };
+          };
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+              reason: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -178,25 +359,28 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "grantType": "password",
-    "email": "pratik.t+ihp@iqm.com",
-    "password": "123456"
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-        "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-        "scope": "read write",
-        "token_type": "bearer",
-        "expires_in": 35999,
-        "owId": 200001
-    }
+  "success": true,
+  "data": {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
 }
 ```
 
@@ -205,33 +389,112 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 
 ```json title="Response 400"
 {
-    "success": false,
-    "data": {
-        "status": "On Hold",
-        "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-        "supportEmail": "support@iqm.com"
-    },
-    "errorObjects": [
-        {
-            "error": "User is not allowed to access provided customer",
-            "reason": "User is not associated with any active organization."
-        }
-    ]
+  "success": false,
+  "data": {
+    "status": "On Hold",
+    "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+    "supportEmail": "support@iqm.com"
+  },
+  "errorObjects": [
+    {
+      "error": "User is not allowed to access provided customer",
+      "reason": "User is not associated with any active organization."
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "User doesn't exist or user is not allowed to provided workspace."
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User doesn't exist or user is not allowed to provided workspace."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/login": {
+    parameters: {};
+    post: operations["Login"];
+  };
+}
+
+export interface operations {
+  Login: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          grantType: string;
+          email: string;
+          password: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+
+              expires_in: number;
+
+              owId: number;
+            };
+          };
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              status: string;
+              reason: string;
+              supportEmail: string;
+            };
+            errorObjects: {
+              error: string;
+              reason: string;
+            }[];
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -248,12 +511,45 @@ The user can log out from the API.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": "User logged out successfully."
+  "success": true,
+  "data": "User logged out successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/logout": {
+    parameters: {};
+    post: operations["Logout"];
+  };
+}
+
+export interface operations {
+  Logout: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -275,17 +571,20 @@ The user can update their password.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "email": "kartik.g@iqm.com",
-    "password": "123456"
+  "email": "kartik.g@iqm.com",
+  "password": "123456"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": "Password changed successfully."
+  "success": true,
+  "data": "Password changed successfully."
 }
 ```
 
@@ -295,15 +594,70 @@ The user can update their password.
 
 ```json title="Response 403"
 {
-    "success": true,
-    "data": {
-        "invalidReason": "Reset password link either not valid or it is already processed.",
-        "isValid": false
-    }
+  "success": true,
+  "data": {
+    "invalidReason": "Reset password link either not valid or it is already processed.",
+    "isValid": false
+  }
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/update-password": {
+    parameters: {};
+    post: operations["UpdatePassword"];
+  };
+}
+
+export interface operations {
+  UpdatePassword: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          email: string;
+          password: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              invalidReason: string;
+              isValid: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -322,9 +676,12 @@ The user can send a link to reset a password to a specified email.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "email": "kartik@iqm.com"
+  "email": "kartik@iqm.com"
 }
 ```
 
@@ -332,8 +689,8 @@ Response 200
 
 ```json
 {
-    "success": true,
-    "data": "Email with reset password link sent successfully."
+  "success": true,
+  "data": "Email with reset password link sent successfully."
 }
 ```
 
@@ -342,16 +699,69 @@ Response 200
 
 ```json title="Response 404"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "The email is not available in the system."
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The email is not available in the system."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/reset-password": {
+    parameters: {};
+    post: operations["ResetPasswordEmail"];
+  };
+}
+
+export interface operations {
+  ResetPasswordEmail: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          email: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -373,6 +783,9 @@ The user's profile display name and avatar can be updated.
 | `removeUserProfile` <br /><span class="type-text">boolean</span> | default: `false` <br />To remove profile image `true`|
 
 </div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
 
 ```json title="Response 200"
 {
@@ -399,6 +812,70 @@ The user's profile display name and avatar can be updated.
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/update-profile": {
+    parameters: {};
+    patch: operations["UpdateUserProfile"];
+  };
+}
+
+export interface operations {
+  UpdateUserProfile: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+        Authorization: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          displayName: string;
+          userAvatar: string;
+          removeUserProfile: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              userAvatar: string;
+              message: string;
+            };
+          };
+        };
+      };
+
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -444,8 +921,8 @@ Get a list of users and details for a given workspace ID.
 | `customersCount` <br /><span class="type-text">integer</span> | Count of customers assigned to user |
 | `organizationName` <br /><span class="type-text">string</span> | Organization associated with user |
 | `invitedOn` <br /><span class="type-text">integer</span> | Unix timestamp in Milliseconds when user was invited to create account |
-| `isOrganizationOwnerUSer` <br /><span class="type-text">boolean</span> | User is owner of organization (`true`) or not (`false`) |
-| `isModifactionAllowed` <br /><span class="type-text">boolean</span> | User is allowed to modify (`true`) or not (`false`) |
+| `isOrganizationOwnerUser` <br /><span class="type-text">boolean</span> | User is owner of organization (`true`) or not (`false`) |
+| `isModificationAllowed` <br /><span class="type-text">boolean</span> | User is allowed to modify (`true`) or not (`false`) |
 | `invitedByUserName` <br /><span class="type-text">string</span> | Name of user that invited user |
 | `invitedByUserEmail` <br /><span class="type-text">string</span> | Email of user that invited user |
 | `isAssignActionAllowed` <br /><span class="type-text">boolean</span> | User is allowed to assign (`true`) or not (`false`) |
@@ -454,56 +931,127 @@ Get a list of users and details for a given workspace ID.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "userId": 7130,
-                "firstName": "sample adv user -2",
-                "lastName": "2",
-                "email": "sample-user@iqm.com",
-                "displayName": "sample adv user - 2",
-                "status": "active",
-                "statusId": 1,
-                "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/K2.png",
-                "createdAt": 1705452608000,
-                "uowId": 119592,
-                "customersCount": 0,
-                "organizationName": "Adv Acc 1",
-                "invitedOn": 1705452608000,
-                "isOrganizationOwnerUser": false,
-                "isModificationAllowed": true,
-                "invitedByUserName": "User 2",
-                "invitedByUserEmail": "user2@iqm.com",
-                "isAssignActionAllowed": true
-            },
-            {
-                "userId": 7131,
-                "firstName": "sample-adv-user-3",
-                "email": "sample-user1@iqm.com",
-                "displayName": "sample-adv-user-3",
-                "status": "invited",
-                "statusId": 3,
-                "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/KH.png",
-                "createdAt": 1705466349000,
-                "uowId": 119595,
-                "customersCount": 0,
-                "organizationName": " Adv Acc",
-                "invitedOn": 1705466349000,
-                "isOrganizationOwnerUser": false,
-                "isModificationAllowed": true,
-                "invitedByUserName": "User 1",
-                "invitedByUserEmail": "user1@iqm.com",
-                "isAssignActionAllowed": true
-            },
-        ],
-        "totalRecords": 6,
-        "filteredRecords": 2
-    }
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "userId": 7130,
+        "firstName": "sample adv user -2",
+        "lastName": "2",
+        "email": "sample-user@iqm.com",
+        "displayName": "sample adv user - 2",
+        "status": "active",
+        "statusId": 1,
+        "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/K2.png",
+        "createdAt": 1705452608000,
+        "uowId": 119592,
+        "customersCount": 0,
+        "organizationName": "Adv Acc 1",
+        "invitedOn": 1705452608000,
+        "isOrganizationOwnerUser": false,
+        "isModificationAllowed": true,
+        "invitedByUserName": "User 2",
+        "invitedByUserEmail": "user2@iqm.com",
+        "isAssignActionAllowed": true
+      },
+      {
+        "userId": 7131,
+        "firstName": "sample-adv-user-3",
+        "email": "sample-user1@iqm.com",
+        "displayName": "sample-adv-user-3",
+        "status": "invited",
+        "statusId": 3,
+        "userAvatar": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/KH.png",
+        "createdAt": 1705466349000,
+        "uowId": 119595,
+        "customersCount": 0,
+        "organizationName": " Adv Acc",
+        "invitedOn": 1705466349000,
+        "isOrganizationOwnerUser": false,
+        "isModificationAllowed": true,
+        "invitedByUserName": "User 1",
+        "invitedByUserEmail": "user1@iqm.com",
+        "isAssignActionAllowed": true
+      },
+    ],
+    "totalRecords": 6,
+    "filteredRecords": 2
+  }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/users/list": {
+    parameters: {};
+    get: operations["getUsersList"];
+  };
+}
+
+export interface operations {
+  getUsersList: {
+    parameters: {
+      query?: {
+        status?: string;
+        pageNo?: number;
+        limit?: number;
+        sortBy?: string;
+        searchField?: string;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                userId: number;
+                firstName: string;
+                lastName: string;
+                email: string;
+                displayName: string;
+                status: string;
+                statusId: string;
+                userAvatar: string;
+                createdAt: number;
+                uowId: number;
+                customersCount: number;
+                organizationName: string;
+                invitedOn: number;
+                isOrganizationOwnerUser: boolean;
+                isModificationAllowed: boolean;
+                invitedByUserName: string;
+                invitedByUserEmail: string;
+                isAssignActionAllowed: boolean;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -528,27 +1076,30 @@ See what applications a user has access to, use query parameters to filter resul
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "data": [
-            {
-                "appId": 7,
-                "appName": "Campaigns",
-                "appOwner": "IQM Corporation",
-                "appType": "Default App"
-            },
-            {
-                "appId": 11,
-                "appName": "Conversions",
-                "appOwner": "IQM Corporation",
-                "appType": "Default App"
-            }
-        ],
-        "totalRecords": 2,
-        "filteredRecords": 2
-    }  
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "appId": 7,
+        "appName": "Campaigns",
+        "appOwner": "IQM Corporation",
+        "appType": "Default App"
+      },
+      {
+        "appId": 11,
+        "appName": "Conversions",
+        "appOwner": "IQM Corporation",
+        "appType": "Default App"
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 2
+  }  
 }
 ```
 
@@ -557,16 +1108,83 @@ See what applications a user has access to, use query parameters to filter resul
 
 ```json title="Response 422"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "Invalid sortBy value."
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid sortBy value."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/applications/list": {
+    parameters: {};
+    get: operations["GetUserApplicationaccesslist"];
+  };
+}
+
+export interface operations {
+  GetUserApplicationaccesslist: {
+    parameters: {
+      query: {
+        uowId: number;
+        searchField: string;
+        pageNo: number;
+        limit: number;
+        sortBy: string;
+      };
+      header: {
+        "X-IAA-OW-ID": number;
+        Authorization: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                appId: number;
+                appName: string;
+                appOwner: string;
+                appType: string;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            };
+          };
+        };
+      };
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -589,18 +1207,21 @@ A user can be granted access to specified apps.
 
 </div><div class="child2">
 
+<Tabs>
+  <TabItem value="JSON" lable="JSON" default>
+
 ```json title="Request Sample"
 {
-    "userId": 431,
-    "appIds": "1",
-    "accessLevel": "Full"
+  "userId": 431,
+  "appIds": "1",
+  "accessLevel": "Full"
 }
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": "Application access added successfully."
+  "success": true,
+  "data": "Application access added successfully."
 }
 ```
 
@@ -609,16 +1230,76 @@ A user can be granted access to specified apps.
 
 ```json title="Response 403"
 {
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "User doesn't exist or user is not part of the organization."
-        }
-    ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User doesn't exist or user is not part of the organization."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/user/application/add": {
+    parameters: {};
+    post: operations["AddAppaccessforUser"];
+  };
+}
+
+export interface operations {
+  AddAppaccessforUser: {
+    parameters: {
+      header: {
+        "X-IAA-OW-ID": number;
+        Authorization: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          userId: number;
+          appIds: string;
+          accessLevel: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: string;
+          };
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
