@@ -2,6 +2,9 @@
 title: Matched Audience Upload
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Quickstart Guide: Matched Audience Upload
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.
@@ -11,7 +14,7 @@ Getting started with uploading your first matched audience is easy; just use the
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 <br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
 <br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
-<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/{matched_audience_Id}</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{matched_audience_Id\}</span>
 
 ## About IQM Matched Audience
 
@@ -78,6 +81,9 @@ For further information see the complete [Login API Documentation](https://app.i
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
    "grantType": "password",
@@ -137,13 +143,90 @@ For further information see the complete [Login API Documentation](https://app.i
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/login": {
+    parameters: {};
+    post: operations["Login"];
+  };
+}
+
+export interface operations {
+  Login: {
+    parameters: {
+        header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+        };
+    };
+    requestBody: {
+        content: {
+        "application/json": {
+          grantType: string;
+          email: string;
+          password: string;
+        };
+        };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+              success: boolean;
+              data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+              expires_in: number;
+              owId: number;
+              };
+          };
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+              success: boolean;
+              data: {
+              status: string;
+              reason: string;
+              supportEmail: string;
+              };
+              errorObjects: {
+              error: string;
+              reason: string;
+              }[];
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+              success: boolean;
+              errorObjects: {
+              error: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
 
 ### Step 2: Request column list
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
 
 <div class="container">
   <div class="child1">
@@ -159,99 +242,186 @@ For further information see the complete [Matched Audience Fields API Documentat
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
-   "statusCode":200,
-   "responseObject":{
-      "mandatoryColumns":[
-         {
-            "id":2,
-            "name":"First Name",
-            "l2Name":"Voters_FirstName"
-         },
-         {
-            "id":3,
-            "name":"Last Name",
-            "l2Name":"Voters_LastName"
-         },
-         {
-            "id":4,
-            "name":"State",
-            "l2Name":"Residence_Addresses_State"
-         },
-         {
-            "id":6,
-            "name":"Zip",
-            "l2Name":"Residence_Addresses_Zip"
-         }
-      ],
-      "voterIDColumns":[
-         {
-            "id":1,
-            "name":"Voter ID",
-            "l2Name":"LalVoterID"
-         }
-      ],
-      "optionalColumns":[
-         {
-            "id":5,
-            "name":"Address",
-            "l2Name":"Residence_Addresses_AddressLine"
-         },
-         {
-            "id":7,
-            "name":"Full Name",
-            "l2Name":"Voters_FullName"
-         },
-         {
-            "id":8,
-            "name":"City",
-            "l2Name":"Residence_Addresses_City"
-         },
-         {
-            "id":9,
-            "name":"ZipPlus4",
-            "l2Name":"Residence_Addresses_ZipPlus4"
-         },
-         {
-            "id":10,
-            "name":"Age",
-            "l2Name":"Voters_Age"
-         },
-         {
-            "id":11,
-            "name":"Gender",
-            "l2Name":"Voters_Gender"
-         },
-         {
-            "id":12,
-            "name":"Ethnicity",
-            "l2Name":"Ethnic_Description"
-         },
-         {
-            "id":13,
-            "name":"Cellphone",
-            "l2Name":"VoterTelephones_CellphoneUnformatted"
-         },
-         {
-            "id":14,
-            "name":"Landline",
-            "l2Name":"VoterTelephones_LandlineUnformatted"
-         },
-         {
-            "id":15,
-            "name":"Latitude",
-            "l2Name":"Residence_Addresses_Latitude"
-         },
-         {
-            "id":16,
-            "name":"Longitude",
-            "l2Name":"Residence_Addresses_Longitude"
-         }
-      ]
-   }
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "label": "Voter ID",
+      "key": "Voters_ID",
+      "order": 1,
+      "isSingleColumn": true
+    },
+    {
+      "id": 26,
+      "label": "NPI ID",
+      "key": "NPI_ID",
+      "order": 2,
+      "isSingleColumn": true
+    },
+    {
+      "id": 2,
+      "label": "Email",
+      "key": "Email",
+      "order": 3,
+      "isSingleColumn": true
+    },
+    {
+      "id": 3,
+      "label": "Phone",
+      "key": "Phone",
+      "order": 4,
+      "isSingleColumn": true
+    },
+    {
+      "id": 4,
+      "label": "Full Address",
+      "key": "Residence_FullAddress",
+      "order": 5,
+      "isSingleColumn": true
+    },
+    {
+      "id": 5,
+      "label": "First Name",
+      "key": "Voters_FirstName",
+      "order": 6,
+      "isSingleColumn": false
+    },
+    {
+      "id": 6,
+      "label": "Last Name",
+      "key": "Voters_LastName",
+      "order": 7,
+      "isSingleColumn": false
+    },
+    {
+      "id": 7,
+      "label": "Zip",
+      "key": "Residence_Addresses_Zip",
+      "order": 8,
+      "isSingleColumn": false
+    },
+    {
+      "id": 8,
+      "label": "State",
+      "key": "Residence_Addresses_State",
+      "order": 9,
+      "isSingleColumn": false
+    },
+    {
+      "id": 9,
+      "label": "Street Address",
+      "key": "Residence_Addresses_AddressLine",
+      "order": 10,
+      "isSingleColumn": false
+    },
+    {
+      "id": 10,
+      "label": "Full Name",
+      "key": "Voters_FullName",
+      "order": 11,
+      "isSingleColumn": false
+    },
+    {
+      "id": 11,
+      "label": "City",
+      "key": "Residence_Addresses_City",
+      "order": 12,
+      "isSingleColumn": false
+    },
+    {
+      "id": 12,
+      "label": "ZipPlus4",
+      "key": "Residence_Addresses_ZipPlus4",
+      "order": 13,
+      "isSingleColumn": false
+    },
+    {
+      "id": 13,
+      "label": "Age",
+      "key": "Voters_Age",
+      "order": 14,
+      "isSingleColumn": false
+    },
+    {
+      "id": 14,
+      "label": "Gender",
+      "key": "Voters_Gender",
+      "order": 15,
+      "isSingleColumn": false
+    },
+    {
+      "id": 15,
+      "label": "Ethnicity",
+      "key": "Ethnic_Description",
+      "order": 16,
+      "isSingleColumn": false
+    },
+    {
+      "id": 16,
+      "label": "Latitude",
+      "key": "Residence_Addresses_Latitude",
+      "order": 17,
+      "isSingleColumn": false
+    },
+    {
+      "id": 17,
+      "label": "Longitude",
+      "key": "Residence_Addresses_Longitude",
+      "order": 18,
+      "isSingleColumn": false
+    }
+  ]
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/audience/static/matched/column-list": {
+    parameters: {};
+    get: operations["getMatchedAudienceColumnList"];
+  };
+}
+
+export interface operations {
+  getMatchedAudienceColumnList: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              id: number;
+              label: stringl
+              key: string;
+              order: number;
+              isSingleColumn: boolean;
+            }[];
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -266,6 +436,10 @@ For further information see the complete [Matched Audience Fields API Documentat
 
 To upload matched audiences,  provide file columns for matching and all the necessary parameters.
 
+Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
+
+For further information see the complete [Matched Audience Upload API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience).
+
 | Headers |  |
 | ---- | --- |
 | `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
@@ -273,35 +447,33 @@ To upload matched audiences,  provide file columns for matching and all the nece
 
 </div></div>
 
-\
-**Payload (Form Data)**
-
-Please refer to [MDN documentation on form data format](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data).
-
 <div class="container">
   <div class="child4">
 
 <table>
+<tr>
+<th>Payload (Form Data)</th>
+</tr>
   <tr>
    <td>
       <strong>columns * </strong><br /><span class="type-text">string (FormData)</span>
    </td>
    <td>Matched audience file columns mapped with system fields. 
 This supports a few columns mapping as follows:<ol><li> FirstName, LastName, State, Zip - SampleValue: 
-   <var>{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
+   `{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
    <li>LastName, StreetAddress, State, Zip - SampleValue: 
-   <var>{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
+   `{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
    <li>StreetAddress, State, Zip - SampleValue: 
-   <var>{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }</var></li>
+   `{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
    <li>NPI_ID - SampleValue: 
-   <var>{ "NPI_ID_VALUE": "NPI_ID" }</var></li>
+   `{ "NPI_ID_VALUE": "NPI_ID" }`</li>
    <li>VoterId - SampleValue: 
-   <var>{ "LALVOTERID": "Voters_ID" }</var></li>
+   `{ "LALVOTERID": "Voters_ID" }`</li>
    <li>Phone - SampleValue: 
-   <var>{ "Phone": "Phone" }</var></li>
+   `{ "Phone": "Phone" }`</li>
    <li>Email - SampleValue: 
-   <var>{ "Email": "Email" }</var></li>
-   <li>FullAddress - SampleValue: <var>{ "FullAddress": "Residence_FullAddress" }</var></li></ol></td>
+   `{ "Email": "Email" }`</li>
+   <li>FullAddress - SampleValue: `{ "FullAddress": "Residence_FullAddress" }`</li></ol></td>
    </tr>
 <tr>
    <td>
@@ -313,32 +485,35 @@ Matched audience columns setting as per the selected columns for matching. Colum
       <li>LastName, StreetAddress, State, Zip - NOT REQUIRED.</li>
       <li>StreetAddress, State, Zip - NOT REQUIRED.</li>
       <li>LastName, StreetAddress, State, Zip -NOT REQUIRED.</li>
-      <li>VoterId (It must be supported voter's data partners id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner">see API documentation</a>) - SampleValue: <var>{ "Voters_ID": "voterbase_id" }</var></li>
-      <li>NPI_Id (It must be supported healthcare data partners id <a href="https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience">see API documentation</a>) - SampleValue: <var>{ "NPI_ID": "healthcare_id" }</var></li>
-      <li>Phone (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API documentation</a>) - SampleValue: <var>{ "Phone": "SHA1" }</var></li>
-      <li>Email (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API doucmentation</a>)- SampleValue: <var>{ "Email": "SHA256" }</var></li>
+      <li>VoterId (It must be supported voter's data partners id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner">see API documentation</a>) - SampleValue: `{ "Voters_ID": "voterbase_id" }`</li>
+      <li>NPI_Id (It must be supported healthcare data partners id <a href="https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience">see API documentation</a>) - SampleValue: `{ "NPI_ID": "healthcare_id" }`</li>
+      <li>Phone (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API documentation</a>) - SampleValue: `{ "Phone": "SHA1" }`</li>
+      <li>Email (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API doucmentation</a>)- SampleValue: `{ "Email": "SHA256" }`</li>
       <li>FullAddress - NOT REQUIRED.</li></ol>
    </td>
    </tr>
   <tr>
-   <td><strong>audienceName *</strong><br /><span class="type-text">string (FormData)</span></td>
+   <td><strong>audienceName</strong><br /><span class="type-text">string (FormData)</span> <span class="required-text">required</span></td>
    <td>Name of matched audience</td>
    </tr>
   <tr>
-   <td><strong>metadata *</strong><br /><span class="type-text">string (FormData)</span></td>
+   <td><strong>metadata</strong><br /><span class="type-text">string (FormData)</span> <span class="required-text">required</span></td>
    <td>Matched audience sample data with system fields</td>
    </tr>
   <tr>
-   <td><strong>fileTotalCount *</strong><br /><span class="type-text">integer($int32) (FormData)</span></td>
+   <td><strong>fileTotalCount</strong><br /><span class="type-text">integer (FormData)</span> <span class="required-text">required</span></td>
    <td>Total number of records in the uploaded audience file</td>
    </tr>
   <tr>
-   <td><strong>isSingleColumnEnabled *</strong><br /><span class="type-text">boolean (FormData)</span></td>
+   <td><strong>isSingleColumnEnabled</strong><br /><span class="type-text">boolean (FormData)</span> <span class="required-text">required</span></td>
    <td>Flag to indicate if the mapping is single column enabled, if the voterId/phone/email/full-address the primary column mapping than this should be true, and false otherwise. <em>Default value</em> : false</td>
   </tr>
 </table>
 
-``` title="Request Sample (FormData)"
+<Tabs>
+<TabItem value="FormData" label="FormData" default>
+
+```FormData title="Request Sample (FormData)"
 ------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
 Content-Disposition: form-data; name="file"; filename="matched-audience-example.csv"
 Content-Type: text/csv
@@ -400,25 +575,106 @@ Content-Disposition: form-data; name="fileTotalCount"
 ```
 </details>
 
-</div></div>
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
 
-\
-For further information see the complete [Matched Audience Upload API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience).
+```ts
+export interface paths {
+    "/api/v2/audience/matched/add": {
+    parameters: {};
+    post: operations["addMatchedAudience"];
+  };
+}
+
+export interface operations {
+ addMatchedAudience: {
+    parameters: {
+      query: {
+        columns: string;
+        columnSettings?: string;
+        audienceName: string;
+        metadata: string;
+        fileTotalCount: number;
+        isSingleColumnEnabled: boolean;
+      };
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "multipart/form-data": {
+          file: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              id: number;
+              message: string;
+            }
+          }
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              errorMsg: string;
+              errorCode: number;
+            }
+          }
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              errorMsg: string;
+              errorCode: number;
+            }
+          }
+        };
+      };
+    };
+  };
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ### Step 4: Check audience status
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/{matched_audience_Id}</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id\}</span>
 
 <div class="container">
   <div class="child1">
 
-Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. Use this endpoint to get audience details. 
+Before the audience can be used for campaign targeting it has to be processed and approved.  Once the status is Ready, the audience can be targeted. Use the `id` generated in the last step with this endpoint to get audience details. 
 
 For further information see the complete [Matched Audience Details API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceDetails).
 
 | Path Parameters|  |
 | ----  | --- |
-| `matched_audience_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | |
+| `id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Matched audience ID |
 
 | Headers|  |
 | ----  | --- |
@@ -426,6 +682,9 @@ For further information see the complete [Matched Audience Details API Documenta
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> | Organization Workspace ID Header |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -462,6 +721,73 @@ For further information see the complete [Matched Audience Details API Documenta
    }
  }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v2/audience/matched/{id}": {
+    parameters: {};
+    get: operations["getMatchedAudienceDetails"];
+  };
+}
+
+export interface operations {
+  getMatchedAudienceDetails: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "{{ow_id_header_key}}": string;
+      };
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            statusCode: number;
+            responseObject: {
+              id: number;
+              audienceName: string;
+              existingColumnMatching: string;
+              metadata: string;
+              rawS3URL: string;
+              status: string;
+              matchRate: number;
+              minEcpm: number;
+              maxEcpm: number;
+              s3FileName: string;
+              included: number;
+              excluded: number;
+              createdDate: number;
+              modifiedDate: number;
+              organizationName: string;
+              userName: string;
+              expectedSpent7: number;
+              expectedSpent30: number;
+              expectedSpent60: number;
+              dataCost: number;
+              owId: number;
+              uowId: number;
+              rawS3URLError: string;
+              uniques: number;
+              approvedRejectedByUserName: string;
+              approvedRejectedByUserEmail: string;
+              isApprovalAccess: boolean;
+              isEditAccess: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
