@@ -2,6 +2,9 @@
 title: Schedule a Report
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Quickstart Guide: Schedule a Report
 
 IQM's API allows you to create report scheduling events.
@@ -30,12 +33,12 @@ This quick start guide will help you create a report scheduling event. At a mini
 
 ### Step 1: Log In
 
-To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
-
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
 <div class="container">
   <div class="child1">
+
+To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), which is a unique identifier for each organization. This ID will be used for any further API communications.
 
 | Headers |  |
 | ----  | --- |
@@ -50,26 +53,29 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
-   "grantType": "password",
-   "email": "pratik.t+ihp@iqm.com",
-   "password": "123456"
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
 }
 ```
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
 }
 ```
 
@@ -78,36 +84,113 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 ```json title="Response 400"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "data":
+  {
+    "status": "On Hold",
+    "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+    "supportEmail": "support@iqm.com"
+  },
+  "errorObjects":
+  [
+    {
+      "error": "User is not allowed to access provided customer",
+      "reason": "User is not associated with any active organization."
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "success": false,
+  "errorObjects":
+  [
+    {
+      "error": "User doesn't exist or user is not allowed to provided workspace."
+    }
+  ]
 }
 ```
 
 </details>
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/login": {
+    parameters: {};
+    post: operations["Login"];
+  };
+}
+
+export interface operations {
+  Login: {
+    parameters: {
+      header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          grantType: string;
+          email: string;
+          password: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+              expires_in: number;
+              owId: number;
+            };
+          };
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              status: string;
+              reason: string;
+              supportEmail: string;
+            };
+            errorObjects: {
+              error: string;
+              reason: string;
+            }[];
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -115,14 +198,14 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 ### Step 2: Schedule a Report
 
-Decide the delivery frequency, day, and end date of scheduled reports. This API will save the delivery information and return a success message.
-
-For further information see the complete [Save Report Scheduling Event API Documentation](https://api.iqm.com/docs?path=tag/Report-API/operation/saveReportScheduleEvent).
-
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/email/schedule`</span>
 
 <div class="container">
   <div class="child1">
+
+Decide the delivery frequency, day, and end date of scheduled reports. This API will save the delivery information and return a success message.
+
+For further information see the complete [Save Report Scheduling Event API Documentation](https://api.iqm.com/docs?path=tag/Report-API/operation/saveReportScheduleEvent).
 
 | Request Schema |  |
 |---|---|
@@ -136,6 +219,9 @@ For further information see the complete [Save Report Scheduling Event API Docum
 | `earliestCampaignDate` <br /><span class="type-text">integer</span> | With `runningTotalEnabled` as `true`, this should be a long TIME EPOCH in UNIX format, in milliseconds. This is campaign's EARLIEST start date from the selected campaigns, which will be set as the start date of the report-time-period. |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -174,6 +260,65 @@ For further information see the complete [Save Report Scheduling Event API Docum
   }
 }
 ```
+
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/email/schedule": {
+    parameters: {};
+    post: operations["saveReportScheduleEvent"];
+  };
+}
+
+export interface operations {
+  saveReportScheduleEvent: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          earliestCampaignStartDate?: number;
+          reportId?: number;
+          deliveryFrequency?: number;
+          fileType?: number;
+          subscriberEmails?: string[];
+          eventEndDate?: number;
+          deliveryDay?: string;
+          runningTotalEnabled?: boolean;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              scheduledData: {
+                earliestCampaignStartDate: number;
+                reportId: number;
+                deliveryFrequency: number;
+                fileType: number;
+                subscriberEmails: string[];
+                eventEndDate: number;
+                deliveryDay: string;
+                runningTotalEnabled: boolean;
+              }
+              message: string;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 

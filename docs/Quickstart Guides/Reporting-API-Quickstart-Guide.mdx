@@ -2,6 +2,9 @@
 title: Run a Report
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Quickstart Guide: Run a Report
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.
@@ -57,6 +60,9 @@ For further information see the complete [Login API Documentation](https://app.i
 | `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Your user accout password |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -117,17 +123,101 @@ For further information see the complete [Login API Documentation](https://app.i
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ua/login": {
+    parameters: {};
+    post: operations["Login"];
+  };
+}
+
+export interface operations {
+  Login: {
+    parameters: {
+        header: {
+        Authorization: string;
+        "X-Iaa-Host": string;
+        };
+    };
+    requestBody: {
+        content: {
+        "application/json": {
+          grantType: string;
+          email: string;
+          password: string;
+        };
+        };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": {
+              success: boolean;
+              data: {
+              access_token: string;
+              refresh_token: string;
+              scope: string;
+              token_type: string;
+              expires_in: number;
+              owId: number;
+              };
+          };
+        };
+      };
+      400: {
+        content: {
+          "application/json": {
+              success: boolean;
+              data: {
+              status: string;
+              reason: string;
+              supportEmail: string;
+              };
+              errorObjects: {
+              error: string;
+              reason: string;
+              }[];
+          };
+        };
+      };
+      403: {
+        content: {
+          "application/json": {
+              success: boolean;
+              errorObjects: {
+              error: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
+---
 
 ### Step 2: Request dimensions and metrics
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/dimension-metrics/detail</span>
+
+<div class="container">
+  <div class="child1">
 
 Choose the dimensions and metrics you want to see in your report. This API offers Dimension and Metrics information grouped by category.
  See [full documentation on dimensions and metrics](https://help.iqm.com/en/articles/7826036-dimensions-and-metrics) we support.
 
 Reports will be in table format. The metrics comprise the columns, and the dimensions comprise the rows. Necessary information about campaigns is found in the columns.
 
-For more information see this [help article about Conversions](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform).
+For more information see this [help article about Conversions](https://help.iqm.com/en/articles/7329794-understanding-conversion-metrics-in-the-iqm-platform) and  the complete [Dimension and Metrics Details API Documentation](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails).
+
 
 <details>
 <summary>See dimensions & metrics</summary>
@@ -239,13 +329,7 @@ Available metrics:
   * Attributed Conversion Rate
   * ROAS
 
-  </details>
-
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ra/report/dimension-metrics/detail</span>
-
-<div class="container">
-  <div class="child1">
+</details>
 
 | Headers |  |
 | ---- | --- |
@@ -254,113 +338,119 @@ Available metrics:
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "metrics":
-      [
-         {
-         "Budget":
-            [
-               {
-                  "id": 1,
-                  "label": "Daily Budget",
-                  "order": 1,
-                  "fieldDataType": "currencyUSD",
-                  "aggregationType": "sum",
-                  "description": "Amount up to which you allow platform to spend on average each day",
-                  "defaultEnabled": false,
-                  "key": "dailyBudget",
-                  "dependentDimensions": [ 1, 2, 43, 44 ]
-               },
-               {
-                  "id": 2,
-                  "label": "Total Budget",
-                  "order": 2,
-                  "defaultEnabled": false,
-                  "key": "totalBudget",
-                  "dependentDimensions": [ 1, 2, 43, 44 ]
-               }
+  "success": true,
+  "data": {
+    "metrics": [
+      {
+        "Budget": [
+          {
+            "id": 1,
+            "label": "Daily Budget",
+            "order": 1,
+            "fieldDataType": "currencyUSD",
+            "aggregationType": "sum",
+            "description": "Amount up to which you allow platform to spend on average each day",
+            "defaultEnabled": false,
+            "key": "dailyBudget",
+            "dependentDimensions": [ 
+              1, 
+              2, 
+              43, 
+              44 
             ]
-         },
-         {
-            "Counts":
-            [
-               {
-                  "id": 5,
-                  "label": "Impressions",
-                  "order": 1,
-                  "defaultEnabled": true,
-                  "key": "impressions",
-                  "dependentDimensions": null
-               }
-            ]
-         }
-      ],
-      "dimensions":
-      [
-         {
-            "Campaign Specifics":
-               [
-                  {
-                     "id": 1,
-                     "label": "Campaign",
-                     "order": 1,
-                     "isFilterSupported": true,
-                     "isRowToColumn": false,
-                     "isCustomerDependent": true,
-                     "fieldDataType": "text",
-                     "description": "Campaign Name",
-                     "groupId": 1,
-                     "key": "campaign"
-                  },
-                  {
-                     "id": 2,
-                     "label": "Campaign ID",
-                     "order": 2,
-                     "isFilterSupported": true,
-                     "isRowToColumn": false,
-                     "isCustomerDependent": true,
-                     "fieldDataType": "text",
-                     "description": "Unique system-generated number assigned to each Campaign",
-                     "groupId": 1,
-                     "key": "campaignId"
-                  }
-               ]
           },
           {
-             "Locations":
-               [
-                  {
-                     "id": 34,
-                     "label": "Country",
-                     "order": 1,
-                     "isFilterSupported": true,
-                     "isRowToColumn": false,
-                     "isCustomerDependent": false,
-                     "fieldDataType": "country",
-                     "description": "Country the ad ran in",
-                     "groupId": 29,
-                     "key": "country"
-                  },
-                  {
-                     "id": 35,
-                     "label": "State",
-                     "order": 2,
-                     "isFilterSupported": true,
-                     "isRowToColumn": false,
-                     "isCustomerDependent": false,
-                     "fieldDataType": "regionCode",
-                     "description": "State the ad ran in",
-                     "groupId": 30,
-                     "key": "state"
-                  }
-               ]
-         }
-      ]
-   }
+            "id": 2,
+            "label": "Total Budget",
+            "order": 2,
+            "defaultEnabled": false,
+            "key": "totalBudget",
+            "dependentDimensions": [ 
+              1, 
+              2, 
+              43, 
+              44 
+            ]
+          }
+        ]
+      },
+      {
+          "Counts": [
+            {
+              "id": 5,
+              "label": "Impressions",
+              "order": 1,
+              "defaultEnabled": true,
+              "key": "impressions",
+              "dependentDimensions": null
+            }
+          ]
+        }
+    ],
+    "dimensions": [
+      {
+        "Campaign Specifics": [
+          {
+              "id": 1,
+              "label": "Campaign",
+              "order": 1,
+              "isFilterSupported": true,
+              "isRowToColumn": false,
+              "isCustomerDependent": true,
+              "fieldDataType": "text",
+              "description": "Campaign Name",
+              "groupId": 1,
+              "key": "campaign"
+          },
+          {
+              "id": 2,
+              "label": "Campaign ID",
+              "order": 2,
+              "isFilterSupported": true,
+              "isRowToColumn": false,
+              "isCustomerDependent": true,
+              "fieldDataType": "text",
+              "description": "Unique system-generated number assigned to each Campaign",
+              "groupId": 1,
+              "key": "campaignId"
+          }
+        ]
+      },
+      {
+        "Locations": [
+          {
+            "id": 34,
+            "label": "Country",
+            "order": 1,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": false,
+            "fieldDataType": "country",
+            "description": "Country the ad ran in",
+            "groupId": 29,
+            "key": "country"
+          },
+          {
+            "id": 35,
+            "label": "State",
+            "order": 2,
+            "isFilterSupported": true,
+            "isRowToColumn": false,
+            "isCustomerDependent": false,
+            "fieldDataType": "regionCode",
+            "description": "State the ad ran in",
+            "groupId": 30,
+            "key": "state"
+          }
+        ]
+      }
+    ]
+  }
 }
 
 ```
@@ -394,21 +484,264 @@ Available metrics:
 
 </details>
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/dimension-metrics/detail": {
+    parameters: {};
+    get: operations["getDimensionAndMetricDetails"];
+  };
+}
+
+export interface operations {
+  getDimensionAndMetricDetails: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              metrics: {
+                Budget: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Performance: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Spending: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Cost: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Video: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Conversion: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+                Counts: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  aggregationType: string;
+                  description: string;
+                  defaultEnabled: boolean;
+                  key: string;
+                  dependentDimensions: number[];
+                }[];
+              }
+              dimensions: {
+                Insertion Order Specifics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Campaign Specifics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Creative Specifics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Demographics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Technologies: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Deliveries: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Locations: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+                Conersion Specifics: {
+                  id: number;
+                  label: string;
+                  order: number;
+                  fieldDataType: string;
+                  description: string;
+                  groupId: string;
+                  key: string;
+                  isFilterSupported: boolean;
+                  isCustomerDependent: boolean;
+                  isRowToColumn: boolean;
+                }[];
+              }
+            }
+          }
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          }
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            errorObjects: {
+              error: string;
+            }[];
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
-\
-For further information see the complete [Dimension and Metrics Details API Documentation](https://app.iqm.com/docs/?path=tag/Report-API/operation/getDimensionAndMetricDetails).
+---
 
 ### Step 3: Select time zones
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/timezones</span>
+
+<div class="container">
+  <div class="child1">
 
 After you’ve chosen your metrics and dimensions, choose the time zone to target. You can only include one-time zone per report. Run multiple reports if you want to see results for numerous time zones.
 
 Use the Timeszones API to generate a list of time zone IDs to refer to in API calls. Use these IDs to target time zones in your report.
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/adv/static/timezones</span>
-
-<div class="container">
-  <div class="child1">
+For further information see the complete [Timezone API documentation](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones).
 
 | Headers |  |
 | ---- | --- |
@@ -417,24 +750,91 @@ Use the Timeszones API to generate a list of time zone IDs to refer to in API ca
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
-   "statusCode":200,
-   "responseObject":[
+  "success": true,
+  "data": {
+    "data": [
       {
-         "name":"US/Central",
-         "id":423,
-         "label":"US/Central"
+        "name": "US/Central",
+        "id": 423,
+        "label": "US/Central"
+      },
+      {
+        "name": "US/Eastern",
+        "id": 29,
+        "label": "US/Eastern"
+      },
+      {
+        "name": "US/Mountain",
+        "id": 21,
+        "label": "US/Mountain"
       }
-   ]
+      ...
+    ]
+  }
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/master/timezones": {
+    parameters: {};
+    get: operations["getTimezones"];
+  };
+}
+
+export interface operations {
+  getTimezones: {
+    parameters: {
+      header?: {
+        Authorization?: string;
+        "X-IAA-OW-ID"?: string;
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            success: boolean;
+            data: {
+              data: {
+                name: string;
+                id: number;
+                label: string;
+              }[];
+              totalRecords: number;
+              filteredRecords: number;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
-For further information see the complete [Timezone API documentation](https://app.iqm.com/docs/?path=tag/Master-API/operation/Timezones).
+---
 
 ### Step 4: Execute your report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/execute</span>
+
+<div class="container">
+  <div class="child1">
 
 Run your report based on Report Data.
 
@@ -444,10 +844,7 @@ All columns are optional, but you must include some for running the report.
 
 At least one dimension is required.
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ra/report/execute</span>
-
-<div class="container">
-  <div class="child1">
+For further information see the complete [Execute Report Data API](https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportDatas).
 
 | Headers |  |
 | ----  | --- |
@@ -471,6 +868,9 @@ At least one dimension is required.
 | `sortBy` <br /><span class="type-text">string</span> | Dimension or metric to sort by, if prefixed by “-” then descending: “-impressions”. |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -890,9 +1290,131 @@ At least one dimension is required.
 }
 ```
 
+</TabItem>
+<TabItem value="Typescript" label="Typescript">
+
+```ts
+export interface paths {
+  "/api/v3/ra/report/execute": {
+    parameters: {};
+    post: operations["executeReportData"];
+  };
+}
+
+export interface operations {
+  executeReportData: {
+    parameters: {};
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: number;
+          reportName?: string;
+          startDate?: number;
+          endDate?: number;
+          dimensions?: string;
+          customerIds?: number[];
+          columns?: string[];
+          timezoneId?: number;
+          requestType?: number;
+          reportAggregated?: string;
+          owId?: number;
+          createdByUOWId?: number;
+          modifiedByUOWId?: number;
+          timezoneName?: string;
+          organizationName?: string;
+          resultType?: string;
+          fileType?: number;
+          pageNo?: number;
+          noOfEntries?: number;
+          sortBy?: string;
+          searchField?: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+               success: boolean;
+            data: {
+              total: {
+                CTR: number;
+                date: number;
+                deviceTypeId: number;
+                VCR: number;
+                budgetDay: string;
+                gender: string;
+                budgetPacing: boolean;
+                dataCost: number;
+                totalRecords: number;
+                campaignTimezone: string;
+                eCPM: number;
+                bidImpressions: number;
+                startTime: number;
+                mediaSpent: number;
+                eCPC: number;
+                deviceType: string;
+                startCount: number;
+                campaignType: string;
+                spent: number;
+                impressions: number;
+                eCPCV: number;
+                completeCount: number;
+                budgetTotal: number;
+                maxBid: number;
+                clicks: number;
+                endTime: number;
+                campaignName: string;
+                status: string;
+              };
+              data: {
+                CTR: number;
+                date: number;
+                deviceTypeId: number;
+                VCR: number;
+                budgetDay: string;
+                gender: string;
+                budgetPacing: boolean;
+                dataCost: number;
+                totalRecords: number;
+                campaignTimezone: string;
+                eCPM: number;
+                bidImpressions: number;
+                startTime: number;
+                mediaSpent: number;
+                eCPC: number;
+                deviceType: string;
+                startCount: number;
+                campaignType: string;
+                spent: number;
+                impressions: number;
+                eCPCV: number;
+                completeCount: number;
+                budgetTotal: number;
+                maxBid: number;
+                clicks: number;
+                endTime: number;
+                campaignName: string;
+                status: string;
+              }[];
+              totalRecords: number
+            }
+          }
+        };
+      };
+    };
+  };
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
-For further information see the complete [Execute Report Data API](https://app.iqm.com/docs/?path=tag/Report-API/operation/executeReportDatas).
+---
 
 ## Best Practices
 
