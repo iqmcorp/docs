@@ -31,18 +31,17 @@ An hour after running a campaign, you can generate reports on it.
 
 ## Quickstart
 
-These guides will help you to perform the most essential tasks using the API of the IQM platform:
+Quickstart Guides provide step-by-step instructions to get started with the IQM platform's basic services:
 
 * [Sign Up and Authentication](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)
-* [Create a Report](/docs/Quickstart%20Guides/Reporting-API-Quickstart-Guide)
-* [Schedule a Report](/docs/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide)
 * [Upload a Matched Audience](/docs/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide)
 * [Upload a Creative and Create a Campaign](/docs/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide)
+* [Create a Report](/docs/Quickstart%20Guides/Reporting-API-Quickstart-Guide)
+* [Schedule a Report](/docs/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide)
 
 ## Guidelines
 
-These guidelines pages will help you navigate common methods and resources in the various endpoints available.
-
+Guidelines pages provide comprehensive coverage of common methods, endpoints, and resources of the IQM platform. These pages are organized by section. They include code samples in JSON and TypeScript, and descriptions of all parameters and resources.
 
 #### [User & Profile Management](/docs/Guidelines/User-Profile-Guidelines)
 
@@ -54,6 +53,7 @@ These guidelines pages will help you navigate common methods and resources in th
 * [User Application Access](/docs/Guidelines/User-Profile-Guidelines#user-app-access-list)
 
 #### [Workspace API](/docs/Guidelines/Workspace-Guidelines)
+
 * [Organization Details](/docs/Guidelines/Workspace-Guidelines#organization-details)
 * [Organization Management](/docs/Guidelines/Workspace-Guidelines#organization-management)
 * [Workspace Management](/docs/Guidelines/Workspace-Guidelines#workspace-management)
@@ -78,6 +78,7 @@ These guidelines pages will help you navigate common methods and resources in th
 * [Get List of Bid Model Dimensions](/docs/Guidelines/Bid-Model-API-Guidelines#get-list-of-bid-model-dimensions)
 
 #### [Inventory API](/docs/Guidelines/Inventory-API-Guide)
+
 * [Get Inventory Details](/docs/Guidelines/Inventory-API-Guide#get-inventory-details)
 * [Inventory Management](/docs/Guidelines/Inventory-API-Guide#inventory-management)
 * [Inventory Groups](/docs/Guidelines/Inventory-API-Guide#inventory-groups)
@@ -88,41 +89,43 @@ These guidelines pages will help you navigate common methods and resources in th
 * [PG Deals Management](/docs/Guidelines/Inventory-API-Guide#pg-management)
 
 #### [Assets API](/docs/Guidelines/Assets-API-Guidelines)
+
 * [Get Assets Details](/docs/Guidelines/Assets-API-Guidelines#get-assets-details)
 * [Assets Managemnt](/docs/Guidelines/Assets-API-Guidelines#assets-management)
 
 #### [Reports API](/docs/Guidelines/Reports-API-Guidelines)
+
 * [Get Report Details](/docs/Guidelines/Reports-API-Guidelines#get-reports-details)
 * [Reports Management](/docs/Guidelines/Reports-API-Guidelines#reports-management)
 * [Scheduling Management](/docs/Guidelines/Reports-API-Guidelines#scheduling-management)
 * [Get More Report Details](/docs/Guidelines/Reports-API-Guidelines#get-more-report-details)
 
 #### [Insights API](/docs/Guidelines/Insights-API-Guidelines)
+
 * [Get Insights Details](/docs/Guidelines/Insights-API-Guidelines#get-insights-details)
 * [Insights Management](/docs/Guidelines/Insights-API-Guidelines#insights-management)
 * [Voter Level Data Reports](/docs/Guidelines/Insights-API-Guidelines#voter-level-data-reports)
 * [Get More Insights Details](/docs/Guidelines/Insights-API-Guidelines#get-more-insights-details)
 
-
 #### [Conversions API](/docs/Guidelines/Conversion-API-Guidelines)
+
 * [Get Conversions Details](/docs/Guidelines/Conversion-API-Guidelines#get-conversion-details)
 * [Conversions Management](/docs/Guidelines/Conversion-API-Guidelines#conversions-management)
 * [Get More Conversion Details](/docs/Guidelines/Conversion-API-Guidelines#get-more-conversion-details)
 
 #### [Finance API](/docs/Guidelines/Finance-Guidelines)
+
 * [Finance Details](/docs/Guidelines/Finance-Guidelines#finance-details)
 * [Invoice Management](/docs/Guidelines/Finance-Guidelines#invoice-management)
 * [Credit Management](/docs/Guidelines/Finance-Guidelines#credit-management)
 * [Payment Management](/docs/Guidelines/Finance-Guidelines#payment-management)
 * [Static Details Lists](/docs/Guidelines/Finance-Guidelines#static-details-lists)
 
-
 #### [Master API Guidelines](/docs/Guidelines/Master-API-Guidelines)
+
 * [Get Geographical Data](/docs/Guidelines/Master-API-Guidelines#get-geographical-data)
 * [Get Creative Data](/docs/Guidelines/Master-API-Guidelines#get-creative-data)
 * [Get More Data](/docs/Guidelines/Master-API-Guidelines#get-more-data)
-
-
 
 ## Requests
 
