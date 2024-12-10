@@ -80,8 +80,11 @@ const config = {
       docs: {
         sidebar: {
           hideable: true,
+        },
       },
-    },
+      tableOfContents: {
+        title: "On This Page"
+      }
       image: "img/docusaurus-social-card.jpg",
       navbar: {
         title: "IQM Docs",
