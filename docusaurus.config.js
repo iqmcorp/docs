@@ -82,12 +82,9 @@ const config = {
           hideable: true,
         },
       },
-      tableOfContents: {
-        title: "On This Page"
-      }
       image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: "IQM Docs",
+        title: "API Docs",
         logo: {
           alt: "My Site Logo",
           src: "img/IQM.png",
@@ -97,9 +94,25 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Docs",
+            label: "Get Started",
+            className: "navbarLink",
           },
-          /*{ to: "/blog", label: "Blog", position: "left" },*/
+          {
+            label: "Quickstart",
+            position: "left",
+            to: "/Quickstart%20Guides/Authentication-Quickstart-Guide",
+            className: "navbarLink",
+          },
+          {
+            label: "API Guidelines",
+            position: "left",
+            to: "/Guidelines/Assets-API-Guidelines",
+            className: "navbarLink",
+          },
+          {
+            type: "search",
+            position: "right",
+          },
           {
             href: "https://github.com/facebook/docusaurus",
             label: "GitHub",
