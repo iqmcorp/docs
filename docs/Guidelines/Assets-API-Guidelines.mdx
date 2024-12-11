@@ -80,38 +80,37 @@ Use the following header parameters for all requests:
 <TabItem value="Typescript" label="Typescript">
 
 ```ts 
-export interface paths {
-    "/api/v3/asset/list": {
-        get: operations["getAllAssets"]
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          storagePath: string;
+          cdnUrl: string;
+          created: number;
+          modifiedDate: string;
+          disposable: boolean
+        }[]
+      }
     }
+  }
 }
 
-export interface operations {
-    getAllAssets: {
-        parameters: {
-            header?: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-            }
-        };
-        responses: {
-            200: {
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        data: {
-                            id: number;
-                            storagePath: string;
-                            cdnUrl: string;
-                            created: number;
-                            modifiedDate: string;
-                            disposable: boolean
-                        }[]
-                    }
-                }
-            }
-        }
-    }
+function getAllAssets(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/asset/list',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -159,41 +158,42 @@ Get attributes of a single asset by ID
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/asset/{assetId}": {
-        get: operations["getAssetDetails"]
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          storagePath: string;
+          cdnUrl: string;
+          created: number;
+          modifiedDate: string;
+          disposable: boolean
+        }
+      }
     }
+  }
 }
 
-export interface operations {
- getAssetDetails: {
-        parameters: {
-            header?: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-            };
-            path: {
-                assetId: number;
-            }
-        };
-        responses: {
-            200: {
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        data: {
-                            id: number;
-                            storagePath: string;
-                            cdnUrl: string;
-                            created: number;
-                            modifiedDate: string;
-                            disposable: boolean
-                        }
-                    }
-                }
-            }
-        }
+function getAssetDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/asset/{assetId}',
+    params: {
+      path: {
+        assetId: `number`
+      }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -241,49 +241,50 @@ Add multiple assets to the system. Request accepts an array of multipart file ob
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-    "/api/v3/asset": {
-        post: operations["addAssets"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          files: {
+            assetID: number;
+            assetCDNURL: string
+          }
+        }
+      }
+    }
+  };
+  401: {
+    content: {
+      Authorization?: string;
+      "X-IAA-OW-ID"?: string;
     };
+    path: {
+      assetId: number
+    }
+  }
 }
 
-export interface operations {
-    addAssets: {
-        parameters: {
-            query: {
-                filesMetadata: string;
-                files: string[];
-            };
-            header?: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-            }
-        };
-        responses: { 
-            200: {
-                content: {
-                    "application/json": {
-                        statusCode: number;
-                        responseObject: {
-                            files: {
-                                assetID: number;
-                                assetCDNURL: string
-                            }
-                        }
-                    }
-                }
-            };
-            401: {
-                content: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-                };
-                path: {
-                    assetId: number
-                }
-            }
-        }
+function addAssets(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/asset',
+    params: {
+      query: {
+        filesMetadata: `string`,
+        files: `string`,
+      },
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -342,65 +343,63 @@ Update the details of an existing asset by ID
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-    "/api/v3/asset/{assetId}": {
-        patch: operations["updateAssetDetails"]
-    }
-}
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
 
-export interface operations {
-      updateAssetDetails: {
-        parameters: {
-            header?: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-            };
-            path: {
-                assetId: number;
-            }
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    storagePath?: string;
-                    cdnUrl?: string;
-                    disposable?: boolean;
-                }
-            }
-        };
-        responses: {
-            200: {
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        data: {
-                            statusCode: number;
-                            responseObject: {
-                                message: string
-                            }
-                        }
-                    }
-                }
-            };
-            401: {
-                content: {
-                    "application/json": {
-                        success?: boolean;
-                        errorObjects?: {
-                            error?: string;
-                            reason?: string;
-                            field?: string;
-                        }[];
-                        data?: Record<string, never>;
-                    }
-                }
-            }
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          statusCode: number;
+          responseObject: {
+            message: string
+          }
         }
+      }
     }
+  };
+  401: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      }
+    }
+  }
 }
 
+function updateAssetDetails(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/asset/{assetId}',
+    params: {
+      path: {
+        assetId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          storagePath?: `string`,
+          cdnUrl?: `string`,
+          disposable?: `boolean`,
+        }
+      }
+    },
+  };
 
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -439,43 +438,44 @@ Delete single asset by ID
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-    "/api/v3/asset/{assetId}": {
-        delete: operations["deleteAsset"]
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     }
+  };
+  401: {
+    content: {
+      Authorization?: string;
+      "X-IAA-OW-ID"?: string;
+    };
+    path: {
+      assetId: number;
+    }
+  }
 }
 
-export interface operations {
-    deleteAsset: {
-        parameters: {
-            header?: {
-                Authorization?: string;
-                "X-IAA-OW-ID"?: string;
-            };
-            path: {
-                assetId: number;
-            }
-        };
-        responses: {
-            200: {
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        data: string
-                    }
-                }
-            };
-            401: {
-                content: {
-                    Authorization?: string;
-                    "X-IAA-OW-ID"?: string;
-                };
-                path: {
-                    assetId: number;
-                }
-            }
-        }
+function deleteAsset(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/asset/{assetId}',
+    params: {
+      path: {
+        assetId: `number`
+      }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
