@@ -80,6 +80,7 @@ const config = {
       docs: {
         sidebar: {
           hideable: true,
+          autoCollapseCategories: true,
         },
       },
       image: "img/docusaurus-social-card.jpg",
@@ -91,22 +92,20 @@ const config = {
         },
         items: [
           {
-            type: "docSidebar",
-            sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Get Started",
-            className: "navbarLink",
+            label: "Getting Started",
+            to: "Getting%20Started/"
           },
           {
             label: "Quickstart",
             position: "left",
-            to: "/Quickstart%20Guides/Authentication-Quickstart-Guide",
+            to: "/Quickstart%20Guides/",
             className: "navbarLink",
           },
           {
             label: "API Guidelines",
             position: "left",
-            to: "/Guidelines/Assets-API-Guidelines",
+            to: "/Guidelines/",
             className: "navbarLink",
           },
           {
