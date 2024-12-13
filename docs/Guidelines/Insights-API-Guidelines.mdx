@@ -67,49 +67,49 @@ Get a list of insights availabe in the database.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/list": {
-    parameters: {};
-    get: operations["getInsightsDetailList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getInsightsDetailList: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        pageSize?: number;
-        pageNo?: number;
-        sortBy?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filterRecords: number;
-              insightsData: {
-                id: number;
-                typeId: number;
-                statusId: number;
-                name: string;
-                sourceId: number;
-                createdAt: number
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filterRecords: number;
+          insightsData: {
+            id: number;
+            typeId: number;
+            statusId: number;
+            name: string;
+            sourceId: number;
+            createdAt: number
           }
-        };
-      };
+        }
+      }
     };
   };
+};
+
+function getInsightsDetailList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/insights/list',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageSize?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -263,146 +263,143 @@ Response 422 (invalid start date)
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/campaign/bid-insights/{campaignId}": {
-    parameters: {};
-    get: operations["getCampaignBiddingInsight"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getCampaignBiddingInsight: {
-    parameters: {
-      query: {
-        dateRangeStart: number;
-        dateRangeEnd: number;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        campaignId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRequests: number;
-              rejectionList: {
-                campaignSettings: {
-                  title: string;
-                  rejectedBids: number;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRequests: number;
+          rejectionList: {
+            campaignSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            ioBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            inventoryTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBidPrice: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            locationTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            deviceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            creativeSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {
+                creativeDimension: {
+                  label: string;
+                  droppedRequests: number;
                   description: string;
-                  subReasonInfo: {}
-                };
-                ioBudget: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                inventoryTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                campaignBidPrice: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                locationTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                deviceTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                creativeSettings: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {
-                    creativeDimension: {
-                      label: string;
-                      droppedRequests: number;
-                      description: string;
-                    }
-                  }
-                };
-                advancedTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                audienceTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                bidStrategy: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                campaignBudget: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                demographicsTargeting: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
-                };
-                undefined: {
-                  title: string;
-                  rejectedBids: number;
-                  description: string;
-                  subReasonInfo: {}
                 }
-              };
-              topMainReasons: {
-                creativeSettings: number
-              };
-              topSubReasons: {
-                creativeSettings: number
-              };
-              totalBids: number;
-              lostBids: number;
-              totalWins: number;
+              }
+            };
+            advancedTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            audienceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            bidStrategy: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            demographicsTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            undefined: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
             }
-          }
-        };
-      };
-      422: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[]
-          }
-        };
-      };
+          };
+          topMainReasons: {
+            creativeSettings: number
+          };
+          topSubReasons: {
+            creativeSettings: number
+          };
+          totalBids: number;
+          lostBids: number;
+          totalWins: number;
+        }
+      }
     };
   };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[]
+      }
+    };
+  };
+};
+
+function getCampaignBiddingInsight(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}',
+    params: {
+      query: {
+        dateRangeStart: `number`,
+        dateRangeEnd: `number`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -467,47 +464,47 @@ Get a list of eligible audiences which have 10k uniques (minimum).
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/audiences/list": {
-    parameters: {};
-    get: operations["getInsightsCreateEligibleAudienceList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getInsightsCreateEligibleAudienceList: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        pageSize?: number;
-        pageNo?: number;
-        sortBy?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filteredRecords: number;
-              insightsData: {
-                id: number;
-                audienceName: string;
-                matchRate: number;
-                uniques: number;
-              }[]
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          insightsData: {
+            id: number;
+            audienceName: string;
+            matchRate: number;
+            uniques: number;
+          }[]
+        }
+      }
     };
   };
+};
+
+function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/audiences/list',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageSize?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -545,34 +542,32 @@ Get a count of insights by type ID. See [list of insights type IDs](#get-list-of
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/type-wise-count": {
-    parameters: {};
-    get: operations["getInsightsTypeWiseCount"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getInsightsTypeWiseCount: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              [insightsTypeId: number]: number;
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [insightsTypeId: number]: number;
+        }
+      }
     };
   };
+};
+
+function getInsightsTypeWiseCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/insights/type-wise-count',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -622,46 +617,46 @@ Get matched audience details by audience ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/audience/matched/{audienceId}": {
-    parameters: {};
-    get: operations["getMatchedAudienceDetailsByAudienceId"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getMatchedAudienceDetailsByAudienceId: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        audienceId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              matchedAudienceData: {
-                audienceName: string;
-                matchRate: number;
-                uniques: number;
-                createdDate: number;
-                fileTotalCount: number;
-                dataCost: number;
-                audienceStatusName: string;
-                s3FileName: string;
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          matchedAudienceData: {
+            audienceName: string;
+            matchRate: number;
+            uniques: number;
+            createdDate: number;
+            fileTotalCount: number;
+            dataCost: number;
+            audienceStatusName: string;
+            s3FileName: string;
           }
-        };
-      };
+        }
+      }
     };
   };
+};
+
+function getMatchedAudienceDetailsByAudienceId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/audience/matched/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -696,37 +691,37 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/audience/matched/download/{audienceId}": {
-    parameters: {};
-    get: operations["downloadMatchedAudienceFile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  downloadMatchedAudienceFile: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        audienceId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              audienceFileUrl: string
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceFileUrl: string
+        }
+      }
     };
   };
+};
+
+function downloadMatchedAudienceFile(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/audience/matched/download/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -792,53 +787,51 @@ Create an insight report for a given audience ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/add": {
-    parameters: {};
-    post: operations["createInsightsDetails"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  createInsightsDetails: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidSourceIds: number[];
+          insightsData: {
+            id: number;
+            typeId: number;
+            statusId: number;
+            sourceName: string;
+            name: string;
+            sourceId: number;
+            createdAt: number;
+          }[]
+        }
+      }
     };
+  };
+};
+
+function createInsightsDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/add',
     requestBody: {
       content: {
         "application/json": {
-          insightsTypeId?: number;
-          sourceIds?: number[];
-          owId?: number;
-          uowId?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              invalidSourceIds: number[];
-              insightsData: {
-                id: number;
-                typeId: number;
-                statusId: number;
-                sourceName: string;
-                name: string;
-                sourceId: number;
-                createdAt: number;
-              }[]
-            }
-          }
-        };
-      };
-    };
+          insightsTypeId?: `number`,
+          sourceIds?: `array of numbers`,
+          owId?: `number`,
+          uowId?: `number`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -886,38 +879,38 @@ Delete records from the database for valid insights IDs passed.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/delete": {
-    parameters: {};
-    delete: operations["deleteInsights"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  deleteInsights: {
-    parameters: {
-      query: {
-        insightIds: number[];
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              deletedIds: number[];
-              invalidIds: number[];
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          deletedIds: number[];
+          invalidIds: number[];
+        }
+      }
     };
   };
+};
+
+function deleteInsights(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/insights/delete',
+    params: {
+      query: {
+        insightsId: `array of numbers`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -956,35 +949,35 @@ Regenerates an insights report if the insight fails.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/regenerate/{insightsId}": {
-    parameters: {};
-    post: operations["regenerateInsights_1"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  regenerateInsights_1: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        insightsId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
     };
   };
+};
+
+function regenerateInsights_1(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/insights/regenerate/{insightsId}',
+    params: {
+      path: {
+        insightsId: `number`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1036,45 +1029,45 @@ Download insights report for audience (pdf or xlsx) by passing multipart/form-da
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/insights/download": {
-    parameters: {};
-    post: operations["downloadInsights"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  downloadInsights: {
-    parameters: {
-      query: {
-        insightsId: number;
-        fileType: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          insightsReportUrl: string;
+        }
+      }
     };
+  };
+};
+
+function downloadInsights(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/download',
+    params: {
+      query: {
+        insightsId: `number`,
+        fileType: `string`
+      }
+    },
     requestBody?: {
       content: {
         "application/json": {
-          customLogoFile?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              insightsReportUrl: string;
-            }
-          }
-        };
-      };
-    };
+          customLogoFile?: `string`
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1125,44 +1118,44 @@ Send an attached insights report file via email.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/ins/send-email": {
-    parameters: {};
-    post: operations["sendInsightsEmail"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  sendInsightsEmail: {
-    parameters: {
-      query: {
-        id: number;
-        attachmentType: string;
-        recipientEmails: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function sendInsightsEmail(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/send-email',
+    params: {
+      query: {
+        id: `number`,
+        attachmentType: `string`,
+        recipientEmails: `string`,
+      },
+    },
     requestBody?: {
       content: {
         "application/json": {
-          file?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
+          file?: `string`
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1280,57 +1273,57 @@ Get a list of VLD reports based on search filters.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld-reports": {
-    parameters: {};
-    get: operations["getVLDReportList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getVLDReportList: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        pageNo?: number;
-        noOfEntries?: number;
-        sortBy?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              vldReportDataList: {
-                vldId: number;
-                vldName: string;
-                campaignName: string;
-                campaignId: number;
-                vldStatusId: number;
-                startDate: number;
-                endDate: number;
-                ioId: number;
-                ioName: string;
-                isCampaignEligible: boolean;
-                vldCreatedOn: number;
-                creativeTypeId: number;
-                campaignVldTimezoneId: number;
-                ioTypeId: number;
-              }[];
-              filteredRecords: number;
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          vldReportDataList: {
+            vldId: number;
+            vldName: string;
+            campaignName: string;
+            campaignId: number;
+            vldStatusId: number;
+            startDate: number;
+            endDate: number;
+            ioId: number;
+            ioName: string;
+            isCampaignEligible: boolean;
+            vldCreatedOn: number;
+            creativeTypeId: number;
+            campaignVldTimezoneId: number;
+            ioTypeId: number;
+          }[];
+          filteredRecords: number;
+        }
+      }
     };
   };
+};
+
+function getVLDReportList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/vld-reports',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+      },
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1376,36 +1369,34 @@ Get a list of campaign IDs by satus eligible for VLD report generation.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld/campaigns": {
-    parameters: {};
-    get: operations["getStatusWiseCampaignsForVLDReports"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getStatusWiseCampaignsForVLDReports: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              running: number[];
-              paused: number[];
-              expired: number[];
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          running: number[];
+          paused: number[];
+          expired: number[];
+        }
+      }
     };
   };
+};
+
+function getStatusWiseCampaignsForVLDReports(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/vld/campaigns',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1466,54 +1457,52 @@ This API calculates the cost for the impressions for the Voter Level Data Report
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld-report": {
-    parameters: {};
-    post: operations["generateVLDReports"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  generateVLDReports: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportCreated: boolean;
+          campaignId: number;
+          campaignName: string;
+          campaignStatus: string;
+          vldStartDate: number;
+          vldEndDate: number;
+          vldChargeableImps: number;
+          vldChargedImps: number;
+          vldChargeableCost: number;
+          vldChargedCost: number;
+          fundsAvailable: boolean
+        }
+      }
     };
+  };
+};
+
+function generateVLDReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/vld-report',
     requestBody: {
       content: {
         "application/json": {
-          campaignId?: number;
-          vldId?: number;
-          vldStartDate?: number;
-          vldEndDate?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              vldReportCreated: boolean;
-              campaignId: number;
-              campaignName: string;
-              campaignStatus: string;
-              vldStartDate: number;
-              vldEndDate: number;
-              vldChargeableImps: number;
-              vldChargedImps: number;
-              vldChargeableCost: number;
-              vldChargedCost: number;
-              fundsAvailable: boolean
-            }
-          }
-        };
-      };
-    };
+          campaignId?: `number`,
+          vldId?: `number`,
+          vldStartDate?: `number`,
+          vldEndDate?: `number`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1574,54 +1563,52 @@ Calculates the cost for the impressions for the VLD report based on impressions 
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld-reports/computation": {
-    parameters: {};
-    post: operations["getChargeableImpressionsDataForVLDReports"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getChargeableImpressionsDataForVLDReports: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportCreated: boolean;
+          campaignId: number;
+          campaignName: string;
+          campaignStatus: string;
+          vldStartDate: number;
+          vldEndDate: number;
+          vldChargeableImps: number;
+          vldChargedImps: number;
+          vldChargeableCost: number;
+          vldChargedCost: number;
+          fundsAvailable: boolean
+        }
+      }
     };
+  };
+};
+
+function getChargeableImpressionsDataForVLDReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/vld-reports/computation',
     requestBody: {
       content: {
         "application/json": {
-          campaignId?: number;
-          vldId?: number;
-          vldStartDate?: number;
-          vldEndDate?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              vldReportCreated: boolean;
-              campaignId: number;
-              campaignName: string;
-              campaignStatus: string;
-              vldStartDate: number;
-              vldEndDate: number;
-              vldChargeableImps: number;
-              vldChargedImps: number;
-              vldChargeableCost: number;
-              vldChargedCost: number;
-              fundsAvailable: boolean
-            }
-          }
-        };
-      };
-    };
+          campaignId?: `number`,
+          vldId?: `number`,
+          vldStartDate?: `number`,
+          vldEndDate?: `number`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1663,43 +1650,40 @@ Get a donwload link for a VLD insight report in CSV or XLSX format.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld-report/download": {
-    parameters: {};
-    post: operations["getVLDReportDownloadUrl"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getVLDReportDownloadUrl: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportUrl: string;
+        }
+      }
     };
+  };
+};
+
+function getVLDReportDownloadUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/vld-reports/download',
     requestBody: {
       content: {
         "application/json": {
-          fileTypeId?: number;
-
-          vldId?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              vldReportUrl: string;
-            }
-          }
-        };
-      };
-    };
+          fileTypeId?: `number`,
+          vldId?: `number`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1740,37 +1724,37 @@ Deletes VLD reports that are not marked as deleted and have a 'failed' status, r
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/vld-report": {
-    parameters: {};
-    delete: operations["deleteFailedVLDReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  deleteFailedVLDReport: {
-    parameters: {
-      query: {
-        vldIds: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              message: string;
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportUrl: string;
+        }
+      }
     };
   };
+};
+
+function deleteFailedVLDReport(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/vld-report',
+    params: {
+      query: {
+        vldIds: `string`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1824,36 +1808,39 @@ Get a list of insights types by ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/static/insights/type/list": {
-    parameters: {};
-    get: operations["getInsightsType"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getInsightsType: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filteredRecords: number;
-              insightsTypeData: {
-                id: number;
-                name: string;
-                label: string;
-                order: number;
-              }[]
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          insightsTypeData: {
+            id: number;
+            name: string;
+            label: string;
+            order: number;
+          }[]
+        }
+      }
     };
   };
+};
+
+function getInsightsType(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/static/insights/type/list',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1911,36 +1898,39 @@ Get a list of insights status types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ins/static/insights/status/list": {
-    parameters: {};
-    get: operations["getInsightsStatus"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getInsightsStatus: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filterRecords: number;
-              insightsStatusData: {
-                id: number;
-                name: string;
-                label: string;
-                order: number;
-              }[]
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filterRecords: number;
+          insightsStatusData: {
+            id: number;
+            name: string;
+            label: string;
+            order: number;
+          }[]
+        }
+      }
     };
   };
+};
+
+function getInsightsStatus(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/static/insights/status/list',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
