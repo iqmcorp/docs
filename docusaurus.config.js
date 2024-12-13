@@ -23,7 +23,7 @@ const config = {
   organizationName: "IQM", // Usually your GitHub org/user name.
   projectName: "API Guidelines", // Usually your repo name.
 
-  /*onBrokenLinks: "ignore",*/
+  onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
