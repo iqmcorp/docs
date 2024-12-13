@@ -160,67 +160,67 @@ Get details about a conversion from its ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/{conversionId}": {
-    parameters: {};
-    get: operations["getConversionDetailsById"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getConversionDetailsById: {
-    parameters: {
-      query?: {
-          typeId?: number;
-      };
-      header?: {
-          Authorization?: string;
-          "X-IAA-OW-ID"?: string;
-      };
-      path: {
-          conversionId: number;
-        };
-      };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              name: string;
-              uuid: string;
-              typeId: number;
-              owId: number;
-              createdByUowId: number;
-              modifiedByUowId: number;
-              attributionId: number;
-              statusId: number;
-              customFields: string[];
-              financialMetrics: string;
-              piggybackData: {
-                url: string;
-                type: number
-              }
-              pixelConversionScript: string;
-              conversionSetting: {
-                conversionDuration: {
-                  view: number;
-                  click: number;
-                }
-                repeatConversion: {
-                  count: number;
-                  frequency: number;
-                  unity: string;
-                }
-                crossModelling: boolean
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          uuid: string;
+          typeId: number;
+          owId: number;
+          createdByUowId: number;
+          modifiedByUowId: number;
+          attributionId: number;
+          statusId: number;
+          customFields: string[];
+          financialMetrics: string;
+          piggybackData: {
+            url: string;
+            type: number
           }
-        };
-      };
+          pixelConversionScript: string;
+          conversionSetting: {
+            conversionDuration: {
+              view: number;
+              click: number;
+            }
+            repeatConversion: {
+              count: number;
+              frequency: number;
+              unity: string;
+            }
+            crossModelling: boolean
+          }
+        }
+      }
     };
   };
+};
+
+function getConversionDetailsById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/{conversionId}',
+    parameters: {
+      query?: {
+        typeId?: `number`,
+      },
+      path: {
+        conversionId: `number`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -291,65 +291,65 @@ Get a list of conversions with details and filters.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/conversion/list": {
-    parameters: {};
-    get: operations["getConversionList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getConversionList: {
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            postbackPartnerName: string;
+            status: string;
+            type: string;
+            created: number;
+            totalConversion: number;
+            owId: number;
+            createdByUowId: number;
+            modifiedByUowId: number;
+            uuid: string;
+            pixelConversionScript: string;
+            attributedConversion: number;
+            attributedViewThroughConversion: number;
+            attributedClickThroughConversion: number;
+            pixelFinancialMetric: string;
+            postbackPartnerLogoUrl: string;
+            campaignCount: number
+          }[];
+          totalRecords: number;
+          filteredRecords: number
+        }
+      }
+    };
+  };
+};
+
+function getConversionList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/list',
     parameters: {
       query?: {
-        searchField?: string;
-        limit?: number;
-        pageNo?: number;
-        sortBy?: string;
-        conversionIds?: string;
-        typeIds?: string;
-        statusIds?: string;
-        postbackPartnerIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                postbackPartnerName: string;
-                status: string;
-                type: string;
-                created: number;
-                totalConversion: number;
-                owId: number;
-                createdByUowId: number;
-                modifiedByUowId: number;
-                uuid: string;
-                pixelConversionScript: string;
-                attributedConversion: number;
-                attributedViewThroughConversion: number;
-                attributedClickThroughConversion: number;
-                pixelFinancialMetric: string;
-                postbackPartnerLogoUrl: string;
-                campaignCount: number
-              }[];
-              totalRecords: number;
-              filteredRecords: number
-            }
-          }
-        };
-      };
-    };
+        searchField?: `string`,
+        limit?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        conversionIds?: `string`,
+        typeIds?: `string`,
+        statusIds?: `string`,
+        postbackPartnerIds?: `string`,
+      },
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -399,42 +399,42 @@ Get a count of conversions based on type.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/type-wise-count": {
-    parameters: {};
-    get: operations["getConversionCountTypeWise"];
-  }
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getConversionCountTypeWise: {
-    parameters: {
-      query?: {
-        searchField?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              conversionType: string;
-              conversionCount: number;
-              order: number
-            }[]
-          }
-        };
-      };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          conversionType: string;
+          conversionCount: number;
+          order: number
+        }[]
+      }
     };
   };
+};
+
+function getConversionCountTypeWise(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/type-wise-count',
+    parameters: {
+      query?: {
+        searchField?: `string`,
+      },
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -488,48 +488,48 @@ Get a list of campaign details by conversion ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/attached/campaigns/list": {
-    parameters: {};
-    get: operations["getAttachedCampaignsListByConversionId"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getAttachedCampaignsListByConversionId: {
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          campaingId: number;
+          campaignName: string;
+          creativeTypeId: number;
+          status: string;
+          startTime: number;
+          endTime: number;
+          ioId: number;
+          ioName: string;
+          ioStatusID: number;
+          ioBudgetTypeId: number;
+        }[];
+        totalRecords: number;
+        filteredRecords: number;
+      }
+    };
+  };
+};
+
+function getAttachedCampaignsListByConversionId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/attached/campaigns/list',
     parameters: {
       query?: {
-        conversionId?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              campaingId: number;
-              campaignName: string;
-              creativeTypeId: number;
-              status: string;
-              startTime: number;
-              endTime: number;
-              ioId: number;
-              ioName: string;
-              ioStatusID: number;
-              ioBudgetTypeId: number;
-            }[];
-            totalRecords: number;
-            filteredRecords: number;
-          }
-        };
-      };
-    };
+        conversionId?: `string`,
+      },
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ``` 
 
@@ -602,70 +602,65 @@ Get a list of campaign details by conversin ID in group details or basic details
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/allowed/campaign-list": {
-    parameters: {};
-    get: operations["getAttachableCampaignListByConversionIds"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getAttachableCampaignListByConversionIds: {
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          ioId: number;
+          ioName: string;
+          ioBudgetTypeId: number;
+          ioStatusId: number;
+          created: number;
+          lastModified: number;
+          owId: number;
+          uowId: number;
+          campaignCount: number;
+          campaigns: {
+            id: number;
+            campaignId: number;
+            name: string;
+            creativeTypeId: number;
+            status: string;
+            startTime: number;
+            endTime: number;
+            createdAt: number;
+            modifiedAt: number;
+            owId: number;
+            ioId: number;
+            ioName: string;
+          }[]
+        }[]
+      }
+    };
+  };
+};
+
+function getAttachableCampaignListByConversionIds(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/allowed/campaign-list',
     parameters: {
       query?: {
-        conversionIds?: string;
-
-        owId?: string;
-
-        isGroup?: string;
-
-        limit?: number;
-
-        pageNo?: number;
-
-        sortBy?: string;
-        searchField?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              ioId: number;
-              ioName: string;
-              ioBudgetTypeId: number;
-              ioStatusId: number;
-              created: number;
-              lastModified: number;
-              owId: number;
-              uowId: number;
-              campaignCount: number;
-              campaigns: {
-                id: number;
-                campaignId: number;
-                name: string;
-                creativeTypeId: number;
-                status: string;
-                startTime: number;
-                endTime: number;
-                createdAt: number;
-                modifiedAt: number;
-                owId: number;
-                ioId: number;
-                ioName: string;
-              }[]
-            }[]
-          }
-        };
-      };
-    };
+        conversionIds?: `string`,
+        owId?: `string`,
+        isGroup?: `string`,
+        limit?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        searchField?: `string`,
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -738,69 +733,67 @@ Create postback type conversion records.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/postback/add": {
-    parameters: {};
-    post: operations["addPostbackConversion"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  addPostbackConversion: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          partnerName: string;
+          status: string;
+          type: string;
+          created: number;
+          totalConversions: number;
+          owId: number;
+          createdByUowId: number;
+          modifiedByUowId: number;
+          uuid: string;
+          attributedConversions: number;
+          attributedViewThroughConversion: number;
+          attributedClickThroughConversions: number;
+          pixelFinancialMetric: null;
+          postbackPartnerLogoURL: string;
+          partnerUrl: string;
+        }
+      }
     };
+  };
+};
+
+function addPostbackConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/conversion/postback/add',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          name: string;
-          uuid?: string;
-          typeId?: number;
-          owId?: number;
-          createdByUowId?: number;
-          modifiedByUowId?: number;
-          statusId?: number;
-          status?: string;
-          created?: number;
-          partnerTypeId?: number;
-          impressionUrl: string;
-          clickUrl: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              name: string;
-              partnerName: string;
-              status: string;
-              type: string;
-              created: number;
-              totalConversions: number;
-              owId: number;
-              createdByUowId: number;
-              modifiedByUowId: number;
-              uuid: string;
-              attributedConversions: number;
-              attributedViewThroughConversion: number;
-              attributedClickThroughConversions: number;
-              pixelFinancialMetric: null;
-              postbackPartnerLogoURL: string;
-              partnerUrl: string;
-            }
-          }
-        };
-      };
-    };
+          id?: `number`,
+          name: `string`,
+          uuid?: `string`,
+          typeId?: `number`,
+          owId?: `number`,
+          createdByUowId?: `number`,
+          modifiedByUowId?: `number`,
+          statusId?: `number`,
+          status?: `string`,
+          created?: `number`,
+          partnerTypeId?: `number`,
+          impressionUrl: `string`,
+          clickUrl: `string`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -885,87 +878,85 @@ Refer to the [Pixel Conversion resource properties](#pixel-conversion-resource-p
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/pixel/add": {
-    parameters: {};
-    post: operations["addPixelConversion"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  addPixelConversion: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          postbackPartnerName: string;
+          status: string;
+          type: string;
+          created: number;
+          totalConversions: number;
+          owId: number;
+          createdByUowId: number;
+          modifiedByUowId: number;
+          uuid: string;
+          attributedConversions: number;
+          attributedViewThroughConversions: number;
+          attributedClickThroughConversions: number;
+          pixelFinancialMetric: null;
+          postbackPartnerLogoURL: string;
+          pixelConversionScript: string;
+          partnerUrl: string;
+        }
       };
     };
+  };
+};
+
+function addPixelConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/conversion/pixel/add',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          name: string;
-          uuid?: string;
-          typeId?: number;
-          owId?: number;
-          createdByUowId?: number;
-          modifiedByUowId?: number;
-          statusId?: number;
-          status?: string;
-          created?: number;
-          attributionId?: number;
-          customFields?: string[];
-          financialMetrics?: string;
+          id?: `number`,
+          name: `string`,
+          uuid?: `string`,
+          typeId?: `number`,
+          owId?: `number`,
+          createdByUowId?: `number`,
+          modifiedByUowId?: `number`,
+          statusId?: `number`,
+          status?: `string`,
+          created?: `number`,
+          attributionId?: `number`,
+          customFields?: `array of strings`,
+          financialMetrics?: `string`,
           piggybackData?: {
-            url?: string;
-            type?: number;
-          };
-          pixelConversionScript?: string;
+            url?: `string`,
+            type?: `number`,
+          },
+          pixelConversionScript?: `string`,
           conversionSetting: {
             conversionDuration: {
-              view?: number;
-              click?: number;
-            };
+              view?: `number`,
+              click?: `number`,
+            },
             repeatConversion: {
-              count: number;
-              frequency: number;
-              unit: string;
-            };
-            crossModelling?: boolean;
-          };
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              name: string;
-              postbackPartnerName: string;
-              status: string;
-              type: string;
-              created: number;
-              totalConversions: number;
-              owId: number;
-              createdByUowId: number;
-              modifiedByUowId: number;
-              uuid: string;
-              attributedConversions: number;
-              attributedViewThroughConversions: number;
-              attributedClickThroughConversions: number;
-              pixelFinancialMetric: null;
-              postbackPartnerLogoURL: string;
-              pixelConversionScript: string;
-              partnerUrl: string;
-            }
-          };
-        };
-      };
-    };
-  }
+              count: `number`,
+              frequency: `number`,
+              unit: `string`,
+            },
+            crossModelling?: `boolean`,
+          }
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1004,35 +995,35 @@ This API provides a soft delete functionality for conversions.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/delete": {
-    parameters: {};
-    delete: operations["deleteConversions"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  deleteConversions: {
-    parameters: {
-      query: {
-        conversionIds: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
     };
   };
+};
+
+function deleteConversions(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/conversion/delete',
+    params: {
+      query: {
+        conversionIds: `string`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1082,43 +1073,41 @@ Update the name of a postback type conversion.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/postback/update": {
-    parameters: {};
-    patch: operations["updateConversion"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  updateConversion: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+        }
+      }
     };
+  };
+};
+
+function updateConversion(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/conversion/postback/update',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          name: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              name: string;
-            }
-          }
-        };
-      };
-    };
+          id?: `number`,
+          name: `string`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1179,51 +1168,49 @@ Update the name and piggyback data of a pixel type conversion.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/pixel/update": {
-    parameters: {};
-    patch: operations["updateConversion_1"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  updateConversion_1: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          piggybackData: {
+            url: string;
+            type: number
+          }
+        }
+      }
     };
+  };
+};
+
+function updateConversion_1(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/conversion/pixel/update',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          name: string;
+          id?: `number`,
+          name: `string`,
           piggybackData?: {
-            url?: string;
-            type?: number;
-          };
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              name: string;
-              piggybackData: {
-                url: string;
-                type: number
-              }
-            }
+            url?: `string`,
+            type?: `number`,
           }
-        };
-      };
-    };
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1302,49 +1289,49 @@ Assign a conversion to a campaign while validating conversion IDs and campaign I
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/assign-to/campaign": {
-    parameters: {};
-    post: operations["assignConversionToCampaign"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  assignConversionToCampaign: {
-    parameters: {
-      query?: {
-        assignConversionToCampaign?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          conversionIdsList: number;
+          validAddCampaignIdsList: number[];
+          validRemoveCampaignIdsList: number[];
+          invalidRemoveCampaignIdsList: number[]
+        }
+      }
     };
+  };
+};
+
+function assignConversionToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/conversion/assign-to/campaign',
+    params: {
+      query: {
+        assignConversionToCampaign?: `string`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          conversionIdList?: number[];
-          addCampaignsList?: number[];
-          removeCampaignsList?: number[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              conversionIdsList: number;
-              validAddCampaignIdsList: number[];
-              validRemoveCampaignIdsList: number[];
-              invalidRemoveCampaignIdsList: number[]
-            }
-          }
-        };
-      };
-    };
+          conversionIdList?: `array of numbers`,
+          addCampaignsList?: `array of numbers`,
+          removeCampaignsList?: `array of numbers`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1395,47 +1382,45 @@ Send an email containing information of integration pixel in html.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/pixel/send-email": {
-    parameters: {};
-    post: operations["sendEmailForPixelConversion"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  sendEmailForPixelConversion: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function sendEmailForPixelConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/conversion/pixel/send-email',
     requestBody: {
       content: {
         "application/json": {
-          advertiserId?: number;
-          dspId?: number;
-          owId?: number;
-          uowId?: number;
-          conversionId?: number;
-          recipients: string;
-          recipientsList?: string[];
-          emailSubject: string;
-          emailText?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          conversionId?: `number`,
+          recipients: `string`,
+          recipientsList?: `array of strings`,
+          emailSubject: `string`,
+          emailText?: `string`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1512,47 +1497,46 @@ Get list of partner details for postback converisions like logo and name.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/postback/partner-type": {
-    parameters: {};
-    get: operations["getListOfConversionPartnerType"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getListOfConversionPartnerType: {
-    parameters: {
-      query?: {
-        searchField?: string;
+const axios = getInstance();
 
-        partnerTypeIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                logoUrl: string;
-                order: number;
-                active: string;
-              }[];
-              filteredRecords: number;
-              totalRecords: number
-            }
-          }
-        };
-      };
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            logoUrl: string;
+            order: number;
+            active: string;
+          }[];
+          filteredRecords: number;
+          totalRecords: number
+        }
+      }
     };
   };
+};
+
+function getListOfConversionPartnerType(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/postback/partner-type',
+    params: {
+      query: {
+        searchField?: `string`,
+        partnerTypeIds?: `string`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1613,60 +1597,56 @@ Get a list and details about default values of advanced settings for pixel based
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/pixel/conversion-default-advanced-setting-data": {
-    parameters: {};
-    get: operations["getConversionDefaultAdvancedSettingData"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getConversionDefaultAdvancedSettingData: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                displayName: string;
-                value: number;
-                active: boolean;
-              }[];
-              totalRecords: number;
-              filteredRecords: number
-            }
-          }
-        };
-      };
+const axios = getInstance();
 
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            displayName: string;
+            value: number;
+            active: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number
+        }
+      }
     };
   };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": unknown;
+    };
+  };
+  500: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": unknown;
+    };
+  };
+};
+
+function getConversionDefaultAdvancedSettingData(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/pixel/conversion-default-advanced-setting-data',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1727,44 +1707,44 @@ Get a list and details of conversion types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/conversion-type": {
-    parameters: {};
-    get: operations["getListOfConversionTypes"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getListOfConversionTypes: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        conversionTypeIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                displayName: string;
-                order: number;
-                active: boolean
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            displayName: string;
+            order: number;
+            active: boolean
           }
-        };
-      };
+        }
+      }
     };
   };
+};
+
+function getListOfConversionTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/conversion-type',
+    params: {
+      query?: {
+        searchField?: `string`,
+        conversionTypeIds?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1825,46 +1805,46 @@ Get a list of conversion status.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/conversion-status": {
-    parameters: {};
-    get: operations["getListOfConversionStatus"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getListOfConversionStatus: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        statusIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                displayName: string;
-                order: number;
-                active: boolean;
-              }[];
-              totalRecords: number;
-              filteredRecords: number
-            }
-          }       
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            displayName: string;
+            order: number;
+            active: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number
+        }
+      }
     };
   };
+};
+
+function getListOfConversionStatus(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/conversion-status',
+    params: {
+      query?: {
+        searchField?: `string`,
+        statusIds?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1926,46 +1906,46 @@ Get a list of conversion piggyback types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/conversion-piggyback-type": {
-    parameters: {};
-    get: operations["getListOfConversionPiggybackTypes"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getListOfConversionPiggybackTypes: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        piggybackTypeIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                displayName: string;
-                order: number;
-                active: boolean;
-              }[];
-              totalRecords: number;
-              filteredRecords: number
-            }
-          }    
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            displayName: string;
+            order: number;
+            active: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number
+        }
+      }
     };
   };
+};
+
+function getListOfConversionPiggybackTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/conversion-piggyback-type',
+    params: {
+      query?: {
+        searchField?: `string`,
+        piggybackTypeIds?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2036,47 +2016,47 @@ Get a list of conversion attribute types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/conversion/static/conversion-attribution-type": {
-    parameters: {};
-    get: operations["getListOfConversionAttributionTypes"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getListOfConversionAttributionTypes: {
-    parameters: {
-      query?: {
-        searchField?: string;
-        attributionTypeIds?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                displayName: string;
-                order: number;
-                description: string;
-                active: boolean
-              }[];
-              totalRecords: number;
-              filteredRecords: number
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            displayName: string;
+            order: number;
+            description: string;
+            active: boolean
+          }[];
+          totalRecords: number;
+          filteredRecords: number
+        }
+      }
     };
   };
+};
+
+function getListOfConversionAttributionTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/conversion/static/conversion-piggyback-type',
+    params: {
+      query?: {
+        searchField?: `string`,
+        attributionTypeIds?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
