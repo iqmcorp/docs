@@ -146,133 +146,96 @@ Get a list of reports.
   <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/reports/list": {
-    parameters: {};
-    get: operations["getReportList"];
-    post: operations["fetchReportList"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            reportName: string;
+            startDate: number;
+            endDate: number;
+            dimensions: string;
+            customerIds: number[];
+            customerDetails: {
+              owId: number;
+              organizationName: string;
+              organizationLogo: string;
+              statusId: number;
+              status: string;
+              supportEmail: string;
+              timezone: number
+            }[];
+            timezoneId: number;
+            reportSchedulingEventDetails: {
+              eventId: number;
+              deliveryFrequency: number;
+              fileType: number;
+              subscriberEmails: string[];
+              eventEndDate: number;
+              deliveryDay: string;
+            }
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    };
   };
+};
+
+function getReportList(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ra/reports/list',
+    params: {
+      query?: {
+        customerIds?: `string`,
+        sortBy?: `string`,
+        searchField?: `string`,
+        limit?: `number`,
+        pageNo?: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 
-export interface operations {
-  getReportList: {
-    parameters: {
-      query?: {
-        customerIds?: string;
-        sortBy?: string;
-        searchField?: string;
-        limit?: number;
-        pageNo?: number;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                reportName: string;
-                startDate: number;
-                endDate: number;
-                dimensions: string;
-                customerIds: number[];
-                customerDetails: {
-                  owId: number;
-                  organizationName: string;
-                  organizationLogo: string;
-                  statusId: number;
-                  status: string;
-                  supportEmail: string;
-                  timezone: number
-                }[];
-                timezoneId: number;
-                reportSchedulingEventDetails: {
-                  eventId: number;
-                  deliveryFrequency: number;
-                  fileType: number;
-                  subscriberEmails: string[];
-                  eventEndDate: number;
-                  deliveryDay: string;
-                }
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
-    };
-  };
-  fetchReportList: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
+/* or */
+
+function fetchReportList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/reports/list',
     requestBody: {
       content: {
         "application/json": {
-          searchBy?: string[];
-          owId?: number;
-          customerIds?: string;
-          uowId?: number;
-          pagination?: string;
-          pageNo?: number;
-          noOfEntries?: number;
-          sortBy?: string;
-          searchField?: string
-          order?: "asc" | "desc";
-          offset?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                reportName: string;
-                startDate: number;
-                endDate: number;
-                dimensions: string;
-                customerIds: number[];
-                customerDetails: {
-                  owId: number;
-                  organizationName: string;
-                  organizationLogo: string;
-                  statusId: number;
-                  status: string;
-                  supportEmail: string;
-                  timezone: number
-                }[];
-                timezoneId: number;
-                reportSchedulingEventDetails: {
-                  eventId: number;
-                  deliveryFrequency: number;
-                  fileType: number;
-                  subscriberEmails: string[];
-                  eventEndDate: number;
-                  deliveryDay: string;
-                }
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
-    };
+          searchBy?: `array of strings`,
+          owId?: `number`,
+          customerIds?: `string`,
+          uowId?: `number`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: [ "asc" | "desc" ],
+          offset?: `number`
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -345,54 +308,54 @@ Get report data by report ID.
   <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/ra/report/{reportId}": {
-    parameters: {};
-    get: operations["getReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getReport: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        reportId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              reportName: string;
-              startDate: number;
-              endDate: number;
-              dimensions: string;
-              columns: string[];
-              timezoneId: number;
-              requestType: number;
-              reportSchedulingEventDetails: {
-                eventId: number;
-                deliveryFrequency: number;
-                fileType: number;
-                subscriberEmails: string[];
-                eventEndDate: number;
-                deliveryDay: string;
-                runningTotalEnabled: number;
-                earliestCampaignStartDate: number;
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          reportName: string;
+          startDate: number;
+          endDate: number;
+          dimensions: string;
+          columns: string[];
+          timezoneId: number;
+          requestType: number;
+          reportSchedulingEventDetails: {
+            eventId: number;
+            deliveryFrequency: number;
+            fileType: number;
+            subscriberEmails: string[];
+            eventEndDate: number;
+            deliveryDay: string;
+            runningTotalEnabled: number;
+            earliestCampaignStartDate: number;
           }
-        };
-      };
+        }
+      }
     };
   };
+};
+
+function getReport(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ra/reports/{reportId}',
+    params: {
+      path?: {
+        reportId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -508,73 +471,73 @@ Response 200
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/add": {
-    parameters: {};
-    post: operations["saveReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  saveReport: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: number;
+      }
     };
+  };
+};
+
+function saveReport(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/reports/add',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          reportName?: string;
-          startDate?: number;
-          endDate?: number;
-          dimensions?: string;
-          customerIds?: number[];
-          columns?: string[];
-          timezoneId?: number;
-          requestType?: number;
-          reportAggregated?: string;
-          owId?: number;
-          createdByUOWId?: number;
-          modifiedByUOWId?: number;
-          timezoneName?: string;
-          organizationName?: string;
-          customerDetails?: {
-            owId?: number;
-            organizationName?: string;
-            organizationLogo?: string;
-            statusId?: number;
-            status?: string;
-            supportEmail?: string;
-            timezone?: number;
-            organizationType?: string;
-          }[];
+          id?: `number`,
+          reportName?: `string`,
+          startDate?: `number`,
+          endDate?: `number`,
+          dimensions?: `string`,
+          customerIds?: `array of numbers`,
+          columns?: `array of strings`,
+          timezoneId?: `number`,
+          requestType?: `number`,
+          reportAggregated?: `string`,
+          owId?: `number`,
+          createdByUOWId?: `number`,
+          modifiedByUOWId?: `number`,
+          timezoneName?: `string`,
+          organizationName?: `string`,
+          customerDetails?: [
+            {
+            owId?: `number`,
+            organizationName?: `string`,
+            organizationLogo?: `string`,
+            statusId?: `number`,
+            status?: `string`,
+            supportEmail?: `string`,
+            timezone?: `number`,
+            organizationType?: `string`,
+            }
+          ],
           reportSchedulingEventDetails?: {
-            earliestCampaignStartDate?: number;
-            reportId?: number;
-            deliveryFrequency?: number;
-            fileType?: number;
-            subscriberEmails?: string[];
-            eventEndDate?: number;
-            deliveryDay?: string;
-            runningTotalEnabled?: boolean;
-          };
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: number;
+            earliestCampaignStartDate?: `number`,
+            reportId?: `number`,
+            deliveryFrequency?: `number`,
+            fileType?: `number`,
+            subscriberEmails?: `array of strings`,
+            eventEndDate?: `number`,
+            deliveryDay?: `string`,
+            runningTotalEnabled?: `boolean`,
           }
-        };
-      };
-    };
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -823,119 +786,122 @@ Once a report is created, execute it with this endpoint.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/execute": {
-    parameters: {};
-    post: operations["executeReportData"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  executeReportData: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          total: {
+            CTR: number;
+            date: number;
+            deviceTypeId: number;
+            VCR: number;
+            budgetDay: string;
+            gender: string;
+            budgetPacing: boolean;
+            dataCost: number;
+            totalRecords: number;
+            campaignTimezone: string;
+            eCPM: number;
+            bidImpressions: number;
+            startTime: number;
+            mediaSpent: number;
+            eCPC: number;
+            deviceType: string;
+            startCount: number;
+            campaignType: string;
+            spent: number;
+            impressions: number;
+            eCPCV: number;
+            completeCount: number;
+            budgetTotal: number;
+            maxBid: number;
+            clicks: number;
+            endTime: number;
+            campaignName: string;
+            status: string;
+          };
+          data: {
+            CTR: number;
+            date: number;
+            deviceTypeId: number;
+            VCR: number;
+            budgetDay: string;
+            gender: string;
+            budgetPacing: boolean;
+            dataCost: number;
+            totalRecords: number;
+            campaignTimezone: string;
+            eCPM: number;
+            bidImpressions: number;
+            startTime: number;
+            mediaSpent: number;
+            eCPC: number;
+            deviceType: string;
+            startCount: number;
+            campaignType: string;
+            spent: number;
+            impressions: number;
+            eCPCV: number;
+            completeCount: number;
+            budgetTotal: number;
+            maxBid: number;
+            clicks: number;
+            endTime: number;
+            campaignName: string;
+            status: string;
+          }[];
+          totalRecords: number
+        }
+      }
+    };
+  };
+};
+
+function executeReportData(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/reports/execute',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          reportName?: string;
-          startDate?: number;
-          endDate?: number;
-          dimensions?: string;
-          customerIds?: number[];
-          columns?: string[];
-          timezoneId?: number;
-          requestType?: number;
-          reportAggregated?: string;
-          owId?: number;
-          createdByUOWId?: number;
-          modifiedByUOWId?: number;
-          timezoneName?: string;
-          organizationName?: string;
-          resultType?: string;
-          fileType?: number;
+          id?: `number`;
+          reportName?: `string`,
+          startDate?: `number`,
+          endDate?: `number`,
+          dimensions?: `string`,
+          customerIds?: `array of numbers`,
+          columns?: `array of strings`,
+          timezoneId?: `number`,
+          requestType?: `number`,
+          reportAggregated?: `string`,
+          owId?: `number`,
+          createdByUOWId?: `number`,
+          modifiedByUOWId?: `number`,
+          timezoneName?: `string`,
+          organizationName?: `string`,
+          resultType?: `string`,
+          fileType?: `number`,
           filters?: {
-            [key: string]: Record<string, never>[];
-          };
-          pageNo?: number;
-          noOfEntries?: number;
-          sortBy?: string;
-          searchField?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              total: {
-                CTR: number;
-                date: number;
-                deviceTypeId: number;
-                VCR: number;
-                budgetDay: string;
-                gender: string;
-                budgetPacing: boolean;
-                dataCost: number;
-                totalRecords: number;
-                campaignTimezone: string;
-                eCPM: number;
-                bidImpressions: number;
-                startTime: number;
-                mediaSpent: number;
-                eCPC: number;
-                deviceType: string;
-                startCount: number;
-                campaignType: string;
-                spent: number;
-                impressions: number;
-                eCPCV: number;
-                completeCount: number;
-                budgetTotal: number;
-                maxBid: number;
-                clicks: number;
-                endTime: number;
-                campaignName: string;
-                status: string;
-              };
-              data: {
-                           CTR: number;
-                date: number;
-                deviceTypeId: number;
-                VCR: number;
-                budgetDay: string;
-                gender: string;
-                budgetPacing: boolean;
-                dataCost: number;
-                totalRecords: number;
-                campaignTimezone: string;
-                eCPM: number;
-                bidImpressions: number;
-                startTime: number;
-                mediaSpent: number;
-                eCPC: number;
-                deviceType: string;
-                startCount: number;
-                campaignType: string;
-                spent: number;
-                impressions: number;
-                eCPCV: number;
-                completeCount: number;
-                budgetTotal: number;
-                maxBid: number;
-                clicks: number;
-                endTime: number;
-                campaignName: string;
-                status: string;
-              }[];
-              totalRecords: number
-            }
-          }
-        };
-      };
-    };
+            [key: `string`]: Record<`string`, never>[],
+          },
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -974,32 +940,35 @@ Delete a report and its scheduling data by ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/{reportId}": {
-    parameters: {};
-    delete: operations["deleteReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  DeleteReport: {
-    parameters: {
-      header: {
-        "X-IAA-API-TOKEN": string;
-        "Base-Url": string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        }
-      };
-    };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    }
   };
+};
+
+function DeleteReport(): Promise < Responses > {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ra/report/{reportId}',
+    params: {
+     path: {
+      reportId: `number`
+     }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1101,56 +1070,59 @@ Edit a report's data based on given field.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/{reportId}": {
-    parameters: {};
-    patch: operations["updateReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UpdateReport: {
-    parameters: {
-      header: {
-        Accept: string;
-        "X-IAA-API-TOKEN": string;
-      };
-    };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    }
+  };
+};
+
+function UpdateReport(): Promise < Responses > {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/ra/report/{reportId}',
+    params: {
+     path: {
+      reportId: `number`
+     }
+    },
     requestBody: {
       content: {
         "application/json": {
-          customerIds?: number[];
-          startDate?: number;
-          endDate?: number;
-          reportName?: string;
-          timezoneId?: number;
-          timezoneName?: string;
-          dimensions?: string;
-          columns?: string[];
-          requestType?: number;
-          reportAggregated?: number;
+          customerIds?: `array of numbers`,
+          startDate?: `number`,
+          endDate?: `number`,
+          reportName?: `string`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          dimensions?: `string`,
+          columns?: `array of strings`,
+          requestType?: `number`,
+          reportAggregated?: `number`,
           reportSchedulingEventDetails?: {
-            eventId?: number;
-            deliveryFrequency?: number;
-            fileType?: number;
-            subscriberEmails?: string[];
-            eventEndDate?: number;
-            deliveryDay?: string;
-          }        
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
+            eventId?: `number`,
+            deliveryFrequency?: `number`,
+            fileType?: `number`,
+            subscriberEmails?: `array of strings`,
+            eventEndDate?: `number`,
+            deliveryDay?: `string`,
           }
-        };
-      };
-    };
-  }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1197,40 +1169,43 @@ Create a copy of a report with its ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/ra/report/duplicate": {
-    parameters: {};
-    post: operations["duplicateReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  duplicateReport: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    }
+  };
+};
+
+function duplicateReport(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/report/duplicate',
+    params: {
+     path: {
+      reportId: `number`
+     }
+    },
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          reportName?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
-    };
+          id?: `number`,
+          reportName?: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1313,53 +1288,56 @@ Create and save a report scheule.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/email/schedule": {
-    parameters: {};
-    post: operations["saveReportScheduleEvent"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  saveReportScheduleEvent: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          scheduledData: {
+            earliestCampaignStartDate: string;
+            reportId: number;
+            deliveryFrequency: number;
+            fileType: number;
+            subscriberEmails: string[];
+            eventEndDate: number;
+            deliveryDay: number;
+            runningTotalEnabled: boolean;
+          };
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function saveReportScheduleEvent(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/report/email/schedule',
     requestBody: {
       content: {
         "application/json": {
-          earliestCampaignStartDate?: number;
-          reportId?: number;
-          deliveryFrequency?: number;
-          fileType?: number;
-          subscriberEmails?: string[];
-          eventEndDate?: number;
-          deliveryDay?: string;
-          runningTotalEnabled?: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              scheduledData: {
-                earliestCampaignStartDate: string;
-                reportId: number;
-                deliveryFrequency: number;
-                fileType: number;
-                subscriberEmails: string[];
-                eventEndDate: number;
-                deliveryDay: number;
-                runningTotalEnabled: boolean;
-              };
-              message: string;
-            }
-          }
-        };
-      };
-    };
+          earliestCampaignStartDate?: `number`,
+          reportId?: `number`,
+          deliveryFrequency?: `number`,
+          fileType?: `number`,
+          subscriberEmails?: `array of strings`,
+          eventEndDate?: `number`,
+          deliveryDay?: `string`,
+          runningTotalEnabled?: `boolean`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1437,57 +1415,61 @@ Include whichever fields to be updated in the request body:
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/email/schedule/{reportId}": {
-    parameters: {};
-    patch: operations["updateReportScheduleEvent"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  updateReportScheduleEvent: {
-    parameters: {
-      path: {
-        reportId: number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          scheduledData: {
+            earliestCampaignStartDate: number;
+            reportId: number;
+            deliveryFrequency: number;
+            fileType: number;
+            subscriberEmails: string[];
+            eventEndDate: number;
+            deliveryDay: string;
+            runningTotalEnabled: boolean;
+          }
+          message: string;
+        }
+      }
     };
+  };
+};
+
+function updateReportScheduleEvent(): Promise < Responses > {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/ra/report/email/schedule/{reportId}',
+    params: {
+      path: {
+        reportId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          earliestCampaignStartDate?: number;
-          reportId?: number;
-          deliveryFrequency?: number;
-          fileType?: number;
-          subscriberEmails?: string[];
-          eventEndDate?: number;
-          deliveryDay?: string;
-          runningTotalEnabled?: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              scheduledData: {
-                earliestCampaignStartDate: number;
-                reportId: number;
-                deliveryFrequency: number;
-                fileType: number;
-                subscriberEmails: string[];
-                eventEndDate: number;
-                deliveryDay: string;
-                runningTotalEnabled: boolean;
-              }
-              message: string;
-            }
-          }
-        };
-      };
-    };
+          earliestCampaignStartDate?: `number`,
+          reportId?: `number`,
+          deliveryFrequency?: `number`,
+          fileType?: `number`,
+          subscriberEmails?: `array of strings`,
+          eventEndDate?: `number`,
+          deliveryDay?: `string`,
+          runningTotalEnabled?: `boolean`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1528,33 +1510,37 @@ Remove a report schedule.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/email/schedule/{reportId}": {
-    parameters: {};
-    delete: operations["deleteReportScheduleEvent"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  deleteReportScheduleEvent: {
-    parameters: {
-      path: {
-        reportId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              message: string
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string
+        }
+      }
     };
   };
+};
+
+function deleteReportScheduleEvent(): Promise < Responses > {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ra/report/email/schedule/{reportId}',
+    params: {
+      path: {
+        reportId: `number`
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1649,63 +1635,64 @@ Refer to the [resource properties](#resource-properties) table for request schem
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/download": {
-    parameters: {};
-    post: operations["downloadReport"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  DownloadReport: {
-    parameters: {
-      header: {
-        "x-iaa-api-token": string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          url: string
+        }
+      }
     };
+  };
+};
+
+function DownloadReport(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/report/download',
     requestBody: {
       content: {
         "application/json": {
-          url: string;
-          fileName: string;
-          method: string;
+          url: `string`,
+          fileName: `string`,
+          method: `string`,
           headers: {
-            "Base-Url": string;
-          };
+            "Base-Url": `string`,
+          },
           data: {
-            id: string;
-            page_number: number;
-            total_count: number;
-            request_type: string;
-            sort_by: string;
-            dataPath: string;
+            id: `string`,
+            page_number: `number`,
+            total_count: `number`,
+            request_type: `string`,
+            sort_by: `string`,
+            dataPath: `string`,
             dateRange: {
-              start: number;
-              end: number;
+              start: `number`,
+              end: `number`,
             };
-            sort_type: string;
-          };
-          columns: {
-            label: string;
-            value: string;
-          }[];
-          token: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              url: string
+            sort_type: `string`,
+          },
+          columns: [
+            {
+              label: `string`,
+              value: `string`,
             }
-          }
-        };
-      };
-    };
+          ],
+          token: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1782,55 +1769,53 @@ Get a list of conversion's custom fields by filter parameters.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/ra/conversion/custom-field/list": {
-    parameters: {};
-    post: operations["getConversionCustomFieldsDetailsList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getConversionCustomFieldsDetailsList: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filterRecords: number;
+          customFieldData: {
+            id: number;
+            pixelName: string;
+            customFieldName: string;
+          }[]
+        }
+      }
     };
+  };
+};
+
+function getConversionCustomFieldsDetailsList(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/conversion/custom-field/list',
     requestBody: {
       content: {
         "application/json": {
-          searchBy?: string[];
-          owIds?: number[];
-          pagination?: string;
-          pageNo?: number;
-          noOfEntries?: number;
-          sortBy?: string;
-          searchField?: string;
-          order?: "asc" | "desc";
-          offset?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filterRecords: number;
-              customFieldData: {
-                id: number;
-                pixelName: string;
-                customFieldName: string;
-              }[]
-            }
-          }
-        };
-      };
-    };
+          searchBy?: `array of strings`,
+          owIds?: `array of numbers`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: [ "asc" | "desc" ],
+          offset?: `number`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1876,31 +1861,34 @@ Get a static list of report request type.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/rb/static/report-request-type": {
-    parameters: {};
-    get: operations["getRequestType"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getRequestType: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-            }[]
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+        }[]
+      }
     };
   };
+};
+
+function getRequestType(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/rb/static/report-request-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1946,31 +1934,34 @@ Get a static list of report file types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/rb/static/report-file-type": {
-    parameters: {};
-    get: operations["getFileType"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getFileType: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            sucess: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-            }[]
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+        }[]
+      }
     };
-  }
+  };
+};
+
+function getFileType(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/rb/static/report-file-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2026,31 +2017,34 @@ Get a static list of report delivery frequency types.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/rb/static/report-delivery-frequency": {
-    parameters: {};
-    get: operations["getDeliveryFrequency"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getDeliveryFrequency: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-            }[]
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+        }[]
+      }
     };
   };
+};
+
+function getDeliveryFrequency(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/rb/static/report-delivery-frequency',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2191,80 +2185,78 @@ Get dimensions and metrics information grouped by category (see [complete table]
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/dimension-metrics/detail": {
-    parameters: {};
-    get: operations["getDimensionAndMetricDetails"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getDimensionAndMetricDetails: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              metrics: {
-                budget: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType:string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                counts: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-              }[];
-              dimensions: {
-                Campaign Specifics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  isFilterSupported: boolean;
-                  isRowToColumn: boolean;
-                  isCustomerDependent: boolean;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: number;
-                  key: string;
-                }[];
-                Locations: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  isFilterSupported: boolean;
-                  isRowToColumn: boolean;
-                  isCustomerDependent: boolean;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: number;
-                  key: string;
-                }[]
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          metrics: {
+            budget: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            counts: {
+              id: number;
+              label: string;
+              order: number;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+          }[];
+          dimensions: {
+              Campaign Specifics: {
+              id: number;
+              label: string;
+              order: number;
+              isFilterSupported: boolean;
+              isRowToColumn: boolean;
+              isCustomerDependent: boolean;
+              fieldDataType: string;
+              description: string;
+              groupId: number;
+              key: string;
+            }[];
+            Locations: {
+              id: number;
+              label: string;
+              order: number;
+              isFilterSupported: boolean;
+              isRowToColumn: boolean;
+              isCustomerDependent: boolean;
+              fieldDataType: string;
+              description: string;
+              groupId: number;
+              key: string;
+            }[]
           }
-        };
-      };
+        }
+      }
     };
   };
+};
+
+function getDimensionAndMetricDetails(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ra/report/dimension-metrics/detail',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
