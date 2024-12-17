@@ -155,77 +155,76 @@ For further information see the complete [Login API Documentation](https://app.i
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
       };
     };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
     requestBody: {
       content: {
         "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-              owId: number;
-            };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-            };
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -311,54 +310,55 @@ For further information see the complete [Creative Types API Documentation](http
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/master/creativeTypes": {
-    parameters: {};
+import {
+  getInstance
+} from "prerequisites"
 
-    get: operations["getCreativeTypes_1"];
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          label: string;
+          rtbTypeId: string;
+        }[];
+        totalRecords: number;
+        filteredRecords: number;
+      }
+    };
   };
-}
+};
 
-export interface operations {
-  getCreativeTypes_1: {
-    parameters: {
+function getCreativeTypes_1(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/creativeTypes',
+    params: {
       query?: {
-        creativeTypeIds?: string;
-        ids?: string;
-        pageNo?: number;
-        noOfEntries?: number;
-        sortBy?: string;
-        order?: string;
-        searchField?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              label: string;
-              rtbTypeId: string;
-            }[];
-            totalRecords: number;
-            filteredRecords: number;
-          }
-        };
-      };
-    };
+        creativeTypeIds?: `string`,
+        ids?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        order?: `string`,
+        searchField?: `string`
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -449,57 +449,56 @@ J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅ�
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v2/crt/add/image/banner/creative": {
-    parameters: {};
-    post: operations["AddImageCreative"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  AddImageCreative: {
-    parameters: {
-      header: {
-        "X-IAA-OW-ID": string;
-        Authorization: string;
-        "content-type": "multipart/form-data";
-      };
+const axios = getInstance();
+
+interface Responses {
+  201: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          data: number[];
+          message: string;
+        }
+      }
     };
+  };
+};
+
+function AddImageCreative(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/crt/add/image/banner/creative',
     requestBody?: {
       content: {
         "application/x-www-form-urlencoded": {
-          creativeFiles: string;
+          creativeFiles: `string`,
           creativeImageMetadata: {
             "50b0edfc14f011eab703f36c2a7f7251": {
-              originalFileName: string;
-              clickUrl: string;
-              pixelUrl: string[];
-            };
+              originalFileName: `string`,
+              clickUrl: `string`,
+              pixelUrl: `array of strings`
+            },
             "4c49c1bc14f011eaaa9ceb9a07a6934f": {
-              originalFileName: string;
-              clickUrl: string;
-            };
-          };
-        };
-      };
-    };
-    responses: {
-      201: {
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              data: number[];
-              message: string;
+              originalFileName: `string`,
+              clickUrl: `string`,
             }
           }
-        };
-      };
-    };
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -585,83 +584,83 @@ For further information see the complete [Creative Details API Documentation](ht
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/crt/basic/list": {
-    parameters: {};
-    post: operations["getCreativeBasicDetailList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getCreativeBasicDetailList: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
+    content: {
+      "application/json": {
+        sucess: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            creativeTypeId: number;
+            creativeType: string;
+            status: string;
+            createdAt: number;
+            modifiedAt: number;
+            owId: number;
+            organizationName: string;
+            organizationLogo: string;
+            previewFlag: number;
+            creativeScreenshotSource: string;
+            creativeCardSource: string;
+            creativeThumbnailSource: string;
+            duration: number;
+            pixelUrls: string[];
+            clickUrl: string;
+            height: number;
+            width: number
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    };
+  };
+};
+
+function getCreativeBasicDetailList(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/basic/list',
     requestBody: {
       content: {
         "application/json": {
-          owIds?: number[];
-          isAllOwIds?: boolean;
-          ids?: number[];
-          creativeIds?: number[];
+          owIds?: `array of numbers`,
+          isAllOwIds?: `boolean`,
+          ids?: `array of numbers`,
+          creativeIds?: `array of numbers`,
           //highlight-next-line
-          status?: number[];
-          creativeTypeIds?: number[];
-          responseFields?: string[];
-          campaignId?: number;
-          allOwIds?: boolean;
-          pageNo?: number;
-          noOfEntries?: number;
-          sortBy?: string;
-          searchField?: string;
-          order?: "asc" | "desc"
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            sucess: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                creativeTypeId: number;
-                creativeType: string;
-                status: string;
-                createdAt: number;
-                modifiedAt: number;
-                owId: number;
-                organizationName: string;
-                organizationLogo: string;
-                previewFlag: number;
-                creativeScreenshotSource: string;
-                creativeCardSource: string;
-                creativeThumbnailSource: string;
-                duration: number;
-                pixelUrls: string[];
-                clickUrl: string;
-                height: number;
-                width: number
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
-    };
+          status?: `string`,
+          creativeTypeIds?: `array of numbers`,
+          responseFields?: `array of strings`,
+          campaignId?: `number`,
+          allOwIds?: `boolean`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: [ "asc" | "desc" ]
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -733,73 +732,73 @@ The minimum required values for IO creation are as listed below. See a complete 
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/cmp/io/add": {
-    parameters: {};
-    post: operations["createCampaignIO"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  createCampaignIO: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          ioId: number;
+          ioName: string;
+          ioStartTime: number;
+          ioEndTime: number;
+          ioTotalBudget: number;
+          ioTimeZoneId: number;
+          ioBudgetTypeId: number;
+          ioBudgetDistributionMethodId: number;
+          isAutoSumIoTotalBudget: boolean;
+          ioTotalImpressions: number
+        }
+      }
+    };
+  };
+};
+
+function createCampaignIO(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/io/add',
     requestBody: {
       content: {
         "application/json": {
-          ioId?: number;
-          ioName: string;
-          owId?: number;
-          createdByUowId?: number;
-          modifiedByUowId?: number;
-          ioStartTime?: number;
-          ioEndTime?: number;
-          ioTotalBudget?: number;
-          ioTimeZoneId?: number;
-          isAutoSumIoTotalBudget?: boolean;
-          ioBudgetDistributionMethodId?: number;
-          ioBudgetTypeId?: number;
-          ioTotalImpressions?: number;
-          ioStatusId?: number;
-          ioNextPerformanceCheck?: number;
-          ioLastPriorityShift?: number;
-          ioCurrentPriority?: number;
-          isIoPrioritise?: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              ioId: number;
-              ioName: string;
-              ioStartTime: number;
-              ioEndTime: number;
-              ioTotalBudget: number;
-              ioTimeZoneId: number;
-              ioBudgetTypeId: number;
-              ioBudgetDistributionMethodId: number;
-              isAutoSumIoTotalBudget: boolean;
-              ioTotalImpressions: number;
-            }
-          }
-        };
-      };
-    };
+          ioId?: `number`,
+          ioName: `string`,
+          owId?: `number`,
+          createdByUowId?: `number`,
+          modifiedByUowId?: `number`,
+          ioStartTime?: `number`,
+          ioEndTime?: `number`,
+          ioTotalBudget?: `number`,
+          ioTimeZoneId?: `number`,
+          isAutoSumIoTotalBudget?: `boolean`,
+          ioBudgetDistributionMethodId?: `number`,
+          ioBudgetTypeId?: `number`,
+          ioTotalImpressions?: `number`,
+          ioStatusId?: `number`,
+          ioNextPerformanceCheck?: `number`,
+          ioLastPriorityShift?: `number`,
+          ioCurrentPriority?: `number`,
+          isIoPrioritise?: `boolean`,
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -976,57 +975,58 @@ To create a PG Deal, an exchange must be provided. Use the master exchange endpo
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
- "/api/v3/master/exchanges": {
-    parameters: {};
-    get: operations["getExchanges"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getExchanges: {
-    parameters: {
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            urlName: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    };
+  };
+};
+
+function getExchanges(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/exchanges',
+    params: {
       query?: {
-        exchangeIds?: string;
-        ids?: string;
-        pageNo?: number;
-        noOfEntries?: number;
-        sortBy?: string;
-        order?: string;
-        searchField?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                name: string;
-                urlName: string;
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
-    };
+        exchangeIds?: `string`,
+        ids?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        order?: `string`,
+        searchField?: `string`,
+      }
+    }
   };
-}
 
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1221,100 +1221,94 @@ For further information see the complete [Campaign Creation API Documentation](h
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/cmp/pg/campaigns/add": {
-    parameters: {};
-    post: operations["addPGCampaign"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+          campaignId: number
+        }
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }
+      }
+    };
   };
 }
 
-export interface operations {
-  addPGCampaign: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-    };
+function addPGCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/pg/campaigns/add',
     requestBody: {
       content: {
         "application/json": {
-          countryId?: number;
-          politicalAdvertiserClientId?: number;
+          countryId?: `number`,
+          politicalAdvertiserClientId?: `number`,
           conversionTargeting?: {
-            conversionTypeId?: number;
-            conversionIds: number[];
-          };
+            conversionTypeId?: `number`,
+            conversionIds: `array of numbers`,
+          },
           creativeTargeting: {
             //highlight-start
-            creativeTypeId: number;
-            creativeIds: number[];
+            creativeTypeId: `number`,
+            creativeIds: `array of numbers`,
             //highlight-end
-          };
+          },
           inventoryTargeting: {
             //highlight-start
-            pgDealIds: number[];
-            paymentTypeId?: number;
+            pgDealIds: `array of numbers`,
+            paymentTypeId?: `number`,
             //highlight-end
-          };
+          },
           pgCampaignInfo: {
-            campaignName: string;
-            timeZoneId: number;
-            spendingBudget?: number;
-            maxBid: number;
-            startTime: number;
-            endTime?: number;
-            totalImpressions?: number;
-            advertiserDomain: string;
+            campaignName: `string`,
+            timeZoneId: `number`,
+            spendingBudget?: `number`,
+            maxBid: `number`,
+            startTime: `number`,
+            endTime?: `number`,
+            totalImpressions?: `number`,
+            advertiserDomain: `string`,
             //highlight-next-line
-            ioId: number;
+            ioId: `number`,
             //highlight-next-line
-            budgetTypeId: number;
-            campaignTypeId?: number;
-            owId?: number;
-            uowId?: number;
-            creativeTypeId?: number;
-            status?: string;
-            configObj?: string;
-            totalBudget?: number;
-            pgFeesPercentage?: number;
-          };
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              message: string;
-              campaignId: number;
-            }
+            budgetTypeId: `number`,
+            campaignTypeId?: `number`,
+            owId?: `number`,
+            uowId?: `number`,
+            creativeTypeId?: `number`,
+            status?: `string`,
+            configObj?: `string`,
+            totalBudget?: `number`,
+            pgFeesPercentage?: `number`,
           }
-        };
-      };
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[]
-          }
-        };
-      };
-    };
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1417,98 +1411,91 @@ For further information see the complete [Campaign Details API Documentation](ht
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v2/cmp/campaign/{campaign_id}": {
-    parameters: {};
-    get: operations["Getcampaigndetails"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Getcampaigndetails: {
-    parameters: {
-      query: {
-        isSpentRequired: boolean;
-      };
-      header: {
-        "X-IAA-OW-ID": string;
-        Authorization: string;
-      };
-      path: {
-        campaign_id: string;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              owId: number;
-              parentOrganizationName: string;
-              id: number;
-              uowId: number;
-              campaignName: string;
-              advertiserDomain: string;
-              creativeType: number;
-              campaignType: number;
-              totalBudgetPacing: boolean;
-              isTvAd: boolean;
-              budgetDay: number;
-              budgetTotal: number;
-              maxBid: number;
-              timezone: number;
-              startTime: number;
-              endTime: number;
-              //highlight-next-line
-              status: string;
-              dspMargin: number;
-              platformMargin: number;
-              userDealMargin: number;
-              spentScale: boolean;
-              creativeIds: string;
-              spent: number;
-              conversionType: string;
-              bidOptimization: boolean;
-              bidPacing: boolean;
-              impressionCapping: number;
-              deviceType: string;
-              trafficType: string;
-              exchanges: string;
-              countryId: string;
-              locationDetails: Record<string, never>;
-              isCampaignFromNewPlatform: boolean;
-              organizationName: string;
-              userName: string;
-              isEditAccess: boolean;
-              isApprovalAccess: boolean;
-              isMarginSet: boolean;
-              isParentInvoiceTemplateSet: boolean;
-              isUnapprovedAudienceTargeted: boolean;
-              isAllAudienceUnapproved: boolean;
-            };
-          };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+          startTime: number;
+          endTime: number;
+          //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          spent: number;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          impressionCapping: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          countryId: string;
+          locationDetails: Record<string, never>;
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userName: string;
+          isEditAccess: boolean;
+          isApprovalAccess: boolean;
+          isMarginSet: boolean;
+          isParentInvoiceTemplateSet: boolean;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
         };
       };
     };
   };
+};
+
+function Getcampaigndetails(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaign_id}',
+    params: {
+      path: {
+        campaign_id: `number`
+      },
+      query: {
+        isSpentRequired: `boolean`
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
+
+
 ```
 
 </TabItem></Tabs>
 
 </div></div>
-
----
-
-
-## Best Practices
-
-The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error.
-
-API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
-
-The maximum data size per page is 1K rows.
