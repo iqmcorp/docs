@@ -58,44 +58,43 @@ Any customer or organization can send invitations to one or more users by provid
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/invite": {
-    parameters: {};
-    post: operations["SendUserInvitations"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  SendUserInvitations: {
-    parameters: {
-      header: {
-        "X-IAA-OW-ID": number;
+const axios = getInstance();
 
-        Authorization: string;
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
+  };
+};
+
+function SendUserInvitations(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/user/invite',
     requestBody: {
       content: {
-        "application/json": {
-          email: string;
-          name: string;
-        }[];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-    };
+        "application/json": [
+          {
+            email: `string`,
+            name: `string`,
+          }
+        ]
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -159,53 +158,56 @@ The invited user will receive an email with a link and a hash which can be valid
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/invite/validate": {
-    parameters: {};
-    post: operations["ValidateInvite"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  ValidateInvite: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          isExpired: boolean;
+        };
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          field: string;
+        }[];
+      };
+    };
+  };
+};
+
+function ValidateInvite(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/invite/validate',
     requestBody: {
       content: {
         "application/json": {
-          inviteHash: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              isExpired: boolean;
-            };
-          };
-        };
-      };
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-              field: string;
-            }[];
-          };
-        };
-      };
-    };
+          inviteHash: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -276,63 +278,62 @@ A user/customer can sign up and create a password to access the API.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/sign-up": {
-    parameters: {};
-    post: operations["UserSign-up/PasswordCreation"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UserSign-up/PasswordCreation: {
-    parameters: {
-      header: {
-        Authorization: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+
+          expires_in: number;
+        };
       };
     };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+};
+
+function UserSign-up/PasswordCreation(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/sign-up',
     requestBody: {
       content: {
         "application/json": {
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-
-              expires_in: number;
-            };
-          };
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-    };
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -421,76 +422,74 @@ Once the user/customer logs in, the API will send an OAuth compliant response wi
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+
+          expires_in: number;
+
+          owId: number;
+        };
       };
     };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
     requestBody: {
       content: {
         "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-
-              expires_in: number;
-
-              owId: number;
-            };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-            };
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          grantType: `string`,
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -525,27 +524,30 @@ The user can log out from the API.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/logout": {
-    parameters: {};
-    post: operations["Logout"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Logout: {
-    parameters: {};
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
   };
+};
+
+function Logout(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/logout',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -608,52 +610,55 @@ The user can update their password.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/update-password": {
-    parameters: {};
-    post: operations["UpdatePassword"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UpdatePassword: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidReason: string;
+          isValid: boolean;
+        };
+      };
+    };
+  };
+};
+
+function UpdatePassword(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/user/update-password',
     requestBody: {
       content: {
         "application/json": {
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              invalidReason: string;
-              isValid: boolean;
-            };
-          };
-        };
-      };
-    };
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -714,50 +719,53 @@ Response 200
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/reset-password": {
-    parameters: {};
-    post: operations["ResetPasswordEmail"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  ResetPasswordEmail: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  404: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function ResetPasswordEmail(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/user/reset-password',
     requestBody: {
       content: {
         "application/json": {
-          email: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          email: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -817,61 +825,59 @@ The user's profile display name and avatar can be updated.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/update-profile": {
-    parameters: {};
-    patch: operations["UpdateUserProfile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UpdateUserProfile: {
-    parameters: {
-      header: {
-        "X-IAA-OW-ID": number;
-        Authorization: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          userAvatar: string;
+          message: string;
+        };
       };
     };
+  };
+
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function UpdateUserProfile(): Promise < Responses > {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/ua/user/update-profile',
     requestBody?: {
       content: {
         "application/x-www-form-urlencoded": {
-          displayName: string;
-          userAvatar: string;
-          removeUserProfile: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              userAvatar: string;
-              message: string;
-            };
-          };
-        };
-      };
-
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          displayName: `string`,
+          userAvatar: `string`,
+          removeUserProfile: `boolean`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -989,65 +995,65 @@ Get a list of users and details for a given workspace ID.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/users/list": {
-    parameters: {};
-    get: operations["getUsersList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getUsersList: {
-    parameters: {
-      query?: {
-        status?: string;
-        pageNo?: number;
-        limit?: number;
-        sortBy?: string;
-        searchField?: string;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                userId: number;
-                firstName: string;
-                lastName: string;
-                email: string;
-                displayName: string;
-                status: string;
-                statusId: string;
-                userAvatar: string;
-                createdAt: number;
-                uowId: number;
-                customersCount: number;
-                organizationName: string;
-                invitedOn: number;
-                isOrganizationOwnerUser: boolean;
-                isModificationAllowed: boolean;
-                invitedByUserName: string;
-                invitedByUserEmail: string;
-                isAssignActionAllowed: boolean;
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            userId: number;
+            firstName: string;
+            lastName: string;
+            email: string;
+            displayName: string;
+            status: string;
+            statusId: string;
+            userAvatar: string;
+            createdAt: number;
+            uowId: number;
+            customersCount: number;
+            organizationName: string;
+            invitedOn: number;
+            isOrganizationOwnerUser: boolean;
+            isModificationAllowed: boolean;
+            invitedByUserName: string;
+            invitedByUserEmail: string;
+            isAssignActionAllowed: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
     };
   };
+};
+
+function getUsersList(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/users/list',
+    params: {
+      query?: {
+        status?: `string`,
+        pageNo?: `number`,
+        limit?: `number`,
+        sortBy?: `string`,
+        searchField?: `string`,
+      },
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1123,64 +1129,64 @@ See what applications a user has access to, use query parameters to filter resul
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/applications/list": {
-    parameters: {};
-    get: operations["GetUserApplicationaccesslist"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  GetUserApplicationaccesslist: {
-    parameters: {
-      query: {
-        uowId: number;
-        searchField: string;
-        pageNo: number;
-        limit: number;
-        sortBy: string;
-      };
-      header: {
-        "X-IAA-OW-ID": number;
-        Authorization: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                appId: number;
-                appName: string;
-                appOwner: string;
-                appType: string;
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            };
-          };
-        };
-      };
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            appId: number;
+            appName: string;
+            appOwner: string;
+            appType: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
         };
       };
     };
   };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function GetUserApplicationaccesslist(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/user/applications/list',
+    params: {
+      query?: {
+        uowId?: `number`,
+        pageNo?: `number`,
+        limit?: `number`,
+        sortBy?: `string`,
+        searchField?: `string`,
+      },
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1245,57 +1251,55 @@ A user can be granted access to specified apps.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/application/add": {
-    parameters: {};
-    post: operations["AddAppaccessforUser"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  AddAppaccessforUser: {
-    parameters: {
-      header: {
-        "X-IAA-OW-ID": number;
-        Authorization: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function AddAppaccessforUser(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/user/application/add',
     requestBody: {
       content: {
         "application/json": {
-          userId: number;
-          appIds: string;
-          accessLevel: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          userId: `number`,
+          appIds: `string`,
+          accessLevel: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
