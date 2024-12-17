@@ -113,68 +113,68 @@ Get a list of allowed organizations by customer type.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/allowed-organizations": {
-    parameters: {};
-    get: operations["GetallowedOrganizationsList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  GetallowedOrganizationsList: {
-    parameters: {
-      query: {
-        customerType: string;
-        searchField: string;
-        pageNo: number;
-        limit: number;
-        sortBy: string;
-      };
-      header: {
-        "X-IAA-OW-ID": number;
-        Authorization: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                owId: number;
-                organizationName: string;
-                ownerUserEmail: string;
-                workspaceDomain: string;
-                customerType: string;
-                logoUrl: string;
-                dateOfJoining: string | null;
-                title: string | null;
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            };
-          };
-        };
-      };
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            owId: number;
+            organizationName: string;
+            ownerUserEmail: string;
+            workspaceDomain: string;
+            customerType: string;
+            logoUrl: string;
+            dateOfJoining: string | null;
+            title: string | null;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
         };
       };
     };
   };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function GetallowedOrganizationsList(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/user/allowed-organizations',
+    params: {
+      query: {
+        customerType: `string`,
+        searchField: `string`,
+        pageNo: `number`,
+        limit: `number`,
+        sortBy: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -230,56 +230,54 @@ Get the profile information of an organization for logged in organization.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/organization/view-profile": {
-    parameters: {};
-    get: operations["getOrganizationProfile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getOrganizationProfile: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              organizationName: string;
-              email: string;
-              website: string;
-              contactNumber: string;
-              address: string;
-              city: string;
-              state: number;
-              country: number;
-              zipcode: string;
-              isAvatarUrl: boolean;
-              organizationLogo: string;
-              industry: string;
-              companySize: number;
-              companyId: string;
-              taxId: string;
-              currency: string;
-              dateFormat: string;
-              description: string;
-              verticalId: number;
-              expertize: string;
-            }
-          }
-        };
-      };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          organizationName: string;
+          email: string;
+          website: string;
+          contactNumber: string;
+          address: string;
+          city: string;
+          state: number;
+          country: number;
+          zipcode: string;
+          isAvatarUrl: boolean;
+          organizationLogo: string;
+          industry: string;
+          companySize: number;
+          companyId: string;
+          taxId: string;
+          currency: string;
+          dateFormat: string;
+          description: string;
+          verticalId: number;
+          expertize: string;
+        }
+      }
     };
   };
+};
+
+function getOrganizationProfile(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/organization/view-profile',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -357,60 +355,61 @@ Refer to the [Organization Resource Properties](#organization-resource-propertie
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/user/update-profile": {
-    parameters: {};
-    patch: operations["UpdateUserProfile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UpdateUserProfile: {
-    parameters: {
-      header: {
-        "X-IAA-OW-ID": number;
-        Authorization: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          organizationLogo: string;
+          message: string;
+        };
       };
     };
+  };
+};
+
+function UpdateOrganizationprofile(): Promise < Responses > {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/ua/organization/update-profile',
     requestBody?: {
       content: {
         "application/x-www-form-urlencoded": {
-          displayName: string;
-          userAvatar: string;
-          removeUserProfile: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              userAvatar: string;
-              message: string;
-            };
-          };
-        };
-      };
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          organizationName: `string`,
+          email: `string`,
+          website: `string`,
+          contactNumber: `string`,
+          address: `string`,
+          city: `string`,
+          state: `number`,
+          country: `number`,
+          zipcode: `number`,
+          industry: `string`,
+          companySize: `number`,
+          companyId: `string`,
+          taxId: `string`,
+          currency: `string`,
+          dateFormat: `string`,
+          expertize: `string`,
+          description: `string`,
+          organizationLogo: `string`,
+          removeOrganizationLogo: `boolean`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1575,66 +1574,71 @@ Refer to [Customer Operations Resource Property table](#customer-operations-reso
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/customer/invite": {
-    parameters: {};
-    post: operations["sendInvitations"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  sendInvitations: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          successfulEmails: string[];
+          failedEmails: string[];
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function sendInvitations(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/customer/invite',
     requestBody: {
       content: {
-        "application/json": {
-          id?: number;
-          invitedUserOWId?: number;
-          email?: string;
-          password?: string;
-          name?: string;
-          ownerUserName?: string;
-          owId?: number;
-          uowId?: number;
-          modifiedByUOWId?: number;
-          status?: number;
-          expiresAt?: number;
-          modifiedAt?: string;
-          invitationUserType?: string;
-          verticalId?: number;
-          logoUrl?: string;
-          serviceType?: number;
-          customerOperationDetails?: {
-            customerTypeId?: number;
-            customerPaymentTypeId?: number;
-            countryId?: number;
-            createdByUowId?: number;
-            modifiedByUowId?: number;
-            adOpsAssigneeUserIds?: number[];
-            sellerAssigneeUserIds?: number[];
-            labelIds?: number[];
-          };
-        }[];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              successfulEmails: string[];
-              failedEmails: string[];
-              message: string;
+        "application/json": [
+          {
+            id?: `number`,
+            invitedUserOWId?: `number`,
+            email?: `string`,
+            password?: `string`,
+            name?: `string`,
+            ownerUserName?: `string`,
+            owId?: `number`,
+            uowId?: `number`,
+            modifiedByUOWId?: `number`,
+            status?: `number`,
+            expiresAt?: `number`,
+            modifiedAt?: `string`,
+            invitationUserType?: `string`,
+            verticalId?: `number`,
+            logoUrl?: `string`,
+            serviceType?: `number`,
+            customerOperationDetails?: {
+              customerTypeId?: `number`,
+              customerPaymentTypeId?: `number`,
+              countryId?: `number`,
+              createdByUowId?: `number`,
+              modifiedByUowId?: `number`,
+              adOpsAssigneeUserIds?: `array of numbers`,
+              sellerAssigneeUserIds?: `array of numbers`,
+              labelIds?: `array of numbers`,
             }
           }
-        };
-      };
-    };
+        ]
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2253,54 +2257,54 @@ Get a list of advertiser profiles and their details.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/organization/advertisers/list": {
-    parameters: {};
-    get: operations["Listadvertiserprofile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Listadvertiserprofile: {
-    parameters: {
-      query: {
-        searchField: string;
-        pageNo: number;
-        limit: number;
-        advertiserIds: string;
-      };
-      header: {
-        Authorization: string;
-        "X-IAA-OW-ID": number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                id: number;
-                advertiserName: string;
-                website: string;
-                chiefName: string;
-                contactNumber: string;
-                address: string | null;
-                legalInfo: string | null;
-                links: string[];
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            };
-          };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            advertiserName: string;
+            website: string;
+            chiefName: string;
+            contactNumber: string;
+            address: string | null;
+            legalInfo: string | null;
+            links: string[];
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
         };
       };
     };
   };
+};
+
+function Listadvertiserprofile(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/organization/advertisers/list',
+    params: {
+      query: {
+        searchField: `string`,
+        pageNo: `number`,
+        limit: `number`,
+        advertiserIds: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2352,48 +2356,46 @@ Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for r
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/organization/advertiser/add": {
-    parameters: {};
-    post: operations["Addadvertiserprofile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Addadvertiserprofile: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-IAA-OW-ID": number;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
+  };
+};
+
+function Addadvertiserprofile(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/organization/advertisers/add',
     requestBody: {
       content: {
         "application/json": {
-          advertiserName: string;
-          website: string;
-          chiefName: string;
-          contactNumber: string;
-          address: string;
-          legalInfo: string;
-          links: string[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-    };
+          advertiserName: `string`,
+          website: `string`,
+          chiefName: `string`,
+          contactNumber: `string`,
+          address: `string`,
+          legalInfo: `string`,
+          links: `array of strings`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2441,51 +2443,51 @@ Refer to [Advertiser Resource Properties](#advertiser-resource-properties) for r
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/organization/advertiser/{advertiserId}": {
-    parameters: {};
-    patch: operations["Editadvertiserprofile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Editadvertiserprofile: {
-    parameters: {
-      path: {
-        advertiserId: number;
-      };
-      header: {
-        Authorization: string;
-        "X-IAA-OW-ID": number;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
+  };
+};
+
+function Editadvertiserprofile(): Promise < Responses > {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/ua/organization/advertisers/{advertiserId}',
+    params: {
+      path: {
+        advertiserId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          advertiserName: string;
-          website: string;
-          chiefName: string;
-          contactNumber: string;
-          address: string;
-          legalInfo: string;
-          links: string[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
-      };
-    };
+          advertiserName: `string`,
+          website: `string`,
+          chiefName: `string`,
+          contactNumber: `string`,
+          address: `string`,
+          legalInfo: `string`,
+          links: `array of strings`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2524,35 +2526,38 @@ Delete an advertiser profile.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/organization/advertiser/{advertiserId}": {
-    parameters: {};
-    delete: operations["Deleteadvertiserprofile"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Deleteadvertiserprofile: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-IAA-OW-ID": number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          };
-        };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
       };
     };
   };
+};
+
+function Deleteadvertiserprofile(): Promise < Responses > {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ua/organization/advertisers/{advertiserId}',
+    params: {
+      path: {
+        advertiserId: `number`
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2712,39 +2717,42 @@ Identifies what kind of services customer has chosen.
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/static/customer-payment-types": {
-    parameters: {};
-    get: operations["getCustomerPaymentType"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getCustomerPaymentType: {
-    parameters: {};
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filteredRecords: number;
-              customerPaymentTypes: {
-                name: string;
-                id: number;
-                label: string;
-                order: number;
-              }[]
-            }
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          customerPaymentTypes: {
+            name: string;
+            id: number;
+            label: string;
+            order: number;
+          }[]
+        }
+      }
     };
   };
+};
+
+function getCustomerPaymentType(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/customer-payment-types',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2888,39 +2896,38 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/static/organization-expertize": {
-    parameters: {};
-    get: operations["OrganizationExpertize"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  OrganizationExpertize: {
-    parameters: {
-      header: {
-        Authorization: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-              order: number;
-            }[];
-          };
-        };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
       };
     };
   };
+};
+
+function OrganizationExpertize(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/organization-expertize',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -2996,35 +3003,38 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/static/company-size": {
-    parameters: {};
-    get: operations["Companysize"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Companysize: {
-    parameters: {};
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-              order: number;
-            }[];
-          };
-        };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
       };
     };
   };
+};
+
+function Companysize(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/company-size',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -3940,35 +3950,38 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/static/industries": {
-    parameters: {};
-    get: operations["Industries"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Industries: {
-    parameters: {};
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-              order: number;
-            }[];
-          };
-        };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
       };
     };
   };
+};
+
+function Industries(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/industries',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -4039,35 +4052,38 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
-  "/api/v3/ua/static/media-budget": {
-    parameters: {};
-    get: operations["Mediabudget"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Mediabudget: {
-    parameters: {};
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-              order: number;
-            }[];
-          };
-        };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
       };
     };
   };
+};
+
+function Mediabudget(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/media-budget',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -4122,36 +4138,39 @@ export interface operations {
 <TabItem value="Typescript" label="Typescript">
 
 ```ts
-export interface paths {
- "/api/v3/ua/static/verticals": {
-    parameters: {};
-    get: operations["getVerticals"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getVerticals: {
-    parameters: {};
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              name: string;
-              id: number;
-              label: string;
-              order: number;
-              description: string;
-            }[]
-          }
-        };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+          description: string;
+        }[];
       };
     };
   };
+};
+
+function getVerticals(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ua/static/verticals',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
