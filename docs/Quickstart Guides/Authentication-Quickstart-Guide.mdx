@@ -54,65 +54,66 @@ Sign up for an account by providing an email address and desired password.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ua/sign-up": {
-    parameters: {};
-    post: operations["UserSign-up/PasswordCreation"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  UserSign-up/PasswordCreation: {
-    parameters: {
-      header: {
-        Authorization: string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+        };
       };
     };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+};
+
+function UserSign-up/PasswordCreation(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/sign-up',
     requestBody: {
       content: {
         "application/json": {
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-            };
-          };
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-    };
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -170,77 +171,77 @@ Once a user has created an account, they can perform the login. This API will se
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-    "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
       };
     };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
     requestBody: {
       content: {
         "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-              owId: number;
-            };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-            };
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          grantType: `string`,
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
