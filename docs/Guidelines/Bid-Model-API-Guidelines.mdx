@@ -117,94 +117,96 @@ Retrieves counts of dimensions for a specific campaign within a given date range
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/dimensions/count": {
-    get: operations["getDimensionWiseServeCount"]
-  }
-}
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
 
-export interface operations {
- getDimensionWiseServeCount: {
-    parameters: {
-      query: {
-        startDate: number;
-        endDate: number;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        campaignId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              creative: number;
-              dealId: number;
-              openExchange: number;
-              publisherCategory: number;
-              trafficType: number;
-              deviceType: number;
-              state: number;
-              city: number;
-              zip: number;
-              exchange: number;
-            }
-          }
-        };
-      };
-      400: {
-        content: {
-          "application:json": {
-            success: boolean
-            errorObjects: {
-              error: string;
-              field: string;
-            }[]
-          }
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creative: number;
+          dealId: number;
+          openExchange: number;
+          publisherCategory: number;
+          trafficType: number;
+          deviceType: number;
+          state: number;
+          city: number;
+          zip: number;
+          exchange: number;
         }
       }
-      403: {
-        content: {
-          "application/json": {
-            success: boolean
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
-      422: {
-       content: {
-          "application/json": {
-            success: boolean
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
-      500: {
-        content: {
-          "application/json": {
-            success: boolean
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
     };
+  };
+  400: {
+    content: {
+      "application:json": {
+        success: boolean
+        errorObjects: {
+          error: string;
+          field: string;
+        }[]
+      }
+    }
   }
+  403: {
+    content: {
+      "application/json": {
+        success: boolean
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+};
+
+function getDimensionWiseServeCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/dimensions/count',
+    params: {
+      query: {
+        startDate: `number`,
+        endDate: `number`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -247,42 +249,46 @@ Get details on total spent by dimension for a campaign.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent": {
-    get: operations["getDimensionWiseEntitySpentForCampaign"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getDimensionWiseEntitySpentForCampaign: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        campaignId: number;
-        dimensionId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              entityWiseSpent: {
-                dimensionId: number
-              }
-            }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          entityWiseSpent: {
+            dimensionId: number
           }
         }
       }
-    };
+    }
+  }
+};
+
+function getDimensionWiseEntitySpentForCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent',
+    params: {
+      path: {
+        campaignId: `number`,
+        dimensionId: `number`
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -333,46 +339,50 @@ Get details on total and dimension specific counts of modelled items for a speci
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/bid-models/count": {
-    get: operations["getModelledItemsCount"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getModelledItemsCount: {
-    parameters: {
-      query?: {
-        dimensionId?: number;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        campaignId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalCount: number;
-              dimensionWiseCount: {
-                dimensionId: number;
-                count: number
-              }[]
-            }
-          }
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalCount: number;
+          dimensionWiseCount: {
+            dimensionId: number;
+            count: number
+          }[]
         }
       }
-    };
+    }
+  }
+};
+
+function getModelledItemsCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/count',
+    params: {
+      query: {
+        dimensionId: `number`
+      },
+      path: {
+        campaignId: `number`,
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -424,61 +434,51 @@ For IDs see endpoint documentation for [device type](https://api.iqm.com/docs?pa
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v2/cmp/deviceType/includeExclude": {
-    post: operations["DeviceType-includeExclude"];
-  }
-/**
- * Substitute exchange or trafficsource endpoints
- * @example {
- * 
- *  "/api/v2/cmp/exchange/includeExclude": {
- *    post: operations["Exchange-includeExclude"];
- *  }
- *
- *  or
- *
- * "/api/v2/cmp/trafficsource/includeExclude": {
- *    post: operations["Trafficsource-includeExclude"];
- *  };
- *}
- */
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
- "DeviceType-includeExclude": {
-    parameters: {
-      header: {
-        Authorization: string;
-          "X-Iaa-Host": string;
-          "X-IAA-OW-ID": number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          ids: string;
-          isExcluded: number;
-          campaignId: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json;charset=UTF-8": {
-            statusCode: number;
-            responseObject: {
-              message: string;
-            };
-          };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          message: string;
         };
       };
     };
   };
+};
+
+function DeviceType-includeExclude(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/cmp/deviceType/includeExclude',
+    params: {
+      header: {
+        "X-IAA-HOST": `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          ids: `string`,
+          isExcluded: `number`,
+          campaignId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -533,52 +533,55 @@ Optimize a campaign by updating the status of specified entities to be either in
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/include-exclude/dimensions/{dimensionId}": {
-    post: operations["toggleCampaignDimensionStatus"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
- toggleCampaignDimensionStatus: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
-      path: {
-        campaignId: number;
-        dimensionId: number;
-      };
-      cookie?: never;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function toggleCampaignDimensionStatus(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/include-exclude/dimensions/{dimensionId}',
+    params: {
+      path: {
+        campaignId: `number`,
+        dimensionId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          advertiserId?: number;
-          dspId?: number;
-          owId?: number;
-          uowId?: number;
-          campaignId?: number;
-          ids?: string;
-          isExcluded?: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
+          advertiserId: `number`,
+          dspId: `number`,
+          owId: `number`,
+          uowId: `number`,
+          campaignId: `number`,
+          ids: `string`,
+          isExcluded: `number`
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -740,102 +743,110 @@ Assigning priority to campaigns allows the user to establish a sequential order 
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/io/{ioId}/bid-models": {
-    put: operations["managePriorityToCampaign"];
-  }
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  managePriorityToCampaign: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        "Insertion Order": string;
-        ioId: number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+  403: {
+    content: {
+      "application/json": {
+        succes: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        succes: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        succes: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+};
+
+function managePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          bidModelRequests?: {
-            bidModelData?: {
-              id?: number;
-              priority?: number;
-              bidMultiplier?: number;
-              spendRatio?: number;
-              spendRatioTypeId?: number;
-            };
-            dimensionEntityMappings?: {
-              campaignId?: number;
-              dimensionId?: number;
-              entityId?: number;
-              bidModelDataId?: number;
-            }[];
-            action: "ADD" | "UPDATE" | "DELETE";
-            bidModelDataIds?: number[];
-          }[];
-          baseBid?: number;
-          excludeDimensionEntityMappings?: {
-            advertiserId?: number;
-            dspId?: number;
-            owId?: number;
-            uowId?: number;
-            campaignId?: number;
-            ids?: string;
-            isExcluded?: number;
-            dimensionId?: number;
-          }[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-            succes: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
-      422: {
-        content: {
-          "application/json": {
-            succes: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
-      500: {
-        content: {
-          "application/json": {
-            succes: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
-        };
-      };
-    };
+          bidModelRequests?: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`,
+              },
+              dimensionEntityMappings?: [
+                {
+                  campaignId?: `number`,
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                  bidModelDataId?: `number`,
+                }
+              ],
+              action: [ "ADD" | "UPDATE" | "DELETE" ],
+              bidModelDataIds?: `[number]`,
+            }
+          ],
+          baseBid?: `number`,
+          excludeDimensionEntityMappings?: [
+            {
+              advertiserId?: `number`,
+              dspId?: `number`,
+              owId?: `number`,
+              uowId?: `number`,
+              campaignId?: `number`,
+              ids?: `string`,
+              isExcluded?: `number`,
+              dimensionId?: `number`,
+            }
+          ]  
+        } 
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -895,106 +906,85 @@ Add, update, or delete assigned priorities to multiple campaigns.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
- "/api/v3/bm/io/{ioId}/bid-models": {
-    post: operations["addPriorityToCampaign"];
-    delete: operations["deletePriorityToCampaign"];
-    patch: operations["updatePriorityToCampaign"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
   };
+};
+
+function addPriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST'
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 
-export interface operations {
-  addPriorityToCampaign: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
+function deletePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'DELETE'
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
       path: {
-        "Insertion Order": string;
-        ioId: number;
-      };
-    };
+        ioId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+  function updatePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PATCH'
+  url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          priority: number;
-          campaignIds: number[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
   };
-  deletePriorityToCampaign: {
-    parameters: {
-      query?: {
-        campaignIds?: string;
-      };
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        "Insertion Order": string;
-        ioId: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
-  };
-  updatePriorityToCampaign: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        "Insertion Order": string;
-        ioId: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          priority: number;
-          campaignIds: number[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string
-          }
-        };
-      };
-    };
-  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1088,61 +1078,65 @@ Add bid modelling for different dimensions. Validates and calculates others as b
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
-    post: operations["addBidModellingOfDimensionForCampaign"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  addBidModellingOfDimensionForCampaign: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        campaignId: number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      path: {
+        campaignId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          bidModelling: {
-            bidModelData?: {
-              id?: number;
-              priority?: number;
-              bidMultiplier?: number;
-              spendRatio?: number;
-              spendRatioTypeId?: number;
-            };
-            dimensionEntityMappings?: {
-              campaignId?: number;
-              dimensionId?: number;
-              entityId?: number;
-              bidModelDataId?: number;
-            }[];
-          }[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/mediaType": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
-    };
+          bidModelling: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`
+              },
+              dimensionEntityMappings?: [
+                {
+                  campaignId?: `number`,
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                  bidModelDataId?: `number`
+                }
+              ]
+            }
+          ]  
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1267,76 +1261,80 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modelling.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
-    parameters: {};
-    put: operations["manageBidModelling"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  manageBidModelling: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        "Campaign Id": string;
-        campaignId: number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function manageBidModelling(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      path: {
+        campaignId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          bidModelRequests?: {
-            bidModelData?: {
-              id?: number;
-              priority?: number;
-              bidMultiplier?: number;
-              spendRatio?: number;
-              spendRatioTypeId?: number;
-            };
-            dimensionEntityMappings?: {
-              campaignId?: number;
-              dimensionId?: number;
-              entityId?: number;
-              bidModelDataId?: number;
-            }[];
-            action: "ADD" | "UPDATE" | "DELETE";
-            bidModelDataIds?: number[];
-          }[];
-          baseBid?: number;
-          excludeDimensionEntityMappings?: {
-            advertiserId?: number;
-            dspId?: number;
-            owId?: number;
-            uowId?: number;
-            campaignId?: number;
-            ids?: string;
-            isExcluded?: number;
-            dimensionId?: number;
-          }[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
-    };
+          bidModelRequests?: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`,
+              },
+              dimensionEntityMappings?: [
+                {
+                  campaignId?: `number`,
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                  bidModelDataId?: `number`,
+                }
+              ],
+              action: [ "ADD" | "UPDATE" | "DELETE" ],
+              bidModelDataIds?: `array of numbers`,
+            }
+          ],
+          baseBid?: `number`,
+          excludeDimensionEntityMappings?: [
+            {
+              advertiserId?: `number`,
+              dspId?: `number`,
+              owId?: `number`,
+              uowId?: `number`,
+              campaignId?: `number`,
+              ids?: `string`,
+              isExcluded?: `number`,
+              dimensionId?: `number`,
+            }
+          ]
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1414,55 +1412,55 @@ Update bid modelling for different dimensions.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
- "/api/v3/bm/campaigns/{campaignId}/bid-models": {
-    parameters: {};
-    patch: operations["updateBidModellingForCampaign"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  updateBidModellingForCampaign: {
-    parameters: {
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        "Campaign Id": string;
-        campaignId: number;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
+  };
+};
+
+function updateBidModellingForCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      path: {
+        campaignId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          bidModelData?: {
-            id?: number;
-            priority?: number;
-            bidMultiplier?: number;
-            spendRatio?: number;
-            spendRatioTypeId?: number;
-          }[];
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
-    };
+          bidModelData?: [
+            {
+              id?: `number`,
+              priority?: `number`,
+              bidMultiplier?: `number`,
+              spendRatio?: `number`,
+              spendRatioTypeId?: `number`
+            }
+          ]
+        }
+      }
+    }
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1506,46 +1504,45 @@ Delete all bid modelling for a campaign or dimension, or based on bid modelling 
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/bid-models": {
-    parameters: {};
-    delete: operations["deleteBidModelling"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  deleteBidModelling: {
-    parameters: {
-      query?: {
-        dimensionIds?: string;
-        bidModelDataIds?: string;
-        campaignId?: number;
-      };
-      header?: {
-        "X-IAA-OW-ID"?: string;
-        Authorization?: string;
-      };
-      path: {
-        campaignId: number;
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: string;
-          }
-        };
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
     };
   };
+};
+
+function deleteBidModelling(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      query?: {
+        dimensionIds?: `string`,
+        bidModelDataIds?: `string`,
+        campaignId?: `number`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1668,93 +1665,98 @@ Generate a detailed metrics for a specific campaign, segmented by dimension.
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}": {
-    post: operations["fetchCampaignMetricsByDimension"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        data?: {
+          url: string
+        }
+      };
+    };
+  };
+  401: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    }
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    }
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    }
   };
 }
 
-export interface operations {
-  fetchCampaignMetricsByDimension: {
-    parameters: {
+function fetchCampaignMetricsByDimension(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}',
+    params: {
       query?: {
-        searchField?: string;
-        sortBy?: string;
-        pageNo?: number;
-        pageSize?: number;
-        timeZoneId?: number;
-        startDate?: number;
-        endDate?: number;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+        searchField?: `string`,
+        sortBy?: `string`,
+        pageNo?: `number`,
+        pageSize?: `number`,
+        timeZoneId?: `number`,
+        startDate?: `number`,
+        endDate?: `number`,
+      },
       path: {
-        campaignId: number;
-        dimensionId: number;
-      };
-    };
+        campaignId: `number`,
+        dimensionId: `number`
+      }
+    },
     requestBody: {
       content: {
         "application/json": {
-          fileName: string;
-          columns: {
-            label: string;
-            value: string
-          }[];
-          fileType: string;
-          token: string;
-          download: boolean
-        }
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success?: boolean;
-            data?: {
-              url: string
+          fileName: `string`,
+          columns: [
+            {
+              label: `string`,
+              value: `string`
             }
-          };
-        };
-      };
-      401: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
+          ],
+          fileType: `string`,
+          token: `string`,
+          download: `boolean`
         }
-      };
-      422: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
-        }
-      };
-      500: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string
-            }[]
-          }
-        }
-      };
+      }
     }
-  }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1906,45 +1908,53 @@ This API will provide values of bid-model dimensions and sub-dimensions.
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/bm/static/dimensions": {
-    get: operations["getDimensions"];
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          dimensions: {
+            name: string;
+            id: number;
+            label: string;
+            order: number;
+            modellingEnabled: boolean
+            subdimensions?: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+              modellingEnabled: boolean
+            }[]
+          }[]
+        }
+      }
+    };
   };
 }
 
-export interface operations {
- getDimensions: {
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              totalRecords: number;
-              filteredRecords: number;
-              dimensions: {
-                name: string;
-                id: number;
-                label: string;
-                order: number;
-                modellingEnabled: boolean
-                subdimensions?: {
-                  name:string;
-                  id: number;
-                  label: string;
-                  order: number;
-                  modellingEnabled: boolean
-                }[]
-              }[]
-            }
-          }
-        };
-      };
-    };
+function getDimensions(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/bm/static/dimensions',
   };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
