@@ -508,6 +508,138 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'Conversions API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Guidelines/Conversion-API-Guidelines'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Conversion Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Postback Conversion Resource Details',
+              href: '/Guidelines/Conversion-API-Guidelines#postback-conversion-resource-properties'
+            },
+            {
+              type: 'link',
+              label: 'Pixel Conversion Resource Details',
+              href: '/Guidelines/Conversion-API-Guidelines#pixel-conversion-resource-properties'
+            },
+            {
+              type: 'link',
+              label: 'Get Conversion Details by ID',
+              href: '/Guidelines/Conversion-API-Guidelines#get-conversion-details-by-id'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Conversions',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversions'
+            },
+            {
+              type: 'link',
+              label: 'Get Conversion Count by Type',
+              href: '/Guidelines/Conversion-API-Guidelines#get-conversion-count-by-type'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Details by Conversion ID',
+              href: '/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Details by Conversion ID in Group or Basic',
+              href: '/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Conversions Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Create Postback Conversion',
+              href: '/Guidelines/Conversion-API-Guidelines#create-postback-conversion'
+            },
+            {
+              type: 'link',
+              label: 'Create Pixel Conversion',
+              href: '/Guidelines/Conversion-API-Guidelines#create-pixel-conversion'
+            },
+            {
+              type: 'link',
+              label: 'Delete Conversion',
+              href: '/Guidelines/Conversion-API-Guidelines#delete-conversion'
+            },
+            {
+              type: 'link',
+              label: 'Update Postback Conversion',
+              href: '/Guidelines/Conversion-API-Guidelines#update-postback-conversion'
+            },
+            {
+              type: 'link',
+              label: 'Update Pixel Conversion',
+              href: '/Guidelines/Conversion-API-Guidelines#update-pixel-conversion'
+            },
+            {
+              type: 'link',
+              label: 'Assign Conversion to a Campaign',
+              href: '/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign'
+            },
+            {
+              type: 'link',
+              label: 'Assign Email for Pixel Integration',
+              href: '/Guidelines/Conversion-API-Guidelines#send-email-for-pixel-integration'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Conversion Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get List of Partner Types for Postback Conversions',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-partner-types-for-postback-conversions'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Pixel Conversion Advanced Setting Default Values',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-pixel-conversion-advanced-setting-default-values'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Conversion Types',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-types'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Conversion Status',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-status'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Conversion Piggyback Types',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-piggyback-types'
+            },
+            {
+              type: 'link',
+              label: 'Get List of Conversion Attribute Types',
+              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-attribute-types'
+            },
+          ]
+        },
+      ],
+    },
   ]
 }
 
