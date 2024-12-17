@@ -50,7 +50,7 @@ For further information see the complete [Login API Documentation](https://app.i
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide) |
 | `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
 | Request Schema |  |
@@ -124,77 +124,76 @@ For further information see the complete [Login API Documentation](https://app.i
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-        header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
-        };
-    };
-    requestBody: {
-        content: {
-        "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-        };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-              success: boolean;
-              data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-              owId: number;
-              };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-              success: boolean;
-              data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-              };
-              errorObjects: {
-              error: string;
-              reason: string;
-              }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-              success: boolean;
-              errorObjects: {
-              error: string;
-              }[];
-          };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
         };
       };
     };
   };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -333,7 +332,7 @@ Available metrics:
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide) |
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span>|  Organization Workspace ID Header |
 
 </div><div class="child2">
@@ -485,242 +484,242 @@ Available metrics:
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/dimension-metrics/detail": {
-    parameters: {};
-    get: operations["getDimensionAndMetricDetails"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getDimensionAndMetricDetails: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              metrics: {
-                Budget: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Performance: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Spending: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Cost: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Video: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Conversion: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-                Counts: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  aggregationType: string;
-                  description: string;
-                  defaultEnabled: boolean;
-                  key: string;
-                  dependentDimensions: number[];
-                }[];
-              }
-              dimensions: {
-                Insertion Order Specifics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Campaign Specifics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Creative Specifics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Demographics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Technologies: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Deliveries: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Locations: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-                Conersion Specifics: {
-                  id: number;
-                  label: string;
-                  order: number;
-                  fieldDataType: string;
-                  description: string;
-                  groupId: string;
-                  key: string;
-                  isFilterSupported: boolean;
-                  isCustomerDependent: boolean;
-                  isRowToColumn: boolean;
-                }[];
-              }
-            }
-          }
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          metrics: {
+            Budget: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Performance: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Spending: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Cost: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Video: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Conversion: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
+            }[];
+            Counts: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              aggregationType: string;
+              description: string;
+              defaultEnabled: boolean;
+              key: string;
+              dependentDimensions: number[];
             }[];
           }
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
+          dimensions: {
+            Insertion Order Specifics: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
             }[];
+            Campaign Specifics: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Creative Specifics: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Demographics: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Technologies: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Deliveries: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Locations: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            }[];
+            Conversion Specifics: {
+              id: number;
+              label: string;
+              order: number;
+              fieldDataType: string;
+              description: string;
+              groupId: string;
+              key: string;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;
+              isRowToColumn: boolean;
+            } [];
           }
-        };
-      };
+        }
+      }
     };
   };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        } [];
+      }
+    };
+  };
+  500: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        } [];
+      }
+    };
+  };
+};
+
+function getDimensionAndMetricDetails(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ra/report/dimension-metrics/detail',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -745,7 +744,7 @@ For further information see the complete [Timezone API documentation](https://ap
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)|
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)|
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> |  Organization Workspace ID Header |
 
 </div><div class="child2">
@@ -780,46 +779,46 @@ For further information see the complete [Timezone API documentation](https://ap
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/master/timezones": {
-    parameters: {};
-    get: operations["getTimezones"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getTimezones: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              data: {
-                name: string;
-                id: number;
-                label: string;
-              }[];
-              totalRecords: number;
-              filteredRecords: number;
-            }
-          }
-        };
-      };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            name: string;
+            id: number;
+            label: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
     };
   };
+};
+
+function getTimezones(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/timezones',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -1291,122 +1290,127 @@ For further information see the complete [Execute Report Data API](https://app.i
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/execute": {
-    parameters: {};
-    post: operations["executeReportData"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  executeReportData: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          total: {
+            CTR: number;
+            date: number;
+            deviceTypeId: number;
+            VCR: number;
+            budgetDay: string;
+            gender: string;
+            budgetPacing: boolean;
+            dataCost: number;
+            totalRecords: number;
+            campaignTimezone: string;
+            eCPM: number;
+            bidImpressions: number;
+            startTime: number;
+            mediaSpent: number;
+            eCPC: number;
+            deviceType: string;
+            startCount: number;
+            campaignType: string;
+            spent: number;
+            impressions: number;
+            eCPCV: number;
+            completeCount: number;
+            budgetTotal: number;
+            maxBid: number;
+            clicks: number;
+            endTime: number;
+            campaignName: string;
+            status: string;
+          };
+          data: {
+            CTR: number;
+            date: number;
+            deviceTypeId: number;
+            VCR: number;
+            budgetDay: string;
+            gender: string;
+            budgetPacing: boolean;
+            dataCost: number;
+            totalRecords: number;
+            campaignTimezone: string;
+            eCPM: number;
+            bidImpressions: number;
+            startTime: number;
+            mediaSpent: number;
+            eCPC: number;
+            deviceType: string;
+            startCount: number;
+            campaignType: string;
+            spent: number;
+            impressions: number;
+            eCPCV: number;
+            completeCount: number;
+            budgetTotal: number;
+            maxBid: number;
+            clicks: number;
+            endTime: number;
+            campaignName: string;
+            status: string;
+          }[];
+          totalRecords: number
+        }
+      }
+    };
+  };
+};
+
+function executeReportData(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/report/execute',
     requestBody: {
       content: {
         "application/json": {
-          id?: number;
-          reportName?: string;
-          startDate?: number;
-          endDate?: number;
-          dimensions?: string;
-          customerIds?: number[];
-          columns?: string[];
-          timezoneId?: number;
-          requestType?: number;
-          reportAggregated?: string;
-          owId?: number;
-          createdByUOWId?: number;
-          modifiedByUOWId?: number;
-          timezoneName?: string;
-          organizationName?: string;
-          resultType?: string;
-          fileType?: number;
-          pageNo?: number;
-          noOfEntries?: number;
-          sortBy?: string;
-          searchField?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-               success: boolean;
-            data: {
-              total: {
-                CTR: number;
-                date: number;
-                deviceTypeId: number;
-                VCR: number;
-                budgetDay: string;
-                gender: string;
-                budgetPacing: boolean;
-                dataCost: number;
-                totalRecords: number;
-                campaignTimezone: string;
-                eCPM: number;
-                bidImpressions: number;
-                startTime: number;
-                mediaSpent: number;
-                eCPC: number;
-                deviceType: string;
-                startCount: number;
-                campaignType: string;
-                spent: number;
-                impressions: number;
-                eCPCV: number;
-                completeCount: number;
-                budgetTotal: number;
-                maxBid: number;
-                clicks: number;
-                endTime: number;
-                campaignName: string;
-                status: string;
-              };
-              data: {
-                CTR: number;
-                date: number;
-                deviceTypeId: number;
-                VCR: number;
-                budgetDay: string;
-                gender: string;
-                budgetPacing: boolean;
-                dataCost: number;
-                totalRecords: number;
-                campaignTimezone: string;
-                eCPM: number;
-                bidImpressions: number;
-                startTime: number;
-                mediaSpent: number;
-                eCPC: number;
-                deviceType: string;
-                startCount: number;
-                campaignType: string;
-                spent: number;
-                impressions: number;
-                eCPCV: number;
-                completeCount: number;
-                budgetTotal: number;
-                maxBid: number;
-                clicks: number;
-                endTime: number;
-                campaignName: string;
-                status: string;
-              }[];
-              totalRecords: number
-            }
-          }
-        };
-      };
-    };
+          id?: `number`,
+          reportName?: `string`,
+          startDate?: `number`,
+          endDate?: `number`,
+          dimensions?: `string`,
+          customerIds?: `array of numbers`,
+          columns?: `array of strings`,
+          timezoneId?: `number`,
+          requestType?: `number`,
+          reportAggregated?: `string`,
+          owId?: `number`,
+          createdByUOWId?: `number`,
+          modifiedByUOWId?: `number`,
+          timezoneName?: `string`,
+          organizationName?: `string`,
+          resultType?: `string`,
+          fileType?: `number`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 

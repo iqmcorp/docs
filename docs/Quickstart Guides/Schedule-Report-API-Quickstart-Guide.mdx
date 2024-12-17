@@ -42,7 +42,7 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 
 | Headers |  |
 | ----  | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md) |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token. See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide) |
 | `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
 | Request Schema |  |
@@ -116,77 +116,76 @@ To log in, the `Authorization: Basic` header is required. The Login API returns 
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
       };
     };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
     requestBody: {
       content: {
         "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-              owId: number;
-            };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-            };
-            errorObjects: {
-              error: string;
-              reason: string;
-            }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-            success: boolean;
-            errorObjects: {
-              error: string;
-            }[];
-          };
-        };
-      };
-    };
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -262,59 +261,64 @@ For further information see the complete [Save Report Scheduling Event API Docum
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ra/report/email/schedule": {
-    parameters: {};
-    post: operations["saveReportScheduleEvent"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  saveReportScheduleEvent: {
-    parameters: {};
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          scheduledData: {
+            earliestCampaignStartDate: number;
+            reportId: number;
+            deliveryFrequency: number;
+            fileType: number;
+            subscriberEmails: string[];
+            eventEndDate: number;
+            deliveryDay: string;
+            runningTotalEnabled: boolean;
+          }
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function saveReportScheduleEvent(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ra/report/email/schedule',
     requestBody: {
       content: {
         "application/json": {
-          earliestCampaignStartDate?: number;
-          reportId?: number;
-          deliveryFrequency?: number;
-          fileType?: number;
-          subscriberEmails?: string[];
-          eventEndDate?: number;
-          deliveryDay?: string;
-          runningTotalEnabled?: boolean;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              scheduledData: {
-                earliestCampaignStartDate: number;
-                reportId: number;
-                deliveryFrequency: number;
-                fileType: number;
-                subscriberEmails: string[];
-                eventEndDate: number;
-                deliveryDay: string;
-                runningTotalEnabled: boolean;
-              }
-              message: string;
-            }
-          }
-        };
-      };
-    };
+          earliestCampaignStartDate?: `number`,
+          reportId?: `number`,
+          deliveryFrequency?: `number`,
+          fileType?: `number`,
+          subscriberEmails?: `array of strings`,
+          eventEndDate?: `number`,
+          deliveryDay?: `string`,
+          runningTotalEnabled?: `boolean`
+        }
+      }
+    }
   };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 

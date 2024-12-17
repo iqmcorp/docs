@@ -31,7 +31,7 @@ To upload Matched Audience, you must have the following:
 
 If you do not have any of the above, please follow the steps below:
 
-* See [Before You Begin](/docs/#before-you-begin) section to create an account and request a Client ID and Client Secret.
+* See [Before You Begin](/docs/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret.
 * File requirements for audience matching
   * CSV or XLSX file for audience matching with maximum 1GB or 5M records
   * Without Voter ID / Email / Phone / Address in the file
@@ -70,7 +70,7 @@ For further information see the complete [Login API Documentation](https://app.i
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
 | `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
 
 | Request Schema |  |
@@ -144,77 +144,76 @@ For further information see the complete [Login API Documentation](https://app.i
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/ua/login": {
-    parameters: {};
-    post: operations["Login"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  Login: {
-    parameters: {
-        header: {
-        Authorization: string;
-        "X-Iaa-Host": string;
-        };
-    };
-    requestBody: {
-        content: {
-        "application/json": {
-          grantType: string;
-          email: string;
-          password: string;
-        };
-        };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-              success: boolean;
-              data: {
-              access_token: string;
-              refresh_token: string;
-              scope: string;
-              token_type: string;
-              expires_in: number;
-              owId: number;
-              };
-          };
-        };
-      };
-      400: {
-        content: {
-          "application/json": {
-              success: boolean;
-              data: {
-              status: string;
-              reason: string;
-              supportEmail: string;
-              };
-              errorObjects: {
-              error: string;
-              reason: string;
-              }[];
-          };
-        };
-      };
-      403: {
-        content: {
-          "application/json": {
-              success: boolean;
-              errorObjects: {
-              error: string;
-              }[];
-          };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
         };
       };
     };
   };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -237,7 +236,7 @@ For further information see the complete [Matched Audience Fields API Documentat
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
 </div><div class="child2">
@@ -380,44 +379,44 @@ For further information see the complete [Matched Audience Fields API Documentat
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v3/audience/static/matched/column-list": {
-    parameters: {};
-    get: operations["getMatchedAudienceColumnList"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getMatchedAudienceColumnList: {
-    parameters: {
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            success: boolean;
-            data: {
-              id: number;
-              label: stringl
-              key: string;
-              order: number;
-              isSingleColumn: boolean;
-            }[];
-          }
-        };
-      };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          label: stringl
+          key: string;
+          order: number;
+          isSingleColumn: boolean;
+        }[];
+      }
     };
   };
+};
+
+function getMatchedAudienceColumnList(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/static/matched/column-list',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
@@ -442,7 +441,7 @@ For further information see the complete [Matched Audience Upload API Documentat
 
 | Headers |  |
 | ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> <span class="required-text">required</span> |  Organization Workspace ID Header |
 
 </div></div>
@@ -576,85 +575,87 @@ Content-Disposition: form-data; name="fileTotalCount"
 </details>
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-    "/api/v2/audience/matched/add": {
-    parameters: {};
-    post: operations["addMatchedAudience"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
- addMatchedAudience: {
-    parameters: {
-      query: {
-        columns: string;
-        columnSettings?: string;
-        audienceName: string;
-        metadata: string;
-        fileTotalCount: number;
-        isSingleColumnEnabled: boolean;
-      };
-      header?: {
-        Authorization?: string;
-        "X-IAA-OW-ID"?: string;
-      };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
     };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        }
+      }
+    };
+  };
+  400: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          errorMsg: string;
+          errorCode: number;
+        }
+      }
+    };
+  };
+  500: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          errorMsg: string;
+          errorCode: number;
+        }
+      }
+    };
+  };
+};
+
+function addMatchedAudience(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/matched/add',
+    params: {
+      query: {
+        columns: `string`,
+        columnSettings?: `string`,
+        audienceName: `string`,
+        metadata: `string`,
+        fileTotalCount: `number`,
+        isSingleColumnEnabled: `boolean`
+      }
+    },
     requestBody?: {
       content: {
         "multipart/form-data": {
-          file: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              id: number;
-              message: string;
-            }
-          }
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              errorMsg: string;
-              errorCode: number;
-            }
-          }
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              errorMsg: string;
-              errorCode: number;
-            }
-          }
-        };
-      };
-    };
+          file: `string`
+        }
+      }
+    }
   };
 
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -678,7 +679,7 @@ For further information see the complete [Matched Audience Details API Documenta
 
 | Headers|  |
 | ----  | --- |
-| `Authorization` <br /><span class="type-text">string</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide.md)<br /> |
+| `Authorization` <br /><span class="type-text">string</span>  | Authorization Bearer Token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
 | `X-IAA-OW-ID` <br /><span class="type-text">string</span> | Organization Workspace ID Header |
 
 </div><div class="child2">
@@ -723,67 +724,69 @@ For further information see the complete [Matched Audience Details API Documenta
 ```
 
 </TabItem>
-<TabItem value="Typescript" label="Typescript">
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
 ```ts
-export interface paths {
-  "/api/v2/audience/matched/{id}": {
-    parameters: {};
-    get: operations["getMatchedAudienceDetails"];
-  };
-}
+import {
+  getInstance
+} from "prerequisites"
 
-export interface operations {
-  getMatchedAudienceDetails: {
-    parameters: {
-      header: {
-        Authorization: string;
-        "{{ow_id_header_key}}": string;
-      };
-      path: {
-        id: number;
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            statusCode: number;
-            responseObject: {
-              id: number;
-              audienceName: string;
-              existingColumnMatching: string;
-              metadata: string;
-              rawS3URL: string;
-              status: string;
-              matchRate: number;
-              minEcpm: number;
-              maxEcpm: number;
-              s3FileName: string;
-              included: number;
-              excluded: number;
-              createdDate: number;
-              modifiedDate: number;
-              organizationName: string;
-              userName: string;
-              expectedSpent7: number;
-              expectedSpent30: number;
-              expectedSpent60: number;
-              dataCost: number;
-              owId: number;
-              uowId: number;
-              rawS3URLError: string;
-              uniques: number;
-              approvedRejectedByUserName: string;
-              approvedRejectedByUserEmail: string;
-              isApprovalAccess: boolean;
-              isEditAccess: boolean;
-            };
-          };
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          audienceName: string;
+          existingColumnMatching: string;
+          metadata: string;
+          rawS3URL: string;
+          status: string;
+          matchRate: number;
+          minEcpm: number;
+          maxEcpm: number;
+          s3FileName: string;
+          included: number;
+          excluded: number;
+          createdDate: number;
+          modifiedDate: number;
+          organizationName: string;
+          userName: string;
+          expectedSpent7: number;
+          expectedSpent30: number;
+          expectedSpent60: number;
+          dataCost: number;
+          owId: number;
+          uowId: number;
+          rawS3URLError: string;
+          uniques: number;
+          approvedRejectedByUserName: string;
+          approvedRejectedByUserEmail: string;
+          isApprovalAccess: boolean;
+          isEditAccess: boolean;
         };
       };
     };
   };
+};
+
+function getMatchedAudienceDetails(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/matched/{id}',
+    params: {
+      path: {
+        id: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
