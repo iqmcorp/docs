@@ -79,7 +79,7 @@ const config = {
       // Replace with your project's social card
       docs: {
         sidebar: {
-          hideable: true,
+          hideable: false,
           autoCollapseCategories: true,
         },
       },
