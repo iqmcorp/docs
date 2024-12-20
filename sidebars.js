@@ -707,11 +707,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Get Campaign Margin Details',
-              href: '/Guidelines/Finance-Guidelines#get-campaign-margin-details'
-            },
-            {
-              type: 'link',
               label: 'Get Customer PG Fees Details',
               href: '/Guidelines/Finance-Guidelines#get-customer-pg-fees-details'
             },
