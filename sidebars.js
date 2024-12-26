@@ -2014,8 +2014,13 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Add or Revoke Customer App Access',
-              href: '/Guidelines/Workspace-Guidelines#add-or-revoke-customer-app-access'
+              label: 'Add Customer App Access',
+              href: '/Guidelines/Workspace-Guidelines#add-customer-app-access'
+            },
+            {
+              type: 'link',
+              label: 'Revoke Customer App Access',
+              href: '/Guidelines/Workspace-Guidelines#revoke-customer-app-access'
             },
             {
               type: 'link',
