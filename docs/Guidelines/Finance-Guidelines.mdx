@@ -2,6 +2,9 @@
 hide_table_of_contents: true
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Finance API
 
 This page covers the methods and endpoints associated with managing finance operations. In addition to general finance details and lists, there are sections coevering invoice, credit, and payment management. 
@@ -57,6 +60,9 @@ Get an over of a customer's finance details.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -73,6 +79,61 @@ Get an over of a customer's finance details.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          pendingCampaigns: number;
+          runningCampaigns: number;
+          totalCampaigns: number;
+          dataCost: number;
+          actualSpent: number;
+          credits: number;
+          balance: number;
+          spent: number;
+          earning: number;
+        };
+      };
+    };
+  };
+}
+
+function GetCustomerOverview(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/financial-details',
+    params: {
+      query: {
+        owId: `number`,
+        isFinanceRequest: `boolean`,
+        year: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -116,6 +177,9 @@ Get a list of payment transactions for an organization.
 </details>
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -199,6 +263,70 @@ Get a list of payment transactions for an organization.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            isPaymentInitiatorOrg: boolean;
+            paymentId: number;
+            createdByUserEmail: string;
+            paymentDate: number;
+            paymentAmount: number;
+            paymentStatus: string;
+            paymentMode: string;
+            paymentType: string;
+            invoiceId: number;
+            modifiedAt: number;
+            bankName: string | null;
+            refundReason: string | null;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+}
+
+function ListofPaymenttransactionformyOrganisation(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/payments/list',
+    params: {
+      query: {
+        status: `string`,
+        paymentType: `string`,
+        searchField: `string`,
+        pageNo: `number`,
+        limit: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -223,6 +351,9 @@ Get a list of payments by customer.
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` <br />Supported values: `paymentId`, `paymentDate`, `paymentAmount`, `organizationName`, `paymentType`, `paymentMode`, `paymentStatus` |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -331,6 +462,77 @@ Get a list of payments by customer.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            isPaymentInitiatorOrg: boolean;
+            paymentId: number;
+            createdAt: number;
+            createdByUserEmail: string;
+            createdByUserProfile: string;
+            paymentDate: number;
+            paymentAmount: number;
+            paymentStatus: string;
+            paymentMode: string;
+            paymentType: string;
+            invoiceId: number;
+            transactionId: string | null;
+            modifiedAt: number;
+            modifiedByUserEmail: string;
+            modifiedByUserProfile: string;
+            bankName: string | null;
+            refundReason: string | null;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+}
+
+function ListPaymentforCustomer(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payments/list',
+    params: {
+      query: {
+        owId: `number`,
+        status: `number`,
+        paymentType: `string`,
+        searchField: `string`,
+        pageNo: `number`,
+        limit: `number`,
+        sortBy: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -369,6 +571,9 @@ Get an invoice for an organization.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -392,6 +597,60 @@ Get an invoice for an organization.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invoiceId: number;
+          owId: number;
+          invoiceTitle: string;
+          invoiceCompanyName: string;
+          invoiceCompanyAddress: string;
+          email: string;
+          website: string;
+          invoiceDescription: string;
+          paypalId: number;
+          chequeTransferId: number;
+          wireTransferId: number;
+          termsAndConditions: string;
+          paymentTerm: string;
+          invoiceFooter: string;
+          createdAt: string;
+        };
+      };
+    };
+  };
+}
+
+function GetInvoiceForOrganization(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-settings',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -410,6 +669,9 @@ Get invoice payment details by invoice ID.
 | `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -437,6 +699,68 @@ Get invoice payment details by invoice ID.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          paypalPaymentDetail: {
+            paypalId: number;
+            paypalAccountId: string;
+          };
+          chequePaymentDetail: {
+            chequeId: number;
+            chequeCompanyName: string;
+            chequeCompanyAddress: string;
+          };
+          wireTransferPaymentDetail: {
+            wireTransferId: number;
+            wireTransferCompanyName: string;
+            bankName: string;
+            accountNumber: string;
+            bankAddress: string;
+            swiftCode: string;
+            routing: string;
+          };
+        };
+      };
+    };
+  };
+}
+
+function GetInvoicePaymentDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-settings-payment-details',
+    params: {
+      query: {
+        invoiceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -461,6 +785,9 @@ Get a list of invoices by customer or organization.
 | `isCustomerRequest` <br /><span class="type-text">boolean</span> | (Organization endpoint only) Customer app request (default): `true` <br />Organization app request: `false`
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -492,6 +819,68 @@ Get a list of invoices by customer or organization.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            invoiceId: number;
+            invoiceFromDate: number;
+            invoiceToDate: number;
+            issuedOn: number;
+            invoiceAmount: number;
+            status: number;
+            paymentTerm: number;
+            paidAmount: number;
+            paymentMode: (number[] | null) | (string | null) | unknown;
+            invoiceName: string | null;
+            actionNote: string | null;
+            invoiceStatusUpdatedBy: string | null;
+            modifiedAt: number;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+}
+
+function ListInvoiceForCustomer(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/invoice/list/{owId}',
+    params: {
+      query: {
+        status: `string`,
+        sortBy: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -512,6 +901,9 @@ Get customer margin details by margin type.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -529,6 +921,59 @@ Get customer margin details by margin type.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          data: {
+            marginTypeId: number;
+            marginType: string;
+            marginValue: number;
+          }[];
+          filteredRecords: number;
+          isBidShadingEnabled: boolean;
+        };
+      };
+    };
+  };
+}
+
+function getCustomerMargin(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/view-margin',
+    params: {
+      query: {
+        marginTypeIds: `string`,
+        owId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -549,6 +994,9 @@ Get customer margin details by margin type.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 202318,
@@ -561,40 +1009,52 @@ Get customer margin details by margin type.
 
 ```
 
-</div></div>
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
 
----
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
 
-### Get Campaign Margin Details
+```ts
+import {
+  getInstance
+} from "prerequisites"
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/custom/fa/list/campaign-margin-detail</span>
+const axios = getInstance();
 
-<div class="container">
-  <div class="child1">
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": unknown;
+    };
+  };
+}
 
-Get campaign margin details by campaign ID.
-
-| Query Parameters |  |
-| ---- | --- |
-| `campaignIds` <br /><span class="type-text">string</span> | Comma separated campaign IDs |
-
-</div><div class="child2">
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "1234": {
-            "workspaceMargin": 10,
-            "organizationMargin": 10
-        },
-        "4567": {
-            "workspaceMargin": 11,
-            "organizationMargin": 20
+function editCustomerMargin(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/edit-margin',
+    requestBody: {
+      content: {
+        "application/json": {
+          email?: `string`,
+          username?: `string`,
+          campaignId?: `number`,
+          workspaceMargin?: `number`,
+          organizationMargin?: `number`,
+          marginTypeId?: `number`,
         }
+      }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -615,6 +1075,9 @@ Get details for customer PG fees.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -626,6 +1089,54 @@ Get details for customer PG fees.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          organizationPGFeesDetails: {
+            pgCampaignFees: number;
+            pgWorkspaceShare: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function getPgFeesDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/{owId}/pg-fees',
+    params: {
+      query: {
+        owId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -650,6 +1161,9 @@ Get details for customer PG fees.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 202318,
@@ -664,6 +1178,58 @@ Get details for customer PG fees.
     "data": "PG Fees details updated Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
+    };
+  };
+}
+
+function editPgFeesDetails(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/customer/{customerOwId}/pg-fees',
+    params: {
+      path: {
+        customerowId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          customerOwId?: `number`,
+          pgCampaignFees?: `number`,
+          pgWorkspaceShare?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -683,6 +1249,9 @@ Get finance details for customer VLD.
 | `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -708,6 +1277,52 @@ Get finance details for customer VLD.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          vldRate: number;
+        }
+      }
+    };
+  };
+}
+
+function getVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/{customerOwId}/vld-fees',
+    params: {
+      path: {
+        customerowId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -728,6 +1343,9 @@ Get finance details for customer VLD.
 | `vldMarkupValue` <br /><span class="type-text">integer</span> | VLD markup value for advertiser customer |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -750,6 +1368,62 @@ Get finance details for customer VLD.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        id: number;
+        owId: number;
+        vldRate: number;
+        vldEnabled: boolean;
+        vldMarkupType: string;
+        vldMarkupTypeId: number;
+        vldMarkupValue: number;
+      }
+    };
+  };
+}
+
+function editVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/customer/vld-fees',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          owId: `number`,
+          vldRate?: `number`,
+          vldEnabled?: `boolean`,
+          vldMarkupType?: `string`,
+          vldMarkupTypeId?: `number`,
+          vldMarkupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -790,12 +1464,55 @@ Get finance details for customer VLD.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": 5855904.72
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          paypalFeesPercentage: number;
+        }
+      }
+    };
+  };
+}
+
+function getBasicDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/available-balance',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -820,6 +1537,9 @@ Get credit summary by workspace ID.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -829,6 +1549,52 @@ Get credit summary by workspace ID.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          usedCredit: number;
+          totalCredit: number;
+        };
+      };
+    };
+  };
+}
+
+function CreditSummary(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/credit-summary/{owId}',
+    params: {
+      path: {
+        owId: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -850,6 +1616,9 @@ Get a list of offered credits to organization.
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (`+`) or descending (`-`), default: `-modifiedAt` |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -877,6 +1646,74 @@ Get a list of offered credits to organization.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            creditId: number;
+            creditAmount: number;
+            modifiedAt: string;
+            status: string;
+            organizationName: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function ListCreditsofferedtomyorganization(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/credits/list',
+    params: {
+      query: {
+        pageNo: `number`,
+        limit: `number`,
+        sortBy: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -899,9 +1736,57 @@ Get a list of offered credits to organization.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      "Content-Disposition"?: {
+
+        "text/plain": string;
+      };
+      [name: string]: unknown;
+    };
+  };
+}
+
+function DownloadInvoice(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/download-invoice/{owId}/{invoiceId}',
+    params: {
+      query: {
+        isCustomerRequest: `boolean`,
+      },
+      path: {
+        owId: `number`,
+        invoiceId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -927,9 +1812,53 @@ Get a PDF of payment receipt.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+  };
+}
+
+function DownloadPaymentReceiptpdf(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/payment/download-receipt/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      },
+      query: {
+        owId: `number`,
+        isCustomerRequest: `boolean`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -969,6 +1898,9 @@ Get a PDF of payment receipt.
 | `companyTaxName` <br /><span class="type-text">string</span> | Company tax name |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1029,6 +1961,92 @@ Get a PDF of payment receipt.
 
 </details>
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+
+          invoiceId: number;
+          message: string;
+        };
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function Save/UpdateInvoiceSettings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-settings/{invoiceId}',
+    params: {
+      query: {
+        isWhiteLabel: `boolean`,
+      },
+      path: {
+        invoiceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          invoiceTitle: `string`,
+          invoiceCompanyAddress: `string`,
+          email: `string`,
+          website: `string`,
+          invoiceDescription: `string`,
+          termsAndConditions: `string`,
+          paymentTerm: `string`,
+          invoiceFooter: `string`,
+          paypalAccountId: `string`,
+          chequeCompanyName: `string`,
+          chequeCompanyAddress: `string`,
+          wireTransferCompanyName: `string`,
+          bankName: `string`,
+          accountNumber: `string`,
+          bankAddress: `string`,
+          companyTaxId: `string`,
+          companyTaxName: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1045,6 +2063,9 @@ Get a PDF of payment receipt.
 | `taxId` <br /><span class="type-text">integer</span> | Tax ID |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1063,6 +2084,63 @@ Get a PDF of payment receipt.
   ]
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function DeleteInvoiceTaxdata(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-settings-tax-data',
+    params: {
+      query: {
+        taxId: `number`,
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1083,12 +2161,71 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Invoice with the provided ID approved successfully"
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function ApproveInvoice(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-approve/{invoiceId}',
+    params: {
+      path: {
+        invoiceId: `number`,
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1103,11 +2240,77 @@ Update [invoice status](#invoice-status).
 
   <div class="child2">
 
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "actionNote": "cancelling invoice"
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function CancelInvoice(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/invoice-cancel/{invoiceId}',
+    params: {
+      path: {
+        invoiceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          actionNote: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1129,6 +2332,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 678345,
@@ -1144,6 +2350,67 @@ Update [invoice status](#invoice-status).
     "data": "Payment added Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function MarkInvoiceAsPaid(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/pay-invoice',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentAmount: `number`,
+          paymentType: `number`,
+          invoiceId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1168,6 +2435,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "email": "user@company.com"
@@ -1180,6 +2450,50 @@ Update [invoice status](#invoice-status).
     "data": "Invoice e-mail sent successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function EmailInvoice(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/email-invoice/{owId}/{invoiceId}',
+    params: {
+      path: {
+        owId: `number`;
+        invoiceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1201,6 +2515,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 23,
@@ -1214,6 +2531,65 @@ Update [invoice status](#invoice-status).
     "data": "Credits offered Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function AddCredittoCustomer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/credit/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          owId: `number`,
+          creditAmount: `number`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1234,6 +2610,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 54,
@@ -1248,6 +2627,66 @@ Update [invoice status](#invoice-status).
     "data": "Credits updated Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function EditofferedCredittoCustomer(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/customer/credit/edit',
+    requestBody: {
+      content: {
+        "application/json": {
+          owId: `number`,
+          creditAmount: `number`,
+          creditId: `number`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1267,6 +2706,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 54,
@@ -1280,6 +2722,65 @@ Update [invoice status](#invoice-status).
     "data": "Credits revoked Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function RevokeCreditofferedtoCustomer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/credit/revoke',
+    requestBody: {
+      content: {
+        "application/json": {
+          owId: `number`,
+          creditId: `number`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1305,6 +2806,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "creditId": 4,
@@ -1324,6 +2828,71 @@ Update [invoice status](#invoice-status).
     "data": "Credits claimed."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function Claimofferedcredits(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/credit/claim',
+    requestBody: {
+      content: {
+        "application/json": {
+          creditId: `number`,
+          customerName: `string`,
+          businessName: `string`,
+          taxId: `string`,
+          contactPersonName: `string`,
+          contactPersonEmail: `string`,
+          incorporationPlace: `string`,
+          address: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1351,6 +2920,9 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 123654,
@@ -1371,6 +2943,58 @@ Update [invoice status](#invoice-status).
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddPaymentforcustomer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/add',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentAmount: `number`,
+          paymentDate: `string`,
+          paymentMode: `number`,
+          transactionId: `string`,
+          paymentProof: `string`,
+          paymentType: `number`,
+          invoiceId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div>
 </div>
 
@@ -1389,12 +3013,72 @@ Update [invoice status](#invoice-status).
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Payment updated Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function EditPaymentofcustomer(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentAmount: `number`,
+          paymentDate: `string`,
+          paymentMode: `number`,
+          transactionId: `string`,
+          paymentProof: `string`,
+          paymentType: `number`,
+          invoiceId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1420,6 +3104,9 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "owId": 200485,
@@ -1433,6 +3120,57 @@ Update payment status
     "data": "Payment approved Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function ApprovePayment(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/approve/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          actionNote: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1451,12 +3189,79 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Payment cancelled Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function CancelPayment(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/cancel/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          actionNote: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1475,12 +3280,79 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Payment rejected Successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function RejectPayment(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/reject/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          actionNote: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1503,12 +3375,64 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Payment Successful."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddPaymentfromOrganizationApp(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/add-fund',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          paymentAmount: `number`,
+          paymentDate: `string`,
+          paymentMode: `number`,
+          paymentProof: `string`,
+          bankName: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1527,12 +3451,60 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-3YM2956846765604B"
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function PaymentwithPayPal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/paypal/payment',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          paymentAmount: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1556,12 +3528,65 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
     "data": "Refund Initiated."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function InitiateRefund(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/refund',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentAmount: `number`,
+          paymentDate: `string`,
+          paymentMode: `number`,
+          transactionId: `string`,
+          paymentProof: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1585,6 +3610,9 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
   "owId": 200485,
@@ -1598,6 +3626,57 @@ Update payment status
     "data": "Refund successful."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function ApproveRefund(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/approve-refund/{paymentId}',
+    params: {
+      path: {
+        paymentId: `number`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentProof: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1621,6 +3700,9 @@ Update payment status
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Request Sample"
 {
     "email": "example@business.com"
@@ -1633,6 +3715,57 @@ Update payment status
     "data": "Payment receipt e-mail sent successfully."
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function EmailPaymentReceipt(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/payment/email-receipt/{owId}/{paymentId}',
+    params: {
+      path: {
+        owId: `number`,
+        paymendId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
@@ -1656,6 +3789,9 @@ Get a list of payment type IDs.
 | <span class="value-text">Refund</span> <br /><span class="type-text">ID: 3</span> |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1682,6 +3818,50 @@ Get a list of payment type IDs.
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function PaymentTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/payment-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1703,6 +3883,9 @@ Get a list of payment type IDs.
 | <span class="value-text">Cancelled</span> <br /><span class="type-text">ID: 4</span> | Payment cancelled |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1736,6 +3919,49 @@ Get a list of payment type IDs.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function PaymentStatus(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/payment-status',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1756,6 +3982,9 @@ Get a list of payment mode type IDs.
 | <span class="value-text">Wire Transfer</span> <br /><span class="type-text">ID: 3</span> | Payment by wire transfer |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1783,6 +4012,49 @@ Get a list of payment mode type IDs.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function InvoicePaymentModes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/invoice-payment-modes',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1807,6 +4079,9 @@ Get a list of invoice status type IDs.
 | <span class="value-text">Cancelled</span> <br /><span class="type-text">ID: 8</span> | Invoice payment cancelled |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1858,6 +4133,49 @@ Get a list of invoice status type IDs.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function InvoiceStatus(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/invoice-status',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1870,6 +4188,9 @@ Get a list of invoice status type IDs.
   <div class="child1"></div>
 
   <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json
 {
@@ -1927,6 +4248,49 @@ Get a list of invoice status type IDs.
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function InvoicePaymentTerm(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/invoice-payment-terms',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
 </div></div>
 
 ---
@@ -1946,6 +4310,9 @@ Get a list of PG payment type IDs.
 | <span class="value-text">Platform</span> <br /><span class="type-text">ID: 2</span> | Platform payment |
 
 </div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
@@ -1970,6 +4337,49 @@ Get a list of PG payment type IDs.
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          id: number;
+          label: string;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getPgPaymentTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/static/pg/payment-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
