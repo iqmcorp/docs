@@ -102,14 +102,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get List of All Assets',
-              href: '/Guidelines/Assets-API-Guidelines#get-a-list-of-all-assets'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-a-list-of-all-assets"><span class="badge bar badge--primary">GET</span>List of All Assets</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Asset Details',
-              href: '/Guidelines/Assets-API-Guidelines#get-asset-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-asset-details"><span class="badge bar badge--primary">GET</span>Asset Details</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -119,19 +119,19 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Add Multiple Assets',
-              href: '/Guidelines/Assets-API-Guidelines#add-multiple-assets'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#add-multiple-assets"><span class="badge bar badge--success">POST</span>Add Multiple Assets</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Asset Details',
-              href: '/Guidelines/Assets-API-Guidelines#update-asset-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#update-asset-details"><span class="badge bar badge--info">PATCH</span>Update Asset Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Asset',
-              href: '/Guidelines/Assets-API-Guidelines#delete-asset'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#delete-asset"><span class="badge bar badge--danger">DEL</span>Delete Asset</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -152,19 +152,19 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get Campaign Dimension Counts',
-              href: '/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts"><span class="badge bar badge--primary">GET</span>Campaign Dimension Counts</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Dimension Specific Spending for a Campaign',
-              href: '/Guidelines/Bid-Model-API-Guidelines#get-dimension-specific-spending-for-a-campaign'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-dimension-specific-spending-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Spending by Dimension</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Total and Dimension Specific Count of Modelled Items for a Campaign',
-              href: '/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modelled-items-for-a-campaign'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modelled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modelled Items Count</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -174,19 +174,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Devices, Exchanges, Traffic',
-              href: '/Guidelines/Bid-Model-API-Guidelines#includeexclude-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#includeexclude-management"><span class="badge bar badge--success">POST</span>Devices, Exchanges, Traffic</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Campaign Entities',
-              href: '/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign'
-            },
-            {
-              type: 'link',
-              label: 'Delete Asset',
-              href: '/Guidelines/Assets-API-Guidelines#delete-asset'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign"><span class="badge bar badge--success">POST</span>Campaign Entities</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -196,14 +191,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Assign Priority to Multiple Campaigns',
-              href: '/Guidelines/Bid-Model-API-Guidelines#assign-priority-to-multiple-campaigns'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#assign-priority-to-multiple-campaigns"><span class="badge bar badge--warning">PUT</span>Assign Priority to Multiple Campaigns</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'More Campaign Priority Management',
-              href: '/Guidelines/Bid-Model-API-Guidelines#more-priority-management-for-multiple-campaigns'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#more-priority-management-for-multiple-campaigns"><span class="badge bar badge--success">POST</span>Priority Management for Multiple Campaigns</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -213,38 +208,38 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Add Bid Modelling',
-              href: '/Guidelines/Bid-Model-API-Guidelines#add-bid-modelling'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modelling"><span class="badge bar badge--success">POST</span>Add Bid Modelling</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Bid Modelling Actions',
-              href: '/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-actions'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-actions"><span class="badge bar badge--warning">PUT</span>Update Bid Modelling Actions</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Bid Modelling Actions',
-              href: '/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-dimensions'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-dimensions"><span class="badge bar badge--info">PATCH</span>Update Bid Modelling Dimensions</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Bid Modelling Data',
-              href: '/Guidelines/Bid-Model-API-Guidelines#delete-bid-modelling-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modelling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modelling Data</a>',
+              defaultStyle: true,
             },
           ]
         },
         {
-          type: `link`,
-          label: `Get Metrics Report For a Given Campaign and Dimension`,
-          href: '/Guidelines/Bid-Model-API-Guidelines#get-metrics-report-for-a-given-campaign-and-dimension',
-          className: 'sidebarItem',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-metrics-report-for-a-given-campaign-and-dimension"><span class="badge bar badge--success">POST</span>Metrics Report for a Given Campaign & Dimension</a>',
+          defaultStyle: true,
+          className: 'sidebarItem'
         },
         {
-          type: `link`,
-          label: `Get List of Bid Model Dimensions`,
-          href: '/Guidelines/Bid-Model-API-Guidelines#get-list-of-bid-model-dimensions',
-          className: 'sidebarItem',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-list-of-bid-model-dimensions"><span class="badge bar badge--primary">GET</span>List of Bid Model Dimensions</a>',
+          defaultStyle: true,
+          className: 'sidebarItem'
         },
       ],
     },
@@ -263,79 +258,79 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Campaign Resource Details',
-              href: '/Guidelines/Campaign-API-Guidelines#campaign-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#campaign-resource-properties"><span class="badge bar badge--primary"></span>Campaign Resource Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Details by ID',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-details-by-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-details-by-id"><span class="badge bar badge--primary">GET</span>Campaign Details by ID</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns"><span class="badge bar badge--primary">GET</span>List of Campaigns</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns with Basic Details',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-with-basic-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-with-basic-details"><span class="badge bar badge--primary">GET</span>List of Campaigns with Basic Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Basic Details of Campaigns',
-              href: '/Guidelines/Campaign-API-Guidelines#get-basic-details-of-campaigns'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-basic-details-of-campaigns"><span class="badge bar badge--success">POST</span>Basic Details of Campaigns</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns With Filters',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-with-filters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-with-filters"><span class="badge bar badge--success">POST</span>List of Campaigns with Filters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Budget Details',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-budget-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-budget-details"><span class="badge bar badge--primary">GET</span>Campaign Budget Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaign Groups',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-groups'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-groups"><span class="badge bar badge--success">POST</span>List of Campaign Groups</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Count by Status',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status"><span class="badge bar badge--success">POST</span>Campaign Count by Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Count With Campaign Type',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type"><span class="badge bar badge--success">POST</span>Campaign Count with Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Count by Creative Type',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-creative-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-creative-type"><span class="badge bar badge--primary">GET</span>Campaign Count by Creative Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Creative Type and Campaign Count',
-              href: '/Guidelines/Campaign-API-Guidelines#get-creative-type-and-campaigns-count'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-creative-type-and-campaigns-count"><span class="badge bar badge--success">POST</span>Creative Type and Campaign Count</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Start Date',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-start-date'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-start-date"><span class="badge bar badge--primary">GET</span>Campaign Start Date</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaign Start Dates or End Dates',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-start-date'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-start-date"><span class="badge bar badge--success">POST</span>List of Campaign Start/End Dates</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Report Data',
-              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-report-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-campaign-report-data"><span class="badge bar badge--primary">GET</span>Campaign Report Data</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -345,64 +340,64 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create New PG Campaign',
-              href: '/Guidelines/Campaign-API-Guidelines#create-new-pg-campaign'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#create-new-pg-campaign"><span class="badge bar badge--success">POST</span>Create New PG Campaign</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update PG Campaign',
-              href: '/Guidelines/Campaign-API-Guidelines#update-pg-campaign'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-pg-campaign"><span class="badge bar badge--info">PATCH</span>Update PG Campaign</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Campaign by Field',
-              href: '/Guidelines/Campaign-API-Guidelines#update-campaign-by-field'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-campaign-by-field"><span class="badge bar badge--info">PATCH</span>Update Campaign by Field</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Change Campaign Name',
-              href: '/Guidelines/Campaign-API-Guidelines#change-campaign-name'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#change-campaign-name"><span class="badge bar badge--info">PATCH</span>Change Campaign Name</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Change Campaign End Date',
-              href: '/Guidelines/Campaign-API-Guidelines#change-campaign-end-date'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#change-campaign-end-date"><span class="badge bar badge--warning">PUT</span>Change Campaign End Date</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Change Campaign Budget',
-              href: '/Guidelines/Campaign-API-Guidelines#change-campaign-budget'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#change-campaign-budget"><span class="badge bar badge--warning">PUT</span>Change Campaign Budget</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Target Campaign With Conversions',
-              href: '/Guidelines/Campaign-API-Guidelines#target-campaigns-with-conversions'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#target-campaigns-with-conversions"><span class="badge bar badge--success">POST</span>Target Campaign with Conversions</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Audience Targeting in Campaigns',
-              href: '/Guidelines/Campaign-API-Guidelines#update-audience-targeting-in-campaigns'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-audience-targeting-in-campaigns"><span class="badge bar badge--success">POST</span>Update Audience Targeting in Campaign</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Assign PMP Deals',
-              href: '/Guidelines/Campaign-API-Guidelines#assign-pmp-deals'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#assign-pmp-deals"><span class="badge bar badge--info">PATCH</span>Assign PMP Deals</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Assign PG Deals',
-              href: '/Guidelines/Campaign-API-Guidelines#assign-pg-deals'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#assign-pg-deals"><span class="badge bar badge--info">PATCH</span>Assign PG Deals</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Resend Email to Set Margin',
-              href: '/Guidelines/Campaign-API-Guidelines#resend-email-to-set-margin'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#resend-email-to-set-margin"><span class="badge bar badge--success">POST</span>Resend Email to Set Margin</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Resend Email Reminder to Set Invoice Template',
-              href: '/Guidelines/Campaign-API-Guidelines#resend-email-reminder-to-set-invoice-template'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#resend-email-reminder-to-set-invoice-template"><span class="badge bar badge--success">POST</span>Resend Email Reminder to Set Invoice Template</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -417,44 +412,44 @@ const sidebars = {
               href: '/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties'
             },
             {
-              type: 'link',
-              label: 'Get Insertion Order Details',
-              href: '/Guidelines/Campaign-API-Guidelines#get-insertion-order-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-insertion-order-details"><span class="badge bar badge--success">POST</span>IO Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Advanced Insertion Order Details',
-              href: '/Guidelines/Campaign-API-Guidelines#get-advanced-insertion-order-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-advanced-insertion-order-details"><span class="badge bar badge--primary">GET</span>Advanced IO Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get IO Campaign Budget and Details',
-              href: '/Guidelines/Campaign-API-Guidelines#get-io-campaign-budget-and-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-io-campaign-budget-and-details"><span class="badge bar badge--primary">GET</span>Get IO Campaign Budget and Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaign Details Grouped by Insertion Order ID',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-details-grouped-by-insertion-order-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-details-grouped-by-insertion-order-id"><span class="badge bar badge--success">POST</span>List of Campaign Details Grouped by IO ID</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaign Details Grouped by IO ID With Filters',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-details-grouped-by-io-id-with-filters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-details-grouped-by-io-id-with-filters"><span class="badge bar badge--success">POST</span>List of Campaign Details Grouped by IO ID with Filters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns and Report Details by Insertion Order ID',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-and-report-details-by-insertion-order-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-and-report-details-by-insertion-order-id"><span class="badge bar badge--success">POST</span> List of Campaigns and Report Details by IO ID</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download csv/xlsx File for IO-based Campaign Details',
-              href: '/Guidelines/Campaign-API-Guidelines#download-csvxlsx-file-for-io-based-campaign-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#download-csvxlsx-file-for-io-based-campaign-details"><span class="badge bar badge--success">POST</span>Download csv/xlsx File for IO-based Campaign Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of IO Start/End Dates',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-io-startend-dates'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-io-startend-dates"><span class="badge bar badge--success">POST</span>List of IO Start/End Dates</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -464,34 +459,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create an Insertion Order',
-              href: '/Guidelines/Campaign-API-Guidelines#create-an-insertion-order'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#create-an-insertion-order"><span class="badge bar badge--success">POST</span>Create an Insertion Order</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Insertion Order Details',
-              href: '/Guidelines/Campaign-API-Guidelines#update-insertion-order-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-insertion-order-details"><span class="badge bar badge--info">PATCH</span>Update Insertion Order Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update End Date for Multiple IOs',
-              href: '/Guidelines/Campaign-API-Guidelines#update-end-date-for-multiple-ios'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-end-date-for-multiple-ios"><span class="badge bar badge--info">PATCH</span>Update End Date for Multiple IOs</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Budget for Multiple IOs',
-              href: '/Guidelines/Campaign-API-Guidelines#update-budget-for-multiple-ios'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-budget-for-multiple-ios"><span class="badge bar badge--info">PATCH</span>Update Budget for Multiple IOs</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Duplicate an Insertion Order',
-              href: '/Guidelines/Campaign-API-Guidelines#duplicate-an-insertion-order'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#duplicate-an-insertion-order"><span class="badge bar badge--success">POST</span>Duplicate an Insertion Order</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete an Insertion Order',
-              href: '/Guidelines/Campaign-API-Guidelines#delete-an-insertion-order'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#delete-an-insertion-order"><span class="badge bar badge--danger">DEL</span>Delete an Insertion Order</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -501,19 +496,19 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get IO Status List',
-              href: '/Guidelines/Campaign-API-Guidelines#get-io-status-list'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-io-status-list"><span class="badge bar badge--primary">GET</span>List of IO Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaign Budget Types',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types"><span class="badge bar badge--primary">GET</span>List of Campaign Budget Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Budget Distribution Methods',
-              href: '/Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods"><span class="badge bar badge--primary">GET</span>List of Budget Distribution Methods</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -534,39 +529,39 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Postback Conversion Resource Details',
-              href: '/Guidelines/Conversion-API-Guidelines#postback-conversion-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#postback-conversion-resource-properties"><span class="badge bar badge--primary"></span>Postback Conversion Resource Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Pixel Conversion Resource Details',
-              href: '/Guidelines/Conversion-API-Guidelines#pixel-conversion-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#pixel-conversion-resource-properties"><span class="badge bar badge--primary"></span>Pixel Conversion Resource Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Conversion Details by ID',
-              href: '/Guidelines/Conversion-API-Guidelines#get-conversion-details-by-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-conversion-details-by-id"><span class="badge bar badge--primary">GET</span>Conversion Details by ID</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Conversions',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversions'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-conversions"><span class="badge bar badge--primary">GET</span>List of Conversions</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Conversion Count by Type',
-              href: '/Guidelines/Conversion-API-Guidelines#get-conversion-count-by-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-conversion-count-by-type"><span class="badge bar badge--primary">GET</span>Conversion Count by Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Details by Conversion ID',
-              href: '/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id"><span class="badge bar badge--primary">GET</span>Campaign Details by Conversion ID</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Details by Conversion ID in Group or Basic',
-              href: '/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic"><span class="badge bar badge--primary">GET</span>Campaign Details by Conversion ID in Group or Basic</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -576,39 +571,39 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create Postback Conversion',
-              href: '/Guidelines/Conversion-API-Guidelines#create-postback-conversion'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#create-postback-conversion"><span class="badge bar badge--success">POST</span>Create Postback Conversion</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Create Pixel Conversion',
-              href: '/Guidelines/Conversion-API-Guidelines#create-pixel-conversion'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#create-pixel-conversion"><span class="badge bar badge--success">POST</span>Create Pixel Conversion</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Conversion',
-              href: '/Guidelines/Conversion-API-Guidelines#delete-conversion'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#delete-conversion"><span class="badge bar badge--danger">DEL</span>Delete Conversion</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Postback Conversion',
-              href: '/Guidelines/Conversion-API-Guidelines#update-postback-conversion'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#update-postback-conversion"><span class="badge bar badge--info">PATCH</span>Update Postback Conversion</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Pixel Conversion',
-              href: '/Guidelines/Conversion-API-Guidelines#update-pixel-conversion'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#update-pixel-conversion"><span class="badge bar badge--info">PATCH</span>Update Pixel Conversion</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Assign Conversion to a Campaign',
-              href: '/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign"><span class="badge bar badge--info">PATCH</span>Assign Conversion to a Campaign</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Assign Email for Pixel Integration',
-              href: '/Guidelines/Conversion-API-Guidelines#send-email-for-pixel-integration'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#send-email-for-pixel-integration"><span class="badge bar badge--success">POST</span>Send Email for Pixel Integration</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -618,34 +613,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get List of Partner Types for Postback Conversions',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-partner-types-for-postback-conversions'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-partner-types-for-postback-conversions"><span class="badge bar badge--primary">GET</span>List of Partner Types for Postback Conversions</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Pixel Conversion Advanced Setting Default Values',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-pixel-conversion-advanced-setting-default-values'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-pixel-conversion-advanced-setting-default-values"><span class="badge bar badge--primary">GET</span>List of Pixel Conversion Advanced Setting Default Values</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Conversion Types',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-types"><span class="badge bar badge--primary">GET</span>List of Conversion Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Conversion Status',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-status"><span class="badge bar badge--primary">GET</span>List of Conversion Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Conversion Piggyback Types',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-piggyback-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-piggyback-types"><span class="badge bar badge--primary">GET</span>List of Conversion Piggyback Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Conversion Attribute Types',
-              href: '/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-attribute-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#get-list-of-conversion-attribute-types"><span class="badge bar badge--primary">GET</span>List of Conversion Attribute Types</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -666,94 +661,94 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get Customer Finance Details',
-              href: '/Guidelines/Finance-Guidelines#finance-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#finance-details"><span class="badge bar badge--primary">GET</span>Customer Finance Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Payment Transactions for Organization',
-              href: '/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization"><span class="badge bar badge--primary">GET</span>List of Payment Transactions for Organization</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Customer Payments',
-              href: '/Guidelines/Finance-Guidelines#get-list-of-customer-payments'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-list-of-customer-payments"><span class="badge bar badge--primary">GET</span>List of Customer Payments</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Invoice for Organization',
-              href: '/Guidelines/Finance-Guidelines#get-invoice-for-organization'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-invoice-for-organization"><span class="badge bar badge--primary">GET</span>Invoice for Organization</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Invoice Payment Details',
-              href: '/Guidelines/Finance-Guidelines#get-invoice-payment-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-invoice-payment-details"><span class="badge bar badge--primary">GET</span>Invoice Payment Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Invoices for Customer or Organization',
-              href: '/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization"><span class="badge bar badge--primary">GET</span>List of Invoices for Customer or Organization</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Margin Details',
-              href: '/Guidelines/Finance-Guidelines#get-customer-margin-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-customer-margin-details"><span class="badge bar badge--primary">GET</span>Customer Margin Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Customer Margin Details',
-              href: '/Guidelines/Finance-Guidelines#update-customer-margin-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#update-customer-margin-details"><span class="badge bar badge--success">POST</span>Update Customer Margin Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer PG Fees Details',
-              href: '/Guidelines/Finance-Guidelines#get-customer-pg-fees-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-customer-pg-fees-details"><span class="badge bar badge--primary">GET</span>Customer PG Fees Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Edit Customer PG Fees',
-              href: '/Guidelines/Finance-Guidelines#edit-customer-pg-fees'
+              type: 'html',
+              value: '<a class="menu__link" href="#edit-customer-pg-fees"><span class="badge bar badge--info">PATCH</span>Edit Customer PG Fees</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer VLD Finance Details',
-              href: '/Guidelines/Finance-Guidelines#get-customer-vld-finance-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-customer-vld-finance-details"><span class="badge bar badge--primary">GET</span>Customer VLD Finance Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Updates Customer VLD Details',
-              href: '/Guidelines/Finance-Guidelines#updates-customer-vld-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Basic Financial Details',
-              href: '/Guidelines/Finance-Guidelines#get-basic-financial-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#get-basic-financial-details"><span class="badge bar badge--primary">GET</span>Basic Financial Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Available Balance',
-              href: '/Guidelines/Finance-Guidelines#available-balance'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#available-balance"><span class="badge bar badge--primary">GET</span>Available Balance</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Credit Summary',
-              href: '/Guidelines/Finance-Guidelines#credit-summary'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#credit-summary"><span class="badge bar badge--primary">GET</span>Credit Summary</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Offered Credits',
-              href: '/Guidelines/Finance-Guidelines#offered-credits'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#offered-credits"><span class="badge bar badge--primary">GET</span>Offered Credits</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download Invoice',
-              href: '/Guidelines/Finance-Guidelines#download-invoice'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#download-invoice"><span class="badge bar badge--primary">GET</span>Download Invoice</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download Payment Receipt',
-              href: '/Guidelines/Finance-Guidelines#download-payment-receipt'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#download-payment-receipt"><span class="badge bar badge--primary">GET</span>Download Payment Receipt</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -763,34 +758,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Update Invoice Settings',
-              href: '/Guidelines/Finance-Guidelines#invoice-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#invoice-management"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Invoice Tax Data',
-              href: '/Guidelines/Finance-Guidelines#delete-invoice-tax-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#delete-invoice-tax-data"><span class="badge bar badge--danger">DEL</span>Delete Invoice Tax Data</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Approve Invoice',
-              href: '/Guidelines/Finance-Guidelines#approve-invoice'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#approve-invoice"><span class="badge bar badge--info">PATCH</span>Approve Invoice</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Cancel Invoice',
-              href: '/Guidelines/Finance-Guidelines#cancel-invoice'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#cancel-invoice"><span class="badge bar badge--info">PATCH</span>Cancel Invoice</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Mark Invoice as Paid',
-              href: '/Guidelines/Finance-Guidelines#mark-invoice-as-paid'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#mark-invoice-as-paid"><span class="badge bar badge--success">POST</span>Mark Invoice as Paid</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Email Invoice',
-              href: '/Guidelines/Finance-Guidelines#email-invoice'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#email-invoice"><span class="badge bar badge--success">POST</span>Email Invoice</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -800,24 +795,24 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Add Credit to Customer',
-              href: '/Guidelines/Finance-Guidelines#credit-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#credit-management"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Credit Offered to Customer',
-              href: '/Guidelines/Finance-Guidelines#update-credit-offered-to-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#update-credit-offered-to-customer"><span class="badge bar badge--info">PATCH</span>Update Credit Offered to Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Revoke Credit Offered to Customer',
-              href: '/Guidelines/Finance-Guidelines#revoke-credit-offered-to-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#revoke-credit-offered-to-customer"><span class="badge bar badge--success">POST</span>Revoke Credit Offered to Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Claim Offered Credits',
-              href: '/Guidelines/Finance-Guidelines#claim-offered-credits'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#claim-offered-credits"><span class="badge bar badge--success">POST</span>Claim Offered Credits</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -827,54 +822,54 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Add Payment for Customer',
-              href: '/Guidelines/Finance-Guidelines#payment-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#payment-management"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Edit Customer Payment',
-              href: '/Guidelines/Finance-Guidelines#edit-customer-payment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#edit-customer-payment"><span class="badge bar badge--warning">PUT</span>Edit Customer Payment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Approve Payment',
-              href: '/Guidelines/Finance-Guidelines#approve-payment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#approve-payment"><span class="badge bar badge--success">POST</span>Approve Payment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Cancel Payment',
-              href: '/Guidelines/Finance-Guidelines#cancel-payment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#cancel-payment"><span class="badge bar badge--success">POST</span>Cancel Payment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Reject Payment',
-              href: '/Guidelines/Finance-Guidelines#reject-payment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#reject-payment"><span class="badge bar badge--success">POST</span>Reject Payment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add Payment from Organization App',
-              href: '/Guidelines/Finance-Guidelines#add-payment-from-organization-app'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#add-payment-from-organization-app"><span class="badge bar badge--success">POST</span>Add Payment from Organization App</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Payment with PayPal',
-              href: '/Guidelines/Finance-Guidelines#payment-with-paypal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#payment-with-paypal"><span class="badge bar badge--success">POST</span>Payment with PayPal</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Initiate Refund',
-              href: '/Guidelines/Finance-Guidelines#initiate-refund'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#initiate-refund"><span class="badge bar badge--success">POST</span>Initiate Refund</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Approve Refund',
-              href: '/Guidelines/Finance-Guidelines#approve-refund'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#approve-refund"><span class="badge bar badge--success">POST</span>Approve Refund</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Email Payment Receipt',
-              href: '/Guidelines/Finance-Guidelines#email-payment-receipt'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#email-payment-receipt"><span class="badge bar badge--success">POST</span>Email Payment Receipt</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -884,34 +879,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Payment Types',
-              href: '/Guidelines/Finance-Guidelines#static-details-lists'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#static-details-lists"><span class="badge bar badge--primary">GET</span>Payment Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Payment Status',
-              href: '/Guidelines/Finance-Guidelines#payment-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#payment-status"><span class="badge bar badge--primary">GET</span>Payment Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Invoice Payment Mode Types',
-              href: '/Guidelines/Finance-Guidelines#invoice-payment-mode-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#invoice-payment-mode-types"><span class="badge bar badge--primary">GET</span>Invoice Payment Mode Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Invoice Status',
-              href: '/Guidelines/Finance-Guidelines#invoice-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#invoice-status"><span class="badge bar badge--primary">GET</span>Invoice Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Invoice Payment Term',
-              href: '/Guidelines/Finance-Guidelines#invoice-payment-term'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#invoice-payment-term"><span class="badge bar badge--primary">GET</span>Invoice Payment Term</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'PG Payment Type',
-              href: '/Guidelines/Finance-Guidelines#pg-payment-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Finance-Guidelines#pg-payment-type"><span class="badge bar badge--primary">GET</span>PG Payment Type</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -932,34 +927,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get a List of Insights',
-              href: '/Guidelines/Insights-API-Guidelines#get-insights-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-insights-details"><span class="badge bar badge--primary">GET</span>List of Insights</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Campaign Bidding Insights',
-              href: '/Guidelines/Insights-API-Guidelines#get-campaign-bidding-insights'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-campaign-bidding-insights"><span class="badge bar badge--primary">GET</span>Campaign Bidding Insights</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get a List of Eligible Audiences',
-              href: '/Guidelines/Insights-API-Guidelines#get-a-list-of-eligible-audiences'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-a-list-of-eligible-audiences"><span class="badge bar badge--primary">GET</span>List of Eligible Audiences</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Insights Count by Type',
-              href: '/Guidelines/Insights-API-Guidelines#get-insights-count-by-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-insights-count-by-type"><span class="badge bar badge--primary">GET</span>Insights Count by Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Matched Audience Details',
-              href: '/Guidelines/Insights-API-Guidelines#get-matched-audience-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Matched Audience File URL',
-              href: '/Guidelines/Insights-API-Guidelines#get-matched-audience-file-url'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-matched-audience-file-url"><span class="badge bar badge--primary">GET</span>Matched Audience File URL</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -969,29 +964,29 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create Insights for a Given Audience',
-              href: '/Guidelines/Insights-API-Guidelines#insights-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#insights-management"><span class="badge bar badge--success">POST</span>Create Insights for a Given Audience</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Insights Record',
-              href: '/Guidelines/Insights-API-Guidelines#delete-insights-record'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#delete-insights-record"><span class="badge bar badge--danger">DEL</span>Delete Insights Record</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Regenerate Insights Report',
-              href: '/Guidelines/Insights-API-Guidelines#regenerate-insights-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#regenerate-insights-report"><span class="badge bar badge--success">POST</span>Regenerate Insights Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download Insights Report',
-              href: '/Guidelines/Insights-API-Guidelines#download-insights-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#download-insights-report"><span class="badge bar badge--success">POST</span>Download Insights Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Send Insights Email',
-              href: '/Guidelines/Insights-API-Guidelines#send-insights-email'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#send-insights-email"><span class="badge bar badge--success">POST</span>Send Insights Email</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1001,39 +996,39 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'VLD Resource Properties',
-              href: '/Guidelines/Insights-API-Guidelines#voter-level-data-reports'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#voter-level-data-reports"><span class="badge bar badge--primary"></span>VLD Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of VLD Reports',
-              href: '/Guidelines/Insights-API-Guidelines#get-list-of-vld-reports'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-list-of-vld-reports"><span class="badge bar badge--primary">GET</span>List of VLD Reports</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns Eligible for VLD Reports',
-              href: '/Guidelines/Insights-API-Guidelines#get-list-of-campaigns-eligible-for-vld-reports'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-list-of-campaigns-eligible-for-vld-reports"><span class="badge bar badge--primary">GET</span>List of Campaigns Eligible for VLD Reports</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Generate VLD Report',
-              href: '/Guidelines/Insights-API-Guidelines#generate-vld-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#generate-vld-report"><span class="badge bar badge--success">POST</span>Generate VLD Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Cost Assessment for VLD Report',
-              href: '/Guidelines/Insights-API-Guidelines#get-cost-assessment-for-vld-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-cost-assessment-for-vld-report"><span class="badge bar badge--success">POST</span>Cost Assessment for VLD Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download VLD Insight Report',
-              href: '/Guidelines/Insights-API-Guidelines#download-vld-insight-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#download-vld-insight-report"><span class="badge bar badge--success">POST</span>Download VLD Insight Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete VLD Report',
-              href: '/Guidelines/Insights-API-Guidelines#delete-vld-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#delete-vld-report"><span class="badge bar badge--danger">DEL</span>Delete VLD Report</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1043,14 +1038,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get List of Insights Types',
-              href: '/Guidelines/Insights-API-Guidelines#get-more-insights-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-more-insights-details"><span class="badge bar badge--primary">GET</span>List of Insights Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Insights Status',
-              href: '/Guidelines/Insights-API-Guidelines#get-list-of-insights-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#get-list-of-insights-status"><span class="badge bar badge--primary">GET</span>List of Insights Status</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1071,34 +1066,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Query Parameters',
-              href: '/Guidelines/Inventory-API-Guide#get-inventory-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-details"><span class="badge bar badge--primary"></span>Query Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Inventories',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-inventories'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-inventories"><span class="badge bar badge--primary">GET</span>List of Inventories</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory Distribution',
-              href: '/Guidelines/Inventory-API-Guide#get-inventory-distribution'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-distribution"><span class="badge bar badge--primary">GET</span>Inventory Distribution</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventories Count',
-              href: '/Guidelines/Inventory-API-Guide#get-inventories-count'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventories-count"><span class="badge bar badge--primary">GET</span>Inventories Count</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory Group Types',
-              href: '/Guidelines/Inventory-API-Guide#get-inventory-group-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-group-types"><span class="badge bar badge--primary">GET</span>Inventory Group Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Blocked Inventories',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-blocked-inventories'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-blocked-inventories"><span class="badge bar badge--primary">GET</span>List of Blocked Inventories</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1108,34 +1103,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Campaign Inventory Optimization',
-              href: '/Guidelines/Inventory-API-Guide#inventory-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#inventory-management"><span class="badge bar badge--success">POST</span>Campaign Inventory Optimization</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Block Inventories',
-              href: '/Guidelines/Inventory-API-Guide#block-inventories'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#block-inventories"><span class="badge bar badge--success">POST</span>Block Inventories</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Download CSV Inventory List',
-              href: '/Guidelines/Inventory-API-Guide#download-csv-inventory-list'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#download-csv-inventory-list"><span class="badge bar badge--success">POST</span>Download CSV Inventory List</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory Based on CSV File',
-              href: '/Guidelines/Inventory-API-Guide#get-inventory-based-on-csv-file'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-based-on-csv-file"><span class="badge bar badge--success">POST</span>Inventory Based on CSV File</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Distribution of Inventory Based on CSV File',
-              href: '/Guidelines/Inventory-API-Guide#get-distribution-of-inventory-based-on-csv-file'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-distribution-of-inventory-based-on-csv-file"><span class="badge bar badge--success">POST</span>Distribution of Inventory Based on CSV File</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory Count Based on CSV File',
-              href: '/Guidelines/Inventory-API-Guide#get-inventory-count-based-on-csv-file'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-count-based-on-csv-file"><span class="badge bar badge--success">POST</span>Inventory Count Based on CSV File</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1145,64 +1140,64 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get List of Inventory Groups',
-              href: '/Guidelines/Inventory-API-Guide#inventory-groups'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#inventory-groups"><span class="badge bar badge--primary">GET</span>List of Inventory Groups</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Inventory Groups Statistics',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-inventory-groups-statistics'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-inventory-groups-statistics"><span class="badge bar badge--primary">GET</span>List of Inventory Groups Statistics</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Campaigns Attached to Group',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-campaigns-attached-to-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-campaigns-attached-to-group"><span class="badge bar badge--primary">GET</span>List of Campaigns Attached to Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of PMP Deals In an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-pmp-deals-in-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-pmp-deals-in-an-inventory-group"><span class="badge bar badge--primary">GET</span>List of PMP Deals In an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get CSV List of PMP Deals In an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-csv-list-of-pmp-deals-in-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-csv-list-of-pmp-deals-in-an-inventory-group"><span class="badge bar badge--primary">GET</span>CSV List of PMP Deals In an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Open Exchange Inventories In an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-open-exchange-inventories-in-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-open-exchange-inventories-in-an-inventory-group"><span class="badge bar badge--primary">GET</span>List of Open Exchange Inventories In an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Distributions of Open Exchange Inventories In an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-distributions-of-open-exchange-inventories-in-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-distributions-of-open-exchange-inventories-in-an-inventory-group"><span class="badge bar badge--primary">GET</span>Distributions of Open Exchange Inventories In an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Count of Open Exchange Inventories In an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-count-of-open-exchange-inventories-in-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-count-of-open-exchange-inventories-in-an-inventory-group"><span class="badge bar badge--primary">GET</span>Count of Open Exchange Inventories In an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Contextual Inventories For an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-contextual-inventories-for-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-contextual-inventories-for-an-inventory-group"><span class="badge bar badge--primary">GET</span>List of Contextual Inventories For an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Count of Contextual Inventories For an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-count-of-contextual-inventories-for-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-count-of-contextual-inventories-for-an-inventory-group"><span class="badge bar badge--primary">GET</span>Count of Contextual Inventories For an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get CSV File of Contextual Inventories For an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#get-csv-file-of-contextual-inventories-for-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-csv-file-of-contextual-inventories-for-an-inventory-group"><span class="badge bar badge--primary">GET</span>CSV File of Contextual Inventories For an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Contextual Inventory',
-              href: '/Guidelines/Inventory-API-Guide#contextual-inventory'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#contextual-inventory"><span class="badge bar badge--primary">GET</span>Contextual Inventory</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1212,29 +1207,29 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create a New Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#inventory-group-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#inventory-group-management"><span class="badge bar badge--success">POST</span>Create a New Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add or Remove Mappings to an Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#add-or-remove-mappings-to-an-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#add-or-remove-mappings-to-an-inventory-group"><span class="badge bar badge--success">POST</span>Add or Remove Mappings to an Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add or Remove Customers From a Shared Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#add-or-remove-customers-from-a-shared-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#add-or-remove-customers-from-a-shared-inventory-group"><span class="badge bar badge--info">PATCH</span>Add or Remove Customers From a Shared Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Edit Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#edit-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#edit-inventory-group"><span class="badge bar badge--info">PATCH</span>Edit Inventory Group</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Inventory Group',
-              href: '/Guidelines/Inventory-API-Guide#delete-inventory-group'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#delete-inventory-group"><span class="badge bar badge--danger">DEL</span>Delete Inventory Group</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1244,34 +1239,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get PMP Deals List',
-              href: '/Guidelines/Inventory-API-Guide#private-marketplace-pmp-deals-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#private-marketplace-pmp-deals-details"><span class="badge bar badge--success">POST</span>List of PMP Deals</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get PMP Deal Details by IDs',
-              href: '/Guidelines/Inventory-API-Guide#get-pmp-deal-details-by-ids'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-pmp-deal-details-by-ids"><span class="badge bar badge--primary">GET</span>PMP Deal Details by IDs</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Customers Associated with Campaigns for a PMP Deal',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-customers-associated-with-campaigns-for-a-pmp-deal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-customers-associated-with-campaigns-for-a-pmp-deal"><span class="badge bar badge--primary">GET</span>List of Customers Associated with Campaigns for a PMP Deal</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Count of PMP Deals for All statuses',
-              href: '/Guidelines/Inventory-API-Guide#get-count-of-pmp-deals-for-all-statuses'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-count-of-pmp-deals-for-all-statuses"><span class="badge bar badge--primary">GET</span>Count of PMP Deals for All statuses</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Deal Types',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-deal-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-deal-types"><span class="badge bar badge--primary">GET</span>List of Deal Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Deal statuses',
-              href: '/Guidelines/Inventory-API-Guide#get-list-of-deal-statuses'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-list-of-deal-statuses"><span class="badge bar badge--primary">GET</span>List of Deal statuses</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1281,24 +1276,24 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Resource Properties',
-              href: '/Guidelines/Inventory-API-Guide#pmp-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pmp-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Create PMP Deal',
-              href: '/Guidelines/Inventory-API-Guide#create-pmp-deal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#create-pmp-deal"><span class="badge bar badge--success">POST</span>Create PMP Deal</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update PMP Deal',
-              href: '/Guidelines/Inventory-API-Guide#update-pmp-deal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#update-pmp-deal"><span class="badge bar badge--info">PATCH</span>Update PMP Deal</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete PMP Deal',
-              href: '/Guidelines/Inventory-API-Guide#delete-pmp-deal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#delete-pmp-deal"><span class="badge bar badge--danger">DEL</span>Delete PMP Deal</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1308,14 +1303,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get PG Deals List',
-              href: '/Guidelines/Inventory-API-Guide#programmatic-guarantee-pg-deals-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#programmatic-guarantee-pg-deals-details"><span class="badge bar badge--primary">GET</span>List of PG Deals</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get PG Deals Details by ID',
-              href: '/Guidelines/Inventory-API-Guide#get-pg-deals-details-by-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-pg-deals-details-by-id"><span class="badge bar badge--primary">GET</span>PG Deals Details by ID</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1325,24 +1320,24 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Resource Properties',
-              href: '/Guidelines/Inventory-API-Guide#pg-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pg-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Create PG Deal',
-              href: '/Guidelines/Inventory-API-Guide#create-pg-deal'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#create-pg-deal"><span class="badge bar badge--success">POST</span>Create PG Deal</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update PG Deal Details',
-              href: '/Guidelines/Inventory-API-Guide#update-pg-deal-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#update-pg-deal-details"><span class="badge bar badge--info">PATCH</span>Update PG Deal Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete PG Deal',
-              href: '/Guidelines/Inventory-API-Guide#delete-pg-dea'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#delete-pg-deal"><span class="badge bar badge--danger">DEL</span>Delete PG Deal</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1363,109 +1358,109 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get Geographical Data',
-              href: '/Guidelines/Master-API-Guidelines#get-geographical-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-geographical-data"><span class="badge bar badge--success">POST</span>Geographical Data</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Zip Codes and State IDs',
-              href: '/Guidelines/Master-API-Guidelines#get-zip-codes-and-state-ids'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-zip-codes-and-state-ids"><span class="badge bar badge--success">POST</span>Zip Codes and State IDs</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get State segment',
-              href: '/Guidelines/Master-API-Guidelines#get-state-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-state-segment"><span class="badge bar badge--success">POST</span>State Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Senate District segment',
-              href: '/Guidelines/Master-API-Guidelines#get-senate-district-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-senate-district-segment"><span class="badge bar badge--success">POST</span>Senate District Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get House District segment',
-              href: '/Guidelines/Master-API-Guidelines#get-house-district-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-house-district-segment"><span class="badge bar badge--success">POST</span>House District Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Gender segment',
-              href: '/Guidelines/Master-API-Guidelines#get-gender-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-gender-segment"><span class="badge bar badge--success">POST</span>Gender Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Age Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-age-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-age-segment"><span class="badge bar badge--primary">GET</span>Age Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Language Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-language-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-language-segment"><span class="badge bar badge--primary">GET</span>Language Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Interest Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-interest-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-interest-segment"><span class="badge bar badge--primary">GET</span>Interest Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Income Range Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-income-range-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-income-range-segment"><span class="badge bar badge--primary">GET</span>Income Range Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Ethnicity Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-ethnicity-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-ethnicity-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Ethnicity Group Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-ethnicity-group-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-ethnicity-group-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Group Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get DMA Code Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-dma-code-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-dma-code-segment"><span class="badge bar badge--success">POST</span>DMA Code Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get County Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-county-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-county-segment"><span class="badge bar badge--success">POST</span>County Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Country Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-country-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-country-segment"><span class="badge bar badge--success">POST</span>Country Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Congressional District Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-congressional-district-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-congressional-district-segment"><span class="badge bar badge--success">POST</span>Congressional District Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get City Segment',
-              href: '/Guidelines/Master-API-Guidelines#get-city-segment'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-city-segment"><span class="badge bar badge--success">POST</span>City Segment</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Location Types',
-              href: '/Guidelines/Master-API-Guidelines#get-location-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-location-types"><span class="badge bar badge--primary">GET</span>Location Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Location Details by Location Type',
-              href: '/Guidelines/Master-API-Guidelines#get-location-details-by-location-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-location-details-by-location-type"><span class="badge bar badge--primary">GET</span>Location Details by Location Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Timezones',
-              href: '/Guidelines/Master-API-Guidelines#get-timezones'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-timezones"><span class="badge bar badge--primary">GET</span>Timezones</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Carriers and States by Country ID',
-              href: '/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id"><span class="badge bar badge--primary">GET</span>Carriers and States by Country ID</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1475,49 +1470,49 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Query Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-creative-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-creative-data"><span class="badge bar badge--primary"></span>Query Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Creative Types',
-              href: '/Guidelines/Master-API-Guidelines#get-creative-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-creative-types"><span class="badge bar badge--primary">GET</span>Creative Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get RTB Creative Types',
-              href: '/Guidelines/Master-API-Guidelines#get-rtb-creative-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-rtb-creative-types"><span class="badge bar badge--primary">GET</span>RTB Creative Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Creative sizes',
-              href: '/Guidelines/Master-API-Guidelines#get-creative-sizes'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-creative-sizes"><span class="badge bar badge--primary">GET</span>Creative Sizes</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Video Skip Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-video-skip-parameters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-video-skip-parameters"><span class="badge bar badge--primary">GET</span>Video Skip Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Video Roll Position Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-video-roll-position-parameters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-video-roll-position-parameters"><span class="badge bar badge--primary">GET</span>Video Roll Position Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Video Player Size Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-video-player-size-parameters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-video-player-size-parameters"><span class="badge bar badge--primary">GET</span>Video Player Size Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Video Playback Method Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-video-playback-method-parameters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-video-playback-method-parameters"><span class="badge bar badge--primary">GET</span>Video Playback Method Parameters</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Video Placement Type Parameters',
-              href: '/Guidelines/Master-API-Guidelines#get-video-placement-type-parameters'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-video-placement-type-parameters"><span class="badge bar badge--primary">GET</span>Video Placement Type Parameters</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1527,64 +1522,64 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get Network Types for targeting',
-              href: '/Guidelines/Master-API-Guidelines#get-more-data'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-more-data"><span class="badge bar badge--primary">GET</span>Network Types for Targeting</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Device OS for targeting',
-              href: '/Guidelines/Master-API-Guidelines#get-device-os-for-targeting'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-device-os-for-targeting"><span class="badge bar badge--primary">GET</span>Device OS for Targeting</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Manufacturers for Targeting',
-              href: '/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting"><span class="badge bar badge--primary">GET</span>Manufacturers for Targeting</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Channels for Inventory',
-              href: '/Guidelines/Master-API-Guidelines#get-channels-for-inventory'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-channels-for-inventory"><span class="badge bar badge--primary">GET</span>Channels for Inventory</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Verticals',
-              href: '/Guidelines/Master-API-Guidelines#get-verticals'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-verticals"><span class="badge bar badge--primary">GET</span>Verticals</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Traffic Types',
-              href: '/Guidelines/Master-API-Guidelines#get-traffic-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-traffic-types"><span class="badge bar badge--primary">GET</span>Traffic Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory Types',
-              href: '/Guidelines/Master-API-Guidelines#get-inventory-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-inventory-types"><span class="badge bar badge--primary">GET</span>Inventory Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Exchanges',
-              href: '/Guidelines/Master-API-Guidelines#get-exchanges'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-exchanges"><span class="badge bar badge--primary">GET</span>Exchanges</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Deal Curation Types',
-              href: '/Guidelines/Master-API-Guidelines#get-deal-curation-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-deal-curation-types"><span class="badge bar badge--primary">GET</span>Deal Curation Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Publisher Ad categories',
-              href: '/Guidelines/Master-API-Guidelines#get-publisher-ad-categories'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-publisher-ad-categories"><span class="badge bar badge--success">POST</span>Publisher Ad Categories</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Device Type',
-              href: '/Guidelines/Master-API-Guidelines#get-device-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-device-type"><span class="badge bar badge--success">POST</span>Device Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Inventory',
-              href: '/Guidelines/Master-API-Guidelines#get-inventory'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-inventory"><span class="badge bar badge--success">POST</span>Inventory</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1605,14 +1600,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get a List of Reports',
-              href: '/Guidelines/Reports-API-Guidelines#get-reports-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-reports-details"><span class="badge bar badge--primary">GET</span>List of Reports</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Report by ID',
-              href: '/Guidelines/Reports-API-Guidelines#get-report-by-id'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-report-by-id"><span class="badge bar badge--primary">GET</span>Report by ID</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1622,34 +1617,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Resource Properties',
-              href: '/Guidelines/Reports-API-Guidelines#reports-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#reports-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Create Report',
-              href: '/Guidelines/Reports-API-Guidelines#create-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#create-report"><span class="badge bar badge--success">POST</span>Create Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Execute a Report',
-              href: '/Guidelines/Reports-API-Guidelines#execute-a-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#execute-a-report"><span class="badge bar badge--success">POST</span>Execute a Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete a Report',
-              href: '/Guidelines/Reports-API-Guidelines#delete-a-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#delete-a-report"><span class="badge bar badge--danger">DEL</span>Delete a Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Edit a Report',
-              href: '/Guidelines/Reports-API-Guidelines#edit-a-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#edit-a-report"><span class="badge bar badge--info">PATCH</span>Edit a Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Duplicate a Report',
-              href: '/Guidelines/Reports-API-Guidelines#duplicate-a-report'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#duplicate-a-report"><span class="badge bar badge--success">POST</span>Duplicate a Report</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1659,29 +1654,29 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Schedule a Report',
-              href: '/Guidelines/Reports-API-Guidelines#scheduling-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#scheduling-management"><span class="badge bar badge--success">POST</span>Schedule a Report</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update a Report Schedule',
-              href: '/Guidelines/Reports-API-Guidelines#update-a-report-schedule'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#update-a-report-schedule"><span class="badge bar badge--info">PATCH</span>Update a Report Schedule</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Report Schedule',
-              href: '/Guidelines/Reports-API-Guidelines#delete-report-schedule'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#delete-report-schedule"><span class="badge bar badge--danger">DEL</span>Delete Report Schedule</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Unsubscribe an Email from All Scheduled Reports',
-              href: '/Guidelines/Reports-API-Guidelines#unsubscribe-an-email-from-all-scheduled-reports'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#unsubscribe-an-email-from-all-scheduled-reports"><span class="badge bar badge--primary">GET</span>Unsubscribe an Email from All Scheduled Reports</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Unsubscribe an Email from a Report Schedule',
-              href: '/Guidelines/Reports-API-Guidelines#unsubscribe-an-email-from-a-report-schedule'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#unsubscribe-an-email-from-a-report-schedule"><span class="badge bar badge--primary">GET</span>Unsubscribe an Email from a Report Schedule</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1691,34 +1686,34 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Get URL for Report Download',
-              href: '/Guidelines/Reports-API-Guidelines#get-more-report-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-more-report-details"><span class="badge bar badge--success">POST</span>URL for Report Download</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get a List of Conversion\'s Custom Fields',
-              href: '/Guidelines/Reports-API-Guidelines#get-a-list-of-conversions-custom-fields'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-a-list-of-conversions-custom-fields"><span class="badge bar badge--success">POST</span>List of Conversion\'s Custom Fields</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Report Request Types',
-              href: '/Guidelines/Reports-API-Guidelines#get-report-request-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-report-request-types"><span class="badge bar badge--primary">GET</span>Report Request Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Report File Types',
-              href: '/Guidelines/Reports-API-Guidelines#get-report-file-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-report-file-types"><span class="badge bar badge--primary">GET</span>Report File Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Report Delivery Frequency Types',
-              href: '/Guidelines/Reports-API-Guidelines#get-report-delivery-frequency-types'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-report-delivery-frequency-types"><span class="badge bar badge--primary">GET</span>Report Delivery Frequency Types</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Dimensions and Metrics Details',
-              href: '/Guidelines/Reports-API-Guidelines#get-dimensions-and-metrics-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#get-dimensions-and-metrics-details"><span class="badge bar badge--primary">GET</span>Dimensions and Metrics Details</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1734,63 +1729,69 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Send User Invitation',
-          href: '/Guidelines/User-Profile-Guidelines#send-user-invitation',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#send-user-invitation"><span class="badge bar badge--success">POST</span>Send User Invitation</a>',
+          defaultStyle: true,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#validate-user-invite"><span class="badge bar badge--success">POST</span>Validate User Invite</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Validate User Invite',
-          href: '/Guidelines/User-Profile-Guidelines#validate-user-invite',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#user-sign-up"><span class="badge bar badge--success">POST</span>User Sign-Up</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'User Sign-Up',
-          href: '/Guidelines/User-Profile-Guidelines#user-sign-up',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#login"><span class="badge bar badge--success">POST</span>Login</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Login',
-          href: '/Guidelines/User-Profile-Guidelines#login',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#user-logout"><span class="badge bar badge--success">POST</span>User Logout</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'User Logout',
-          href: '/Guidelines/User-Profile-Guidelines#user-logout',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#change-password"><span class="badge bar badge--success">POST</span>Change Password</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Change Password',
-          href: '/Guidelines/User-Profile-Guidelines#change-password',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#reset-password-email"><span class="badge bar badge--success">POST</span>Reset Password Email</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Update User Profile',
-          href: '/Guidelines/User-Profile-Guidelines#update-user-profile',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#update-user-profile"><span class="badge bar badge--info">PATCH</span>Update User Profile</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Get List of Users',
-          href: '/Guidelines/User-Profile-Guidelines#get-list-of-users',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#get-list-of-users"><span class="badge bar badge--primary">GET</span>List of Users</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'User App Access List',
-          href: '/Guidelines/User-Profile-Guidelines#user-app-access-list',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#user-app-access-list"><span class="badge bar badge--primary">GET</span>User App Access List</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
         {
-          type: 'link',
-          label: 'Add App Access for User',
-          href: '/Guidelines/User-Profile-Guidelines#add-app-access-for-user',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#add-app-access-for-user"><span class="badge bar badge--success">POST</span>Add App Access for User</a>',
+          defaultStyle: true,
           className: "sidebarItem"
         },
       ],
@@ -1810,24 +1811,24 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Resource Properties',
-              href: '/Guidelines/Workspace-Guidelines#organization-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#organization-details"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Allowed Organizations',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-allowed-organizations'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-allowed-organizations"><span class="badge bar badge--primary">GET</span>List of Allowed Organizations</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Organization Details',
-              href: '/Guidelines/Workspace-Guidelines#get-organization-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-organization-details"><span class="badge bar badge--primary">GET</span>Organization Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Check for Available Domain',
-              href: '/Guidelines/Workspace-Guidelines#check-for-available-domain'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#check-for-available-domain"><span class="badge bar badge--primary">GET</span>Check for Available Domain</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1837,14 +1838,14 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Update Organization Profile',
-              href: '/Guidelines/Workspace-Guidelines#organization-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#organization-management"><span class="badge bar badge--info">PATCH</span>Update Organization Profile</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Organization Email',
-              href: '/Guidelines/Workspace-Guidelines#update-organization-email'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#update-organization-email"><span class="badge bar badge--info">PATCH</span>Update Organization Email</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1854,24 +1855,24 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Create a Workspace',
-              href: '/Guidelines/Workspace-Guidelines#workspace-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#workspace-management"><span class="badge bar badge--success">POST</span>Create a Workspace</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Workspace Domain',
-              href: '/Guidelines/Workspace-Guidelines#update-workspace-domain'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#update-workspace-domain"><span class="badge bar badge--info">PATCH</span>Update Workspace Domain</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Validate Workspace Domain',
-              href: '/Guidelines/Workspace-Guidelines#validate-workspace-domain'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#validate-workspace-domain"><span class="badge bar badge--success">POST</span>Validate Workspace Domain</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Workspaces',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-workspaces'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-workspaces"><span class="badge bar badge--primary">GET</span>List of Workspaces</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1881,84 +1882,84 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Customer Resource Properties',
-              href: '/Guidelines/Workspace-Guidelines#customer-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-details"><span class="badge bar badge--primary"></span>Customer Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Details',
-              href: '/Guidelines/Workspace-Guidelines#get-customer-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-customer-details"><span class="badge bar badge--primary">GET</span>Customer Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Basic Customer Details',
-              href: '/Guidelines/Workspace-Guidelines#get-basic-customer-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-basic-customer-details"><span class="badge bar badge--success">POST</span>Basic Customer Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Multi-level Customers List',
-              href: '/Guidelines/Workspace-Guidelines#get-multi-level-customers-list'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-multi-level-customers-list"><span class="badge bar badge--primary">GET</span>Multi-level Customers List</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Immediate Customers List',
-              href: '/Guidelines/Workspace-Guidelines#get-immediate-customers-list'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-immediate-customers-list"><span class="badge bar badge--primary">GET</span>Immediate Customers List</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer Operations Resource Properties',
-              href: '/Guidelines/Workspace-Guidelines#customer-operations-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-operations-resource-properties"><span class="badge bar badge--primary"></span>Customer Operations Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Operations Details',
-              href: '/Guidelines/Workspace-Guidelines#get-customer-operations-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-customer-operations-details"><span class="badge bar badge--primary">GET</span>Customer Operations Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Operations Label List',
-              href: '/Guidelines/Workspace-Guidelines#get-customer-operations-label-list'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-customer-operations-label-list"><span class="badge bar badge--primary">GET</span>Customer Operations Label List</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Count of Customers by Status',
-              href: '/Guidelines/Workspace-Guidelines#get-count-of-customers-by-status'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-count-of-customers-by-status"><span class="badge bar badge--primary">GET</span>Count of Customers by Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Users for Selected Customer',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-users-for-selected-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-users-for-selected-customer"><span class="badge bar badge--primary">GET</span>List of Users for Selected Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of User Assigned Customers',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-user-assigned-customers'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-user-assigned-customers"><span class="badge bar badge--primary">GET</span>List of User Assigned Customers</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get User\'s Remaining Customers',
-              href: '/Guidelines/Workspace-Guidelines#get-users-remaining-customers'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-users-remaining-customers"><span class="badge bar badge--primary">GET</span>User\'s Remaining Customers</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Customer\'s Allowed Applications',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-customers-allowed-applications'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-customers-allowed-applications"><span class="badge bar badge--primary">GET</span>List of Customer\'s Allowed Applications</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Remaining Apps for Customer',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-remaining-apps-for-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-remaining-apps-for-customer"><span class="badge bar badge--primary">GET</span>List of Remaining Apps for Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Advertisers for Customer',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-advertisers-for-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-advertisers-for-customer"><span class="badge bar badge--primary">GET</span>List of Advertisers for Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Config Details',
-              href: '/Guidelines/Workspace-Guidelines#get-customer-config-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-customer-config-details"><span class="badge bar badge--primary">GET</span>Customer Config Details</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -1968,84 +1969,84 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Invite Customer to Platform',
-              href: '/Guidelines/Workspace-Guidelines#customer-management'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-management"><span class="badge bar badge--success">POST</span>Invite Customer to Platform</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Resend Customer Invite',
-              href: '/Guidelines/Workspace-Guidelines#resend-customer-invite'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#resend-customer-invite"><span class="badge bar badge--success">POST</span>Resend Customer Invite</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Cancel Customer Invite',
-              href: '/Guidelines/Workspace-Guidelines#cancel-customer-invite'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#cancel-customer-invite"><span class="badge bar badge--danger">DEL</span>Cancel Customer Invite</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer Signup',
-              href: '/Guidelines/Workspace-Guidelines#customer-signup'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-signup"><span class="badge bar badge--success">POST</span>Customer Signup</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get Customer Signup Form',
-              href: '/Guidelines/Workspace-Guidelines#get-customer-signup-form'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-customer-signup-form"><span class="badge bar badge--primary">GET</span>Customer Signup Form</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Assign Customer to User',
-              href: '/Guidelines/Workspace-Guidelines#assign-customer-to-user'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#assign-customer-to-user"><span class="badge bar badge--success">POST</span>Assign Customer to User</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Unassign Customer from User',
-              href: '/Guidelines/Workspace-Guidelines#unassign-customer-from-user'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#unassign-customer-from-user"><span class="badge bar badge--success">POST</span>Unassign Customer from User</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Approve Customer',
-              href: '/Guidelines/Workspace-Guidelines#approve-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#approve-customer"><span class="badge bar badge--info">PATCH</span>Approve Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Reject Customer',
-              href: '/Guidelines/Workspace-Guidelines#reject-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#reject-customer"><span class="badge bar badge--info">PATCH</span>Reject Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add Customer App Access',
-              href: '/Guidelines/Workspace-Guidelines#add-customer-app-access'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#add-customer-app-access"><span class="badge bar badge--success">POST</span>Add Customer App Access</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Revoke Customer App Access',
-              href: '/Guidelines/Workspace-Guidelines#revoke-customer-app-access'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#revoke-customer-app-access"><span class="badge bar badge--success">POST</span>Revoke Customer App Access</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Put Customer On-Hold',
-              href: '/Guidelines/Workspace-Guidelines#put-customer-on-hold'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#put-customer-on-hold"><span class="badge bar badge--info">PATCH</span>Put Customer On-Hold</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Re-Activate Customer',
-              href: '/Guidelines/Workspace-Guidelines#re-activate-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#re-activate-customer"><span class="badge bar badge--info">PATCH</span>Re-Activate Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add Label for Customer Operation',
-              href: '/Guidelines/Workspace-Guidelines#add-label-for-customer-operation'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#add-label-for-customer-operation"><span class="badge bar badge--success">POST</span>Add Label for Customer Operation</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Enable Bid Shading for Customer',
-              href: '/Guidelines/Workspace-Guidelines#enable-bid-shading-for-customer'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#enable-bid-shading-for-customer"><span class="badge bar badge--info">PATCH</span>Enable Bid Shading for Customer</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Update Customer Operations Details',
-              href: '/Guidelines/Workspace-Guidelines#update-customer-operations-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#update-customer-operations-details"><span class="badge bar badge--info">PATCH</span>Update Customer Operations Details</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -2055,29 +2056,29 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Advertiser Resource Properties',
-              href: '/Guidelines/Workspace-Guidelines#get-list-of-advertiser-profile-and-details'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#advertiser-management"><span class="badge bar badge--primary"></span>Advertiser Resource Properties</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Get List of Advertiser Profile and Details',
-              href: '/Guidelines/Workspace-Guidelines#resend-customer-invite'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#get-list-of-advertiser-profile-and-details"><span class="badge bar badge--primary">GET</span>List of Advertiser Profile and Details</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Add Advertiser Profile',
-              href: '/Guidelines/Workspace-Guidelines#add-advertiser-profile'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#add-advertiser-profile"><span class="badge bar badge--success">POST</span>Add Advertiser Profile</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Edit Advertiser Profile',
-              href: '/Guidelines/Workspace-Guidelines#edit-advertiser-profile'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#edit-advertiser-profile"><span class="badge bar badge--info">PATCH</span>Edit Advertiser Profile</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Delete Advertiser Profile',
-              href: '/Guidelines/Workspace-Guidelines#delete-advertiser-profile'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#delete-advertiser-profile"><span class="badge bar badge--danger">DEL</span>Delete Advertiser Profile</a>',
+              defaultStyle: true,
             },
           ]
         },
@@ -2087,54 +2088,54 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Organization Workspace Status',
-              href: '/Guidelines/Workspace-Guidelines#static-details-lists'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#static-details-lists"><span class="badge bar badge--primary">GET</span>Organization Workspace Status</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer Type',
-              href: '/Guidelines/Workspace-Guidelines#customer-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-type"><span class="badge bar badge--primary">GET</span>Customer Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer Payment Type',
-              href: '/Guidelines/Workspace-Guidelines#customer-payment-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-payment-type"><span class="badge bar badge--primary">GET</span>Customer Payment Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer Account Type',
-              href: '/Guidelines/Workspace-Guidelines#customer-account-type'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-account-type"><span class="badge bar badge--primary">GET</span>Customer Account Type</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Customer List Sortable Fields',
-              href: '/Guidelines/Workspace-Guidelines#customer-list-sortable-fields'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-list-sortable-fields"><span class="badge bar badge--primary">GET</span>Customer List Sortable Fields</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Organization Expertise',
-              href: '/Guidelines/Workspace-Guidelines#organization-expertise'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#organization-expertise"><span class="badge bar badge--primary">GET</span>Organization Expertise</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Company Size',
-              href: '/Guidelines/Workspace-Guidelines#company-size'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#company-size"><span class="badge bar badge--primary">GET</span>Company Size</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Industries',
-              href: '/Guidelines/Workspace-Guidelines#industries'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#industries"><span class="badge bar badge--primary">GET</span>Industries</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Media Budget',
-              href: '/Guidelines/Workspace-Guidelines#media-budget'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#media-budget"><span class="badge bar badge--primary">GET</span>Media Budget</a>',
+              defaultStyle: true,
             },
             {
-              type: 'link',
-              label: 'Verticals',
-              href: '/Guidelines/Workspace-Guidelines#verticals'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#verticals"><span class="badge bar badge--primary">GET</span>Verticals</a>',
+              defaultStyle: true,
             },
           ]
         },
