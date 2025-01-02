@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 IQM’s REST API enables you to interact with most of IQM’s offerings.
 
-Getting started with uploading your first matched audience is easy; just use the following endpoints:
+Get started uploading a matched audience with the following endpoints:
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 <br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
@@ -18,21 +18,21 @@ Getting started with uploading your first matched audience is easy; just use the
 
 ## About IQM Matched Audience
 
-The IQM APIs provide access to upload the audience for matching in XLSX or CSV format. You can use the APIs to connect to applications of your choice.
+The IQM APIs provide access to upload the audience for matching in XLSX or CSV format. The APIs can be used to connect to the desired application. 
 
 Once uploaded and processed, the matched audience can be used for advertising campaign targeting.
 
-## Before you begin
+## Before You Begin
 
-To upload Matched Audience, you must have the following:
+To upload Matched Audience, the following are required:
 
 1. An Account On the IQM platform
+   *  See [Before You Begin](/docs/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
 1. CSV or XLSX file for matching
 
-If you do not have any of the above, please follow the steps below:
+:::info 
 
-* See [Before You Begin](/docs/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret.
-* File requirements for audience matching
+**File requirements for audience matching:**
   * CSV or XLSX file for audience matching with maximum 1GB or 5M records
   * Without Voter ID / Email / Phone / Address in the file
     * One of the following system field combinations is required for matching
@@ -44,9 +44,11 @@ If you do not have any of the above, please follow the steps below:
     * Only one of these fields is required - Voter ID or Email or Phone, or Address. The preferred format for full address is Street, City, Zip, and State
     * Other fields are optional and can be added along with one of the above fields
 
-## Upload Matched Audience using the IQM API
+:::
 
-This quick start will help you to create a matched audience.  At a minimum, you must log in, select columns for matching, and upload your audience. Once you have accomplished these basics, you can continue learning more about our API through the [documentation](https://app.iqm.com/docs).
+## Upload Matched Audience Using the IQM API
+
+This quickstart will cover how to create a matched audience.  The minimum requirements to perform this task are: logging in with authentication credentials, selecting columns for matching, and uploading an audience. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines pages](/docs/Guidelines/).
 
 1. Log In
    * Optional if you have already logged in and have a token
@@ -57,14 +59,14 @@ This quick start will help you to create a matched audience.  At a minimum, you 
 1. Check Audience Status
    * Matched audience requires processing and approval before it can be used for targeting
 
-### Step 1: Log in
+### Step 1: Log In
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 
 <div class="container">
   <div class="child1">
 
-To log in, the `Authorization: Basic` header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (OWID), a unique identifier for each organization. This ID will be used for any further API communications.
+To log in, the <var>Authorization: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (`owId`), a unique identifier for each organization. This ID will be used for any further API communications.
 
 For further information see the complete [Login API Documentation](https://app.iqm.com/docs/?path=tag/User-Management-API/operation/Login).
 
@@ -223,14 +225,14 @@ function Login(): Promise < Responses > {
 
 ---
 
-### Step 2: Request column list
+### Step 2: Request Column List
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/static/matched/column-list</span>
 
 <div class="container">
   <div class="child1">
 
-To upload a matched audience, you must provide a list of mapping between IQM-allowed fields and columns in your file. Use the column list endpoint to request a full list of allowed columns for mapping.
+To upload a matched audience, a list of mapping between supported fields and columns in a CSV/XLSX file must be provided. Use the column list endpoint to request a full list of supported columns for mapping.
 
 For further information see the complete [Matched Audience Fields API Documentation](https://app.iqm.com/docs?path=tag/Audience-API/operation/GetMatchedAudienceFields).
 
@@ -426,7 +428,7 @@ function getMatchedAudienceColumnList(): Promise < Responses > {
 
 ---
 
-### Step 3: Upload matched audience
+### Step 3: Upload Matched Audience
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
 
@@ -458,21 +460,23 @@ For further information see the complete [Matched Audience Upload API Documentat
       <strong>columns * </strong><br /><span class="type-text">string (FormData)</span>
    </td>
    <td>Matched audience file columns mapped with system fields. 
-This supports a few columns mapping as follows:<ol><li> FirstName, LastName, State, Zip - SampleValue: 
-   `{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
-   <li>LastName, StreetAddress, State, Zip - SampleValue: 
-   `{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
-   <li>StreetAddress, State, Zip - SampleValue: 
-   `{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li>
-   <li>NPI_ID - SampleValue: 
-   `{ "NPI_ID_VALUE": "NPI_ID" }`</li>
-   <li>VoterId - SampleValue: 
-   `{ "LALVOTERID": "Voters_ID" }`</li>
-   <li>Phone - SampleValue: 
-   `{ "Phone": "Phone" }`</li>
-   <li>Email - SampleValue: 
-   `{ "Email": "Email" }`</li>
-   <li>FullAddress - SampleValue: `{ "FullAddress": "Residence_FullAddress" }`</li></ol></td>
+This supports a few columns mapping as follows:
+<ul><li> FirstName, LastName, State, Zip
+      <ul><li>Sample value: `{ "FirstName": "Voters_FirstName", "LastName": "Voters_LastName", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li></ul></li>
+   <li>LastName, StreetAddress, State, Zip
+      <ul><li>Sample value: `{ "LastName": "Voters_LastName", "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li></ul></li>
+   <li>StreetAddress, State, Zip
+        <ul><li>Sample value: `{ "StreetAddress": "Residence_Addresses_AddressLine", "mState": "Residence_Addresses_State", "mZip5": "Residence_Addresses_Zip" }`</li></ul></li>
+   <li>NPI_ID
+        <ul><li>Sample value: `{ "NPI_ID_VALUE": "NPI_ID" }`</li></ul></li>
+   <li>VoterId
+        <ul><li>Sample value: `{ "LALVOTERID": "Voters_ID" }`</li></ul></li>
+   <li>Phone
+        <ul><li>Sample value: `{ "Phone": "Phone" }`</li></ul></li>
+   <li>Email
+        <ul><li>Sample value: `{ "Email": "Email" }`</li></ul></li>
+   <li>FullAddress
+        <ul><li>Sample value: `{ "FullAddress": "Residence_FullAddress" }`</li></ul></li></ul></td>
    </tr>
 <tr>
    <td>
@@ -480,15 +484,23 @@ This supports a few columns mapping as follows:<ol><li> FirstName, LastName, Sta
    </td>
    <td>
 Matched audience columns setting as per the selected columns for matching. Column setting should be as per the selected column as follows:
-   <ol><li>FirstName, LastName, State, Zip - NOT REQUIRED</li>
-      <li>LastName, StreetAddress, State, Zip - NOT REQUIRED.</li>
-      <li>StreetAddress, State, Zip - NOT REQUIRED.</li>
-      <li>LastName, StreetAddress, State, Zip -NOT REQUIRED.</li>
-      <li>VoterId (It must be supported voter's data partners id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner">see API documentation</a>) - SampleValue: `{ "Voters_ID": "voterbase_id" }`</li>
-      <li>NPI_Id (It must be supported healthcare data partners id <a href="https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience">see API documentation</a>) - SampleValue: `{ "NPI_ID": "healthcare_id" }`</li>
-      <li>Phone (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API documentation</a>) - SampleValue: `{ "Phone": "SHA1" }`</li>
-      <li>Email (It must be supported data format's id <a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API doucmentation</a>)- SampleValue: `{ "Email": "SHA256" }`</li>
-      <li>FullAddress - NOT REQUIRED.</li></ol>
+   <ul><li>FirstName, LastName, State, Zip [not required]</li>
+      <li>LastName, StreetAddress, State, Zip [not required]</li>
+      <li>StreetAddress, State, Zip [not required]</li>
+      <li>LastName, StreetAddress, State, Zip [not required]</li>
+      <li>VoterId 
+          <ul><li>Value must be a supported voter's data partners ID (<a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataPartner">see API documentation</a>)</li>
+          <li>Sample value: `{ "Voters_ID": "voterbase_id" }`</li></ul></li>
+      <li>NPI_Id 
+          <ul><li>Value must be a supported healthcare data partners ID (<a href="https://app.iqm.com/docs?path=tag/Audience-API/operation/addMatchedAudience">see API documentation</a>)</li>
+          <li>Sample value: `{ "NPI_ID": "healthcare_id" }`</li></ul></li>
+      <li>Phone 
+          <ul><li>Value must be a supported data format's ID (<a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API documentation</a>)</li>
+          <li>Sample value: `{ "Phone": "SHA1" }`</li></ul></li>
+      <li>Email 
+          <ul><li>Value must be a supported data format's ID (<a href="https://app.iqm.com/docs?path=/Audience%20API/getMatchedAudienceDataFormats">see API doucmentation</a>)</li>
+          <li>SampleValue: `{ "Email": "SHA256" }`</li></ul></li>
+      <li>FullAddress [not required]</li></ul>
    </td>
    </tr>
   <tr>
@@ -662,7 +674,7 @@ function addMatchedAudience(): Promise < Responses > {
 
 </div></div>
 
-### Step 4: Check audience status
+### Step 4: Check Audience Status
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id\}</span>
 
@@ -696,6 +708,7 @@ For further information see the complete [Matched Audience Details API Documenta
      "existingColumnMatching": "{\"FirstName\":\"Voters_FirstName\",\"LastName\":\"Voters_LastName\",\"State\":\"Residence_Addresses_State\",\"Zip4\":\"Residence_Addresses_Zip\"}",
      "metadata": "{\"voterIDColumn\":[],\"columns\":[\"Voter File VANID\",\"LastName\",\"FirstName\",\"MiddleName\",\"Suffix\",\"Address\",\"City\",\"State\",\"Zip5\",\"Zip4\",\"Sex\",\"Age\",\"Preferred Phone\",\"CD\",\"SD\",\"HD \"],\"fileName\":\"NYSD3DigitalUniverse.csv\",\"fileSize\":7856375,\"rows\":0}",
      "rawS3URL": "",
+     /*highlight-next-line*/
      "status": "Pending",
      "matchRate": 57.88,
      "minEcpm": 0,
@@ -793,11 +806,3 @@ function getMatchedAudienceDetails(): Promise < Responses > {
 </TabItem></Tabs>
 
 </div></div>
-
-## Best Practices
-
-The message rate limit is 20 requests per minute. Exceeding this limit will cause a 429 (too many requests) error. 
-
-API access token expiry is 24 hours after generation. Generate a refresh token for uninterrupted access to data.
-
-The maximum data size per page is 1K rows.
