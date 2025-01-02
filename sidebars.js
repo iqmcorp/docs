@@ -407,9 +407,9 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Insertion Order Resource Properties',
-              href: '/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties"><span class="badge bar badge--primary"></span>IO Resource Properties</a>',
+              defaultStyle: true,
             },
             {
               type: 'html',
