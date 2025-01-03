@@ -98,7 +98,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Get Assets Details',
+          label: 'Assets Details',
           className: 'sidebarItem',
           items: [
             {
@@ -148,7 +148,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Get Bid Modelling Details',
+          label: 'Bid Modelling Details',
           className: 'sidebarItem',
           items: [
             {
@@ -230,18 +230,23 @@ const sidebars = {
           ]
         },
         {
-          type: 'html',
-          value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-metrics-report-for-a-given-campaign-and-dimension"><span class="badge bar badge--success">POST</span>Metrics Report for a Given Campaign & Dimension</a>',
-          defaultStyle: true,
-          className: 'sidebarItem'
+          type: `category`,
+          label: `Bid Model Metrics and Dimensions`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-metrics-report-for-a-given-campaign-and-dimension"><span class="badge bar badge--success">POST</span>Metrics Report for a Given Campaign & Dimension</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-list-of-bid-model-dimensions"><span class="badge bar badge--primary">GET</span>List of Bid Model Dimensions</a>',
+              defaultStyle: true,
+            },
+          ],
         },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-list-of-bid-model-dimensions"><span class="badge bar badge--primary">GET</span>List of Bid Model Dimensions</a>',
-          defaultStyle: true,
-          className: 'sidebarItem'
-        },
-      ],
+      ]
     },
     {
       type: 'category',
@@ -407,9 +412,9 @@ const sidebars = {
           className: 'sidebarItem',
           items: [
             {
-              type: 'link',
-              label: 'Insertion Order Resource Properties',
-              href: '/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties'
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties"><span class="badge bar badge--primary"></span>IO Resource Properties</a>',
+              defaultStyle: true,
             },
             {
               type: 'html',
