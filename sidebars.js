@@ -30,12 +30,7 @@ const sidebars = {
         },
         {
           type: `doc`,
-          id: `Getting Started/Error-Handling`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          id: `Getting Started/Request-Methods`,
+          id: `Getting Started/REST-API-Reference`,
           className: 'sidebarItem'
         },
         {
