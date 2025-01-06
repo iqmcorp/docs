@@ -25,12 +25,12 @@ const sidebars = {
       items: [
         {
           type: `doc`,
-          id: `Getting Started/Before-You-Begin`,
+          id: `Getting Started/REST-API-Reference`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
-          id: `Getting Started/REST-API-Reference`,
+          id: `Getting Started/Before-You-Begin`,
           className: 'sidebarItem'
         },
         {
