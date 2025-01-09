@@ -83,12 +83,6 @@ const config = {
           autoCollapseCategories: true,
         },
       },
-      algolia: {
-        appId: "09FZUVDE53",
-        apiKey: "0a3dbfa566444b62a52591ad5db9b3c8",
-        indexName: "iqmcorpio",
-        contextualSearch: true,
-      },
       image: "img/docusaurus-social-card.jpg",
       navbar: {
         title: "API Docs",
