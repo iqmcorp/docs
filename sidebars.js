@@ -401,6 +401,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Bid-Model-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'category',
           label: 'Bid Modelling Details',
           className: 'sidebarItem',
@@ -511,6 +517,12 @@ const sidebars = {
         id: 'Guidelines/Campaign-API-Guidelines'
       },
       items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Campaign-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
         {
           type: 'category',
           label: 'Campaign Details',
@@ -783,6 +795,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Conversion-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'category',
           label: 'Conversion Details',
           className: 'sidebarItem',
@@ -914,6 +932,12 @@ const sidebars = {
         id: 'Guidelines/Finance-Guidelines'
       },
       items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Finance-Guidelines#overview',
+          className: 'sidebarItem'
+        },
         {
           type: 'category',
           label: 'Finance Details',
@@ -1181,6 +1205,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Insights-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'category',
           label: 'Insights Details',
           className: 'sidebarItem',
@@ -1319,6 +1349,12 @@ const sidebars = {
         id: 'Guidelines/Inventory-API-Guide'
       },
       items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Inventory-API-Guide#overview',
+          className: 'sidebarItem'
+        },
         {
           type: 'category',
           label: 'Inventory Details',
@@ -1612,6 +1648,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Master-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'category',
           label: 'Geographical Data',
           className: 'sidebarItem',
@@ -1854,6 +1896,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Reports-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'category',
           label: 'Reports Details',
           className: 'sidebarItem',
@@ -1988,6 +2036,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/User-Profile-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
           type: 'html',
           value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#send-user-invitation"><span class="badge bar badge--success">POST</span>Send User Invitation</a>',
           defaultStyle: true,
@@ -2064,6 +2118,12 @@ const sidebars = {
         id: 'Guidelines/Workspace-Guidelines'
       },
       items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Workspace-Guidelines#overview',
+          className: 'sidebarItem'
+        },
         {
           type: 'category',
           label: 'Organization Details',
