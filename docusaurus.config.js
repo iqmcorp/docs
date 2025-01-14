@@ -149,7 +149,7 @@ const config = {
               },
               {
                 label: "API Guidelines",
-                to: "/",
+                to: "/docs/Guidelines",
               },
               {
                 label: "API Docs",
