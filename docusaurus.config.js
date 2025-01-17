@@ -8,8 +8,8 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "IQM",
+  tagline: "API Docs",
   favicon: "img/IQM-Q.ico",
 
   // Set the production url of your site here
@@ -21,7 +21,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "IQM", // Usually your GitHub org/user name.
-  projectName: "API Guidelines", // Usually your repo name.
+  projectName: "API Documentation", // Usually your repo name.
 
   /*onBrokenLinks: "ignore",*/
   onBrokenMarkdownLinks: "warn",
@@ -105,7 +105,7 @@ const config = {
       navbar: {
         title: "API Docs",
         logo: {
-          alt: "My Site Logo",
+          alt: "IQM Site Logo",
           src: "img/IQM.png",
         },
         items: [
