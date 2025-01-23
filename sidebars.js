@@ -24,6 +24,12 @@ const sidebars = {
       },
       items: [
         {
+          type: 'doc',
+          id: 'Getting Started/Platform-overview',
+          label: 'IQM Platform Overview',
+          className: 'sidebarItem',
+        },
+        {
           type: 'category',
           label: 'REST API Overview',
           className: 'sidebarItem',
