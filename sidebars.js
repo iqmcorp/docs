@@ -30,68 +30,16 @@ const sidebars = {
           className: 'sidebarItem',
         },
         {
-          type: 'category',
+          type: 'doc',
+          id: 'Getting Started/REST-API-Reference',
           label: 'REST API Overview',
           className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Getting Started/REST-API-Reference'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'Prerequisites',
-              href: `/docs/Getting%20Started/REST-API-Reference#prerequisites`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `link`,
-              label: 'Authentication',
-              href: `/docs/Getting%20Started/REST-API-Reference#authentication`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `link`,
-              label: 'HTTP Request Methods',
-              href: `/docs/Getting%20Started/REST-API-Reference#http-request-methods`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `link`,
-              label: 'Error Handling',
-              href: `/docs/Getting%20Started/REST-API-Reference#error-handling`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `link`,
-              label: 'Rate Limiting',
-              href: `/docs/Getting%20Started/REST-API-Reference#rate-limits`,
-              className: 'sidebarItem'
-            },
-          ]
         },
         {
-          type: 'category',
+          type: 'doc',
+          id: 'Getting Started/Before-You-Begin',
           label: 'Getting Started',
           className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Getting Started/Before-You-Begin'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'Before You Begin',
-              href: `/docs/Getting%20Started/Before-You-Begin#before-you-begin`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `link`,
-              label: 'Quickstart',
-              href: `/docs/Getting%20Started/Before-You-Begin#quickstart`,
-              className: 'sidebarItem'
-            },
-          ]
         },
         {
           type: 'doc',
