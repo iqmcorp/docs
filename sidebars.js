@@ -879,6 +879,17 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Creative API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Guidelines/Creative-API-Guidelines'
+      },
+      items: [
+      ]
+    },
+    {
+      type: 'category',
       label: 'Finance API',
       className: 'sidebarCategory',
       link: {
