@@ -91,7 +91,68 @@ Get Creative details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          creativeName: string;
+          rtbCreativeTypeId: number;
+          platformCreativeTypeId: number;
+          creativeStatusId: number;
+          creativeSource: string;
+          creativeCardSource: string;
+          clickUrl: string;
+          imageDetails: {
+            pixelUrl: string;
+            creativeWidth: number;
+            creativeHeight: number;
+          };
+          creativeSourceType: string;
+          creativePreviewFlag: number;
+          createdAt: number;
+          modifiedAt: number;
+          userDetails: {
+            uowId: number;
+            userName: string;
+            userEmail: string;
+            hasApprovalAccess: boolean;
+            hasEditAccess: boolean;
+          };
+          organizationDetails: {
+            owId: number;
+            organizationName: string
+          }
+        }
+      };
+    };
+  };
+}
+
+function getCreative(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -323,7 +384,99 @@ Get a list of Creatives with their details.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          filteredList: {
+            creativeId: number;
+            creativeName: string;
+            platformCreativeTypeId: number;
+            creativeStatusId: number;
+            creativePreviewFlag: number;
+            creativeSourceType: string;
+            creativeSource: string;
+            creativeThumbnailSource: string;
+            creativeCardSource: string;
+            createdAt: number;
+            modifiedAt: number;
+            clickUrl: string;
+            creativeWidth: number;
+            creativeHeight: number;
+            campaignDetails: {
+              campaignIds: number[]
+            };
+            userDetails: {
+              uowId: number;
+              userName: string;
+              userEmail: string;
+              hasApprovalAccess: boolean;
+              hasEditAccess: boolean;
+            };
+            organizationDetails: {
+              owId: number;
+              organizationName: string
+            }
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getCreatives_1(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/list',
+    requestBody: {
+      content: {
+        "application/json": {
+          sortCriteriaMap?: {
+            [key: string]: `string`,
+          },
+          creativeStatusIds?: `array of numbers`,
+          platformCreativeTypeIds?: `array of numbers`,
+          creativeIds?: `array of numbers`,
+
+          creativeGroupId?: `number`,
+          campaignIds?: `array of numbers`,
+          owIds?: `array of numbers`,
+          allOwIds?: `boolean`,
+          includeCreativeSourceDetails?: `boolean`,
+          includeOrganizationDetails?: `boolean`,
+          includeUserDetails?: `boolean`,
+
+          startTime?: `number`,
+
+          endTime?: `number`,
+
+          pageNo?: `number`,
+
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+
+          order?: 'SortOrderEnum[id=1, name='asc', symbol='+']" | "SortOrderEnum[id=2, name='desc', symbol='-']'
+        };
+      };
+    };
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -414,7 +567,79 @@ Get details of a Creative by ID along with its associated Campaigns. Includes th
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          creativeName: string;
+          rtbCreativeTypeId: number;
+          platformCreativeTypeId: number;
+          creativeStatusId: number;
+          creativeSource: string;
+          creativeCardSource: string;
+          clickUrl: string;
+          videoDetails: {
+            duration: number;
+            xmlType: string;
+            creativeSourceUrl: string;
+            availableXmlVersions: number;
+            transformed: boolean;
+          };
+          creativeSourceType: string;
+          creativePreviewFlag: number;
+          createdAt: number;
+          modifiedAt: number;
+          userDetails: {
+            uowId: number;
+            userName: string;
+            userEmail: string;
+          };
+          organizationDetails: {
+            owId: number;
+            organizationName: string
+          };
+          approvalRequiredPostUrlUpdate: boolean;
+          campaignDetails: {
+            id: number;
+            name: string;
+            status: string;
+            totalCreativesCount: number;
+            isModelled: boolean;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getCreativeAndCampaignDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}/creative-campaign-details',
+    params: {
+      path: {
+        creativeId: `number`
+      },
+      query?: {
+        includingModelingInfo?: `boolean`
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -512,7 +737,70 @@ Get a list of Creative groups by desired filters.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          creativeGroupList: {
+            creativeGroupId: number;
+            creativeGroupName: string;
+            creativeTypeId: number;
+            createdAt: number;
+            creativesCount: number;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getCreativeAndCampaignDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups/list',
+    requestBody: {
+      content: {
+        "application/json": {
+          sortCriteriaMap?: {
+            [key: string]: `string`
+          },
+          platformCreativeTypeIds?: `array of numbers`,
+          creativeStatusIds?: `array of numbers`,
+          creativeGroupIds?: `array of numbers`,
+
+          startTime?: `number`,
+
+          endTime?: `number`,
+          owIds?: `array of numbers`,
+          allOwIds?: `boolean`,
+
+          pageNo?: `number`,
+
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+
+          order?: 'SortOrderEnum[id=1, name='asc', symbol='+']" | "SortOrderEnum[id=2, name='desc', symbol='-']'
+        }
+      }
+    };
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -588,7 +876,50 @@ Get a count of Creatives by Creative type.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          creativeTypeList: {
+            id: number;
+            creativeCount: number;
+          }[]
+        }
+      };
+    };
+  };
+}
+
+function getCreativeAndCampaignDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/count-by-type',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchField?: `string`,
+          owIds?: `array of numbers`,
+          allOwIds?: `boolean`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -698,7 +1029,59 @@ Get count of Creatives by Creative status.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          creativeStatusList: {
+            id: number;
+            creativeCount: number;
+          }[]
+        }
+      };
+    };
+  };
+}
+
+function getCreativeAndCampaignDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/count-by-status',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchField?: `string`,
+          creativeStatusIds?: `array of numbers`,
+          platformCreativeTypeIds?: `array of numbers`,
+          allCreatives?: `boolean`,
+          groupedCreatives?: `boolean`,
+          owIds?: `array of numbers`,
+          allOwIds?: `boolean`,
+          campaignIds?: `array of numbers`,
+
+          startTime?: `number`,
+
+          endTime?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -716,7 +1099,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 Add a new Creative by providing the Creative metadata and files. Endpoint accepts a JSON payload with Creative details and supports file uploads in multipart form data. The API handles both the metadata and Creative file uploads simultaneously. 
 
-| Request Schema | |
+| Query Parameters | |
 | --- | --- | 
 | `creativeRequest`<br /><span class="type-text">string</span> | This parameter accepts a Map of UUIDs to creative details. Each UUID corresponds to a single creative. The metadata includes information such as creative name, external creative ID, creative type, and click URL. Additionally, the creative files are sent as multipart form data |
 | `creativeFiles`<br /><span class="type-text">array of strings</span> | Array of creative files uploaded as multipart files. These files will be used for creating the creatives. Each file is processed according to its type (image, video, etc.) |
@@ -747,7 +1130,47 @@ Add a new Creative by providing the Creative metadata and files. Endpoint accept
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          successData: {
+            PS: string;
+          };
+          failedData: {
+            PF: string;
+          }
+        }
+      };
+    };
+  };
+}
+
+function createCreatives(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives',
+    params: {
+      query: {
+        creativeRequest: `string`,
+        creativeFiles?: `array of strings`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -805,7 +1228,68 @@ Update the details of an existing Creative. Users authorized to modify a Creativ
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateCreative(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeName?: `string`,
+          externalCreativeId?: `string`,
+          clickUrl?: `string`,
+          pixelUrl?: `string`,
+          creativeRemarks?: `string`,
+          creativeSource?: `string`,
+          title?: `string`,
+          description?: `string`,
+          cta?: {
+            id?: `number`,
+            ctaText?: `string`,
+            defaultCta?: `boolean`,
+          },
+          brandName?: `string`,
+          brandIconSourceUrl?: `string`,
+          brandIconHeight?: `number`,
+          brandIconWidth?: `number`,
+          thumbnailSourceUrl?: `string`,
+          thumbnailWidth?: `number`,
+          thumbnailHeight?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -859,7 +1343,50 @@ Update the status of an existing Creative. Users authorized to modify a Creative
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateCreativeStatus(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/update-status',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeIds: `array of numbers`,
+          creativeStatusId: `number`,
+          creativeRejectionReason?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -870,7 +1397,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 ### Create New Creative Group 
 
-<span class="badge badge--success">POST</span><span class="path-text">/api/v3/crt/creatives/group</span>
+<span class="badge badge--success">POST</span><span class="path-text">/api/v3/crt/creatives/groups</span>
 
 <div class="container">
   <div class="child1">
@@ -917,7 +1444,46 @@ Create a new Creative group and add desired Creatives to the group.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeGroupId: number;
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function createCreativeGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups',
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeGroupName: `string`,
+          creativeIds: `array of numbers`,
+          creativeTypeId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -960,7 +1526,41 @@ Delete Creative group(s) by ID. Also removes mapping of Creatives from deleted g
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function deleteCreativeGroups(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups',
+    params: {
+      query: {
+        creativeGroupIds: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1017,7 +1617,46 @@ Add or remove Creatives from Creative groups.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function modifyCreativesInGroups(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups/modify-creatives',
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeIds: `array of numbers`,
+          creativeGroupIds: `array of numbers`,
+
+          actionType: "ADD" | "REMOVE";
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1070,7 +1709,48 @@ Update a Creative group name.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateCreativeGroupName(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups/{creativeGroupId}',
+    params: {
+      path: {
+        creativeGroupId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeGroupName: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1125,7 +1805,44 @@ Duplicate one or more Creatives. User may also include click URL conversion in t
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function CreateDuplicateCreatives(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/duplicate',
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeIds: `array of numbers`,
+          clickUrl?: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1177,7 +1894,42 @@ Duplicate Creative group by ID. Also duplicates existing Creatives within group.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          duplicatedCreativeGroupId: number;
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function duplicateCreativeGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/groups/duplicate/{creativeGroupId}',
+    params: {
+      path: {
+        creativeGroupId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1231,7 +1983,44 @@ Compress uploaded image Creatives. Also validates file types and size, and retur
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function compressImages(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/image/compress',
+    params: {
+      path: {
+        files: `array of strings`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1285,7 +2074,44 @@ Update pixel URL conversion for Creative(s).
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function UpdatePixelUrl(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/pixel-url',
+    requestBody: {
+      content: {
+        "application/json": {
+          pixelUrl?: `string`,
+          creativeIds: `array of numbers`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1338,7 +2164,44 @@ Update click URL conversion for Creative(s).
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateCreativeClickUrl(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/click-url',
+    requestBody: {
+      content: {
+        "application/json": {
+          clickUrl?: `string`,
+          creativeIds: `array of numbers`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1428,7 +2291,51 @@ Get a list of Creative types.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          creativeTypeList: {
+            id: number;
+            name: string;
+            order: number;
+            displayName: string;
+            rtbCreativeTypeId: number;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function creativeTypeList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/master/static/creative-types',
+    params: {
+      query?: {
+        displayAllType?: `boolean`,
+        searchField?: `string`,
+        creativeTypeIds?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1504,7 +2411,48 @@ Get a list of Creative statuses.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          creativeStatusList: {
+            id: number;
+            name: string;
+            order: number;
+            displayName: string;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function creativeStatusList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/master/static/creative-status',
+    params: {
+      query?: {
+        displayAllStatusOption?: `boolean`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1565,7 +2513,48 @@ Get list of CTA details from the database.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          ctaDetailsList: {
+            id: number;
+            ctaText: string;
+            defaultCta: boolean;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function ctaDetailsList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/master/cta/list',
+    params: {
+      query?: {
+        showOnlyDefault: `string`,
+        searchField?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
