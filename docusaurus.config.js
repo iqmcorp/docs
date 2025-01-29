@@ -115,7 +115,7 @@ const config = {
             to: "Getting%20Started/"
           },
           {
-            label: "Quickstart",
+            label: "Quickstart Guides",
             position: "left",
             to: "/Quickstart%20Guides/",
             className: "navbarLink",
