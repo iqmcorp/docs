@@ -886,6 +886,138 @@ const sidebars = {
         id: 'Guidelines/Creative-API-Guidelines'
       },
       items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/docs/Guidelines/Creative-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: 'category',
+          label: 'Creative Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#creative-details-by-id"><span class="badge bar badge--primary">GET</span>Creative Details by ID</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-list-of-creatives-and-details"><span class="badge bar badge--success">POST</span>List of Creatives and Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-associated-campaigns"><span class="badge bar badge--primary">GET</span>Associated Campaigns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-list-of-creative-groups"><span class="badge bar badge--success">POST</span>List of Creative Groups</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-creative-count-by-type"><span class="badge bar badge--success">POST</span>Creative Count by Type</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-creative-count-by-status"><span class="badge bar badge--success">POST</span>Creative Count by Status</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Creative Management',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#add-new-creative"><span class="badge bar badge--success">POST</span>Add New Creative</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#update-creative-details"><span class="badge bar badge--info">PATCH</span>Update Creative Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#update-creative-status"><span class="badge bar badge--info">PATCH</span>Update Creative Status</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#create-new-creative-group"><span class="badge bar badge--success">POST</span>Create New Creative Group</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#delete-creative-group"><span class="badge bar badge--danger">DEL</span>Delete Creative Group</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#modify-creatives"><span class="badge bar badge--success">POST</span>Modify Creatives</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#update-creative-group-name"><span class="badge bar badge--info">PATCH</span>Update Creative Group Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#duplicate-creatives"><span class="badge bar badge--success">POST</span>Duplicate Creatives</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#duplicate-creative-group"><span class="badge bar badge--success">POST</span>Duplicate Creative Group Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#compress-uploaded-image-creative"><span class="badge bar badge--success">POST</span>Compress Image</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#update-pixel-url"><span class="badge bar badge--info">PATCH</span>Update Pixel URL</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#update-click-url"><span class="badge bar badge--info">PATCH</span>Update Click URL</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Creative Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-creative-types-list"><span class="badge bar badge--primary">GET</span>Creative Types List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-creative-status-list"><span class="badge bar badge--primary">GET</span>Creative Status List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Creative-API-Guidelines#get-cta-details"><span class="badge bar badge--primary">GET</span>CTA Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
       ]
     },
     {
