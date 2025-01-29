@@ -369,7 +369,7 @@ function getCreativeTypes_1(): Promise < Responses > {
 
 #### Step 2.2 Upload Creative
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/crt/creatives</span>
 
 <div class="container">
   <div class="child1">
@@ -384,10 +384,10 @@ Please refer to [MDN Documentation<svg xmlns="http://www.w3.org/2000/svg" viewBo
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 | `content-type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Media type of the resource |
 
-| Request Schema | |
-| ----| --- |
-| `creativeFiles` <br /><span class="type-text">string</span> <span class="required-text">required</span>  | File - image file as multipart form data |
-|  `creativeImageMetadata` <br /><span class="type-text">object</span> <span class="required-text">required</span>  | (creativeImageMetadata) |
+| Query Parameters | |
+| --- | --- | 
+| `creativeRequest`<br /><span class="type-text">string</span> | This parameter accepts a Map of UUIDs to Creative details. Each UUID corresponds to a single Creative. The metadata includes information such as Creative name, external Creative ID, Creative type, and click URL. Additionally, the Creative files are sent as multipart form data |
+| `creativeFiles`<br /><span class="type-text">array of strings</span> | Array of Creative files uploaded as multipart files. These files will be used for creating the Creatives. Each file is processed according to its type (image, video, etc.) |
 
 </div><div class="child2">
 
@@ -439,11 +439,15 @@ J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅ�
 
 ```json title="Response 201"
 {
- "statusCode": 201,
- "responseObject": {
-   "data": [148971],
-   "message": "Image Creative(s) Added successfully"
- }
+  "success": true,
+  "data": {
+    "successData": {
+      "PS": "701388"
+    },
+    "failedData": {
+      "PF": "Creative file missing. Please attach the required file. : null"
+    }
+  }
 }
 ```
 
@@ -460,39 +464,34 @@ import {
 const axios = getInstance();
 
 interface Responses {
-  201: {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
     content: {
       "application/json": {
-        statusCode: number;
-        responseObject: {
-          data: number[];
-          message: string;
-        }
-      }
-    };
-  };
-};
-
-function AddImageCreative(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v2/crt/add/image/banner/creative',
-    requestBody?: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          creativeFiles: `string`,
-          creativeImageMetadata: {
-            "50b0edfc14f011eab703f36c2a7f7251": {
-              originalFileName: `string`,
-              clickUrl: `string`,
-              pixelUrl: `array of strings`
-            },
-            "4c49c1bc14f011eaaa9ceb9a07a6934f": {
-              originalFileName: `string`,
-              clickUrl: `string`,
-            }
+        success: boolean;
+        data: {
+          successData: {
+            PS: string;
+          };
+          failedData: {
+            PF: string;
           }
         }
+      };
+    };
+  };
+}
+
+function createCreatives(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives',
+    params: {
+      query: {
+        creativeRequest: `string`,
+        creativeFiles?: `array of strings`
       }
     }
   };
@@ -519,67 +518,62 @@ For further information see the complete API Documentation:
 
 #### Step 2.3 Check the Creative Status
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/crt/creatives/\{creativeId}</span>
 
 <div class="container">
   <div class="child1">
 
 To create a Campaign, the Creative must be processed and approved. This API checks a Creative's status. Use the `creativeId` (6 digit number under `data` parameter in response) retrieved from the previous step to get its details. 
 
-For further information see the complete [Creative Details API Documentation<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="1em" height="1.2em" stroke-width="1.5"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"></path><path d="M11 13l9 -9"></path><path d="M15 4h5v5"></path></svg>](https://app.iqm.com/docs?path=tag/Creative-API/operation/GetCreativedetailbyid).
+The Creative details endpoint returns a Status ID (highlighted in code sample). A status ID of `2` means the Creative is `running`, which is the necessary status to continue creating a Campaign. See the [Get Creative Status List](/docs/Guidelines/Creative-API-Guidelines#get-creative-status-list) endpoint documentation for more information.
 
 | Headers |  |
 | ----| --- |
 | `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/docs/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
-| Request Schema || 
+| Path Parameter || 
 | --- | --- |
-| `creativeIds` <br /><span class="type-text">array of integers</span> | Creative ID |
+| `creativeId` <br /><span class="type-text">array of integers</span> | Creative ID |
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-  "creativeIds": [
-    123456
-  ]
-}
-```
-
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "data": [
-      {
-        "id": 676384,
-        "name": "banner",
-        "creativeTypeId": 11,
-        "creativeType": "Image",
-        //highlight-next-line
-        "status": "pending",
-        "createdAt": 1726086249544,
-        "modifiedAt": 1726086257,
-        "owId": 203578,
-        "organizationName": "User's Org",
-        "organizationLogo": "https://web-asset.png",
-        "previewFlag": 1,
-        "creativeScreenshotSource": "1726086249396.jpg",
-        "creativeCardSource": "https://Screenshots/1726086249396.jpg",
-        "creativeThumbnailSource": "https://1726086249396.jpg",
-        "duration": 0,
-        "pixelUrls": [],
-        "clickUrl": "http://iqm.com",
-        "height": 750,
-        "width": 1700
-      }
-    ],
-    "totalRecords": 1,
-    "filteredRecords": 1
+    "creativeId": 686855,
+    "creativeName": "300x600-w23-01",
+    "rtbCreativeTypeId": 1,
+    "platformCreativeTypeId": 11,
+    //highlight-next-line
+    "creativeStatusId": 2,
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
+    "clickUrl": "http://iqm.com",
+    "imageDetails": {
+      "pixelUrl": "http://pixel.com",
+      "creativeWidth": 300,
+      "creativeHeight": 600
+    },
+    "creativeSourceType": "file",
+    "creativePreviewFlag": 1,
+    "createdAt": 1730201855165,
+    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
+    "userDetails": {
+      "uowId": 175891,
+      "userName": "Hardik",
+      "userEmail": "hardik.v+iqmsuper@iqm.com",
+      "hasApprovalAccess": true,
+      "hasEditAccess": true
+    },
+    "organizationDetails": {
+      "owId": 202760,
+      "organizationName": "AdWing"
+    }
   }
 }
 ```
@@ -603,66 +597,53 @@ interface Responses {
     };
     content: {
       "application/json": {
-        sucess: boolean;
+        success: boolean;
         data: {
-          data: {
-            id: number;
-            name: string;
-            creativeTypeId: number;
-            creativeType: string;
-            status: string;
-            createdAt: number;
-            modifiedAt: number;
+          creativeId: number;
+          creativeName: string;
+          rtbCreativeTypeId: number;
+          platformCreativeTypeId: number;
+          //highlight-next-line
+          creativeStatusId: number;
+          creativeSource: string;
+          creativeCardSource: string;
+          clickUrl: string;
+          imageDetails: {
+            pixelUrl: string;
+            creativeWidth: number;
+            creativeHeight: number;
+          };
+          creativeSourceType: string;
+          creativePreviewFlag: number;
+          createdAt: number;
+          modifiedAt: number;
+          userDetails: {
+            uowId: number;
+            userName: string;
+            userEmail: string;
+            hasApprovalAccess: boolean;
+            hasEditAccess: boolean;
+          };
+          organizationDetails: {
             owId: number;
-            organizationName: string;
-            organizationLogo: string;
-            previewFlag: number;
-            creativeScreenshotSource: string;
-            creativeCardSource: string;
-            creativeThumbnailSource: string;
-            duration: number;
-            pixelUrls: string[];
-            clickUrl: string;
-            height: number;
-            width: number
-          }[];
-          totalRecords: number;
-          filteredRecords: number;
+            organizationName: string
+          }
         }
-      }
+      };
     };
   };
-};
+}
 
-function getCreativeBasicDetailList(): Promise < Responses > {
+function getCreative(): Promise<Responses> {
   const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/crt/basic/list',
-    requestBody: {
-      content: {
-        "application/json": {
-          owIds?: `array of numbers`,
-          isAllOwIds?: `boolean`,
-          ids?: `array of numbers`,
-          creativeIds?: `array of numbers`,
-          //highlight-next-line
-          status?: `string`,
-          creativeTypeIds?: `array of numbers`,
-          responseFields?: `array of strings`,
-          campaignId?: `number`,
-          allOwIds?: `boolean`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: [ "asc" | "desc" ]
-        }
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}',
+    params: {
+      path: {
+        creativeId: `number`
       }
     }
   };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
 ```
 
 </TabItem></Tabs>
