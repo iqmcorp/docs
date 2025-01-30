@@ -368,7 +368,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Bid Modelling Details',
+          label: 'Bid Model Details',
           className: 'sidebarItem',
           items: [
             {
@@ -424,27 +424,27 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Bid Modelling Management`,
+          label: `Bid Model Management`,
           className: 'sidebarItem',
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modelling"><span class="badge bar badge--success">POST</span>Add Bid Modelling</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modelling"><span class="badge bar badge--success">POST</span>Add Bid Modeling</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-actions"><span class="badge bar badge--warning">PUT</span>Update Bid Modelling Actions</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-actions"><span class="badge bar badge--warning">PUT</span>Update Bid Modeling Actions</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-dimensions"><span class="badge bar badge--info">PATCH</span>Update Bid Modelling Dimensions</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-dimensions"><span class="badge bar badge--info">PATCH</span>Update Bid Modeling Dimensions</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modelling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modelling Data</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modelling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modeling Data</a>',
               defaultStyle: true,
             },
           ]
