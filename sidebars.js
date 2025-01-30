@@ -15,6 +15,12 @@
 const sidebars = {
   tutorialSidebar: [
     {
+      type: 'doc',
+      id: 'intro',
+      label: 'IQM API',
+      className: 'sidebarCategory'
+    },
+    {
       type: 'category',
       label: 'Getting Started',
       className: 'sidebarCategory',
@@ -60,7 +66,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Sign Up and Authentication',
+          label: 'Sign Up and Authenticate',
           className: 'sidebarItem',
           link: {
             type: 'doc',
@@ -89,7 +95,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Matched Audience Upload',
+          label: 'Upload a Matched Audience',
           className: 'sidebarItem',
           link: {
             type: 'doc',
