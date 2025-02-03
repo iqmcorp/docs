@@ -1991,6 +1991,56 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Planner API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Guidelines/Planner-API-Guidelines'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Proposal Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-a-list-of-all-assets"><span class="badge bar badge--primary">GET</span>List of All Assets</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-asset-details"><span class="badge bar badge--primary">GET</span>Asset Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Proposal Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#add-multiple-assets"><span class="badge bar badge--success">POST</span>Add Multiple Assets</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#update-asset-details"><span class="badge bar badge--info">PATCH</span>Update Asset Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#delete-asset"><span class="badge bar badge--danger">DEL</span>Delete Asset</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: 'Reports API',
       className: 'sidebarCategory',
       link: {
