@@ -229,8 +229,155 @@ Get proposal details by ID.
 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
-```ts
+```ts title="Draft Proposal"
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          startTime: number;
+          endTime: number;
+          status: number;
+          politicalAdvertiserId: number;
+          marginValue: number;
+          owId: number;
+          proposalTargeting: {
+            location: {
+              country: number;
+              states: number[];
+              dma: number[];
+              city: number[];
+              county: number[];
+              congressionalDistricts: number[];
+              stateHouse: number[];
+              stateSenate: number[];
+              zipCodes: string;
+              locationAdvanceTargeted: string[];
+              advanceTargeted: boolean;
+            };
+            audience: {
+              audienceSegmentIds: number[];
+              advanceTargeted: boolean;
+            };
+            creative: {
+              creativeTypeIds: number[];
+              tvAutoBuying: boolean;
+            };
+            inventory: {
+              openExchangeInventory: {
+                iabCategories: number[];
+                exchanges: number[];
+              };
+              inventoryGroupIds: number[];
+              advanceTargeted: boolean;
+            };
+            device: {
+              deviceTypesTargetedIds: number[];
+              channelTypesTargetedIds: number[];
+              deviceTypesAdvanceTargetedIds: number[];
+              advanceTargeted: boolean;
+            }
+          }
+        };
+      };
+    };
+  };
+}
+
+function getProposalDetailsById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+```ts title="Ready Proposal"
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          startTime: number;
+          endTime: number;
+          status: number;
+          targetedReach: number;
+          targetedImpresions: number;
+          maxTargetedReach: number;
+          maxTargetedImpressions: number;
+          budget: number;
+          maxBudget: number;
+          owId: number;
+          proposedCampaigns: {
+            id: number;
+            name: string;
+            startTime: number;
+            endTime: number;
+            strategy: string;
+            creativeTypeId: number;
+            duration: number;
+            modelType: string;
+            targetedReach: number;
+            maxTargetedReach: number;
+            frequencyCap: number;
+            targetedImpressions: number;
+            maxTargetedImpressions: number;
+            cpm: number;
+            minCpm: number;
+            maxCpm: number;
+            budget: number;
+            maxBudget: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getProposalDetailsById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -302,7 +449,64 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          proposalDetailList: {
+            id: number;
+            name: string;
+            statusId: number;
+            createdOn: number;
+            userAvaturUrl: string;
+            reach: number;
+            impressions: number;
+            ioId: number;
+            budget: number;
+            startDate: number;
+            endDate: number;
+            createdBy: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            totalBudget: number;
+            totalImpressions: number;
+          }
+        };
+      };
+    };
+  };
+}
+
+function proposalDetailList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposals',
+    params: {
+      query: {
+        searchField?: `string`,
+        noOfEntries?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        statusIds?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -330,40 +534,40 @@ Get summary of maximum reach and impressions for different targeting parameters 
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country` <br /><span class="type-text">array of integers</span></td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
-    <td>Zip code ID</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
+    <td>Comma separated zip code IDs</td>
   </tr>
   </table></details>
   </td>
@@ -379,7 +583,7 @@ Get summary of maximum reach and impressions for different targeting parameters 
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   </table></details>
@@ -395,7 +599,7 @@ Get summary of maximum reach and impressions for different targeting parameters 
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   </table></details>
@@ -411,7 +615,7 @@ Get summary of maximum reach and impressions for different targeting parameters 
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -420,18 +624,18 @@ Get summary of maximum reach and impressions for different targeting parameters 
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   </table></details>
@@ -447,11 +651,11 @@ Get summary of maximum reach and impressions for different targeting parameters 
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   </table></details>
@@ -568,7 +772,79 @@ Get summary of maximum reach and impressions for different targeting parameters 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          impressions: number;
+          reach: number;
+        };
+      };
+    };
+  };
+}
+
+function getReachAndImpressions(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal-summary/reach-impressions',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -598,40 +874,40 @@ Get summary of impressions distribution for different device types targeted in p
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country` <br /><span class="type-text">array of integers</span></td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
-    <td>Zip code ID</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
+    <td>Comma separated zip code IDs</td>
   </tr>
   </table></details>
   </td>
@@ -647,7 +923,7 @@ Get summary of impressions distribution for different device types targeted in p
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   </table></details>
@@ -663,7 +939,7 @@ Get summary of impressions distribution for different device types targeted in p
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   </table></details>
@@ -679,7 +955,7 @@ Get summary of impressions distribution for different device types targeted in p
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -688,18 +964,18 @@ Get summary of impressions distribution for different device types targeted in p
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   </table></details>
@@ -715,11 +991,11 @@ Get summary of impressions distribution for different device types targeted in p
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   </table></details>
@@ -856,7 +1132,82 @@ Get summary of impressions distribution for different device types targeted in p
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          deviceTypes: {
+            device: string;
+            precentage: number;
+            impressions: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getDeviceTypeData(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal-summary/device-type',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -886,40 +1237,40 @@ Get summary of impressions distribution for different channel types targeted in 
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country` <br /><span class="type-text">array of integers</span></td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
-    <td>Zip code ID</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
+    <td>Comma separated zip code IDs</td>
   </tr>
   </table></details>
   </td>
@@ -935,7 +1286,7 @@ Get summary of impressions distribution for different channel types targeted in 
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   </table></details>
@@ -951,7 +1302,7 @@ Get summary of impressions distribution for different channel types targeted in 
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   </table></details>
@@ -967,7 +1318,7 @@ Get summary of impressions distribution for different channel types targeted in 
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -976,18 +1327,18 @@ Get summary of impressions distribution for different channel types targeted in 
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   </table></details>
@@ -1003,11 +1354,11 @@ Get summary of impressions distribution for different channel types targeted in 
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   </table></details>
@@ -1144,7 +1495,82 @@ Get summary of impressions distribution for different channel types targeted in 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          channelTypes: {
+            channel: string;
+            precentage: number;
+            impressions: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getChannelTypeData(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal-summary/channel-type',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1174,40 +1600,40 @@ Get summary of impressions distribution for different bid landscapes targeted in
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country` <br /><span class="type-text">array of integers</span></td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
-    <td>Zip code ID</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
+    <td>Comma separated zip code IDs</td>
   </tr>
   </table></details>
   </td>
@@ -1223,7 +1649,7 @@ Get summary of impressions distribution for different bid landscapes targeted in
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   </table></details>
@@ -1239,7 +1665,7 @@ Get summary of impressions distribution for different bid landscapes targeted in
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   </table></details>
@@ -1255,7 +1681,7 @@ Get summary of impressions distribution for different bid landscapes targeted in
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -1264,18 +1690,18 @@ Get summary of impressions distribution for different bid landscapes targeted in
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   </table></details>
@@ -1291,11 +1717,11 @@ Get summary of impressions distribution for different bid landscapes targeted in
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   </table></details>
@@ -1454,7 +1880,87 @@ Get summary of impressions distribution for different bid landscapes targeted in
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          HTML: {
+            percentile: number;
+            cpm: number;
+            impressions: number;
+          }[];
+          Video: {
+            percentile: number;
+            cpm: number;
+            impressions: number;
+          }
+        };
+      };
+    };
+  };
+}
+
+function getBidLandscapeData(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal-summary/bid-landscape',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1498,7 +2004,44 @@ Get download URL for proposals with statuses: ready, failed, converted, or expir
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          proposalReportUrl: string;
+        };
+      };
+    };
+  };
+}
+
+function generateS3LinkForDownloadProposal(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}/download',
+    params: {
+      path: {
+        proposalId: `number`
+      },
+      query: {
+        fileType: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1550,39 +2093,39 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country`<br /><span class="type-text">array of integers</span> </td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
     <td>Zip code ID</td>
   </tr>
     <tr>
@@ -1607,7 +2150,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   <tr>
@@ -1627,7 +2170,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   <tr>
@@ -1647,7 +2190,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -1656,18 +2199,18 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   <tr>
@@ -1687,11 +2230,11 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   <tr>
@@ -1833,7 +2376,92 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          name?: `string`,
+          startTime?: `number`,
+          endTime?: `number`,
+          politicalAdvertiserId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          margin?: `number`,
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          id?: `number`,
+          reach?: `number`,
+          maxReach?: `number`,
+          impressions?: `number`,
+          maxImpressions?: `number`,
+          frequencyCap?: `number`,
+          budget?: `number`,
+          maxBudget?: `number`,
+          isPoliticalAdvertiser?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1885,39 +2513,39 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country`<br /><span class="type-text">array of integers</span> </td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
     <td>Zip code ID</td>
   </tr>
     <tr>
@@ -1942,7 +2570,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   <tr>
@@ -1962,7 +2590,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   <tr>
@@ -1982,7 +2610,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -1991,18 +2619,18 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   <tr>
@@ -2022,11 +2650,11 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   <tr>
@@ -2168,7 +2796,84 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function addDraftProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/draft',
+    requestBody: {
+      content: {
+        "application/json": {
+          name?: `string`,
+          startTime?: `number`,
+          endTime?: `number`,
+          politicalAdvertiserId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          margin?: `number`,
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          isPoliticalAdvertiser?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2246,39 +2951,39 @@ Update proposal details.
   <summary>`campaigns` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`id`</td>
+    <td>`id`<br /><span class="type-text">integer</span></td>
     <td>Campaign ID</td>
   </tr>
     <tr>
-    <td>`name`</td>
+    <td>`name`<br /><span class="type-text">string</span></td>
     <td>Campaign name</td>
   </tr>
   <tr>
-    <td>`startTime`</td>
+    <td>`startTime`<br /><span class="type-text">integer</span></td>
     <td>Start time</td>
   </tr>
   <tr>
-    <td>`endTime`</td>
+    <td>`endTime`<br /><span class="type-text">integer</span></td>
     <td>End time</td>
   </tr>
   <tr>
-    <td>`reach`</td>
+    <td>`reach`<br /><span class="type-text">integer</span></td>
     <td>Reach</td>
   </tr>
   <tr>
-    <td>`frequencyCap`</td>
+    <td>`frequencyCap`<br /><span class="type-text">integer</span></td>
     <td>Frequency cap</td>
   </tr>
   <tr>
-    <td>`impressions`</td>
+    <td>`impressions`<br /><span class="type-text">integer</span></td>
     <td>Impressions</td>
   </tr>
   <tr>
-    <td>`cpm`</td>
+    <td>`cpm`<br /><span class="type-text">integer</span></td>
     <td>CPM</td>
   </tr>
   <tr>
-    <td>`budget`</td>
+    <td>`budget`<br /><span class="type-text">integer</span></td>
     <td>Campaign budget</td>
   </tr>
   </table></details>
@@ -2345,7 +3050,127 @@ Update proposal details.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function editReadyProposal(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+
+          proposalId?: `number`,
+          proposalName?: `string`,
+          proposalStartTime?: `number`,
+          proposalEndTime?: `number`,
+          proposalStatusId?: `number`,
+          proposalReach?: `number`,
+          proposalMaxReach?: `number`,
+          proposalImpressions?: `number`,
+          proposalMaxImpressions?: `number`,
+          politicalAdvertiserId?: `number`,
+          proposalBudget?: `number`,
+          proposalMaxBudget?: `number`,
+          proposalOwId?: `number`,
+          campaigns?: {
+            id?: `number`,
+            name?: `string`,
+            startTime?: `number`,
+            endTime?: `number`,
+            durationInDays?: `number`,
+            reach?: `number`,
+            maxReach?: `number`,
+            impressions?: `number`,
+            maxImpressions?: `number`,
+            cpm?: `number`,
+            minCpm?: `number`,
+            frequencyCap?: `number`,
+            budget?: `number`,
+            maxBudget?: `number`,
+            proposalId?: `number`,
+            campaignId?: `number`,
+            timeZoneId?: `number`,
+            owId?: `number`,
+            strategy?: `string`,
+            location?: {
+              country: `number`,
+              states?: `array of numbers`,
+              dma?: `array of numbers`,
+              city?: `array of numbers`,
+              county?: `array of numbers`,
+              congressionalDistricts?: `array of numbers`,
+              stateHouse?: `array of numbers`,
+              stateSenate?: `array of numbers`,
+              zipCodes?: `string`,
+              isAdvanceTargeted?: `boolean`,
+              locationAdvanceTargeted?: `array of numbers`,
+            },
+            audience?: {
+              audienceSegmentIds?: `array of numbers`,
+              isAdvanceTargeted?: `boolean`,
+            },
+            creative?: {
+              creativeTypeIds?: `array of numbers`,
+              isTvAutoBuying?: `boolean`,
+            },
+            inventory?: {
+              openExchangeInventory?: {
+                iabCategories?: `array of numbers`,
+                exchanges?: `array of numbers`,
+              },
+              inventoryGroupIds?: `array of numbers`,
+              isAdvanceTargeted?: `boolean`;
+            },
+            device?: {
+              deviceTypesTargetedIds?: `array of numbers`,
+              channelTypesTargetedIds?: `array of numbers`,
+              deviceTypesAdvanceTargetedIds?: `array of numbers`,
+              isAdvanceTargeted?: `boolean`,
+            },
+            locationStrategy?: `string`,
+            audienceStrategy?: `string`,
+            inventoryStrategy?: `string`,
+            deviceStrategy?: `string`,
+            deleted?: `boolean`,
+          }[],
+          deletedCampaignIds?: `array of numbers`,
+          proposalMargin?: `number`,
+          ioId?: `number`,
+          proposalCreatedByUowId?: `number`,
+          isPoliticalAdvertiser?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2403,39 +3228,39 @@ Update draft proposal details.
   <summary>`location` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`country`</td>
+    <td>`country`<br /><span class="type-text">array of integers</span> </td>
     <td>Country ID</td>
   </tr>
     <tr>
-    <td>`states`</td>
+    <td>`states`<br /><span class="type-text">array of integers</span></td>
     <td>States ID</td>
   </tr>
   <tr>
-    <td>`dma`</td>
+    <td>`dma`<br /><span class="type-text">array of integers</span></td>
     <td>DMA ID</td>
   </tr>
   <tr>
-    <td>`city`</td>
+    <td>`city`<br /><span class="type-text">array of integers</span></td>
     <td>City ID</td>
   </tr>
   <tr>
-    <td>`county`</td>
+    <td>`county`<br /><span class="type-text">array of integers</span></td>
     <td>County ID</td>
   </tr>
   <tr>
-    <td>`congressionalDistricts`</td>
+    <td>`congressionalDistricts`<br /><span class="type-text">array of integers</span></td>
     <td>Congressional district ID</td>
   </tr>
   <tr>
-    <td>`stateHouse`</td>
+    <td>`stateHouse`<br /><span class="type-text">array of integers</span></td>
     <td>State house ID</td>
   </tr>
   <tr>
-    <td>`stateSenate`</td>
+    <td>`stateSenate`<br /><span class="type-text">array of integers</span></td>
     <td>State senate ID</td>
   </tr>
   <tr>
-    <td>`zipCodes`</td>
+    <td>`zipCodes`<br /><span class="type-text">string</span></td>
     <td>Zip code ID</td>
   </tr>
     <tr>
@@ -2460,7 +3285,7 @@ Update draft proposal details.
   <summary>`audience` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`audienceSegmentIds`</td>
+    <td>`audienceSegmentIds`<br /><span class="type-text">array of integers</span></td>
     <td>Audience segment ID</td>
   </tr>
   <tr>
@@ -2480,7 +3305,7 @@ Update draft proposal details.
   <summary>`creative` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`creativeTypeIds`</td>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
     <td>Creative type ID</td>
   </tr>
   <tr>
@@ -2500,7 +3325,7 @@ Update draft proposal details.
   <summary>`inventory` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`openExchangeInventory`</td>
+    <td>`openExchangeInventory`<br /><span class="type-text">object</span></td>
     <td>Open exchange inventory data</td>
   </tr>
   <tr>
@@ -2509,18 +3334,18 @@ Update draft proposal details.
       <summary>`openExchangeInventory` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`iabCategories`</td>
+        <td>`iabCategories`<br /><span class="type-text">array of integers</span></td>
         <td>IAB category ID</td>
       </tr>
       <tr>
-        <td>`exchanges`</td>
+        <td>`exchanges`<br /><span class="type-text">array of integers</span></td>
         <td>Exchange ID</td>
       </tr>
       </table></details>
       </td>
   </tr>
   <tr>
-    <td>`inventoryGroupIds`</td>
+    <td>`inventoryGroupIds`<br /><span class="type-text">array of integers</span></td>
     <td>Inventory group ID</td>
   </tr>
   <tr>
@@ -2540,11 +3365,11 @@ Update draft proposal details.
   <summary>`device` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`deviceTypesTargetedIds`</td>
+    <td>`deviceTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Device types targeted ID</td>
   </tr>
    <tr>
-    <td>`channelTypesTargetedIds`</td>
+    <td>`channelTypesTargetedIds`<br /><span class="type-text">array of integers</span></td>
     <td>Channel types targeted ID</td>
   </tr>
   <tr>
@@ -2685,7 +3510,171 @@ Update draft proposal details.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function updateDraftProposal(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/draft/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          name?: `string`,
+          startTime?: `number`,
+          endTime?: `number`,
+          politicalAdvertiserId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          margin?: `number`,
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          isPoliticalAdvertiser?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function updateDraftProposal(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/draft/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          name?: `string`,
+          startTime?: `number`,
+          endTime?: `number`,
+          politicalAdvertiserId?: `number`,
+          location?: {
+            country: `number`,
+            states?: `array of numbers`,
+            dma?: `array of numbers`,
+            city?: `array of numbers`,
+            county?: `array of numbers`,
+            congressionalDistricts?: `array of numbers`,
+            stateHouse?: `array of numbers`,
+            stateSenate?: `array of numbers`,
+            zipCodes?: `string`,
+            isAdvanceTargeted?: `boolean`,
+            locationAdvanceTargeted?: `array of numbers`,
+          },
+          margin?: `number`,
+          audience?: {
+            audienceSegmentIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          creative?: {
+            creativeTypeIds?: `array of numbers`,
+            isTvAutoBuying?: `boolean`,
+          },
+          inventory?: {
+            openExchangeInventory?: {
+              iabCategories?: `array of numbers`,
+              exchanges?: `array of numbers`,
+            },
+            inventoryGroupIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          device?: {
+            deviceTypesTargetedIds?: `array of numbers`,
+            channelTypesTargetedIds?: `array of numbers`,
+            deviceTypesAdvanceTargetedIds?: `array of numbers`,
+            isAdvanceTargeted?: `boolean`,
+          },
+          isPoliticalAdvertiser?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2728,7 +3717,41 @@ Validate the proposal details and update its status to in-progress. Campaign wil
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function generateIOCampaigns(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}/campaigns',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2782,7 +3805,45 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function restoreReadyProposal(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/plan/proposals/restore',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalIds: `array of numbers`,
+          startTime: `number`,
+          endTime: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2820,7 +3881,40 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        proposalName: string;
+        startTime: number;
+        endTime: number;
+      };
+    };
+  };
+}
+
+function createDuplicateProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/{proposalId}/duplicate',
+    params: {
+      path: {
+        proposalId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2861,7 +3955,41 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string
+        }
+      };
+    };
+  };
+}
+
+function softDeleteProposal(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/plan/proposal',
+    params: {
+      query: {
+        proposalIds: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2939,7 +4067,43 @@ Get list of proposal status IDs.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          proposalStatusList: {
+            name: string;
+            id: number;
+            label: string;
+            order: number;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function ProposalStatusList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/static/proposal/status',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3045,7 +4209,103 @@ Get list of supported parameters for proposal summaries.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          bidLandscape: {
+            location: {
+              countryIds: boolean;
+              cityIds: boolean;
+              countyIds: boolean;
+              senateDistrictIds: boolean;
+              houseDistrictIds: boolean;
+              congressionalDistrictIds: boolean;
+              dmaIds: boolean;
+              zipCodes: boolean;
+            };
+            deviceTypes: boolean;
+            creativeTypes: boolean;
+            channelTypes: boolean;
+            segmentIds: boolean;
+            inventory: boolean;
+          };
+          deviceGraph: {
+            location: {
+              countryIds: boolean;
+              cityIds: boolean;
+              countyIds: boolean;
+              senateDistrictIds: boolean;
+              houseDistrictIds: boolean;
+              congressionalDistrictIds: boolean;
+              dmaIds: boolean;
+              zipCodes: boolean;
+            };
+            deviceTypes: boolean;
+            creativeTypes: boolean;
+            channelTypes: boolean;
+            segmentIds: boolean;
+            inventory: boolean;
+          };
+          channelGraph: {
+            location: {
+              countryIds: boolean;
+              cityIds: boolean;
+              countyIds: boolean;
+              senateDistrictIds: boolean;
+              houseDistrictIds: boolean;
+              congressionalDistrictIds: boolean;
+              dmaIds: boolean;
+              zipCodes: boolean;
+            };
+            deviceTypes: boolean;
+            creativeTypes: boolean;
+            channelTypes: boolean;
+            segmentIds: boolean;
+            inventory: boolean;
+          };
+          reachImpressions: {
+            location: {
+              countryIds: boolean;
+              cityIds: boolean;
+              countyIds: boolean;
+              senateDistrictIds: boolean;
+              houseDistrictIds: boolean;
+              congressionalDistrictIds: boolean;
+              dmaIds: boolean;
+              zipCodes: boolean;
+            };
+            deviceTypes: boolean;
+            creativeTypes: boolean;
+            channelTypes: boolean;
+            segmentIds: boolean;
+            inventory: boolean;
+          }
+        }
+      };
+    };
+  };
+}
+
+function getSupportedParameters(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposal-summary/supported-params',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3086,7 +4346,38 @@ Get user access details of logged-in organization's parent organizations.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          parentOrganisationAccess: boolean;
+          adminOrganisationAccess: boolean;
+          marginValue: number;
+        }
+      };
+    };
+  };
+}
+
+function getDefaultCustomerMargin(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/plan/proposal/margin',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
