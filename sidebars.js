@@ -2005,12 +2005,37 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-a-list-of-all-assets"><span class="badge bar badge--primary">GET</span>List of All Assets</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#get-proposal-details-by-id"><span class="badge bar badge--primary">GET</span>Proposal Details by ID</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#get-asset-details"><span class="badge bar badge--primary">GET</span>Asset Details</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#get-list-of-proposals"><span class="badge bar badge--primary">GET</span>List of Proposals</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-reach-and-impressions-summary"><span class="badge bar badge--success">POST</span>Reach and Impressions Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-device-type-summary"><span class="badge bar badge--success">POST</span>Device Type Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-channel-type-summary"><span class="badge bar badge--success">POST</span>Channel Type Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-bid-landscape-summary"><span class="badge bar badge--success">POST</span>Bid Landscape Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#download-proposal"><span class="badge bar badge--primary">GET</span>Download Proposal</a>',
               defaultStyle: true,
             },
           ]
@@ -2022,17 +2047,64 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#add-multiple-assets"><span class="badge bar badge--success">POST</span>Add Multiple Assets</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#create-proposal"><span class="badge bar badge--success">POST</span>Create Proposal</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#update-asset-details"><span class="badge bar badge--info">PATCH</span>Update Asset Details</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#create-draft-proposal"><span class="badge bar badge--success">POST</span>Create Draft Proposal</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Assets-API-Guidelines#delete-asset"><span class="badge bar badge--danger">DEL</span>Delete Asset</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#update-proposal"><span class="badge bar badge--info">PATCH</span>Update Proposal</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#update-draft-proposal"><span class="badge bar badge--info">PATCH</span>Update Draft Proposal</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#generate-campaigns-for-ready-proposal"><span class="badge bar badge--success">POST</span>Generate Campaigns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#restore-proposal"><span class="badge bar badge--info">PATCH</span>Restore Proposal</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#duplicate-proposal"><span class="badge bar badge--success">POST</span>Duplicate Proposal</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#delete-proposal"><span class="badge bar badge--danger">DEL</span>Delete Proposal</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-status-list"><span class="badge bar badge--primary">GET</span>Proposal Status List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#proposal-summary-parameters-list"><span class="badge bar badge--primary">GET</span>Parameters List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Planner-API-Guidelines#get-user-access-details"><span class="badge bar badge--primary">GET</span>User Access Details</a>',
               defaultStyle: true,
             },
           ]
