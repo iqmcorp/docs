@@ -296,6 +296,26 @@ const sidebars = {
       ],
     },
     {
+      type: "category",
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      items: [
+        {
+          type: 'category',
+          label: 'Trade Desk Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Tutorials/Trade Desk Migration/Overview`,
+              className: 'sidebarItem'
+            },
+          ]
+        }
+      ]
+    },
+    {
       type: `doc`,
       label: `API Guidelines`,
       id: `Guidelines/index`,
