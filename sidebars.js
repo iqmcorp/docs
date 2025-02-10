@@ -311,6 +311,12 @@ const sidebars = {
               id: `Tutorials/Trade Desk Migration/Overview`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Tutorials/Trade Desk Migration/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
           ]
         }
       ]
