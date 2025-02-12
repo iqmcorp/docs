@@ -299,6 +299,10 @@ const sidebars = {
       type: "category",
       label: 'Tutorials',
       className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Tutorials/index'
+      },
       items: [
         {
           type: 'category',
@@ -321,6 +325,12 @@ const sidebars = {
               type: `doc`,
               label: 'Reports',
               id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Tutorials/Trade Desk Migration/Bid-Model-Migration-Guide`,
               className: 'sidebarItem'
             },
           ]
