@@ -425,7 +425,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modelled Items Count</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modeled Items Count</a>',
               defaultStyle: true,
             },
           ]
@@ -443,23 +443,6 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign"><span class="badge bar badge--success">POST</span>Campaign Entities</a>',
-              defaultStyle: true,
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Campaign Priority Management`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#assign-priority-to-multiple-campaigns"><span class="badge bar badge--warning">PUT</span>Assign Priority to Multiple Campaigns</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#more-priority-management-for-multiple-campaigns"><span class="badge bar badge--success">POST</span>Priority Management for Multiple Campaigns</a>',
               defaultStyle: true,
             },
           ]
@@ -487,6 +470,16 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modeling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modeling Data</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#manage-insertion-order-bid-modeling"><span class="badge bar badge--warning">PUT</span>IO Bid Modeling</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#manage-insertion-order-priority"><span class="badge bar badge--success">POST</span>IO Priority</a>',
               defaultStyle: true,
             },
           ]
