@@ -594,488 +594,6 @@ function toggleCampaignDimensionStatus(): Promise<Responses> {
 
 </div></div>
 
-## Campaign Priority Management
-
-### Assign Priority to Multiple Campaigns
-
-<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-
-<div class="container">
-  <div class="child1">
-
-Assigning priority to Campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Assign priority (ranging 1 to 10) to multiple `campaignIds`.
-
-| Path  |     |
-| ---- | --- |
-| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
-
-<table>
-<th>Request Schema</th>
-<tr>
-<td>`bidModelRequests` <br /><span class="type-text">array of objects</span></td>
-<td>Objects containing bid model actions</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`bidModelRequests` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td>`action` <br /><span class="type-text">string</span></td>
-  <td>Supported values specifying bid model action: `ADD`, `UPDATE`, `DELETE`</td>
-  </tr>
-    <tr>
-  <td>`bidModelData` <br /><span class="type-text">object</span></td>
-  <td>Object containing bid model data</td>
-  </tr>
-  <tr>
-      <td colSpan="2">
-        <details className="objectPropertiesDetails">
-        <summary>`bidModelData` object properties</summary>
-        <table className="objectProperties">
-        <tr>
-        <td>`id`<br /><span class="type-text">integer</span></td>
-        <td>Bid Model data ID</td>
-        </tr>
-          <tr>
-        <td>`priority` <br /><span class="type-text">integer</span></td>
-        <td>Assigned priority: [`1` .. `10`]</td>
-        </tr>
-          <tr>
-        <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
-        <td>Bid Multiplier [`0.1` .. `100`]</td>
-        </tr>
-        <tr>
-        <td>`spendRatio` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio [`0` .. `100`]</td>
-        </tr>
-        <tr>
-        <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio type ID [`1`, `2`]</td>
-        </tr>
-        </table></details>
-        </td>
-        <td></td>
-      </tr>
-  <tr>
-  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
-  <td>Object containing entity mappings</td>
-  </tr>
-  <tr>
-      <td colSpan="2">
-        <details className="objectPropertiesDetails">
-        <summary>`dimensionEntityMappings` object properties</summary>
-        <table className="objectProperties">
-        <tr>
-        <td>`campaignId` <br /><span class="type-text">integer</span></td>
-        <td>Campaign ID</td>
-        </tr>
-          <tr>
-        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
-        <td>Dimension ID</td>
-        </tr>
-          <tr>
-        <td>`entityId` <br /><span class="type-text">integer</span></td>
-        <td>Entity ID</td>
-        </tr>
-            <tr>
-        <td>`bidModelDataId` <br /><span class="type-text">integer</span></td>
-        <td>Bid Model data ID</td>
-        </tr>
-        </table></details>
-        </td>
-        <td></td>
-      </tr>
-   <tr>
-  <td>`bidModelDataIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Bid Model data IDs</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-<td>`baseBid` <br /><span class="type-text">integer</span></td>
-<td>Base value on which bid modifiers are applied. For example, if base bid is 2, and bid modifier is 2, then bid price is: 2x2=4</td>
-</tr>
-<tr>
-<td>`excludeDimensionEntityMappings` <br /><span class="type-text">object</span></td>
-<td>Object containing dimension entity mappings to exclude</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`excludeDimensionEntityMappings` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td> `advertiserId` <br /><span class="type-text">integer</span></td>
-  <td>Advertiser ID</td>
-  </tr>
-    <tr>
-  <td>`dspId` <br /><span class="type-text">integer</span></td>
-  <td>DSP ID</td>
-  </tr>
-    <tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-  </tr>
-      <tr>
-  <td>`uowId` <br /><span class="type-text">integer</span></td>
-  <td>Universal Organization Workspace ID</td>
-  </tr>
-      <tr>
-  <td>`campaignId` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID</td>
-  </tr>
-      <tr>
-  <td>`ids` <br /><span class="type-text">string</span></td>
-  <td>Comma separated IDs</td>
-  </tr>
-      <tr>
-  <td>`isExcluded` <br /><span class="type-text">boolean</span></td>
-  <td></td>
-  </tr>
-      <tr>
-  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
-  <td>Dimension ID</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
-
-</div>
-  <div class="child2">
-
-  <Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "bidModelRequests": [
-    {
-      "action": "ADD",
-      "bidModelData": {
-        "priority": 1
-      },
-      "dimensionEntityMappings": [
-        {
-          "campaignId": 1
-        }
-      ]
-    },
-    {
-      "action": "UPDATE",
-      "bidModelData": {
-        "id": 3677,
-        "priority": 2
-      }
-    },
-    {
-      "action": "DELETE",
-      "bidModelDataIds": [
-        893
-      ]
-    }
-  ]
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Priority Updated Successfully"
-}
-```
-
-<details>
-<summary>More Responses</summary>
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Cannot assign priority as campaign is in invalid status"
-    }
-  ]
-}
-```
-
-```json title="Response 500"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "server encountered an error !"
-    }
-  ]
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-  422: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-  500: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-};
-
-function managePriorityToCampaign(): Promise<Responses> {
-  const options = {
-    method: 'PUT',
-    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
-    params: {
-      path: {
-        ioId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          bidModelRequests?: [
-            {
-              bidModelData?: {
-                id?: `number`,
-                priority?: `number`,
-                bidMultiplier?: `number`,
-                spendRatio?: `number`,
-                spendRatioTypeId?: `number`,
-              },
-              dimensionEntityMappings?: [
-                {
-                  campaignId?: `number`,
-                  dimensionId?: `number`,
-                  entityId?: `number`,
-                  bidModelDataId?: `number`,
-                }
-              ],
-              action: [ "ADD" | "UPDATE" | "DELETE" ],
-              bidModelDataIds?: `[number]`,
-            }
-          ],
-          baseBid?: `number`,
-          excludeDimensionEntityMappings?: [
-            {
-              advertiserId?: `number`,
-              dspId?: `number`,
-              owId?: `number`,
-              uowId?: `number`,
-              campaignId?: `number`,
-              ids?: `string`,
-              isExcluded?: `number`,
-              dimensionId?: `number`,
-            }
-          ]  
-        } 
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### More Priority Management for Multiple Campaigns
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-<br /><span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-<br /><span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-
-<div class="container">
-  <div class="child1">
-
-Add, update, or delete assigned priorities to multiple Campaigns.
-
-| Query Parameters   | <span class="badge badge--danger">DELETE</span> only|
-| --- | --- |
-| `campaignIds` <br /><span class="type-text">string</span> | Comma separated Campaign IDs
-
-| Path Parameters  | |
-| --- | --- |
-| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
-
-| Properties  |  |
-| --- | --- |
-| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Assigned priority: [`1` .. `10`] |
-| <span class="code-text">campaignIdList</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs   |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "priority": 1,
-  "campaignIdList": [
-    123456, 
-    234567, 
-    345678, 
-    456789
-  ]
-}
-```
-
-```json title="response 200"
-{
-  "success": true,
-  "data": "Priority Updated Successfully"
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function addPriorityToCampaign(): Promise<Responses> {
-  const options = {
-    method: 'POST'
-    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
-    params: {
-      path: {
-        ioId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          priority: `number`,
-          campaignIds: `array of numbers`,
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-
-function deletePriorityToCampaign(): Promise<Responses> {
-  const options = {
-    method: 'DELETE'
-    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
-    params: {
-      path: {
-        ioId: `number`
-      }
-    },
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-
-  function updatePriorityToCampaign(): Promise<Responses> {
-  const options = {
-    method: 'PATCH'
-  url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
-    params: {
-      path: {
-        ioId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          priority: `number`,
-          campaignIds: `array of numbers`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
 ## Bid Modeling Management
 
 ### Add Bid Modeling
@@ -1619,8 +1137,9 @@ Update bid modeling for different dimensions.
 </tr>
     <tr>
     <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`bidModelData` object properties</summary>
       <table className="objectProperties">
-      <th colspan="2" style={{ textAlign: 'center'}}>`bidModelData` object properties</th>
       <tr>
       <td>`id` <br /><span class="type-text">integer</span></td>
       <td>Bid Model data ID</td>
@@ -1641,7 +1160,7 @@ Update bid modeling for different dimensions.
       <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
       <td>Spend ratio type ID [`1`, `2`]</td>
       </tr>
-      </table>
+      </table></details>
       </td>
       <td></td>
     </tr>
@@ -1820,6 +1339,490 @@ function deleteBidModelling(): Promise<Responses> {
 
 </div>
 </div>
+
+---
+
+### Manage Insertion Order Bid Modeling
+
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+
+<div class="container">
+  <div class="child1">
+
+Add, update, or remove Bid Modeling at the Insertion Order level. Changes will be applied to all Campaigns associated with specified Insertion Order.
+
+| Path  |     |
+| ---- | --- |
+| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`bidModelRequests` <br /><span class="type-text">array of objects</span></td>
+<td>Objects containing bid model actions</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`bidModelRequests` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`action` <br /><span class="type-text">string</span></td>
+  <td>Supported values specifying bid model action: `ADD`, `UPDATE`, `DELETE`</td>
+  </tr>
+    <tr>
+  <td>`bidModelData` <br /><span class="type-text">object</span></td>
+  <td>Object containing bid model data</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`bidModelData` object properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`id`<br /><span class="type-text">integer</span></td>
+        <td>Bid Model data ID</td>
+        </tr>
+          <tr>
+        <td>`priority` <br /><span class="type-text">integer</span></td>
+        <td>Assigned priority: [`1` .. `10`]</td>
+        </tr>
+          <tr>
+        <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+        <td>Bid Multiplier [`0.1` .. `100`]</td>
+        </tr>
+        <tr>
+        <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+        <td>Spend ratio [`0` .. `100`]</td>
+        </tr>
+        <tr>
+        <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+        <td>Spend ratio type ID [`1`, `2`]</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+  <tr>
+  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
+  <td>Object containing entity mappings</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`dimensionEntityMappings` object properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`campaignId` <br /><span class="type-text">integer</span></td>
+        <td>Campaign ID</td>
+        </tr>
+          <tr>
+        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
+        <td>Dimension ID</td>
+        </tr>
+          <tr>
+        <td>`entityId` <br /><span class="type-text">integer</span></td>
+        <td>Entity ID</td>
+        </tr>
+            <tr>
+        <td>`bidModelDataId` <br /><span class="type-text">integer</span></td>
+        <td>Bid Model data ID</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+   <tr>
+  <td>`bidModelDataIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Bid Model data IDs</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+<td>`baseBid` <br /><span class="type-text">integer</span></td>
+<td>Base value on which bid modifiers are applied. For example, if base bid is 2, and bid modifier is 2, then bid price is: 2x2=4</td>
+</tr>
+<tr>
+<td>`excludeDimensionEntityMappings` <br /><span class="type-text">object</span></td>
+<td>Object containing dimension entity mappings to exclude</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`excludeDimensionEntityMappings` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td> `advertiserId` <br /><span class="type-text">integer</span></td>
+  <td>Advertiser ID</td>
+  </tr>
+    <tr>
+  <td>`dspId` <br /><span class="type-text">integer</span></td>
+  <td>DSP ID</td>
+  </tr>
+    <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+  </tr>
+      <tr>
+  <td>`uowId` <br /><span class="type-text">integer</span></td>
+  <td>Universal Organization Workspace ID</td>
+  </tr>
+      <tr>
+  <td>`campaignId` <br /><span class="type-text">integer</span></td>
+  <td>Campaign ID</td>
+  </tr>
+      <tr>
+  <td>`ids` <br /><span class="type-text">string</span></td>
+  <td>Comma separated IDs</td>
+  </tr>
+      <tr>
+  <td>`isExcluded` <br /><span class="type-text">boolean</span></td>
+  <td></td>
+  </tr>
+      <tr>
+  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
+  <td>Dimension ID</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</div>
+  <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelRequests": [
+    {
+      "action": "ADD",
+      "bidModelData": {
+        "priority": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "campaignId": 1
+        }
+      ]
+    },
+    {
+      "action": "UPDATE",
+      "bidModelData": {
+        "id": 3677,
+        "priority": 2
+      }
+    },
+    {
+      "action": "DELETE",
+      "bidModelDataIds": [
+        893
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+<details>
+<summary>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Cannot assign priority as campaign is in invalid status"
+    }
+  ]
+}
+```
+
+```json title="Response 500"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "server encountered an error !"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+};
+
+function managePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelRequests?: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`,
+              },
+              dimensionEntityMappings?: [
+                {
+                  campaignId?: `number`,
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                  bidModelDataId?: `number`,
+                }
+              ],
+              action: [ "ADD" | "UPDATE" | "DELETE" ],
+              bidModelDataIds?: `[number]`,
+            }
+          ],
+          baseBid?: `number`,
+          excludeDimensionEntityMappings?: [
+            {
+              advertiserId?: `number`,
+              dspId?: `number`,
+              owId?: `number`,
+              uowId?: `number`,
+              campaignId?: `number`,
+              ids?: `string`,
+              isExcluded?: `number`,
+              dimensionId?: `number`,
+            }
+          ]  
+        } 
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Manage Insertion Order Priority
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+<br /><span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+<br /><span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+
+<div class="container">
+  <div class="child1">
+
+Add, update, or delete priorities at the Insertion Order level. Changes will be applied to all Campaigns associated with the Insertion Order. 
+
+Assigning priority to Campaigns allows the user to establish a sequential order of bidding to fine-tune their targeting strategy. Assign priority (ranging 1 to 10) to multiple `campaignIds`.
+
+| Query Parameters   | <span class="badge badge--danger">DELETE</span> only|
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated Campaign IDs
+
+| Path Parameters  | |
+| --- | --- |
+| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
+
+| Properties  |  |
+| --- | --- |
+| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Assigned priority: [`1` .. `10`] |
+| <span class="code-text">campaignIdList</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs   |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "priority": 1,
+  "campaignIdList": [
+    123456, 
+    234567, 
+    345678, 
+    456789
+  ]
+}
+```
+
+```json title="response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function addPriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST'
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+function deletePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'DELETE'
+    url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+  function updatePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PATCH'
+  url: 'https://app.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ## Bid Model Metrics and Dimensions
 
