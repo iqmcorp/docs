@@ -425,7 +425,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modelled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modelled Items Count</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modelled Items Count</a>',
               defaultStyle: true,
             },
           ]
@@ -471,22 +471,22 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modelling"><span class="badge bar badge--success">POST</span>Add Bid Modeling</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modeling"><span class="badge bar badge--success">POST</span>Add Bid Modeling</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-actions"><span class="badge bar badge--warning">PUT</span>Update Bid Modeling Actions</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-actions"><span class="badge bar badge--warning">PUT</span>Update Bid Modeling Actions</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modelling-dimensions"><span class="badge bar badge--info">PATCH</span>Update Bid Modeling Dimensions</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-dimensions"><span class="badge bar badge--info">PATCH</span>Update Bid Modeling Dimensions</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modelling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modeling Data</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Bid-Model-API-Guidelines#delete-bid-modeling-data"><span class="badge bar badge--danger">DEL</span>Delete Bid Modeling Data</a>',
               defaultStyle: true,
             },
           ]
