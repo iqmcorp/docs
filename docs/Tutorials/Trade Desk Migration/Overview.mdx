@@ -1,0 +1,92 @@
+---
+hide_table_of_contents: true
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Trade Desk Migration Guide
+
+## Overview
+
+Like IQM, The Trade Desk is a DSP platform where advertisers can run advertising campaigns and buy inventory from ad exchanges in one user interface.  
+
+Because both IQM and The Trade Desk offer many of the same services, it is possible to migrate data from one service to the other. This is particularly the case with each of the service's API protocols. 
+
+Some of the services the two platforms have in common are: creating and managing Campaigns and Insertion Orders, budget and audience targeting optimization, and advanced conversion settings. Each platform has a unique REST API interface to interact with and customize these parameters. 
+
+This guide will cover and compare the platforms so users can migrate their data from The Trade Desk to IQM's platform. This page will compare the major entities, how the are referred to and what they do. Subsequent pages will cover more granular endpoint comparisons of specific API protocols. 
+
+## Entities Comparison 
+
+Both IQM and The Trade Desk use similar organizational frameworks for their advertising management. While each platform has different naming conventions, their hierarchical structure is similar and involves some of the same relationships.
+
+For a more detailed summary of IQM's structure, see the [IQM Platform Overview](/docs/Getting%20Started/Platform-overview) page. 
+
+See the table below for a brief comparison of advertising entities used by each platform. 
+
+<center>
+<table className='platformTable'>
+<th>IQM</th>
+<th style={{textWrap: 'nowrap' }}>Trade Desk</th>
+<th>Description</th>
+<tr>
+  <td>Organization</td>
+  <td>Partner</td>
+  <td>Organization/company details (address, email, website, etc.). See [Workspace API](/docs/Guidelines/Workspace-Guidelines) or [IQM Platform Overview](/docs/Getting%20Started/Platform-overview) pages for more details. <p />See Trade Desk's [Entity Relationships<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/EntityRelationships) page for more details on their organization hierarchy.</td>
+</tr>
+<tr>
+  <td>Workspace (User)</td>
+  <td>Partner</td>
+  <td>A user that signs up with the platform and receives authentication credentials: Organization Workspace ID (`owId`) for IQM; Partner ID for Trade Desk. A Workspace User are also referred to as Advertisers or Customers in different contexts. <p />See [Workspace API](/docs/Guidelines/Workspace-Guidelines) or [IQM Platform Overview](/docs/Getting%20Started/Platform-overview) pages for more details.</td>
+</tr>
+<tr>
+  <td>Advertiser (Customer)</td>
+  <td>Advertiser</td>
+  <td>On IQM's platform, once an Advertiser is assigned to a Workspace User, it becomes a Customer (these also operate as their own Workspaces). This relationship for Trade Desk is between an Advertiser and a Partner. Can be assigned to one Workspace/Partner. Can have multiple Insertion Orders/Campaigns assigned. <p />Refer to the respective organization hierarchy pages for more information: [IQM Platform Overview](/docs/Getting%20Started/Platform-overview) and [Entity Relationships<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/EntityRelationships)</td>
+</tr>
+<tr>
+  <td>Insertion Order</td>
+  <td>Campaign</td>
+  <td>The contract between advertisers and media partner that outlines the budget details and parameters of an advertising Campaign. Assigned to one advertiser. <p />See the [Campaign API](/docs/Guidelines/Campaign-API-Guidelines) or the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1962110-create-a-campaign) article for more details; see the [Campaigns<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/Campaigns) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Campaign</td>
+  <td>Ad Group</td>
+  <td>The targeting and optimization strategies of an advertising run. Select inventories, set goals, Creatives. <p />See the [Campaign API](/docs/Guidelines/Campaign-API-Guidelines) or the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1962110-create-a-campaign) article for more details; see the [Ad Groups<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/AdGroup) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Creative</td>
+  <td>Creative</td>
+  <td>The media file used in the advertisement. Can be assigned to multiple Campaigns/Ad Groups. <p />See the [Creative API](/docs/Guidelines/Creative-API-Guidelines) for more details; see the [Creatives<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/Creative) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Audience</td>
+  <td>Audience</td>
+  <td>The group of people targeted for a Campaign. Audiences are made up of included/excluded demographic data used to optimize targeting. On the IQM platform this is referred to as the audience segment (static lists of segment data are in the [Master API](/docs/Guidelines/Master-API-Guidelines)); The Trade Desk refers to this as data groups or data elements. <p />See the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1387061-selecting-your-audiences) article for more details on Audiences; see the [Audiences and Targeting<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/AudiencesAndTargeting) page for Trade Desk. </td>
+</tr>
+<tr>
+  <td>Bid Model</td>
+  <td>Bid Lists</td>
+  <td>Advanced bidding options that tailor bid prices for various targeting dimensions within Campaigns. Fine-tune where ads appear, manage Campaign priority, manage Campaign dimensions. <p />See the [Bid Model API](/docs/Guidelines/Bid-Model-API-Guidelines) or the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/3156335-campaign-delivery-and-optimization) articles for more details; see the [Bid Lists<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/BidList) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Reports</td>
+  <td>My Reports</td>
+  <td>Execute and schedule reports to generate insights and inform current and future Campaign optimization. Customizable by quantitative metrics and qualitative dimensions. Downloadable in CSV or Excel format.<p />See the [Reports API](/docs/Guidelines/Reports-API-Guidelines) or the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics) articles for more details; see the [My Reports<ExternalLink />](https://partner.thetradedesk.com/v3/portal/reds/doc/MyReportsGetStarted) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Inventory</td>
+  <td>Inventory</td>
+  <td>IQM provides advertisers a way to organize collections or groups based on ad format, placement type, targeting options, and other properties. IQM has options to bid on open exchange inventory or create Private Marketplace Deals or Programmatic Guarantee Deals as a way for advertisers to negotiate directly with publishers. Trade Desk uses their OpenPath product to manage bidding activities.<p />See the [Inventory API](/docs/Guidelines/Inventory-API-Guide) or the [Help Center <ExternalLink />](https://help.iqm.com/en/collections/2908807-select-inventory) articles for more details; see the [Inventory Integrations<ExternalLink />](https://partner.thetradedesk.com/v3/portal/ssp/overview) product overview for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Conversions</td>
+  <td>Tracking Tags</td>
+  <td>IQM supports client-side (Pixel) and server-side (Postback) conversions to track visitor activity. Trade Desk refers to their conversions as Tracking Tags and offers Universal Pixel or Static Tracking Tag options. <p />See the [Conversions API](/docs/Guidelines/Conversion-API-Guidelines) or the [Help Center<ExternalLink />](https://help.iqm.com/en/collections/3219750-choose-your-conversion) articles for more details; see the [Tracking Tags<ExternalLink />](https://partner.thetradedesk.com/v3/portal/data/doc/TrackingTagsOverview) page for Trade Desk.</td>
+</tr>
+<tr>
+  <td>Planner</td>
+  <td>n/a</td>
+  <td>IQM manages proposals in the [Planner API](/docs/Guidelines/Planner-API-Guidelines) to draft ad strategies that meet clients' requirements and Campaign goals.</td>
+</tr>
+</table></center>

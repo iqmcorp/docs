@@ -296,6 +296,38 @@ const sidebars = {
       ],
     },
     {
+      type: "category",
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      items: [
+        {
+          type: 'category',
+          label: 'Trade Desk Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Tutorials/Trade Desk Migration/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Tutorials/Trade Desk Migration/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+          ]
+        }
+      ]
+    },
+    {
       type: `doc`,
       label: `API Guidelines`,
       id: `Guidelines/index`,
