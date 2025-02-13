@@ -121,6 +121,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "Tutorials",
+            position: "left",
+            to: "/Tutorials/",
+            className: "navbarLink",
+          },
+          {
             label: "API Guidelines",
             position: "left",
             to: "/Guidelines/",
