@@ -607,17 +607,22 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#create-new-campaign"><span class="badge bar badge--success">POST</span>Create New Campaign</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-campaign"><span class="badge bar badge--info">PATCH</span>Update Campaign</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#create-new-pg-campaign"><span class="badge bar badge--success">POST</span>Create New PG Campaign</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
               value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-pg-campaign"><span class="badge bar badge--info">PATCH</span>Update PG Campaign</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#update-campaign-by-field"><span class="badge bar badge--info">PATCH</span>Update Campaign by Field</a>',
               defaultStyle: true,
             },
             {
