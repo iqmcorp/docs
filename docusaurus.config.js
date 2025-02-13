@@ -123,7 +123,7 @@ const config = {
           {
             label: "Tutorials",
             position: "left",
-            to: "/tutorials/",
+            to: "/Tutorials/",
             className: "navbarLink",
           },
           {
