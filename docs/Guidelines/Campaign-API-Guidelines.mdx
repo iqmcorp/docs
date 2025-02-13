@@ -2415,6 +2415,678 @@ function GetCampaignReportData(): Promise<Responses> {
 
 Update various aspects of a Campaign.
 
+### Create New campaign
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/add</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/draft/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Create a new Campaign in <var>pending</var> or <var>draft</var> status
+
+
+| Request Schema ||
+| --- | --- |
+|`campaignName`	<br /><span class="type-text">string</span> |	Campaign name
+| `isAgreementChecked` <br /><span class="type-text">boolean</span> | |
+|`advertiserDomain`	<br /><span class="type-text">string</span> |	Advertiser domain
+|`creativeType`	<br /><span class="type-text">integer</span> |	Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) |
+|`campaignType`	<br /><span class="type-text">integer</span> |	[Campaign Type ID](#get-campaign-count-with-campaign-type)
+|`totalBudgetPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
+|`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for Campaign serving daily
+|`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for Campaign serving period
+| `budgetTypeId` <br /><span class="type-text">integer</span> | Budget type ID
+|`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
+|`timezone`	<br /><span class="type-text">integer</span> |	Timezone ID for Campaign, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones)
+|`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
+|`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
+|`status`	<br /><span class="type-text">string</span> |	Status of Campaign
+|`creativeIds`	<br /><span class="type-text">integer</span> |	Campaign creation time update
+|`excludeFromPlatformServing`	<br /><span class="type-text">boolean</span> | Exclude Campaign from platform serving
+|`forTest`	<br /><span class="type-text">boolean</span> |	Indicates Campaign for test
+|`modifiedDate`	<br /><span class="type-text">integer</span> |	Campaign modified date
+|`dspMarginJson`	<br /><span class="type-text">string</span> |	Campaign DSP margin JSON
+|`platformMarginJson`	<br /><span class="type-text">string</span> |	Campaign platform margin JSON
+|`dspMargin`	<br /><span class="type-text">integer</span> |	Campaign DSP margin number
+|`platformMargin`	<br /><span class="type-text">integer</span> |	Campaign platform margin number
+|`userDealMargin`	<br /><span class="type-text">integer</span> |	Campaign user deal margin number
+|`bidStrategyFlag`	<br /><span class="type-text">boolean</span> |	Bid strategy allowed or not for user
+|`bidOptimization` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span> |	Optimize bid price based on analysis: `true`
+|`bidPacing` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span>|	Budget is spent equally every hour: `true`
+|`impressionCapping` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Maximum impressions in one inventory
+|`maxDayClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Maximum daily clicks
+|`totalClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Total clicks
+|`maxDayImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Maximum daily impressions
+|`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Total impressions
+|`maxDayConversions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	Maximum daily conversions
+|`totalConversions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span>|	Total conversions
+|`spentScale`	<br /><span class="type-text">boolean</span> |	Spent scale on/off
+|`creativeIds`	<br /><span class="type-text">string</span> |	Targeted Creative ids
+|`targetCPI`	<br /><span class="type-text">integer</span> |	Target CPI for Campaign Serving
+|`conversionType` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	User conversion type <br/> Allowed values: `install`, `non-install` |
+|`conversionTypeId` <br /><span class="type-text">integer</span> |	Conversion type Id which represents the type of conversion attached to it: Pixel (`1`) or Postback (`2`)
+|`appURL` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	If conversion type is install, specify URL of inventory
+|`targetCPI` <br /><span class="type-text">integer</span> <span class="required-text">optional</span>|	Cost per install if conversion type is install
+| `technologyFlag`	<br /><span class="type-text">boolean</span> |	Technology enabled or disabled based on policy of user
+|`carriers` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated carrier IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id)
+|`networkType` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Network targeting. Value in form of String of comma separated IDs of targeted network(s)
+|`deviceType` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Comma separated device type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-type)
+|`trafficType` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Comma separated traffic type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-traffic-types)
+|`manufacturer` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Comma separated manufacturer IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting)
+|`os` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Comma separated OS IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-os-for-targeting)
+|`osVersion` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	OS version targeting. Value in form of String of comma separated IDs of targeted OS version based on targeted OS
+|`exchanges` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Comma separated exchanges IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-exchanges)
+|`prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> <span class="required-text">optional</span> |	Prebid Audience Segment IDs to attach Campaign to segment IDs
+|`device` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Targeted devices as string
+|`publisherAdCategory` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated publisher ad category IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-publisher-ad-categories)
+|`userDealId` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	User specific deal IDs. Value in form of String of comma separated deal IDs
+|`groupDealId` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Group of selected deals. Value in form of String of comma separated deal IDs
+|`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> |	ID of political advertiser in case of Campaign is political Campaign
+|`stateIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated state IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-state-segment)
+|`locationFileIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
+|`ageRangeIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated age range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-age-segment)
+|`genderIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated gender IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-gender-segment)
+|`interestIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated interest IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-interest-segment)
+|`incomeRangeIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated income range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-income-range-segment)
+|`languageIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated language IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-language-segment)
+|`ethnicityIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Comma separated ethnicity IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-ethnicity-segment)
+|`schedule` <br /><span class="type-text">string</span> <span class="required-text">optional</span>|	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
+|`campaignIabCategoryIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span> |	Target iab categories. Value in form of a string of comma-separated ID. Only super user can update iab categories
+|`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
+|`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
+| `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment ids.
+|`campaignEstimatorMetaData`	<br /><span class="type-text">JSON</span> |	Campaign Estimator data with <var>reachMeta</var>, <var>landScapeMeta</var> and <var>sliderMeta</var>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignName": "Sample campaign name ",
+  "isAgreementChecked": true,
+  "advertiserDomain": "https://www.example.com",
+  "creativeType": 14,
+  "budgetTotal": 100,
+  "budgetTypeId": 1,
+  "startTime": 1598427074,
+  "budgetDay": 18,
+  "timezone": 105,
+  "creativeIds": "100027,100028",
+  "maxBid": 10,
+  "bidOptimization": false,
+  "bidPacing": true,
+  "isBidShading": true,
+  "impressionCapping": 2,
+  "conversionType": "install",
+  "conversionTypeId": 1,
+  "appURL": "https://www.example.com",
+  "totalBudgetPacing": false,
+  "carriers": "293,294",
+  "networkType": "13",
+  "deviceType": "15",
+  "trafficType": "11",
+  "manufacturer": "451,155",
+  "os": "11,14",
+  "osVersion": "11,12,13",
+  "exchanges": "27,21",
+  "publisherAdCategory": "112",
+  "userDealId": "1,2,b",
+  "countryId": 246,
+  "ioId": "20",
+  "politicalAdvertiserClientId": 17,
+  "locationFileIds": "1011,1010",
+  "stateIds": "30200031,30200032",
+  "prebidAudienceSegmentIdList": [
+    10,
+    11,
+    12
+  ],
+  "campaignEstimatorMetaData": {
+    "reachMeta": {},
+    "landScapeMeta": {},
+    "sliderMeta": {}
+  },
+  "isAdvanceAudioVideoTargeted": true,
+  "creativeAdvanceTargeting": {
+    "placementType": [
+      20600001
+    ],
+    "rollPosition": [
+      20700001
+    ],
+    "playerSize": [
+      20800001
+    ],
+    "skippability": [
+      20900001
+    ],
+    "playbackMethod": [
+      21000001
+    ]
+  },
+  "inventoryKeywords": [
+    "Clothing",
+    "Education"
+  ],
+  "inventoryUrls": [
+    "https://www.google.com",
+    "https://www.iqm.com"
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 201,
+  "responseObject": {
+    "data": 123456,
+    "message": "Campaign saved successfully.",
+    "status": "pending"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+      content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          data: number;
+          message: string;
+          status: string;
+        }
+      }
+    };
+  };
+}
+
+function saveCampaign(): Promise<Responses> {
+/*
+* or function saveDraftCampaign(): Promise<Responses> {
+*/
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/cmp/campaigns/add',
+/*
+* or url : 'https://app.iqm.com/api/v2/cmp/campaigns/draft/add',
+*/
+    requestBody: {
+         content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          id?: `number`,
+          campaignName?: `string`,
+          advertiserDomain?: `string`,
+          creativeType?: `number`,
+          campaignType?: `number`,
+          totalBudgetPacing?: `boolean`,
+          budgetDay?: `number`,
+          budgetTotal?: `number`,
+          maxBid?: `number`,
+          timezone?: `number`,
+          startTime?: `number`,
+          endTime?: `number`,
+          status?: `string`,
+          created?: `number`,
+          excludeFromPlatformServing?: `boolean`,
+          forTest?: `boolean`,
+          modifiedDate?: `string`,
+          dspMarginJson?: `string`,
+          platformMarginJson?: `string`,
+          dspMargin?: `number`,
+          platformMargin?: `number`,
+          userDealMargin?: `number`,
+          isAgreementChecked?: `boolean`,
+          spentScale?: `boolean`,
+          creativeIds?: `string`,
+          targetCPI?: `number`,
+          conversionType?: `string`,
+          conversionTypeId?: `number`,
+          appURL?: `string`,
+          bidOptimization?: `boolean`,
+          bidPacing?: `boolean`,
+          impressionCapping?: `number`,
+          maxDayImpressions?: `number`,
+          maxDayClicks?: `number`,
+          maxDayConversions?: `number`,
+          totalImpressions?: `number`,
+          totalClicks?: `number`,
+          totalConversions?: `number`,
+          bidStrategyFlag?: `boolean`,
+          ioId?: `number`,
+          prebidAudienceSegmentIdList?: `array of numbers`,
+          isBidShading?: `boolean`,
+          carriers?: `string`,
+          networkType?: `string`,
+          deviceType?: `string`,
+          trafficType?: `string`,
+          manufacturer?: `string`,
+          device?: `string`,
+          os?: `string`,
+          osVersion?: `string`,
+          technologyFlag?: `boolean`,
+          exchanges: `string`,
+          advancedFlag?: `boolean`,
+          userDealId?: `string`,
+          groupDealId?: `string`,
+          publisherAdCategory: `string`,
+          campaignIabCategoryIds?: `string`,
+          stateIds?: `string`,
+          countryId?: `number`,
+          dmaIds?: `string`,
+          zipcodes?: `string`,
+          locationFileIds?: `string`,
+          inventoryKeywords?: `array of strings`,
+          inventoryUrls?: `array of strings`,
+          pmpDealIds?: `array of numbers`,
+          politicalAdvertiserClientId?: `number`,
+          scheduling?: {
+            [key: `string`]: `Record<string, never>`,
+          },
+          ageRangeIds?: `string`,
+          genderIds?: `string`,
+          languageIds?: `string`,
+          incomeRangeIds?: `string`,
+          ethnicityIds?: `string`,
+          interestIds?: `string`,
+          demographicTargetingFlag?: `boolean`,
+          conversionIds?: `string`,
+          creativesPlacementMapping?: {
+            [key: `string`]: `number`,
+          },
+          isTvAd?: `boolean`,
+          creativeAdvanceTargeting?: {
+            [key: `string`]: `array of numbers`
+          },
+          budgetTypeId?: `number`,
+          campaignEstimatorMetaData?: {
+            reachMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            landScapeMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            sliderMeta?: {
+              [key: string]: Record<string, never>;
+            },
+          },
+          customAudienceTargeted?: `boolean`,
+          advanceAudioVideoTargeted?: `boolean`,
+          isAdvanceAudioVideoTargeted?: `boolean`,
+        };
+      };
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Campaign
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Update various Campaign properties.
+
+:::info
+
+If Campaign is in `DRAFT` status, this API will automatically update status from `DRAFT` to `PENDING`. In all other cases status will not be updated.
+
+:::
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+<details className='objectPropertiesDetails'>
+<summary>Supported properties</summary>
+
+| ||
+| --- | --- |
+|`id`	<br /><span class="type-text">integer</span> |	Campaign ID
+|`campaignName`	<br /><span class="type-text">string</span> |	Campaign name
+|`advertiserDomain`	<br /><span class="type-text">string</span> |	Advertiser domain
+|`creativeType`	<br /><span class="type-text">integer</span> |	Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) |
+|`campaignType`	<br /><span class="type-text">integer</span> |	[Campaign Type ID](#get-campaign-count-with-campaign-type)
+|`totalBudgetPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
+|`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for Campaign serving daily
+|`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for Campaign serving period
+|`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
+|`timezone`	<br /><span class="type-text">integer</span> |	Timezone ID for Campaign, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones)
+|`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
+|`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
+|`status`	<br /><span class="type-text">string</span> |	Status of Campaign
+|`creativeIds`	<br /><span class="type-text">integer</span> |	Campaign creation time update
+|`excludeFromPlatformServing`	<br /><span class="type-text">boolean</span> | Exclude Campaign from platform serving
+|`forTest`	<br /><span class="type-text">boolean</span> |	Indicates Campaign for test
+|`modifiedDate`	<br /><span class="type-text">integer</span> |	Campaign modified date
+|`dspMarginJson`	<br /><span class="type-text">string</span> |	Campaign DSP margin JSON
+|`platformMarginJson`	<br /><span class="type-text">string</span> |	Campaign platform margin JSON
+|`dspMargin`	<br /><span class="type-text">integer</span> |	Campaign DSP margin number
+|`platformMargin`	<br /><span class="type-text">integer</span> |	Campaign platform margin number
+|`userDealMargin`	<br /><span class="type-text">integer</span> |	Campaign user deal margin number
+|`bidStrategyFlag`	<br /><span class="type-text">boolean</span> |	Bid strategy allowed or not for user
+|`bidOptimization` <br /><span class="type-text">boolean</span> |	Optimize bid price based on analysis: `true`
+|`bidPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
+|`impressionCapping` <br /><span class="type-text">integer</span> |	Maximum impressions in one inventory
+|`maxDayClicks` <br /><span class="type-text">integer</span> |	Maximum daily clicks
+|`totalClicks` <br /><span class="type-text">integer</span> |	Total clicks
+|`maxDayImpressions` <br /><span class="type-text">integer</span> |	Maximum daily impressions
+|`totalImpressions` <br /><span class="type-text">integer</span> |	Total impressions
+|`maxDayConversions` <br /><span class="type-text">integer</span> |	Maximum daily conversions
+|`totalConversions` <br /><span class="type-text">integer</span> |	Total conversions
+|`spentScale`	<br /><span class="type-text">boolean</span> |	Spent scale on/off
+|`creativeIds`	<br /><span class="type-text">string</span> |	Targeted Creative ids
+|`targetCPI`	<br /><span class="type-text">integer</span> |	Target CPI for Campaign Serving
+|`conversionType` <br /><span class="type-text">string</span> |	User conversion type <br/> Allowed values: `install`, `non-install` |
+|`conversionTypeId` <br /><span class="type-text">integer</span> |	Conversion type Id which represents the type of conversion attached to it: Pixel (`1`) or Postback (`2`)
+|`appURL` <br /><span class="type-text">string</span> |	If conversion type is install, specify URL of inventory
+|`targetCPI` <br /><span class="type-text">integer</span> |	Cost per install if conversion type is install
+| `technologyFlag`	<br /><span class="type-text">boolean</span> |	Technology enabled or disabled based on policy of user
+|`carriers` <br /><span class="type-text">string</span> |	Comma separated carrier IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id)
+|`networkType` <br /><span class="type-text">string</span> |	Network targeting. Value in form of String of comma separated IDs of targeted network(s)
+|`deviceType` <br /><span class="type-text">string</span> |	Comma separated device type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-type)
+|`trafficType` <br /><span class="type-text">string</span> |	Comma separated traffic type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-traffic-types)
+|`manufacturer` <br /><span class="type-text">string</span> |	Comma separated manufacturer IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting)
+|`os` <br /><span class="type-text">string</span> |	Comma separated OS IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-os-for-targeting)
+|`osVersion` <br /><span class="type-text">string</span> |	OS version targeting. Value in form of String of comma separated IDs of targeted OS version based on targeted OS
+|`exchanges` <br /><span class="type-text">string</span> |	Comma separated exchanges IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-exchanges)
+|`prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> |	Prebid Audience Segment IDs to attach Campaign to segment IDs
+|`device` <br /><span class="type-text">string</span> |	Targeted devices as string
+|`publisherAdCategory` <br /><span class="type-text">string</span> |	Comma separated publisher ad category IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-publisher-ad-categories)
+|`userDealId` <br /><span class="type-text">string</span> |	User specific deal IDs. Value in form of String of comma separated deal IDs
+|`groupDealId` <br /><span class="type-text">string</span> |	Group of selected deals. Value in form of String of comma separated deal IDs
+|`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> |	ID of political advertiser in case of Campaign is political Campaign
+|`stateIds` <br /><span class="type-text">string</span> |	Comma separated state IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-state-segment)
+|`locationFileIds` <br /><span class="type-text">string</span> |	Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
+|`ageRangeIds` <br /><span class="type-text">string</span> |	Comma separated age range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-age-segment)
+|`genderIds` <br /><span class="type-text">string</span> |	Comma separated gender IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-gender-segment)
+|`interestIds` <br /><span class="type-text">string</span> |	Comma separated interest IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-interest-segment)
+|`incomeRangeIds` <br /><span class="type-text">string</span> |	Comma separated income range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-income-range-segment)
+|`languageIds` <br /><span class="type-text">string</span> |	Comma separated language IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-language-segment)
+|`ethnicityIds` <br /><span class="type-text">string</span> |	Comma separated ethnicity IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-ethnicity-segment)
+|`schedule` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
+|`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target iab categories. Value in form of a string of comma-separated ID. Only super user can update iab categories
+|`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
+|`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
+| `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment ids.
+|`campaignEstimatorMetaData`	<br /><span class="type-text">JSON</span> |	Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignName": "Sample Campaign name ",
+  "isAgreementChecked": true,
+  "advertiserDomain": "https://www.example.com",
+  "creativeType": 14,
+  "budgetTotal": 100,
+  "startTime": 1598427074,
+  "budgetDay": 18,
+  "timezone": 105,
+  "creativeIds": "100027,100028",
+  "maxBid": 10,
+  "bidOptimization": false,
+  "bidPacing": true,
+  "isBidShading": true,
+  "impressionCapping": 2,
+  "conversionType": "install",
+  "conversionTypeId": 1,
+  "appURL": "https://www.example.com",
+  "totalBudgetPacing": false,
+  "carriers": "293,294",
+  "networkType": "13",
+  "deviceType": "15",
+  "trafficType": "11",
+  "manufacturer": "451,155",
+  "os": "11,14",
+  "osVersion": "11,12,13",
+  "exchanges": "27,21",
+  "prebidAudienceSegmentIdList": [
+    10,
+    11,
+    12
+  ],
+  "publisherAdCategory": "112",
+  "userDealId": "1,2,b",
+  "countryId": 246,
+  "politicalAdvertiserClientId": 17,
+  "locationFileIds": "1011,1010",
+  "campaignEstimatorMetaData": {
+    "reachMeta": {},
+    "landScapeMeta": {},
+    "sliderMeta": {}
+  },
+  "stateIds": "30200031,30200032",
+  "isAdvanceAudioVideoTargeted": true,
+  "creativeAdvanceTargeting": {
+    "placementType": [
+      20600001
+    ],
+    "rollPosition": [
+      20700001
+    ],
+    "playerSize": [
+      20800001
+    ],
+    "skippability": [
+      20900001
+    ],
+    "playbackMethod": [
+      21000001
+    ]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 201,
+  "responseObject": {
+    "data": 123456,
+    "message": "Campaign saved successfully.",
+    "status": "pending"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          data: number;
+          message: string;
+          status: string;
+        }
+      }
+    };
+  };
+}
+
+function editCampaignPatch(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      path: {
+        campaignId: `number`
+      }
+    },
+    requestBody: {
+              content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          id?: `number`,
+          campaignName?: `string`,
+          advertiserDomain?: `string`,
+          creativeType?: `number`,
+          campaignType?: `number`,
+          totalBudgetPacing?: `boolean`,
+          budgetDay?: `number`,
+          budgetTotal?: `number`,
+          maxBid?: `number`,
+          timezone?: `number`,
+          startTime?: `number`,
+          endTime?: `number`,
+          status?: `string`,
+          created?: `number`,
+          excludeFromPlatformServing?: `boolean`,
+          forTest?: `boolean`,
+          modifiedDate?: `string`,
+          dspMarginJson?: `string`,
+          platformMarginJson?: `string`,
+          dspMargin?: `number`,
+          platformMargin?: `number`,
+          userDealMargin?: `number`,
+          isAgreementChecked?: `boolean`,
+          spentScale?: `boolean`,
+          creativeIds?: `string`,
+          targetCPI?: `number`,
+          conversionType?: `string`,
+          conversionTypeId?: `number`,
+          appURL?: `string`,
+          bidOptimization?: `boolean`,
+          bidPacing?: `boolean`,
+          impressionCapping?: `number`,
+          maxDayImpressions?: `number`,
+          maxDayClicks?: `number`,
+          maxDayConversions?: `number`,
+          totalImpressions?: `number`,
+          totalClicks?: `number`,
+          totalConversions?: `number`,
+          bidStrategyFlag?: `boolean`,
+          ioId?: `number`,
+          prebidAudienceSegmentIdList?: `array of numbers`,
+          isBidShading?: `boolean`,
+          carriers?: `string`,
+          networkType?: `string`,
+          deviceType?: `string`,
+          trafficType?: `string`,
+          manufacturer?: `string`,
+          device?: `string`,
+          os?: `string`,
+          osVersion?: `string`,
+          technologyFlag?: `boolean`,
+          exchanges: `string`,
+          advancedFlag?: `boolean`,
+          userDealId?: `string`,
+          groupDealId?: `string`,
+          publisherAdCategory: `string`,
+          campaignIabCategoryIds?: `string`,
+          stateIds?: `string`,
+          countryId?: `number`,
+          dmaIds?: `string`,
+          zipcodes?: `string`,
+          locationFileIds?: `string`,
+          inventoryKeywords?: `array of strings`,
+          inventoryUrls?: `array of strings`,
+          pmpDealIds?: `array of numbers`,
+          politicalAdvertiserClientId?: `number`,
+          scheduling?: {
+            [key: `string`]: `Record<string, never>`,
+          },
+          ageRangeIds?: `string`,
+          genderIds?: `string`,
+          languageIds?: `string`,
+          incomeRangeIds?: `string`,
+          ethnicityIds?: `string`,
+          interestIds?: `string`,
+          demographicTargetingFlag?: `boolean`,
+          conversionIds?: `string`,
+          creativesPlacementMapping?: {
+            [key: `string`]: `number`,
+          },
+          isTvAd?: `boolean`,
+          creativeAdvanceTargeting?: {
+            [key: `string`]: `array of numbers`
+          },
+          budgetTypeId?: `number`,
+          campaignEstimatorMetaData?: {
+            reachMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            landScapeMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            sliderMeta?: {
+              [key: string]: Record<string, never>;
+            },
+          },
+          customAudienceTargeted?: `boolean`,
+          advanceAudioVideoTargeted?: `boolean`,
+          isAdvanceAudioVideoTargeted?: `boolean`,
+        };
+      };
+    };
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Create New PG Campaign
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
@@ -3017,446 +3689,7 @@ function editPGCampaign(): Promise<Responses> {
 
 ---
 
-### Update Campaign by Field
 
-<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
-
-<div class="container">
-  <div class="child1">
-
-Update various Campaign properties.
-
-:::info
-
-If Campaign is in `DRAFT` status, this API will automatically update status from `DRAFT` to `PENDING`. In all other cases status will not be updated.
-
-:::
-
-<details className='objectPropertiesDetails'>
-<summary>Supported properties</summary>
-
-| ||
-| --- | --- |
-|`id`	<br /><span class="type-text">integer</span> |	Campaign ID
-|`campaignName`	<br /><span class="type-text">string</span> |	Campaign name
-|`advertiserDomain`	<br /><span class="type-text">string</span> |	Advertiser domain
-|`creativeType`	<br /><span class="type-text">integer</span> |	Creative type ID, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-creative-types) |
-|`campaignType`	<br /><span class="type-text">integer</span> |	[Campaign Type ID](#get-campaign-count-with-campaign-type)
-|`totalBudgetPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
-|`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for Campaign serving daily
-|`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for Campaign serving period
-|`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
-|`timezone`	<br /><span class="type-text">integer</span> |	Timezone ID for Campaign, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-timezones)
-|`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
-|`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
-|`status`	<br /><span class="type-text">string</span> |	Status of Campaign
-|`creativeIds`	<br /><span class="type-text">integer</span> |	Campaign creation time update
-|`excludeFromPlatformServing`	<br /><span class="type-text">boolean</span> | Exclude Campaign from platform serving
-|`forTest`	<br /><span class="type-text">boolean</span> |	Indicates Campaign for test
-|`modifiedDate`	<br /><span class="type-text">integer</span> |	Campaign modified date
-|`dspMarginJson`	<br /><span class="type-text">string</span> |	Campaign DSP margin JSON
-|`platformMarginJson`	<br /><span class="type-text">string</span> |	Campaign platform margin JSON
-|`dspMargin`	<br /><span class="type-text">integer</span> |	Campaign DSP margin number
-|`platformMargin`	<br /><span class="type-text">integer</span> |	Campaign platform margin number
-|`userDealMargin`	<br /><span class="type-text">integer</span> |	Campaign user deal margin number
-|`bidStrategyFlag`	<br /><span class="type-text">boolean</span> |	Bid strategy allowed or not for user
-|`bidOptimization` <br /><span class="type-text">boolean</span> |	Optimize bid price based on analysis: `true`
-|`bidPacing` <br /><span class="type-text">boolean</span> |	Budget is spent equally every hour: `true`
-|`impressionCapping` <br /><span class="type-text">integer</span> |	Maximum impressions in one inventory
-|`maxDayClicks` <br /><span class="type-text">integer</span> |	Maximum daily clicks
-|`totalClicks` <br /><span class="type-text">integer</span> |	Total clicks
-|`maxDayImpressions` <br /><span class="type-text">integer</span> |	Maximum daily impressions
-|`totalImpressions` <br /><span class="type-text">integer</span> |	Total impressions
-|`maxDayConversions` <br /><span class="type-text">integer</span> |	Maximum daily conversions
-|`totalConversions` <br /><span class="type-text">integer</span> |	Total conversions
-|`spentScale`	<br /><span class="type-text">boolean</span> |	Spent scale on/off
-|`creativeIds`	<br /><span class="type-text">string</span> |	Targeted Creative ids
-|`targetCPI`	<br /><span class="type-text">integer</span> |	Target CPI for Campaign Serving
-|`conversionType` <br /><span class="type-text">string</span> |	User conversion type <br/> Allowed values: `install`, `non-install` |
-|`conversionTypeId` <br /><span class="type-text">integer</span> |	Conversion type Id which represents the type of conversion attached to it: Pixel (`1`) or Postback (`2`)
-|`appURL` <br /><span class="type-text">string</span> |	If conversion type is install, specify URL of inventory
-|`targetCPI` <br /><span class="type-text">integer</span> |	Cost per install if conversion type is install
-| `technologyFlag`	<br /><span class="type-text">boolean</span> |	Technology enabled or disabled based on policy of user
-|`carriers` <br /><span class="type-text">string</span> |	Comma separated carrier IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id)
-|`networkType` <br /><span class="type-text">string</span> |	Network targeting. Value in form of String of comma separated IDs of targeted network(s)
-|`deviceType` <br /><span class="type-text">string</span> |	Comma separated device type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-type)
-|`trafficType` <br /><span class="type-text">string</span> |	Comma separated traffic type IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-traffic-types)
-|`manufacturer` <br /><span class="type-text">string</span> |	Comma separated manufacturer IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-manufacturers-for-targeting)
-|`os` <br /><span class="type-text">string</span> |	Comma separated OS IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-device-os-for-targeting)
-|`osVersion` <br /><span class="type-text">string</span> |	OS version targeting. Value in form of String of comma separated IDs of targeted OS version based on targeted OS
-|`exchanges` <br /><span class="type-text">string</span> |	Comma separated exchanges IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-exchanges)
-|`prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> |	Prebid Audience Segment IDs to attach Campaign to segment IDs
-|`device` <br /><span class="type-text">string</span> |	Targeted devices as string
-|`publisherAdCategory` <br /><span class="type-text">string</span> |	Comma separated publisher ad category IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-publisher-ad-categories)
-|`userDealId` <br /><span class="type-text">string</span> |	User specific deal IDs. Value in form of String of comma separated deal IDs
-|`groupDealId` <br /><span class="type-text">string</span> |	Group of selected deals. Value in form of String of comma separated deal IDs
-|`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> |	ID of political advertiser in case of Campaign is political Campaign
-|`stateIds` <br /><span class="type-text">string</span> |	Comma separated state IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-state-segment)
-|`locationFileIds` <br /><span class="type-text">string</span> |	Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
-|`ageRangeIds` <br /><span class="type-text">string</span> |	Comma separated age range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-age-segment)
-|`genderIds` <br /><span class="type-text">string</span> |	Comma separated gender IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-gender-segment)
-|`interestIds` <br /><span class="type-text">string</span> |	Comma separated interest IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-interest-segment)
-|`incomeRangeIds` <br /><span class="type-text">string</span> |	Comma separated income range IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-income-range-segment)
-|`languageIds` <br /><span class="type-text">string</span> |	Comma separated language IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-language-segment)
-|`ethnicityIds` <br /><span class="type-text">string</span> |	Comma separated ethnicity IDs for targeting, see [Master API](/docs/Guidelines/Master-API-Guidelines#get-ethnicity-segment)
-|`schedule` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
-|`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target iab categories. Value in form of a string of comma-separated ID. Only super user can update iab categories
-|`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
-|`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
-| `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment ids.
-|`campaignEstimatorMetaData`	<br /><span class="type-text">JSON</span> |	Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta
-
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "campaignName": "Sample Campaign name ",
-  "isAgreementChecked": true,
-  "advertiserDomain": "https://www.example.com",
-  "creativeType": 14,
-  "budgetTotal": 100,
-  "startTime": 1598427074,
-  "budgetDay": 18,
-  "timezone": 105,
-  "creativeIds": "100027,100028",
-  "maxBid": 10,
-  "bidOptimization": false,
-  "bidPacing": true,
-  "isBidShading": true,
-  "impressionCapping": 2,
-  "conversionType": "install",
-  "conversionTypeId": 1,
-  "appURL": "https://www.example.com",
-  "totalBudgetPacing": false,
-  "carriers": "293,294",
-  "networkType": "13",
-  "deviceType": "15",
-  "trafficType": "11",
-  "manufacturer": "451,155",
-  "os": "11,14",
-  "osVersion": "11,12,13",
-  "exchanges": "27,21",
-  "prebidAudienceSegmentIdList": [
-    10,
-    11,
-    12
-  ],
-  "publisherAdCategory": "112",
-  "userDealId": "1,2,b",
-  "countryId": 246,
-  "politicalAdvertiserClientId": 17,
-  "locationFileIds": "1011,1010",
-  "campaignEstimatorMetaData": {
-    "reachMeta": {},
-    "landScapeMeta": {},
-    "sliderMeta": {}
-  },
-  "stateIds": "30200031,30200032",
-  "isAdvanceAudioVideoTargeted": true,
-  "creativeAdvanceTargeting": {
-    "placementType": [
-      20600001
-    ],
-    "rollPosition": [
-      20700001
-    ],
-    "playerSize": [
-      20800001
-    ],
-    "skippability": [
-      20900001
-    ],
-    "playbackMethod": [
-      21000001
-    ]
-  }
-}
-```
-
-```json title="Response 200"
-{
-  "statusCode": 201,
-  "responseObject": {
-    "data": 123456,
-    "message": "Campaign saved successfully.",
-    "status": "pending"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/docs/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        statusCode: number;
-        responseObject: {
-          data: number;
-          message: string;
-          status: string;
-        }
-      }
-    };
-  };
-}
-
-function editCampaignPatch(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
-    params: {
-      path: {
-        campaignId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          advertiserId?: `number`,
-          dspId?: `number`,
-          owId?: `number`,
-          uowId?: `number`,
-          id?: `number`,
-          campaignName?: `string`,
-          advertiserDomain?: `string`,
-          creativeType?: `number`,
-          campaignType?: `number`,
-          totalBudgetPacing?: `boolean`,
-          budgetDay?: `number`,
-          budgetTotal?: `number`,
-          maxBid?: `number`,
-          timezone?: `number`,
-          startTime?: `number`,
-          endTime?: `number`,
-          status?: `string`,
-          created?: `number`,
-          excludeFromPlatformServing?: `boolean`,
-          forTest?: `boolean`,
-          modifiedDate?: `string`,
-          dspMarginJson?: `string`,
-          platformMarginJson?: `string`,
-          dspMargin?: `number`,
-          platformMargin?: `number`,
-          userDealMargin?: `number`,
-          isAgreementChecked?: `boolean`,
-          spentScale?: `boolean`,
-          creativeIds?: `string`,
-          targetCPI?: `number`,
-          conversionType?: `string`,
-          conversionTypeId?: `number`,
-          appURL?: `string`,
-          bidOptimization?: `boolean`,
-          bidPacing?: `boolean`,
-          impressionCapping?: `number`,
-          maxDayImpressions?: `number`,
-          maxDayClicks?: `number`,
-          maxDayConversions?: `number`,
-          totalImpressions?: `number`,
-          totalClicks?: `number`,
-          totalConversions?: `number`,
-          bidStrategyFlag?: `boolean`,
-          ioId?: `number`,
-          prebidAudienceSegmentIdList?: `array of numbers`,
-          isBidShading?: `boolean`,
-          carriers?: `string`,
-          networkType?: `string`,
-          deviceType?: `string`,
-          trafficType?: `string`,
-          manufacturer?: `string`,
-          device?: `string`,
-          os?: `string`,
-          osVersion?: `string`,
-          technologyFlag?: `boolean`,
-          exchanges: `string`,
-          whiteListedDeviceId?: `string`,
-          whiteListedIp?: `string`,
-          whiteListedAppId?: `string`,
-          whiteListedPackageName?: `string`,
-          whiteListedSiteDomain?: `string`,
-          blackListedDeviceId?: `string`,
-          blackListedIp?: `string`,
-          blackListedAppId?: `string`,
-          blackListedPackageName?: `string`,
-          blackListedSiteDomain?: `string`,
-          advancedFlag?: `boolean`,
-          userDealId?: `string`,
-          groupDealId?: `string`,
-          publisherAdCategory: `string`,
-          campaignIabCategoryIds?: `string`,
-          stateIds?: `string`,
-          whiteListedStateIds?: `string`,
-          blackListedStateIds?: `string`,
-          countryId?: `number`,
-          dmaIds?: `string`,
-          whiteListedDmaIds?: `string`,
-          blackListedDmaIds?: `string`,
-          zipcodes?: `string`,
-          whiteListedZipcodes?: `string`,
-          blackListedZipcodes?: `string`,
-          geoRadiusDetails?: [
-            {
-              latitude?: `number`,
-              longitude?: `number`,
-              radius?: `number`,
-              address?: `string`,
-              stateShortName?: `string`,
-              countryShortName?: `string`,
-              locationId?: `number`,
-              rejectionReason?: `string`,
-              placemarkName?: `string`,
-              isIncluded?: `boolean`,
-              cid?: `string`,
-              sid?: `string`,
-              type?: `string`,
-              unit?: `string`,
-              cdId?: `number`,
-              sdId?: `number`,
-              hdId?: `number`,
-            }
-          ],
-          whiteListedGeoRadiusDetails?: [
-            {
-              latitude?: `number`,
-              longitude?: `number`,
-              radius?: `number`,
-              address?: `string`,
-              stateShortName?: `string`,
-              countryShortName?: `string`,
-              locationId?: `number`,
-              rejectionReason?: `string`,
-              placemarkName?: `string`,
-              isIncluded?: `boolean`,
-              cid?: `string`,
-              sid?: `string`,
-              type?: `string`,
-              unit?: `string`,
-              cdId?: `number`,
-              sdId?: `number`,
-              hdId?: `number`,
-            }
-          ],
-          blackListedGeoRadiusDetails?: [
-            {
-              latitude?: `number`,
-              longitude?: `number`,
-              radius?: `number`,
-              address?: `string`,
-              stateShortName?: `string`,
-              countryShortName?: `string`,
-              locationId?: `number`,
-              rejectionReason?: `string`,
-              placemarkName?: `string`,
-              isIncluded?: `boolean`,
-              cid?: `string`,
-              sid?: `string`,
-              type?: `string`,
-              unit?: `string`,
-              cdId?: `number`,
-              sdId?: `number`,
-              hdId?: `number`,
-            }
-          ],
-          gotvLocationId?: `number`,
-          congressionalDistrictIds?: `string`,
-          whiteListedCongressionalDistrictIds?: `string`,
-          blackListedCongressionalDistrictIds?: `string`,
-          senateDistrictIds?: `string`,
-          whiteListedSenateDistrictIds?: `string`,
-          blackListedSenateDistrictIds?: `string`,
-          houseDistrictIds?: `string`,
-          whiteListedHouseDistrictIds?: `string`,
-          blackListedHouseDistrictIds?: `string`,
-          locationFileIds?: `string`,
-          whiteListedLocationIds?: `string`,
-          blackListedLocationIds?: `string`,
-          radiusUpdatedLocations?: {
-            [key: `string`]: `number`,
-          },
-          removedLocationIds?: `string`,
-          whiteListedCityIds?: `string`,
-          blackListedCityIds?: `string`,
-          whiteListedCountyIds?: `string`,
-          blackListedCountyIds?: `string`,
-          blackListedInventoryGroupIds?: `string`,
-          whiteListedInventoryGroupIds?: `string`,
-        inventoryKeywords?: `array of strings`,
-        inventoryUrls?: `array of strings`,
-        pmpDealIds?: `array of numbers`,
-          blackListedAudienceIds?: `string`,
-          whiteListedAudienceIds?: `string`,
-          blackListedCustomAudienceIds?: `string`,
-          whiteListedCustomAudienceIds?: `string`,
-          politicalAdvertiserClientId?: `number`,
-          scheduling?: {
-            [key: `string`]: `Record<string, never>`,
-          },
-          ageRangeIds?: `string`,
-          genderIds?: `string`,
-          languageIds?: `string`,
-          incomeRangeIds?: `string`,
-          ethnicityIds?: `string`,
-          interestIds?: `string`,
-          demographicTargetingFlag?: `boolean`,
-          whiteListedAudienceSegmentGroupIds?: `string`,
-          blackListedAudienceSegmentGroupIds?: `string`,
-          blackListedConversionTagIds?: `string`,
-          whiteListedConversionTagIds?: `string`,
-          conversionIds?: `string`,
-          creativesPlacementMapping?: {
-            [key: `string`]: `number`,
-          },
-          isTvAd?: `boolean`,
-          creativeAdvanceTargeting?: {
-            [key: `string`]: `array of numbers`
-          },
-          budgetTypeId?: `number`,
-          campaignEstimatorMetaData?: {
-            reachMeta?: {
-              [key: string]: Record<string, never>;
-            };
-            landScapeMeta?: {
-              [key: string]: Record<string, never>;
-            };
-            sliderMeta?: {
-              [key: string]: Record<string, never>;
-            },
-          },
-          customAudienceTargeted?: `boolean`,
-          advanceAudioVideoTargeted?: `boolean`,
-          isAdvanceAudioVideoTargeted?: `boolean`,
-        };
-      };
-    };
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
 
 ### Change Campaign Name
 
