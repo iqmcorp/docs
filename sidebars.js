@@ -333,6 +333,12 @@ const sidebars = {
               id: `Tutorials/Trade Desk Migration/Bid-Model-Migration-Guide`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Tutorials/Trade Desk Migration/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
           ]
         }
       ]
