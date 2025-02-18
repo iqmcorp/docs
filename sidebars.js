@@ -339,6 +339,12 @@ const sidebars = {
               id: `Tutorials/Trade Desk Migration/Conversions-Migration-Guide`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Tutorials/Trade Desk Migration/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
           ]
         }
       ]
