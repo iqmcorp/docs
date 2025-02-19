@@ -531,7 +531,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#campaign-resource-properties"><span class="badge bar badge--primary"></span>Campaign Resource Details</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#campaign-resource-properties"><span class="badge bar badge"></span>Campaign Resource Details</a>',
               defaultStyle: true,
             },
             {
@@ -685,7 +685,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties"><span class="badge bar badge--primary"></span>IO Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties"><span class="badge bar badge"></span>IO Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -813,12 +813,12 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#postback-conversion-resource-properties"><span class="badge bar badge--primary"></span>Postback Conversion Resource Details</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#postback-conversion-resource-properties"><span class="badge bar badge"></span>Postback Conversion Resource Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#pixel-conversion-resource-properties"><span class="badge bar badge--primary"></span>Pixel Conversion Resource Details</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Conversion-API-Guidelines#pixel-conversion-resource-properties"><span class="badge bar badge"></span>Pixel Conversion Resource Details</a>',
               defaultStyle: true,
             },
             {
@@ -1435,7 +1435,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#voter-level-data-reports"><span class="badge bar badge--primary"></span>VLD Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Insights-API-Guidelines#voter-level-data-reports"><span class="badge bar badge"></span>VLD Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -1511,7 +1511,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-details"><span class="badge bar badge--primary"></span>Query Parameters</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#get-inventory-details"><span class="badge bar badge"></span>Query Parameters</a>',
               defaultStyle: true,
             },
             {
@@ -1721,7 +1721,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pmp-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pmp-management"><span class="badge bar badge"></span>Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -1765,7 +1765,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pg-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Inventory-API-Guide#pg-management"><span class="badge bar badge"></span>Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -1921,7 +1921,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-creative-data"><span class="badge bar badge--primary"></span>Query Parameters</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Master-API-Guidelines#get-creative-data"><span class="badge bar badge"></span>Query Parameters</a>',
               defaultStyle: true,
             },
             {
@@ -2196,7 +2196,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#reports-management"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Reports-API-Guidelines#reports-management"><span class="badge bar badge"></span>Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -2307,9 +2307,9 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/docs/Guidelines/User-Profile-Guidelines#overview',
+          type: 'html',
+          value: '<a class="menu__link" href="/docs/Guidelines/User-Profile-Guidelines#overview"><span class="badge bar badge"></span>Overview</a>',
+          defaultStyle: true,
           className: 'sidebarItem'
         },
         {
@@ -2402,7 +2402,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#organization-details"><span class="badge bar badge--primary"></span>Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#organization-details"><span class="badge bar badge"></span>Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -2473,7 +2473,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-details"><span class="badge bar badge--primary"></span>Customer Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-details"><span class="badge bar badge"></span>Customer Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -2498,7 +2498,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-operations-resource-properties"><span class="badge bar badge--primary"></span>Customer Operations Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#customer-operations-resource-properties"><span class="badge bar badge"></span>Customer Operations Resource Properties</a>',
               defaultStyle: true,
             },
             {
@@ -2647,7 +2647,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#advertiser-management"><span class="badge bar badge--primary"></span>Advertiser Resource Properties</a>',
+              value: '<a class="menu__link" href="/docs/Guidelines/Workspace-Guidelines#advertiser-management"><span class="badge bar badge"></span>Advertiser Resource Properties</a>',
               defaultStyle: true,
             },
             {
