@@ -323,12 +323,6 @@ const sidebars = {
             },
             {
               type: `doc`,
-              label: 'Reports',
-              id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
               label: 'Bid Model',
               id: `Tutorials/Trade Desk Migration/Bid-Model-Migration-Guide`,
               className: 'sidebarItem'
@@ -337,6 +331,18 @@ const sidebars = {
               type: `doc`,
               label: 'Conversions',
               id: `Tutorials/Trade Desk Migration/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Tutorials/Trade Desk Migration/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
               className: 'sidebarItem'
             },
           ]
