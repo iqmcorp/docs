@@ -171,7 +171,7 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} IQM API docs. Built with Docusaurus.`,
       },
       prism: {
-        theme: prismThemes.jettwaveLight,
+        theme: prismThemes.vsLight,
         darkTheme: prismThemes.vsDark,
       },
     }),
