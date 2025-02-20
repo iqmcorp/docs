@@ -101,7 +101,7 @@ const config = {
         indexName: "iqmcorpio",
         contextualSearch: true,
       },
-      image: "img/docusaurus-social-card.jpg",
+      image: "img/IQM-logo-black.png",
       navbar: {
         title: "API Docs",
         logo: {
