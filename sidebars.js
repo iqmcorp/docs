@@ -346,8 +346,51 @@ const sidebars = {
               className: 'sidebarItem'
             },
           ]
+        },
+        {
+          type: 'category',
+          label: 'Beeswax Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Tutorials/Trade Desk Migration/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Tutorials/Trade Desk Migration/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Tutorials/Trade Desk Migration/Bid-Model-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Tutorials/Trade Desk Migration/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Tutorials/Trade Desk Migration/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+          ]
         }
-      ]
+      ],
     },
     {
       type: `doc`,
