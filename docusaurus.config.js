@@ -10,7 +10,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 const config = {
   title: "IQM",
   tagline: "API Docs",
-  favicon: "img/IQM-Q.ico",
+  favicon: "img/IQM-icon-black.jpb",
 
   // Set the production url of your site here
   url: "https://iqmcorp.github.io",
@@ -101,7 +101,7 @@ const config = {
         indexName: "iqmcorpio",
         contextualSearch: true,
       },
-      image: "img/IQM-logo-black.png",
+      image: "img/IQM-logo-dark.jpg",
       navbar: {
         title: "API Docs",
         logo: {
@@ -111,23 +111,23 @@ const config = {
         items: [
           {
             position: "left",
-            label: "Getting Started",
+            label: "GETTING STARTED",
             to: "Getting%20Started/"
           },
           {
-            label: "Quickstart Guides",
+            label: "QUICKSTART GUIDES",
             position: "left",
             to: "/Quickstart%20Guides/",
             className: "navbarLink",
           },
           {
-            label: "Tutorials",
+            label: "TUTORIALS",
             position: "left",
             to: "/Tutorials/",
             className: "navbarLink",
           },
           {
-            label: "API Guidelines",
+            label: "API GUIDELINES",
             position: "left",
             to: "/Guidelines/",
             className: "navbarLink",
