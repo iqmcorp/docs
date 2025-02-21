@@ -121,9 +121,9 @@ const config = {
             className: "navbarLink",
           },
           {
-            label: "Tutorials",
+            label: "Migration Guides",
             position: "left",
-            to: "/Tutorials/",
+            to: "/Migration%20Guides/",
             className: "navbarLink",
           },
           {
