@@ -321,6 +321,12 @@ const sidebars = {
               id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
