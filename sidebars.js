@@ -333,6 +333,12 @@ const sidebars = {
               id: `Migration Guides/Beeswax/Conversions-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
