@@ -10,7 +10,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 const config = {
   title: "IQM",
   tagline: "API Docs",
-  favicon: "img/IQM-icon-black.jpb",
+  favicon: "img/IQM-icon-black.jpg",
 
   // Set the production url of your site here
   url: "https://iqmcorp.github.io",
@@ -121,7 +121,7 @@ const config = {
             className: "navbarLink",
           },
           {
-            label: "Migration Guides",
+            label: "MIGRATION GUIDES",
             position: "left",
             to: "/Migration%20Guides/",
             className: "navbarLink",
