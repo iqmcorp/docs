@@ -297,13 +297,56 @@ const sidebars = {
     },
     {
       type: "category",
-      label: 'Tutorials',
+      label: 'Migration Guides',
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Tutorials/index'
+        id: 'Migration Guides/index'
       },
       items: [
+        {
+          type: 'category',
+          label: 'Beeswax Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Beeswax/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Beeswax/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Beeswax/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
         {
           type: 'category',
           label: 'Trade Desk Migration',
@@ -312,42 +355,42 @@ const sidebars = {
             {
               type: `doc`,
               label: 'Overview',
-              id: `Tutorials/Trade Desk Migration/Overview`,
+              id: `Migration Guides/The Trade Desk/Overview`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Campaigns',
-              id: `Tutorials/Trade Desk Migration/Campaign-Migration-Guide`,
+              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Bid Model',
-              id: `Tutorials/Trade Desk Migration/Bid-Model-Migration-Guide`,
+              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Conversions',
-              id: `Tutorials/Trade Desk Migration/Conversions-Migration-Guide`,
+              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Tutorials/Trade Desk Migration/Inventories-Migration-Guide`,
+              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Tutorials/Trade Desk Migration/Reports-Migration-Guide`,
+              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
               className: 'sidebarItem'
             },
           ]
         }
-      ]
+      ],
     },
     {
       type: `doc`,
