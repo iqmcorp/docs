@@ -389,6 +389,49 @@ const sidebars = {
               className: 'sidebarItem'
             },
           ]
+        },
+        {
+          type: 'category',
+          label: 'Xandr Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Xandr/Overview`,
+              className: 'sidebarItem'
+            },
+            /* {
+               type: `doc`,
+               label: 'Campaigns',
+               id: `Migration Guides/Xandr/Campaign-Migration-Guide`,
+               className: 'sidebarItem'
+             },
+             {
+               type: `doc`,
+               label: 'Bid Model',
+               id: `Migration Guides/Xandr/Bid-Model-Migration-Guide`,
+               className: 'sidebarItem'
+             },
+             {
+               type: `doc`,
+               label: 'Conversions',
+               id: `Migration Guides/Xandr/Conversions-Migration-Guide`,
+               className: 'sidebarItem'
+             },
+             {
+               type: `doc`,
+               label: 'Inventories',
+               id: `Migration Guides/Xandr/Inventories-Migration-Guide`,
+               className: 'sidebarItem'
+             },
+             {
+               type: `doc`,
+               label: 'Reports',
+               id: `Migration Guides/Xandr/Reports-Migration-Guide`,
+               className: 'sidebarItem'
+             },*/
+          ]
         }
       ],
     },
