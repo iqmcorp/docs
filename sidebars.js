@@ -401,13 +401,13 @@ const sidebars = {
               id: `Migration Guides/Xandr/Overview`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Xandr/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
             /* {
-               type: `doc`,
-               label: 'Campaigns',
-               id: `Migration Guides/Xandr/Campaign-Migration-Guide`,
-               className: 'sidebarItem'
-             },
-             {
                type: `doc`,
                label: 'Bid Model',
                id: `Migration Guides/Xandr/Bid-Model-Migration-Guide`,
