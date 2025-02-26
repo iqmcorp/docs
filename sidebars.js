@@ -306,7 +306,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Beeswax Migration',
+          label: 'Beeswax Migration Guide',
           className: 'sidebarItem',
           items: [
             {
@@ -349,7 +349,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Trade Desk Migration',
+          label: 'The Trade Desk Migration Guide',
           className: 'sidebarItem',
           items: [
             {
