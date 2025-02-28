@@ -407,30 +407,30 @@ const sidebars = {
               id: `Migration Guides/Xandr/Campaign-Migration`,
               className: 'sidebarItem'
             },
-            /* {
-               type: `doc`,
-               label: 'Bid Model',
-               id: `Migration Guides/Xandr/Bid-Model-Migration-Guide`,
-               className: 'sidebarItem'
-             },
-             {
-               type: `doc`,
-               label: 'Conversions',
-               id: `Migration Guides/Xandr/Conversions-Migration-Guide`,
-               className: 'sidebarItem'
-             },
-             {
-               type: `doc`,
-               label: 'Inventories',
-               id: `Migration Guides/Xandr/Inventories-Migration-Guide`,
-               className: 'sidebarItem'
-             },
-             {
-               type: `doc`,
-               label: 'Reports',
-               id: `Migration Guides/Xandr/Reports-Migration-Guide`,
-               className: 'sidebarItem'
-             },*/
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Xandr/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            /*{
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Xandr/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Xandr/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Xandr/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },*/
           ]
         }
       ],
