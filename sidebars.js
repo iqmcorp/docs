@@ -413,13 +413,13 @@ const sidebars = {
               id: `Migration Guides/Xandr/Bid-Model-Migration`,
               className: 'sidebarItem'
             },
-            /*{
+            {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/Xandr/Conversions-Migration-Guide`,
+              id: `Migration Guides/Xandr/Conversions-Migration`,
               className: 'sidebarItem'
             },
-            {
+            /*{
               type: `doc`,
               label: 'Inventories',
               id: `Migration Guides/Xandr/Inventories-Migration-Guide`,
