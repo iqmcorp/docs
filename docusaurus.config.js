@@ -10,7 +10,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 const config = {
   title: "IQM",
   tagline: "API Docs",
-  favicon: "img/IQM-icon-black.jpb",
+  favicon: "img/IQM-icon-black.jpg",
 
   // Set the production url of your site here
   url: "https://developers.iqm.com/",
