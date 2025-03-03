@@ -13,7 +13,7 @@ const config = {
   favicon: "img/IQM-icon-black.jpb",
 
   // Set the production url of your site here
-  url: "https://iqmcorp.github.io",
+  url: "https://developers.iqm.com/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/docs/",
