@@ -419,18 +419,18 @@ const sidebars = {
               id: `Migration Guides/Xandr/Conversions-Migration`,
               className: 'sidebarItem'
             },
-            /*{
+            {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/Xandr/Inventories-Migration-Guide`,
+              id: `Migration Guides/Xandr/Inventories-Migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/Xandr/Reports-Migration-Guide`,
+              id: `Migration Guides/Xandr/Reports-Migration`,
               className: 'sidebarItem'
-            },*/
+            },
           ]
         }
       ],
