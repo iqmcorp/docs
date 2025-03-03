@@ -6,13 +6,9 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 # Migrate a Bid Model
 
-## Overview
+## Overview 
 
-The Trade Desk uses terminology similar to IQM to describe Bid Modeling.
-
-IQM's [Bid Model API](/docs/Guidelines/Bid-Model-API-Guidelines) optimizes Campaigns for better performance. The user can fine-tune where their ads appear, manage priorities, and Campaign dimensions. The Trade Desk refers to their bid modeling as [Bid Lists<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/BidList).  
-
-The tables below highlight the main definitions, actions, and API methods for managing Bid Modeling. Each IQM endpoint is paired with the analogous API for The Trade Desk. Both link to their respective documenation. By following the workflow instructions and comparing APIs, the user can migrate their Bid Modeling data from The Trade Desk to IQM.
+The Definitions and API Comparison tables highlight the main terminology, actions, and API methods for managing Bid Modeling. Select an endpoint from IQM or The Trade Desk to review that platform's relevant API documentation. By comparing APIs, you can migrate your Bid Modeling workflows from The Trade Desk to IQM.
 
 ## Definitions
 
@@ -24,17 +20,17 @@ The tables below highlight the main definitions, actions, and API methods for ma
 <tr>
   <td>Bid Model</td>
   <td>Bid List</td>
-  <td>The set of optimizations applied to a Campaign (AdGroup on The Trade Desk platform).</td>
+  <td>The set of optimizations applied to a Campaign or Insertion Order. These optimizations control where ads appear, and define their priorities, bids, and budget allocation.</td>
 </tr>
 <tr>
   <td>Bid Model Data</td>
   <td>Bid Line</td>
-  <td>A component of a Bid Model that adjusts a Campaign's base bid based on specified parameters.</td>
+  <td>A Bid Model settting that adjusts a Campaign's base bid based on specified parameters.</td>
 </tr>
 <tr>
   <td>Dimension</td>
   <td>Dimension</td>
-  <td>An attribute or datum in digital advertising used to categorize, filter, or analyze audiences, Campaigns or inventories. Serves as a targeting parameter for advertisers, specifying where an ad appears.</td>
+  <td>A property in digital advertising used to categorize, filter, or analyze audiences, Campaigns or inventories. It serves as a targeting parameter for advertisers, specifying where an ad appears.</td>
 </tr>
 <tr>
   <td>Bid Modifier</td>
@@ -43,14 +39,24 @@ The tables below highlight the main definitions, actions, and API methods for ma
 </tr>
 <tr>
   <td>Spend Ratio</td>
-  <td rowSpan={2}>[Multi-Dimension Bidding<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/DimensionalBidding#multi-dimension-bidding)</td>
-  <td>Determines how the Campaign budget is distributed across targeting dimensions.</td>
+  <td rowSpan={2}>Multi-Dimension Bidding</td>
+  <td>A setting that determines how the Campaign budget is distributed across targeting dimensions.</td>
 </tr>
 <tr>
   <td>Dimension Priority</td>
-  <td style={{ fontSize: '100%' }}>Dictates the sequence of bidding for specific targeting dimensions.</td>
+  <td style={{ fontSize: '100%' }}>A setting that dictates the order in which a Campaign should attempt to deliver impressions based on the available budget.</td>
 </tr>
 </table></center>
+
+<div class="child4">
+:::info
+
+IQM's Bid Model currently supports applying Bid Modifiers to Creatives. 
+
+It will soon support the folloowing dimensions: Location (City, State, Zip), Device, and Inventory (Open Exchange, Publisher Category, Deal ID).
+
+:::
+</div>
 
 ## API Comparison
 
@@ -62,38 +68,49 @@ The tables below highlight the main definitions, actions, and API methods for ma
 <th>Notes</th>
 <tr>
   <td>Add Bid Modeling</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/docs/Guidelines/Bid-Model-API-Guidelines#add-bid-modeling)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#add-bid-modeling)</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist)</td>
   <td></td>
 </tr>
 <tr>
   <td>Add Bid Modeling to Insertion Order</td>
-  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/io/\{ioId}/bid-models</span>](/docs/Guidelines/Bid-Model-API-Guidelines#manage-insertion-order-bid-modeling)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/io/\{ioId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#manage-insertion-order-bid-modeling)</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch)</td>
   <td>Add Bid Modeling to an Insertion Order and its associated Campaigns. <p />The Trade Desk endpoints use the <var>BidListOWner</var> parameter to specifiy whether the created Bid List will be applied at the Campaign level or the Ad Group level.</td>
 </tr>
 <tr>
   <td>Update Bid Modeling</td>
-  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-dimensions)</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-dimensions)</td>
   <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist)</td>
   <td></td>
 </tr>
 <tr>
   <td>Add/Update Multiple Bid Models</td>
-  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/docs/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-actions)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-actions)</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch) <br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist-batch)</td>
   <td>IQM endpoint supports adding, updating, and deleting Bid Model data.</td>
 </tr>
 <tr>
   <td>Get Campaign Bid Model Details</td>
-  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimensions/count</span>](/docs/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimension/\{dimensionId}/spent</span>](/docs/Guidelines/Bid-Model-API-Guidelines#get-dimension-specific-spending-for-a-campaign) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models/count</span>](/docs/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimensions/count</span>](/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimension/\{dimensionId}/spent</span>](/Guidelines/Bid-Model-API-Guidelines#get-dimension-specific-spending-for-a-campaign) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models/count</span>](/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign)</td>
   <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/bidlist/\{bidListId}</span>](https://partner.thetradedesk.com/v3/portal/api/ref/get-bidlist-bidlistid)</td>
-  <td>IQM endpoints get counts of dimensions, spending by dimension, and modeled items count by <var>campaignId</var></td>
+  <td>IQM endpoints get counts of dimensions, spending by dimension, and modeled items count by <var>campaignId</var>.</td>
 </tr>
 <tr>
   <td>Include/Exclude Management</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/deviceType/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/exchange/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/trafficsource/includeExclude</span>](/docs/Guidelines/Bid-Model-API-Guidelines#devices-exchanges-traffic)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/include-Exclude/dimensions/\{dimensionId}</span>](/docs/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/deviceType/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/exchange/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/trafficsource/includeExclude</span>](/Guidelines/Bid-Model-API-Guidelines#devices-exchanges-traffic)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/include-Exclude/dimensions/\{dimensionId}</span>](/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign)</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist)<br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch) <br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist-batch)</td>
-  <td>IQM has separate endpoints for including/excluding device types, exchanges, traffic sources, and dimensions. <p />The Trade Desk specifies include/exclude options with the <var>BidListAdjustmentType</var> parameter when creating/updating a Bid List</td>
+  <td>IQM has separate endpoints for including/excluding device types, exchanges, traffic sources, and dimensions. <p />The Trade Desk specifies include/exclude options with the <var>BidListAdjustmentType</var> parameter when creating/updating a Bid List.</td>
 </tr>
 </table></center>
+
+## More Bid Model Resources
+
+IQM:
+  * [Bid Model API](/Guidelines/Bid-Model-API-Guidelines)
+  * [Advanced Modeling<ExternalLink />](https://help.iqm.com/en/collections/11511670-advanced-modeling)
+
+
+TTD: 
+  * [Bid Lists<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/BidList)
+  * [Multi-Dimension Bidding<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/DimensionalBidding#multi-dimension-bidding)
