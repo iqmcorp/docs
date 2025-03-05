@@ -358,13 +358,13 @@ const sidebars = {
               id: `Migration Guides/DV360/Overview`,
               className: 'sidebarItem'
             },
-            /*{
+            {
               type: `doc`,
               label: 'Campaigns',
-              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
+              id: `Migration Guides/DV360/Campaign-Migration`,
               className: 'sidebarItem'
             },
-            {
+            /*{
               type: `doc`,
               label: 'Bid Model',
               id: `Migration Guides/Beeswax/Bid-Model-Migration`,
