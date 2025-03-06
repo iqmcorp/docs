@@ -349,6 +349,49 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'DV360 Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/DV360/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/DV360/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/DV360/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/DV360/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/DV360/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/DV360/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'The Trade Desk Migration Guide',
           className: 'sidebarItem',
           items: [
