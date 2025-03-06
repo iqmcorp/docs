@@ -370,19 +370,19 @@ const sidebars = {
               id: `Migration Guides/DV360/Bid-Model-Migration`,
               className: 'sidebarItem'
             },
-            /*{
+            {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/Beeswax/Conversions-Migration`,
+              id: `Migration Guides/DV360/Conversions-Migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              id: `Migration Guides/DV360/Inventories-Migration`,
               className: 'sidebarItem'
             },
-            {
+            /*{
               type: `doc`,
               label: 'Reports',
               id: `Migration Guides/Beeswax/Reports-Migration`,
