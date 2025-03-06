@@ -382,12 +382,12 @@ const sidebars = {
               id: `Migration Guides/DV360/Inventories-Migration`,
               className: 'sidebarItem'
             },
-            /*{
+            {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/Beeswax/Reports-Migration`,
+              id: `Migration Guides/DV360/Reports-Migration`,
               className: 'sidebarItem'
-            },*/
+            },
           ]
         },
         {
