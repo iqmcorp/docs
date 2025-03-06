@@ -8,23 +8,23 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 ## Overview 
 
-The Definitions and API Comparison tables highlight the main terminology, actions, and API methods for managing Bid Modeling. Select an endpoint from IQM or The Trade Desk to review that platform's relevant API documentation. By comparing APIs, you can migrate your Bid Modeling workflows from The Trade Desk to IQM.
+The Definitions and API Comparison tables highlight the main terminology, actions, and API methods for managing Bid Modeling. Select an endpoint from IQM or DV360 to review that platform's relevant API documentation. By comparing APIs, you can migrate your Bid Modeling workflows from DV360 to IQM.
 
 ## Definitions
 
 <center>
 <table className='platformTable'>
 <th>IQM</th>
-<th>The Trade Desk</th>
+<th>DV360</th>
 <th>Description</th>
 <tr>
   <td>Bid Model</td>
-  <td>Bid List</td>
+  <td>Custom Bidding Algorithm</td>
   <td>The set of optimizations applied to a Campaign or Insertion Order. These optimizations control where ads appear, and define their priorities, bids, and budget allocation.</td>
 </tr>
 <tr>
   <td>Bid Model Data</td>
-  <td>Bid Line</td>
+  <td>Script or Rules</td>
   <td>A Bid Model setting that adjusts a Campaign's base bid based on specified parameters.</td>
 </tr>
 <tr>
@@ -34,12 +34,12 @@ The Definitions and API Comparison tables highlight the main terminology, action
 </tr>
 <tr>
   <td>Bid Modifier</td>
-  <td>Bid Adjustment/Factor</td>
+  <td>Score or Multiplier</td>
   <td>A multiplier applied to a base bid.</td>
 </tr>
 <tr>
   <td>Spend Ratio</td>
-  <td rowSpan={2}>Multi-Dimension Bidding</td>
+  <td rowSpan={2}>Weighted Conversions</td>
   <td>A setting that determines how the Campaign budget is distributed across targeting dimensions.</td>
 </tr>
 <tr>
@@ -60,47 +60,55 @@ It will soon support the folloowing dimensions: Location (City, State, Zip), Dev
 
 ## API Comparison
 
+<div class="smallTable">
+```ts title="Base URLs"
+  IQM: https://app.iqm.com
+  
+  DV360: https://displayvideo.googleapis.com
+```
+</div>
+
 <center>
 <table className='endpointTable'>
 <th>Action</th>
 <th>IQM Endpoint</th>
-<th style={{textWrap: 'nowrap' }}>The Trade Desk Endpoint</th>
+<th style={{textWrap: 'nowrap' }}>DV360 Endpoint</th>
 <th>Notes</th>
 <tr>
   <td>Add Bid Modeling</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#add-bid-modeling)</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/customBiddingAlgorithms</span>](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms/create)</td>
   <td></td>
 </tr>
 <tr>
   <td>Add Bid Modeling to Insertion Order</td>
   <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/io/\{ioId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#manage-insertion-order-bid-modeling)</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch)</td>
-  <td>Add Bid Modeling to an Insertion Order and its associated Campaigns. <p />The Trade Desk endpoints use the <var>BidListOWner</var> parameter to specifiy whether the created Bid List will be applied at the Campaign level or the Ad Group level.</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/advertisers/\{lineItem.advertiserId}/lineItems</span>](https://developers.google.com/display-video/api/reference/rest/v3/advertisers.lineItems/create) <br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/v3/advertisers/\{lineItem.advertiserId}/lineItems/\{lineItem.lineItemId}</span>](https://developers.google.com/display-video/api/reference/rest/v3/advertisers.lineItems/patch)</td>
+  <td>Add Bid Modeling to an Insertion Order and its associated Campaigns. <p />DV360  adds Custom Bidding when creating/updating Line Items. Add a <var>customBiddingAlgorithmId</var> to the <var>MaximizeSpendBidStrategy</var> object within the <var>bidStrategy</var> object. </td>
 </tr>
 <tr>
   <td>Update Bid Modeling</td>
   <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-dimensions)</td>
-  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist)</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/v3/customBiddingAlgorithms/\{customBiddingAlgorithm.customBiddingAlgorithmId}</span>](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms/patch)</td>
   <td></td>
 </tr>
 <tr>
   <td>Add/Update Multiple Bid Models</td>
   <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/Guidelines/Bid-Model-API-Guidelines#update-bid-modeling-actions)</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch) <br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist-batch)</td>
+  <td>n/a</td>
   <td>IQM endpoint supports adding, updating, and deleting Bid Model data.</td>
 </tr>
 <tr>
   <td>Get Campaign Bid Model Details</td>
   <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimensions/count</span>](/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimension/\{dimensionId}/spent</span>](/Guidelines/Bid-Model-API-Guidelines#get-dimension-specific-spending-for-a-campaign) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models/count</span>](/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign)</td>
-  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/bidlist/\{bidListId}</span>](https://partner.thetradedesk.com/v3/portal/api/ref/get-bidlist-bidlistid)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/customBiddingAlgorithms/\{customBiddingAlgorithmId}</span>](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms/get)</td>
   <td>IQM endpoints get counts of dimensions, spending by dimension, and modeled items count by <var>campaignId</var>.</td>
 </tr>
 <tr>
   <td>Include/Exclude Management</td>
   <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/deviceType/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/exchange/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/trafficsource/includeExclude</span>](/Guidelines/Bid-Model-API-Guidelines#devices-exchanges-traffic)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/include-Exclude/dimensions/\{dimensionId}</span>](/Guidelines/Bid-Model-API-Guidelines#includeexclude-entities-from-a-campaign)</td>
-  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist)<br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-bidlist-batch) <br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/bidlist/batch</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-bidlist-batch)</td>
-  <td>IQM has separate endpoints for including/excluding device types, exchanges, traffic sources, and dimensions. <p />The Trade Desk specifies include/exclude options with the <var>BidListAdjustmentType</var> parameter when creating/updating a Bid List.</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/customBiddingAlgorithms/\{customBiddingAlgorithmId}/scripts</span>](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms.scripts/create)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/customBiddingAlgorithms/\{customBiddingAlgorithmId}:uploadScript</span>](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms/uploadScript)</td>
+  <td>IQM has separate endpoints for including/excluding device types, exchanges, traffic sources, and dimensions. <p />DV360 specifies include/exclude options with the <var>CustomBiddingScriptRef</var> object when creating a Script. The <var>CustomBiddingScript</var> is then uploaded to a <var>CustomBiddingAlgorithm</var>. See [More Bid Model Resources](#more-bid-model-resources) below for reference material.</td>
 </tr>
 </table></center>
 
@@ -111,6 +119,10 @@ IQM:
   * [Advanced Modeling<ExternalLink />](https://help.iqm.com/en/collections/11511670-advanced-modeling)
 
 
-TTD: 
-  * [Bid Lists<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/BidList)
-  * [Multi-Dimension Bidding<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/DimensionalBidding#multi-dimension-bidding)
+DV360: 
+  * [Implement Custom Bidding<ExternalLink />](https://developers.google.com/display-video/api/guides/managing-line-items/custom-bidding)
+  * [REST Resource: customBiddingAlgorithms<ExternalLink />](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms)
+  * [REST Resource: customBiddingAlgorithms.rules<ExternalLink />](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms.rules)
+  * [REST Resource: customBiddingAlgorithms.scripts<ExternalLink />](https://developers.google.com/display-video/api/reference/rest/v3/customBiddingAlgorithms.scripts)
+  * [Custom bidding script reference<ExternalLink />](https://support.google.com/displayvideo/answer/11967043?hl=en&ref_topic=11967792&sjid=11415182797637732109-NC)
+  * [Use rules to create custom bidding algorithms<ExternalLink />](https://support.google.com/displayvideo/answer/11118987?hl=en&ref_topic=9928205&sjid=11415182797637732109-NC)
