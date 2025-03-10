@@ -536,6 +536,101 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Audience API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Guidelines/Audience-API-Guidelines'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Audience Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-retargeted-audience-details"><span class="badge bar badge--primary">GET</span>Retargeted Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-geo-farmed-audience-details"><span class="badge bar badge--primary">GET</span>Geo-Farmed Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-campaign-audience-details"><span class="badge bar badge--primary">GET</span>Campaign Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-audience-segment-details"><span class="badge bar badge--primary">GET</span>Audience Segment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-prebid-audience-details"><span class="badge bar badge--primary">GET</span>Prebid Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-matched-audience"><span class="badge bar badge--success">POST</span>Create Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-retargeted-audience"><span class="badge bar badge--success">POST</span>Create Retargeted Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-geo-farmed-audience"><span class="badge bar badge--success">POST</span>Create Geo-Farmed Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-campaign-audience"><span class="badge bar badge--success">POST</span>Create Campaign Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-audience-segment"><span class="badge bar badge--success">POST</span>Create Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-prebid-audience"><span class="badge bar badge--success">POST</span>Create Prebid Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-contextual-audience"><span class="badge bar badge--success">POST</span>Create Contextual Audience</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: 'Bid Model API',
       className: 'sidebarCategory',
       link: {
