@@ -627,6 +627,63 @@ const sidebars = {
             },
           ]
         },
+        {
+          type: `category`,
+          label: `Healthcare Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-abm-audience-details"><span class="badge bar badge--primary">GET</span>ABM Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-abm-audience-statistics"><span class="badge bar badge--primary">GET</span>ABM Audience Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-titles"><span class="badge bar badge--primary">GET</span>Healthcare Titles List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-specialties"><span class="badge bar badge--primary">GET</span>Healthcare Specialties List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-systems"><span class="badge bar badge--primary">GET</span>Healthcare Systems List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-data"><span class="badge bar badge--success">POST</span>Healthcare Data</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-statistics"><span class="badge bar badge--success">POST</span>Healthcare Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-types"><span class="badge bar badge--success">POST</span>Healthcare Account Types</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-subtypes"><span class="badge bar badge--success">POST</span>Healthcare Account Subtypes</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-names"><span class="badge bar badge--success">POST</span>Healthcare Account Names</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
       ],
     },
     {
