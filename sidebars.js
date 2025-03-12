@@ -550,37 +550,94 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-retargeted-audience-details"><span class="badge bar badge--primary">GET</span>Retargeted Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#retargeted-audience-details"><span class="badge bar badge--primary">GET</span>Retargeted Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-geo-farmed-audience-details"><span class="badge bar badge--primary">GET</span>Geo-Farmed Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#geo-farmed-audience-details"><span class="badge bar badge--primary">GET</span>Geo-Farmed Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-campaign-audience-details"><span class="badge bar badge--primary">GET</span>Campaign Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#campaign-audience-details"><span class="badge bar badge--primary">GET</span>Campaign Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-audience-segment-details"><span class="badge bar badge--primary">GET</span>Audience Segment Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#prebid-audience-details"><span class="badge bar badge--primary">GET</span>Prebid Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-prebid-audience-details"><span class="badge bar badge--primary">GET</span>Prebid Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-prebid-audience-details"><span class="badge bar badge--success">POST</span>Search Prebid Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-count-by-status"><span class="badge bar badge--primary">GET</span>Audience Count by Status</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-count-by-type"><span class="badge bar badge--primary">GET</span>Audience Count by Type</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#paginated-audience-details-list"><span class="badge bar badge--primary">GET</span>Paginated Audience Details List</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Segment Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-segment-details-1"><span class="badge bar badge--primary">GET</span>Audience Segment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#segment-partner-provider-list"><span class="badge bar badge--primary">GET</span>Segment Partner Provider List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#segment-list-by-providerpartner-ids"><span class="badge bar badge--primary">GET</span>Segment List by Partner/Partner IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#segment-list-by-audience-ids"><span class="badge bar badge--primary">GET</span>Segment List by Audience IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-segment-insights"><span class="badge bar badge--primary">GET</span>Audience Segment Insights</a>',
               defaultStyle: true,
             },
           ]
@@ -597,7 +654,22 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-matched-audience"><span class="badge bar badge--info">PATCH</span>Update Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-retargeted-audience"><span class="badge bar badge--success">POST</span>Create Retargeted Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-retargeted-audience"><span class="badge bar badge--warning">PUT</span>Update Retargeted Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#retargeted-audience-email-notification"><span class="badge bar badge--success">POST</span>Retargeted Audience Email</a>',
               defaultStyle: true,
             },
             {
@@ -617,12 +689,72 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-audience-segment"><span class="badge bar badge--warning">PUT</span>Update Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-prebid-audience"><span class="badge bar badge--success">POST</span>Create Prebid Audience</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-prebid-audience"><span class="badge bar badge--warning">PUT</span>Update Prebid Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-contextual-audience"><span class="badge bar badge--success">POST</span>Create Contextual Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-abm-audience"><span class="badge bar badge--success">POST</span>Create ABM Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-lookalike-audience"><span class="badge bar badge--success">POST</span>Create Lookalike Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-audience-name"><span class="badge bar badge--info">PATCH</span>Update Audience Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#duplicate-matched-audience"><span class="badge bar badge--success">POST</span>Duplicate Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-audience-insights"><span class="badge bar badge--success">POST</span>Create Audience Insights</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#send-insights-email"><span class="badge bar badge--success">POST</span>Send Insights Email</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#regenerate-audience-insights-report"><span class="badge bar badge--success">POST</span>Regenerate Insights Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#download-audience-insights-report"><span class="badge bar badge--success">POST</span>Download Insights Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#validate-url-for-contextual-audience"><span class="badge bar badge--success">POST</span>Validate URL for Contextual Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#delete-audience"><span class="badge bar badge--warning">PUT</span>Delete Audience</a>',
               defaultStyle: true,
             },
           ]
@@ -634,52 +766,109 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-abm-audience-details"><span class="badge bar badge--primary">GET</span>ABM Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#abm-audience-details"><span class="badge bar badge--primary">GET</span>ABM Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-abm-audience-statistics"><span class="badge bar badge--primary">GET</span>ABM Audience Statistics</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#abm-audience-statistics"><span class="badge bar badge--primary">GET</span>ABM Audience Statistics</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-titles"><span class="badge bar badge--primary">GET</span>Healthcare Titles List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-titles-list"><span class="badge bar badge--primary">GET</span>Healthcare Titles List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-specialties"><span class="badge bar badge--primary">GET</span>Healthcare Specialties List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-specialties-list"><span class="badge bar badge--primary">GET</span>Healthcare Specialties List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-list-of-healthcare-systems"><span class="badge bar badge--primary">GET</span>Healthcare Systems List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-systems-list"><span class="badge bar badge--primary">GET</span>Healthcare Systems List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-data"><span class="badge bar badge--success">POST</span>Healthcare Data</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-data"><span class="badge bar badge--success">POST</span>Healthcare Data</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-statistics"><span class="badge bar badge--success">POST</span>Healthcare Statistics</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-statistics"><span class="badge bar badge--success">POST</span>Healthcare Statistics</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-types"><span class="badge bar badge--success">POST</span>Healthcare Account Types</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-account-types"><span class="badge bar badge--success">POST</span>Healthcare Account Types</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-subtypes"><span class="badge bar badge--success">POST</span>Healthcare Account Subtypes</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-account-subtypes"><span class="badge bar badge--success">POST</span>Healthcare Account Subtypes</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#get-healthcare-account-names"><span class="badge bar badge--success">POST</span>Healthcare Account Names</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#healthcare-account-names"><span class="badge bar badge--success">POST</span>Healthcare Account Names</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Audience Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#matched-audience-fields"><span class="badge bar badge--primary">GET</span>Matched Audience Fields</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#reach-range-list-for-audience-segment"><span class="badge bar badge--primary">GET</span>Segment Reach Range</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#price-range-list-for-audience-segment"><span class="badge bar badge--primary">GET</span>Segment Price Range</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#data-partners-list-for-matched-audience"><span class="badge bar badge--primary">GET</span>Matched Data Partners</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#data-formats-list-for-matched-audience"><span class="badge bar badge--primary">GET</span>Matched Data Formats</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#column-list-for-matched-audience"><span class="badge bar badge--primary">GET</span>Matched Column List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-type-list"><span class="badge bar badge--success">POST</span>Audience Type List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-status-list"><span class="badge bar badge--success">POST</span>Audience Status List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#frequency-type-list"><span class="badge bar badge--success">POST</span>Frequency Type List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#provider-details-list"><span class="badge bar badge--success">POST</span>Provider Details List</a>',
               defaultStyle: true,
             },
           ]
