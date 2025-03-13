@@ -627,7 +627,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#segment-list-by-providerpartner-ids"><span class="badge bar badge--primary">GET</span>Segment List by Partner/Partner IDs</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#segment-list-by-providerpartner-ids"><span class="badge bar badge--primary">GET</span>Segment List by Provider/Partner IDs</a>',
               defaultStyle: true,
             },
             {
@@ -694,12 +694,12 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-prebid-audience"><span class="badge bar badge--success">POST</span>Create Prebid Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-pre-bid-audience"><span class="badge bar badge--success">POST</span>Create Prebid Audience</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-prebid-audience"><span class="badge bar badge--warning">PUT</span>Update Prebid Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-pre-bid-audience"><span class="badge bar badge--warning">PUT</span>Update Prebid Audience</a>',
               defaultStyle: true,
             },
             {
