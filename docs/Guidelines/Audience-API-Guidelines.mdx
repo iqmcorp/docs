@@ -45,7 +45,7 @@ Use the following header parameters for all requests:
 
 ### Matched Audience Details
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{matched_audience_id}</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id}</span>
 
 <div class="container">
   <div class="child1">
@@ -54,7 +54,7 @@ Get Matched Audience details by ID.
 
 | Path Parameter | |
 | --- | --- |
-| `matched_audience_id` <br /><span class="type-text">string</span> | Matched Audience ID |
+| `id` <br /><span class="type-text">string</span> | Matched Audience ID |
 
 </div>
 <div class="child2">
@@ -66,34 +66,35 @@ Get Matched Audience details by ID.
 {
   "statusCode": 200,
   "responseObject": {
-    "id": 1,
-    "audienceName": "Sample audience name",
-    "existingColumnMatching": "{\"FirstName\":\"Voters_FirstName\",\"LastName\":\"Voters_LastName\",\"State\":\"Residence_Addresses_State\",\"Zip4\":\"Residence_Addresses_Zip\"}",
-    "metadata": "{\"voterIDColumn\":[],\"columns\":[\"Voter File VANID\",\"LastName\",\"FirstName\",\"MiddleName\",\"Suffix\",\"Address\",\"City\",\"State\",\"Zip5\",\"Zip4\",\"Sex\",\"Age\",\"Preferred Phone\",\"CD\",\"SD\",\"HD \"],\"fileName\":\"NYSD3DigitalUniverse.csv\",\"fileSize\":7856375,\"rows\":0}",
-    "rawS3URL": "",
-    "status": "Pending",
-    "matchRate": 57.88,
+    "id": 12345,
+    "audienceName": "Sample audience",
+    "existingColumnMatching": "{\"LALVOTERID\":\"Voters_ID\"}",
+    "columnSettings": "{\"Voters_ID\":\"LalVoterID\"}",
+    "metadata": "{\"voterIDColumn\":[\"LALVOTERID\"],\"columns\":[\"LALVOTERID\",\"Residence_Addresses_Zip\",\"Residence_Addresses_State\",\"Voters_FirstName\",\"Voters_LastName\"],\"fileName\":\"matched_audience fn-ln-st-zp.csv\",\"fileSize\":17915,\"rows\":0,\"columnValues\":{\"LALVOTERID\":[\"LALNY106413966\",\"LALNY111849285\",\"LALNY110212948\"],\"Residence_Addresses_Zip\":[\"11021\",\"11050\",\"11050\"],\"Residence_Addresses_State\":[\"NY\",\"NY\",\"NY\"],\"Voters_FirstName\":[\"Mei\",\"Carole\",\"Erin\"],\"Voters_LastName\":[\"Liu\",\"Visconti\",\"Orr\"]}}",
+    "status": "Processing",
+    "matchRate": 0,
     "minEcpm": 0,
     "maxEcpm": 0,
-    "s3FileName": "1642843451480_NYSD3DigitalUniverse.csv",
+    "s3FileName": "Test audience voter id",
     "included": 0,
     "excluded": 0,
-    "createdDate": 1642843451,
-    "modifiedDate": 1642843884,
-    "organizationName": "Sample organization name",
-    "userName": "Sample user name",
+    "createdDate": 1683200348,
+    "modifiedDate": 1683200348,
+    "organizationName": "Sample orgranization name",
+    "userEmail": "sample@example.com",
+    "userName": "Dummy User",
     "expectedSpent7": 0,
     "expectedSpent30": 0,
     "expectedSpent60": 0,
-    "dataCost": 1.5,
-    "owId": 1,
-    "uowId": 1,
-    "rawS3URLError": "File not available currently, please check later",
-    "uniques": 52432,
-    "approvedRejectedByUserName": "Sample user name",
-    "approvedRejectedByUserEmail": "example@example.com",
-    "isApprovalAccess": true,
-    "isEditAccess": true
+    "dataCost": 0,
+    "fileTotalCount": 502,
+    "owId": 1000001,
+    "uowId": 10001,
+    "uniques": 0,
+    "verticalId": 8,
+    "isApprovalAccess": false,
+    "isEditAccess": true,
+    "isSingleColumnEnabled": true
   }
 }
 ```
@@ -118,48 +119,47 @@ interface Responses {
     content: {
       "application/json": {
         statusCode: number;
-        responseObject: {       
-            id: number;
-            audienceName: string;
-            existingColumnMatching: string;
-            metadata: string;
-            rawS3URL: string;
-            status: string;
-            matchRate: number;
-            minEcpm: number;
-            maxEcpm: number;
-            s3FileName: string;
-            included: number;             
-            excluded: number;              
-            createdDate: number;              
-            modifiedDate: number;
-            organizationName: string;
-            userName: string;              
-            expectedSpent7: number;             
-            expectedSpent30: number;         
-            expectedSpent60: number;
-            dataCost: number;           
-            owId: number;             
-            uowId: number;
-            rawS3URLError: string;            
-            uniques: number;
-            approvedRejectedByUserName: string;
-            approvedRejectedByUserEmail: string;
-            isApprovalAccess: boolean;
-            isEditAccess: boolean;
-        };
+        responseObject: {
+          id: number;
+          audienceName: string;
+          existingColumnMatching: string;
+          columnSettings: string;
+          metaData: string;
+          status: string;
+          matchRate: number;
+          minEcpm: number;
+          maxEcpm: number;
+          s3FileName: string;
+          included: number;
+          excluded: number;
+          createdDate: number;
+          modifiedDate: number;
+          organizationName: string;
+          userEmail: string;
+          expectedSpent7: number;
+          expectedSpent30: number;
+          expectedSpent60: number;
+          dataCost: number;
+          fileTotalCount: number;
+          owId: number;
+          uniques: number;
+          verticalId: number;
+          isApprovalAcces: boolean;
+          isEditAccess: boolean;
+          isSingleColumnEnabled: boolean
+        }[];
       };
     };
   };
 }
 
-function GetMatchedAudienceDetails(): Promise<Responses> {
+function getMatchedAudienceDetails(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://app.iqm.com/api/v2/audience/matched/{matched_audience_Id}',
+    url: 'https://app.iqm.com/api/v2/audience/matched/{id}',
     params: {
       path: {
-        matched_audience_Id: `string`
+        id: `number`
       }
     }
   };
