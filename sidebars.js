@@ -570,12 +570,12 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#prebid-audience-details"><span class="badge bar badge--primary">GET</span>Prebid Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#pre-bid-audience-details"><span class="badge bar badge--primary">GET</span>Pre-bid Audience Details</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-prebid-audience-details"><span class="badge bar badge--success">POST</span>Search Prebid Audience Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-pre-bid-audience-details"><span class="badge bar badge--success">POST</span>Search Pre-bid Audience Details</a>',
               defaultStyle: true,
             },
             {
@@ -694,12 +694,12 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-pre-bid-audience"><span class="badge bar badge--success">POST</span>Create Prebid Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#create-pre-bid-audience"><span class="badge bar badge--success">POST</span>Create Pre-bid Audience</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-pre-bid-audience"><span class="badge bar badge--warning">PUT</span>Update Prebid Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#update-pre-bid-audience"><span class="badge bar badge--warning">PUT</span>Update Pre-bid Audience</a>',
               defaultStyle: true,
             },
             {
