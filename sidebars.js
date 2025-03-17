@@ -853,22 +853,22 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-type-list"><span class="badge bar badge--success">POST</span>Audience Type List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-type-list"><span class="badge bar badge--primary">GET</span>Audience Type List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-status-list"><span class="badge bar badge--success">POST</span>Audience Status List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-status-list"><span class="badge bar badge--primary">GET</span>Audience Status List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#frequency-type-list"><span class="badge bar badge--success">POST</span>Frequency Type List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#frequency-type-list"><span class="badge bar badge--primary">GET</span>Frequency Type List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#provider-details-list"><span class="badge bar badge--success">POST</span>Provider Details List</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#provider-details-list"><span class="badge bar badge--primary">GET</span>Provider Details List</a>',
               defaultStyle: true,
             },
           ]
