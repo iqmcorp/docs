@@ -104,7 +104,68 @@ Get Matched Audience details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {       
+            id: number;
+            audienceName: string;
+            existingColumnMatching: string;
+            metadata: string;
+            rawS3URL: string;
+            status: string;
+            matchRate: number;
+            minEcpm: number;
+            maxEcpm: number;
+            s3FileName: string;
+            included: number;             
+            excluded: number;              
+            createdDate: number;              
+            modifiedDate: number;
+            organizationName: string;
+            userName: string;              
+            expectedSpent7: number;             
+            expectedSpent30: number;         
+            expectedSpent60: number;
+            dataCost: number;           
+            owId: number;             
+            uowId: number;
+            rawS3URLError: string;            
+            uniques: number;
+            approvedRejectedByUserName: string;
+            approvedRejectedByUserEmail: string;
+            isApprovalAccess: boolean;
+            isEditAccess: boolean;
+        };
+      };
+    };
+  };
+}
+
+function GetMatchedAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/matched/{matched_audience_Id}',
+    params: {
+      path: {
+        matched_audience_Id: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -163,7 +224,57 @@ Get Retargeted Audience details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {            
+            id: number;
+            name: string;
+            status: string;           
+            type: number;             
+            includedCount: number;             
+            excludedCount: number;             
+            createdOn: number;
+            organizationName: string;              
+            owId: number;             
+            createdByUowId: number;
+            createdByUser: string;
+            tagId: string;
+            duration: string;            
+            time: number;             
+            startDate: number;            
+            endDate: number;
+            editAccess: boolean;
+        };
+      };
+    };
+  };
+}
+
+function GetRetargetedAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/retarget/{retargeted_audience_Id}',
+    params: {
+      path: {
+        retargeted_audience_Id: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -583,7 +694,143 @@ Get Geo-Farmed Audience Details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+          success: boolean;         
+          data: {             
+              id: number;
+              name: string;
+              status: string;             
+              type: number;             
+              includedCount: number;             
+              excludedCount: number;             
+              createdOn: number;
+              organizationName: string;             
+              owId: number;              
+              createdByUowId: number;
+              createdByUser: string;              
+              uniques: number;              
+              frequency: number;             
+              frequencyType: number;             
+              startDate: number;              
+              endDate: number;             
+              timezone: number;
+              timeRange: {
+                  [key: string]: string;
+              };
+              locations: {
+                  included: {
+                      locationIds: number[];
+                      states: number[];
+                      counties: number[];
+                      cities: number[];
+                      stateSenates: number[];
+                      stateHouses: number[];
+                      congressionalDistricts: number[];
+                      zipCodes: number[];
+                      customAreas: {
+                          latitude: number;
+                          longitude: number;
+                          radius: number;
+                          address: string;                          
+                          locationId: number;
+                          isIncluded: boolean;
+                          cid: string;
+                          sid: string;
+                          type: string;
+                          unit: string;                         
+                          cdId: number;                         
+                          sdId: number;                         
+                          hdId: number;
+                          polypath?: {
+                              lat: number;
+                              lng: number;
+                          }[];
+                      }[];
+                  };
+                  excluded: {
+                      states: string | null;
+                      cities: number[];
+                      counties: number[];
+                      stateSenates: number[];
+                      stateHouses: number[];
+                      congressionalDistricts: number[];
+                      zipCodes: number[];
+                      customAreas: {
+                          latitude: number;
+                          longitude: number;
+                          radius: number;
+                          address: string;                         
+                          locationId: number;
+                          isIncluded: boolean;
+                          cid: string;
+                          sid: string;
+                          type: string;
+                          unit: string;                        
+                          cdId: number;                         
+                          sdId: number;                         
+                          hdId: number;
+                          polypath?: {
+                              lat: number;
+                              lng: number;
+                          }[];
+                      }[];
+                      locationIds: number[];
+                  };
+                  locationFileIds: number[];                  
+                  country: number;
+              };
+              bulkLocationDetails: {
+                  [key: string]: {
+                      fileName: string;
+                      fileType: string;
+                      validLocations: {
+                          latitude: number;
+                          longitude: number;
+                          radius: number;
+                          address: string;                        
+                          locationId: number;
+                          isIncluded: boolean;
+                          cid: string;
+                          sid: string;                          
+                          cdId: number;                         
+                          sdId: number;                          
+                          hdId: number;
+                      }[];                      
+                      id: number;
+                  };
+              };
+              editAccess: boolean;
+          };
+      };
+    };
+  };
+}
+
+function GetGeo-FarmedAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/geo-farmed/{geo-farmed_audience_Id}',
+    params: {
+      path: {
+        geo-farmed_audience_Id: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -652,7 +899,66 @@ Get Campaign Audience details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          type: number;
+          includedCount: number;
+          excludedCount: number;
+          createdOn: number;
+          organizationName: string;
+          owId: number;
+          createdByUowId: number;
+          createdByUser: string;
+          uniques: number;
+          campaignDetail: {
+            impression: {
+              [key: string]: string;
+            };
+            clicks: {
+              [key: string]: string;
+            };
+            conversion: {
+              [key: string]: string;
+            };
+          };
+          startDate: number;
+          endDate: number;
+          editAccess: boolean;
+        };
+      };
+    };
+  };
+}
+
+function GetCampaignAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/campaign/{campaign_audience_Id}',
+    params: {
+      path: {
+        campaign_audience_Id: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -660,8 +966,6 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 </div></div>
 
 ---
-
-
 
 ### Pre-bid Audience Details
 
@@ -734,7 +1038,59 @@ Get Pre-bid Audience details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          owId: number;
+          createdByUowId: number;
+          cpm: number;
+          createdOn: number;
+          prebidSegmentData: {
+            prebidAudienceSegmentId: number;
+            prebidAudienceSegmentName: string;
+            prebidAudienceSegmentRootId: number;
+            description: string;
+            parentPathKey: string;
+            cpm: number;
+            creativeTypeIdList: number[];
+            providerId: number;
+            providerName: string;
+            providerLogoUrl: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getPrebidAudienceDetailsByAudienceId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/prebid/{prebidAudienceId}',
+    params: {
+      path: {
+        prebidAudienceId: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -827,7 +1183,59 @@ Search Pre-bid Audiences by specified parameters.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          prebidSegmentData: {
+            prebidAudienceSegmentId: number;
+            prebidAudienceSegmentName: string;
+            prebidAudienceSegmentRootId: number;
+            description: string;
+            parentPathKey: string;
+            cpm: number;
+            creativeTypeIdList: number[];
+            providerId: number;
+            providerName: string;
+            providerLogoUrl: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getPrebidSegmentDetailsBySearch(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/prebid/details/search/list',
+    requestBody: {
+      content: {
+        "application/json": {
+          providerIdList?: `number[]`,
+          prebidAudienceSegmentIdList?: `number[]`,
+          prebidAudienceIdList?: `number[]`,
+          searchField?: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -887,7 +1295,60 @@ Get Contextual Audience details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+         id: number;
+         name: string;
+         status: string;
+         type: number;
+         includedCount: number;
+         excludedCount: number;
+         createdOn: number;
+         organizationName: string;
+         owId: number;
+         createdByUowId: number;
+         createdByUser: string;
+         createdByUserEmail: string;
+         uniques: number;
+         dataCost: number;
+         keywords: string;
+         urls: string;
+         startDate: number;
+         endDate: number;
+         frequency: number;
+         editAccess: boolean
+        };
+      };
+    };
+  };
+}
+
+function getContextualAudience(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/contextual/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -979,7 +1440,48 @@ Get a count of Audiences by status type.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          statusKey: string;
+          statusLabel: string;
+          logDescription: string | null;
+          statusCount: number;
+          order: number;
+        }[];
+      };
+    };
+  };
+}
+
+function GetStatuswiseaudiencecount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/count/bystatus',
+    params: {
+      query: {
+        searchField: `string`,
+        owIds: `string`,
+        audienceTypeIds: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1063,7 +1565,45 @@ Get an Audience count by Audience type.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          audienceTypeId: number;
+          audienceTypeName: string;
+          audienceCount: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceTypeWiseCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/typeWiseCount',
+    params: {
+      query?: {
+        audienceTypeIds?: `string`,
+        status?: `string`,
+        searchField?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1143,7 +1683,51 @@ Get list of audiences with basic information by desired filters.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          id: number;
+          audienceName: string;
+          audienceType: number;
+          isVoterAudience: boolean;
+          status: string;
+          statusDisplayName: string;
+          createdOn: number;
+          dataCost: number;
+          uniques: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/list',
+    params: {
+      query?: {
+        owIds?: `string`,
+        audienceTypeIds?: `string`,
+        searchField?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1234,7 +1818,86 @@ Get a paginated list of audiences with details by desired filters.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          totalRecords: number;
+          data: {
+            id: number;
+            audienceName: string;
+            audienceType: number;
+            matchRate: number;
+            fileTotalCount: number;
+            included: number;
+            excluded: number;
+            includedCampaignList: number[];
+            excludedCampaignList: number[];
+            status: string;
+            createdOn: number;
+            tagTime: number;
+            tagUniqueCount: number;
+            isAudienceNewPlatform: number;
+            dataCost: number;
+            s3FileName: string;
+            organizationName: string;
+            uniques: number;
+            runningCampaignCount: number;
+            pendingCampaignCount: number;
+            pausedCampaignCount: number;
+            expiredCampaignCount: number;
+            timezone: number;
+            partnerName: string;
+            partnerLogoUrl: string;
+            isApprovalAccess: boolean;
+            isEditAccess: boolean;
+          }[];
+          filteredRecords: number;
+          insightDetails: {
+            [number: number]: {
+              statusId: number;
+              id: number;
+            }
+          }
+        }
+      };
+    };
+  };
+}
+
+function getAudienceDetailedList_1(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/detailed/list',
+    params: {
+      query?: {
+        audienceTypeIds?: `string`,
+        searchField?: `string`,
+        pageSize?: `string`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        audienceIds?: `string`,
+        owIds?: `string`,
+        status?: `string`,
+        noOfEntries?: `number`,
+        sortType?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1345,7 +2008,72 @@ Get Audience Segment details by ID.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          type: number;
+          includedCount: number;
+          excludedCount: number;
+          createdOn: number;
+          organizationName: string;
+          owId: number;
+          createdByUowId: number;
+          createdByUserEmail: string;
+          uniques: number;
+          dataCost: number;
+          segmentsList: {
+            segmentId: number;
+            taxonomyId: number;
+            taxonomyValue: number;
+            description: string;
+            pathKey: string;
+            cpm: number;
+            lastUpdatedDate: string;
+            totalReach: number;
+            reachMetadata: string;
+            dataAvailable: boolean;
+            leafNode: boolean;
+          }[];
+          segmentPartnerName: string;
+          segmentPartnerId: number;
+          segmentPartnerLogo: string;
+          equation: string;
+          segmentIdList: number[];
+          editAccess: boolean;
+        }
+      };
+    };
+  };
+}
+
+function getSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1444,7 +2172,53 @@ Search Audience Segments by specified parameters.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          "0d5fcaea-0fe3-4b10-ba62-168f3dcb0281": {
+            description: string;
+            cpm: number;
+            isLeaf: number;
+            margin: number;
+            pathKey: string;
+            id: string;
+            taxonomy_value: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function GetSegmentSearchResult(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/segment/search',
+    requestBody: {
+      content: {
+        "application/json": {
+          providerIds: `string`,
+          referenceId: `string`,
+          searchField: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1561,7 +2335,59 @@ Get a list of partners and providers with basic Audience information.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          partnerProviderList: {
+            partnerId: number;
+            partnerReferenceUuid: string;
+            partnerName: string;
+            partnerLogoUrl: string;
+            partnerDescription: string;
+            order: number;
+            verticalIdList: number[];
+            seatId: number;
+            customPartner: boolean;
+            providerList: {
+              providerId: number;
+              providerReferenceUuid: string;
+              providerName: string;
+              providerLogoUrl: string;
+              verticalIdList: number[];
+              providerDescription: string;
+            }[];
+            isPartnerPublic: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getSegmentPartnerProviderList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/partner-provider/list',
+    requestBody: {
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1639,7 +2465,60 @@ Get a list of Segments by given provider or parent ID. If parent ID is not provi
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          segmentId: number;
+          taxonomyId: string;
+          taxonomyValue: string;
+          description: string;
+          pathKey: string;
+          cpm: number;
+          referenceId: string;
+          lastUpdateDate: string;
+          totalReach: number;
+          dataAvailable: boolean;
+          reachMetadata: {
+            iosDevicesReach: number;
+            androidDevicesReach: number;
+            cookiesReach: number;
+          };
+          leafNode: boolean;
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentsListByParent(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/list-by-parent-id',
+    params: {
+      query: {
+        partnerId: `number`,
+        providerId: `number`,
+        parentId?: `number`,
+        showOnlyNonZeroSegments?: `boolean`,
+        showOnlyReadySegments?: `boolean`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1731,7 +2610,47 @@ Get a list of Segments based on Audience IDs.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          totalSegments: number;
+          segmentDetailsResponseV0List: {
+            segmentId: number;
+            segmentName: string;
+          }[];
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentListByAudience(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/list-by-audience-ids',
+    params: {
+      query: {
+        audienceIds: `string`,
+        segmentListSize?: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1824,7 +2743,57 @@ Get available Audience Insights like age, location, gender, etc.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          audienceName: string;
+          audienceDate: string;
+          verticalId: string;
+          vertical: string;
+          widgets: {
+            title: string;
+            type: string;
+            data: {
+              srNo: number;
+              deviceType: string;
+              audienceValue(Absolute): string;
+              audienceValue(%): number;
+              nationalAvg(%): number;
+              delta: number;
+            }[];
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getSegmentAudienceInsights(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/audience-insights/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -1835,7 +2804,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 ### Create Matched Audience
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/add</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
 
 <div class="container">
   <div class="child1">
@@ -1962,7 +2931,54 @@ Content-Disposition: form-data; name="fileTotalCount"
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function addMatchedAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/matched/add',
+    params: {
+      query: {
+        columns: `string`,
+        columnSettings?: `string`,   
+        audienceName: `string`,    
+        metadata: `string`,   
+        fileTotalCount: `number`,       
+        isSingleColumnEnabled: `boolean`,
+      },
+    },
+    requestBody: {
+      content: {
+        "multipart/form-data": {       
+            file: `string`,
+        },
+      },
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2018,7 +3034,50 @@ Update a Matched Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function EditMatchedAudience(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v2/audience/matched/update/{matched_audience_Id}',
+    params: {
+      path: {
+        matched_audience_Id: `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          rawS3URL: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2074,7 +3133,48 @@ Create a Retargeted Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          tag_script: string;
+          message: string;
+        };
+      }
+    };
+  };
+}
+
+function CreateRetargetedAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/retarget/tag',
+    requestBody: {
+      content: {
+        "application/json": {
+          tag_duration: `string`,
+          tag_name: `string`,
+          start_date: `number`,
+          end_date: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2132,7 +3232,52 @@ Update a Retargeted Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          tag_script: string;
+          message: string;
+        };
+      }
+    };
+  };
+}
+
+function EditRetargetAudience(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/audience/retarget/{retargeted_audience_id}',
+    param: {
+      path: {
+        retargeted_audience_id: `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          tag_duration: `string`,
+          tag_name: `string`,
+          tag_time: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2183,7 +3328,44 @@ Send email notification on Retargeted Audience creation.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function RetargetAudienceemailnotify(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/email/notify',
+    requestBody: {
+      content: {
+        "application/json": {
+          pixelCode: `string`,
+          recipients: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2795,7 +3977,114 @@ Create a Geo-Farmed Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function CreateGeo-FarmedAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/geo-farmed/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          frequency: `number`,
+          frequencyType: `number`,
+          startDate: `number`,
+          endDate: `number`,
+          timezone: `number`,
+          timeRange: {
+            [key: string]: `string`,
+          },
+          removedLocationsIds: `number[]`,
+          locations: {
+            country: `number`,
+            included: {
+              locationIds: `number[]`,
+              states: `number[]`,
+              counties: `number[]`,
+              cities: `number[]`,
+              stateSenates: `number[]`,
+              stateHouses: `number[]`,
+              congressionalDistricts: `number[]`,
+              zipCodes: `number[]`,
+              customAreas: {
+                latitude: `number`,
+                longitude: `number`,
+                radius: `number`,
+                address: `string`,
+                locationId: `number`,
+                isIncluded: `boolean`,
+                cid: `string`,
+                sid: `string`,
+                type: `string`,
+                unit: `string`,
+                cdId: `number`,
+                sdId: `number`,
+                hdId: `number`,
+                polypath?: {
+                  lat: `number`,
+                  lng: `number`,
+                }[],
+              }[],
+            },
+            excluded: {
+              locationIds: `number[]`,
+              cities: `number[]`,
+              counties: `number[]`,
+              stateSenates: `number[]`,
+              stateHouses: `number[]`,
+              congressionalDistricts: `number[]`,
+              zipCodes: `number[]`,
+              customAreas: {
+                latitude: `number`,
+                longitude: `number`,
+                radius: `number`,
+                address: `string`,
+                locationId: `number`,
+                isIncluded: `boolean`,
+                cid: `string`,
+                sid: `string`,
+                type: `string`,
+                unit: `string`,
+                cdId: `number`,
+                sdId: `number`,
+                hdId: `number`,
+                polypath?: {
+                  lat: `number`,
+                  lng: `number`,
+                }[],
+              }[],
+            },
+            locationFileIds: number[],
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2896,7 +4185,51 @@ Create a Campaign Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function CreateCampaignAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/campaign/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          startDate: `number`,
+          endDate: `number`,
+          campaignDetail: {
+            impressions: `number[]`,
+            clicks: `number[]`,
+            conversions: `number[]`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2949,7 +4282,49 @@ Create an Audience Segment.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/segment/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3008,7 +4383,53 @@ Update an Audience Segment.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function updateSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/audience/segment/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3072,7 +4493,44 @@ The IQM platform supports one Creative type per Campaign. Pre-bid segments inclu
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createPrebidAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/prebid/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          prebidAudienceName: `string`,
+          prebidAudienceSegmentIdList: `number[]`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3128,7 +4586,50 @@ Update a Pre-bid Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          prebidAudienceId: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function editPrebidAudience(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/audience/prebid/{prebidAudienceId}',
+    params: {
+      path: {
+        prebidAudienceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          prebidAudienceName: `string`,
+          prebidAudienceSegmentIdList: `number[]`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3198,7 +4699,53 @@ The period between the start date and the end date cannot exceed 30 days.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createContextualAudiences(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/contextual/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          audienceName: `string`,
+          keywords?: `string`,
+          urls?: `string`,
+          frequency?: `number`,
+          startDate?: `number`,
+          endDate?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3209,7 +4756,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 ### Create ABM Audience
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm</span>
 
 <div class="container">
   <div class="child1">
@@ -3442,7 +4989,53 @@ Create a Lookalike Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function CreateLookalikeAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/lookalike/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          sourceAudienceIds: `string`,
+          countryIds: `string`,
+          stateIds: `string`,
+          cityIds: `string`,
+          countyIds: `string`,
+          senateDistrictIds: `string`,
+          houseDistrictIds: `string`,
+          congressionalDistrictIds: `string`,
+          audienceSize: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3498,7 +5091,50 @@ Update an Audience's name.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function UpdateAudienceName(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v2/audience/updateName/{audience_id}',
+    params: {
+      path: {
+        audience_id: `string`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          audienceTypeId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3552,7 +5188,49 @@ Duplicate a Matched Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function Duplicatematchedaudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/matched/duplicate/{audienceId}',
+    params: {
+      path: {
+        audienceId: `string`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3617,7 +5295,50 @@ Generate Insights for any given Audience IDs.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidSourceIds: number[];
+          insightsData: {
+            id: number;
+            typeId: number;
+            statusId: number;
+            sourceName: string;
+            name: string;
+            sourceId: number;
+            createdAt: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function createInsightsForMatchedAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/insights/add',
+    params: {
+      query: {       
+        audienceIds: `string`
+      }
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3668,7 +5389,48 @@ Send an Audience Insights as an email.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function sendAudienceInsightsEmail(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/ins/insights/send-email',
+    params: {
+      query: {          
+        attachmentType: `string`,    
+        recipientEmails: `string`,
+        audienceId: `number`,
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/json": {           
+          file?: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3679,7 +5441,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 ### Regenerate Audience Insights Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/ins/insights/regenerate/\{audienceId}</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/ins/insights/regenerate/\{insightsId}</span>
 
 <div class="container">
   <div class="child1">
@@ -3688,7 +5450,7 @@ Regenerate the Insights Report for a given Insight ID, if the Insights fails.
 
 | Path Parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
 
 </div>
 <div class="child2"> 
@@ -3709,7 +5471,39 @@ Regenerate the Insights Report for a given Insight ID, if the Insights fails.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function regenerateInsightsFromAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/ins/insights/regenerate/{insightsId}',
+    params: {
+      path: {
+        insightsId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3763,7 +5557,49 @@ Download an Audience Insights Report as an XLSX or PDF file.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          insightsReportUrl: string;
+        }
+      };
+    };
+  };
+}
+
+function downloadInsightsReportOfAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/ins/insights/download',
+    params: {
+      query: {
+        audienceId: `number`,
+        fileType: `string`,
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/json": {
+          customLogoFile?: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3780,6 +5616,10 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
   <div class="child1">
 
 Validate given URLs to be targeted in a Contextual Audience. 
+
+| Request Schema | |
+| --- | --- |
+| URLs<br /><span class="type-text">array of strings</span> | URLs to validate 
 
 </div>
 <div class="child2">
@@ -3813,7 +5653,39 @@ Validate given URLs to be targeted in a Contextual Audience.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string[];
+      };
+    };
+  };
+}
+
+function validateContextualUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/contextual/programmatic/url/validate',
+    requestBody: {
+      content: {
+        "application/json": `string[]`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3888,7 +5760,46 @@ If the user is not authorized to delete an Audience, or the Audience IDs are att
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          audienceFailedIds: string[];
+          message: string;
+          audienceSuccessfulIds: number[];
+          status: boolean;
+        };
+      };
+    };
+  };
+}
+
+function DeleteAudience(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v2/audience/delete',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceIds: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -4862,7 +6773,50 @@ Get a list of Matched Audience columns.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          mandatoryColumns: {
+            id: number;
+            name: string;
+            l2Name: string;
+          }[];
+          voterIDColumns: {
+            id: number;
+            name: string;
+            l2Name: string;
+          }[];
+          optionalColumns: {
+            id: number;
+            name: string;
+            l2Name: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function GetMatchedAudienceFields(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/matched/fields',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -4925,7 +6879,38 @@ Get a static list of the available reach range used to filter Audience Segment d
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          displayName: string;
+          id: number;
+          order: string;
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentReachRange(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/segment/reach-range',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -4988,7 +6973,38 @@ Get a static list of available CPM range used to filter Audience Segment data.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          displayName: string;
+          id: number;
+          order: string;
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentPriceRange(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/segment/price-range',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -5068,7 +7084,39 @@ Get a static list of Matched Audience data partners.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          id: number;
+          label: string;
+          keyName: string;
+          audienceColumnId: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getMatchedAudienceDataPartner(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/matched/data-partner',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -5136,7 +7184,38 @@ Get a static list of Matched Audience hashed data formats.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          id: number;
+          label: string;
+          keyName: string;
+        }[];
+      };
+    };
+  };
+}
+
+function getMatchedAudienceDataFormats(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/matched/data-format',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -5293,7 +7372,40 @@ Get a static list of columns for Matched Audiences.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          id: number;
+          label: string;
+          key: string;
+          order: number;
+          isSinglecolumn: boolean;
+        }[];
+      };
+    };
+  };
+}
+
+function getMatchedAudienceColumnList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/matched/column-list',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -5387,7 +7499,7 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 
 ### Audience Status List 
 
-<span class="badge badge--primary">GET</span> <span class="path-text">path</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/status</span>
 
 <div class="container">
   <div class="child1">
@@ -5443,7 +7555,43 @@ See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for 
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          status: string;
+          displayName: string;
+        }[];
+      };
+    };
+  };
+}
+
+function GetAudienceStatus(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/status',
+    params: {
+      query: {
+        audienceTypeIds: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -5497,7 +7645,38 @@ Get a static list of Geo-Farmed Audience frequency types.
 See [`prerequisites`](/docs/Getting%20Started/Typescript-Prerequisites.mdx) for TypeScript usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          status: string;
+          displayName: string;
+        }[];
+      };
+    };
+  };
+}
+
+function GetGeo-FarmedFrequencyTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/static/frequency-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
