@@ -403,6 +403,12 @@ const sidebars = {
             },
             {
               type: `doc`,
+              label: 'Audiences',
+              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
               label: 'Campaigns',
               id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
               className: 'sidebarItem'
