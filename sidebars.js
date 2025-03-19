@@ -464,6 +464,12 @@ const sidebars = {
             },
             {
               type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Xandr/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
               label: 'Campaigns',
               id: `Migration Guides/Xandr/Campaign-Migration`,
               className: 'sidebarItem'
