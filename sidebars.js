@@ -366,6 +366,12 @@ const sidebars = {
             },
             {
               type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/DV360/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
               label: 'Campaigns',
               id: `Migration Guides/DV360/Campaign-Migration`,
               className: 'sidebarItem'
