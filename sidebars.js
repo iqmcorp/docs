@@ -317,6 +317,12 @@ const sidebars = {
             },
             {
               type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Beeswax/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
               label: 'Campaigns',
               id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
               className: 'sidebarItem'
@@ -356,6 +362,12 @@ const sidebars = {
               type: `doc`,
               label: 'Overview',
               id: `Migration Guides/DV360/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/DV360/Audience-Migration`,
               className: 'sidebarItem'
             },
             {
@@ -403,6 +415,12 @@ const sidebars = {
             },
             {
               type: `doc`,
+              label: 'Audiences',
+              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
               label: 'Campaigns',
               id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
               className: 'sidebarItem'
@@ -442,6 +460,12 @@ const sidebars = {
               type: `doc`,
               label: 'Overview',
               id: `Migration Guides/Xandr/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Xandr/Audience-Migration`,
               className: 'sidebarItem'
             },
             {
