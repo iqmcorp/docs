@@ -284,7 +284,108 @@ Get a list of your Dashboard configurations.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        items: {
+          data: {
+            freeze: {
+              rows: number;
+              columns: number;
+            };
+            graph1: {
+              label: string;
+              value: string;
+            };
+            graph2: {
+              label: string;
+              value: string;
+            };
+            metric: {
+              id: number;
+              key: string;
+              label: string;
+              order: number;
+              value: string;
+              description: string;
+              fieldDataType: string;
+              defaultEnabled: boolean;
+              aggregationType: string;
+            };
+            search: string;
+            status: {
+              label: string;
+              value: string;
+            };
+            timezone: {
+              id: number;
+              label: string;
+              value: string;
+            };
+            dimensions: {
+              id: number;
+              key: string;
+              label: string;
+              order: number;
+              value: string;
+              groupId: number;
+              description: string;
+              fieldDataType: string;
+              isRowToColumn: boolean;
+              isFilterSupported: boolean;
+              isCustomerDependent: boolean;       
+            };
+            tableLevel: {
+              label: string;
+              value: string;
+            };
+            lastModified: string;
+            sortingColumns: {
+              label: string;
+              value: string;
+              active: boolean;
+              alwaysEnabled: boolean;
+              draggableGroup: number;
+            }[];
+            filteredGroupsId: number[];
+            filteredCampaignsIds: number[];
+            sortingGroupsColumns: {
+              label: string;
+              value: string;
+              alwaysEnabled: boolean;
+              draggableGroup: number;
+            }[];
+            selectedCampaignTypes: [];
+            isSelectingCampaignsByGroup: boolean;
+          };
+          created: number;
+          modifiedDate: string;
+          id: number;
+          label: string
+        }
+      };
+    };
+  };
+}
+
+function getDashBoardList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/das/dashboards',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -352,7 +453,7 @@ Get display data table based on selected Dimensions. Currently supported dimensi
 </tr>
 <tr>
   <td>`dateRange` <br /><span class="type-text">object</span></td>
-  <td>Filters results by start time and end time</td>
+  <td>Defines the reporting window for the metrics and dimensions generated in your Dashboard</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -436,7 +537,7 @@ Get display data table based on selected Dimensions. Currently supported dimensi
 </tr>
 <tr>
   <td>`filters`<br /><span class="type-text">object</span></td>
-  <td>Filters results</td>
+  <td>Filters results by Campaign status, type, or ID</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -741,7 +842,172 @@ Get display data table based on selected Dimensions. Currently supported dimensi
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "text/plain; charset=utf-8": {
+        total: {
+          CTR: number;
+          date: string | null;
+          budgetDay: number;
+          VCR: number;
+          budgetPacing: string | null;
+          dataCost: number;
+          totalCount: number;
+          campaignTimezone: string | null;
+          eCPM: number;
+          thirdCount: number;
+          owId: string | null;
+          bidImpressions: number;
+          eCPI: number;
+          startTime: string | null;
+          mediaSpent: number;
+          eCPC: number;
+          mappingDataCost: string | null;
+          conversion: {
+            [key: string]: {
+              rate: string | null;
+              CPA: string | null;
+              count: string | null;
+              value: string | null;
+            };
+          };
+          startCount: number;
+          firstCount: number;
+          campaignType: string | null;
+          organizationName: string | null;
+          campaignId: string | null;
+          spent: number;
+          isCampaignFromNewPlatform: string | null;
+          eCPV: number;
+          percentageOfTotalSpent: number;
+          eCPCV: number;
+          impressions: number;
+          completeCount: number;
+          audioVideoViewed: number;
+          mappingSpent: string | null;
+          midCount: number;
+          budgetTotal: number;
+          creativeType: string | null;
+          maxBid: string | null;
+          clicks: number;
+          winRate: number;
+          endTime: string | null;
+          uowId: string | null;
+          campaignName: string | null;
+          CVR: number;
+          status: string | null;
+        };
+        data: {
+          CTR: number;
+          date: string | null;
+          isEditAccess: boolean;
+          budgetDay: number;
+          VCR: number;
+          budgetPacing: boolean;
+          dataCost: number;
+          totalCount: string | null;
+          campaignTimezone: string;
+          eCPM: number;
+          thirdCount: number;
+          owId: number;
+          bidImpressions: number;
+          eCPI: number;
+          startTime: number;
+          mediaSpent: number;
+          eCPC: number;
+          mappingDataCost: string | null;
+          conversion: {
+            [key: string]: {
+              rate: string | null;
+              CPA: string | null;
+              count: number;
+              value: number;
+            };
+          };
+          startCount: number;
+          firstCount: number;
+          campaignType: string;
+          organizationName: string;
+          campaignId: number;
+          spent: number;
+          isCampaignFromNewPlatform: boolean;
+          eCPV: number;
+          percentageOfTotalSpent: number;
+          eCPCV: number;
+          impressions: number;
+          completeCount: number;
+          audioVideoViewed: number;
+          mappingSpent: string | null;
+          midCount: number;
+          budgetTotal: number;
+          creativeType: string;
+          maxBid: number;
+          clicks: number;
+          winRate: number;
+          endTime: number;
+          uowId: number;
+          campaignName: string;
+          CVR: number;
+          status: string;
+        }[];
+        totalCount: number;
+      };
+    };
+  };
+}
+
+function ResultDashBoard(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/rb/resultDashboard',
+    requestBody: {
+      content: {
+        "application/json": {
+          draw: `number`,
+          sort_by: `string`,
+          sort_type: `string`,
+          total_agg: `boolean`,
+          dateRange: {
+            startDate: `string`,
+            endDate: `string`,
+          },
+          timezone: {
+            label: `string`,
+            value: `string`,
+            id: `number`,
+          },
+          dimension: {
+            filter: {
+              value: `string`,
+              label: `string`,
+            },
+            value: `string[]`,
+          },
+          user_session_id: `string`,
+          search_field: `string`,
+          filters: {
+            campaign_status: `string`,
+            creative_type_ids: `string`,
+          },
+          page_number: `number`,
+          total_count: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -784,7 +1050,7 @@ Get serving data report.
 </tr>
 <tr>
   <td>`dateRange` <br /><span class="type-text">object</span></td>
-  <td>Filters results by start time and end time</td>
+  <td>Defines the reporting window for the metrics and dimensions generated in your Dashboard</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1834,7 +2100,144 @@ Get serving data report.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "text/plain; charset=utf-8": {
+        total: {
+          CTR: number;
+          date: string | null;
+          pixalateImpressions: string | null;
+          pixalateViewAbility: number;
+          VCR: number;
+          budgetDay: string | null;
+          budgetPacing: string | null;
+          pixalateViews: string | null;
+          dataCost: number;
+          totalCount: number;
+          campaignTimezone: string | null;
+          eCPM: number;
+          thirdCount: number;
+          bidImpressions: number;
+          eCPI: number;
+          startTime: string | null;
+          mediaSpent: number;
+          eCPC: number;
+          mappingDataCost: string | null;
+          startCount: number;
+          firstCount: number;
+          campaignType: string | null;
+          campaignId: string | null;
+          spent: number;
+          isCampaignFromNewPlatform: string | null;
+          eCPV: number;
+          impressions: number;
+          eCPCV: number;
+          completeCount: number;
+          audioVideoViewed: number;
+          mappingSpent: string | null;
+          midCount: number;
+          uniqueReach: string | null;
+          budgetTotal: string | null;
+          creativeType: string | null;
+          maxBid: string | null;
+          clicks: number;
+          winRate: number;
+          endTime: string | null;
+          campaignName: string | null;
+          CVR: number;
+          status: string | null;
+        };
+        data: {
+          CTR: number;
+          date: string;
+          pixalateImpressions: string | null;
+          pixalateViewAbility: string | null;
+          VCR: number;
+          budgetDay: number;
+          budgetPacing: boolean;
+          pixalateViews: string | null;
+          dataCost: number;
+          totalCount: string | null;
+          campaignTimezone: string;
+          eCPM: number;
+          thirdCount: number;
+          bidImpressions: number;
+          eCPI: number;
+          startTime: number;
+          mediaSpent: number;
+          eCPC: number;
+          mappingDataCost: number;
+          startCount: number;
+          firstCount: number;
+          campaignType: string;
+          campaignId: number;
+          spent: number;
+          isCampaignFromNewPlatform: boolean;
+          eCPV: number;
+          impressions: number;
+          eCPCV: number;
+          completeCount: number;
+          audioVideoViewed: number;
+          mappingSpent: number;
+          midCount: number;
+          uniqueReach: string | null;
+          budgetTotal: number;
+          creativeType: string;
+          maxBid: number;
+          clicks: number;
+          winRate: number;
+          endTime: number;
+          campaignName: string;
+          CVR: number;
+          status: string;
+        }[];
+        totalCount: number;
+      };
+    };
+  };
+}
+
+function GetServingResults(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/rb/serving/result',
+    requestBody: {
+      content: {
+        "application/json": {
+          request_type: `string`,
+          total_agg: `boolean`,
+          dateRange: {
+            startDate: `string`,
+            endDate: `string`,
+          },
+          timezone: {
+            label: `string`,
+            value: `string`,
+            id: `number`,
+          },
+          dimension: {
+            filter: {
+              value: `string`,
+              label: `string`,
+            }
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2147,11 +2550,11 @@ Create and store a Dashboard configuration.
     </tr>
        <tr>
       <td>`isFilterSupported`<br /><span class="type-text">boolean</span></td>
-      <td>null</td>
+      <td>Indicates whether filters are supported (<var>true</var>)</td>
     </tr>
        <tr>
       <td>`isCustomerDependent`<br /><span class="type-text">boolean</span></td>
-      <td>null</td>
+      <td>Indicates whether dimension is Customer dependent (<var>true</var>)</td>
     </tr>
        <tr>
       <td>`isRowToColumn`<br /><span class="type-text">boolean</span></td>
@@ -2799,7 +3202,206 @@ Create and store a Dashboard configuration.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "text/plain; charset=utf-8": {
+        value: number;
+        label: string;
+        id: number;
+        data: {
+          timezone: {
+            id: number;
+            label: string;
+            value: string;
+          };
+          selectedCampaignTypes: [];
+          tableLevel: {
+            label: string;
+            value: string;
+          };
+          search: "";
+          status: {
+            label: string;
+            value: string;
+          };
+          sortingColumns: {
+            label: string;
+            value: string;
+            active: boolean;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          }[];
+          sortingGroupsColumns: {
+            label: string;
+            value: string;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          }[];
+          sortingInsertionOrdersColumns: {
+            label: string;
+            value: string;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          };
+          freeze: {
+            rows: number;
+            columns: number;
+          };
+          graph1: {
+            label: string;
+            value: string;
+          };
+          graph2: {
+            label: string;
+            value: string;
+          };
+          dimension: {
+            id: number;
+            key: string;
+            label: string;
+            order: number;
+            value: string;
+            groupId: number;
+            description: string;
+            fieldDataType: string;
+            isRowToColumn: boolean;
+            isFilterSupported: boolean;
+            isCustomerDependent: boolean;       
+          };
+          metric: {
+            id: number;
+            key: string;
+            label: string;
+            order: number;
+            value: string;
+            description: string;
+            fieldDataType: string;
+            defaultEnabled: boolean;
+            aggregationType: string;
+          };
+          filteredCampaignsIds: number[];
+          filteredGroupsIds: number[];
+          isSelectingCampaignsByGroup: boolean;
+          selectedCampaigns: number[];
+          selectedInsertionOrders: number[];
+        }
+      };
+    };
+  };
+}
+
+function createDashboardAPI(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/das/dashboard',
+    requestBody: {
+      content: {
+        "application/json": {
+          value: `string`,
+          label: `string`,
+          data: {
+            timezone: {
+              label: `string`,
+              value: `string`,
+              id: `number`,
+            },
+            selectedCampaignTypes: `[]`,
+            tableLevel: {
+              label: `string`,
+              value: `string`,
+            },
+            search: ``,
+            status: {
+              label: `string`,
+              value: `string`,
+            },
+            sortingColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            sortingGroupsColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            sortingInsertionOrderColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            freeze: {
+              columns: `number`,
+              rows: `number`,
+            },
+            graph1: {
+              value: `string`,
+              label: `string`,
+            },
+            graph2: {
+              value: `string`,
+              label: `string`,
+            },
+            dimension: {
+              id: `number`,
+              label: `string`,
+              order: `number`,
+              fieldDataType: `string`,
+              description: `string`,
+              groupId: `number`,
+              key: `string`,
+              isFilterSupported: `boolean`,
+              isCustomerDependent: `boolean`,
+              isRowToColumn: `boolean`,
+              value: `string`
+            },
+            metric: {
+              id: `number`,
+              label: `string`,
+              order: `number`,
+              fieldDataType: `string`,
+              aggregationType: `string`,
+              description: `string`,
+              defaultEnabled: `boolean`,
+              key: `string`,
+              dependentDimensions: `null`,
+              value: `string`
+            },
+            filteredCampaignIds: `array of numbers`,
+            filteredGroupIds: `array of numbers`,
+            isSelectingCampaignsByGroup: `boolean`,
+            selectedCampaigns: `array of numbers`,
+            selectedInsertionOrders: `array of numbers`
+          },
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3055,7 +3657,211 @@ See [Create Dashboard](#create-dashboard) for supported request body parameters.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "text/plain; charset=utf-8": {
+        value: number;
+        label: string;
+        id: number;
+        data: {
+          timezone: {
+            id: number;
+            label: string;
+            value: string;
+          };
+          selectedCampaignTypes: [];
+          tableLevel: {
+            label: string;
+            value: string;
+          };
+          search: "";
+          status: {
+            label: string;
+            value: string;
+          };
+          sortingColumns: {
+            label: string;
+            value: string;
+            active: boolean;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          }[];
+          sortingGroupsColumns: {
+            label: string;
+            value: string;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          }[];
+          sortingInsertionOrdersColumns: {
+            label: string;
+            value: string;
+            alwaysEnabled: boolean;
+            draggableGroup: number;
+          };
+          freeze: {
+            rows: number;
+            columns: number;
+          };
+          graph1: {
+            label: string;
+            value: string;
+          };
+          graph2: {
+            label: string;
+            value: string;
+          };
+          dimension: {
+            id: number;
+            key: string;
+            label: string;
+            order: number;
+            value: string;
+            groupId: number;
+            description: string;
+            fieldDataType: string;
+            isRowToColumn: boolean;
+            isFilterSupported: boolean;
+            isCustomerDependent: boolean;       
+          };
+          metric: {
+            id: number;
+            key: string;
+            label: string;
+            order: number;
+            value: string;
+            description: string;
+            fieldDataType: string;
+            defaultEnabled: boolean;
+            aggregationType: string;
+          };
+          filteredCampaignsIds: number[];
+          filteredGroupsIds: number[];
+          isSelectingCampaignsByGroup: boolean;
+          selectedCampaigns: number[];
+          selectedInsertionOrders: number[];
+        }
+      };
+    };
+  };
+}
+
+function updateDashboardAPI(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v2/das/dashboard/{dashboardId}',
+    params: {
+      path: {
+        dashboardId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          value: `string`,
+          label: `string`,
+          data: {
+            timezone: {
+              label: `string`,
+              value: `string`,
+              id: `number`,
+            },
+            selectedCampaignTypes: `[]`,
+            tableLevel: {
+              label: `string`,
+              value: `string`,
+            },
+            search: ``,
+            status: {
+              label: `string`,
+              value: `string`,
+            },
+            sortingColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            sortingGroupsColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            sortingInsertionOrderColumns: [
+              {
+                label: `string`,
+                value: `string`,
+                alwaysEnabled: `boolean`,
+                draggableGroup: `number`,
+                active: `boolean`,
+              }
+            ],
+            freeze: {
+              columns: `number`,
+              rows: `number`,
+            },
+            graph1: {
+              value: `string`,
+              label: `string`,
+            },
+            graph2: {
+              value: `string`,
+              label: `string`,
+            },
+            dimension: {
+              id: `number`,
+              label: `string`,
+              order: `number`,
+              fieldDataType: `string`,
+              description: `string`,
+              groupId: `number`,
+              key: `string`,
+              isFilterSupported: `boolean`,
+              isCustomerDependent: `boolean`,
+              isRowToColumn: `boolean`,
+              value: `string`
+            },
+            metric: {
+              id: `number`,
+              label: `string`,
+              order: `number`,
+              fieldDataType: `string`,
+              aggregationType: `string`,
+              description: `string`,
+              defaultEnabled: `boolean`,
+              key: `string`,
+              dependentDimensions: `null`,
+              value: `string`
+            },
+            filteredCampaignIds: `array of numbers`,
+            filteredGroupIds: `array of numbers`,
+            isSelectingCampaignsByGroup: `boolean`,
+            selectedCampaigns: `array of numbers`,
+            selectedInsertionOrders: `array of numbers`
+          },
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3093,7 +3899,36 @@ Delete a Dashboard.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": unknown;
+    };
+  };
+}
+
+function deleteDashboardAPI(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v2/das/dashboard',
+    params: {
+      query: {
+        id: `number`,
+      }
+    }d
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3101,6 +3936,8 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 </div></div>
 
 ## Dashboard Reports
+
+Create custom reports or generate tailored Insights reports from the Dashboard.
 
 ### Workspace Report
 
@@ -3252,7 +4089,174 @@ Get a report on a Campaign's performance by Workspace and supported filters.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            click: number;
+            totalCount: number;
+            winRate: number;
+            logoUrl: string;
+            avatarUrl: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceMediaEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationBidShadingSaving: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: string;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPv: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: number;
+            frequency: number;
+            date: number;
+            campaignId: number;
+            campaignName: string;
+            maxBid: number;
+            startTime: number;
+            endTime: number;
+            campaignType: string;
+            status: number;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: string;
+            creativeType: string;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            vldInsightsCost: number;
+            workspaceVLDInsightsEarnings: number;
+            platformVLDInsightsEarnings: number;
+            pldInsightsCost: number;
+            workspacePLDInsightsEarnings: number;
+            platformPLDInsightsEarnings: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: string;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            exchangeId: number;
+            exchangeName: string;
+            autoSumTotalBudget: boolean;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function dashboard-report-by-workspace(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/das/report/by-workspace',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[],
+          columns?: {
+            [key: string]: Record<string, never>,
+          }[],
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          resultType?: `string`,
+          campaignStatus?: `string`,
+          campaignStatusList?: `string[]`,
+          creativeTypeIds?: `number[]`,
+          owIds?: `string`,
+          owIdsList?: `number[]`,
+          workspaceOwIdsList?: `number[]`,
+          customerOwIdsList?: `number[]`,
+          tab?: `string`,
+          isGraph?: `boolean`,
+          dayDiff?: `number`,
+          download?: `boolean`,
+          fileType?: `string`,
+          fileName?: `string`,
+          campaignIds?: `number[]`,
+          campaignGroupIds?: `number[]`,
+          isBetaUser?: `boolean`,
+          isAudienceFlagsRequired?: `boolean`,
+          loggedInUowId?: `number`,
+          graphType?: `string`,
+          ioIdsList?: `number[]`,
+          ioStatusIdsList?: `number[]`,
+          ids?: `number[]`,
+          budgetTypeIdList?: `number[]`,
+          campaignTypeIds?: `number[]`,
+          organizationType?: `string`,
+          campaignRequest?: `boolean`,
+          dataQueryEligible?: `boolean`,
+          totalQueryEligible?: `boolean`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3429,7 +4433,185 @@ Get a report on a Campaign's performance by Insertion Order and supported filter
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            click: number;
+            totalCount: number;
+            winRate: number;
+            logoUrl: string;
+            avatarUrl: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceMediaEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationBidShadingSaving: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: string;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPv: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: number;
+            frequency: number;
+            date: number;
+            campaignId: number;
+            campaignName: string;
+            maxBid: number;
+            startTime: number;
+            endTime: number;
+            campaignType: string;
+            status: number;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: string;
+            creativeType: string;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            vldInsightsCost: number;
+            workspaceVLDInsightsEarnings: number;
+            platformVLDInsightsEarnings: number;
+            pldInsightsCost: number;
+            workspacePLDInsightsEarnings: number;
+            platformPLDInsightsEarnings: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: string;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            ioStatusId: number;
+            campaignsCount: number;
+            ioTotalImpressions: number;
+            ioPacingPercentage: number;
+            ioActualSpent: number;
+            ioExpectedSpent: number;
+            ioDuration: number;
+            ioRemainingDuraiton: number;
+            exchangeId: number;
+            exchangeName: string;
+            isAutoSumIoTotalBudget: boolean;
+            budgetTotalCombined: number;
+            budgetDayCombined: number;
+            ioTotalBudgetCombined: number; 
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function dashboard-report-by-io(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/das/report/by-io',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[],
+          columns?: {
+            [key: string]: Record<string, never>,
+          }[],
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          resultType?: `string`,
+          campaignStatus?: `string`,
+          campaignStatusList?: `string[]`,
+          creativeTypeIds?: `number[]`,
+          owIds?: `string`,
+          owIdsList?: `number[]`,
+          workspaceOwIdsList?: `number[]`,
+          customerOwIdsList?: `number[]`,
+          tab?: `string`,
+          isGraph?: `boolean`,
+          dayDiff?: `number`,
+          download?: `boolean`,
+          fileType?: `string`,
+          fileName?: `string`,
+          campaignIds?: `number[]`,
+          campaignGroupIds?: `number[]`,
+          isBetaUser?: `boolean`,
+          isAudienceFlagsRequired?: `boolean`,
+          loggedInUowId?: `number`,
+          graphType?: `string`,
+          ioIdsList?: `number[]`,
+          ioStatusIdsList?: `number[]`,
+          ids?: `number[]`,
+          budgetTypeIdList?: `number[]`,
+          campaignTypeIds?: `number[]`,
+          organizationType?: `string`,
+          campaignRequest?: `boolean`,
+          dataQueryEligible?: `boolean`,
+          totalQueryEligible?: `boolean`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3578,7 +4760,164 @@ Get a report on a Campaign's performance by Exchange and supported filters.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            click: number;
+            totalCount: number;
+            winRate: number;
+            logoUrl: string;
+            avatarUrl: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceMediaEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationBidShadingSaving: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: string;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPv: number;
+            conversionCount: number;
+            conversionValue: number;
+            conversionCPA: number;
+            conversionRate: number;
+            reach: number;
+            frequency: number;
+            date: number;
+            campaignId: number;
+            campaignName: string;
+            maxBid: number;
+            startTime: number;
+            endTime: number;
+            campaignType: string;
+            status: number;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: string;
+            creativeType: string;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            uowId: number;
+            audioVideoViewed: number;
+            campaignGroupId: number;
+            campaignGroupName: string;
+            exchangeId: number;
+            exchangeName: string;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function dashboard-report-by-exchange(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/das/report/by-exchange',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[],
+          columns?: {
+            [key: string]: Record<string, never>,
+          }[],
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          resultType?: `string`,
+          campaignStatus?: `string`,
+          campaignStatusList?: `string[]`,
+          creativeTypeIds?: `number[]`,
+          owIds?: `string`,
+          owIdsList?: `number[]`,
+          workspaceOwIdsList?: `number[]`,
+          customerOwIdsList?: `number[]`,
+          tab?: `string`,
+          isGraph?: `boolean`,
+          dayDiff?: `number`,
+          download?: `boolean`,
+          fileType?: `string`,
+          fileName?: `string`,
+          campaignIds?: `number[]`,
+          campaignGroupIds?: `number[]`,
+          isBetaUser?: `boolean`,
+          isAudienceFlagsRequired?: `boolean`,
+          loggedInUowId?: `number`,
+          graphType?: `string`,
+          ioIdsList?: `number[]`,
+          ioStatusIdsList?: `number[]`,
+          ids?: `number[]`,
+          budgetTypeIdList?: `number[]`,
+          campaignTypeIds?: `number[]`,
+          organizationType?: `string`,
+          campaignRequest?: `boolean`,
+          dataQueryEligible?: `boolean`,
+          totalQueryEligible?: `boolean`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3745,7 +5084,173 @@ Get a report on a Campaign's performance by Customer(Advertiser) and supported f
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            click: number;
+            totalCount: number;
+            winRate: number;
+            logoUrl: string;
+            avatarUrl: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceMediaEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationBidShadingSaving: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: string;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPv: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: number;
+            frequency: number;
+            date: number;
+            campaignId: number;
+            campaignName: string;
+            maxBid: number;
+            startTime: number;
+            endTime: number;
+            campaignType: string;
+            status: number;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: string;
+            creativeType: string;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            vldInsightsCost: number;
+            workspaceVLDInsightsEarnings: number;
+            platformVLDInsightsEarnings: number;
+            pldInsightsCost: number;
+            workspacePLDInsightsEarnings: number;
+            platformPLDInsightsEarnings: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: string;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            exchangeId: number;
+            exchangeName: string;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function dashboard-report-by-customer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/das/report/by-customer',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[],
+          columns?: {
+            [key: string]: Record<string, never>,
+          }[],
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          resultType?: `string`,
+          campaignStatus?: `string`,
+          campaignStatusList?: `string[]`,
+          creativeTypeIds?: `number[]`,
+          owIds?: `string`,
+          owIdsList?: `number[]`,
+          workspaceOwIdsList?: `number[]`,
+          customerOwIdsList?: `number[]`,
+          tab?: `string`,
+          isGraph?: `boolean`,
+          dayDiff?: `number`,
+          download?: `boolean`,
+          fileType?: `string`,
+          fileName?: `string`,
+          campaignIds?: `number[]`,
+          campaignGroupIds?: `number[]`,
+          isBetaUser?: `boolean`,
+          isAudienceFlagsRequired?: `boolean`,
+          loggedInUowId?: `number`,
+          graphType?: `string`,
+          ioIdsList?: `number[]`,
+          ioStatusIdsList?: `number[]`,
+          ids?: `number[]`,
+          budgetTypeIdList?: `number[]`,
+          campaignTypeIds?: `number[]`,
+          organizationType?: `string`,
+          campaignRequest?: `boolean`,
+          dataQueryEligible?: `boolean`,
+          totalQueryEligible?: `boolean`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3942,7 +5447,710 @@ Get a report on a Campaign's performance by supported filters.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            click: number;
+            totalCount: number;
+            winRate: number;
+            logoUrl: string;
+            avatarUrl: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceMediaEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationBidShadingSaving: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: string;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPv: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: number;
+            frequency: number;
+            date: number;
+            campaignId: number;
+            campaignName: string;
+            maxBid: number;
+            startTime: number;
+            endTime: number;
+            campaignType: string;
+            status: number;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: string;
+            creativeType: string;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: string;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            ioStartTime: number;
+            ioStatusId: number;
+            ioEndTime: number;
+            ioTotalBudget: number;
+            pacingPercentage: number;
+            actualSpent: number;
+            expectedSpent: number;
+            campaignDuration: number;
+            remainingDuraion: number;
+            dailyPacingPercentage: number;
+            expectedDailySpent: number;
+            actualDailySpent: number;
+            isAutoSumIoTotalbudget: number;
+            exchangeId: number;
+            budgetTypeId: number;
+            campaignTypeId: number;
+            isEligibleForVLDInsightsReport: boolean;
+            vldInsightsCost: number;
+            workspaceVLDInsightsEarnings: number;
+            platformVLDInsightsEarnings: number;
+            pldInsightsCost: number;
+            workspacePLDInsightsEarnings: number;
+            platformPLDInsightsEarnings: number;
+            isEligibleForPLDInsightsReport: boolean;
+            targetImpression: number;
+            creativesCount: number;
+            budgetTotalCombined: number;
+            budgetDayCombined: number;
+            ioTotalBudgetCombined: number;
+            campaignPriority: number;
+            bidModelDataId: number;
+            exchangeName: string;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+        }
+      }
+    };
+  };
+}
+
+function dashboard-report-by-campaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/das/report/by-campaign',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: string[],
+          columns?: {
+            [key: string]: Record<string, never>,
+          }[],
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: `number`,
+          timezoneName?: `string`,
+          resultType?: `string`,
+          campaignStatus?: `string`,
+          campaignStatusList?: `string[]`,
+          creativeTypeIds?: `number[]`,
+          owIds?: `string`,
+          owIdsList?: `number[]`,
+          workspaceOwIdsList?: `number[]`,
+          customerOwIdsList?: `number[]`,
+          tab?: `string`,
+          isGraph?: `boolean`,
+          dayDiff?: `number`,
+          download?: `boolean`,
+          fileType?: `string`,
+          fileName?: `string`,
+          campaignIds?: `number[]`,
+          campaignGroupIds?: `number[]`,
+          isBetaUser?: `boolean`,
+          isAudienceFlagsRequired?: `boolean`,
+          loggedInUowId?: `number`,
+          graphType?: `string`,
+          ioIdsList?: `number[]`,
+          ioStatusIdsList?: `number[]`,
+          ids?: `number[]`,
+          budgetTypeIdList?: `number[]`,
+          campaignTypeIds?: `number[]`,
+          organizationType?: `string`,
+          campaignRequest?: `boolean`,
+          dataQueryEligible?: `boolean`,
+          totalQueryEligible?: `boolean`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Download Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/rb/export/csv</span>
+
+<div class="container">
+  <div class="child1">
+
+Create a download link for a report.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`draw`<br /><span class="type-text">integer</span></td>
+<td>Displays Data-table parameter, default: <var>1</var></td>
+</tr>
+<tr>
+  <td>`sort_by` <br /><span class="type-text">string</span></td>
+  <td>Filter results by field, default: <var>impressions</var></td>
+</tr>
+<tr>
+  <td>`sort_type`</td>
+  <td>Sort results by ascending (<var>asc</var>) or descending (<var>desc</var>), default: <var>desc</var></td>
+</tr>
+<tr>
+  <td>`total_agg` <br /><span class="type-text">boolean</span></td>
+  <td>Total row only required, default: <var>false</var></td>
+</tr>
+<tr>
+  <td>`is_report`<br /><span class="type-text">boolean</span></td>
+  <td>Request for report</td>
+</tr>
+<tr>
+  <td>`is_graph` <br /><span class="type-text">boolean</span></td>
+  <td>Request for a graph</td>
+</tr>
+<tr>
+  <td>`result_type` <br /><span class="type-text">string</span></td>
+  <td>Only total rows in response (<var>total</var>) or only data in response (<var>data</var>)</td>
+</tr>
+<tr>
+  <td>`user_session_id` <br /><span class="type-text">string</span></td>
+  <td>User session token ID</td>
+</tr>
+<tr>
+  <td>`search_field` <br /><span class="type-text">string</span></td>
+  <td>Filter results by search keyword</td>
+</tr>
+<tr>
+  <td>`page_number` <br /><span class="type-text">integer</span></td>
+  <td>Pagination of records, default: <var>0</var></td>
+</tr>
+<tr>
+  <td>`total_count` <br /><span class="type-text">integer</span></td>
+  <td>Maximum number of results returned, default: <var>50</var></td>
+</tr>
+<tr>
+  <td>`dateRange` <br /><span class="type-text">object</span></td>
+  <td>Defines the reporting window for the metrics and dimensions generated in your Dashboard</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`dateRange` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`startDate` <br /><span class="type-text">string</span> </td>
+    <td>Unix epoch timestamp, in milliseconds</td>
+  </tr>
+  <tr>
+    <td>`endDate`<br /><span class="type-text">string</span></td>
+    <td>Unix epoch timestamp, in milliseconds</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`timezone` <br /><span class="type-text">object</span></td>
+  <td>Filters results by timezone</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`timezone` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`label`<br /><span class="type-text">string</span></td>
+    <td>Timezone label</td>
+  </tr>
+  <tr>
+    <td>`value`<br /><span class="type-text">string</span></td>
+    <td>Timezone value</td>
+  </tr>
+    <tr>
+    <td>`id`<br /><span class="type-text">integer</span></td>
+    <td>Timezone ID</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`dimension`<br /><span class="type-text">object</span></td>
+  <td>Filters results by dimension</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`dimension` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`filter`</td>
+    <td>Nested</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`filter` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+        <td>`value`<br /><span class="type-text">string</span></td>
+        <td>Dimension value</td>
+      </tr>
+      <tr>
+        <td>`label`<br /><span class="type-text">string</span></td>
+        <td>Dimension label</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+  </tr>
+  <tr>
+    <td>`value` <br /><span class="type-text">array</span></td>
+    <td>Filter with IDs or string values</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`filters`<br /><span class="type-text">object</span></td>
+  <td>Filters results by Campaign status, type, or ID</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`filters` object properties</summary>
+  <table className="objectProperties">
+  <th style={{ textAlign: 'center'}}>Object Properties</th>
+  <tr>
+    <td>`campaign_status`</td>
+    <td>Filter results by Campaign status</td>
+  </tr>
+  <tr>
+    <td>`creative_type_ids`</td>
+    <td>Filter results by comma separated Creative IDs</td>
+  </tr>
+  <tr>
+    <td>`campaign_ids`</td>
+    <td>Filter results by comma separated Campaign IDs</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`download` <br /><span class="type-text">boolean</span></td>
+  <td>Request data for download file</td>
+</tr>
+  <tr>
+    <td>`file_type` <br /><span class="type-text">string</span></td>
+    <td>File type for download: <var>xlsx</var>, <var>csv</var>, or <var>xls</var></td>
+  </tr>
+    <tr>
+    <td>`fileName` <br /><span class="type-text">string</span></td>
+    <td>Name of file for download</td>
+  </tr>
+    <tr>
+    <td>`columns` <br /><span class="type-text">object</span></td>
+    <td>Columns in file</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`columns` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>null</td>
+    <td>null</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "url": "https://app.stage.inhousebuying.com/api/v2/rb/resultDashboard",
+  "method": "post",
+  "data": {
+    "total_agg": false,
+    "dateRange": {
+      "startDate": "1646341200000",
+      "endDate": "1646427599000"
+    },
+    "timezone": {
+      "label": "Africa/Asmara",
+      "value": "Africa/Asmara",
+      "id": 145
+    },
+    "dimension": {
+      "filter": {
+        "value": "campaign",
+        "label": "Campaign"
+      },
+      "value": []
+    },
+    "user_session_id": "786a4828-fc87-410c-bea5-504c56aff928_4",
+    "search_field": "",
+    "filters": {
+      "campaign_status": "deleted",
+      "creative_type_ids": "13,14"
+    },
+    "sort_by": "impressions",
+    "sort_type": "desc",
+    "conversion_ids": "312,313,337,343,351,352,353,356",
+    "owIds": "",
+    "status": "deleted",
+    "total_count": 4,
+    "draw": 1,
+    "dataPath": "data"
+  },
+  "headers": {
+    "Base-Url": "https://app.stage.inhousebuying.com",
+    "x-iaa-ow-id": "200001",
+    "authorization": "Bearer 786a4828-fc87-410c-bea5-504c56aff928"
+  },
+  "search_field": "",
+  "dateRange": {
+    "start": 1646341200,
+    "end": 1646427599
+  },
+  "name": "Super IQM Org",
+  "fileName": "Campaigns",
+  "columns": [
+    {
+      "label": "ID",
+      "value": "campaignId"
+    },
+    {
+      "label": "Campaign Name",
+      "value": "campaignName"
+    },
+    {
+      "label": "Organization",
+      "value": "organizationName"
+    },
+    {
+      "label": "Daily Budget($)",
+      "value": "budgetDay"
+    },
+    {
+      "label": "Total Budget($)",
+      "value": "budgetTotal"
+    },
+    {
+      "label": "Max Bid($)",
+      "value": "maxBid"
+    },
+    {
+      "label": "Reach",
+      "value": "reach"
+    },
+    {
+      "label": "Viewability(%)",
+      "value": "pixalateViewAbility"
+    },
+    {
+      "label": "Frequency",
+      "value": "frequency"
+    },
+    {
+      "label": "Budget Completion(%)",
+      "value": "percentageOfTotalSpent"
+    },
+    {
+      "label": "Impressions",
+      "value": "impressions"
+    },
+    {
+      "label": "Clicks",
+      "value": "clicks"
+    },
+    {
+      "label": "CTR(%)",
+      "value": "CTR"
+    },
+    {
+      "label": "WinRate(%)",
+      "value": "winRate"
+    },
+    {
+      "label": "eCPM($)",
+      "value": "eCPM"
+    },
+    {
+      "label": "eCPC($)",
+      "value": "eCPC"
+    },
+    {
+      "label": "VCR(%)",
+      "value": "VCR"
+    },
+    {
+      "label": "CPCV($)",
+      "value": "eCPCV"
+    },
+    {
+      "label": "Total Spent($)",
+      "value": "spent"
+    },
+    {
+      "label": "Video 100%",
+      "value": "completeCount"
+    },
+    {
+      "label": "Conversion Rate (%)",
+      "value": "conversionRate-316"
+    },
+    {
+      "label": "CPA",
+      "value": "conversionCpa-316"
+    },
+    {
+      "label": "Conversions",
+      "value": "conversionData-316"
+    },
+    {
+      "label": "Conversion Rate (%)",
+      "value": "conversionRate-342"
+    },
+    {
+      "label": "CPA",
+      "value": "conversionCpa-342"
+    },
+    {
+      "label": "Conversions",
+      "value": "conversionData-342"
+    },
+    {
+      "label": "ROAS (%)",
+      "value": "conversionRoas-315"
+    },
+    {
+      "label": "Conversion Rate (%)",
+      "value": "conversionRate-315"
+    },
+    {
+      "label": "Conversion Value",
+      "value": "conversionValue-315"
+    },
+    {
+      "label": "CPA",
+      "value": "conversionCpa-315"
+    },
+    {
+      "label": "Conversions",
+      "value": "conversionData-315"
+    },
+    {
+      "label": "Conversion Rate (%)",
+      "value": "conversionRate-312"
+    },
+    {
+      "label": "CPA",
+      "value": "conversionCpa-312"
+    },
+    {
+      "label": "Conversions",
+      "value": "conversionData-312"
+    },
+    {
+      "label": "ROAS (%)",
+      "value": "conversionRoas-337"
+    },
+    {
+      "label": "Conversion Rate (%)",
+      "value": "conversionRate-337"
+    },
+    {
+      "label": "Conversion Value",
+      "value": "conversionValue-337"
+    },
+    {
+      "label": "CPA",
+      "value": "conversionCpa-337"
+    },
+    {
+      "label": "Conversions",
+      "value": "conversionData-337"
+    }
+  ],
+  "token": "786a4828-fc87-410c-bea5-504c56aff928"
+}
+```
+
+```json title="Response 200"
+{
+  "responseURL": "https://tmpd3vsekqsh1zre3k8n-stage.s3.amazonaws.com/csv/1/Super%20IQM%20Org_Campaigns_1646426520299.csv?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQCsYG%2Botm2bZgIZZuiv2zmiSxEpwxgEG6mbrbdzuETwKgIgbAAum7%2Fqg09FtiAB309dtk5%2BFovDwjfG4ijh4e5IbOAq7wMIYxACGgw2NTg3Nzg2NjY2NDAiDGQYhDZX88D11PQaLCrMA%2FnjmKvNqGycagscgigUph%2FpuzadAsV6m7UZSeGI%2F46KQyZgTUMifOyZwXSLobcvuBRxb0aBSKeE3b6ERotUdVfiyQN6PUqpAAlu%2Bd2kps2gSEihUqUjBccavzioWH4w2bECUJrTkTlqRrwD6SB5JJAvr%2BG7ya9iwzFfj3%2F%2BIz9mRioiSZldIPDFlYOCZHACIsRRMN97acrshRP5GZg%2FNm8AkrI%2BptJa6jc2xNaXfyD7yToREJjNDi2Cxn5qXC3QPS%2B8WquiFJ%2FISyzvt29QHxpzI2lhm8giVDlq2Mp8Nn4FMl%2FHdoOOfe%2FWYS9P0nkxwjI83su6BSYWCrxZ7TpUEAEZafZQLSStD1uYoubgYAgFLrA7ae1YZfagWFhpPDRlJDxV87514JIYSsaTa%2BzqFfAv7KbGw7Gt8erVQu2V9eqxw1eBmly6dQd7beEMmdSaS9fZOIF7Ip8OBlWW6V8O6tczLuzj%2FHzFmrHGGVplhIEiwZYj3yvLDBd5fHEzuMJe0m3VMT2wro1H4yscVL5WzFtJm5VEAdL9PkjQ7eRO4NswXeIzt0MNjSm1nSUVHF7DTzZks9JGxgi%2B%2BQO%2FnhcGFlUHDnEIqYkLz5uKUWow9q%2BJkQY6pQFhHQsx%2FFs%2Bni6RvRAHPX6cf7%2BfxZAbHW0Gtuo1NjisRcFjjboPtAJZ%2B3I15R3nZgm9KKUaHFWZjtOwkHuuiV31oflScO4iTNPzXguW6MsyWcUnONxsBXAjBoV7eHjQ2e9PTLXKA3j6aUOYOydYKkxyURRDVr6xRj9S2KsKdP9BfiZFUmOFjyEYUHNLmHZyrEUdgqnuMg82yiQDn1rpZh3mhKEMXSQ%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220304T204200Z&X-Amz-SignedHeaders=host&X-Amz-Expires=10799&X-Amz-Credential=ASIAZSYSEW2ICNTQIFG6%2F20220304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=8e5e511b4aff57cd9c9073ae926771affd3cdc4666ea0bf244e1f897820b3912"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        responseUrl: string;
+      }
+    };
+  };
+}
+
+function ExporttoCSV(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/rb/export/csv',
+    requestBody: {
+      content: {
+        "application/json": {
+          url: `string`,
+          method: `string`,
+          data: {
+            total_agg: `boolean`,
+            dateRange: {
+              startDate: `string`,
+              endDate: `string`,
+            },
+            timezone: {
+              label: `string`,
+              value: `string`,
+              id: `number`,
+            },
+            dimension: {
+              filter: {
+                value: `string`,
+                label: `string`,
+              },
+              value: `string[]`,
+            },
+            user_session_id: `string`,
+            search_field: `string`,
+            filters: {
+              campaign_status: `string`,
+              creative_type_ids: `string`,
+            },
+            sort_by: `string`,
+            sort_type: `string`,
+            conversion_ids: `string`,
+            owIds: `string`,
+            status: `string`,
+            total_count: `number`,
+            draw: `number`,
+            dataPath: `string`,
+          },
+          search_field: `string`,
+          dateRange: {
+            start: `number`,
+            end: `number`,
+          },
+          name: `string`,
+          fileName: `string`,
+          columns: {
+            label: `string`,
+            value: `string`,
+          }[],
+          token: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
