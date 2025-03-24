@@ -1588,12 +1588,17 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#get-a-list-of-all-assets"><span class="badge bar badge--primary">GET</span>List of All Assets</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#dashboard-config-list"><span class="badge bar badge--primary">GET</span>Dashboard Config List</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#get-asset-details"><span class="badge bar badge--primary">GET</span>Asset Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#get-dimension-display-data"><span class="badge bar badge--success">POST</span>Dimension Display Data</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#get-serving-results"><span class="badge bar badge--success">POST</span>Serving Results</a>',
               defaultStyle: true,
             },
           ]
@@ -1605,17 +1610,17 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#add-multiple-assets"><span class="badge bar badge--success">POST</span>Add Multiple Assets</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#create-dashboard"><span class="badge bar badge--success">POST</span>Create Dashboard</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#update-asset-details"><span class="badge bar badge--info">PATCH</span>Update Asset Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#update-dashboard"><span class="badge bar badge--warning">PUT</span>Update Dashboard</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#delete-asset"><span class="badge bar badge--danger">DEL</span>Delete Asset</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#delete-dashboard"><span class="badge bar badge--danger">DEL</span>Delete Dashboard</a>',
               defaultStyle: true,
             },
           ]
@@ -1627,17 +1632,32 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#add-multiple-assets"><span class="badge bar badge--success">POST</span>Add Multiple Assets</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#workspace-report"><span class="badge bar badge--success">POST</span>Workspace Report</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#update-asset-details"><span class="badge bar badge--info">PATCH</span>Update Asset Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#io-report"><span class="badge bar badge--success">POST</span>IO Report</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Assets-API-Guidelines#delete-asset"><span class="badge bar badge--danger">DEL</span>Delete Asset</a>',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#exchange-report"><span class="badge bar badge--success">POST</span>Exchange Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#customer-report"><span class="badge bar badge--success">POST</span>Customer Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#campaign-report"><span class="badge bar badge--success">POST</span>Campaign Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#download-report"><span class="badge bar badge--success">POST</span>Download Report</a>',
               defaultStyle: true,
             },
           ]
