@@ -1632,6 +1632,11 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#dashboard-reports-resource-properties"><span class="badge bar badge"></span>Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#workspace-report"><span class="badge bar badge--success">POST</span>Workspace Report</a>',
               defaultStyle: true,
             },
