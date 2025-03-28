@@ -1591,16 +1591,6 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#dashboard-config-list"><span class="badge bar badge--primary">GET</span>Dashboard Config List</a>',
               defaultStyle: true,
             },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#get-dimension-display-data"><span class="badge bar badge--success">POST</span>Dimension Display Data</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#get-serving-results"><span class="badge bar badge--success">POST</span>Serving Results</a>',
-              defaultStyle: true,
-            },
           ]
         },
         {
