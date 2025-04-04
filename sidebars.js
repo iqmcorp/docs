@@ -2396,7 +2396,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-geographical-data"><span class="badge bar badge--success">POST</span>Geographical Data</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
