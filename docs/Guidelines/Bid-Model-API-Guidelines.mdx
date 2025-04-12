@@ -12,6 +12,13 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 The Bid Model API allows you to optimize advertising Campaigns for better performance. You can fine-tune metrics such as where ads appear (Include/Exclude), manage Campaign priority, and dimensions by which a Campaign is subdivided. This page covers the common endpoints and methods associated with the Bid Model API.
 
+Bid Modeling comprises the following tools:
+  * **Spend Ratio**: determines how the Campaign budget is distributed across various dimensions, expressed as a percentage in two types 
+    * Strict: budget is allocated up to its specified percentage as able, but will underspend if unable to meet that ratio
+    * Flexible: budget will reallocate if unable to fulfill its specified percentage
+  * **Dimension Priority**: dictates the sequence of bidding for specified targeting Dimensions, expressed as a range of 1-10
+  * **Bid Modifier**: adjusts the base bid of a Campaign for the specified Dimension that is modified, expressed as a multiplier in a range of 0.1-100
+
 Learn more about Bid Modeling with our [Help Center<ExternalLink />](https://help.iqm.com/en/collections/3156335-set-a-bid-model) article. 
 
 ### Authentication
@@ -45,6 +52,52 @@ Retrieves counts of dimensions for a specific Campaign within a given date range
 | <span class="code-text">startDate</span> <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for Campaign start date |
 | <span class="code-text">endDate</span>   <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for Campaign end date   |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creative` <br /><span class="type-text">integer</span></td>
+  <td>Creative Dimension count</td>
+</tr>
+<tr>
+  <td>`dealId` <br /><span class="type-text">integer</span></td>
+  <td>Deal Dimension count</td>
+</tr>
+<tr>
+  <td>`openExchange` <br /><span class="type-text">integer</span></td>
+  <td>Open Exchange Dimension count</td>
+</tr>
+<tr>
+  <td>`publisherCategory` <br /><span class="type-text">integer</span></td>
+  <td>Publisher Category Dimension count</td>
+</tr>
+<tr>
+  <td>`trafficType` <br /><span class="type-text">integer</span></td>
+  <td>Traffic Type Dimension Count</td>
+</tr>
+<tr>
+  <td>`deviceType` <br /><span class="type-text">integer</span></td>
+  <td>Device Type Dimension count</td>
+</tr>
+<tr>
+  <td>`state` <br /><span class="type-text">integer</span></td>
+  <td>State Dimension count</td>
+</tr>
+<tr>
+  <td>`city` <br /><span class="type-text">integer</span></td>
+  <td>City Dimension count</td>
+</tr>
+<tr>
+  <td>`zip` <br /><span class="type-text">integer</span></td>
+  <td>Zip Code Dimension count</td>
+</tr>
+<tr>
+  <td>`exchange` <br /><span class="type-text">integer</span></td>
+  <td>Exchange Dimension count</td>
+</tr>
+</table></details>
+
 
 </div><div class="child2">
 
@@ -69,7 +122,7 @@ Retrieves counts of dimensions for a specific Campaign within a given date range
 }
 ```
 
-<details>
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
 <summary>More Responses</summary>
 
 
@@ -123,7 +176,7 @@ Retrieves counts of dimensions for a specific Campaign within a given date range
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -234,6 +287,16 @@ Get details on total spent by dimension for a Campaign.
 | `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The Campaign ID |
 | `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Dimension ID <br />See static [List of Dimension IDs](#get-list-of-bid-model-dimensions) |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`entityWiseSpent` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>dimensionId</var> and amount spent</td>
+</tr>
+</table></details>
+
 </div><div class="child2">
 
 <Tabs>
@@ -255,7 +318,7 @@ Get details on total spent by dimension for a Campaign.
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -314,6 +377,37 @@ Get details on total and dimension specific counts of modeled items for a specif
 | ---- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The Campaign ID |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`totalCount` <br /><span class="type-text">integer</span></td>
+  <td>Total count of modeled items for a Campaign</td>
+</tr>
+<tr>
+  <td>`dimensionWiseCount` <br /><span class="type-text">object</span></td>
+  <td>Dimension specific count of modeled items for a Campaign</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`dimensionWiseCount` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
+  <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
+  </tr>
+    <tr>
+  <td>`count`<br /><span class="type-text">object</span></td>
+  <td>Modeled items count</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table></details>
+
 </div><div class="child2">
 
 <Tabs>
@@ -345,7 +439,7 @@ Get details on total and dimension specific counts of modeled items for a specif
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
 import {
@@ -414,6 +508,16 @@ For IDs see endpoint documentation for [Device Type](/Guidelines/Master-API-Guid
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span> | Allow targeted entity: <var>0</var> <br />Block targeted entity: <var>1</var> |
 | <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign ID   |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
 </div>
   <div class="child2">
 
@@ -440,7 +544,7 @@ For IDs see endpoint documentation for [Device Type](/Guidelines/Master-API-Guid
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -511,10 +615,20 @@ Optimize a Campaign by updating the status of specified entities to be either in
 | <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Advertiser ID  |
 | <span class="code-text">dspId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | Demand Side Platform ID  |
 | <span class="code-text">owId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>       | Organization workspace ID   |
-| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | User organization workspace ID |
+| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | User Organization workspace ID |
 | <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Unique ID of Campaign  |
 | <span class="code-text">ids</span> <br /><span class="type-text">string</span> <span class="required-text">optional</span>         | Creative ID  |
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span>  | Target entity: <var>0</var> <br />Block entity: <var>1</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
   <div class="child2">
@@ -539,7 +653,7 @@ Optimize a Campaign by updating the status of specified entities to be either in
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -601,7 +715,20 @@ function toggleCampaignDimensionStatus(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-Add bid modeling for different dimensions. Validates and calculates others as bid modeling as well.
+Add Bid Modeling for different dimensions. Validates and calculates others as Bid Modeling as well.
+
+:::info
+
+Bid Modeling criteria:
+
+  * Bid Multiplier & Dimension Priority
+    * Campaign must be at least 3 days long
+    * Campaign's daily budget must be at least $100
+    * Base bid and max bid price must be defined for the Campaign
+  * Spend Ratio
+    * Strict spend ratios must equal 100% across all allocated dimensions
+    * Flexible spend ratios require a dimension priority
+:::
 
 | Path Parameters | |
 | --- | --- |
@@ -645,7 +772,7 @@ Add bid modeling for different dimensions. Validates and calculates others as bi
               </tr>
               <tr>
               <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-              <td>Spend ratio type ID<br /> [ <var>1</var> , <var>2</var> ]</td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
               </tr>
               </table></details>
             </td>
@@ -686,6 +813,16 @@ Add bid modeling for different dimensions. Validates and calculates others as bi
     </tr>
 </table>
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
 </div>
 <div class="child2">
 
@@ -724,7 +861,7 @@ Add bid modeling for different dimensions. Validates and calculates others as bi
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -798,7 +935,7 @@ function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling. 
+Update various actions such as `ADD`, `UPDATE`, or `DELETE` for Bid Modeling. 
 
 | Path Parameters | |
 | --- | --- |
@@ -808,7 +945,7 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
 <th>Request Schema</th>
 <tr>
 <td>`bidModelRequests` <br /><span class="type-text">array of objects</span></td>
-<td>Objects containing bid model actions</td>
+<td>Objects containing Bid Model actions</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -817,11 +954,11 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
   <table className="objectProperties">
   <tr>
   <td>`action` <br /><span class="type-text">string</span></td>
-  <td>Supported values specifying bid model action: `ADD`, `UPDATE`, `DELETE`</td>
+  <td>Supported values specifying Bid Model action: `ADD`, `UPDATE`, `DELETE`</td>
   </tr>
     <tr>
   <td>`bidModelData` <br /><span class="type-text">object</span></td>
-  <td>Object containing bid model data</td>
+  <td>Object containing Bid Model data</td>
   </tr>
   <tr>
       <td colSpan="2">
@@ -846,7 +983,7 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
         </tr>
         <tr>
         <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio type ID<br /> [ <var>1</var> , <var>2</var> ]</td>
+        <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
         </tr>
         </table></details>
         </td>
@@ -916,7 +1053,7 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
   </tr>
       <tr>
   <td>`uowId` <br /><span class="type-text">integer</span></td>
-  <td>Universal Organization Workspace ID</td>
+  <td>User Organization Workspace ID</td>
   </tr>
       <tr>
   <td>`campaignId` <br /><span class="type-text">integer</span></td>
@@ -939,6 +1076,16 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
   <td></td>
 </tr>
 </table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
 <div class="child2">
@@ -1032,7 +1179,7 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for bid modeling.
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
 import {
@@ -1121,7 +1268,7 @@ function manageBidModelling(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-Update bid modeling for different dimensions.
+Update Bid Modeling for different dimensions.
 
 | Path Parameters | |
 | --- | --- |
@@ -1156,13 +1303,23 @@ Update bid modeling for different dimensions.
       </tr>
        <tr>
       <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-      <td>Spend ratio type ID<br /> [ <var>1</var> , <var>2</var> ]</td>
+      <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
       </tr>
       </table></details>
       </td>
       <td></td>
     </tr>
 </table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
 <div class="child2">
@@ -1201,7 +1358,7 @@ Update bid modeling for different dimensions.
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -1265,7 +1422,7 @@ function updateBidModellingForCampaign(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-Delete all bid modeling for a Campaign or dimension, or based on bid modeling data IDs.
+Delete all Bid Modeling for a Campaign or dimension, or based on Bid Modeling data IDs.
 
 | Path Parameters | |
 | --- | --- |
@@ -1273,9 +1430,19 @@ Delete all bid modeling for a Campaign or dimension, or based on bid modeling da
 
 | Query Parameters | |
 | --- | --- |
-| `dimensionIds` <br /><span class="type-text">string</span> | Comma separated dimension IDs to delete bid modeling data for |
-| `bidModelDataIds` <br /><span class="type-text">string</span> | Comma separated bid model data IDs to delete |
-| `campaignId` <br /><span class="type-text">string</span> | Campaign ID to delete bid modeling data for |
+| `dimensionIds` <br /><span class="type-text">string</span> | Comma separated dimension IDs to delete Bid Modeling data for |
+| `bidModelDataIds` <br /><span class="type-text">string</span> | Comma separated Bid Model data IDs to delete |
+| `campaignId` <br /><span class="type-text">string</span> | Campaign ID to delete Bid Modeling data for |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
 <div class="child2">
@@ -1293,7 +1460,7 @@ Delete all bid modeling for a Campaign or dimension, or based on bid modeling da
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -1357,7 +1524,7 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
 <th>Request Schema</th>
 <tr>
 <td>`bidModelRequests` <br /><span class="type-text">array of objects</span></td>
-<td>Objects containing bid model actions</td>
+<td>Objects containing Bid Model actions</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1366,11 +1533,11 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
   <table className="objectProperties">
   <tr>
   <td>`action` <br /><span class="type-text">string</span></td>
-  <td>Supported values specifying bid model action: `ADD`, `UPDATE`, `DELETE`</td>
+  <td>Supported values specifying Bid Model action: `ADD`, `UPDATE`, `DELETE`</td>
   </tr>
     <tr>
   <td>`bidModelData` <br /><span class="type-text">object</span></td>
-  <td>Object containing bid model data</td>
+  <td>Object containing Bid Model data</td>
   </tr>
   <tr>
       <td colSpan="2">
@@ -1395,7 +1562,7 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
         </tr>
         <tr>
         <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio type ID<br /> [ <var>1</var> , <var>2</var> ]</td>
+        <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
         </tr>
         </table></details>
         </td>
@@ -1465,7 +1632,7 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
   </tr>
       <tr>
   <td>`uowId` <br /><span class="type-text">integer</span></td>
-  <td>Universal Organization Workspace ID</td>
+  <td>User Organization Workspace ID</td>
   </tr>
       <tr>
   <td>`campaignId` <br /><span class="type-text">integer</span></td>
@@ -1488,6 +1655,16 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
   <td></td>
 </tr>
 </table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
   <div class="child2">
@@ -1533,8 +1710,8 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
 }
 ```
 
-<details>
-<summary>More Responses</summary>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
 
 ```json title="Response 403"
 {
@@ -1574,7 +1751,7 @@ Add, update, or remove Bid Modeling at the Insertion Order level. Changes will b
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -1687,9 +1864,9 @@ function managePriorityToCampaign(): Promise<Responses> {
 
 ### Manage Insertion Order Priority
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-<br /><span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
-<br /><span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+<span class="badge bar  badge--success">POST</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+<br /><span class="badge bar badge--danger">DEL</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
+<br /><span class="badge bar badge--info">PATCH</span> <span class="path-text">/api/v3/bm/io/\{ioId\}/bid-models</span>
 
 <div class="container">
   <div class="child1">
@@ -1710,6 +1887,16 @@ Assigning priority to Campaigns allows the you to establish a sequential order o
 | --- | --- |
 | <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ] |
 | <span class="code-text">campaignIdList</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs   |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
 <div class="child2">
@@ -1739,7 +1926,7 @@ Assigning priority to Campaigns allows the you to establish a sequential order o
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -1838,8 +2025,8 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 | `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID
 | `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Dimension ID
 
-<details>
-<summary>Query Parameters</summary>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Query Parameters</summary>
 
 <table className="objectProperties">
 <tr>
@@ -1874,8 +2061,9 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 
 </details>
 
-<table>
-<th>Request Schema</th>
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Request Schema</summary>
+    <table className="objectProperties">
 <tr>
 <td> `fileName` <br /><span class="type-text">string</span></td>
 <td>File name</td>
@@ -1914,6 +2102,17 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 <td>Generate download URL: <var>true</var></td>
 </tr>
 </table>
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`url` <br /><span class="type-text">string</span></td>
+    <td>Download URL</td>
+    </tr>
+    </table>
+    </details>
 
 </div>
 <div class="child2">
@@ -1949,8 +2148,8 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 }
 ```
 
-<details>
-<summary>More Responses</summary>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
 
 ```json title="Response 403"
 {
@@ -1990,7 +2189,7 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
 import {
@@ -2233,7 +2432,7 @@ This API will provide values of bid-model dimensions and sub-dimensions.
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
 import {
