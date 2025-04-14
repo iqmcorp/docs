@@ -1574,6 +1574,93 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Dashboard API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Guidelines/Dashboard-API-Guidelines'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Dashboard Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#dashboard-config-list"><span class="badge bar badge--primary">GET</span>Dashboard Config List</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Dashboard Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#create-dashboard"><span class="badge bar badge--success">POST</span>Create Dashboard</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#update-dashboard"><span class="badge bar badge--warning">PUT</span>Update Dashboard</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#delete-dashboard"><span class="badge bar badge--danger">DEL</span>Delete Dashboard</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Dashboard Reports`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#dashboard-reports-resource-properties"><span class="badge bar badge"></span>Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#workspace-report"><span class="badge bar badge--success">POST</span>Workspace Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#io-report"><span class="badge bar badge--success">POST</span>IO Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#exchange-report"><span class="badge bar badge--success">POST</span>Exchange Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#customer-report"><span class="badge bar badge--success">POST</span>Customer Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#campaign-report"><span class="badge bar badge--success">POST</span>Campaign Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Dashboard-API-Guidelines#download-report"><span class="badge bar badge--success">POST</span>Download Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: 'Finance API',
       className: 'sidebarCategory',
       link: {
@@ -2309,7 +2396,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-geographical-data"><span class="badge bar badge--success">POST</span>Geographical Data</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
