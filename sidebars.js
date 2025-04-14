@@ -604,6 +604,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#doubleverify-pre-bid-audience-segment-details"><span class="badge bar badge--primary">GET</span>DoubleVerify Pre-bid Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
               defaultStyle: true,
             },
@@ -1737,6 +1742,16 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-doubleverify-details"><span class="badge bar badge--primary">GET</span>Customer DoubleVerify IVT Flag</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-doubleverify"><span class="badge bar badge--info">PATCH</span>Updates Customer DoubleVerify IVT Flag</a>',
               defaultStyle: true,
             },
             {
