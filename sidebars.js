@@ -406,6 +406,12 @@ const sidebars = {
               id: `Migration Guides/DV360/Reports-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/DV360/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
