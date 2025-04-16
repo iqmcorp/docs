@@ -461,6 +461,12 @@ const sidebars = {
               id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -508,6 +514,12 @@ const sidebars = {
               type: `doc`,
               label: 'Reports',
               id: `Migration Guides/Xandr/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Xandr/Workspace-Migration`,
               className: 'sidebarItem'
             },
           ]
