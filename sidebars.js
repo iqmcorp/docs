@@ -522,6 +522,12 @@ const sidebars = {
               id: `Migration Guides/Xandr/Workspace-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Xandr/Finance-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         }
       ],
