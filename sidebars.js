@@ -412,6 +412,12 @@ const sidebars = {
               id: `Migration Guides/DV360/Workspace-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/DV360/Finance-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -465,6 +471,12 @@ const sidebars = {
               type: `doc`,
               label: 'Workspace',
               id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/The Trade Desk/Finance-Migration`,
               className: 'sidebarItem'
             },
           ]
