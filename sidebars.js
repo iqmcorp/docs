@@ -351,6 +351,18 @@ const sidebars = {
               id: `Migration Guides/Beeswax/Reports-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Beeswax/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Beeswax/Finance-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -398,6 +410,18 @@ const sidebars = {
               type: `doc`,
               label: 'Reports',
               id: `Migration Guides/DV360/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/DV360/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/DV360/Finance-Migration`,
               className: 'sidebarItem'
             },
           ]
@@ -449,6 +473,18 @@ const sidebars = {
               id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/The Trade Desk/Finance-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -496,6 +532,18 @@ const sidebars = {
               type: `doc`,
               label: 'Reports',
               id: `Migration Guides/Xandr/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Xandr/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Xandr/Finance-Migration`,
               className: 'sidebarItem'
             },
           ]
