@@ -357,6 +357,12 @@ const sidebars = {
               id: `Migration Guides/Beeswax/Workspace-Migration`,
               className: 'sidebarItem'
             },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Beeswax/Finance-Migration`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
