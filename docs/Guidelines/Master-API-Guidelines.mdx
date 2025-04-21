@@ -2685,6 +2685,9 @@ Get location details by location type and search filters.
 
 </div><div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
   "success": true,
@@ -2697,25 +2700,91 @@ Get location details by location type and search filters.
         "parentId": 30100001,
         "geojsonUrl": "https://d3jme5si7t6llb.cloudfront.net/statedata/OR.geojson"
       }
-  ],
-  "303": [
-      {
-        "id": 30320708,
-        "name": "Baker, OR",
-        "parentId": 30200038,
-        "geojsonUrl": "https://d3jme5si7t6llb.cloudfront.net/countydata/US/OR/geojson/30320708.geojson"
-      }
-      {
-        "id": 30320709,
-        "name": "Benton, OR",
-        "parentId": 30200038,
-        "geojsonUrl": "https://d3jme5si7t6llb.cloudfront.net/countydata/US/OR/geojson/30320709.geojson"
-      }
-      ...
+    ],
+    "303": [
+        {
+          "id": 30320708,
+          "name": "Baker, OR",
+          "parentId": 30200038,
+          "geojsonUrl": "https://d3jme5si7t6llb.cloudfront.net/countydata/US/OR/geojson/30320708.geojson"
+        }
+        {
+          "id": 30320709,
+          "name": "Benton, OR",
+          "parentId": 30200038,
+          "geojsonUrl": "https://d3jme5si7t6llb.cloudfront.net/countydata/US/OR/geojson/30320709.geojson"
+        }
+        ...
     ]
   }
 }        
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [name: string]: {
+            id: number;
+            name: string;
+            abbreviation: string;
+            parentId: number;
+            geojsonUrl: string;
+          }[];
+        }[];
+      }
+    }
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      }
+    }
+  };
+}
+
+function getMasterSegmentLocationTypeDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/segment/locationtype-details',
+    params: {
+      query?: {
+        searchField?: `string`,
+        locationTypeIds?: `string`,
+        countryIds?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More Responses</summary>
@@ -3961,7 +4030,7 @@ function NetworkTypes(): Promise<Responses> {
 
 Get list of device OS for targeting. 
 
-The following query paramters are supported by the <span class="path-text">/api/v2/master/segment/device-os</span> endpoint. 
+The following query paramters are supported by the <var>/device-os</var> endpoint. 
 
 | Query Parameters |  |
 |---|---|
@@ -3985,7 +4054,7 @@ The following query paramters are supported by the <span class="path-text">/api/
 <div class="child2">
 
 <Tabs>
-<TabItem value="JSON 1" label="JSON 1" default>
+<TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200 (device_os)"
 [
@@ -4019,9 +4088,6 @@ The following query paramters are supported by the <span class="path-text">/api/
   }
 ]
 ```
-
-</TabItem>
-<TabItem value="JSON 2" label="JSON 2" default>
 
 ```json title="Response 200 (device-os)"
 {
@@ -4927,6 +4993,49 @@ Get list of deal curation types.
     "totalRecords": 3,
     "filteredRecords": 3
   }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            name: string;
+            id: number;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    }
+  };
+}
+
+function getDealCurationTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/deal-curation-type',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
 
