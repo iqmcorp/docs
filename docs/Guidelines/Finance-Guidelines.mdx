@@ -1943,7 +1943,55 @@ Super Organization users can fetch DoubleVerify Fraud & IVT Segments flag for Cu
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          customerOwId: number;
+          isDvIvtSegmentsEnabled: boolean;
+        }
+      }
+    }
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          error: string;
+        }[];
+      }
+    }
+  };
+}
+
+function getDvIvtFlag(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/dv-ivt',
+    params: {
+      query: {
+        customerOwId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2025,7 +2073,60 @@ Super Organization Users can update DoubleVerify IVT free Segments boolean flag 
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          customerOwId: number;
+          isDvIvtSegmentsEnabled: boolean;
+          message: string;
+        }
+      }
+    }
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          success: boolean;
+          errorObjects: {
+            error: string;
+          }[];
+        }
+      }
+    }
+  };
+}
+
+function updateDvIvtFlag(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/customer/dv-ivt',
+    params: {
+      query: {
+        customerOwId: `number`,
+        isDvIvtSegmentsEnabled: `boolean`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2052,6 +2153,9 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
   </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
 ```json title="Response 200"
 {
     "success": true,
@@ -2060,6 +2164,46 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
     }
 }
 ```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          paypalFeesPercentage: number;
+        }
+      }
+    }
+  };
+}
+
+function getBasicDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/basic/details',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
