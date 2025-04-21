@@ -2061,7 +2061,38 @@ Get the DoubleVerify IVT Pre-bid Audience Segments which are free and available 
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          prebidAudienceSegmentId: number;
+          providerId: number;
+          isSelectedByDefault: boolean;
+        }[];
+      }
+    }
+  };
+}
+
+function getDvIvtFreePrebidSegments(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/prebid/dv-ivt/free-segments',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
