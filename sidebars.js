@@ -293,6 +293,35 @@ const sidebars = {
             },
           ]
         },
+        {
+          type: 'category',
+          label: 'Create an Insights Report',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Insights-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'Sign Up',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#sign-up`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Log In',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#log-in`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Refresh Token',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#refresh-token`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
       ],
     },
     {
