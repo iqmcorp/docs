@@ -2354,6 +2354,9 @@ function deleteFailedVLDReport(): Promise<Responses> {
 
 ### PLD Resource Properties
 
+<div class="container">
+  <div class="child3">
+
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Resource Properties</summary>
 
@@ -2414,9 +2417,35 @@ function deleteFailedVLDReport(): Promise<Responses> {
   <td>`campaignPldTimezoneId` <br /><span class="type-text">integer</span></td>
   <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)</td>
 </tr>
+<tr>
+  <td>`pldReportCreatable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if PLD Report can be generated for the given Campaign and date range (<var>true</var>)</td>
+</tr>
+<tr>
+  <td> `pldChargeableImps` <br /><span class="type-text">integer</span></td>
+  <td>The number of chargeable impressions for the requested PLD Report</td>
+</tr>
+<tr>
+  <td>`pldChargedImps` <br /><span class="type-text">integer</span></td>
+  <td>The number of impressions for which the PLD Report is already generated</td>
+</tr>
+<tr>
+  <td>`pldChargeableCost` <br /><span class="type-text">integer</span></td>
+  <td>Cost to generate the PLD Report</td>
+</tr>
+<tr>
+  <td>`pldChargedCost` <br /><span class="type-text">integer</span></td>
+  <td>Cost of PLD Report that is already generated</td>
+</tr>
+<tr>
+  <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if sufficient funds are available in the Advertiser's account to generate the PLD Report (<var>true</var>)</td>
+</tr>
 </table>
 
 </details>
+
+</div></div>
 
 ### Get List of PLD Reports
 
@@ -2433,6 +2462,8 @@ Get a list of PLD Reports.
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>200</var> |
 | `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data, default: <var>1</var> |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-pldId</var> |
+
+See [PLD Resource Properties](#pld-resource-properties) for response property descriptions.
 
 </div>
 <div class="child2">
@@ -2490,7 +2521,61 @@ Get a list of PLD Reports.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          pldReportDataList: {
+            pldId: number;
+            pldName: string;
+            campaignName: string;
+            campaignId: number;
+            pldStatusId: number;
+            startDate: number;
+            endDate: number;
+            ioId: number;
+            ioName: string;
+            isCampaignEligible: boolean;
+            pldCreatedOn: number;
+            creativeTypeId: number;
+            campaignPldTimezoneId: number;
+            ioTypeId: number;
+          }[];
+        }
+      }
+    }
+  };
+}
+
+function getPLDReportList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/pld-reports',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2499,7 +2584,7 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 
 ---
 
-### Get List of Campaigns Eligible for VLD Reports
+### Get List of Campaigns Eligible for PLD Reports
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/pld-reports/campaigns</span>
 
@@ -2525,6 +2610,8 @@ Get a list of Campaign IDs by status eligible for PLD Report generation.
     </tr>
     </table>
     </details>
+
+See [PLD Resource Properties](#pld-resource-properties) for response property descriptions.
 
 </div><div class="child2">
 
@@ -2557,7 +2644,38 @@ Get a list of Campaign IDs by status eligible for PLD Report generation.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          running: number[];
+          paused: number[];
+          expired: number[];
+        }
+      }
+    }
+  };
+}
+
+function getStatusWiseCampaignsForPLDReports(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/pld-reports/campaigns',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2566,9 +2684,9 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 
 ---
 
-### Generate VLD Report
+### Generate PLD Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report</span>
 
 <div class="container">
   <div class="child1">
@@ -2582,6 +2700,8 @@ This API calculates the cost for the impressions for the Practitioner Level Data
 | `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
 | `pldId` <br /><span class="type-text">integer</span> | PLD ID to regenerate |
 
+See [PLD Resource Properties](#pld-resource-properties) for response property descriptions. 
+
 </div><div class="child2">
 
 <Tabs>
@@ -2590,8 +2710,8 @@ This API calculates the cost for the impressions for the Practitioner Level Data
 ```json title="Request Sample"
 {
   "campaignId": 12345,
-  "vldStartDate": 1722311000,
-  "vldEndDate": 1722315000
+  "pldStartDate": 1722311000,
+  "pldEndDate": 1722315000
 }
 ```
 
@@ -2612,6 +2732,7 @@ This API calculates the cost for the impressions for the Practitioner Level Data
     "fundsAvailable": true
   }
 }
+```
 
 ```json title="Response 200 (failure)"
 {
@@ -2629,7 +2750,56 @@ This API calculates the cost for the impressions for the Practitioner Level Data
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          pldReportCreated: boolean;
+          campaignId: number;
+          campaignName: string;
+          campaignStatus: string;
+          pldStartDate: number;
+          pldEndDate: number;
+          pldChargeableImps: number;
+          pldChargedImps: number;
+          pldChargeableCost: number;
+          pldChargedCost: number;
+          fundsAvailable: boolean
+        }
+      }
+    };
+  };
+}
+
+function generatePLDReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/pld-report',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId?: `number`,
+          pldId?: `number`,
+          pldStartDate?: `number`,
+          pldEndDate?: `number`,
+          endDate?: `number`,
+          startDate?: `number`,
+          id?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2646,6 +2816,8 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
   <div class="child1">
 
 Get columns details for PLD Reports. 
+
+The response properties for this endpoint include names of each possible column paired with a boolean value indicating whether it is included in the report (<var>true</var>) or not (<var>false</var>).
 
 </div>
 <div class="child2">
@@ -2676,7 +2848,41 @@ Get columns details for PLD Reports.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: boolean;
+          insightsName: boolean;
+          campaignName: boolean;
+          campaignId: boolean;
+          status: boolean;
+          dateRange: boolean;
+          createdOn: boolean;
+          ioName: boolean;
+          ioId: boolean;
+        }
+      }
+    };
+  };
+}
+
+function fetchPLDReportSelectedColumns(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/pld-reports/columns',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2693,6 +2899,8 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
   <div class="child1">
 
 Save or update the selection of columns shown in PLD Reports. 
+
+The request schema and response properties for this endpoint include names of each possible column paired with a boolean value indicating whether it is included in the report (<var>true</var>) or not (<var>false</var>).
 
 </div>
 <div class="child2">
@@ -2737,7 +2945,56 @@ Save or update the selection of columns shown in PLD Reports.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: boolean;
+          insightsName: boolean;
+          campaignName: boolean;
+          campaignId: boolean;
+          status: boolean;
+          dateRange: boolean;
+          createdOn: boolean;
+          ioName: boolean;
+          ioId: boolean;
+        }
+      }
+    };
+  };
+}
+
+function saveOrUpdatePLDReportSelectedColumns(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/pld-reports/columns',
+    requestBody: {
+      content: {
+        "application/json": {
+            id: `boolean`,
+            insightsName: `boolean`,
+            campaignName: `boolean`,
+            campaignId: `boolean`,
+            status: `boolean`,
+            dateRange: `boolean`,
+            createdOn: `boolean`,
+            ioName: `boolean`,
+            ioId: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2759,6 +3016,17 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 | --- | --- |
 | `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
 | `pldId` <br /><span class="type-text">integer</span> | Practitioner Level Data Report ID
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`pldReportUrl` <br /><span class="type-text">string</span></td>
+  <td>PLD Report File URL</td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
@@ -2806,7 +3074,42 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          pldReportUrl: string;
+        }
+      }
+    };
+  };
+}
+
+function getPLDReportDownloadUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/pld-report/download',
+    requestBody: {
+      content: {
+        "application/json": {
+          fileTypeId?: `number`,
+          vldId?: `number`,
+          pldId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -2863,7 +3166,38 @@ Deletes PLD Reports that are not marked as deleted and have a 'failed' status, r
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      }
+    };
+  };
+}
+
+function deleteFailedPLDReport(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/pld-reports',
+    params: {
+      query: {
+        pldIds: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
