@@ -2122,6 +2122,53 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Practitioner Level Data Reports`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#practitioner-level-data-reports"><span class="badge bar badge"></span>PLD Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-pld-reports"><span class="badge bar badge--primary">GET</span>List of PLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-campaigns-eligible-for-pld-reports"><span class="badge bar badge--primary">GET</span>List of Campaigns Eligible for PLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#generate-pld-report"><span class="badge bar badge--success">POST</span>Generate PLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-pld-reports-columns"><span class="badge bar badge--primary">GET</span>PLD Reports Columns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#update-pld-reports-columns"><span class="badge bar badge--success">POST</span>Update PLD Reports Columns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#download-pld-report"><span class="badge bar badge--success">POST</span>Download PLD Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#delete-pld-report"><span class="badge bar badge--danger">DEL</span>Delete PLD Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
           label: `More Insights Details`,
           className: 'sidebarItem',
           items: [
