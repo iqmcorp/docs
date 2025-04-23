@@ -10,25 +10,14 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 ## Overview
 
-Audience Insights provide in-depth Reports of Audience characteristics, interests, and behaviors to give Advertisers a deeper understanding of their target Audience and create targeted and personalized advertising strategies. 
+Insights reports are one of IQM's analytics tools that help Advertisers quickly identify trends and apply precise adjustments to deliver better results for Campaigns. With pre-defined metrics and dimensions, Insights reports can be generated for the following areas:
+  * **Campaign Bidding Insights** captures rejected Campaigns and segments them based on rejection reason, allowing you to assess which parameters are limiting a Campaign's success.
+  * **Audience Insights** provide in-depth Reports of Audience characteristics, interests, and behaviors to give you a deeper understanding of your target Audience and create targeted and personalized advertising strategies. 
+  * **Voter Level Data** (VLD) Reports offer Insights about targeting in current or prior political Campaigns. These Reports include ad exposure, engagement data, demographic data, and voting-history details by voter.
+  * **Provider Level Data** (PLD) Reports include details about healthcare professionals targeted in your Campaigns, and provide similar details as VLD Reports while adhering to healthcare data privacy regulations. 
 
-**Voter Level Data** (VLD) Reports offer Insights about targeting in current or prior political Campaigns. These Reports include ad exposure, engagement data, demographic data, and voting-history details, by voter. This section covers the methods and endpoints for managing VLD Reports.
 
-This page covers the various methods and endpoints for Insights details and management, as well as Voter Level Data Reports details and management.
-
-<div style={{ maxWidth: "1000px" }}>
-:::warning
-
-Your Campaign must meet certain eligibility requirements before you can generate Insights Reports for it. Refer to the following Help Center articles for more information on the data included in each Report and review their individual eligibility criteria:
-
-  * [Audience Insights Report Overview<ExternalLink />](https://help.iqm.com/en/articles/8337863-audience-insights-report-overview#h_b5765ae4d3) 
-  * [Voter Level Data (VLD) Insights Report Overview<ExternalLink />](https://help.iqm.com/en/articles/9827089-voter-level-data-vld-insights-report-overview#h_f7f335080d) 
-  * [Campaign Bidding Insights Report Overview<ExternalLink />](https://help.iqm.com/en/articles/10111445-campaign-bidding-insights-overview#h_3952d00349) 
-
-:::
-</div>
-
-Learn more about Audience and VLD Insights with our [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics) articles. 
+Learn more about Insights with our [Help Center<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics) articles. 
 
 ### Authentication
 
@@ -184,7 +173,17 @@ function getInsightsDetailList(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Gets the data required for bidding insights of Campaign by Campaign ID in a given date range (2 weeks maximum), along with the rejection reasons and rejection bids per reason. Also gets total wins during the date range.
+Campaign bidding Insights provides a list of bid rejection reasons for given Campaign ID. 
+
+:::info 
+
+A Campaign must meet the following eligibility criteria to generate bidding Insights: 
+  * More than 1 impression captured 
+  * "running", "expired" (within last two weeks), "paused" status
+  * Must have been active within the last two weeks
+  * [Campaign Type](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type): "advanced"
+
+:::
 
 | Path Parameters |  |
 | ---- | --- |
@@ -315,24 +314,50 @@ Gets the data required for bidding insights of Campaign by Campaign ID in a give
 
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> object properties</summary>
+  <summary style={{ fontSize: "16px" }}>Bid rejection descriptions</summary>
 
 <table className="objectProperties">
 <tr>
-  <td>`inactiveAccount`</td>
-  <td>Bids dropped off because Advertiser's account with IQM is inactive</td>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`accountSettings` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+      <tr>
+        <td>`inactiveAccount`</td>
+        <td>Bids dropped off because Advertiser's account with IQM is inactive</td>
+      </tr>
+      <tr>
+        <td>`insufficientBalance`</td>
+        <td>Bids dropped off because there is an insufficient balance in your account </td>
+      </tr>
+ </table></details>
+  </td>
+  <td></td>
 </tr>
 <tr>
-  <td>`insufficientBalance`</td>
-  <td>Bids dropped off because there is an insufficient balance in your account </td>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`creativeSettings` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`creativeRollPosition`</td>
+      <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the Campaign's required roll position </td>
+    </tr>
+    <tr>
+      <td>`creativePlayerSize`</td>
+      <td>Bids dropped off because player size did not match Campaign's required player size  </td>
+    </tr>
+        <tr>
+      <td>`creativeDimension`</td>
+      <td>Bids dropped off due to the size of Creative</td>
+    </tr>
+    <tr>
+  <td>`creativeUnavailable`</td>
+  <td>Bids dropped off due to the Campaign's creative settings, such as creative type, dimensions, duration and others</td>
 </tr>
-<tr>
-  <td>`creativeRollPosition`</td>
-  <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the Campaign's required roll position </td>
-</tr>
-<tr>
-  <td>`creativePlayerSize`</td>
-  <td>Bids dropped off because player size did not match Campaign's required player size  </td>
+    </table></details>
+  </td>
+  <td></td>
 </tr>
 <tr>
   <td>`ioBudget`</td>
@@ -343,10 +368,6 @@ Gets the data required for bidding insights of Campaign by Campaign ID in a give
   <td>Bids dropped off because Audience did not match Campaign's Audience targeting parameters </td>
 </tr>
 <tr>
-  <td>`creativeUnavailable`</td>
-  <td>Bids dropped off due to the Campaign's creative settings, such as creative type, dimensions, duration and others</td>
-</tr>
-<tr>
   <td>`campaignBidPrice`</td>
   <td>Bids dropped off because the bid price is lower than the floor price recived from the exchange </td>
 </tr>
@@ -355,24 +376,33 @@ Gets the data required for bidding insights of Campaign by Campaign ID in a give
   <td>Bids dropped off because Operating System did not match the Campaign's Operating System requirements</td>
 </tr>
 <tr>
-  <td>`manufacturer`</td>
-  <td>Bids dropped off because the Manufacturer did not match the Campaign's Manufacturer parameters</td>
-</tr>
-<tr>
-  <td>`deviceType`</td>
-  <td>Bids dropped off because the Device Type did not match the Campaign's Device Type targeting parameters </td>
-</tr>
-<tr>
-  <td>`channels`</td>
-  <td>Bids dropped off because Channels did not match the Campaign's Channel Targeting Parameters</td>
-</tr>
-<tr>
-  <td>`networkTypes`</td>
-  <td>Bids dropped off because Network Type did not match the Campaign's Network Type requirements</td>
-</tr>
-<tr>
-  <td>`carrier`</td>
-  <td>Bids dropped off because Carrier did not match the Campaign's Carrier requirements</td>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`deviceTargeting` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+      <tr>
+        <td>`manufacturer`</td>
+        <td>Bids dropped off because the Manufacturer did not match the Campaign's Manufacturer parameters</td>
+      </tr>
+      <tr>
+        <td>`deviceType`</td>
+        <td>Bids dropped off because the Device Type did not match the Campaign's Device Type targeting parameters </td>
+      </tr>
+      <tr>
+        <td>`channels`</td>
+        <td>Bids dropped off because Channels did not match the Campaign's Channel Targeting Parameters</td>
+      </tr>
+      <tr>
+        <td>`networkTypes`</td>
+        <td>Bids dropped off because Network Type did not match the Campaign's Network Type requirements</td>
+      </tr>
+      <tr>
+        <td>`carrier`</td>
+        <td>Bids dropped off because Carrier did not match the Campaign's Carrier requirements</td>
+      </tr>
+  </table></details>
+  </td>
+  <td></td>
 </tr>
 </table>
 </details>
@@ -488,9 +518,9 @@ Gets the data required for bidding insights of Campaign by Campaign ID in a give
 }
 ```
 
-Response 422 (invalid start date)
 
-```json
+
+```json title="Response 422 (invalid start date)"
 {
   "success": false,
   "errorObjects": [
@@ -653,6 +683,354 @@ function getCampaignBiddingInsight(): Promise<Responses> {
 
 ---
 
+
+
+### Get Insights Count by Type
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/insights/type-wise-count</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a count of Insights by type ID. See [List of Insights Type IDs](#get-list-of-insights-types). 
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">object</span></td>
+    <td>Name-Value pairs of <var>insightsTypeId</var> and count</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "1": 32,
+        "3": 20
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [insightsTypeId: number]: number;
+        }
+      }
+    };
+  };
+};
+
+function getInsightsTypeWiseCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/insights/type-wise-count',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Insights Management
+
+### Delete Insights Record
+
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ins/insights/delete</span>
+
+<div class="container">
+  <div class="child1">
+
+Delete records from the database for valid insights IDs passed.
+
+| Query Parameters |  |
+| ---- | --- |
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to delete | 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`deletedIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Deleted Insights records</td>
+</tr>
+<tr>
+  <td>`invalidIDs` <br /><span class="type-text">array of integers</span></td>
+  <td>Invalid IDs</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "deletedIds": [
+      35,
+      34
+    ],
+    "invalidIds": [
+      33,
+      1
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          deletedIds: number[];
+          invalidIds: number[];
+        }
+      }
+    };
+  };
+};
+
+function deleteInsights(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/insights/delete',
+    params: {
+      query: {
+        insightsId: `array of numbers`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Regenerate Insights Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/regenerate/\{insightsId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Regenerates an Insights Report if the insight fails.
+
+| Path Parameters |  |
+| ---- | --- |
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated Insights IDs to regenerate |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Insights regenerated successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
+    };
+  };
+};
+
+function regenerateInsights_1(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://app.iqm.com/api/v3/ins/insights/regenerate/{insightsId}',
+    params: {
+      path: {
+        insightsId: `number`
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+
+
+### Send Insights Email
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/send-email</span>
+
+<div class="container">
+  <div class="child1">
+
+Send an attached Insights Report file via email.
+
+| Query Parameters |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> | Insights ID |
+| `attachmentType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var> |
+| `recipientEmails` <br /><span class="type-text">string</span> | Comma separated string of emails to send Insights Report to, up to 15 |
+
+| Request Schema |  |
+| ---- | --- |
+| `file` <br /><span class="type-text">string</span> | Multipart/form-data format
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Insights email was succesfully sent: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "file": "string"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Insights-1 pdf email sent successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function sendInsightsEmail(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/send-email',
+    params: {
+      query: {
+        id: `number`,
+        attachmentType: `string`,
+        recipientEmails: `string`,
+      },
+    },
+    requestBody?: {
+      content: {
+        "application/json": {
+          file?: `string`
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Audience Insights
+
 ### Get a List of Eligible Audiences
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audiences/list</span>
@@ -785,81 +1163,6 @@ function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
         sortBy?: `string`,
       }
     }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Get Insights Count by Type
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/insights/type-wise-count</span>
-
-<div class="container">
-  <div class="child1">
-
-Get a count of Insights by type ID. See [List of Insights Type IDs](#get-list-of-insights-types). 
-
- <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`data` <br /><span class="type-text">object</span></td>
-    <td>Name-Value pairs of <var>insightsTypeId</var> and count</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "1": 32,
-        "3": 20
-    }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          [insightsTypeId: number]: number;
-        }
-      }
-    };
-  };
-};
-
-function getInsightsTypeWiseCount(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/ins/insights/type-wise-count',
   };
   
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -1094,16 +1397,26 @@ function downloadMatchedAudienceFile(): Promise<Responses> {
 
 </div></div>
 
-## Insights Management
+---
 
-### Create Insights for a Given Audience
+### Create Audience Insights
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
 
 <div class="container">
   <div class="child1">
 
-Create an insight Report for a given Audience ID.
+Create an Insights Report for a given Audience ID.
+
+:::info 
+
+An Audience must meet the following eligibility criteria to generate Insights report:
+  * Must be **Matched Audience** type
+  * Audience status: "ready"
+  * Audience reach: 10,000+
+  * (Recommended) Audience creation date within the last year
+
+:::
 
 | Request Schema |  |
 | ----  | --- |
@@ -1259,171 +1572,6 @@ function createInsightsDetails(): Promise<Responses> {
 
 ---
 
-### Delete Insights Record
-
-<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ins/insights/delete</span>
-
-<div class="container">
-  <div class="child1">
-
-Delete records from the database for valid insights IDs passed.
-
-| Query Parameters |  |
-| ---- | --- |
-| `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to delete | 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-  <td>`deletedIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Deleted Insights records</td>
-</tr>
-<tr>
-  <td>`invalidIDs` <br /><span class="type-text">array of integers</span></td>
-  <td>Invalid IDs</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "deletedIds": [
-      35,
-      34
-    ],
-    "invalidIds": [
-      33,
-      1
-    ]
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          deletedIds: number[];
-          invalidIds: number[];
-        }
-      }
-    };
-  };
-};
-
-function deleteInsights(): Promise<Responses> {
-  const options = {
-    method: 'DELETE',
-    url: 'https://app.iqm.com/api/v3/ins/insights/delete',
-    params: {
-      query: {
-        insightsId: `array of numbers`
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Regenerate Insights Report
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/regenerate/\{insightsId\}</span>
-
-<div class="container">
-  <div class="child1">
-
-Regenerates an Insights Report if the insight fails.
-
-| Path Parameters |  |
-| ---- | --- |
-| `insightsIds` <br /><span class="type-text">string</span> | Comma separated Insights IDs to regenerate |
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Insights regenerated successfully."
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      }
-    };
-  };
-};
-
-function regenerateInsights_1(): Promise<Responses> {
-  const options = {
-    method: 'DELETE',
-    url: 'https://app.iqm.com/api/v3/ins/insights/regenerate/{insightsId}',
-    params: {
-      path: {
-        insightsId: `number`
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
 ### Download Insights Report
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
@@ -1526,108 +1674,6 @@ function downloadInsights(): Promise<Responses> {
 </div></div>
 
 ---
-
-### Send Insights Email
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/send-email</span>
-
-<div class="container">
-  <div class="child1">
-
-Send an attached Insights Report file via email.
-
-| Query Parameters |  |
-| ---- | --- |
-| `id` <br /><span class="type-text">integer</span> | Insights ID |
-| `attachmentType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var> |
-| `recipientEmails` <br /><span class="type-text">string</span> | Comma separated string of emails to send Insights Report to, up to 15 |
-
-| Request Schema |  |
-| ---- | --- |
-| `file` <br /><span class="type-text">string</span> | Multipart/form-data format
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Insights email was succesfully sent: <var>true</var></td>
-    </tr>
-    <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "file": "string"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Insights-1 pdf email sent successfully."
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function sendInsightsEmail(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/ins/send-email',
-    params: {
-      query: {
-        id: `number`,
-        attachmentType: `string`,
-        recipientEmails: `string`,
-      },
-    },
-    requestBody?: {
-      content: {
-        "application/json": {
-          file?: `string`
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
 
 ## Voter Level Data Reports
 
@@ -1970,6 +2016,19 @@ function getStatusWiseCampaignsForVLDReports(): Promise<Responses> {
   <div class="child1">
 
 This API calculates the cost for the impressions for the Voter Level Data Reports based on the impressions and mark up charged on the Organization and then creates the VLD Reports.
+
+:::info 
+
+A Campaign must meet the following eligibility criteria to generate bidding Insights: 
+  * Must be political Campaign 
+  * "running", "expired" (within last two years), "paused" status
+  * Must have duration of 3 or more days
+  * Creation date: Sept. 16, 2024 or later
+  * Voter location: all US states (except Oregon)
+  * Audience type: **Matched Audience**
+
+:::
+
 | Request Schema |  |
 | ---- | --- |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
@@ -2350,7 +2409,7 @@ function deleteFailedVLDReport(): Promise<Responses> {
 
 </div></div>
 
-## Practitioner Level Data Reports
+## Provider Level Data Reports
 
 ### PLD Resource Properties
 
@@ -2691,7 +2750,17 @@ function getStatusWiseCampaignsForPLDReports(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-This API calculates the cost for the impressions for the Practitioner Level Data Reports based on the impressions and mark up charged on the Organization and then creates the PLD Reports.
+This API calculates the cost for the impressions for the Provider Level Data Reports based on the impressions and mark up charged on the Organization and then creates the PLD Reports.
+
+:::info 
+
+A Campaign must meet the following eligibility criteria to generate bidding Insights: 
+  * Must be healthcare Campaign 
+  * "running", "expired" (within last 90 days), "paused" (within last 90 days) status
+  * Must have duration of 3 or more days
+  * Audience type: **Matched Audience** from NPI IDs
+
+:::
 
 | Request Schema |  |
 | ---- | --- |
@@ -3015,7 +3084,7 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 | Request Schema | |
 | --- | --- |
 | `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
-| `pldId` <br /><span class="type-text">integer</span> | Practitioner Level Data Report ID
+| `pldId` <br /><span class="type-text">integer</span> | Provider Level Data Report ID
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -3225,6 +3294,14 @@ Get a list of Insights types by ID.
   <td>`3` </td>
   <td>Voter Level Data</td>
 </tr>
+<tr>
+  <td>`4` </td>
+  <td>Provider Level Data</td>
+</tr>
+<tr>
+  <td>`5` </td>
+  <td>Script Lift Study</td>
+</tr>
 </table>
 
 </div><div class="child2">
@@ -3250,6 +3327,18 @@ Get a list of Insights types by ID.
         "name": "voter_level_data",
         "label": "Voter Level Data",
         "order": 3
+      },
+      {
+        "id": 4,
+        "name": "provider_level_data",
+        "label": "Provider Level Data",
+        "order": 4
+      },
+      {
+        "id": 5,
+        "name": "script_life_study",
+        "label": "Script Lift Study",
+        "order": 5
       }
     ]
   }
