@@ -2026,22 +2026,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-a-list-of-eligible-audiences"><span class="badge bar badge--primary">GET</span>List of Eligible Audiences</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-insights-count-by-type"><span class="badge bar badge--primary">GET</span>Insights Count by Type</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-matched-audience-file-url"><span class="badge bar badge--primary">GET</span>Matched Audience File URL</a>',
               defaultStyle: true,
             },
           ]
@@ -2051,11 +2036,6 @@ const sidebars = {
           label: `Insights Management`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#insights-management"><span class="badge bar badge--success">POST</span>Create Insights for a Given Audience</a>',
-              defaultStyle: true,
-            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#delete-insights-record"><span class="badge bar badge--danger">DEL</span>Delete Insights Record</a>',
@@ -2068,12 +2048,39 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#download-insights-report"><span class="badge bar badge--success">POST</span>Download Insights Report</a>',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#send-insights-email"><span class="badge bar badge--success">POST</span>Send Insights Email</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Insights`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-a-list-of-eligible-audiences"><span class="badge bar badge--primary">GET</span>List of Eligible Audiences</a>',
               defaultStyle: true,
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#send-insights-email"><span class="badge bar badge--success">POST</span>Send Insights Email</a>',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-matched-audience-file-url"><span class="badge bar badge--primary">GET</span>Matched Audience File URL</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#create-audience-insights"><span class="badge bar badge--success">POST</span>Create Audience Insights</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#download-insights-report"><span class="badge bar badge--success">POST</span>Download Insights Report</a>',
               defaultStyle: true,
             },
           ]
@@ -2122,7 +2129,7 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Practitioner Level Data Reports`,
+          label: `Provider Level Data Reports`,
           className: 'sidebarItem',
           items: [
             {
