@@ -3299,7 +3299,65 @@ This API calculates the cost for the impressions for the ScriptLift Studies Repo
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          slsReportCreated: number;
+          campaignIds: number[];
+          slsStartDate: number;
+          slsEndDate: number;
+          slsChargeableImps: number;
+          slsChargedImps: number;
+          slsChargeableCost: number;
+          slsChargedCost: number;
+          slsName: string;
+          slsLookbackDuration: number;
+          conceptGroupId: number;
+          reportTypes: number[];
+          competitorConceptGroupIds: number[];
+          fundsAvailable: boolean;
+        }
+      }
+    };
+  };
+}
+
+function generateSLSReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/sls-reports',
+    requestBody: {
+      content: {
+        "application/json": {
+          ioId?: `number`,
+          campaignIds?: `array of numbers`,
+          slsId?: `number`,
+          slsStartDate?: `number`,
+          slsEndDate?: `number`,
+          slsName?: `string`,
+          slsLookbackDuration?: `number`,
+          conceptGroupId?: `number`,
+          competitorConceptGroupIds?: `array of numbers`,
+          reportTypes?: `array of numbers`,
+          endDate?: `number`,
+          startDate?: `number`,
+          id?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3401,7 +3459,65 @@ Calculates the cost for the impressions for the SLS Report based on impressions 
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          slsReportCreated: number;
+          campaignIds: number[];
+          slsStartDate: number;
+          slsEndDate: number;
+          slsChargeableImps: number;
+          slsChargedImps: number;
+          slsChargeableCost: number;
+          slsChargedCost: number;
+          slsName: string;
+          slsLookbackDuration: number;
+          conceptGroupId: number;
+          reportTypes: number[];
+          competitorConceptGroupIds: number[];
+          fundsAvailable: boolean;
+        }
+      }
+    };
+  };
+}
+
+function getChargeableImpressionsDataForSLSReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/sls-reports/computation',
+    requestBody: {
+      content: {
+        "application/json": {
+          ioId?: `number`,
+          campaignIds?: `array of numbers`,
+          slsId?: `number`,
+          slsStartDate?: `number`,
+          slsEndDate?: `number`,
+          slsName?: `string`,
+          slsLookbackDuration?: `number`,
+          conceptGroupId?: `number`,
+          competitorConceptGroupIds?: `array of numbers`,
+          reportTypes?: `array of numbers`,
+          endDate?: `number`,
+          startDate?: `number`,
+          id?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3417,14 +3533,37 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 <div class="container">
   <div class="child1">
 
+Validate a name for SLS Reports. 
+
+| Query Parameters | |
+| --- | --- |
+| `reportName` <br /><span class="type-text">string</span> | Report name |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates successful validation</td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
 </div>
 <div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title=""
-
+```json title="Response 200"
+{
+  "success": true,
+  "data": "This SLS report name is valid"
+}
 ```
 
 </TabItem>
@@ -3433,7 +3572,36 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
+    };
+  };
+}
+
+function validateSlsReportName(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/sls-reports/validate/name',
+    params: {
+      query: {
+        reportName: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
@@ -3449,14 +3617,50 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 <div class="container">
   <div class="child1">
 
+Get a list of Campaign IDs by status eligible for VLD Report generation.
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`running` <br /><span class="type-text">array of integers</span></td>
+    <td>Campaign IDs with "running" status</td>
+    </tr>
+    <tr>
+    <td>`paused` <br /><span class="type-text">array of integers</span></td>
+    <td>Campaign IDs with "paused" status</td>
+    </tr>
+        <tr>
+    <td>`expired` <br /><span class="type-text">array of integers</span></td>
+    <td>Campaign IDs with "expired" status</td>
+    </tr>
+    </table>
+    </details>
+
 </div>
 <div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title=""
-
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "running": [
+      12345,
+      12543
+    ],
+    "paused": [
+      54321,
+      34521
+    ],
+    "expired": [
+      33452,
+      22453
+    ]
+  }
+}
 ```
 
 </TabItem>
@@ -3465,7 +3669,40 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
+import {
+  getInstance
+} from "prerequisites"
 
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          running: number[];
+          paused: number[];
+          expired: number[];
+        }
+      }
+    };
+  };
+}
+
+function getStatusWiseCampaignsForSLSReports(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/sls-reports/campaigns',
+    params: {
+      query: {
+        reportName: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
 ```
 
 </TabItem></Tabs>
