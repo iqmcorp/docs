@@ -188,35 +188,707 @@ function Login(): Promise < Responses > {
 
 ### Eligibility Requirements
 
-The table below outlines the eligiblity requirements for each Insights Report type. 
+The table below outlines the eligiblity requirements for each Insights Report type and includes relevant resources. Click on a type to jump to the instructions for generating that Insights Report. 
 
 <table>
 <th>Type</th>
 <th>Requirements</th>
 <th>Resources</th>
 <tr>
-<td>Campaign Bidding Insights</td>
+<td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Campaign Bidding Insights**](#campaign-bidding-insights)</td>
 <td>Campaign requirements:<ul><li>More than 1 impression</li><li>Status: "running", "paused", or  "expired" (within last two weeks)</li><li>Type: "advanced"</li></ul></td>
 <td>[Campaign API](/Guidelines/Campaign-API-Guidelines)<br />[Create New Campaign](/Guidelines/Campaign-API-Guidelines#create-new-campaign)<br />[Campaign Status Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status)<br />[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
-  <td>Audience Insights</td>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Audience Insights**](#audience-insights-report)</td>
   <td>Audience requirements: <ul><li>Type: **Matched Audience**</li><li>Status: "ready"</li><li>Reach: 10,000+</li><li>(Recommended) Creation date within the last year</li></ul></td>
   <td>[Upload a Matched Audience](/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide)<br />[Audience API](/Guidelines/Audience-API-Guidelines)<br />[Audience Status Type ID](/Guidelines/Audience-API-Guidelines#audience-count-by-status)<br />[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
 </tr>
 <tr>
-  <td>Voter Level Data Report</td>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Voter Level Data Report**](#voter-level-data-report)</td>
   <td>Campaign requirements: <ul><li>Must be a political Campaign</li><li>Status: "running", "paused", or "expired" (within last two years)</li><li>Must have duration of 3 or more days</li><li>Creation date: Sept. 16, 2024 or later</li><li>Voter location: all US states (except Oregon)</li><li>Audience type: **Matched Audience**</li></ul></td>
   <td></td>
 </tr>
 <tr>
-  <td>Provider Level Data Report</td>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Provider Level Data Report**](#provider-level-data-report)</td>
   <td>Campaign requirements:<ul><li>Must be healthcare Campaign</li><li>"running", "expired" (within last 90 days), "paused" (within last 90 days) status</li><li>Must have duration of 3 or more days</li><li>Audience type: Matched Audience from NPI IDs</li></ul></td>
   <td>[ABM Audience Details](/Guidelines/Audience-API-Guidelines#abm-audience-details)</td>
 </tr>
 </table>
 
 ## Campaign Bidding Insights
+
+### Step 1: Check Campaign for Eligibility
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate Campaign Bidding Insights, use the <var>campaignId</var> and the Get Campaign Details endpoint to check if the eligiblity requirements are met. 
+
+The endpoint will return a JSON schema of Campaign details; the relevant parameters are highlighted in the sample <var>Response 200</var> code block. A Campaign type of <var>1</var> means it's an "advanced" Campaign. In the sample response the status is <var>running</var>, and the impressions count is <var>5</var>. This Campaign meets the eligibilty requirements to generate an Insights Report. 
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+         //highlight-next-line
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+        "startTime": 1726518001,
+        "endTime": 1727668800,
+          //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+          //highlight-next-line
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+                 //highlight-next-line
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+          startTime: number;
+          endTime: number;
+                 //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+                 //highlight-next-line
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate Insights
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Once a Campaign is determined eligible, you can generate Bidding Insights. Pass the <var>campaignId</var> in the endpoint's path and use the query parameters to specify the date range of the Insights report (maximum two weeks). 
+
+This endpoint will return a list of rejection reasons for why the Campaign's bid requests were dropped. The number of bids won will also be returned.
+
+| Path Parameters |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Query Parameters |  |
+| ----| --- |
+| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`rejectionList`<br /><span class="type-text">object</span></td>
+  <td>List of bid rejection reasons</td>
+</tr>
+<tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`rejectionList` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+        <td>`campaignSettings` <br /><span class="type-text">object</span></td>
+        <td>Campaign settings</td>
+      </tr>
+      <tr>
+        <td>`ioBudget` <br /><span class="type-text">object</span></td>
+        <td>IO Budget</td>
+      </tr>
+      <tr>
+        <td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
+        <td>Inventory targeting</td>
+      </tr>
+      <tr>
+        <td>`campaignBidPrice` <br /><span class="type-text">object</span></td>
+        <td>Campaign bid price</td>
+      </tr>
+      <tr>
+        <td>`locationTargeting` <br /><span class="type-text">object</span></td>
+        <td>Location targeting</td>
+      </tr>
+         <tr>
+        <td>`deviceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Device targeting</td>
+      </tr>
+         <tr>
+        <td>`creativeSettings` <br /><span class="type-text">object</span></td>
+        <td>Creative settings</td>
+      </tr>
+         <tr>
+        <td>`advanceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Advanced targeting</td>
+      </tr>
+         <tr>
+        <td>`audienceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Audience targeting</td>
+      </tr>
+         <tr>
+        <td>`bidStrategy` <br /><span class="type-text">object</span></td>
+        <td>Bid strategy</td>
+      </tr>
+         <tr>
+        <td>`campaignBudget` <br /><span class="type-text">object</span></td>
+        <td>Campaign budget</td>
+      </tr>
+         <tr>
+        <td>`demographicsTargeting` <br /><span class="type-text">object</span></td>
+        <td>Demographics targeting</td>
+      </tr>
+            <tr>
+        <td>`undefined` <br /><span class="type-text">object</span></td>
+        <td>Undefined</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`rejectionList` sub-objects properties</summary>
+          <table className="objectProperties">
+          <tr>
+          <td>`title` <br /><span class="type-text">string</span></td>
+          <td>Object title</td>
+          </tr>
+            <tr>
+          <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
+          <td>Rejected bids count</td>
+          </tr>
+            <tr>
+          <td>`description` <br /><span class="type-text">string</span></td>
+          <td>description</td>
+          </tr>
+             <tr>
+          <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
+          <td>List of sub-reasons info</td>
+          </tr>
+          </table></details>
+          </td>
+          <td></td>
+        </tr>
+      </table></details>
+      </td>
+      <td></td>
+</tr>
+<tr>
+  <td>`topMainReasons` <br /><span class="type-text">object</span></td>
+  <td><var>rejectionList</var> objects with the highest <var>rejectedBids</var> counts</td>
+  </tr>
+<tr>
+  <td>`topSubReasons` <br /><span class="type-text">object</span></td>
+  <td><var>rejectionList</var> sub-objects with the highest <var>droppedRequests</var> counts</td>
+  </tr>
+<tr>
+  <td>`totalBids` <br /><span class="type-text">integer</span></td>
+  <td>Total bids count</td>
+  </tr>
+<tr>
+  <td>`lostBids` <br /><span class="type-text">integer</span></td>
+  <td>Lost bids count</td>
+  </tr>
+<tr>
+  <td>`totalWins` <br /><span class="type-text">integer</span></td>
+  <td>Total won bids count</td>
+  </tr>
+</table>
+
+</details>
+
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> object properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`inactiveAccount`</td>
+  <td>Bids dropped off because Advertiser's account with IQM is inactive</td>
+</tr>
+<tr>
+  <td>`insufficientBalance`</td>
+  <td>Bids dropped off because there is an insufficient balance in your account </td>
+</tr>
+<tr>
+  <td>`creativeRollPosition`</td>
+  <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the Campaign's required roll position </td>
+</tr>
+<tr>
+  <td>`creativePlayerSize`</td>
+  <td>Bids dropped off because player size did not match Campaign's required player size  </td>
+</tr>
+<tr>
+  <td>`ioBudget`</td>
+  <td>Bids dropped off because budget on the Campaign's associated IO has spent in full</td>
+</tr>
+<tr>
+  <td>`audienceUnavailable`</td>
+  <td>Bids dropped off because Audience did not match Campaign's Audience targeting parameters </td>
+</tr>
+<tr>
+  <td>`creativeUnavailable`</td>
+  <td>Bids dropped off due to the Campaign's creative settings, such as creative type, dimensions, duration and others</td>
+</tr>
+<tr>
+  <td>`campaignBidPrice`</td>
+  <td>Bids dropped off because the bid price is lower than the floor price recived from the exchange </td>
+</tr>
+<tr>
+  <td>`operatingSystem`</td>
+  <td>Bids dropped off because Operating System did not match the Campaign's Operating System requirements</td>
+</tr>
+<tr>
+  <td>`manufacturer`</td>
+  <td>Bids dropped off because the Manufacturer did not match the Campaign's Manufacturer parameters</td>
+</tr>
+<tr>
+  <td>`deviceType`</td>
+  <td>Bids dropped off because the Device Type did not match the Campaign's Device Type targeting parameters </td>
+</tr>
+<tr>
+  <td>`channels`</td>
+  <td>Bids dropped off because Channels did not match the Campaign's Channel Targeting Parameters</td>
+</tr>
+<tr>
+  <td>`networkTypes`</td>
+  <td>Bids dropped off because Network Type did not match the Campaign's Network Type requirements</td>
+</tr>
+<tr>
+  <td>`carrier`</td>
+  <td>Bids dropped off because Carrier did not match the Campaign's Carrier requirements</td>
+</tr>
+</table>
+</details>
+
+
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRequests": 100,
+    "rejectionList": {
+      "campaignSettings": {
+        "title": "Campaign Settings",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Campaign Settings set in the campaign.",
+        "subReasonInfo": {}
+      },
+      "ioBudget": {
+        "title": "IO Budget",
+        "rejectedBids": 0,
+        "description": null,
+        "subReasonInfo": {}
+      },
+      "inventoryTargeting": {
+        "title": "Inventory Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Inventory Targeting.",
+        "subReasonInfo": {}
+      },
+      "campaignBidPrice": {
+        "title": "Campaign Bid Price",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered because the bid price is lower than the floor price received from the exchange.",
+        "subReasonInfo": {}
+      },
+      "locationTargeting": {
+        "title": "Location Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Location Targeting.",
+        "subReasonInfo": {}
+      },
+      "deviceTargeting": {
+        "title": "Device Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Device Targeting.",
+        "subReasonInfo": {}
+      },
+      "creativeSettings": {
+        "label": "Creative Settings",
+        "rejectedBids": 100,
+        "description": "Campaign is filtered due to non-matching creative dimensions found in the request",
+        "subReasonInfo": {
+          "creativeDimension": {
+            "label": "Creative Dimensions",
+            "droppedRequests": 100,
+            "description": "Campaign is filtered due to non-matching creative dimensions found in the request."
+          }
+        }
+      },
+      "advanceTargeting": {
+        "title": "Advanced Targeting",
+        "rejectedBids": 0,
+        "description": null,
+        "subReasonInfo": {}
+      },
+      "audienceTargeting": {
+        "title": "Audience Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Audience Targeting.",
+        "subReasonInfo": {}
+      },
+      "bidStrategy": {
+        "title": "Bid Strategy",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to bid strategy setting applied in campaign.",
+        "subReasonInfo": {}
+      },
+      "campaignBudget": {
+        "title": "Campaign Budget",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered because the campaign budget is now unavailable for further bidding.",
+        "subReasonInfo": {}
+      },
+      "demographicsTargeting": {
+        "title": "Demographics Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Demographics Targeting.",
+        "subReasonInfo": {}
+      },
+      "undefined": {
+        "title": "Undefined",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Undefined reasons.",
+        "subReasonInfo": {}
+      }
+    },
+    "topMainReasons": {
+      "creativeSettings": 100
+    },
+    "topSubReasons": {
+      "creativeDimension": 100
+    },
+    "totalBids": 0,
+    "lostBids": 0,
+    "totalWins": 0
+  }
+}
+```
+
+Response 422 (invalid start date)
+
+```json
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Date Range End must be greater than Date Range Start"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRequests: number;
+          rejectionList: {
+            campaignSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            ioBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            inventoryTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBidPrice: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            locationTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            deviceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            creativeSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {
+                creativeDimension: {
+                  label: string;
+                  droppedRequests: number;
+                  description: string;
+                }
+              }
+            };
+            advancedTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            audienceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            bidStrategy: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            demographicsTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            undefined: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            }
+          };
+          topMainReasons: {
+            creativeSettings: number
+          };
+          topSubReasons: {
+            creativeSettings: number
+          };
+          totalBids: number;
+          lostBids: number;
+          totalWins: number;
+        }
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[]
+      }
+    };
+  };
+};
+
+function getCampaignBiddingInsight(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}',
+    params: {
+      query: {
+        dateRangeStart: `number`,
+        dateRangeEnd: `number`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ## Audience Insights Report
 
