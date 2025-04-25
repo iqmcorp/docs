@@ -1110,6 +1110,163 @@ function getCampaignBasicDetailList(): Promise<Responses> {
 
 ---
 
+### Get Campaign Audience Targeting Details
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Audience IDs and type for each Campaign ID. 
+
+| Request Schema | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`campaignId` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  </tr>
+   <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`campaignId` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
+  </tr>
+    <tr>
+  <td>`audienceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Audience IDs</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignIds": [
+    52241,
+    50322
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "543363": [],
+    "553441": [
+      {
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101833,
+          1101834,
+          1101835,
+          1102476
+        ]
+      }
+    ],
+    "553443": [
+      {
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101831,
+          1101835,
+          1102476
+        ]
+      },
+      {
+        "audienceTypeId": 9,
+        "audienceIds": [
+          1124205,
+          1124206
+        ]
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [campaignId: number]: {
+            audienceTypeId: number;
+            audienceIds: number[];
+          }
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceBasicDetailByCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/audience/targeting',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignIds?: `array of numbers`,
+          owIds?: `array of numbers`,
+          isAllOwIds?: `boolean`,
+          status?: `array of strings`,
+          creativeTypeIds?: `array of numbers`,
+          ids?: `array of numbers`,
+          responseFields?: `array of strings`,
+          ioIdsList?: `array of numbers`,
+          campaignTypeIds?: `array of numbers`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+        
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ### Get List of Campaigns with Filters
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/customer/campaigns/list</span>
