@@ -293,6 +293,59 @@ const sidebars = {
             },
           ]
         },
+        {
+          type: 'category',
+          label: 'Create an Insights Report',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Insights-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Insights',
+              href: `/Quickstart%20Guides/Insights-Quickstart#about-iqm-insights`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Quickstart%20Guides/Insights-Quickstart#before-you-begin`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Eligibility Requirements',
+              href: `/Quickstart%20Guides/Insights-Quickstart#eligibility-requirements`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Campaign Bidding Insights',
+              href: `/Quickstart%20Guides/Insights-Quickstart#campaign-bidding-insights`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Audience Insights Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#audience-insights-report`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Voter Level Data Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#voter-level-data-report`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Provider Level Data Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#provider-level-data-report`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
       ],
     },
     {
@@ -1105,6 +1158,11 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-basic-details-of-campaigns"><span class="badge bar badge--success">POST</span>Basic Details of Campaigns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-campaign-audience-targeting-details"><span class="badge bar badge--success">POST</span>Campaign Audience Targeting Details</a>',
               defaultStyle: true,
             },
             {
