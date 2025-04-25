@@ -1041,7 +1041,7 @@ function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Pass the Audience <var>id</var> from the response data in step 1 in the Source IDs array to generate the Audience Insights Report with this endpoint. 
+Pass the Audience <var>id</var> (from the response data in step 1) in the Source IDs array to generate the Audience Insights Report with this endpoint. 
 
 | Request Schema |  |
 | ----  | --- |
@@ -1197,6 +1197,307 @@ function createInsightsDetails(): Promise<Responses> {
 
 ### Step 3: Download Insights Report
 
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> query, along with your desired file type, to generate a download link for your Insights Report.
+
+| Query Parameters |  |
+| ---- | --- |
+| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
+| `fileType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var>
+
+| Request Schema |  |
+| ---- | --- |
+| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`insightsReportUrl` <br /><span class="type-text">string</span></td>
+  <td>Insights Report URL</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "customLogoFile": "string"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "insightsReportUrl": "https://domain.com/insights.pdf"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          insightsReportUrl: string;
+        }
+      }
+    };
+  };
+};
+
+function downloadInsights(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/download',
+    params: {
+      query: {
+        insightsId: `number`,
+        fileType: `string`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/json": {
+          customLogoFile?: `string`
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ## Voter Level Data Report
+
+### Step 1: Check Campaign for Eligibility
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate a VLD Report, first use the <var>campaignId</var> and the Get Campaign Details endpoint to check if the eligiblity requirements are met. 
+
+The endpoint will return a JSON schema of Campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
+   * A Campaign type of <var>1</var> means it's an "advanced" Campaign. 
+   * The status is <var>running</var>.
+   * <var>createDate</var> indicates when the Campaign was created (in Unix epoch milliseconds).
+   * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
+   * 
+
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+         //highlight-next-line
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+        "startTime": 1726518001,
+        "endTime": 1727668800,
+          //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+          //highlight-next-line
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+                 //highlight-next-line
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+          startTime: number;
+          endTime: number;
+                 //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+                 //highlight-next-line
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ## Provider Level Data Report
