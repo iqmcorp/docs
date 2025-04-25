@@ -1138,6 +1138,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-campaign-audience-targeting-details"><span class="badge bar badge--success">POST</span>Campaign Audience Targeting Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns-with-filters"><span class="badge bar badge--success">POST</span>List of Campaigns with Filters</a>',
               defaultStyle: true,
             },
