@@ -1,0 +1,2549 @@
+---
+title: Sign Up and Authenticate
+hide_table_of_contents: true
+pagination_next: null
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Create an Insights Report
+
+## About IQM Insights
+
+Insights reports are one of IQM's analytics tools that help Advertisers quickly identify trends and apply precise adjustments to deliver better results for Campaigns. With pre-defined metrics and dimensions, Insights reports can be generated for the following areas:
+   * **Campaign Bidding Insights** capture rejected Campaigns and segments them based on rejection reason, allowing you to assess which parameters are limiting a Campaign's success.
+   * **Audience Insights** provide in-depth Reports of Audience characteristics, interests, and behaviors to give you a deeper understanding of your target Audience and create targeted and personalized advertising strategies.
+   * **Voter Level Data** (VLD) Reports offer Insights about targeting in current or prior political Campaigns. These Reports include ad exposure, engagement data, demographic data, and voting-history details by voter.
+   * **Provider Level Data** (PLD) Reports include details about healthcare professionals targeted in your Campaigns, and provide similar details as VLD Reports while adhering to healthcare data privacy regulations.
+
+## Before You Begin
+
+To generate an Insights Report you will need an account on the IQM Platform (see [Getting Started](/Getting%20Started/Before-You-Begin)). Once you have an account you can log in and review the eligibility requirements table for each kind of Insights Report.
+
+### Log In 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](/Guidelines/User-Profile-Guidelines#login).
+
+| Headers |  |
+| ---- | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Eligibility Requirements
+
+The table below outlines the eligibility requirements for each Insights Report type and includes relevant resources. Click on a type to jump to the instructions for generating that Insights Report. 
+
+<table>
+<th>Type</th>
+<th>Requirements</th>
+<th>Resources</th>
+<tr>
+<td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Campaign Bidding Insights**](#campaign-bidding-insights)</td>
+<td>Campaign requirements:<ul><li>More than 1 impression</li><li>Status: "running", "paused", or  "expired" (within last two weeks)</li><li>Type: "advanced"</li></ul></td>
+<td>[Campaign API](/Guidelines/Campaign-API-Guidelines)<br />[Create New Campaign](/Guidelines/Campaign-API-Guidelines#create-new-campaign)<br />[Campaign Status Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status)<br />[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+</tr>
+<tr>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Audience Insights**](#audience-insights-report)</td>
+  <td>Audience requirements: <ul><li>Type: **Matched Audience**</li><li>Status: "ready"</li><li>Reach: 10,000+</li><li>(Recommended) Creation date within the last year</li></ul></td>
+  <td>[Upload a Matched Audience](/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide)<br />[Audience API](/Guidelines/Audience-API-Guidelines)<br />[Audience Status Type ID](/Guidelines/Audience-API-Guidelines#audience-count-by-status)<br />[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
+</tr>
+<tr>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Voter Level Data Report**](#voter-level-data-report)</td>
+  <td>Campaign requirements: <ul><li>Must be a political Campaign</li><li>Status: "running", "paused", or "expired" (within last two years)</li><li>Must have duration of 3 or more days</li><li>Creation date: Sept. 16, 2024 or later</li><li>Voter location: all US states (except Oregon)</li><li>Audience type: **Matched Audience**</li></ul></td>
+  <td></td>
+</tr>
+<tr>
+  <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Provider Level Data Report**](#provider-level-data-report)</td>
+  <td>Campaign requirements:<ul><li>Must be healthcare Campaign</li><li>"running", "expired" (within last 90 days), "paused" (within last 90 days) status</li><li>Must have duration of 3 or more days</li><li>Audience type: Matched Audience from NPI IDs</li></ul></td>
+  <td>[ABM Audience Details](/Guidelines/Audience-API-Guidelines#abm-audience-details)</td>
+</tr>
+</table>
+
+## Campaign Bidding Insights
+
+### Step 1: Check Campaign for Eligibility
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate Campaign Bidding Insights, use the <var>campaignId</var> and the Get Campaign Details endpoint to check if the eligibility requirements are met. 
+
+The endpoint will return a JSON schema of Campaign details; the relevant parameters are highlighted in the sample <var>Response 200</var> code block. A Campaign type of <var>1</var> means it's an "advanced" Campaign. In the sample response the status is <var>running</var>, and the impressions count is <var>5</var>. This Campaign meets the eligibilty requirements to generate an Insights Report. 
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+         //highlight-next-line
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+        "startTime": 1726518001,
+        "endTime": 1727668800,
+          //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+          //highlight-next-line
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+                 //highlight-next-line
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+          startTime: number;
+          endTime: number;
+                 //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+                 //highlight-next-line
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate Insights
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Once a Campaign is determined eligible, you can generate Bidding Insights. Pass the <var>campaignId</var> in the endpoint's path and use the query parameters to specify the date range of the Insights report (maximum two weeks). 
+
+This endpoint will return a list of rejection reasons for why the Campaign's bid requests were dropped. The number of bids won will also be returned.
+
+| Path Parameters |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Query Parameters |  |
+| ----| --- |
+| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`rejectionList`<br /><span class="type-text">object</span></td>
+  <td>List of bid rejection reasons</td>
+</tr>
+<tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`rejectionList` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+        <td>`campaignSettings` <br /><span class="type-text">object</span></td>
+        <td>Campaign settings</td>
+      </tr>
+      <tr>
+        <td>`ioBudget` <br /><span class="type-text">object</span></td>
+        <td>IO Budget</td>
+      </tr>
+      <tr>
+        <td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
+        <td>Inventory targeting</td>
+      </tr>
+      <tr>
+        <td>`campaignBidPrice` <br /><span class="type-text">object</span></td>
+        <td>Campaign bid price</td>
+      </tr>
+      <tr>
+        <td>`locationTargeting` <br /><span class="type-text">object</span></td>
+        <td>Location targeting</td>
+      </tr>
+         <tr>
+        <td>`deviceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Device targeting</td>
+      </tr>
+         <tr>
+        <td>`creativeSettings` <br /><span class="type-text">object</span></td>
+        <td>Creative settings</td>
+      </tr>
+         <tr>
+        <td>`advanceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Advanced targeting</td>
+      </tr>
+         <tr>
+        <td>`audienceTargeting` <br /><span class="type-text">object</span></td>
+        <td>Audience targeting</td>
+      </tr>
+         <tr>
+        <td>`bidStrategy` <br /><span class="type-text">object</span></td>
+        <td>Bid strategy</td>
+      </tr>
+         <tr>
+        <td>`campaignBudget` <br /><span class="type-text">object</span></td>
+        <td>Campaign budget</td>
+      </tr>
+         <tr>
+        <td>`demographicsTargeting` <br /><span class="type-text">object</span></td>
+        <td>Demographics targeting</td>
+      </tr>
+            <tr>
+        <td>`undefined` <br /><span class="type-text">object</span></td>
+        <td>Undefined</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`rejectionList` sub-objects properties</summary>
+          <table className="objectProperties">
+          <tr>
+          <td>`title` <br /><span class="type-text">string</span></td>
+          <td>Object title</td>
+          </tr>
+            <tr>
+          <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
+          <td>Rejected bids count</td>
+          </tr>
+            <tr>
+          <td>`description` <br /><span class="type-text">string</span></td>
+          <td>description</td>
+          </tr>
+             <tr>
+          <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
+          <td>List of sub-reasons info</td>
+          </tr>
+          </table></details>
+          </td>
+          <td></td>
+        </tr>
+      </table></details>
+      </td>
+      <td></td>
+</tr>
+<tr>
+  <td>`topMainReasons` <br /><span class="type-text">object</span></td>
+  <td><var>rejectionList</var> objects with the highest <var>rejectedBids</var> counts</td>
+  </tr>
+<tr>
+  <td>`topSubReasons` <br /><span class="type-text">object</span></td>
+  <td><var>rejectionList</var> sub-objects with the highest <var>droppedRequests</var> counts</td>
+  </tr>
+<tr>
+  <td>`totalBids` <br /><span class="type-text">integer</span></td>
+  <td>Total bids count</td>
+  </tr>
+<tr>
+  <td>`lostBids` <br /><span class="type-text">integer</span></td>
+  <td>Lost bids count</td>
+  </tr>
+<tr>
+  <td>`totalWins` <br /><span class="type-text">integer</span></td>
+  <td>Total won bids count</td>
+  </tr>
+</table>
+
+</details>
+
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> object properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`inactiveAccount`</td>
+  <td>Bids dropped off because Advertiser's account with IQM is inactive</td>
+</tr>
+<tr>
+  <td>`insufficientBalance`</td>
+  <td>Bids dropped off because there is an insufficient balance in your account </td>
+</tr>
+<tr>
+  <td>`creativeRollPosition`</td>
+  <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the Campaign's required roll position </td>
+</tr>
+<tr>
+  <td>`creativePlayerSize`</td>
+  <td>Bids dropped off because player size did not match Campaign's required player size  </td>
+</tr>
+<tr>
+  <td>`ioBudget`</td>
+  <td>Bids dropped off because budget on the Campaign's associated IO has spent in full</td>
+</tr>
+<tr>
+  <td>`audienceUnavailable`</td>
+  <td>Bids dropped off because Audience did not match Campaign's Audience targeting parameters </td>
+</tr>
+<tr>
+  <td>`creativeUnavailable`</td>
+  <td>Bids dropped off due to the Campaign's creative settings, such as creative type, dimensions, duration and others</td>
+</tr>
+<tr>
+  <td>`campaignBidPrice`</td>
+  <td>Bids dropped off because the bid price is lower than the floor price recived from the exchange </td>
+</tr>
+<tr>
+  <td>`operatingSystem`</td>
+  <td>Bids dropped off because Operating System did not match the Campaign's Operating System requirements</td>
+</tr>
+<tr>
+  <td>`manufacturer`</td>
+  <td>Bids dropped off because the Manufacturer did not match the Campaign's Manufacturer parameters</td>
+</tr>
+<tr>
+  <td>`deviceType`</td>
+  <td>Bids dropped off because the Device Type did not match the Campaign's Device Type targeting parameters </td>
+</tr>
+<tr>
+  <td>`channels`</td>
+  <td>Bids dropped off because Channels did not match the Campaign's Channel Targeting Parameters</td>
+</tr>
+<tr>
+  <td>`networkTypes`</td>
+  <td>Bids dropped off because Network Type did not match the Campaign's Network Type requirements</td>
+</tr>
+<tr>
+  <td>`carrier`</td>
+  <td>Bids dropped off because Carrier did not match the Campaign's Carrier requirements</td>
+</tr>
+</table>
+</details>
+
+
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRequests": 100,
+    "rejectionList": {
+      "campaignSettings": {
+        "title": "Campaign Settings",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Campaign Settings set in the campaign.",
+        "subReasonInfo": {}
+      },
+      "ioBudget": {
+        "title": "IO Budget",
+        "rejectedBids": 0,
+        "description": null,
+        "subReasonInfo": {}
+      },
+      "inventoryTargeting": {
+        "title": "Inventory Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Inventory Targeting.",
+        "subReasonInfo": {}
+      },
+      "campaignBidPrice": {
+        "title": "Campaign Bid Price",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered because the bid price is lower than the floor price received from the exchange.",
+        "subReasonInfo": {}
+      },
+      "locationTargeting": {
+        "title": "Location Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Location Targeting.",
+        "subReasonInfo": {}
+      },
+      "deviceTargeting": {
+        "title": "Device Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Device Targeting.",
+        "subReasonInfo": {}
+      },
+      "creativeSettings": {
+        "label": "Creative Settings",
+        "rejectedBids": 100,
+        "description": "Campaign is filtered due to non-matching creative dimensions found in the request",
+        "subReasonInfo": {
+          "creativeDimension": {
+            "label": "Creative Dimensions",
+            "droppedRequests": 100,
+            "description": "Campaign is filtered due to non-matching creative dimensions found in the request."
+          }
+        }
+      },
+      "advanceTargeting": {
+        "title": "Advanced Targeting",
+        "rejectedBids": 0,
+        "description": null,
+        "subReasonInfo": {}
+      },
+      "audienceTargeting": {
+        "title": "Audience Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Audience Targeting.",
+        "subReasonInfo": {}
+      },
+      "bidStrategy": {
+        "title": "Bid Strategy",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to bid strategy setting applied in campaign.",
+        "subReasonInfo": {}
+      },
+      "campaignBudget": {
+        "title": "Campaign Budget",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered because the campaign budget is now unavailable for further bidding.",
+        "subReasonInfo": {}
+      },
+      "demographicsTargeting": {
+        "title": "Demographics Targeting",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Demographics Targeting.",
+        "subReasonInfo": {}
+      },
+      "undefined": {
+        "title": "Undefined",
+        "rejectedBids": 0,
+        "description": "Campaign is filtered due to Undefined reasons.",
+        "subReasonInfo": {}
+      }
+    },
+    "topMainReasons": {
+      "creativeSettings": 100
+    },
+    "topSubReasons": {
+      "creativeDimension": 100
+    },
+    "totalBids": 0,
+    "lostBids": 0,
+    "totalWins": 0
+  }
+}
+```
+
+Response 422 (invalid start date)
+
+```json
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Date Range End must be greater than Date Range Start"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRequests: number;
+          rejectionList: {
+            campaignSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            ioBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            inventoryTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBidPrice: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            locationTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            deviceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            creativeSettings: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {
+                creativeDimension: {
+                  label: string;
+                  droppedRequests: number;
+                  description: string;
+                }
+              }
+            };
+            advancedTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            audienceTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            bidStrategy: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            campaignBudget: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            demographicsTargeting: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            };
+            undefined: {
+              title: string;
+              rejectedBids: number;
+              description: string;
+              subReasonInfo: {}
+            }
+          };
+          topMainReasons: {
+            creativeSettings: number
+          };
+          topSubReasons: {
+            creativeSettings: number
+          };
+          totalBids: number;
+          lostBids: number;
+          totalWins: number;
+        }
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[]
+      }
+    };
+  };
+};
+
+function getCampaignBiddingInsight(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}',
+    params: {
+      query: {
+        dateRangeStart: `number`,
+        dateRangeEnd: `number`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Audience Insights Report
+
+### Step 1: Check for Eligible Audiences
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audiences/list</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate an Audience Insights Report, first use this endpoint to retrieve a list of eligible Audiences.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>20</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-id</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`insightsData` <br /><span class="type-text">object</span></td>
+  <td>Insights data details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`insightsData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+  </tr>
+    <tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+  </tr>
+    <tr>
+  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>The percentage of matched records compared to a reference set</td>
+  </tr>
+      <tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 10,
+    "filteredRecords": 3,
+    "insightsData": [
+      {
+        "id": 12345,
+        "audienceName": "audience1",
+        "matchRate": 58.99,
+        "uniques": 52432
+      },
+      {
+        "id": 12365,
+        "audienceName": "audience2",
+        "matchRate": 78.88,
+        "uniques": 72786
+      },
+      {
+        "id": 12376,
+        "audienceName": "audience3",
+        "matchRate": 34.88,
+        "uniques": 31122
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          insightsData: {
+            id: number;
+            audienceName: string;
+            matchRate: number;
+            uniques: number;
+          }[]
+        }
+      }
+    };
+  };
+};
+
+function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/audiences/list',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageSize?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate Insights Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the Audience <var>id</var> (from the response data in step 1) in the Source IDs array to generate the Audience Insights Report with this endpoint. 
+
+| Request Schema |  |
+| ----  | --- |
+| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights Type ID](#get-list-of-insights-types) |
+| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`invalidSourceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Invalid source IDs list</td>
+</tr>
+<tr>
+  <td>`insightsData` <br /><span class="type-text">object</span></td>
+  <td>Insights data details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`insightsData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience Insights ID</td>
+  </tr>
+    <tr>
+  <td>`typeId` <br /><span class="type-text">integer</span></td>
+  <td>Insights type ID</td>
+  </tr>
+    <tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Insights Status ID](/Guidelines/Insights-API-Guidelines#get-list-of-insights-status)</td>
+  </tr>
+    <tr>
+  <td>`sourceName` <br /><span class="type-text">string</span></td>
+  <td>Source name</td>
+  </tr>
+      <tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Insights name</td>
+  </tr>
+      <tr>
+  <td>`sourceId` <br /><span class="type-text">integer</span></td>
+  <td>Source ID</td>
+  </tr>
+  <tr>
+  <td>`createdAt`<br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Insights creation date, in milliseconds</td>
+</tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "insightsTypeId": 1,
+  "sourceIds": [
+    567895,
+    925436,
+    123677
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "invalidSourceIds": [],
+    "insightsData": [
+      {
+        "id": 1213,
+        "typeId": 1,
+        "statusId": 2,
+        "sourceName": "Data Trust NY 4 Cols",
+        "name": "Data Trust NY 4 Cols_insights",
+        "sourceId": 1099461,
+        "createdAt": 1728366883518
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidSourceIds: number[];
+          insightsData: {
+            id: number;
+            typeId: number;
+            statusId: number;
+            sourceName: string;
+            name: string;
+            sourceId: number;
+            createdAt: number;
+          }[]
+        }
+      }
+    };
+  };
+};
+
+function createInsightsDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          insightsTypeId?: `number`,
+          sourceIds?: `array of numbers`,
+          owId?: `number`,
+          uowId?: `number`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Download Insights Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> query, along with your desired file type, to generate a download link for your Insights Report.
+
+| Query Parameters |  |
+| ---- | --- |
+| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
+| `fileType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var>
+
+| Request Schema |  |
+| ---- | --- |
+| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`insightsReportUrl` <br /><span class="type-text">string</span></td>
+  <td>Insights Report URL</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "customLogoFile": "string"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "insightsReportUrl": "https://domain.com/insights.pdf"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          insightsReportUrl: string;
+        }
+      }
+    };
+  };
+};
+
+function downloadInsights(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/download',
+    params: {
+      query: {
+        insightsId: `number`,
+        fileType: `string`
+      }
+    },
+    requestBody?: {
+      content: {
+        "application/json": {
+          customLogoFile?: `string`
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Voter Level Data Report
+
+### Step 1: Check Campaign for Eligibility
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate a VLD Report, first use the <var>campaignId</var> and the Get Campaign Details endpoint to check if the eligibility requirements are met. 
+
+The endpoint will return a JSON schema of Campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
+   * The status is <var>running</var>.
+   * <var>createDate</var> indicates when the Campaign was created (in Unix epoch milliseconds).
+   * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
+   * A Country ID of <var>30100001</var> indicates the targeted Audience is in the US.
+
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+               //highlight-next-line
+        "startTime": 1726518001,
+               //highlight-next-line
+        "endTime": 1727668800,
+          //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+               //highlight-next-line
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+               //highlight-next-line
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+                 //highlight-next-line
+          startTime: number;
+                 //highlight-next-line
+          endTime: number;
+                 //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+                 //highlight-next-line
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+                 //highlight-next-line
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+#### Step 1.1: Check Campaign Audience Type
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the <var>campaignId</var> to check its Audience. Audience type ID <var>1</var> indicates this Campaign has a Matched Audience. 
+
+| Request Schema | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`campaignId` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  </tr>
+   <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`campaignId` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
+  </tr>
+    <tr>
+  <td>`audienceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Audience IDs</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignIds": [
+    52241,
+    50322
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "543363": [],
+    "553441": [
+      {
+                //highlight-next-line
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101833,
+          1101834,
+          1101835,
+          1102476
+        ]
+      }
+    ],
+    "553443": [
+      {
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101831,
+          1101835,
+          1102476
+        ]
+      },
+      {
+        "audienceTypeId": 9,
+        "audienceIds": [
+          1124205,
+          1124206
+        ]
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [campaignId: number]: {
+                   //highlight-next-line
+            audienceTypeId: number;
+            audienceIds: number[];
+          }
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceBasicDetailByCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/audience/targeting',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignIds?: `array of numbers`,
+          owIds?: `array of numbers`,
+          isAllOwIds?: `boolean`,
+          status?: `array of strings`,
+          creativeTypeIds?: `array of numbers`,
+          ids?: `array of numbers`,
+          responseFields?: `array of strings`,
+          ioIdsList?: `array of numbers`,
+          campaignTypeIds?: `array of numbers`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+        
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate VLD Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
+
+<div class="container">
+  <div class="child1">
+
+Once the desired Campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with  <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Report.
+
+
+| Request Schema |  |
+| ---- | --- |
+| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
+| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+     <tr>
+      <td>`vldReportCreated` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates VLD Report was created: <var>true</var></td>
+      </tr>
+      <tr>
+      <td>`campaignId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign ID</td>
+      </tr>
+      <tr>
+      <td>`campaignName` <br /><span class="type-text">string</span></td>
+      <td>Campaign name</td>
+      </tr>
+      <tr>
+      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
+      <td>[Campaign Status Type](/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status)</td>
+      </tr>
+      <tr>
+      <td>`vldStartDate`<br /><span class="type-text">integer</span></td>
+      <td>Unix epoch timestamp of start date, in milliseconds</td>
+      </tr>
+      <tr>
+      <td>`vldEndDate`<br /><span class="type-text">integer</span></td>
+      <td>Unix epoch timestamp of end date, in milliseconds</td>
+      </tr>
+      <tr>
+      <td> `vldChargeableImps` <br /><span class="type-text">integer</span></td>
+      <td>The number of chargeable impressions for the requested VLD Report</td>
+      </tr>
+      <tr>
+      <td>`vldChargedImps` <br /><span class="type-text">integer</span></td>
+      <td>The number of impressions for which the VLD Report is already generated</td>
+      </tr>
+      <tr>
+      <td>`vldChargeableCost` <br /><span class="type-text">integer</span></td>
+      <td>Cost to generate the VLD Report</td>
+      </tr>
+      <tr>
+      <td>`vldChargedCost` <br /><span class="type-text">integer</span></td>
+      <td>Cost of VLD Report that is already generated</td>
+      </tr>
+      <tr>
+      <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the VLD Report (<var>true</var>)</td>
+      </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignId": 12345,
+  "vldStartDate": 1722311000,
+  "vldEndDate": 1722315000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "vldReportCreated": true,
+    "campaignId": 1,
+    "campaignName": "Campaign Name",
+    "campaignStatus": "running",
+    "vldStartDate": 1722311000,
+    "vldEndDate": 1722315000,
+    "vldChargeableImps": 1000,
+    "vldChargedImps": 100,
+    "vldChargeableCost": 1000,
+    "vldChargedCost": 100,
+    "fundsAvailable": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportCreated: boolean;
+          campaignId: number;
+          campaignName: string;
+          campaignStatus: string;
+          vldStartDate: number;
+          vldEndDate: number;
+          vldChargeableImps: number;
+          vldChargedImps: number;
+          vldChargeableCost: number;
+          vldChargedCost: number;
+          fundsAvailable: boolean
+        }
+      }
+    };
+  };
+};
+
+function generateVLDReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/vld-report',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId?: `number`,
+          vldId?: `number`,
+          vldStartDate?: `number`,
+          vldEndDate?: `number`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Download VLD Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report/download</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a download link for a VLD insight Report in CSV or XLSX format.
+
+| Request Schema |  |
+| ---- | --- |
+| `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
+| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`vldReportUrl` <br /><span class="type-text">string</span></td>
+  <td>VLD Report File URL</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "vldReportUrl": "https://tem.domain.s3.amazonaws.com/vld-campaigns/ds/2024-08-20/503481_Insights_1.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240820T112818Z&X-Amz-"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          vldReportUrl: string;
+        }
+      }
+    };
+  };
+};
+
+function getVLDReportDownloadUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/vld-reports/download',
+    requestBody: {
+      content: {
+        "application/json": {
+          fileTypeId?: `number`,
+          vldId?: `number`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Provider Level Data Report
+
+### Step 1: Check Campaign for Eligibility 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+To generate a PLD Report, first use the <var>campaignId</var> and the Get Campaign Details endpoint to check if the eligibility requirements are met. 
+
+The endpoint will return a JSON schema of Campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
+   * The status is <var>running</var>.
+   * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
+
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+               //highlight-next-line
+        "startTime": 1726518001,
+               //highlight-next-line
+        "endTime": 1727668800,
+          //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+                 //highlight-next-line
+          startTime: number;
+                 //highlight-next-line
+          endTime: number;
+                 //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+#### Step 1.1 Check Campaign Audience Details
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the <var>campaignId</var> to check its Audience. Audience type ID <var>1</var> indicates this Campaign has a Matched Audience. 
+
+| Request Schema | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`campaignId` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  </tr>
+   <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`campaignId` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
+  </tr>
+    <tr>
+  <td>`audienceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Audience IDs</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignIds": [
+    52241,
+    50322
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "543363": [],
+    "553441": [
+      {
+                //highlight-next-line
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101833,
+          1101834,
+          1101835,
+          1102476
+        ]
+      }
+    ],
+    "553443": [
+      {
+        "audienceTypeId": 1,
+        "audienceIds": [
+          1101831,
+          1101835,
+          1102476
+        ]
+      },
+      {
+        "audienceTypeId": 9,
+        "audienceIds": [
+          1124205,
+          1124206
+        ]
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          [campaignId: number]: {
+                   //highlight-next-line
+            audienceTypeId: number;
+            audienceIds: number[];
+          }
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceBasicDetailByCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/audience/targeting',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignIds?: `array of numbers`,
+          owIds?: `array of numbers`,
+          isAllOwIds?: `boolean`,
+          status?: `array of strings`,
+          creativeTypeIds?: `array of numbers`,
+          ids?: `array of numbers`,
+          responseFields?: `array of strings`,
+          ioIdsList?: `array of numbers`,
+          campaignTypeIds?: `array of numbers`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+        
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate PLD Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report</span>
+
+<div class="container">
+  <div class="child1">
+
+Once the desired Campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with  <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a VLD Report.
+
+| Request Schema |  |
+| ---- | --- |
+| `pldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
+| `pldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+     <tr>
+      <td>`pldReportCreated` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates PLD Report was created: <var>true</var></td>
+      </tr>
+      <tr>
+      <td>`campaignId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign ID</td>
+      </tr>
+      <tr>
+      <td>`campaignName` <br /><span class="type-text">string</span></td>
+      <td>Campaign name</td>
+      </tr>
+      <tr>
+      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
+      <td>[Campaign Status Type](/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status)</td>
+      </tr>
+      <tr>
+      <td>`pldStartDate`<br /><span class="type-text">integer</span></td>
+      <td>Unix epoch timestamp of start date, in milliseconds</td>
+      </tr>
+      <tr>
+      <td>`pldEndDate`<br /><span class="type-text">integer</span></td>
+      <td>Unix epoch timestamp of end date, in milliseconds</td>
+      </tr>
+      <tr>
+      <td> `pldChargeableImps` <br /><span class="type-text">integer</span></td>
+      <td>The number of chargeable impressions for the requested PLD Report</td>
+      </tr>
+      <tr>
+      <td>`pldChargedImps` <br /><span class="type-text">integer</span></td>
+      <td>The number of impressions for which the PLD Report is already generated</td>
+      </tr>
+      <tr>
+      <td>`pldChargeableCost` <br /><span class="type-text">integer</span></td>
+      <td>Cost to generate the PLD Report</td>
+      </tr>
+      <tr>
+      <td>`pldChargedCost` <br /><span class="type-text">integer</span></td>
+      <td>Cost of PLD Report that is already generated</td>
+      </tr>
+      <tr>
+      <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the PLD Report (<var>true</var>)</td>
+      </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignId": 12345,
+  "pldStartDate": 1722311000,
+  "pldEndDate": 1722315000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "pldReportCreated": true,
+    "campaignId": 1,
+    "campaignName": "Campaign Name",
+    "campaignStatus": "running",
+    "pldStartDate": 1722311000,
+    "pldEndDate": 1722315000,
+    "pldChargeableImps": 1000,
+    "pldChargedImps": 100,
+    "pldChargeableCost": 1000,
+    "pldChargedCost": 100,
+    "fundsAvailable": true
+  }
+}
+```
+
+```json title="Response 200 (failure)"
+{
+  "success": true,
+  "data": {
+    "pldReportCreated": false,
+    "message": "PLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          pldReportCreated: boolean;
+          campaignId: number;
+          campaignName: string;
+          campaignStatus: string;
+          pldStartDate: number;
+          pldEndDate: number;
+          pldChargeableImps: number;
+          pldChargedImps: number;
+          pldChargeableCost: number;
+          pldChargedCost: number;
+          fundsAvailable: boolean
+        }
+      }
+    };
+  };
+}
+
+function generatePLDReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/pld-report',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId?: `number`,
+          pldId?: `number`,
+          pldStartDate?: `number`,
+          pldEndDate?: `number`,
+          endDate?: `number`,
+          startDate?: `number`,
+          id?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Download PLD Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report/download</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a download link for a PLD insight Report in CSV or XLSX format.
+
+| Request Schema | |
+| --- | --- |
+| `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
+| `pldId` <br /><span class="type-text">integer</span> | Provider Level Data Report ID
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`pldReportUrl` <br /><span class="type-text">string</span></td>
+  <td>PLD Report File URL</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "fileType": 1,
+  "pldId": 50
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "pldReportUrl": "https://dowload.domain.com/pld-reports/20220101/pld-report-1.xlsx"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid sortBy value."
+    }
+  ]
+}
+```
+
+</details>
+
+
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          pldReportUrl: string;
+        }
+      }
+    };
+  };
+}
+
+function getPLDReportDownloadUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/pld-report/download',
+    requestBody: {
+      content: {
+        "application/json": {
+          fileTypeId?: `number`,
+          vldId?: `number`,
+          pldId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
