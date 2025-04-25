@@ -304,20 +304,44 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'Sign Up',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#sign-up`,
+              label: 'About IQM Insights',
+              href: `/Quickstart%20Guides/Insights-Quickstart#about-iqm-insights`,
               className: 'sidebarItem'
             },
             {
               type: `link`,
-              label: 'Log In',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#log-in`,
+              label: 'Before You Begin',
+              href: `/Quickstart%20Guides/Insights-Quickstart#before-you-begin`,
               className: 'sidebarItem'
             },
             {
               type: `link`,
-              label: 'Refresh Token',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#refresh-token`,
+              label: 'Eligibility Requirements',
+              href: `/Quickstart%20Guides/Insights-Quickstart#eligibility-requirements`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Campaign Bidding Insights',
+              href: `/Quickstart%20Guides/Insights-Quickstart#campaign-bidding-insights`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Audience Insights Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#audience-insights-report`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Voter Level Data Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#voter-level-data-report`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Provider Level Data Report',
+              href: `/Quickstart%20Guides/Insights-Quickstart#provider-level-data-report`,
               className: 'sidebarItem'
             },
           ]
