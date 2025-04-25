@@ -20,7 +20,7 @@ Insights reports are one of IQM's analytics tools that help Advertisers quickly 
 
 ## Before You Begin
 
-To generate an Insights Report you will need an Account On the IQM Platform (See [Before You Begin](/Getting%20Started/Before-You-Begin) to create an account and request a Client ID and Client). Once you have an account you can log in and review the eligibility requirements table for each kind of Insights Report.
+To generate an Insights Report you will need an account on the IQM Platform (see [Getting Started](/Getting%20Started/Before-You-Begin)). Once you have an account you can log in and review the eligibility requirements table for each kind of Insights Report.
 
 ### Log In 
 
@@ -892,23 +892,310 @@ function getCampaignBiddingInsight(): Promise<Responses> {
 
 ## Audience Insights Report
 
-This quickstart guide will cover how to create a Matched Audience Insights Report. 
+### Step 1: Check for Eligible Audiences
 
-The minimum requirements to perform this task are: logging in with authentication credentials, having a Matched Audience, and creating an Insights Report. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audiences/list</span>
 
-1. Log In
-      * Optional if you have already logged in and have a token
-2. Check for eligible Matched Audiences
-3. Generate Insights Report
-4. Download Insights Report
+<div class="container">
+  <div class="child1">
 
+To generate an Audience Insights Report, first use this endpoint to retrieve a list of eligible Audiences.
 
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
+| `pageSize` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>20</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-id</var> |
 
-### Step 2: Check for Eligible Audiences
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 
-### Step 3: Generate Insights Report
+<table className="objectProperties">
+<tr>
+  <td>`insightsData` <br /><span class="type-text">object</span></td>
+  <td>Insights data details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`insightsData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+  </tr>
+    <tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+  </tr>
+    <tr>
+  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>The percentage of matched records compared to a reference set</td>
+  </tr>
+      <tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
 
-### Step 4: Download Insights Report
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 10,
+    "filteredRecords": 3,
+    "insightsData": [
+      {
+        "id": 12345,
+        "audienceName": "audience1",
+        "matchRate": 58.99,
+        "uniques": 52432
+      },
+      {
+        "id": 12365,
+        "audienceName": "audience2",
+        "matchRate": 78.88,
+        "uniques": 72786
+      },
+      {
+        "id": 12376,
+        "audienceName": "audience3",
+        "matchRate": 34.88,
+        "uniques": 31122
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          insightsData: {
+            id: number;
+            audienceName: string;
+            matchRate: number;
+            uniques: number;
+          }[]
+        }
+      }
+    };
+  };
+};
+
+function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/ins/audiences/list',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageSize?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Generate Insights Report
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the Audience <var>id</var> from the response data in step 1 in the Source IDs array to generate the Audience Insights Report with this endpoint. 
+
+| Request Schema |  |
+| ----  | --- |
+| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights Type ID](#get-list-of-insights-types) |
+| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`invalidSourceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Invalid source IDs list</td>
+</tr>
+<tr>
+  <td>`insightsData` <br /><span class="type-text">object</span></td>
+  <td>Insights data details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`insightsData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience Insights ID</td>
+  </tr>
+    <tr>
+  <td>`typeId` <br /><span class="type-text">integer</span></td>
+  <td>Insights type ID</td>
+  </tr>
+    <tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Insights Status ID](/Guidelines/Insights-API-Guidelines#get-list-of-insights-status)</td>
+  </tr>
+    <tr>
+  <td>`sourceName` <br /><span class="type-text">string</span></td>
+  <td>Source name</td>
+  </tr>
+      <tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Insights name</td>
+  </tr>
+      <tr>
+  <td>`sourceId` <br /><span class="type-text">integer</span></td>
+  <td>Source ID</td>
+  </tr>
+  <tr>
+  <td>`createdAt`<br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Insights creation date, in milliseconds</td>
+</tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "insightsTypeId": 1,
+  "sourceIds": [
+    567895,
+    925436,
+    123677
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "invalidSourceIds": [],
+    "insightsData": [
+      {
+        "id": 1213,
+        "typeId": 1,
+        "statusId": 2,
+        "sourceName": "Data Trust NY 4 Cols",
+        "name": "Data Trust NY 4 Cols_insights",
+        "sourceId": 1099461,
+        "createdAt": 1728366883518
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidSourceIds: number[];
+          insightsData: {
+            id: number;
+            typeId: number;
+            statusId: number;
+            sourceName: string;
+            name: string;
+            sourceId: number;
+            createdAt: number;
+          }[]
+        }
+      }
+    };
+  };
+};
+
+function createInsightsDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ins/insights/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          insightsTypeId?: `number`,
+          sourceIds?: `array of numbers`,
+          owId?: `number`,
+          uowId?: `number`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Download Insights Report
 
 ## Voter Level Data Report
 
