@@ -207,6 +207,23 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Bid Model',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Bid-Model-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Bid Modeling',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#about-iqm-campaign-bid-modeling`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
