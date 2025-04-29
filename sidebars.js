@@ -220,6 +220,30 @@ const sidebars = {
               href: `/Quickstart%20Guides/Bid-Model-Quickstart#about-iqm-campaign-bid-modeling`,
               className: 'sidebarItem'
             },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-1-log-in`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Check Campaign for Eligibility',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-2-check-campaign-for-eligibility`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Select Dimension',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-3-select-dimension`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Create a Bid Model',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-4-create-a-bid-model`,
+              className: 'sidebarItem'
+            },
           ]
         },
         {
