@@ -9,6 +9,16 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 # Create a Bid Model
 
+IQM’s REST API enables you to interact with most of our platform's applications.
+
+The following endpoints will be used to check a Campaign's eligibility and create a Bid Model:
+
+<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/advanced/list</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/bm/static/dimensions</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
 ## About IQM Bid Modeling 
 
 The Bid Model API allows you to optimize advertising Campaigns for better performance. You can fine-tune metrics such as where ads appear (Include/Exclude), manage Campaign priority, and dimensions by which a Campaign is subdivided.
@@ -40,9 +50,10 @@ The minimum requirements to perform this task are: logging in with authenticatio
 
 1. Log In
     * Optional if you have already logged in and have a token
-2. Check Campaign for Eligibility
+1. Check Campaign for Eligibility
     * 2.1: Check Insertion Order for Campaign eligibility
-3. Create a Bid Model
+1. Select a Dimension
+1. Create a Bid Model
 
 ### Step 1: Log in
 
@@ -847,186 +858,14 @@ function getIOListWithReportData(): Promise<Responses> {
 
 </div></div>
 
-### Step 3: Create a Bid Model 
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
-
-<div class="container">
-<div class="child1">
-
-Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> to create Bid Modeling for it. First, create new Bid Model data by specifying **Dimension Priority**, **Bid Multiplier**, and **Spend Ratio** (as outlined in the overview above), and the Spend Ratio Type ID. 
-
-:::info
-
-Bid Modeling criteria:
-  * Spend Ratio
-    * Strict spend ratios must equal 100% across all allocated dimensions
-    * Flexible spend ratios require a dimension priority
-:::
-
-| Path Parameters | |
-| --- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-
-<table>
-<th>Request Schema</th>
-<tr>
-<td>`bidModelling` <br /><span class="type-text">object</span></td>
-<td>Object containing Bid Modeling properties</td>
-</tr>
-    <tr>
-    <td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`bidModelling` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`bidModelData` <br /><span class="type-text">object</span></td>
-      <td>Object containing Bid Model Data properties</td>
-      </tr>
-       <tr>
-          <td colSpan="2">
-              <details className="objectPropertiesDetails">
-              <summary>`bidModelData` object properties</summary>
-              <table className="objectProperties">
-              <tr>
-              <td>`id`<br /><span class="type-text">integer</span></td>
-              <td>Bid Model data ID</td>
-              </tr>
-                <tr>
-              <td>`priority` <br /><span class="type-text">integer</span></td>
-              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
-              </tr>
-                <tr>
-              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
-              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
-              </tr>
-              <tr>
-              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
-              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
-              </tr>
-              <tr>
-              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
-              </tr>
-              </table></details>
-            </td>
-            <td></td>
-          </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
-</table>
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "bidModelling": [
-    {
-      "bidModelData": {
-        "id": 1,
-        "priority": 1,
-        "spendRatio": 100,
-        "spendRatioTypeId": 1,
-        "bidMultiplier": 1
-      },
-    }
-  ]
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Priority Updated Successfully"
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
-    params: {
-      path: {
-        campaignId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          bidModelling: [
-            {
-              bidModelData?: {
-                id?: `number`,
-                priority?: `number`,
-                bidMultiplier?: `number`,
-                spendRatio?: `number`,
-                spendRatioTypeId?: `number`
-              },
-            }
-          ]  
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div>
-</div>
-
-### Step 4: Select Dimension and Entity
-
-#### Step 4.1 Get List of Dimensions
+### Step 3: Select Dimension
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/static/dimensions</span>
 
 <div class="container">
   <div class="child1">
 
-This API will provide values of Bid Model dimensions and sub-dimensions.
+This API will provide values of Bid Model dimensions and sub-dimensions. Select the desired dimension <var>id</var> to apply Bid Modeling to. 
 
 | Dimensions | |
 | ------- | --- |
@@ -1213,15 +1052,14 @@ function getDimensions(): Promise<Responses> {
 
 </div></div>
 
-
-### Step 5: Map a Bid Model 
+### Step 4: Create a Bid Model 
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
 
 <div class="container">
 <div class="child1">
 
-Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> to create Bid Modeling for it. 
+Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> to create Bid Modeling for it. Review the Bid Model tools descriptions in the [About](#about-iqm-bid-modeling) section and the Request Schema table below to create a Bid Model and apply it to your desired dimension(s).
 
 :::info
 
@@ -1246,6 +1084,39 @@ Bid Modeling criteria:
       <details className="objectPropertiesDetails">
       <summary>`bidModelling` object properties</summary>
       <table className="objectProperties">
+      <tr>
+      <td>`bidModelData` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model Data properties</td>
+      </tr>
+       <tr>
+          <td colSpan="2">
+              <details className="objectPropertiesDetails">
+              <summary>`bidModelData` object properties</summary>
+              <table className="objectProperties">
+              <tr>
+              <td>`id`<br /><span class="type-text">integer</span></td>
+              <td>Bid Model data ID</td>
+              </tr>
+                <tr>
+              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              </tr>
+                <tr>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+              </table></details>
+            </td>
+            <td></td>
+          </tr>
        <tr>
   <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
   <td>Object containing entity mappings</td>
@@ -1265,7 +1136,7 @@ Bid Modeling criteria:
         </tr>
           <tr>
         <td>`entityId` <br /><span class="type-text">integer</span></td>
-        <td>Entity ID</td>
+        <td>Entity ID of chosen dimension<br />(For example: if chosen dimension is Creative, then pass the Creative ID here)</td>
         </tr>
             <tr>
         <td>`bidModelDataId` <br /><span class="type-text">integer</span></td>
@@ -1301,6 +1172,13 @@ Bid Modeling criteria:
 {
   "bidModelling": [
     {
+      "bidModelData": {
+        "id": 1,
+        "priority": 1,
+        "spendRatio": 100,
+        "spendRatioTypeId": 1,
+        "bidMultiplier": 1
+      },
       "dimensionEntityMappings": [
         {
           "dimensionId": 1,
@@ -1381,8 +1259,8 @@ function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
-
 </TabItem></Tabs>
 
 </div>
 </div>
+
