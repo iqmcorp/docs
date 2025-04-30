@@ -207,6 +207,41 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Conversion',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Conversion-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Conversions',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#about-iqm-conversions`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Create a Conversion',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#create-a-conversion-using-the-iqm-api`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-1-log-in`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Schedule a Report',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-2-schedule-a-report`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
