@@ -248,6 +248,47 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Conversion',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Conversion-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Conversions',
+              href: `/Quickstart%20Guides/Conversion-Quickstart#about-iqm-conversions`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Create a Conversion',
+              href: `/Quickstart%20Guides/Conversion-Quickstart#create-a-conversion-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Conversion-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a Pixel Conversion',
+              href: `/Quickstart%20Guides/Conversion-Quickstart#step-2-create-a-pixel-conversion`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Assign a Conversion to a Campaign',
+              href: `/Quickstart%20Guides/Conversion-Quickstart#step-3-assign-a-conversion-to-a-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
