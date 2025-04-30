@@ -556,3 +556,152 @@ function addPixelConversion(): Promise<Responses> {
 </div></div>
 
 ### Step 3: Assign a Conversion to a Campaign 
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/conversion/assign-to/campaign</span>
+
+<div class="container">
+  <div class="child1">
+
+Assign a Conversion to a Campaign while validating Conversion IDs and Campaign IDs. 
+
+Pass the <var>id</var> returned in Step 2 in the <var>conversionIdList</var> array along with the Campaign ID in the <var>addCampaignsList</var> array to assign the created Conversion to the desired Campaign. 
+
+| Query Parameters  |  |
+| ----  | --- |
+| `assignConversionToCampaign` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Map containing details list of Campaign IDs which need to be added/removed
+
+| Request Schema |  |
+| ---- | --- |
+| `conversionIdList` <br /><span class="type-text">array of integers</span> | Conversion IDs to assign |
+| `addCampaignsList` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign Conversions to |
+| `removeCampaignsList` <br /><span class="type-text">array of integers</span> | Campaign IDs to remove assigned Conversions from |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`conversionIdsList` <br /><span class="type-text">integer</span></td>
+<td>Conversion IDs assigned to Campaigns</td>
+</tr>
+<tr>
+  <td>`validAddCampaignIdsList` <br /><span class="type-text">array of integers</span></td>
+  <td>Validated Campaign IDs to assign a Conversion to</td>
+</tr>
+<tr>
+  <td>`invalidAddCampaignIdsList` <br /><span class="type-text">array of integers</span></td>
+  <td>Invalid Campaign IDs to assign a Conversion to</td>
+</tr>
+<tr>
+  <td>`validRemoveCampaignIdsList` <br /><span class="type-text">array of integers</span></td>
+  <td>Validated Campaign IDs to remove a Conversion from</td>
+</tr>
+<tr>
+  <td>`invalidRemoveCampaignIdsList` <br /><span class="type-text">array of integers</span></td>
+  <td>Invalid Campaign IDs to remove a Conversion from</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "conversionIdList": [
+    3925
+  ],
+  "addCampaignsList": [
+    25396,
+    256374,
+    234567
+  ],
+  "removeCampaignsList": [
+    256321,
+    256432,
+    256433
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "conversionIdsList": 3925,
+    "validAddCampaignIdsList": [
+      253396,
+      256374
+    ],
+    "invalidAddCampaignIdsList": [
+      234567
+    ],
+    "validRemoveCampaignIdsList": [
+      256321,
+      256432
+    ],
+    "invalidRemoveCampaignIdsList": [
+      256433
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          conversionIdsList: number;
+          validAddCampaignIdsList: number[];
+          validRemoveCampaignIdsList: number[];
+          invalidRemoveCampaignIdsList: number[]
+        }
+      }
+    };
+  };
+};
+
+function assignConversionToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/conversion/assign-to/campaign',
+    params: {
+      query: {
+        assignConversionToCampaign?: `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          conversionIdList?: `array of numbers`,
+          addCampaignsList?: `array of numbers`,
+          removeCampaignsList?: `array of numbers`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
