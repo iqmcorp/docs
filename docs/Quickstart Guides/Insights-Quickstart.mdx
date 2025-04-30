@@ -1,5 +1,5 @@
 ---
-title: Sign Up and Authenticate
+title: Create an Insights Report
 hide_table_of_contents: true
 pagination_next: null
 ---
@@ -9,6 +9,21 @@ import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 
 # Create an Insights Report
+
+IQM’s REST API enables you to interact with most of our platform's applications.
+
+The following endpoints will be used to check Campaigns for eligibility and create different types of Insights Reports:
+
+<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/\{campaignId\}</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report/download</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report/download</span>
 
 ## About IQM Insights
 
@@ -229,6 +244,11 @@ To generate Campaign Bidding Insights, use the <var>campaignId</var> and the Get
 
 The endpoint will return a JSON schema of Campaign details; the relevant parameters are highlighted in the sample <var>Response 200</var> code block. A Campaign type of <var>1</var> means it's an "advanced" Campaign. In the sample response the status is <var>running</var>, and the impressions count is <var>5</var>. This Campaign meets the eligibilty requirements to generate an Insights Report. 
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Path Parameters |  |
 | ---- | --- |
 | <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
@@ -424,6 +444,11 @@ function getCampaign(): Promise<Responses> {
 Once a Campaign is determined eligible, you can generate Bidding Insights. Pass the <var>campaignId</var> in the endpoint's path and use the query parameters to specify the date range of the Insights report (maximum two weeks). 
 
 This endpoint will return a list of rejection reasons for why the Campaign's bid requests were dropped. The number of bids won will also be returned.
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Path Parameters |  |
 | ---- | --- |
@@ -901,6 +926,11 @@ function getCampaignBiddingInsight(): Promise<Responses> {
 
 To generate an Audience Insights Report, first use this endpoint to retrieve a list of eligible Audiences.
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
@@ -1042,6 +1072,11 @@ function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
   <div class="child1">
 
 Pass the Audience <var>id</var> (from the response data in step 1) in the Source IDs array to generate the Audience Insights Report with this endpoint. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Request Schema |  |
 | ----  | --- |
@@ -1204,6 +1239,11 @@ function createInsightsDetails(): Promise<Responses> {
 
 Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> query, along with your desired file type, to generate a download link for your Insights Report.
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Query Parameters |  |
 | ---- | --- |
 | `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
@@ -1313,6 +1353,10 @@ The endpoint will return a JSON schema of Campaign details (the relevant paramet
    * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
    * A Country ID of <var>30100001</var> indicates the targeted Audience is in the US.
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Path Parameters |  |
 | ---- | --- |
@@ -1512,6 +1556,11 @@ function getCampaign(): Promise<Responses> {
 
 Pass the <var>campaignId</var> to check its Audience. Audience type ID <var>1</var> indicates this Campaign has a Matched Audience. 
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Request Schema | |
 | --- | --- |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
@@ -1671,6 +1720,10 @@ function getAudienceBasicDetailByCampaign(): Promise<Responses> {
 
 Once the desired Campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with  <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Report.
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Request Schema |  |
 | ---- | --- |
@@ -1828,6 +1881,11 @@ function generateVLDReports(): Promise<Responses> {
 
 Get a download link for a VLD insight Report in CSV or XLSX format.
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Request Schema |  |
 | ---- | --- |
 | `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
@@ -1920,6 +1978,10 @@ The endpoint will return a JSON schema of Campaign details (the relevant paramet
    * The status is <var>running</var>.
    * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Path Parameters |  |
 | ---- | --- |
@@ -2115,6 +2177,11 @@ function getCampaign(): Promise<Responses> {
 
 Pass the <var>campaignId</var> to check its Audience. Audience type ID <var>1</var> indicates this Campaign has a Matched Audience. 
 
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
 | Request Schema | |
 | --- | --- |
 | `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
@@ -2273,6 +2340,11 @@ function getAudienceBasicDetailByCampaign(): Promise<Responses> {
   <div class="child1">
 
 Once the desired Campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with  <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a VLD Report.
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Request Schema |  |
 | ---- | --- |
@@ -2442,6 +2514,11 @@ function generatePLDReports(): Promise<Responses> {
   <div class="child1">
 
 Get a download link for a PLD insight Report in CSV or XLSX format.
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
 
 | Request Schema | |
 | --- | --- |
