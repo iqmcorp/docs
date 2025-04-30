@@ -1,0 +1,1294 @@
+---
+title: Create a Bid Model
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Create a Bid Model
+
+IQM’s REST API enables you to interact with most of our platform's applications.
+
+The following endpoints will be used to check a Campaign's eligibility and create a Bid Model:
+
+<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/advanced/list</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/bm/static/dimensions</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+## About IQM Bid Modeling 
+
+The Bid Model API allows you to optimize advertising Campaigns for better performance. You can fine-tune metrics such as where ads appear (Include/Exclude), manage Campaign priority, and dimensions by which a Campaign is subdivided.
+
+Bid Modeling comprises the following tools:
+
+  * **Spend Ratio**: determines how the Campaign budget is distributed across various dimensions, expressed as a percentage in two types
+    1.  Strict: budget is allocated up to its specified percentage as able, but will underspend if unable to meet that ratio
+    1.  Flexible: budget will reallocate if unable to fulfill its specified percentage
+  * **Dimension Priority**: dictates the sequence of bidding for specified targeting Dimensions, expressed as a range of 1-10
+  * **Bid Modifier**: adjusts the base bid of a Campaign for the specified Dimension that is modified, expressed as a multiplier in a range of 0.1-100
+
+## Before You Begin 
+
+To create a Bid Model the following are required:
+
+1. An Account On the IQM Platform
+   *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
+1. A Campaign that meets the following criteria:
+   *  Duration of at least 3 days
+   *  Daily budget of at least $100
+   *  Base bid and max bid price must be defined
+
+## Create a Bid Model Using the IQM API
+
+This Quickstart Guide will cover how to create a Bid Model. 
+
+The minimum requirements to perform this task are: logging in with authentication credentials, checking a Campaign's eligibility, and creating a Bid Model. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+
+1. Log In
+    * Optional if you have already logged in and have a token
+1. Check Campaign for Eligibility
+    * 2.1: Check Insertion Order for Campaign eligibility
+1. Select a Dimension
+1. Create a Bid Model
+
+### Step 1: Log in
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](/Guidelines/User-Profile-Guidelines#login).
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema  |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Schema"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Check Campaign for Eligibility
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Before creating a Bid Model, check that you have an eligible Campaign by using the <var>campaignId</var> and the Get Campaign Details endpoint.
+
+The endpoint will return a JSON schema of Campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
+   * <var>startTime</var> and <var>endTime</var> indicate the Campaign's duration. 
+   * The daily budget is shown by the <var>budgetDay</var> parameter. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign's unique ID |
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+                 //highlight-next-line
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+                 //highlight-next-line
+        "startTime": 1726518001,
+                 //highlight-next-line
+        "endTime": 1727668800,
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+        "totalImpressions": 5,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+                   //highlight-next-line
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+                   //highlight-next-line
+          startTime: number;
+                   //highlight-next-line
+          endTime: number;
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+#### Step 2.1 Check Insertion Order for Max Bid and Base Bid
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/advanced/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Pass the <var>ioId</var> returned from Step 2 in the <var>searchField</var> query parameter. Then check the Insertion Order's advanced details to confirm that <var>baseBid</var> and <var>maxBid</var> are defined for the Campaign's eligibility. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Query Paramters | |
+| --- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search returned results for specified <var>ioId</var> |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "totalRecords": 2,
+        "filteredRecords": 2,
+        "recordsTotal": {
+          ...
+        },
+        "recordsList": [
+            {
+                "prebidCost": 0.0,
+                "clicks": 0,
+                "totalCount": 0,
+                "winRate": 0.0,
+                "logoURL": null,
+                "avatarURL": null,
+                "budgetDay": 0.0,
+                "budgetSpent": 0.0,
+                "budgetTotal": 0.0,
+                "dataCost": 0.0,
+                "mediaBudget": 0.0,
+                "owId": 203578,
+                "orgId": 0,
+                "impressions": 0,
+                "industry": 0,
+                "mediaSpent": 0.0,
+                "spent": 0.0,
+                "organizationBidShadingSaving": null,
+                "workspaceSpent": 0.0,
+                "platformSpent": 0.0,
+                "customerSpent": 0.0,
+                "platformMediaEarning": 0.0,
+                "platformBidShadingEarning": 0.0,
+                "platformTotalEarning": 0.0,
+                "workspaceMediaEarning": 0.0,
+                "workspaceBidShadingEarning": 0.0,
+                "workspaceTotalEarning": 0.0,
+                "organizationName": "Conor's Org",
+                "companySize": 0,
+                "workspaceName": null,
+                "workspaceId": 0,
+                "workspaceDomain": null,
+                "workspaceOrganizationName": null,
+                "bidImpressions": 0,
+                "startCount": 0,
+                "firstCount": 0,
+                "midCount": 0,
+                "thirdCount": 0,
+                "completeCount": 0,
+                "audioVideoActualBids": 0,
+                "audioVideoActualImpressions": 0,
+                "eCPC": 0.0,
+                "eCPM": 0.0,
+                "eCPI": 0.0,
+                "eCPCV": 0.0,
+                "eCPV": 0.0,
+                "totalAttributedConversion": null,
+                "totalAttributedViewThroughConversion": null,
+                "totalAttributedClickThroughConversion": null,
+                "costPerAttributedConversion": null,
+                "totalAttributedConversionRate": null,
+                "reach": 0,
+                "frequency": 0.0,
+                "date": null,
+                "campaignId": 0,
+                "campaignName": null,
+                             //highlight-next-line
+                "maxBid": 40.0,
+                "startTime": 0,
+                "endTime": 0,
+                "campaignType": null,
+                "status": null,
+                "mappingDataCost": 0.0,
+                "mappingSpent": 0.0,
+                "campaignTimezone": null,
+                "creativeType": null,
+                "budgetPacing": false,
+                "isCampaignFromNewPlatform": false,
+                "percentageOfTotalSpent": 0.0,
+                "uowId": 0,
+                "audioVideoViewed": 0.0,
+                "ioId": 15844,
+                "ioName": "Test2",
+                "ioTimezone": 29,
+                "ioBudgetDistributionMethod": 1,
+                "ioStartTime": 1726517280000,
+                "ioEndTime": 0,
+                "ioTotalBudget": 50000.0,
+                "isAutoSumIoTotalBudget": true,
+                "ioBudgetTypeId": 1,
+                "ioTotalImpressions": null,
+                "ioStatusId": 1,
+                "exchangeId": 0,
+                "exchangeName": null,
+                "budgetTypeId": 1,
+                "targetImpression": null,
+                "dailyImpression": null,
+                "creativesCount": null,
+                "campaignsCount": 1,
+                "pacingPercentage": null,
+                "actualSpent": null,
+                "expectedSpent": null,
+                "campaignDuration": null,
+                "remainingDuration": null,
+                "dailyPacingPercentage": null,
+                "expectedDailySpent": null,
+                "actualDailySpent": null,
+                "ioPacingPercentage": 0.0,
+                "ioActualSpent": 0.0,
+                "ioExpectedSpent": 0.0,
+                "ioDuration": null,
+                "ioRemainingDuration": 0,
+                "budgetTotalCombined": null,
+                "budgetDayCombined": null,
+                "ioTotalBudgetCombined": 50000.0,
+                "campaignPriority": null,
+                "bidModelDataId": null,
+                             //highlight-next-line
+                "baseBid": 20.0,
+                "campaignTypeId": null,
+                "workspaceVLDInsightsEarnings": null,
+                "platformVLDInsightsEarnings": null,
+                "isEligibleForVLDInsightsReport": null,
+                "vldInsightsCost": null,
+                "ioTimeZoneName": "US/Eastern",
+                "CTR": 0.0,
+                "VCR": 0.0,
+                "CVR": 0.0
+            }
+        ]
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          recordsTotal: {
+            prebidCost: number;
+            clicks: number;
+            totalCount: number;
+            winRate: number;
+            logoURL: string;
+            avatarURL: string;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            organizationBidShadingSaving: null;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: null;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualImpressions: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPV: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: null;
+            frequency: null;
+            date: null;
+            campaignId: number;
+            campaignName: string;
+            maxBid: null;
+            startTime: number;
+            endTime: number;
+            campaignType: null;
+            status: null;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: null;
+            creativeType: null;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: null;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            ioStartTime: number;
+            ioEndTime: number;
+            ioTotalBudget: number;
+            isAutoSumIoTotalBudget: boolean;
+            ioBudgetTypeId: number;
+            ioTotalImpressions: null;
+            ioStatusId: number;
+            exchangeId: number;
+            exchangeName: string;
+            budgetTypeId: number;
+            targetImpression: null;
+            dailyImpression: null;
+            creativesCount: number;
+            campaignsCount: number;
+            pacingPercentage: number;
+            actualSpent: number;
+            expectedSpent: number;
+            campaignDuration: null;
+            remainingDuration: null;
+            dailyPacingPercentage: null;
+            expectedDailySpent: null;
+            actualDailySpent: null;
+            ioPacingPercentage: null;
+            ioActualSpent: number;
+            ioExpectedSpent: number;
+            ioDuration: null;
+            ioRemainingDuration: number;
+            budgetTotalCombined: null;
+            budgetDayCombined: null;
+            ioTotalBudgetCombined: null;
+            campaignPriority: null;
+            bidModelDataId: null;
+            baseBid: null;
+            campaignTypeId: null;
+            workspaceVLDInsightsEarnings: null;
+            platformVLDInsightsEarnings: null;
+            isEligibleForVLDInsightsReport: null;
+            vldInsightsCost: null;
+            ioTimeZoneName: null;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }
+          recordsList: {
+            prebidCost: number;
+            clicks: number;
+            totalCount: number;
+            winRate: number;
+            logoURL: null;
+            avatarURL: null;
+            budgetDay: number;
+            budgetSpent: number;
+            budgetTotal: number;
+            dataCost: number;
+            mediaBudget: number;
+            owId: number;
+            orgId: number;
+            impressions: number;
+            industry: number;
+            mediaSpent: number;
+            spent: number;
+            organizationBidShadingSaving: null;
+            workspaceSpent: number;
+            platformSpent: number;
+            customerSpent: number;
+            platformMediaEarning: number;
+            platformBidShadingEarning: number;
+            platformTotalEarning: number;
+            workspaceBidShadingEarning: number;
+            workspaceTotalEarning: number;
+            organizationName: string;
+            companySize: number;
+            workspaceName: string;
+            workspaceId: number;
+            workspaceDomain: null;
+            workspaceOrganizationName: string;
+            bidImpressions: number;
+            startCount: number;
+            firstCount: number;
+            midCount: number;
+            thirdCount: number;
+            completeCount: number;
+            audioVideoActualBids: number;
+            audioVideoActualBids: number;
+            eCPC: number;
+            eCPM: number;
+            eCPI: number;
+            eCPCV: number;
+            eCPV: number;
+            totalAttributedConversion: number;
+            totalAttributedViewThroughConversion: number;
+            totalAttributedClickThroughConversion: number;
+            costPerAttributedConversion: number;
+            totalAttributedConversionRate: number;
+            reach: null;
+            frequency: null;
+            date: null;
+            campaignId: number;
+            campaignName: string;
+            maxBid: null;
+            startTime: number;
+            endTime: number;
+            campaignType: null;
+            status: null;
+            mappingDataCost: number;
+            mappingSpent: number;
+            campaignTimezone: null;
+            creativeType: null;
+            budgetPacing: boolean;
+            isCampaignFromNewPlatform: boolean;
+            percentageOfTotalSpent: number;
+            uowId: number;
+            audioVideoViewed: number;
+            ioId: number;
+            ioName: null;
+            ioTimezone: number;
+            ioBudgetDistributionMethod: number;
+            ioStartTime: number;
+            ioEndTime: number;
+            ioTotalBudget: number;
+            isAutoSumIoTotalBudget: boolean;
+            ioBudgetTypeId: number;
+            ioTotalImpressions: null;
+            ioStatusId: number;
+            exchangeId: number;
+            exchangeName: string;
+            budgetTypeId: number;
+            targetImpression: null;
+            dailyImpression: null;
+            creativesCount: number;
+            campaignsCount: number;
+            pacingPercentage: number;
+            actualSpent: number;
+            expectedSpent: number;
+            campaignDuration: null;
+            remainingDuration: null;
+            dailyPacingPercentage: null;
+            expectedDailySpent: null;
+            actualDailySpent: null;
+            ioPacingPercentage: null;
+            ioActualSpent: number;
+            ioExpectedSpent: number;
+            ioDuration: null;
+            ioRemainingDuration: number;
+            budgetTotalCombined: null;
+            budgetDayCombined: null;
+            ioTotalBudgetCombined: null;
+            campaignPriority: null;
+            bidModelDataId: null;
+            baseBid: null;
+            campaignTypeId: null;
+            workspaceVLDInsightsEarnings: null;
+            platformVLDInsightsEarnings: null;
+            isEligibleForVLDInsightsReport: null;
+            vldInsightsCost: null;
+            ioTimeZoneName: null;
+            CTR: number;
+            VCR: number;
+            CVR: number;
+          }[]
+        }
+      }
+    };
+  };
+};
+
+function getIOListWithReportData(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/cmp/io/advanced/list',
+    parameters: {
+      query?: {
+        searchField?: `string`,
+        pageSize?: `number`,
+        offset?: `number`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        startDate?: `number`,
+        endDate?: `number`,
+        budgetTypeIds?: `string`,
+        timeZoneId?: `number`,
+        ioStatusIds?: `string`,
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Select Dimension
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/static/dimensions</span>
+
+<div class="container">
+  <div class="child1">
+
+This API will provide values of Bid Model dimensions and sub-dimensions. Select the desired dimension <var>id</var> to apply Bid Modeling to. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Dimensions | |
+| ------- | --- |
+| `1`  | Creative |
+| `2` | Inventory |
+| `3` | Deal ID |
+| `4` | Open Exchange |
+| `5` | Publisher Category |
+| `6` | Device |
+| `7` | Traffic Type |
+| `8` | Device Type |
+| `9` | Location |
+| `10` | State |
+| `11` | City |
+| `12` | Zip |
+| `13` | Exchange |
+
+</div>
+ <div class="child2">
+
+ <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 5,
+    "filteredRecords": 5,
+    "dimensions": [
+      {
+        "name": "creative",
+        "id": 1,
+        "label": "Creative",
+        "order": 1,
+        "modellingEnabled": true
+      },
+      {
+        "name": "inventory",
+        "id": 2,
+        "label": "Inventory",
+        "order": 2,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "deal_id",
+            "id": 3,
+            "label": "Deal ID",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "open_exchange",
+            "id": 4,
+            "label": "Open Exchange",
+            "order": 2,
+            "modellingEnabled": false
+          },
+          {
+            "name": "publisher_category",
+            "id": 5,
+            "label": "Publisher Category",
+            "order": 3,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "device",
+        "id": 6,
+        "label": "Device",
+        "order": 3,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "traffic_type",
+            "id": 7,
+            "label": "Traffic Type",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "device_type",
+            "id": 8,
+            "label": "Device Type",
+            "order": 2,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "location",
+        "id": 9,
+        "label": "Location",
+        "order": 4,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "state",
+            "id": 10,
+            "label": "State",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "city",
+            "id": 11,
+            "label": "City",
+            "order": 2,
+            "modellingEnabled": false
+          },
+          {
+            "name": "zip",
+            "id": 12,
+            "label": "Zip",
+            "order": 3,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "exchange",
+        "id": 13,
+        "label": "Exchange",
+        "order": 5,
+        "modellingEnabled": false
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          dimensions: {
+            name: string;
+            id: number;
+            label: string;
+            order: number;
+            modellingEnabled: boolean
+            subdimensions?: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+              modellingEnabled: boolean
+            }[]
+          }[]
+        }
+      }
+    };
+  };
+}
+
+function getDimensions(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/bm/static/dimensions',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 4: Create a Bid Model 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+
+<div class="container">
+<div class="child1">
+
+Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> to create Bid Modeling for it. Review the Bid Model tools descriptions in the [About](#about-iqm-bid-modeling) section and the Request Schema table below to create a Bid Model and apply it to your desired dimension(s).
+
+:::info
+
+Bid Modeling criteria:
+  * Spend Ratio
+    * Strict spend ratios must equal 100% across all allocated dimensions
+    * Flexible spend ratios require a dimension priority
+:::
+
+:::warning[NOTE]
+
+IQM's Bid Model currently supports applying bid modifiers to Creatives. 
+
+It will soon support other dimensions: Location (City, State, Zip), Device, and Inventory (Site, App, Deals).
+
+:::
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`bidModelling` <br /><span class="type-text">object</span></td>
+<td>Object containing Bid Modeling properties</td>
+</tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`bidModelling` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`bidModelData` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model Data properties</td>
+      </tr>
+       <tr>
+          <td colSpan="2">
+              <details className="objectPropertiesDetails">
+              <summary>`bidModelData` object properties</summary>
+              <table className="objectProperties">
+              <tr>
+              <td>`id`<br /><span class="type-text">integer</span></td>
+              <td>Bid Model data ID</td>
+              </tr>
+                <tr>
+              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              </tr>
+                <tr>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+              </table></details>
+            </td>
+            <td></td>
+          </tr>
+       <tr>
+  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
+  <td>Object containing entity mappings</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`dimensionEntityMappings` object properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`campaignId` <br /><span class="type-text">integer</span></td>
+        <td>Campaign ID</td>
+        </tr>
+          <tr>
+        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
+        <td>Dimension ID</td>
+        </tr>
+          <tr>
+        <td>`entityId` <br /><span class="type-text">integer</span></td>
+        <td>Entity ID of chosen dimension<br />(For example: if chosen dimension is Creative, then pass the Creative ID here)</td>
+        </tr>
+            <tr>
+        <td>`bidModelDataId` <br /><span class="type-text">integer</span></td>
+        <td>Bid Model data ID</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelling": [
+    {
+      "bidModelData": {
+        "id": 1,
+        "priority": 1,
+        "spendRatio": 100,
+        "spendRatioTypeId": 1,
+        "bidMultiplier": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "dimensionId": 1,
+          "entityId": 583002
+        }
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      path: {
+        campaignId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelling: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`
+              },
+              dimensionEntityMappings?: [
+                {
+                  campaignId?: `number`,
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                  bidModelDataId?: `number`
+                }
+              ]
+            }
+          ]  
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+</TabItem></Tabs>
+
+</div>
+</div>
+
