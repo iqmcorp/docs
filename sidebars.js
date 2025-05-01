@@ -289,6 +289,29 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Optimize Your Inventory',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Inventory-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Inventory',
+              href: `/Quickstart%20Guides/inventory-quickstart#about-iqm-inventory`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Optimize Your Inventory',
+              href: `/Quickstart%20Guides/inventory-quickstart#optimize-your-inventory-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            }
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
