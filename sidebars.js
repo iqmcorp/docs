@@ -2392,7 +2392,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#inventory-management"><span class="badge bar badge--success">POST</span>Campaign Inventory Optimization</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#campaign-inventory-optimization"><span class="badge bar badge--success">POST</span>Campaign Inventory Targeting</a>',
               defaultStyle: true,
             },
             {
