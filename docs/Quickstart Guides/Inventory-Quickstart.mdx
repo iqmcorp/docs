@@ -531,7 +531,11 @@ function Inventory-AddInclude/Exclude(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+[If you have an existing Inventory group and you want to update it, skip to [Step 5](#step-5-update-an-inventory-group)]
+
 The IQM API also allows you to create custom groupings of Inventories with several methods. In this example, we can take the Inventory <var>id</var>s used in Steps 2 and 3 and pass them in the <var>inventoryIds</var> array, along with a <var>groupName</var> and <var>groupTypeId</var> to create a new group.
+
+To review all of the methods, see the [Create a New Inventory Group](/Guidelines/Inventory-API-Guide#create-a-new-inventory-group) endpoint documentation. 
 
 | Headers  |  |
 | ----  | --- |
@@ -735,5 +739,230 @@ function addInventoryGroup(): Promise<Responses> {
 </div></div>
 
 ### Step 5: Update an Inventory Group 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/group/addMappings</span>
+
+<div class="container">
+  <div class="child1">
+
+Add or Remove Inventories (Open Exchange, Private Deals, Contextual) to a group or multiple groups.
+
+Inventories can be added/removed by filtering for results, inputting <var>dealIds</var>, contextual details, or <var>inventoryIds</var>.
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Add/Remove by Inventory ID</summary>
+
+    <table className="objectProperties">
+    <th>Request Schema</th>
+    <tr>
+    <td>`groupIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Group IDs to add/remove mappings to/from</td>
+    </tr>
+    <tr>
+    <td>`inventoryIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Inventory IDs to add/remove to/from group</td>
+    </tr>
+    </table>
+
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+                 <tr>
+        <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+        <td>[Inventory Group Type ID](/Guidelines/Inventory-API-Guide#get-inventory-group-types)</td>
+        </tr>
+              <tr>
+        <td>`created` <br /><span class="type-text">integer</span></td>
+        <td>Unix epoch creation date, in milliseconds</td>
+        </tr>
+              <tr>
+        <td>`modifiedDate` <br /><span class="type-text">integer</span></td>
+        <td>Modified date</td>
+        </tr>
+              <tr>
+        <td>`owID` <br /><span class="type-text">integer</span></td>
+        <td>Organization Workspace ID</td>
+        </tr>
+              <tr>
+        <td>`impressions` <br /><span class="type-text">integer</span></td>
+        <td>Impressions count</td>
+        </tr>
+              <tr>
+        <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates that account-level excluded group is included</td>
+        </tr>
+             <tr>
+        <td>`whiteListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+        <td>Campaign IDs where this Inventory group is whitelisted</td>
+        </tr>
+              <tr>
+        <td>`blackListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+        <td>Campaign IDs where this Inventory group is blacklisted</td>
+        </tr>
+              <tr>
+        <td>`publishers` <br /><span class="type-text">integer</span></td>
+        <td>Publishers count</td>
+        </tr>
+              <tr>
+        <td>`uniques` <br /><span class="type-text">integer</span></td>
+        <td>Total number of unique impressions of the Inventories in a group</td>
+        </tr>
+        <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>The number of unique individuals reached by an Inventory group, does not count repeat views </td>
+        </tr>
+          <tr>
+        <td>`deals` <br /><span class="type-text">integer</span></td>
+        <td>Deals count</td>
+        </tr>
+             <tr>
+        <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
+        <td>Contextual Inventories count</td>
+        </tr>
+             <tr>
+        <td>`count` <br /><span class="type-text">integer</span></td>
+        <td>Inventories count after add/remove mapping</td>
+        </tr>
+             <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Inventory group ID</td>
+        </tr>
+             <tr>
+        <td>`name` <br /><span class="type-text">integer</span></td>
+        <td>Inventory group name</td>
+        </tr>
+                 <tr>
+        <td>`isShared` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates the Inventory group is shared from the Workspace: <var>true</var></td>
+        </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": [
+        {
+            "groupTypeId": 1,
+            "created": 1719983099,
+            "modifiedDate": "2024-07-03T07:35:45.800+0000",
+            "owId": 202017,
+            "impressions": 7927783118,
+            "isAccountLevelExcluded": false,
+            "whiteListedCampaignIds": null,
+            "blackListedCampaignIds": null,
+            "publishers": 59,
+            "sharedCount": 1,
+            "uniques": 0,
+            "reach": 558137549,
+            "inventories": 0,
+            "deals": 0,
+            "contextualInventories": 0,
+            "count": 2,
+            "id": 176130,
+            "name": "Open Exchange Inventories Group",
+            "isShared": true
+        }
+    ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          groupTypeId: number;
+          created: number;
+          modifiedDate: string;
+          owId: number;
+          impressions: number;
+          isAccountLevelExcluded: boolean;
+          publishers: number;
+          sharedCount: number;
+          uniques: number;
+          reach: number;
+          Inventories: number;
+          deals: number;
+          contextualInventories: number;
+          count: number;
+          id: number;
+          name: string;
+          isShared: boolean
+        }
+      }
+    };
+  };
+}
+
+function addMappingsToInventoryGroups(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/inv/group/addMappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          groupName: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+function removeMappingsOfInventoryGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/inv/group/removeMappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          inventoryTypeId?: `number`,
+          searchField?: `string`,
+          excludedInventoryIds?: `array of numbers`,
+          allInventories?: `boolean`,
+          groupTypeId?: `number`,
+          groupId?: `number`,
+          inventoryIds?: `array of numbers`,
+          dealIds?: `array of numbers`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ### Step 6: Get List of Groups by Campaign 
