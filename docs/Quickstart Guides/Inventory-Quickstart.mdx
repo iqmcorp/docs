@@ -30,7 +30,7 @@ To upload Matched Audience, the following are required:
 
 1. An Account On the IQM platform
    *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
-1. A Draft Campaign
+1. A Campaign
    *  See [Create a Campaign](/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide)
 
 ## Optimize Your Inventory Using the IQM API 
@@ -43,10 +43,10 @@ The minimum requirements to perform this task are: logging in with authenticatio
     *  Optional if you have already logged in and have a token
 1. Search Inventory 
     * Optional if you already have pre-selected Inventory to use
-1. Campaign Inventory targeting 
 1. Create an Inventory Group 
     * Optional if you already have an existing Inventory group to use, skip to next step
 1. Update an Inventory Group
+1. Campaign Inventory Group Targeting
 1. Get Inventory Group Campaign Details
 
 ### Step 1: Log In
@@ -451,116 +451,18 @@ function getInventoriesDetails(): Promise<Responses> {
 
 </div></div>
 
-### Step 3: Campaign Inventory Targeting 
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/inv/inventories/includeExclude</span>
 
-<div class="container">
-  <div class="child1">
-
-Once you choose your desired Inventories, you can include them in a Campaign's targeting strategy. Using the <var>id</var> from the response in Step 2, and a <var>campaignId</var> you can attach an Inventory to the desired Campaign. 
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
-
-| Request Schema |  |
-| ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID to target for optimization |
-| `ids` <br /><span class="type-text">string</span>| Comma separated strings of Inventory IDs to include in or exclude from specified Campaign |
-| `isExcluded` <br /><span class="type-text">integer</span> | Include in Campaign: <var>0</var><br /> Exclude from Campaign: <var>1</var> |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-
-<table className="objectProperties">
-  <tr>
-  <td>`message` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
-  </tr>
-  </table></details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-    "campaignId": 168622,
-    "ids": "11593184,11840144",
-    "isExcluded": 0
-}
-```
-
-```json title="Response 200"
-{
-    "statusCode": 200,
-    "responseObject": {
-        "message": "Inventories Included."
-    }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json;charset=UTF-8": {
-        statusCode: number;
-        responseObject: {
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function Inventory-AddInclude/Exclude(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v2/inv/inventories/includeExclude',
-    requestBody: {
-      content: {
-        "application/json": {
-          campaignId: `number`,
-          ids: `string`,
-          isExcluded: `number`
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-### Step 4: Create an Inventory Group
+### Step 3: Create an Inventory Group
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/groups</span>
 
 <div class="container">
   <div class="child1">
 
-[If you have an existing Inventory group and you want to update it, skip to [Step 5](#step-5-update-an-inventory-group)]
+[If you have an existing Inventory group and you want to update it, skip to [Step 4](#step-5-update-an-inventory-group)]
 
-The IQM API also allows you to create custom groupings of Inventories with several methods. In this example, we can take the Inventory <var>id</var>s used in Steps 2 and 3 and pass them in the <var>inventoryIds</var> array, along with a <var>groupName</var> and <var>groupTypeId</var> to create a new group.
+The IQM API also allows you to create custom groupings of Inventories with several methods. In this example, we can take the Inventory <var>id</var>s used in Step 2 and pass it in the <var>inventoryIds</var> array, along with a <var>groupName</var> and <var>groupTypeId</var> to create a new group.
 
 To review all of the methods, see the [Create a New Inventory Group](/Guidelines/Inventory-API-Guide#create-a-new-inventory-group) endpoint documentation. 
 
@@ -765,7 +667,7 @@ function addInventoryGroup(): Promise<Responses> {
 
 </div></div>
 
-### Step 5: Update an Inventory Group 
+### Step 4: Update an Inventory Group 
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/group/addMappings</span>
 
@@ -992,6 +894,103 @@ function removeMappingsOfInventoryGroup(): Promise<Responses> {
 
 </div></div>
 
+### Step 5: Campaign Inventory Group Targeting 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/inventorygroups/{group_id}/includeexclude</span>
+<br /><span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/inventorygroups/{groupId}/includeExclude</span>
+
+<div class="container">
+  <div class="child1">
+
+Once an Inventory group has been created, you can attach it to a Campaign for targeting. Pass the Inventory <var>groupId</var> in the endpoint's path and the desired Campaign ID in the <var>includedCampaigns</var> field. 
+
+| Path Parameter | |
+| --- | --- |
+| `group_id` <br /><span class="type-text">integer</span> | Inventory Group ID |
+| `groupId` <br /><span class="type-text">integer</span> | Inventory Group ID |
+
+| Request Schema (v2) | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs for targeting 
+| `isExcluded` <br /><span class="type-text">boolean</span> | Include in Campaign: <var>0</var><br /> Exclude from Campaign: <var>1</var>
+
+| Request Schema (v3) | |
+| --- | --- |
+| `excludedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to exclude targeting
+| `includedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to include targeting
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignIds": "168622",
+  "isExcluded": 0
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "message": "Inventory Group excluded successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function Inventorygrouptargeting(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/cmp/inventorygroup/{group_id}/includeExclude',
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignIds: `array of numbers`,
+          isExcluded: `boolean`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ### Step 6: Get List of Groups by Campaign 
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/groups/api/v3/group/\{groupId\}/shared/campaigns/list</span>
@@ -999,7 +998,7 @@ function removeMappingsOfInventoryGroup(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Once you have attached an Inventory ID to a Campaign for targeting and created an Inventory Group with that same Inventory ID, you can check that Inventory <var>groupId</var> with this endpoint. You should see the <var>campaignId</var> in the response. 
+Once you have attached an Inventory group ID to a Campaign for targeting you can check that Inventory <var>groupId</var> with this endpoint. You should see the <var>campaignId</var> in the response. 
 
 | Headers  |  |
 | ----  | --- |
