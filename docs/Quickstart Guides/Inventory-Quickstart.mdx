@@ -9,7 +9,20 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 # Optimize Your Inventory
 
+IQM’s REST API enables you to interact with most of our platform's applications.
+
+The following endpoints will be used to search Inventory, assign Campaign targeting, and create an Inventory group:
+
+<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/inv/inventories/list</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v2/inv/inventories/includeExclude</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/inv/groups</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/inv/group/addMappings</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/inv/groups/api/v3/group/\{groupId\}/shared/campaigns/list</span>
+
 ## About IQM Inventory
+
+IQM's advanced algorithm determines the most relevant ads to display to a user based on their activity and the content of a given page. Inventories provide you a way to organize collections or groups based on criteria such as ad format, placement type, targeting options, and other properties.
 
 ## Before You Begin
 
@@ -21,6 +34,20 @@ To upload Matched Audience, the following are required:
    *  See [Create a Campaign](/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide)
 
 ## Optimize Your Inventory Using the IQM API 
+
+This Quickstart Guide will cover how to create and manage Inventory groups and target Inventory with Campaigns.
+
+The minimum requirements to perform this task are: logging in with authentication credentials, selecting Inventory, assigning it to a Campaign, and creating an Inventory group. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+
+1. Log In
+    *  Optional if you have already logged in and have a token
+1. Search Inventory 
+    * Optional if you already have pre-selected Inventory to use
+1. Campaign Inventory targeting 
+1. Create an Inventory Group 
+    * Optional if you already have an existing Inventory group to use, skip to next step
+1. Update an Inventory Group
+1. Get Inventory Group Campaign Details
 
 ### Step 1: Log In
 
@@ -966,3 +993,91 @@ function removeMappingsOfInventoryGroup(): Promise<Responses> {
 </div></div>
 
 ### Step 6: Get List of Groups by Campaign 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/inv/groups/api/v3/group/\{groupId\}/shared/campaigns/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Once you have attached an Inventory ID to a Campaign for targeting and created an Inventory Group with that same Inventory ID, you can check that Inventory <var>groupId</var> with this endpoint. You should see the <var>campaignId</var> in the response. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` | Group ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">array of integers</span></td>
+  <td>List of Campaign IDs</td>
+  </tr>
+  </table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    //highlight-next-line
+    168622,
+    286107,
+    284229,
+    287201,
+    287202
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: number[];
+      };
+    };
+  };
+}
+
+function getSharedGroupCampaignList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/inv/group/{groupId}/shared/campaign/list',
+    params: {
+      path: {
+        groupId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
