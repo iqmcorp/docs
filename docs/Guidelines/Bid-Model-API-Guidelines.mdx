@@ -44,72 +44,49 @@ Learn more about Bid Modeling with our [Help Center<ExternalLink />](https://hel
 
 ## Bid Modeling Details
 
-### Get Campaign Dimension Counts
+### Get Campaign Dimension Statistics
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/dimensions/count</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaign/\{campaignId\}/dimensions/bid-models/count</span>
 
 <div class="container">
   <div class="child1">
 
-Retrieves counts of dimensions for a specific Campaign within a given date range.
+Get dimension statistics for a given Campaign ID. 
 
-| Path Parameters     |  |
-| ---- | --- |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The Campaign ID for which the Report is being generated |
-
-| Query Parameters  |     |
+| Path Parameter | |
 | --- | --- |
-| <span class="code-text">startDate</span> <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for Campaign start date |
-| <span class="code-text">endDate</span>   <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for Campaign end date   |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+
+| Query Parameters | |
+| --- | --- |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count
+| `attributes` <br /><span class="type-text">string</span> | List of statistics to return <br />Supported values: <var>totalCount</var>, <var>modelledCount</var>, <var>modelledIds</var>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 
 <table className="objectProperties">
 <tr>
-  <td>`creative` <br /><span class="type-text">integer</span></td>
-  <td>Creative Dimension count</td>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>dimensionId</var> and attributes object</td>
 </tr>
 <tr>
-  <td>`dealId` <br /><span class="type-text">integer</span></td>
-  <td>Deal Dimension count</td>
+  <td>`totalCount` <br /><span class="type-text">integer</span></td>
+  <td>Total count of entities in a dimension</td>
 </tr>
 <tr>
-  <td>`openExchange` <br /><span class="type-text">integer</span></td>
-  <td>Open Exchange Dimension count</td>
+  <td>`modelledCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of entities modeled in a dimension</td>
 </tr>
 <tr>
-  <td>`publisherCategory` <br /><span class="type-text">integer</span></td>
-  <td>Publisher Category Dimension count</td>
-</tr>
-<tr>
-  <td>`trafficType` <br /><span class="type-text">integer</span></td>
-  <td>Traffic Type Dimension Count</td>
-</tr>
-<tr>
-  <td>`deviceType` <br /><span class="type-text">integer</span></td>
-  <td>Device Type Dimension count</td>
-</tr>
-<tr>
-  <td>`state` <br /><span class="type-text">integer</span></td>
-  <td>State Dimension count</td>
-</tr>
-<tr>
-  <td>`city` <br /><span class="type-text">integer</span></td>
-  <td>City Dimension count</td>
-</tr>
-<tr>
-  <td>`zip` <br /><span class="type-text">integer</span></td>
-  <td>Zip Code Dimension count</td>
-</tr>
-<tr>
-  <td>`exchange` <br /><span class="type-text">integer</span></td>
-  <td>Exchange Dimension count</td>
+  <td>`modelledIds` <br /><span class="type-text">object</span></td>
+  <td>List of modeled entity IDs</td>
 </tr>
 </table></details>
 
-
-</div><div class="child2">
+</div>
+<div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
@@ -118,70 +95,54 @@ Retrieves counts of dimensions for a specific Campaign within a given date range
 {
   "success": true,
   "data": {
-    "creative": 2,
-    "dealId": 0,
-    "openExchange": 0,
-    "publisherCategory": 0,
-    "trafficType": 2,
-    "deviceType": 4,
-    "state": 0,
-    "city": 0,
-    "zip": 0,
-    "exchange": 18
+    "1": {
+      "totalCount": 5,
+      "modelledCount": 3,
+      "modelledIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    "3": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "4": {
+      "totalCount": 10,
+      "modelledCount": 5,
+      "modelledIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "5": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "11": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "12": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "13": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    }
   }
 }
 ```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-<summary>More Responses</summary>
-
-
-```json title="Response 400"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Missing required parameter: 'startDate'. Type: long",
-      "field": "startDate"
-    }
-  ]
-}
-```
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "No campaign found with given campaign Id"
-    }
-  ]
-}
-```
-
-```json title="Response 500"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "server encountered an error !"
-    }
-  ]
-}
-```
-
-</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -189,92 +150,7 @@ Retrieves counts of dimensions for a specific Campaign within a given date range
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
-import {
-  getInstance
-} from "prerequisites"
 
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          creative: number;
-          dealId: number;
-          openExchange: number;
-          publisherCategory: number;
-          trafficType: number;
-          deviceType: number;
-          state: number;
-          city: number;
-          zip: number;
-          exchange: number;
-        }
-      }
-    };
-  };
-  400: {
-    content: {
-      "application:json": {
-        success: boolean
-        errorObjects: {
-          error: string;
-          field: string;
-        }[]
-      }
-    }
-  }
-  403: {
-    content: {
-      "application/json": {
-        success: boolean
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-  422: {
-    content: {
-      "application/json": {
-        success: boolean
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-  500: {
-    content: {
-      "application/json": {
-        success: boolean
-        errorObjects: {
-          error: string
-        }[]
-      }
-    };
-  };
-};
-
-function getDimensionWiseServeCount(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/bm/campaigns/{campaignId}/dimensions/count',
-    params: {
-      query: {
-        startDate: `number`,
-        endDate: `number`,
-      },
-      path: {
-        campaignId: `number`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
 ```
 
 </TabItem></Tabs>
@@ -374,74 +250,185 @@ function getDimensionWiseEntitySpentForCampaign(): Promise<Responses> {
 
 ---
 
-### Get Total and Dimension Specific Count of Modeled Items for a Campaign
+### Get List of Modeled Entities for a Campaign
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}\/bid-models/count</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}\/bid-models/dimensions/\{dimensionId}</span>
 
 <div class="container">
   <div class="child1">
 
-Get details on total and dimension specific counts of modeled items for a specified Campaign.
+Get a list of modeled entities and their associated modeling data for the provided Campaign ID. 
 
 | Path Parameters     |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The Campaign ID |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID |
+| `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Dimension ID |
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-  <td>`totalCount` <br /><span class="type-text">integer</span></td>
-  <td>Total count of modeled items for a Campaign</td>
-</tr>
-<tr>
-  <td>`dimensionWiseCount` <br /><span class="type-text">object</span></td>
-  <td>Dimension specific count of modeled items for a Campaign</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`dimensionWiseCount` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
-  <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
-  </tr>
-    <tr>
-  <td>`count`<br /><span class="type-text">object</span></td>
-  <td>Modeled items count</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table></details>
+| Request Schema | |
+| --- | --- |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) 
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds)
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>+priority</var>
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the retrieved data, default: <var>1</var>
+| `searchField` <br /><span class="type-text">string</span> | Search the result by provided keyword
+| `noOfEntries` <br /><span class="type-text">integer</span> | The maximum number of returned results per page, default: <var>10</var>
+| `skipReporting` <br /><span class="type-text">boolean</span> |
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request Sample"
+{
+  "startDate": 1700758597000,
+  "endDate": 1708194599000,
+  "timezoneId": 105,
+  "sortBy": "+priority",
+  "pageNo": 1,
+  "searchField": "ad",
+  "noOfEntries": 10,
+  "skipReporting": false
+}
+```
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "totalCount": 7,
-    "dimensionWiseCount": [
+    "total": {
+      "totalCount": 5,
+      "impressions": 1,
+      "winRate": 25,
+      "clicks": 0,
+      "eCPM": 4,
+      "eCPC": 0,
+      "dataCost": 0,
+      "mediaSpent": 0.004,
+      "CTR": 0,
+      "spent": 0.004,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0.004,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 4,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "data": [
       {
-        "dimensionId": 1,
-        "count": 5
+        "bidModelData": {
+          "id": 1,
+          "priority": 5,
+          "bidMultiplier": 1.5,
+          "spendRatio": 0.8,
+          "spendRatioTypeId": 2
+        },
+        "id": 604676,
+        "name": "ad-60s",
+        "isExcluded": 0,
+        "modelled": false,
+        "targeted": true,
+        "impressions": 0,
+        "winRate": 0,
+        "clicks": 0,
+        "eCPM": 0,
+        "eCPC": 0,
+        "dataCost": 0,
+        "mediaSpent": 0,
+        "CTR": 0,
+        "spent": 0,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 0,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "creativeStatus": "Deleted",
+        "creativeThumbnailSource": "https://i.gifer.com/g2vO.gif",
+        "creativeCardSource": "https://i.gifer.com/g2vO.gif",
+        "creativeType": "Video",
+        "spentDistribution": 0
       },
       {
-        "dimensionId": 7,
-        "count": 1
-      },
-      {
-        "dimensionId": 13,
-        "count": 1
+        "bidModelData": {
+          "id": 1,
+          "priority": 5,
+          "bidMultiplier": 1.5,
+          "spendRatio": 0.8,
+          "spendRatioTypeId": 2
+        },
+        "id": 604675,
+        "name": "ad-45s",
+        "isExcluded": 1,
+        "modelled": false,
+        "targeted": true,
+        "impressions": 1,
+        "winRate": 100,
+        "clicks": 0,
+        "eCPM": 4,
+        "eCPC": 0,
+        "dataCost": 0,
+        "mediaSpent": 0.004,
+        "CTR": 0,
+        "spent": 0.004,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0.004,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 1,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "creativeStatus": "Running",
+        "creativeThumbnailSource": "https://i.gifer.com/g2vO.gif",
+        "creativeCardSource": "https://i.gifer.com/g2vO.gif",
+        "creativeType": "Video",
+        "spentDistribution": 0
       }
-    ]
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 2,
+    "campaignBidDetails": {
+      "baseBid": 20,
+      "maxBid": 20,
+      "currentPriority": 1,
+      "nextPerformanceCheck": 1740736800000
+    }
   }
 }
 ```
@@ -496,6 +483,177 @@ function getModelledItemsCount(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+      <td>`bidModelData` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model Data properties</td>
+      </tr>
+       <tr>
+          <td colSpan="2">
+              <details className="objectPropertiesDetails">
+              <summary>`bidModelData` object properties</summary>
+              <table className="objectProperties">
+              <tr>
+              <td>`id`<br /><span class="type-text">integer</span></td>
+              <td>Bid Model data ID</td>
+              </tr>
+                <tr>
+              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              </tr>
+                <tr>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+              </table></details>
+            </td>
+            <td></td>
+          </tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Campaign ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Campaign name</td>
+</tr>
+<tr>
+  <td>`isExcluded` <br /><span class="type-text">integer</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`modelled` <br /><span class="type-text">boolean</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`targeted` <br /><span class="type-text">boolean</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`totalCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of modeled entities</td>
+</tr>
+<tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Impressions count</td>
+</tr>
+<tr>
+  <td>`winRate` <br /><span class="type-text">integer</span></td>
+  <td>Percentage of impressions bid on and won</td>
+</tr>
+<tr>
+  <td>`clicks` <br /><span class="type-text">integer</span></td>
+  <td>The number of times a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`eCPM` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per mille</td>
+</tr>
+<tr>
+  <td>`eCPC` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per click</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Data cost applied on Campaigns of given Customer</td>
+</tr>
+<tr>
+  <td>`mediaSpent` <br /><span class="type-text">integer</span></td>
+  <td>Media spent</td>
+</tr>
+<tr>
+  <td>`CTR` <br /><span class="type-text">integer</span></td>
+  <td>Click-through rate</td>
+</tr>
+<tr>
+  <td>`spent` <br /><span class="type-text">integer</span></td>
+  <td>Amount spent</td>
+</tr>
+<tr>
+  <td>`conversionCount` <br /><span class="type-text">integer</span></td>
+  <td>Conversion count</td>
+</tr>
+<tr>
+  <td>`conversionValue` <br /><span class="type-text">integer</span></td>
+  <td>Conversion value</td>
+</tr>
+<tr>
+  <td>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user viewed an ad but did not click on it</td>
+</tr>
+<tr>
+  <td>`costPerAttributedConversions` <br /><span class="type-text">integer</span></td>
+  <td>Cost per attributed Conversion</td>
+</tr>
+<tr>
+  <td>`attributedConversionsRate` <br /><span class="type-text">integer</span></td>
+  <td>Total attributed Conversion rate</td>
+</tr>
+<tr>
+  <td>`returnOnAdSpend` <br /><span class="type-text">integer</span></td>
+  <td>Return on ad spend</td>
+</tr>
+<tr>
+  <td>`VCR` <br /><span class="type-text">integer</span></td>
+  <td>Video completion rate</td>
+</tr>
+<tr>
+  <td>`eCPV` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per visit</td>
+</tr>
+<tr>
+  <td>`eCPCV` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per completed view</td>
+</tr>
+<tr>
+  <td>`startCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video start</td>
+</tr>
+<tr>
+  <td>`firstCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video first quarter</td>
+</tr>
+<tr>
+  <td>`midCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video midpoint</td>
+</tr>
+<tr>
+  <td>`thirdCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video last quarter</td>
+</tr>
+<tr>
+  <td>`completeCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video completed</td>
+</tr>
+<tr>
+  <td>`bidImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Bid on impressions count</td>
+</tr>
+<tr>
+  <td>`audioVideoViewed` <br /><span class="type-text">integer</span></td>
+  <td>Audio/video viewed</td>
+</tr>
+<tr>
+  <td>`prebidCost` <br /><span class="type-text">integer</span></td>
+  <td>Data cost of Pre-bid Audiences</td>
+</tr>
+</table></details>
 
 ## Include/Exclude Management
 
@@ -613,20 +771,15 @@ function DeviceType-includeExclude(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Optimize a Campaign by updating the status of specified entities to be either included or excluded with path parameters `campaignId` and `dimensionId`.
+Optimize a Campaign by updating the status of specified entities to be either included or excluded with path parameters <var>campaignId</var> and <var>dimensionId</var>.
 
 | Path  ||
 | --- | --- |
 | <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | Campaign ID  |
-| <span class="code-text">dimensionId</span> <br /><span class="type-text">integer</span> | Dimension ID <br />See static [List of Dimension IDs](#get-list-of-bid-model-dimensions) |
+| <span class="code-text">dimensionId</span> <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
 
 | Request Schema |  |
 | ---- | --- |
-| <span class="code-text">advertiserId</span><br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Advertiser ID  |
-| <span class="code-text">dspId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | Demand Side Platform ID  |
-| <span class="code-text">owId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>       | Organization workspace ID   |
-| <span class="code-text">uowId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span>      | User Organization workspace ID |
-| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Unique ID of Campaign  |
 | <span class="code-text">ids</span> <br /><span class="type-text">string</span> <span class="required-text">optional</span>         | Creative ID  |
 | <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span>  | Target entity: <var>0</var> <br />Block entity: <var>1</var> |
 
@@ -948,7 +1101,7 @@ function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
 
 ### Update Bid Modeling Actions
 
-<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models/\{dimensionId}</span>
 
 <div class="container">
 <div class="child1">
@@ -958,7 +1111,8 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for Bid Modeling.
 | Path Parameters | |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-
+| `dimensionId` <br /><span class="type-text">integer</span> | Dimension ID |
+ 
 <table>
 <th>Request Schema</th>
 <tr>
@@ -2031,7 +2185,7 @@ function deletePriorityToCampaign(): Promise<Responses> {
 
 ### Get Metrics Report For a Given Campaign and Dimension
 
-<span class="badge badge--success">POST</span> <span class="path-text">api/v3/bm/campaigns/\{campaignId\}\/reports/\{dimensionId\}</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}\/reports/\{dimensionId\}</span>
 
 <div class="container">
   <div class="child1">
