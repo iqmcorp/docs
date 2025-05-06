@@ -1,15 +1,79 @@
+---
+pagination_next: null
+---
+
 # API Pagination
 
 ## Overview
 
 IQM's API supports filtering and sorting in many of its endpoints. By either passing query or request parameters, results can be filtered for certain keywords or entity IDs, or, sorted to a specified order. 
 
-Filtering and sorting parameters 
+### Filtering and sorting parameters
 
-| Query Parameters |  |
+The Parameters Table below lists the most common filtering and sorting fields used in the IQM API. Their usage will vary based on the endpoint. They will often have a default value if a value is not specified. The default value will be listed as part of an endpoint's documentation if it exists. 
+
+| Parameters |  |
 | ---- | --- |
-| `ids` <br /><span class="type-text">integer</span> | Filter results by entity ID |
-| `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
-| `limit` / `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>) |
+| `ids` <br /><span class="type-text">integer</span> | Filter results by entity ID (varies by endpoint) |
+| `searchField` / `keywords` <br /><span class="type-text">string</span> | Search results by keyword |
+| `limit` / `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned per page |
+| `pageNo` / `offset` <br /><span class="type-text">integer</span> | Page number for the returned data |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), the supported values will be listed |
+
+
+## Examples
+
+### Filter by ID
+
+Many endpoint will support filtering by some kind of entity ID. The exact parameter will vary based on the entity. For example, the [Get List of Campaigns](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) endpoint supports filtering by <var>conversionId</var>. When a Conversion ID is passed as a query, the endpoint returns all Campaign IDs that are associated with that Conversion at the top of the results. 
+
+```c title="Query Example"
+https://app.iqm.com/api/v2/cmp/campaigns/data?conversionId=18
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "totalRecords": 1498,
+    "data": [
+      {
+        "id": 176881,
+        "name": "Campaign to test duplicate  copy",
+        "creativeTypeId": 14,
+        "campaignType": "CPV",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620024156,
+        "modifiedDate": 1621571575,
+        //highlight-next-line
+        "conversionId": 18
+      },
+      {
+        "id": 176880,
+        "name": "Campaign to test duplicate update",
+        "creativeTypeId": 14,
+        "campaignType": "CPV",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620024050,
+        "modifiedDate": 1621571575,
+        //highlight-next-line
+        "conversionId": 18
+      },
+      {
+        "id": 176879,
+        "name": "to test campaign duplication",
+        "creativeTypeId": 11,
+        "campaignType": "CPM",
+        "status": "pending",
+        "advertiserId": 100419,
+        "created": 1620023582,
+        "modifiedDate": 1620024188
+      },
+      ...
+    ],
+    "filteredRecords": 1039
+  }
+}
+```
