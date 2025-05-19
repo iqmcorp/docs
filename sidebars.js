@@ -1115,7 +1115,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-counts"><span class="badge bar badge--primary">GET</span>Campaign Dimension Counts</a>',
+              value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#get-campaign-dimension-statistics"><span class="badge bar badge--primary">GET</span>Campaign Dimension Statistics</a>',
               defaultStyle: true,
             },
             {
@@ -1125,7 +1125,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#get-total-and-dimension-specific-count-of-modeled-items-for-a-campaign"><span class="badge bar badge--primary">GET</span>Campaign Modeled Items Count</a>',
+              value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#get-list-of-modeled-entities-for-a-campaign"><span class="badge bar badge--success">POST</span>List of Modeled Entities for a Campaign</a>',
               defaultStyle: true,
             },
           ]
