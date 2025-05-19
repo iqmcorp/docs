@@ -3581,6 +3581,12 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: `doc`,
+      label: `OpenAPI Spec`,
+      id: `Guidelines/API-JSON-File`,
+      className: `sidebarCategory`,
+    }
   ]
 }
 
