@@ -3587,6 +3587,73 @@ const sidebars = {
       id: `Guidelines/API-JSON-File`,
       className: `sidebarCategory`,
     }
+  ],
+  politicalSidebar: [
+    {
+      type: 'doc',
+      id: 'Political Vertical/index',
+      label: 'Political',
+      className: 'sidebarCategory'
+    },
+    {
+      type: 'category',
+      label: 'Insights API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Insights-VLD'
+      },
+      items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/Political%20Vertical/insights-vld#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: `category`,
+          label: `Voter Level Data Reports`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#vld-resource-properties"><span class="badge bar badge"></span>VLD Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-list-of-vld-reports"><span class="badge bar badge--primary">GET</span>List of VLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-list-of-campaigns-eligible-for-vld-reports"><span class="badge bar badge--primary">GET</span>List of Campaigns Eligible for VLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#generate-vld-report"><span class="badge bar badge--success">POST</span>Generate VLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-cost-assessment-for-vld-report"><span class="badge bar badge--success">POST</span>Cost Assessment for VLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#download-vld-insight-report"><span class="badge bar badge--success">POST</span>Download VLD Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#delete-vld-report"><span class="badge bar badge--danger">DEL</span>Delete VLD Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ],
+    },
   ]
 }
 
