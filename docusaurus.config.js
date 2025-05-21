@@ -133,6 +133,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "POLITICAL",
+            position: "left",
+            to: "/Political Vertical/",
+            className: "navbarLink",
+          },
+          {
             type: "search",
             position: "right",
           },
