@@ -1,0 +1,1602 @@
+---
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Audience API
+
+## Overview
+
+The Audience API allows you to create Audience Segments for political Campaigns by grouping users by common characteristics.
+
+<div class="definitionsTable">
+  | Type | Description |
+  | --- | --- |
+  | **Matched Audience** | Upload a CSV or XLSX file with Audience details which is then matched with IQM's user database to create a custom Audience segment. 
+  | **Retargeted Audience** | Add a tracking tag to your website allowing you to track users who visit so they can be retargeted to receive ads in the future. 
+  | **Geo-Farmed Audience** | Define an Audience by a custom geographical area.
+  | **Campaign Audience** | Retarget an Audience associated with a Campaign. 
+  | **Audience Segment** | Group users by common characteristics to reach specific target Audiences. 
+  | **Pre-bid Audience** | Select multiple pre-bid segments and group them together into an Audience. 
+  | **Contextual Audience** | IQM adds users to an Audience when they visit sites featuring specified keywords or URLs.
+  | **Lookalike Audience** | Analyzes an existing Audience and generates a new one based on specified size and similarity percentage. 
+  | **ABM Audience** | Account-Based Marketing for healthcare Campaigns.
+</div>
+
+Learn more about Audiences with our [Selecting your Audiences<ExternalLink />](https://help.iqm.com/en/collections/1387061-selecting-your-audiences) help center article.
+
+### Authentication
+
+Use the following header parameters for all requests:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div>
+
+## Audience Segment Details
+
+### Audience Segment Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+Get Audience Segment details by ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">string</span> |  Audience ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`type` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+</tr>
+<tr>
+  <td>`includedCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns including this Audience</td>
+</tr>
+<tr>
+  <td>`excludedCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns excluding this Audience</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+  <td>Created by User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUser` <br /><span class="type-text">string</span></td>
+  <td>Created by user name</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaignt</td>
+</tr>
+<tr>
+  <td>`segmentsList` <br /><span class="type-text">array of objects</span></td>
+  <td>Array of Audience Segments</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`segmentsList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`segmentId` <br /><span class="type-text">integer</span></td>
+    <td>Audience Segment ID</td>
+  </tr>
+    <tr>
+    <td>`taxonomyId` <br /><span class="type-text">string</span></td>
+    <td>Taxonomy category ID</td>
+  </tr>
+    <tr>
+    <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+    <td>Value assocaited with taxonomy category</td>
+  </tr>
+    <tr>
+    <td>`description` <br /><span class="type-text">string</span></td>
+    <td>Description</td>
+  </tr>
+    <tr>
+    <td>`pathKey` <br /><span class="type-text">string</span></td>
+    <td>A hierarchichal key representing the taxonomy's path or structure</td>
+  </tr>
+    <tr>
+    <td>`cpm` <br /><span class="type-text">integer</span></td>
+    <td>Cost per mille</td>
+  </tr>
+    <tr>
+    <td>`lastUpdatedDate` <br /><span class="type-text">string</span></td>
+    <td>Date last updated</td>
+  </tr>
+    <tr>
+    <td>`totalReach` <br /><span class="type-text">integer</span></td>
+    <td>Total number of reach in terms of devices</td>
+  </tr>
+    <tr>
+    <td>`reachMetadata` <br /><span class="type-text">string</span></td>
+    <td>Reach metadata, such as breakdown by device, IP, coookies, etc.</td>
+  </tr>
+    <tr>
+    <td>`dataAvailable` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether relevant data is available for this taxonomy</td>
+  </tr>
+      <tr>
+    <td>`leafNode` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether this taxonomy is a final node (i.e. it has no subcategories)</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`segmentPartnerName` <br /><span class="type-text">string</span></td>
+  <td>Segment partner name</td>
+</tr>
+<tr>
+  <td>`segmentPartnerId` <br /><span class="type-text">integer</span></td>
+  <td>Segment [Partner ID](/Guidelines/Audience-API-Guidelines#data-partners-list-for-matched-audience)</td>
+</tr>
+<tr>
+  <td>`segmentPartnerLogo` <br /><span class="type-text">string</span></td>
+  <td>Segment partner logo</td>
+</tr>
+<tr>
+  <td>`equation` <br /><span class="type-text">string</span></td>
+  <td>Equation string describing the or-and relationship between Segment groups</td>
+</tr>
+<tr>
+  <td>`segmentIdList` <br /><span class="type-text">array of integers</span></td>
+  <td>Segment IDs</td>
+</tr>
+<tr>
+  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has edit access for the requested resource</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1076846,
+    "name": "Test kishan 19,04:50",
+    "status": "Processing",
+    "type": 2,
+    "includedCount": 0,
+    "excludedCount": 0,
+    "createdOn": 1718796428,
+    "organizationName": "Stage Shared Advertiser",
+    "owId": 201427,
+    "createdByUowId": 153431,
+    "createdByUser": "Kishan Akbari",
+    "createdByUserEmail": null,
+    "uniques": 0,
+    "dataCost": 1.5,
+    "segmentsList": [
+      {
+        "segmentId": 14005,
+        "taxonomyId": "1000143856",
+        "taxonomyValue": "Western Samoa",
+        "description": null,
+        "pathKey": "LiveRamp > L2 Political > L2 Voter Data > Individual Demographics > Ethnicity > Ethnic Description > Western Samoa",
+        "cpm": 1.5,
+        "lastUpdatedDate": "2021-06-08 08:45:50.979634",
+        "totalReach": 0,
+        "reachMetadata": null,
+        "dataAvailable": false,
+        "leafNode": true
+      },
+      {
+        "segmentId": 5586112,
+        "taxonomyId": "1007595031",
+        "taxonomyValue": "South Dakota-13",
+        "description": "30 day full data refresh: Individuals living in the South Dakota-13 state senate district. For political use only.",
+        "pathKey": "LiveRamp > 123Push > Optimized for CTV > Voters > State Senate District > South Dakota-13",
+        "cpm": 0.75,
+        "lastUpdatedDate": "2021-06-08 08:45:50.979634",
+        "totalReach": 14800,
+        "reachMetadata": null,
+        "dataAvailable": false,
+        "leafNode": true
+      },
+      {
+        "segmentId": 6450431,
+        "taxonomyId": "1000037244",
+        "taxonomyValue": "Voted In the 2004 Primary Election",
+        "description": "This Segment contains users who voted in the General Election of this election year",
+        "pathKey": "LiveRamp > Porch Group Media (fka V12) > V12 > NEW VOTER & INCOME > Voted In the 2004 Primary Election",
+        "cpm": 0.5,
+        "lastUpdatedDate": "2024-05-07 09:52:51.191186",
+        "totalReach": 5100000,
+        "reachMetadata": {
+          "iosDevicesReach": 2200000,
+          "androidDevicesReach": 2900000,
+          "cookiesReach": 0
+        },
+        "dataAvailable": false,
+        "leafNode": true
+      }
+    ],
+    "segmentPartnerName": "LiveRamp",
+    "segmentPartnerId": 1,
+    "segmentPartnerLogo": "https://s3.amazonaws.com/advp0had0vuj7rad3niaw1eus2/data_partner/liveramp.png",
+    "equation": "((5586112|6450431)&(14005))",
+    "segmentIdList": [
+      14005,
+      5586112,
+      6450431
+    ],
+    "editAccess": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          type: number;
+          includedCount: number;
+          excludedCount: number;
+          createdOn: number;
+          organizationName: string;
+          owId: number;
+          createdByUowId: number;
+          createdByUserEmail: string;
+          uniques: number;
+          dataCost: number;
+          segmentsList: {
+            segmentId: number;
+            taxonomyId: number;
+            taxonomyValue: number;
+            description: string;
+            pathKey: string;
+            cpm: number;
+            lastUpdatedDate: string;
+            totalReach: number;
+            reachMetadata: string;
+            dataAvailable: boolean;
+            leafNode: boolean;
+          }[];
+          segmentPartnerName: string;
+          segmentPartnerId: number;
+          segmentPartnerLogo: string;
+          equation: string;
+          segmentIdList: number[];
+          editAccess: boolean;
+        }
+      };
+    };
+  };
+}
+
+function getSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Search Audience Segment
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/segment/search</span>
+
+<div class="container">
+  <div class="child1">
+
+Search Audience Segments by specified parameters. 
+
+| Request Schema | |
+| --- | --- |
+| `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider ID](#provider-details-list)s 
+| `referenceId` <br /><span class="type-text">string</span> | Comma separated Reference IDs 
+| `searchField` <br /><span class="type-text">string</span> | Filters results by keyword 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`description` <br /><span class="type-text">string</span></td>
+  <td>Description</td>
+</tr>
+<tr>
+  <td>`cpm` <br /><span class="type-text">integer</span></td>
+  <td>Cost per mille</td>
+</tr>
+<tr>
+  <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates that an Audience Segment is a leaf node in a hierarchical Audience structure: <var>true</var></td>
+</tr>
+<tr>
+  <td>`margin` <br /><span class="type-text">integer</span></td>
+  <td>Margin</td>
+</tr>
+<tr>
+  <td>`pathKey` <br /><span class="type-text">string</span></td>
+  <td>A hierarchichal key representing the taxonomy's path or structure</td>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">string</span></td>
+  <td>Audience Segment ID</td>
+</tr>
+<tr>
+  <td>`taxonomy_value` <br /><span class="type-text">string</span></td>
+  <td>Taxonomy value</td>
+</tr>
+</table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "providerIds": "a6ff7585-dbb4-43cd-8022-8046883bbad5,7735f885-717e-4bd6-b924-f9552ff987ba,267fdd70-8655-4ad2-ad2b-538be580b139,4a163538-1dcb-4c42-909a-256c542e8820,ff6ae965-bd75-4809-b3c3-ed5c568a39b3,efe627d6-25fe-47c1-9dc6-1005c5e8afe5",
+  "referenceId": "ea5f5d49-cbd2-49df-bda1-f3d8f2d14223,6449205f-3be6-419b-924f-817f68b42ca9,63b762fc-a5f4-47ac-ba08-1991fbb29bcb",
+  "searchField": "rocks"
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "0d5fcaea-0fe3-4b10-ba62-168f3dcb0281": [
+      {
+        "description": "Sample discription",
+        "cpm": 1.15,
+        "isLeaf": 1,
+        "margin": 0,
+        "pathKey": "StatSocial > StatSocial > Statsocial > Digital Tribes > Gamers Not Lamers",
+        "id": "68da1011-aa51-48f3-9d55-45c9e63b9f99",
+        "taxonomy_value": "Gamers Not Lamers"
+      },
+      {
+        "description": "Sample discription.",
+        "cpm": 1.15,
+        "isLeaf": 1,
+        "margin": 0,
+        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Style & Fashion > Makeup and Skincare",
+        "id": "d1e94b51-be6a-4ed7-9ad0-8b0b87bc3500",
+        "taxonomy_value": "Makeup and Skincare"
+      },
+      {
+        "description": "Sample discription",
+        "cpm": 1.15,
+        "isLeaf": 1,
+        "margin": 0,
+        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Grand Theft Auto",
+        "id": "a3ce828a-d33e-4391-a588-42c8b1332adf",
+        "taxonomy_value": "Grand Theft Auto"
+      },
+      {
+        "description": "Sample discription",
+        "cpm": 1.15,
+        "isLeaf": 1,
+        "margin": 0,
+        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Red Dead Redemption",
+        "id": "20574ff2-264f-42cc-940b-9356b35637d7",
+        "taxonomy_value": "Red Dead Redemption"
+      },
+      {
+        "description": "Sample discription",
+        "cpm": 1.15,
+        "isLeaf": 1,
+        "margin": 0,
+        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > CPG > Candy (Non-Chocolate)",
+        "id": "6dc06bea-938a-4725-b177-da9a861540ea",
+        "taxonomy_value": "Candy (Non-Chocolate)"
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          "0d5fcaea-0fe3-4b10-ba62-168f3dcb0281": {
+            description: string;
+            cpm: number;
+            isLeaf: number;
+            margin: number;
+            pathKey: string;
+            id: string;
+            taxonomy_value: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function GetSegmentSearchResult(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/segment/search',
+    requestBody: {
+      content: {
+        "application/json": {
+          providerIds: `string`,
+          referenceId: `string`,
+          searchField: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Segment Partner Provider List 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/partner-provider/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of partners and providers with basic Audience information. 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`partnerProviderList` <br /><span class="type-text">array of objects</span></td>
+  <td>Array of partner and provider details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`partnerProviderList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`partnerId` <br /><span class="type-text">integer</span></td>
+    <td>Partner ID</td>
+  </tr>
+    <tr>
+    <td>`partnerReferenceUuid` <br /><span class="type-text">string</span></td>
+    <td>Partner reference Universal User ID</td>
+  </tr>
+    <tr>
+    <td>`partnerName` <br /><span class="type-text">string</span></td>
+    <td>Partner name</td>
+  </tr>
+    <tr>
+    <td>`partnerLogoUrl` <br /><span class="type-text">string</span></td>
+    <td>Partner logo URL</td>
+  </tr>
+    <tr>
+    <td>`partnerDescription` <br /><span class="type-text">string</span></td>
+    <td>Partner description</td>
+  </tr>
+    <tr>
+    <td>`order` <br /><span class="type-text">integer</span></td>
+    <td>Order</td>
+  </tr>
+    <tr>
+    <td>`verticalIdList` <br /><span class="type-text">array of integers</span></td>
+    <td>List of [Vertical IDs](/Guidelines/Workspace-Guidelines#verticals)</td>
+  </tr>
+    <tr>
+    <td>`seatId` <br /><span class="type-text">integer</span></td>
+    <td>Seat ID</td>
+  </tr>
+    <tr>
+    <td>`customerPartner` <br /><span class="type-text">boolean</span></td>
+    <td>Customer associated partner</td>
+  </tr>
+    <tr>
+    <td>`providerList` <br /><span class="type-text">array of objects</span></td>
+    <td>Array of Provider details</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`providerList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`providerId` <br /><span class="type-text">integer</span></td>
+    <td>Provider ID</td>
+  </tr>
+  <tr>
+    <td>`providerReferenceUuid` <br /><span class="type-text">integer</span></td>
+    <td>Provider reference Universal User ID</td>
+  </tr>
+  <tr>
+    <td>`providerName` <br /><span class="type-text">integer</span></td>
+    <td>Provider name</td>
+  </tr>
+  <tr>
+    <td>`providerLogoUrl` <br /><span class="type-text">integer</span></td>
+    <td>Provider logo URL</td>
+  </tr>
+    <tr>
+    <td>`verticalIdList` <br /><span class="type-text">array of integers</span></td>
+    <td>List of [Vertical IDs](/Guidelines/Workspace-Guidelines#verticals)</td>
+  </tr>
+  <tr>
+    <td>`providerDescription` <br /><span class="type-text">integer</span></td>
+    <td>Provider description</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+  </tr>
+      <tr>
+    <td>`isPartnerPublic` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether partner is public (<var>true</var>) or private (<var>false</var>)</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "partnerProviderList": [
+      {
+        "partnerId": 1,
+        "partnerReferenceUuid": "60fe05cf-ec18-120d-b408-01a8118ee02d",
+        "partnerName": "Sample Partner 1",
+        "partnerLogoUrl": "https://s3.amazonaws.com/sample/path/sample-partner-logo.png",
+        "partnerDescription": "This is sample partners description 1",
+        "order": 1,
+        "verticalIdList": [
+          1
+        ],
+        "seatId": 112,
+        "customPartner": false,
+        "providerList": [
+          {
+            "providerId": 75,
+            "providerReferenceUuid": "483feaff-f984-4077-9dd7-a8d5fa95f346",
+            "providerName": "Sample Provider 1",
+            "providerLogoUrl": "https://s3.amazonaws.com/sample/path/sample-logo.png",
+            "verticalIdList": [
+              1
+            ],
+            "providerDescription": "This is a sample provider's description"
+          }
+        ],
+        "isPartnerPublic": false
+      },
+      {
+        "partnerId": 2,
+        "partnerReferenceUuid": "60fe05cf-ec18-120d-b408-01a8118ee02d",
+        "partnerName": "Sample Partner 1",
+        "partnerLogoUrl": "https://s3.amazonaws.com/sample/path/sample-partner-logo.png",
+        "partnerDescription": "This is sample partners description 1",
+        "order": 2,
+        "providerList": [],
+        "verticalIdList": [
+          1
+        ],
+        "seatId": 112,
+        "customPartner": false,
+        "isPartnerPublic": false
+      },
+      {
+        "partnerId": 3,
+        "partnerReferenceUuid": "6449205f-5be6-419b-923f-817f68b42ca9",
+        "partnerName": "Sample Partner 3",
+        "partnerLogoUrl": "https://s3.amazonaws.com/sample/path/sample-partner-logo.svg",
+        "partnerDescription": "This is sample partners description 3",
+        "order": 3,
+        "verticalIdList": [
+          1
+        ],
+        "seatId": 112,
+        "customPartner": false,
+        "providerList": [
+          {
+            "providerId": 65,
+            "providerReferenceUuid": "d353b25a-ed48-4158-8522-85b9e507eb47",
+            "providerName": "Sample provider 1",
+            "providerLogoUrl": null,
+            "verticalIdList": [
+              1
+            ],
+            "providerDescription": "This is a sample provider's description"
+          },
+          {
+            "providerId": 136,
+            "providerReferenceUuid": "47bb6286-aa47-4664-90a0-bf2c2492319a",
+            "providerName": "Sample provider 2",
+            "providerLogoUrl": null,
+            "verticalIdList": [
+              1
+            ],
+            "providerDescription": null
+          }
+        ],
+        "isPartnerPublic": true
+      }
+    ],
+    "totalRecords": 3,
+    "filteredRecords": 3
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          partnerProviderList: {
+            partnerId: number;
+            partnerReferenceUuid: string;
+            partnerName: string;
+            partnerLogoUrl: string;
+            partnerDescription: string;
+            order: number;
+            verticalIdList: number[];
+            seatId: number;
+            customPartner: boolean;
+            providerList: {
+              providerId: number;
+              providerReferenceUuid: string;
+              providerName: string;
+              providerLogoUrl: string;
+              verticalIdList: number[];
+              providerDescription: string;
+            }[];
+            isPartnerPublic: boolean;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getSegmentPartnerProviderList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/partner-provider/list',
+    requestBody: {
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Segment List by Provider/Partner IDs
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/list-by-parent-id</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Segments by given provider or parent ID. If parent ID is not provided, endpoint will return all direct segments of a given provider ID. 
+
+| Query Parameters | |
+| --- | --- |
+| `partnerId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |[Partner ID](#data-partners-list-for-matched-audience) 
+| `providerId` <br /><span class="type-text">integer</span> <span class="required-text">required</span>| [Provider ID](#provider-details-list) 
+| `parentId` <br /><span class="type-text">integer</span> | Parent ID, if not provided returned results will include all direct segments of provided ID 
+| `showOnlyNonZeroSegments` <br /><span class="type-text">boolean</span> | Returns segments with reach greater than 0: <var>true</var>, default: <var>false</var>
+| `showOnlyReadySegments` <br /><span class="type-text">boolean</span> | Returns segments with "ready" status: <var>true</var>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`segmentId` <br /><span class="type-text">integer</span></td>
+  <td>Segment ID</td>
+</tr>
+    <tr>
+    <td>`taxonomyId` <br /><span class="type-text">string</span></td>
+    <td>Taxonomy ID</td>
+  </tr>
+    <tr>
+    <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+    <td>Taxonomy value</td>
+  </tr>
+      <tr>
+    <td>`description` <br /><span class="type-text">string</span></td>
+    <td>Description</td>
+  </tr>
+    <tr>
+    <td>`pathKey` <br /><span class="type-text">string</span></td>
+    <td>A hierarchichal key representing the taxonomy's path or structure</td>
+  </tr>
+    <tr>
+    <td>`cpm` <br /><span class="type-text">integer</span></td>
+    <td>Cost per mille</td>
+  </tr>
+      <tr>
+    <td>`referenceId` <br /><span class="type-text">string</span></td>
+    <td>Reference ID</td>
+  </tr>
+      <tr>
+    <td>`lastUpdatedDate` <br /><span class="type-text">string</span></td>
+    <td>Date last updated</td>
+  </tr>
+    <tr>
+    <td>`totalReach` <br /><span class="type-text">integer</span></td>
+    <td>Total number of reach in terms of devices</td>
+  </tr>
+    <tr>
+    <td>`reachMetadata` <br /><span class="type-text">string</span></td>
+    <td>Reach metadata, such as breakdown by device, IP, coookies, etc.</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`reachMetadata` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`iosDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>IOS devices reach</td>
+  </tr>
+      <tr>
+    <td>`androidDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>Android devices reach</td>
+  </tr>
+        <tr>
+    <td>`cookiesReach` <br /><span class="type-text">integer</span></td>
+    <td>Cookies reach</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+    <tr>
+    <td>`dataAvailable` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether relevant data is available for this taxonomy</td>
+  </tr>
+        <tr>
+    <td>`leafNode` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether this taxonomy is a final node (i.e. it has no subcategories)</td>
+  </tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{    
+  "success": true,    
+  "data": [        
+    {            
+      "segmentId": 6192803,            
+      "taxonomyId": "iqm-6192803",            
+      "taxonomyValue": "Giving And Investment",            
+      "description": null,            
+      "pathKey": "LiveRamp > i360 > i360 > Demographics > Giving And Investment",            
+      "cpm": 0.0,            
+      "referenceId": "fc649c8b-6106-41cc-9b28-c287b46414b2",            
+      "lastUpdatedDate": "2022-08-26 12:14:54.264993",            
+      "totalReach": 0,            
+      "reachMetadata": null,            
+      "dataAvailable":true,             
+      "reachMetadata":{               
+        "iosDevicesReach":120,                
+        "androidDevicesReach":120,               
+        "cookiesReach":120            
+      },            
+      "leafNode": false        
+    },        
+    {            
+      "segmentId": 6192796,            
+      "taxonomyId": "i360-000001",            
+      "taxonomyValue": "Ages 18 To 29",            
+      "description": "Individuals Ages 18 And 29.",            
+      "pathKey": "LiveRamp > i360 > i360 > Demographics > Ages 18 To 29",            
+      "cpm": 1.0,            
+      "referenceId": "72aac958-335d-4651-88ca-b88babc5404a",            
+      "lastUpdatedDate": "2022-08-26 12:14:54.264993",            
+      "totalReach": 18907067,            
+      "reachMetadata": null,            
+      "leafNode": true       
+    }    
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          segmentId: number;
+          taxonomyId: string;
+          taxonomyValue: string;
+          description: string;
+          pathKey: string;
+          cpm: number;
+          referenceId: string;
+          lastUpdateDate: string;
+          totalReach: number;
+          dataAvailable: boolean;
+          reachMetadata: {
+            iosDevicesReach: number;
+            androidDevicesReach: number;
+            cookiesReach: number;
+          };
+          leafNode: boolean;
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentsListByParent(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/list-by-parent-id',
+    params: {
+      query: {
+        partnerId: `number`,
+        providerId: `number`,
+        parentId?: `number`,
+        showOnlyNonZeroSegments?: `boolean`,
+        showOnlyReadySegments?: `boolean`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Segment List by Audience IDs 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/list-by-audience-ids</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Segments based on Audience IDs. 
+
+| Query Parameters | |
+| --- | --- |
+| `audienceIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Audience IDs
+| `segmentListSize` <br /><span class="type-text">integer</span> | Segment list size, default: <var>5</var>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+    <tr>
+    <td>`totalSegments` <br /><span class="type-text">integer</span></td>
+    <td>Segment count</td>
+  </tr>
+    <tr>
+    <td>`segmentDetailsResponseVOList` <br /><span class="type-text">object array</span></td>
+    <td>List of Audience Segments</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`segmentDetailsResponseVOList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`segmentId` <br /><span class="type-text">integer</span></td>
+    <td>Segment ID</td>
+  </tr>
+      <tr>
+    <td>`segmentName` <br /><span class="type-text">string</span></td>
+    <td>Segment name</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "audienceId": 900057,
+      "totalSegments": 6,
+      "segmentDetailsResponseVOList": [
+        {
+          "segmentId": 38029,
+          "segmentName": "Extra-Large (5000+)"
+        },
+        {
+          "segmentId": 38030,
+          "segmentName": "Fortune 500"
+        },
+        {
+          "segmentId": 38031,
+          "segmentName": "Large (1000-4999)"
+        },
+        {
+          "segmentId": 38032,
+          "segmentName": "Medium (50-249)"
+        },
+        {
+          "segmentId": 38033,
+          "segmentName": "Medium-Large (250-999)"
+        }
+      ]
+    },
+    {
+      "audienceId": 900043,
+      "totalSegments": 3,
+      "segmentDetailsResponseVOList": [
+        {
+          "segmentId": 76370,
+          "segmentName": "Strong Democrat"
+        },
+        {
+          "segmentId": 76372,
+          "segmentName": "Strong Republican"
+        },
+        {
+          "segmentId": 76397,
+          "segmentName": "No"
+        }
+      ]
+    },
+    {
+      "audienceId": 1066727,
+      "totalSegments": 0,
+      "segmentDetailsResponseVOList": []
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          totalSegments: number;
+          segmentDetailsResponseVOList: {
+            segmentId: number;
+            segmentName: string;
+          }[];
+        }[];
+      };
+    };
+  };
+}
+
+function getSegmentListByAudience(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/list-by-audience-ids',
+    params: {
+      query: {
+        audienceIds: `string`,
+        segmentListSize?: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Audience Segment Insights
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/audience-insights/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+Get available Audience Insights like age, location, gender, etc.
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audienceId` <br /><span class="type-text">string</span></td>
+  <td>Audience ID</td>
+</tr>
+    <tr>
+    <td>`audienceName` <br /><span class="type-text">string</span></td>
+    <td>Audience name</td>
+  </tr>
+    <tr>
+    <td>`audienceDate` <br /><span class="type-text">string</span></td>
+    <td>Audience date</td>
+  </tr>
+      <tr>
+    <td>`verticalId` <br /><span class="type-text">string</span></td>
+    <td>[Vertical ID](/Guidelines/Workspace-Guidelines/#verticals)</td>
+  </tr>
+    <tr>
+    <td>`vertical` <br /><span class="type-text">string</span></td>
+    <td>Vertical label</td>
+  </tr>
+    <tr>
+    <td>`widgets` <br /><span class="type-text">object</span></td>
+    <td>Widgets list</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`widgets` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`title` <br /><span class="type-text">string</span></td>
+    <td>Title</td>
+  </tr>
+      <tr>
+    <td>`type` <br /><span class="type-text">string</span></td>
+    <td>Type</td>
+  </tr>
+        <tr>
+    <td>`data` <br /><span class="type-text">object</span></td>
+    <td>Data details</td>
+  </tr>
+          <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`data` object properties</summary>
+          <table className="objectProperties">
+          <tr>
+            <td>`srNo` <br /><span class="type-text">integer</span></td>
+            <td></td>
+          </tr>
+              <tr>
+            <td>`deviceType` <br /><span class="type-text">string</span></td>
+            <td>Device type</td>
+          </tr>
+            <tr>
+            <td>`audienceValue(Absolute)` <br /><span class="type-text">string</span></td>
+            <td></td>
+          </tr>
+            <tr>
+            <td>`audienceValue(%)` <br /><span class="type-text">integer</span></td>
+            <td></td>
+          </tr>
+            <tr>
+            <td>`nationalAvg(%)` <br /><span class="type-text">integer</span></td>
+            <td></td>
+          </tr>
+            <tr>
+            <td>`delta` <br /><span class="type-text">integer</span></td>
+            <td></td>
+          </tr>
+          </table></details>
+          </td>
+          <td></td>
+        </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "audienceId": "1064660",
+    "audienceName": "Test Case - Is Voter, Is HL",
+    "audienceDate": "2024-04-29",
+    "verticalId": "8",
+    "vertical": "other",
+    "widgets": [
+      {
+        "title": "deviceType",
+        "type": "pie",
+        "data": [
+          {
+            "srNo": 1,
+            "deviceType": "Tablet",
+            "audienceValue(Absolute)": "10,161,882",
+            "audienceValue(%)": 6.09,
+            "nationalAvg(%)": -1,
+            "delta": -1
+          },
+          {
+            "srNo": 2,
+            "deviceType": "Mobile",
+            "audienceValue(Absolute)": "77,590,386",
+            "audienceValue(%)": 46.54,
+            "nationalAvg(%)": -1,
+            "delta": -1
+          }
+        ]
+      },
+      {
+        "title": "gender",
+        "type": "pie",
+        "data": [
+          {
+            "srNo": 1,
+            "gender": "Male",
+            "audienceValue(Absolute)": "1,253",
+            "audienceValue(%)": 44.35,
+            "nationalAvg(%)": -1,
+            "delta": -1
+          },
+          {
+            "srNo": 2,
+            "gender": "Female",
+            "audienceValue(Absolute)": "1,572",
+            "audienceValue(%)": 55.65,
+            "nationalAvg(%)": -1,
+            "delta": -1
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          audienceName: string;
+          audienceDate: string;
+          verticalId: string;
+          vertical: string;
+          widgets: {
+            title: string;
+            type: string;
+            data: {
+              srNo: number;
+              deviceType: string;
+              audienceValue(Absolute): string;
+              audienceValue(%): number;
+              nationalAvg(%): number;
+              delta: number;
+            }[];
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getSegmentAudienceInsights(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/segment/audience-insights/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Audience Management
+
+### Create Audience Segment
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/segment/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Create an Audience Segment. 
+
+| Request Schema | |
+| --- | --- |
+| `groupName` <br /><span class="type-text">string</span> | Audience Segment name
+| `segmentPartnerId` <br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
+| `equation` <br /><span class="type-text">string</span> | Equation string describing the or-and relationship between Segment groups 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "equation": "((6388749|6388750)&(6388751|6402730|6392754|5776004))",
+  "name": "football-temp"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1063316,
+    "message": "Audience created successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/segment/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Audience Segment 
+
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/audience/segment/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+Update an Audience Segment.
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+
+| Request Schema | |
+| --- | --- |
+| `groupName` <br /><span class="type-text">string</span> | Audience Segment name 
+| `dataPartnerId`<br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
+| `segmentIdList` <br /><span class="type-text">string</span> | Segment IDs 
+| `equation` <br /><span class="type-text">string</span> | Equation string describing or-and relationship between Segment groups 
+| `dataPartnerName` <br /><span class="type-text">string</span> | Data partner name 
+| `taxonomyIdList` <br /><span class="type-text">array of integers</span> | Taxonomy ID list
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "equation": "((5613837|5638265)&(5613844))",
+  "name": "Segment audience - 1"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Your changes have been saved successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function updateSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://app.iqm.com/api/v3/audience/segment/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
