@@ -3605,6 +3605,28 @@ const sidebars = {
       },
       items: [
         {
+          type: 'category',
+          label: 'Audience Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#geo-farmed-audience-details"><span class="badge bar badge--primary">GET</span>Geo-Farmed Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
           type: `category`,
           label: `Audience Segment Details`,
           className: 'sidebarItem',
@@ -3648,6 +3670,16 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-matched-audience"><span class="badge bar badge--success">POST</span>Create Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#update-matched-audience"><span class="badge bar badge--info">PATCH</span>Update Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-audience-segment"><span class="badge bar badge--success">POST</span>Create Audience Segment</a>',
               defaultStyle: true,
             },
@@ -3656,8 +3688,35 @@ const sidebars = {
               value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#update-audience-segment"><span class="badge bar badge--warning">PUT</span>Update Audience Segment</a>',
               defaultStyle: true,
             },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-geo-farmed-audience"><span class="badge bar badge--success">POST</span>Create Geo-Farmed Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-contextual-audience"><span class="badge bar badge--success">POST</span>Create Contextual Audience</a>',
+              defaultStyle: true,
+            },
           ]
         },
+        {
+          type: `category`,
+          label: `More Audience Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#data-partners-list-for-matched-audience"><span class="badge bar badge--primary">GET</span>Matched Data Formats</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#provider-details-list"><span class="badge bar badge--primary">GET</span>Provider Details List</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
       ]
     },
     {
