@@ -3778,6 +3778,131 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'Master API',
+      className: 'sidebarCategory',
+      items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/Guidelines/Master-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: 'category',
+          label: 'Geographical Data',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-zip-codes-and-state-ids"><span class="badge bar badge--success">POST</span>Zip Codes and State IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-state-segment"><span class="badge bar badge--success">POST</span>State Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-senate-district-segment"><span class="badge bar badge--success">POST</span>Senate District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-house-district-segment"><span class="badge bar badge--success">POST</span>House District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-gender-segment"><span class="badge bar badge--success">POST</span>Gender Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-age-segment"><span class="badge bar badge--primary">GET</span>Age Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-language-segment"><span class="badge bar badge--primary">GET</span>Language Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-interest-segment"><span class="badge bar badge--primary">GET</span>Interest Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-income-range-segment"><span class="badge bar badge--primary">GET</span>Income Range Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-ethnicity-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-ethnicity-group-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Group Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-dma-code-segment"><span class="badge bar badge--success">POST</span>DMA Code Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-county-segment"><span class="badge bar badge--success">POST</span>County Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-country-segment"><span class="badge bar badge--success">POST</span>Country Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-congressional-district-segment"><span class="badge bar badge--success">POST</span>Congressional District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-city-segment"><span class="badge bar badge--success">POST</span>City Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-location-types"><span class="badge bar badge--primary">GET</span>Location Types</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-location-details-by-location-type"><span class="badge bar badge--primary">GET</span>Location Details by Location Type</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-timezones"><span class="badge bar badge--primary">GET</span>Timezones</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id"><span class="badge bar badge--primary">GET</span>Carriers and States by Country ID</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    }
   ]
 }
 
