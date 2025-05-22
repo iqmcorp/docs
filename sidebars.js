@@ -3597,6 +3597,71 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Audience API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Audience-Segments'
+      },
+      items: [
+        {
+          type: `category`,
+          label: `Audience Segment Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#audience-segment-details-1"><span class="badge bar badge--primary">GET</span>Audience Segment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-partner-provider-list"><span class="badge bar badge--primary">GET</span>Segment Partner Provider List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-list-by-providerpartner-ids"><span class="badge bar badge--primary">GET</span>Segment List by Provider/Partner IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-list-by-audience-ids"><span class="badge bar badge--primary">GET</span>Segment List by Audience IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#audience-segment-insights"><span class="badge bar badge--primary">GET</span>Audience Segment Insights</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-audience-segment"><span class="badge bar badge--success">POST</span>Create Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#update-audience-segment"><span class="badge bar badge--warning">PUT</span>Update Audience Segment</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: 'Insights API',
       className: 'sidebarCategory',
       link: {
