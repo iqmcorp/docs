@@ -3903,6 +3903,104 @@ const sidebars = {
         },
       ]
     }
+  ],
+  healthcareSidebar: [
+    {
+      type: 'doc',
+      id: 'Healthcare Vertical/index',
+      label: 'Healthcare',
+      className: 'sidebarCategory'
+    },
+    {
+      type: 'category',
+      label: 'Audience API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Audience-Healthcare'
+      },
+      items: [
+        {
+          type: `category`,
+          label: `Matched Audience`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#create-matched-audience"><span class="badge bar badge--success">POST</span>Create Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#update-matched-audience"><span class="badge bar badge--info">PATCH</span>Update Matched Audience</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Healthcare Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#abm-audience-details"><span class="badge bar badge--primary">GET</span>ABM Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#abm-audience-statistics"><span class="badge bar badge--primary">GET</span>ABM Audience Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-titles-list"><span class="badge bar badge--primary">GET</span>Healthcare Titles List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-specialties-list"><span class="badge bar badge--primary">GET</span>Healthcare Specialties List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-systems-list"><span class="badge bar badge--primary">GET</span>Healthcare Systems List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-data"><span class="badge bar badge--success">POST</span>Healthcare Data</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-statistics"><span class="badge bar badge--success">POST</span>Healthcare Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-types"><span class="badge bar badge--success">POST</span>Healthcare Account Types</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-subtypes"><span class="badge bar badge--success">POST</span>Healthcare Account Subtypes</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-names"><span class="badge bar badge--success">POST</span>Healthcare Account Names</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    }
   ]
 }
 

@@ -139,6 +139,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "HEALTHCARE",
+            position: "left",
+            to: "/Healthcare Vertical/",
+            className: "navbarLink",
+          },
+          {
             type: "search",
             position: "right",
           },
