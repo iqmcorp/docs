@@ -295,6 +295,65 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Optimize Your Inventory',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Inventory-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Optimize Your Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Search Inventory List ',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Create an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Update an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 5: Campaign Inventory Group Targeting',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 6: Get List of Groups by Campaign',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
@@ -1357,6 +1416,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#inventory-group-targeting"><span class="badge bar badge--success">POST</span>Inventory Group Targeting</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#assign-pmp-deals"><span class="badge bar badge--info">PATCH</span>Assign PMP Deals</a>',
               defaultStyle: true,
             },
@@ -2398,7 +2462,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#inventory-management"><span class="badge bar badge--success">POST</span>Campaign Inventory Optimization</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#campaign-inventory-optimization"><span class="badge bar badge--success">POST</span>Campaign Inventory Targeting</a>',
               defaultStyle: true,
             },
             {
