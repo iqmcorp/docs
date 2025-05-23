@@ -1769,6 +1769,26 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-pld-finance-details"><span class="badge bar badge--primary">GET</span>Customer PLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-sls-finance-details"><span class="badge bar badge--primary">GET</span>Customer SLS Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-doubleverify-details"><span class="badge bar badge--primary">GET</span>Customer DoubleVerify IVT Flag</a>',
               defaultStyle: true,
             },
