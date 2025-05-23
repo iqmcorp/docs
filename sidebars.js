@@ -299,49 +299,49 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Inventory',
-              href: `/Quickstart%20Guides/inventory-quickstart#about-iqm-inventory`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Optimize Your Inventory',
-              href: `/Quickstart%20Guides/inventory-quickstart#optimize-your-inventory-using-the-iqm-api`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-1-log-in`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 2: Search Inventory List ',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-2-search-inventory-list`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 3: Create an Inventory Group',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-3-create-an-inventory-group`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 4: Update an Inventory Group',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-4-update-an-inventory-group`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 5: Campaign Inventory Group Targeting',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-5-campaign-inventory-group-targeting`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 6: Get List of Groups by Campaign',
-              href: `/Quickstart%20Guides/inventory-quickstart#step-6-get-list-of-groups-by-campaign`,
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
               className: 'sidebarItemQS'
             },
           ]
