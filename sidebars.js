@@ -1739,31 +1739,6 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization"><span class="badge bar badge--primary">GET</span>List of Payment Transactions for Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-customer-payments"><span class="badge bar badge--primary">GET</span>List of Customer Payments</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-for-organization"><span class="badge bar badge--primary">GET</span>Invoice for Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-payment-details"><span class="badge bar badge--primary">GET</span>Invoice Payment Details</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization"><span class="badge bar badge--primary">GET</span>List of Invoices for Customer or Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-margin-details"><span class="badge bar badge--primary">GET</span>Customer Margin Details</a>',
               defaultStyle: true,
             },
@@ -1812,26 +1787,6 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#available-balance"><span class="badge bar badge--primary">GET</span>Available Balance</a>',
               defaultStyle: true,
             },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-summary"><span class="badge bar badge--primary">GET</span>Credit Summary</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#offered-credits"><span class="badge bar badge--primary">GET</span>Offered Credits</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-invoice"><span class="badge bar badge--primary">GET</span>Download Invoice</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-payment-receipt"><span class="badge bar badge--primary">GET</span>Download Payment Receipt</a>',
-              defaultStyle: true,
-            },
           ]
         },
         {
@@ -1839,6 +1794,21 @@ const sidebars = {
           label: `Invoice Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-for-organization"><span class="badge bar badge--primary">GET</span>Invoice for Organization</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-payment-details"><span class="badge bar badge--primary">GET</span>Invoice Payment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization"><span class="badge bar badge--primary">GET</span>List of Invoices for Customer or Organization</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#invoice-management"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
@@ -1869,6 +1839,11 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#email-invoice"><span class="badge bar badge--success">POST</span>Email Invoice</a>',
               defaultStyle: true,
             },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-invoice"><span class="badge bar badge--primary">GET</span>Download Invoice</a>',
+              defaultStyle: true,
+            },
           ]
         },
         {
@@ -1876,6 +1851,16 @@ const sidebars = {
           label: `Credit Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-summary"><span class="badge bar badge--primary">GET</span>Credit Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#offered-credits"><span class="badge bar badge--primary">GET</span>Offered Credits</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-management"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
@@ -1903,6 +1888,16 @@ const sidebars = {
           label: `Payment Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization"><span class="badge bar badge--primary">GET</span>List of Payment Transactions for Organization</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-customer-payments"><span class="badge bar badge--primary">GET</span>List of Customer Payments</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#payment-management"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
@@ -1951,6 +1946,11 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#email-payment-receipt"><span class="badge bar badge--success">POST</span>Email Payment Receipt</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-payment-receipt"><span class="badge bar badge--primary">GET</span>Download Payment Receipt</a>',
               defaultStyle: true,
             },
           ]
