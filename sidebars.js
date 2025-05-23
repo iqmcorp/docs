@@ -2168,6 +2168,53 @@ const sidebars = {
           ]
         },
         {
+          type: 'category',
+          label: 'ScriptLift Studies Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#sls-resource-properties"><span class="badge bar badge"></span>SLS Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-sls-reports"><span class="badge bar badge--primary">GET</span>List of SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#generate-sls-report"><span class="badge bar badge--success">POST</span>Generate SLS Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#sls-reports-computation"><span class="badge bar badge--success">POST</span>SLS Reports Computation</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#validate-sls-report-name"><span class="badge bar badge--primary">GET</span>Validate SLS Report Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-campaigns-eligible-for-sls-reports"><span class="badge bar badge--primary">GET</span>Campaigns Eligible for SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#download-sls-report"><span class="badge bar badge--success">POST</span>Download SLS Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#delete-sls-report"><span class="badge bar badge--danger">DEL</span>Delete SLS Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
           type: `category`,
           label: `More Insights Details`,
           className: 'sidebarItem',
