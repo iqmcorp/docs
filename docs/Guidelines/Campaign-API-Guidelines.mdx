@@ -4945,6 +4945,108 @@ function CampaignAudienceTargetingList(): Promise<Responses> {
 
 ---
 
+### Inventory Group Targeting
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/inventorygroups/\{groupId}/includeExclude</span>
+
+<div class="container">
+  <div class="child1">
+
+Attach an Inventory group to targeted Campaign ID(s). 
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Inventory Group ID |
+
+| Request Schema | |
+| --- | --- |
+| `excludedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to exclude targeting
+| `includedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to include targeting
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignIds": "172813,177146",
+  "isExcluded": 0
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "message": "Inventory Group excluded successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function Inventorygrouptargeting(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/inventorygroup/{groupid}/includeExclude',
+    requestBody: {
+      content: {
+        "application/json": {
+          excludedCampaigns: `string`,
+          includedCampaigns: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Assign PMP Deals
 
 <span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/pmp/campaigns/mappings</span>
@@ -4969,7 +5071,7 @@ Assign or remove multiple PMP deals to/from Campaigns.
     <td>Indicates Deals were assigned succesfully: <var>true</var></td>
     </tr>
     <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>`data` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
     </tr>
     </table>
