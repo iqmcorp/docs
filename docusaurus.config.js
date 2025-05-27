@@ -121,6 +121,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "TUTORIALS",
+            position: "left",
+            to: "/Tutorials/",
+            className: "navbarLink",
+          },
+          {
             label: "MIGRATION GUIDES",
             position: "left",
             to: "/Migration%20Guides/",
@@ -134,11 +140,6 @@ const config = {
           },
           {
             type: "search",
-            position: "right",
-          },
-          {
-            href: "https://github.com/iqmcorp/docs",
-            label: "GitHub",
             position: "right",
           },
         ],
@@ -158,13 +159,13 @@ const config = {
                 to: "/Guidelines",
               },
               {
-                label: "API Docs",
-                to: "https://api.iqm.com/docs"
-              },
-              {
                 label: "Help Center",
                 to: "https://help.iqm.com/en/"
-              }
+              },
+              {
+                label: "Github",
+                to: "https://github.com/iqmcorp/docs"
+              },
             ],
           },
         ],
