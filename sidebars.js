@@ -4162,6 +4162,44 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Finance API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Finance'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Finance Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#get-customer-pld-finance-details"><span class="badge bar badge--primary">GET</span>Customer PLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#get-customer-sls-finance-details"><span class="badge bar badge--primary">GET</span>Customer SLS Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
       label: 'Insights API',
       className: 'sidebarCategory',
       link: {
