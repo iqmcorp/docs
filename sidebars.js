@@ -3721,6 +3721,34 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Finance API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Finance'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Finance Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Finance#get-customer-vld-finance-details"><span class="badge bar badge--primary">GET</span>Customer VLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Finance#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
       label: 'Insights API',
       className: 'sidebarCategory',
       link: {

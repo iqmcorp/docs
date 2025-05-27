@@ -1,0 +1,264 @@
+---
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Finance API
+
+## Overview
+
+This page covers the methods and endpoints associated with finance operations. With the Finance API you can access and manage VLD fees. 
+
+### Authentication
+
+Use the following header parameters for all requests:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div>
+
+## Finance Details
+
+### Get Customer VLD Finance Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/fa/customer/\{customerOwId\}/vld-fees</span>
+
+<div class="container">
+  <div class="child1">
+
+Get finance details for Customer VLD.
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Customer ID</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`vldRate` <br /><span class="type-text">integer</span></td>
+  <td>VLD rate for workspace Customer </td>
+</tr>
+<tr>
+  <td>`vldMarkupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>VLD markup type ID to represent markup types: Absolute or Percentage</td>
+</tr>
+<tr>
+  <td>`vldMarkupValue` <br /><span class="type-text">integer</span></td>
+  <td>VLD markup value for Advertiser Customer</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "vldRate": 3
+    }
+}
+```
+
+```json title="Response 200 (VLD flag)"
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "owId": 201427,
+        "vldRate": 3,
+        "vldEnabled": true,
+        "vldMarkupType": "Percentage",
+        "vldMarkupValue": 10
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          vldRate: number;
+        }
+      }
+    };
+  };
+}
+
+function getVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/fa/customer/{customerOwId}/vld-fees',
+    params: {
+      path: {
+        customerowId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Updates Customer VLD Details
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/fa/customer/vld-fees</span>
+
+<div class="container">
+  <div class="child1">
+
+| Request Schema |  |
+| ---- | --- |
+| `id`<br /><span class="type-text">integer</span> | ID |
+| `owId` <br /><span class="type-text">integer</span> | OW ID of the Customer to update details (required) |
+| `vldRate` <br /><span class="type-text">integer</span> | VLD rate for workspace Customer |
+| `vldEnabled` <br /><span class="type-text">boolean</span> | Boolean flag to enable and disable VLD feature for Advertiser Customer |
+| `vldMarkupTypeId` <br /><span class="type-text">integer</span> | VLD markup type ID to represent markup types: Absolute or Percentage |
+| `vldMarkupValue` <br /><span class="type-text">integer</span> | VLD markup value for Advertiser Customer |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "id": 0,
+    "owId": 0,
+    "vldRate": 0,
+    "vldEnabled": true,
+    "vldMarkupType": "string",
+    "vldMarkupTypeId": 0,
+    "vldMarkupValue": 9999
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "VLD Rate updated successfully. The new rate applies only to newly created VLDs"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        id: number;
+        owId: number;
+        vldRate: number;
+        vldEnabled: boolean;
+        vldMarkupType: string;
+        vldMarkupTypeId: number;
+        vldMarkupValue: number;
+      }
+    };
+  };
+}
+
+function editVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/fa/customer/vld-fees',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          owId: `number`,
+          vldRate?: `number`,
+          vldEnabled?: `boolean`,
+          vldMarkupType?: `string`,
+          vldMarkupTypeId?: `number`,
+          vldMarkupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
