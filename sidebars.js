@@ -3890,7 +3890,7 @@ const sidebars = {
         {
           type: 'link',
           label: 'Overview',
-          href: '/Political%20Vertical/insights-vld#overview',
+          href: '/Political%20Vertical/Insights-VLD#overview',
           className: 'sidebarItem'
         },
         {
@@ -4210,7 +4210,7 @@ const sidebars = {
         {
           type: 'link',
           label: 'Overview',
-          href: '/Healthcare%20Vertical/insights-pld#overview',
+          href: '/Healthcare%20Vertical/Insights-PLD#overview',
           className: 'sidebarItem'
         },
         {
