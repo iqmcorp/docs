@@ -295,6 +295,65 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Optimize Your Inventory',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Inventory-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Optimize Your Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Search Inventory List ',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Create an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Update an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 5: Campaign Inventory Group Targeting',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 6: Get List of Groups by Campaign',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
@@ -1357,6 +1416,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#inventory-group-targeting"><span class="badge bar badge--success">POST</span>Inventory Group Targeting</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#assign-pmp-deals"><span class="badge bar badge--info">PATCH</span>Assign PMP Deals</a>',
               defaultStyle: true,
             },
@@ -1885,31 +1949,6 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization"><span class="badge bar badge--primary">GET</span>List of Payment Transactions for Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-customer-payments"><span class="badge bar badge--primary">GET</span>List of Customer Payments</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-for-organization"><span class="badge bar badge--primary">GET</span>Invoice for Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-payment-details"><span class="badge bar badge--primary">GET</span>Invoice Payment Details</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization"><span class="badge bar badge--primary">GET</span>List of Invoices for Customer or Organization</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-margin-details"><span class="badge bar badge--primary">GET</span>Customer Margin Details</a>',
               defaultStyle: true,
             },
@@ -1940,6 +1979,26 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-pld-finance-details"><span class="badge bar badge--primary">GET</span>Customer PLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-sls-finance-details"><span class="badge bar badge--primary">GET</span>Customer SLS Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-doubleverify-details"><span class="badge bar badge--primary">GET</span>Customer DoubleVerify IVT Flag</a>',
               defaultStyle: true,
             },
@@ -1958,26 +2017,6 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#available-balance"><span class="badge bar badge--primary">GET</span>Available Balance</a>',
               defaultStyle: true,
             },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-summary"><span class="badge bar badge--primary">GET</span>Credit Summary</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#offered-credits"><span class="badge bar badge--primary">GET</span>Offered Credits</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-invoice"><span class="badge bar badge--primary">GET</span>Download Invoice</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-payment-receipt"><span class="badge bar badge--primary">GET</span>Download Payment Receipt</a>',
-              defaultStyle: true,
-            },
           ]
         },
         {
@@ -1985,6 +2024,21 @@ const sidebars = {
           label: `Invoice Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-for-organization"><span class="badge bar badge--primary">GET</span>Invoice for Organization</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-invoice-payment-details"><span class="badge bar badge--primary">GET</span>Invoice Payment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-invoices-for-customer-or-organization"><span class="badge bar badge--primary">GET</span>List of Invoices for Customer or Organization</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#invoice-management"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
@@ -2015,6 +2069,11 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#email-invoice"><span class="badge bar badge--success">POST</span>Email Invoice</a>',
               defaultStyle: true,
             },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-invoice"><span class="badge bar badge--primary">GET</span>Download Invoice</a>',
+              defaultStyle: true,
+            },
           ]
         },
         {
@@ -2022,6 +2081,16 @@ const sidebars = {
           label: `Credit Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-summary"><span class="badge bar badge--primary">GET</span>Credit Summary</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#offered-credits"><span class="badge bar badge--primary">GET</span>Offered Credits</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-management"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
@@ -2049,6 +2118,16 @@ const sidebars = {
           label: `Payment Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-payment-transactions-for-organization"><span class="badge bar badge--primary">GET</span>List of Payment Transactions for Organization</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-list-of-customer-payments"><span class="badge bar badge--primary">GET</span>List of Customer Payments</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#payment-management"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
@@ -2097,6 +2176,11 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#email-payment-receipt"><span class="badge bar badge--success">POST</span>Email Payment Receipt</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#download-payment-receipt"><span class="badge bar badge--primary">GET</span>Download Payment Receipt</a>',
               defaultStyle: true,
             },
           ]
@@ -2321,6 +2405,53 @@ const sidebars = {
           ]
         },
         {
+          type: 'category',
+          label: 'ScriptLift Studies Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#sls-resource-properties"><span class="badge bar badge"></span>SLS Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-sls-reports"><span class="badge bar badge--primary">GET</span>List of SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#generate-sls-report"><span class="badge bar badge--success">POST</span>Generate SLS Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#sls-reports-computation"><span class="badge bar badge--success">POST</span>SLS Reports Computation</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#validate-sls-report-name"><span class="badge bar badge--primary">GET</span>Validate SLS Report Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#get-list-of-campaigns-eligible-for-sls-reports"><span class="badge bar badge--primary">GET</span>Campaigns Eligible for SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#download-sls-report"><span class="badge bar badge--success">POST</span>Download SLS Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Insights-API-Guidelines#delete-sls-report"><span class="badge bar badge--danger">DEL</span>Delete SLS Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
           type: `category`,
           label: `More Insights Details`,
           className: 'sidebarItem',
@@ -2398,7 +2529,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#inventory-management"><span class="badge bar badge--success">POST</span>Campaign Inventory Optimization</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#campaign-inventory-optimization"><span class="badge bar badge--success">POST</span>Campaign Inventory Targeting</a>',
               defaultStyle: true,
             },
             {
