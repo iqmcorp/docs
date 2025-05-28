@@ -496,6 +496,17 @@ const sidebars = {
       ],
     },
     {
+      type: "category",
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Tutorials/index'
+      },
+      items: [
+      ]
+    },
+    {
       type: `doc`,
       label: `API Guidelines`,
       id: `Guidelines/index`,
