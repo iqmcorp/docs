@@ -139,6 +139,18 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "POLITICAL",
+            position: "left",
+            to: "/Political Vertical/",
+            className: "navbarLink",
+          },
+          {
+            label: "HEALTHCARE",
+            position: "left",
+            to: "/Healthcare Vertical/",
+            className: "navbarLink",
+          },
+          {
             type: "search",
             position: "right",
           },
