@@ -1,0 +1,2290 @@
+---
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Audience API
+
+## Overview
+
+The Audience API allows you to create different types of Audiences for Healthcare Campaigns. The following table describes some of the Audience types:
+
+<div class="definitionsTable">
+  | Type | Description |
+  | --- | --- |
+  | **Matched Audience** | Upload a CSV or XLSX file with Audience details which is then matched with IQM's user database to create a custom Audience segment. 
+  | **ABM Audience** | Account-Based Marketing for healthcare Campaigns.
+</div>
+
+More resources:
+  * [Selecting your Audiences<ExternalLink />](https://help.iqm.com/en/collections/1387061-selecting-your-audiences) Help Center Article
+  * [Audience API](/Guidelines/Audience-API-Guidelines) Guidelines
+
+### Authentication
+
+Use the following header parameters for all requests:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+</div>
+
+## Matched Audience
+
+### Matched Audience Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id}</span>
+
+<div class="container">
+  <div class="child1">
+
+Get Matched Audience details by ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `id` <br /><span class="type-text">string</span> | Matched Audience ID |
+
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`existingColumnMatching` <br /><span class="type-text">string</span></td>
+  <td>Matched Audience file columns mapped with system fields in JSON serialized string format</td>
+</tr>
+<tr>
+  <td>`columnSettings` <br /><span class="type-text">string</span></td>
+  <td>Matched Audience columns settings as per the selected columns for matching in JSON serialized string format</td>
+</tr>
+<tr>
+  <td>`metadata` <br /><span class="type-text">string</span></td>
+  <td>Matched Audience sample data with system fields in JSON serialized string format</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>The percentage of matched records compared to a reference set</td>
+</tr>
+<tr>
+  <td>`minEcpm` <br /><span class="type-text">integer</span></td>
+  <td>Minimum effective cost per mille</td>
+</tr>
+<tr>
+  <td>`maxEcpm` <br /><span class="type-text">integer</span></td>
+  <td>Maximum effective cost per mille</td>
+</tr>
+<tr>
+  <td>`s3FileName` <br /><span class="type-text">string</span></td>
+  <td>Audience file name</td>
+</tr>
+<tr>
+  <td>`included` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns including this Audience</td>
+</tr>
+<tr>
+  <td>`excluded` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns excluding this Audience</td>
+</tr>
+<tr>
+  <td>`createdDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`modifiedDate` <br /><span class="type-text">integer</span></td>
+  <td>Modified date</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`userEmail` <br /><span class="type-text">string</span></td>
+  <td>User email</td>
+</tr>
+<tr>
+  <td>`userName` <br /><span class="type-text">string</span></td>
+  <td>User name</td>
+</tr>
+<tr>
+  <td>`expectedSpent7` <br /><span class="type-text">integer</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`expectedSpent30` <br /><span class="type-text">integer</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`expectedSpent60` <br /><span class="type-text">integer</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`fileTotalCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of records updated in a Matched Audience file</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`uowId` <br /><span class="type-text">integer</span></td>
+  <td>User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`verticalId` <br /><span class="type-text">integer</span></td>
+  <td>[Vertical ID](/Guidelines/Workspace-Guidelines/#verticals)</td>
+</tr>
+<tr>
+  <td>`isApprovalAcces` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has access to approve</td>
+</tr>
+<tr>
+  <td>`isEditAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has edit access for the requested resource</td>
+</tr>
+<tr>
+  <td>`isSingleColumnEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Flag to indicate if the mapping is single column enabled, if the voterId/phone/email/full-address is the primary column mapping then this should be true, and false otherwise. Default value: <var>false</var></td>
+</tr>
+</table>
+
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "id": 12345,
+    "audienceName": "Sample audience",
+    "existingColumnMatching": "{\"LALVOTERID\":\"Voters_ID\"}",
+    "columnSettings": "{\"Voters_ID\":\"LalVoterID\"}",
+    "metadata": "{\"voterIDColumn\":[\"LALVOTERID\"],\"columns\":[\"LALVOTERID\",\"Residence_Addresses_Zip\",\"Residence_Addresses_State\",\"Voters_FirstName\",\"Voters_LastName\"],\"fileName\":\"matched_audience fn-ln-st-zp.csv\",\"fileSize\":17915,\"rows\":0,\"columnValues\":{\"LALVOTERID\":[\"LALNY106413966\",\"LALNY111849285\",\"LALNY110212948\"],\"Residence_Addresses_Zip\":[\"11021\",\"11050\",\"11050\"],\"Residence_Addresses_State\":[\"NY\",\"NY\",\"NY\"],\"Voters_FirstName\":[\"Mei\",\"Carole\",\"Erin\"],\"Voters_LastName\":[\"Liu\",\"Visconti\",\"Orr\"]}}",
+    "status": "Processing",
+    "matchRate": 0,
+    "minEcpm": 0,
+    "maxEcpm": 0,
+    "s3FileName": "Test audience voter id",
+    "included": 0,
+    "excluded": 0,
+    "createdDate": 1683200348,
+    "modifiedDate": 1683200348,
+    "organizationName": "Sample orgranization name",
+    "userEmail": "sample@example.com",
+    "userName": "Dummy User",
+    "expectedSpent7": 0,
+    "expectedSpent30": 0,
+    "expectedSpent60": 0,
+    "dataCost": 0,
+    "fileTotalCount": 502,
+    "owId": 1000001,
+    "uowId": 10001,
+    "uniques": 0,
+    "verticalId": 8,
+    "isApprovalAccess": false,
+    "isEditAccess": true,
+    "isSingleColumnEnabled": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          audienceName: string;
+          existingColumnMatching: string;
+          columnSettings: string;
+          metaData: string;
+          status: string;
+          matchRate: number;
+          minEcpm: number;
+          maxEcpm: number;
+          s3FileName: string;
+          included: number;
+          excluded: number;
+          createdDate: number;
+          modifiedDate: number;
+          organizationName: string;
+          userEmail: string;
+          expectedSpent7: number;
+          expectedSpent30: number;
+          expectedSpent60: number;
+          dataCost: number;
+          fileTotalCount: number;
+          owId: number;
+          uniques: number;
+          verticalId: number;
+          isApprovalAcces: boolean;
+          isEditAccess: boolean;
+          isSingleColumnEnabled: boolean
+        }[];
+      };
+    };
+  };
+}
+
+function getMatchedAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/matched/{id}',
+    params: {
+      path: {
+        id: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create Matched Audience
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/matched/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Create a Matched Audience. 
+
+<table>
+<tr>
+<th>Payload (Form Data)</th>
+</tr>
+  <tr>
+   <td>
+      `columns` * <br /><span class="type-text">string (FormData)</span>
+   </td>
+   <td>Matched Audience file columns mapped with system fields. 
+This supports a few columns mapping as follows:
+<ul><li>NPI_ID
+        <ul><li>Sample value: <var>\{ "NPI_ID_VALUE": "NPI_ID" }</var></li></ul></li></ul></td>
+   </tr>
+<tr>
+   <td>
+      `columnSettings` <br /><span class="type-text">string (FormData)</span>
+   </td>
+   <td>
+Matched Audience columns setting as per the selected columns for matching. Column setting should be as per the selected column as follows:
+   <ul><li>NPI_Id 
+          <ul><li>Value must be a supported healthcare [Data Partners ID](/Guidelines/Audience-API-Guidelines#data-partners-list-for-matched-audience)</li>
+          <li>Sample value: <var>\{ "NPI_ID": "healthcare_id" }</var></li></ul></li></ul>
+   </td>
+   </tr>
+  <tr>
+   <td>`audienceName`<br /><span class="type-text">string (FormData)</span> <span class="required-text">required</span></td>
+   <td>Name of matched audience</td>
+   </tr>
+  <tr>
+   <td>`metadata`<br /><span class="type-text">string (FormData)</span> <span class="required-text">required</span></td>
+   <td>Matched Audience sample data with system fields</td>
+   </tr>
+  <tr>
+   <td>`fileTotalCount`<br /><span class="type-text">integer (FormData)</span> <span class="required-text">required</span></td>
+   <td>Total number of records in the uploaded Audience file</td>
+   </tr>
+  <tr>
+   <td>`isSingleColumnEnabled`<br /><span class="type-text">boolean (FormData)</span> <span class="required-text">required</span></td>
+   <td>Flag to indicate if the mapping is single column enabled, if the voterId/phone/email/full-address is the primary column mapping then this should be true, and false otherwise. Default value: <var>false</var></td>
+  </tr>
+</table>
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2a">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```FormData title="Request Sample (FormData)"
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="file"; filename="matched-audience-example.csv"
+Content-Type: text/csv
+
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="columns"
+
+{"first-name":"Voters_FirstName","last-name":"Voters_LastName","zip":"Residence_Addresses_Zip","state":"Residence_Addresses_State","street-address":"Residence_Addresses_AddressLine"}
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="metadata"
+
+{"columns":["registered-voter-id","l2-voter-id","targetsmart-voter-id","first-name","last-name","street-address","city","zip","zipplus4","state","full-address","phone","email","phone-sha256","email-sha256","npi-id"],"fileName":"matched-audience-example.csv","fileSize":1777,"columnValues":{"registered-voter-id":["23457","456789","34567"],"l2-voter-id":["LALNY987654","LALNY76543","LALNY54321"],"targetsmart-voter-id":["NY-000020745","NY-000032452","NY-000069778"],"first-name":["Bilbo","Frodo","Samwise"],"last-name":["Baggins","Baggins","Gamgee"],"street-address":["11 The Shire Middle Earth","22 The Shire Middle Earth","33 The Shire Middle Earth"],"city":["New York","New York","New York"],"zip":["10001","10010","10011"],"zipplus4":["1122","2233","3344"],"state":["NY","New York","NY"],"full-address":["11 The Shire Middle Earth, New York, 10001, NY","22 The Shire Middle Earth, New York, 10010, NY","33 The Shire Middle Earth, New York, 10011, NY"],"phone":["3456789012","5678901234","7890123456"],"email":["Bilbo.Baggins@lotr.com","Frodo.Baggins@lotr.com","Samwise.Gamgee@lotr.com"],"phone-sha256":["26cc49f1a2133f3784b937017f9cc86e05b5413c7f91b0b6bd6375631b68371e","2f510ce904687db4b2706fdaf33f1d0e678be13cc5fe300cf695a546befa5fc8","453fc17260d034186d92d1e58cc557fea9cafc1bf886154b472057feed950605"],"email-sha256":["43f5f8fabe82fc8dce2452267f5550bb036d0ddf33368682a9cd5da8286d63a0","ceb005d969f16f9a6a487849d27bf854fac1f0733aa61995bcbb5cb928dfc410","986c1ae0d3cef60591d3b29aa54afb5d9654406d7cfa4fcbb65c3ad45ad1ce5c"],"npi-id":["1144317652","1467478172","1275506503"]},"rows":5}
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="audienceName"
+
+Matched Audience Sample
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="isSingleColumnEnabled"
+
+false
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ
+Content-Disposition: form-data; name="fileTotalCount"
+
+5
+------WebKitFormBoundary2LAoPYE0pJvRQ6mQ--
+```
+
+```json title="Response 200"
+{
+   "statusCode": 200,
+   "responseObject": {
+       "id": 15332,
+       "message": "Audience created successfully"
+   }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function addMatchedAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/audience/matched/add',
+    params: {
+      query: {
+        columns: `string`,
+        columnSettings?: `string`,   
+        audienceName: `string`,    
+        metadata: `string`,   
+        fileTotalCount: `number`,       
+        isSingleColumnEnabled: `boolean`,
+      },
+    },
+    requestBody: {
+      content: {
+        "multipart/form-data": {       
+            file: `string`,
+        },
+      },
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Matched Audience 
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v2/audience/matched/update/\{matched_audience_id}</span>
+
+<div class="container">
+  <div class="child1">
+
+Update a Matched Audience.
+
+| Path Parameter | |
+| --- | --- |
+| `matched_audience_id` <br /><span class="type-text">integer</span> | Matched Audience ID
+
+| Request Schema | |
+| --- | --- |
+| `audienceName` <br /><span class="type-text">string</span> | Audience Name 
+| `rawS3URL` <br /><span class="type-text">string</span> | Raw S3 URL 
+
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "audienceName": "Sample audience name",
+  "rawS3URL": "s3://sample.url.come"
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "id": 1,
+    "message": "Your changes have been saved successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function EditMatchedAudience(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v2/audience/matched/update/{matched_audience_Id}',
+    params: {
+      path: {
+        matched_audience_Id: `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          rawS3URL: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+## Healthcare Data Details
+
+### ABM Audience Details
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/abm/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+Get ABM Audience details by ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | ABM Audience ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](#audience-type-list)</td>
+</tr>
+<tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Audience creation</td>
+</tr>
+<tr>
+  <td>`partnerName` <br /><span class="type-text">string</span></td>
+  <td>Partner name</td>
+</tr>
+<tr>
+  <td>`partnerLogoUrl` <br /><span class="type-text">string</span></td>
+  <td>Partner logo URL</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`filters` <br /><span class="type-text">object</span></td>
+  <td>Frequency type</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`filter` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`dataProviderIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s</td>
+  </tr>
+    <tr>
+  <td>`accountIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Account IDs</td>
+  </tr>
+    <tr>
+  <td>`accountTypeIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Account type IDs</td>
+  </tr>
+      <tr>
+  <td>`accountSubTypeIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Account Subtype IDs</td>
+  </tr>
+      <tr>
+  <td>`countryIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Country IDs</td>
+  </tr>
+      <tr>
+  <td>`stateIds`<br /><span class="type-text">array of integers</span></td>
+  <td>State IDs</td>
+  </tr>
+      <tr>
+  <td>`cityIds`<br /><span class="type-text">array of integers</span></td>
+  <td>City IDs</td>
+  </tr>
+      <tr>
+  <td>`titleIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Title IDs</td>
+  </tr>
+      <tr>
+  <td>`specialityIds`<br /><span class="type-text">array of integers</span></td>
+  <td>Speciality IDs</td>
+  </tr>
+      <tr>
+  <td>`ids`<br /><span class="type-text">array of integers</span></td>
+  <td>IDs</td>
+  </tr>
+      <tr>
+  <td>`pageNo`<br /><span class="type-text">array of integers</span></td>
+  <td>Page number of retrieved data</td>
+  </tr>
+      <tr>
+  <td>`noOfEntries`<br /><span class="type-text">array of integers</span></td>
+  <td>Number of entries returned</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1124243,
+    "name": "Test ABM audience",
+    "status": "Processing",
+    "audienceTypeId": 9,
+    "createdAt": 1739261114,
+    "partnerName": "Healthlink",
+    "partnerLogoUrl": "www.sample.com",
+    "uniques": 1000,
+    "dataCost": 10,
+    "healthCareDataMappingIds": [
+      13572,
+      13575,
+      32777
+    ],
+    "filters": {
+      "ids": [
+        13572,
+        13575,
+        32777
+      ],
+      "dataProviderIds": [
+        1
+      ],
+      "healthCareSystemIds": [
+        1,
+        2,
+        3
+      ],
+      "accountIds": [
+        1,
+        2,
+        3
+      ],
+      "accountTypeIds": [
+        1,
+        2,
+        3
+      ],
+      "accountSubTypeIds": [
+        1,
+        2,
+        3
+      ],
+      "titleIds": [
+        1,
+        2,
+        3
+      ],
+      "specialityIds": [
+        1,
+        2,
+        3
+      ],
+      "countryIds": [
+        30100001
+      ],
+      "stateIds": [
+        1,
+        2,
+        3
+      ],
+      "cityIds": [
+        1,
+        2,
+        3
+      ],
+      "pageNo": 1,
+      "noOfEntries": 10000
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          audienceTypeId: number;
+          createdAt: number;
+          partnerName: string;
+          partnerLogoUrl: string;
+          uniques: number;
+          dataCost: number;
+          healthCareDataMappings: number[];
+          filters: {
+            id: number[];
+            dataProviderIds: number[];
+            healthCareSystemIds: number[];
+            accountIds: number[];
+            accountTypeIds: number[];
+            accountSubTypeIds: number[];
+            titleIds: number[];
+            specialtyIds: number[];
+            countryIds: number[];
+            stateIds: number[];
+            cityIds: number[];
+            pageNo: number;
+            noOfEntries: number;
+          }
+        }
+      };
+    };
+  };
+}
+
+function getAccountBasedAudienceDetailsByAudienceId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/abm/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    },
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### ABM Audience statistics
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/abm/\{audienceId}/healthcare-data-statistics</span>
+
+<div class="container">
+  <div class="child1">
+
+Get ABM Audience statistics by ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | ABM Audience ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`healthSystem` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare System ID](/Guidelines/Audience-API-Guidelines#healthcare-systems-list)</td>
+</tr>
+<tr>
+  <td>`account` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-names)</td>
+</tr>
+<tr>
+  <td>`accountType` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account Type ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-types)</td>
+</tr>
+<tr>
+  <td>`npiReach` <br /><span class="type-text">integer</span></td>
+  <td>NPI reach</td>
+</tr>
+<tr>
+  <td>`speciality` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Specialty ID](/Guidelines/Audience-API-Guidelines#healthcare-specialties-list)</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "healthSystem": 2,
+    "account": 4,
+    "accountType": 8,
+    "npiReach": 25513,
+    "speciality": 3
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          healthSystem: number;
+          account: number;
+          accountType: number;
+          npiReach: number;
+          specialty: number;
+        }
+      };
+    };
+  };
+}
+
+function getABMAudienceHealthCareStatisticsByAudienceId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/abm/{audienceId}/healthcare-data-statistics',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    },
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Titles List
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/title</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare titles. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Title ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Title name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "titleList": [
+      {
+        "id": 1,
+        "displayName": "Healthcare Title 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Healthcare Title 2",
+        "displayOrder": 20
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          titleList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filterRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getHealthcareTitleList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/title',
+    params: {
+      query: {
+        dataProviderIds: `number[]`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        searchField?: `string`,
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Specialties List 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/speciality</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare specialties. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Specialty ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Specialty name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "specialityList": [
+      {
+        "id": 1,
+        "displayName": "Healthcare Speciality 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Healthcare Speciality 2",
+        "displayOrder": 20
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          specialityList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filterRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getHealthcareSpecialityList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/speciality',
+    params: {
+      query: {
+        dataProviderIds: `number[]`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        searchField?: `string`,
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Systems List 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/healthcare-system</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare systems. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>System ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>System name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "healthcareSystemList": [
+      {
+        "id": 1,
+        "displayName": "Healthcare System 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Healthcare System 2",
+        "displayOrder": 20
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          healthcareSystemList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filterRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getHealthcareSystemList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/healthcare-system',
+    params: {
+      query: {
+        dataProviderIds: `number[]`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        searchField?: `string`,
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Data 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/healthcare-data</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a healthcare data list by specified filters. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `healthCareSystemIds` <br /><span class="type-text">array of integers </span> | Healthcare system IDs 
+| `accountNameIds` <br /><span class="type-text">array of integers </span> | Account name IDs 
+| `accountTypeIds` <br /><span class="type-text">array of integers </span> | Account type IDs 
+| `accountSubTypeIds` <br /><span class="type-text">array of integers </span> | Account subtype IDs 
+| `countryIds` <br /><span class="type-text">array of integers </span> | Country IDs 
+| `stateIds` <br /><span class="type-text">array of integers </span> | State IDs 
+| `cityIds` <br /><span class="type-text">array of integers </span> | City IDs 
+| `titleIds` <br /><span class="type-text">array of integers </span> | Title IDs 
+| `specialityIds` <br /><span class="type-text">array of integers </span> | Specialty IDs 
+| `ids` <br /><span class="type-text">array of integers </span> | IDs 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`cost` <br /><span class="type-text">integer</span></td>
+  <td>Charges for a specific segment</td>
+</tr>
+<tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Unique reach of segments (i.e. Audience reach)</td>
+</tr>
+<tr>
+  <td>`healthCareSystemId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare System ID](/Guidelines/Audience-API-Guidelines#healthcare-systems-list)</td>
+</tr>
+<tr>
+  <td>`healthCareSystemName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare System name</td>
+</tr>
+<tr>
+  <td>`accountId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-names)</td>
+</tr>
+<tr>
+  <td>`accountName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare account name</td>
+</tr>
+<tr>
+  <td>`accountTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account Type ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-types)</td>
+</tr>
+<tr>
+  <td>`accountTypeName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare Account type name</td>
+</tr>
+<tr>
+  <td>`accountSubTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account Subtype ID](/Guidelines/Audience-API-Guidelines#healthcare-account-subtypes)</td>
+</tr>
+<tr>
+  <td>`accountSubTypeName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare Account subtype name</td>
+</tr>
+<tr>
+  <td>`titleId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Title ID](/Guidelines/Audience-API-Guidelines#healthcare-titles-list)</td>
+</tr>
+<tr>
+  <td>`titleName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare title name</td>
+</tr>
+<tr>
+  <td>`specialityId` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Specialty ID](/Guidelines/Audience-API-Guidelines#healthcare-specialties-list)</td>
+</tr>
+<tr>
+  <td>`specialityName` <br /><span class="type-text">string</span></td>
+  <td>Healthcare specialty name</td>
+</tr>
+<tr>
+  <td>`countryId` <br /><span class="type-text">integer</span></td>
+  <td>[Country ID](/Guidelines/Master-API-Guidelines#get-country-segment)</td>
+</tr>
+<tr>
+  <td>`countryName` <br /><span class="type-text">string</span></td>
+  <td>Country name</td>
+</tr>
+<tr>
+  <td>`stateId` <br /><span class="type-text">integer</span></td>
+  <td>[State ID](/Guidelines/Master-API-Guidelines#get-state-segment)</td>
+</tr>
+<tr>
+  <td>`stateName` <br /><span class="type-text">string</span></td>
+  <td>State name</td>
+</tr>
+<tr>
+  <td>`cityId` <br /><span class="type-text">integer</span></td>
+  <td>[City ID](/Guidelines/Master-API-Guidelines#get-city-segment)</td>
+</tr>
+<tr>
+  <td>`cityName` <br /><span class="type-text">string</span></td>
+  <td>City name</td>
+</tr>
+<tr>
+  <td>`dataProviderId` <br /><span class="type-text">integer</span></td>
+  <td>[Data Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)</td>
+</tr>
+<tr>
+  <td>`dataProviderName` <br /><span class="type-text">string</span></td>
+  <td>Data provider name</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "dataProviderIds": [
+    1
+  ],
+  "healthCareSystemIds": [
+    40100004,
+    40100007
+  ],
+  "accountIds": [
+    40208104,
+    40628423
+  ],
+  "accountTypeIds": [
+    40300003
+  ],
+  "accountSubTypeIds": [
+    40400001,
+    40400010
+  ],
+  "countryIds": [
+    30100001
+  ],
+  "stateIds": [
+    30200028,
+    30200043
+  ],
+  "cityIds": [
+    30430356,
+    30447825,
+    30447952,
+    30448122
+  ],
+  "titleIds": [
+    40500099
+  ],
+  "specialityIds": [
+    40500014,
+    40500086
+  ],
+  "ids": [
+    1,
+    2,
+    3
+  ],
+  "pageNo": 1,
+  "noOfEntries": 2
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 52265,
+    "filteredRecords": 5,
+    "healthCareData": [
+      {
+        "id": 1,
+        "cost": 10,
+        "reach": 1,
+        "healthCareSystemId": 40100004,
+        "healthCareSystemName": "ABCD PEDIATRICS",
+        "accountId": 40628423,
+        "accountName": "Stepping Stone Pediatrics PA",
+        "accountTypeId": 40300003,
+        "accountTypeName": "Group Practice",
+        "accountSubTypeId": 40400010,
+        "accountSubTypeName": "Telephone/E-Mail Order Pharmacy",
+        "titleId": 40500099,
+        "titleName": "MD",
+        "specialityId": 40500086,
+        "specialityName": "Gastroenterology",
+        "countryId": 30100001,
+        "countryName": "United States",
+        "stateId": 30200043,
+        "stateName": "Tennessee",
+        "cityId": 30447952,
+        "cityName": "Franklin, TN",
+        "dataProviderId": 1,
+        "dataProviderName": "HealthCarelink"
+      },
+      {
+        "id": 2,
+        "cost": 10,
+        "reach": 1,
+        "healthCareSystemId": 40100004,
+        "healthCareSystemName": "ABCD PEDIATRICS",
+        "accountId": 40628423,
+        "accountName": "Stepping Stone Pediatrics PA",
+        "accountTypeId": 40300003,
+        "accountTypeName": "Group Practice",
+        "accountSubTypeId": 40400010,
+        "accountSubTypeName": "Telephone/E-Mail Order Pharmacy",
+        "titleId": 40500099,
+        "titleName": "MD",
+        "specialityId": 40500086,
+        "specialityName": "Gastroenterology",
+        "countryId": 30100001,
+        "countryName": "United States",
+        "stateId": 30200043,
+        "stateName": "Tennessee",
+        "cityId": 30447825,
+        "cityName": "Brentwood, TN",
+        "dataProviderId": 1,
+        "dataProviderName": "HealthCarelink"
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          healthCareData: {
+            id: number;
+            cost: number;
+            reach: number;
+            healthCareSystemId: number;
+            healthCareSystemName: string;
+            accountId: number;
+            accountName: string;
+            accountTypeId: number;
+            accountTypeName: string;
+            accountSubTypeId: number;
+            accountSubTypeName: string;
+            titleId: number;
+            titleName: string;
+            specialityId: number;
+            specialityName: string;
+            countryId: number;
+            countryName: string;
+            stateId: number;
+            stateName: string;
+            cityId: number;
+            cityName: string;
+            dataProviderId: number;
+            dataProviderName: string;
+          }[];
+        }
+      };
+    };
+  };
+}
+
+function getHealthCareData(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: `string[]`,
+          ids?: `number[]`,
+          dataProviderIds?: `number[]`,
+          healthCareSystemIds?: `number[]`,
+          accountIds?: `number[]`,
+          accountTypeIds?: `number[]`,
+          accountSubTypeIds?: `number[]`,
+          titleIds?: `number[]`,
+          specialityIds?: `number[]`,
+          countryIds?: `number[]`,
+          stateIds?: `number[]`,
+          cityIds?: `number[]`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Statistics 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/statistics</span>
+
+<div class="container">
+  <div class="child1">
+
+Get healthcare statistics details. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `healthCareSystemIds` <br /><span class="type-text">array of integers </span> | Healthcare system IDs 
+| `accountNameIds` <br /><span class="type-text">array of integers </span> | Account name IDs 
+| `accountTypeIds` <br /><span class="type-text">array of integers </span> | Account type IDs 
+| `accountSubTypeIds` <br /><span class="type-text">array of integers </span> | Account subtype IDs 
+| `countryIds` <br /><span class="type-text">array of integers </span> | Country IDs 
+| `stateIds` <br /><span class="type-text">array of integers </span> | State IDs 
+| `cityIds` <br /><span class="type-text">array of integers </span> | City IDs 
+| `titleIds` <br /><span class="type-text">array of integers </span> | Title IDs 
+| `specialityIds` <br /><span class="type-text">array of integers </span> | Specialty IDs 
+| `ids` <br /><span class="type-text">array of integers </span> | IDs 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`healthSystem` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare System ID](/Guidelines/Audience-API-Guidelines#healthcare-systems-list)</td>
+</tr>
+<tr>
+  <td>`account` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-names)</td>
+</tr>
+<tr>
+  <td>`accountType` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Account Type ID](/Guidelines/Audience-API-Guidelines/#healthcare-account-types)</td>
+</tr>
+<tr>
+  <td>`npiReach` <br /><span class="type-text">integer</span></td>
+  <td>NPI reach</td>
+</tr>
+<tr>
+  <td>`speciality` <br /><span class="type-text">integer</span></td>
+  <td>[Healthcare Specialty ID](/Guidelines/Audience-API-Guidelines#healthcare-specialties-list)</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "dataProviderIds": [
+    1
+  ],
+  "healthCareSystemIds": [
+    40100004,
+    40100007
+  ],
+  "accountIds": [
+    40208104,
+    40628423
+  ],
+  "accountTypeIds": [
+    40300003
+  ],
+  "accountSubTypeIds": [
+    40400001,
+    40400010
+  ],
+  "countryIds": [
+    30100001
+  ],
+  "stateIds": [
+    30200028,
+    30200043
+  ],
+  "cityIds": [
+    30430356,
+    30447825,
+    30447952,
+    30448122
+  ],
+  "titleIds": [
+    40500099
+  ],
+  "specialityIds": [
+    40500014,
+    40500086
+  ],
+  "ids": [
+    1,
+    2,
+    3
+  ],
+  "pageNo": 1,
+  "noOfEntries": 2
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "healthSystem": 2,
+    "account": 4,
+    "accountType": 8,
+    "npiReach": 25513,
+    "speciality": 3
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          healthSystem: number;
+          account: number;
+          accountType: number;
+          npiReach: number;
+          speciality: number;
+        }
+      };
+    };
+  };
+}
+
+function getHealthCareDataStatistics(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/statistics',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: `string[]`,
+          ids?: `number[]`,
+          dataProviderIds?: `number[]`,
+          healthCareSystemIds?: `number[]`,
+          accountIds?: `number[]`,
+          accountTypeIds?: `number[]`,
+          accountSubTypeIds?: `number[]`,
+          titleIds?: `number[]`,
+          specialityIds?: `number[]`,
+          countryIds?: `number[]`,
+          stateIds?: `number[]`,
+          cityIds?: `number[]`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Account Types 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/account-type</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare account types.
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `healthCareSystemIds` <br /><span class="type-text">array of integers </span> | Healthcare system IDs 
+| `accountNameIds` <br /><span class="type-text">array of integers </span> | Account name IDs 
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Account ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Account name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "searchField": "Sample Text",
+  "dataProviderIds": [
+    1
+  ],
+  "healthcareSystemIds": [
+    1,
+    2,
+    3
+  ],
+  "accountNameIds": [
+    4,
+    5,
+    6
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "accountTypeList": [
+      {
+        "id": 1,
+        "displayName": "Account Type 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Account Type 2",
+        "displayOrder": 2
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          accountTypeList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filteredRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getAccountTypeList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/account-type',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: `string[]`,
+          ids?: `number[]`,
+          dataProviderIds?: `number[]`,
+          verticalId: `number`,
+          healthCareSystemIds?: `number[]`,
+          accountNameIds?: `number[]`,
+          accountTypeIds?: `number[]`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Account Subtypes
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/account-subtype</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare account subtypes. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `healthCareSystemIds` <br /><span class="type-text">array of integers </span> | Healthcare system IDs 
+| `accountNameIds` <br /><span class="type-text">array of integers </span> | Account name IDs 
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword 
+| `accountTypeIds` <br /><span class="type-text">array of integers </span> | Account type IDs 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Account subtype ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Account sub name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "searchField": "Sample Text",
+  "dataProviderIds": [
+    1
+  ],
+  "healthcareSystemIds": [
+    1,
+    2,
+    3
+  ],
+  "accountNameIds": [
+    4,
+    5,
+    6
+  ],
+  "accountTypeIds": [
+    7,
+    8,
+    9
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "accountSubTypeList": [
+      {
+        "id": 1,
+        "displayName": "Account Subtype 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Account Subtype 2",
+        "displayOrder": 2
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          accountSubTypeList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filteredRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getAccountSubTypeList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/account-subtype',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: `string[]`,
+          ids?: `number[]`,
+          dataProviderIds?: `number[]`,
+          verticalId: `number`,
+          healthCareSystemIds?: `number[]`,
+          accountNameIds?: `number[]`,
+          accountTypeIds?: `number[]`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Healthcare Account Names 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/abm/healthcare-data/account-name</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of healthcare account names. 
+
+| Query Parameters | |
+| --- | --- |
+| `dataProviderIds` <br /><span class="type-text">array of integers</span> | Data [Provider ID](/Guidelines/Audience-API-Guidelines#provider-details-list)s |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>0</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var>
+| `healthCareSystemIds` <br /><span class="type-text">array of integers </span> | Healthcare system IDs 
+| `searchField` <br /><span class="type-text">string</span> | Search results by keyword 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Account name ID</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Account name</td>
+</tr>
+<tr>
+  <td>`displayOrder` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "searchField": "Sample text",
+  "dataProviderIds": [
+    1
+  ],
+  "healthcareSystemIds": [
+    1,
+    2,
+    3
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "accountNameList": [
+      {
+        "id": 1,
+        "displayName": "Account Name 1",
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "displayName": "Account Name 2",
+        "displayOrder": 20
+      }
+    ],
+    "filteredRecords": 5,
+    "totalRecords": 3294
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          accountNameList: {
+            id: number;
+            displayName: string;
+            displayOrder: number;
+          }[];
+          filteredRecords: number;
+          totalRecords: number;
+        }
+      };
+    };
+  };
+}
+
+function getAccountNameList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/abm/healthcare-data/account-name',
+    requestBody: {
+      content: {
+        "application/json": {
+          searchBy?: `string[]`,
+          ids?: `number[]`,
+          dataProviderIds?: `number[]`,
+          verticalId: `number`,
+          healthCareSystemIds?: `number[]`,
+          accountNameIds?: `number[]`,
+          accountTypeIds?: `number[]`,
+          pagination?: `string`,
+          pageNo?: `number`,
+          noOfEntries?: `number`,
+          sortBy?: `string`,
+          searchField?: `string`,
+          order?: `ASC` | `DESC`,
+          offset?: `number`,
+        }
+      }
+    }
+  }
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
