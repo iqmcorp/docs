@@ -4,6 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
+/*import { Redirect } from "@docusaurus/router";*/
 import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
@@ -188,6 +189,20 @@ const config = {
         darkTheme: prismThemes.vsDark,
       },
     }),
+
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/Tutorials/Create-a-Conversion',
+            from: '/Quickstart%20Guides/Conversion-Quickstart'
+          }
+        ]
+      }
+    ]
+  ]
 };
 
 export default config;
