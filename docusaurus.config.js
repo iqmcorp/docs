@@ -197,7 +197,7 @@ const config = {
         redirects: [
           {
             to: '/Tutorials/Create-a-Conversion',
-            from: '/Quickstart%20Guides/Conversion-Quickstart'
+            from: '/Quickstart Guides/Conversion-Quickstart'
           }
         ]
       }
