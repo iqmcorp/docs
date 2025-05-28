@@ -4,6 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
+/*import { Redirect } from "@docusaurus/router";*/
 import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
@@ -121,6 +122,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "TUTORIALS",
+            position: "left",
+            to: "/Tutorials/",
+            className: "navbarLink",
+          },
+          {
             label: "MIGRATION GUIDES",
             position: "left",
             to: "/Migration%20Guides/",
@@ -148,11 +155,6 @@ const config = {
             type: "search",
             position: "right",
           },
-          {
-            href: "https://github.com/iqmcorp/docs",
-            label: "GitHub",
-            position: "right",
-          },
         ],
       },
       footer: {
@@ -170,13 +172,13 @@ const config = {
                 to: "/Guidelines",
               },
               {
-                label: "API Docs",
-                to: "https://api.iqm.com/docs"
-              },
-              {
                 label: "Help Center",
                 to: "https://help.iqm.com/en/"
-              }
+              },
+              {
+                label: "Github",
+                to: "https://github.com/iqmcorp/docs"
+              },
             ],
           },
         ],
@@ -187,6 +189,20 @@ const config = {
         darkTheme: prismThemes.vsDark,
       },
     }),
+
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/Tutorials/Create-a-Conversion',
+            from: '/Quickstart%20Guides/Conversion-Quickstart'
+          }
+        ]
+      }
+    ]
+  ]
 };
 
 export default config;
