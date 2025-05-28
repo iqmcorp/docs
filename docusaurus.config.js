@@ -198,6 +198,22 @@ const config = {
           {
             to: '/Tutorials/Create-a-Conversion',
             from: '/Quickstart Guides/Conversion-Quickstart'
+          },
+          {
+            to: '/Tutorials/Upload-a-Matched-Audience',
+            from: '/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide/'
+          },
+          {
+            to: '/Tutorials/Create-a-Bid-Model',
+            from: '/Quickstart Guides/Bid-Model-Quickstart/'
+          },
+          {
+            to: '/Tutorials/Optimize-Your-Inventory',
+            from: '/Quickstart Guides/Inventory-Quickstart/'
+          },
+          {
+            to: '/Tutorials/Create-an-Insights-Report',
+            from: '/Quickstart Guides/Insights-Quickstart/'
           }
         ]
       }
