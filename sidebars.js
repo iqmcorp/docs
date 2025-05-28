@@ -101,59 +101,6 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Upload a Matched Audience',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#about-iqm-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Before You Begin',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#before-you-begin`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Upload Matched Audience Using the IQM API',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#upload-matched-audience-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Request Column List',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-2-request-column-list`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Upload Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-3-upload-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Check Audience Status',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-4-check-audience-status`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
           label: 'Create a Campaign',
           className: 'sidebarItem',
           link: {
@@ -207,147 +154,6 @@ const sidebars = {
               type: `link`,
               label: 'Step 5: Create a Campaign',
               href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-5-create-a-campaign`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Create a Bid Model',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Bid-Model-Quickstart'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Bid Modeling',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#about-iqm-campaign-bid-modeling`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Check Campaign for Eligibility',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-2-check-campaign-for-eligibility`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Select Dimension',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-3-select-dimension`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Create a Bid Model',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-4-create-a-bid-model`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Create a Conversion',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Conversion-Quickstart'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Conversions',
-              href: `/Quickstart%20Guides/Conversion-Quickstart#about-iqm-conversions`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Create a Conversion',
-              href: `/Quickstart%20Guides/Conversion-Quickstart#create-a-conversion-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Conversion-Quickstart#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Create a Pixel Conversion',
-              href: `/Quickstart%20Guides/Conversion-Quickstart#step-2-create-a-pixel-conversion`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Assign a Conversion to a Campaign',
-              href: `/Quickstart%20Guides/Conversion-Quickstart#step-3-assign-a-conversion-to-a-campaign`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Optimize Your Inventory',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Inventory-Quickstart'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Inventory',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Optimize Your Inventory',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Search Inventory List ',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Create an Inventory Group',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Update an Inventory Group',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 5: Campaign Inventory Group Targeting',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 6: Get List of Groups by Campaign',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
               className: 'sidebarItemQS'
             },
           ]
@@ -440,6 +246,211 @@ const sidebars = {
             },
           ]
         },
+      ],
+    },
+    {
+      type: "category",
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Tutorials/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Upload a Matched Audience',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Matched Audience',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#about-iqm-matched-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Upload Matched Audience Using the IQM API',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#upload-matched-audience-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Request Column List',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-2-request-column-list`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Upload Matched Audience',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-3-upload-matched-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Check Audience Status',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-4-check-audience-status`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Create a Bid Model',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Bid-Model-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Bid Modeling',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#about-iqm-campaign-bid-modeling`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Check Campaign for Eligibility',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-2-check-campaign-for-eligibility`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Select Dimension',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-3-select-dimension`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Create a Bid Model',
+              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-4-create-a-bid-model`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Create a Conversion',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Conversion-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Conversions',
+              href: `/Tutorials/Create-a-Conversion#about-iqm-conversions`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Create a Conversion',
+              href: `/Tutorials/Create-a-Conversion#create-a-conversion-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Tutorials/Create-a-Conversion#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a Pixel Conversion',
+              href: `/Tutorials/Create-a-Conversion#step-2-create-a-pixel-conversion`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Assign a Conversion to a Campaign',
+              href: `/Tutorials/Create-a-Conversion#step-3-assign-a-conversion-to-a-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Optimize Your Inventory',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Inventory-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Optimize Your Inventory',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Search Inventory List ',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Create an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Update an Inventory Group',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 5: Campaign Inventory Group Targeting',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 6: Get List of Groups by Campaign',
+              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
         {
           type: 'category',
           label: 'Create an Insights Report',
@@ -493,262 +504,7 @@ const sidebars = {
             },
           ]
         },
-      ],
-    },
-    {
-      type: "category",
-      label: 'Migration Guides',
-      className: 'sidebarCategory',
-      link: {
-        type: 'doc',
-        id: 'Migration Guides/index'
-      },
-      items: [
-        {
-          type: 'category',
-          label: 'Beeswax Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/Beeswax/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/Beeswax/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/Beeswax/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/Beeswax/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/Beeswax/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/Beeswax/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/Beeswax/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'DV360 Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/DV360/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/DV360/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/DV360/Campaign-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/DV360/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/DV360/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/DV360/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/DV360/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/DV360/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/DV360/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'The Trade Desk Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/The Trade Desk/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audiences',
-              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/The Trade Desk/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Xandr Migration',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/Xandr/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/Xandr/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/Xandr/Campaign-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/Xandr/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/Xandr/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/Xandr/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/Xandr/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/Xandr/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/Xandr/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        }
-      ],
+      ]
     },
     {
       type: `doc`,
@@ -3718,6 +3474,263 @@ const sidebars = {
       id: `Guidelines/API-JSON-File`,
       className: `sidebarCategory`,
     }
+  ],
+  migrationSidebar: [
+    {
+      type: "category",
+      label: 'Migration Guides',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Migration Guides/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Beeswax Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Beeswax/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Beeswax/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Beeswax/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Beeswax/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Beeswax/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Beeswax/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'DV360 Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/DV360/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/DV360/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/DV360/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/DV360/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/DV360/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/DV360/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/DV360/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/DV360/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/DV360/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'The Trade Desk Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/The Trade Desk/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audiences',
+              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/The Trade Desk/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Xandr Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Xandr/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Xandr/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Xandr/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Xandr/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Xandr/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Xandr/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Xandr/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Xandr/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Xandr/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        }
+      ],
+    },
   ],
   politicalSidebar: [
     {
