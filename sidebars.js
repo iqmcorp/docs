@@ -101,59 +101,6 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Upload a Matched Audience',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#about-iqm-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Before You Begin',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#before-you-begin`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Upload Matched Audience Using the IQM API',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#upload-matched-audience-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Request Column List',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-2-request-column-list`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Upload Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-3-upload-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Check Audience Status',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-4-check-audience-status`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
           label: 'Create a Campaign',
           className: 'sidebarItem',
           link: {
@@ -207,6 +154,158 @@ const sidebars = {
               type: `link`,
               label: 'Step 5: Create a Campaign',
               href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-5-create-a-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Run a Report',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Reporting-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Reports',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#about-iqm-reports`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Run a Report Using the IQM API',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#run-a-report-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Request Dimensions and Metrics',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-2-request-dimensions-and-metrics`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Select Timezones',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-3-select-timezones`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Execute a Report',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-4-execute-a-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'FAQ',
+              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#faq`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Schedule a Report',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Schedule-Report-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Reports',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#about-iqm-reports`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Schedule a Report',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#schedule-a-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Schedule a Report',
+              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-2-schedule-a-report`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Tutorials/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Upload a Matched Audience',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Matched Audience',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#about-iqm-matched-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Upload Matched Audience Using the IQM API',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#upload-matched-audience-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Request Column List',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-2-request-column-list`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Upload Matched Audience',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-3-upload-matched-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Check Audience Status',
+              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-4-check-audience-status`,
               className: 'sidebarItemQS'
             },
           ]
@@ -354,94 +453,6 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Run a Report',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Reporting-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Reports',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#about-iqm-reports`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Run a Report Using the IQM API',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#run-a-report-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Request Dimensions and Metrics',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-2-request-dimensions-and-metrics`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Select Timezones',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-3-select-timezones`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Execute a Report',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#step-4-execute-a-report`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'FAQ',
-              href: `/Quickstart%20Guides/Reporting-API-Quickstart-Guide#faq`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Schedule a Report',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Schedule-Report-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Reports',
-              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#about-iqm-reports`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Schedule a Report',
-              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#schedule-a-report`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Schedule a Report',
-              href: `/Quickstart%20Guides/Schedule-Report-API-Quickstart-Guide#step-2-schedule-a-report`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
           label: 'Create an Insights Report',
           className: 'sidebarItem',
           link: {
@@ -493,17 +504,6 @@ const sidebars = {
             },
           ]
         },
-      ],
-    },
-    {
-      type: "category",
-      label: 'Tutorials',
-      className: 'sidebarCategory',
-      link: {
-        type: 'doc',
-        id: 'Tutorials/index'
-      },
-      items: [
       ]
     },
     {
