@@ -160,6 +160,23 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Contextual Audience',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Contextual-Audience-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Contextual Audiences',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#about-iqm-contextual-audiences`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
@@ -787,7 +804,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#delete-audience"><span class="badge bar badge--warning">PUT</span>Delete Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#delete-audience"><span class="badge bar badge--danger">DEL</span>Delete Audience</a>',
               defaultStyle: true,
             },
           ]
