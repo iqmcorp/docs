@@ -496,261 +496,6 @@ const sidebars = {
       ],
     },
     {
-      type: "category",
-      label: 'Migration Guides',
-      className: 'sidebarCategory',
-      link: {
-        type: 'doc',
-        id: 'Migration Guides/index'
-      },
-      items: [
-        {
-          type: 'category',
-          label: 'Beeswax Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/Beeswax/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/Beeswax/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/Beeswax/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/Beeswax/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/Beeswax/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/Beeswax/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/Beeswax/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'DV360 Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/DV360/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/DV360/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/DV360/Campaign-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/DV360/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/DV360/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/DV360/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/DV360/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/DV360/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/DV360/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'The Trade Desk Migration Guide',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/The Trade Desk/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audiences',
-              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/The Trade Desk/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Xandr Migration',
-          className: 'sidebarItem',
-          items: [
-            {
-              type: `doc`,
-              label: 'Overview',
-              id: `Migration Guides/Xandr/Overview`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Audience',
-              id: `Migration Guides/Xandr/Audience-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Campaigns',
-              id: `Migration Guides/Xandr/Campaign-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Bid Model',
-              id: `Migration Guides/Xandr/Bid-Model-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Conversions',
-              id: `Migration Guides/Xandr/Conversions-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Inventories',
-              id: `Migration Guides/Xandr/Inventories-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Reports',
-              id: `Migration Guides/Xandr/Reports-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Workspace',
-              id: `Migration Guides/Xandr/Workspace-Migration`,
-              className: 'sidebarItem'
-            },
-            {
-              type: `doc`,
-              label: 'Finances',
-              id: `Migration Guides/Xandr/Finance-Migration`,
-              className: 'sidebarItem'
-            },
-          ]
-        }
-      ],
-    },
-    {
       type: `doc`,
       label: `API Guidelines`,
       id: `Guidelines/index`,
@@ -3718,6 +3463,263 @@ const sidebars = {
       id: `Guidelines/API-JSON-File`,
       className: `sidebarCategory`,
     }
+  ],
+  migrationSidebar: [
+    {
+      type: "category",
+      label: 'Migration Guides',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Migration Guides/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Beeswax Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Beeswax/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Beeswax/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Beeswax/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Beeswax/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Beeswax/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Beeswax/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'DV360 Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/DV360/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/DV360/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/DV360/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/DV360/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/DV360/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/DV360/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/DV360/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/DV360/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/DV360/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'The Trade Desk Migration Guide',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/The Trade Desk/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audiences',
+              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/The Trade Desk/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Xandr Migration',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: `doc`,
+              label: 'Overview',
+              id: `Migration Guides/Xandr/Overview`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Audience',
+              id: `Migration Guides/Xandr/Audience-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Campaigns',
+              id: `Migration Guides/Xandr/Campaign-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Bid Model',
+              id: `Migration Guides/Xandr/Bid-Model-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Conversions',
+              id: `Migration Guides/Xandr/Conversions-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Inventories',
+              id: `Migration Guides/Xandr/Inventories-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Reports',
+              id: `Migration Guides/Xandr/Reports-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Workspace',
+              id: `Migration Guides/Xandr/Workspace-Migration`,
+              className: 'sidebarItem'
+            },
+            {
+              type: `doc`,
+              label: 'Finances',
+              id: `Migration Guides/Xandr/Finance-Migration`,
+              className: 'sidebarItem'
+            },
+          ]
+        }
+      ],
+    },
   ],
   politicalSidebar: [
     {
