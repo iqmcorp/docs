@@ -3718,6 +3718,597 @@ const sidebars = {
       id: `Guidelines/API-JSON-File`,
       className: `sidebarCategory`,
     }
+  ],
+  politicalSidebar: [
+    {
+      type: 'doc',
+      id: 'Political Vertical/index',
+      label: 'Political',
+      className: 'sidebarCategory'
+    },
+    {
+      type: 'category',
+      label: 'Audience API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Audience-Segments'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Audience Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#geo-farmed-audience-details"><span class="badge bar badge--primary">GET</span>Geo-Farmed Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#contextual-audience-details"><span class="badge bar badge--primary">GET</span>Contextual Audience Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Segment Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#audience-segment-details-1"><span class="badge bar badge--primary">GET</span>Audience Segment Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-partner-provider-list"><span class="badge bar badge--primary">GET</span>Segment Partner Provider List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-list-by-providerpartner-ids"><span class="badge bar badge--primary">GET</span>Segment List by Provider/Partner IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#segment-list-by-audience-ids"><span class="badge bar badge--primary">GET</span>Segment List by Audience IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#audience-segment-insights"><span class="badge bar badge--primary">GET</span>Audience Segment Insights</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Audience Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-matched-audience"><span class="badge bar badge--success">POST</span>Create Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#update-matched-audience"><span class="badge bar badge--info">PATCH</span>Update Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-audience-segment"><span class="badge bar badge--success">POST</span>Create Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#update-audience-segment"><span class="badge bar badge--warning">PUT</span>Update Audience Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-geo-farmed-audience"><span class="badge bar badge--success">POST</span>Create Geo-Farmed Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#create-contextual-audience"><span class="badge bar badge--success">POST</span>Create Contextual Audience</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Audience Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#data-partners-list-for-matched-audience"><span class="badge bar badge--primary">GET</span>Matched Data Formats</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#provider-details-list"><span class="badge bar badge--primary">GET</span>Provider Details List</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Finance API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Finance'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Finance Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Finance#get-customer-vld-finance-details"><span class="badge bar badge--primary">GET</span>Customer VLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Finance#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Insights API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Political Vertical/Insights-VLD'
+      },
+      items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/Political%20Vertical/Insights-VLD#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: `category`,
+          label: `Voter Level Data Reports`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#vld-resource-properties"><span class="badge bar badge"></span>VLD Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-list-of-vld-reports"><span class="badge bar badge--primary">GET</span>List of VLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-list-of-campaigns-eligible-for-vld-reports"><span class="badge bar badge--primary">GET</span>List of Campaigns Eligible for VLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#generate-vld-report"><span class="badge bar badge--success">POST</span>Generate VLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#get-cost-assessment-for-vld-report"><span class="badge bar badge--success">POST</span>Cost Assessment for VLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#download-vld-insight-report"><span class="badge bar badge--success">POST</span>Download VLD Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/insights-vld#delete-vld-report"><span class="badge bar badge--danger">DEL</span>Delete VLD Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Master API',
+      className: 'sidebarCategory',
+      items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/Guidelines/Master-API-Guidelines#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: 'category',
+          label: 'Geographical Data',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-zip-codes-and-state-ids"><span class="badge bar badge--success">POST</span>Zip Codes and State IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-state-segment"><span class="badge bar badge--success">POST</span>State Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-senate-district-segment"><span class="badge bar badge--success">POST</span>Senate District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-house-district-segment"><span class="badge bar badge--success">POST</span>House District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-gender-segment"><span class="badge bar badge--success">POST</span>Gender Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-age-segment"><span class="badge bar badge--primary">GET</span>Age Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-language-segment"><span class="badge bar badge--primary">GET</span>Language Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-interest-segment"><span class="badge bar badge--primary">GET</span>Interest Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-income-range-segment"><span class="badge bar badge--primary">GET</span>Income Range Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-ethnicity-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-ethnicity-group-segment"><span class="badge bar badge--primary">GET</span>Ethnicity Group Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-dma-code-segment"><span class="badge bar badge--success">POST</span>DMA Code Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-county-segment"><span class="badge bar badge--success">POST</span>County Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-country-segment"><span class="badge bar badge--success">POST</span>Country Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-congressional-district-segment"><span class="badge bar badge--success">POST</span>Congressional District Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-city-segment"><span class="badge bar badge--success">POST</span>City Segment</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-location-types"><span class="badge bar badge--primary">GET</span>Location Types</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-location-details-by-location-type"><span class="badge bar badge--primary">GET</span>Location Details by Location Type</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-timezones"><span class="badge bar badge--primary">GET</span>Timezones</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-carriers-and-states-by-country-id"><span class="badge bar badge--primary">GET</span>Carriers and States by Country ID</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    }
+  ],
+  healthcareSidebar: [
+    {
+      type: 'doc',
+      id: 'Healthcare Vertical/index',
+      label: 'Healthcare',
+      className: 'sidebarCategory'
+    },
+    {
+      type: 'category',
+      label: 'Audience API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Audience-Healthcare'
+      },
+      items: [
+        {
+          type: `category`,
+          label: `Matched Audience`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#create-matched-audience"><span class="badge bar badge--success">POST</span>Create Matched Audience</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#update-matched-audience"><span class="badge bar badge--info">PATCH</span>Update Matched Audience</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Healthcare Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#abm-audience-details"><span class="badge bar badge--primary">GET</span>ABM Audience Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#abm-audience-statistics"><span class="badge bar badge--primary">GET</span>ABM Audience Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-titles-list"><span class="badge bar badge--primary">GET</span>Healthcare Titles List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-specialties-list"><span class="badge bar badge--primary">GET</span>Healthcare Specialties List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-systems-list"><span class="badge bar badge--primary">GET</span>Healthcare Systems List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-data"><span class="badge bar badge--success">POST</span>Healthcare Data</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-statistics"><span class="badge bar badge--success">POST</span>Healthcare Statistics</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-types"><span class="badge bar badge--success">POST</span>Healthcare Account Types</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-subtypes"><span class="badge bar badge--success">POST</span>Healthcare Account Subtypes</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-names"><span class="badge bar badge--success">POST</span>Healthcare Account Names</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Finance API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Finance'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Finance Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#get-customer-pld-finance-details"><span class="badge bar badge--primary">GET</span>Customer PLD Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#get-customer-sls-finance-details"><span class="badge bar badge--primary">GET</span>Customer SLS Finance Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              defaultStyle: true,
+            },
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Insights API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Insights-PLD'
+      },
+      items: [
+        {
+          type: 'link',
+          label: 'Overview',
+          href: '/Healthcare%20Vertical/Insights-PLD#overview',
+          className: 'sidebarItem'
+        },
+        {
+          type: `category`,
+          label: `Provider Level Data Reports`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#pld-resource-properties"><span class="badge bar badge"></span>PLD Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#get-list-of-pld-reports"><span class="badge bar badge--primary">GET</span>List of PLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#get-list-of-campaigns-eligible-for-pld-reports"><span class="badge bar badge--primary">GET</span>List of Campaigns Eligible for PLD Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#generate-pld-report"><span class="badge bar badge--success">POST</span>Generate PLD Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#get-pld-reports-columns"><span class="badge bar badge--primary">GET</span>PLD Reports Columns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#update-pld-reports-columns"><span class="badge bar badge--success">POST</span>Update PLD Reports Columns</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#download-pld-report"><span class="badge bar badge--success">POST</span>Download PLD Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#delete-pld-report"><span class="badge bar badge--danger">DEL</span>Delete PLD Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'ScriptLift Studies Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#sls-resource-properties"><span class="badge bar badge"></span>SLS Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#get-list-of-sls-reports"><span class="badge bar badge--primary">GET</span>List of SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#generate-sls-report"><span class="badge bar badge--success">POST</span>Generate SLS Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#sls-reports-computation"><span class="badge bar badge--success">POST</span>SLS Reports Computation</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#validate-sls-report-name"><span class="badge bar badge--primary">GET</span>Validate SLS Report Name</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#get-list-of-campaigns-eligible-for-sls-reports"><span class="badge bar badge--primary">GET</span>Campaigns Eligible for SLS Reports</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#download-sls-report"><span class="badge bar badge--success">POST</span>Download SLS Insight Report</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Insights-PLD#delete-sls-report"><span class="badge bar badge--danger">DEL</span>Delete SLS Report</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
+      ]
+    }
   ]
 }
 
