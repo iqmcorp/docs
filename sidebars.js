@@ -269,43 +269,43 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#about-iqm-matched-audience`,
+              href: `/Tutorials/Upload-a-Matched-Audience#about-iqm-matched-audience`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Before You Begin',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#before-you-begin`,
+              href: `/Tutorials/Upload-a-Matched-Audience#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Upload Matched Audience Using the IQM API',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#upload-matched-audience-using-the-iqm-api`,
+              href: `/Tutorials/Upload-a-Matched-Audience#upload-matched-audience-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-1-log-in`,
+              href: `/Tutorials/Upload-a-Matched-Audience#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 2: Request Column List',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-2-request-column-list`,
+              href: `/Tutorials/Upload-a-Matched-Audience#step-2-request-column-list`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 3: Upload Matched Audience',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-3-upload-matched-audience`,
+              href: `/Tutorials/Upload-a-Matched-Audience#step-3-upload-matched-audience`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 4: Check Audience Status',
-              href: `/Quickstart%20Guides/Matched-Audience-Upload-API-Quickstart-Guide#step-4-check-audience-status`,
+              href: `/Tutorials/Upload-a-Matched-Audience#step-4-check-audience-status`,
               className: 'sidebarItemQS'
             },
           ]
@@ -322,31 +322,31 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Bid Modeling',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#about-iqm-campaign-bid-modeling`,
+              href: `/Tutorials/Create-a-Bid-Model#about-iqm-bid-modeling`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-1-log-in`,
+              href: `/Tutorials/Create-a-Bid-Model#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 2: Check Campaign for Eligibility',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-2-check-campaign-for-eligibility`,
+              href: `/Tutorials/Create-a-Bid-Model#step-2-check-campaign-for-eligibility`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 3: Select Dimension',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-3-select-dimension`,
+              href: `/Tutorials/Create-a-Bid-Model#step-3-select-dimension`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 4: Create a Bid Model',
-              href: `/Quickstart%20Guides/Bid-Model-Quickstart#step-4-create-a-bid-model`,
+              href: `/Tutorials/Create-a-Bid-Model#step-4-create-a-bid-model`,
               className: 'sidebarItemQS'
             },
           ]
@@ -404,49 +404,49 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Inventory',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#about-iqm-inventory`,
+              href: `/Tutorials/Optimize-Your-Inventory#about-iqm-inventory`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Optimize Your Inventory',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#optimize-your-inventory-using-the-iqm-api`,
+              href: `/Tutorials/Optimize-Your-Inventory#optimize-your-inventory-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log In',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-1-log-in`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 2: Search Inventory List ',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-2-search-inventory-list`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-2-search-inventory-list`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 3: Create an Inventory Group',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-3-create-an-inventory-group`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-3-create-an-inventory-group`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 4: Update an Inventory Group',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-4-update-an-inventory-group`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-4-update-an-inventory-group`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 5: Campaign Inventory Group Targeting',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-5-campaign-inventory-group-targeting`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-5-campaign-inventory-group-targeting`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 6: Get List of Groups by Campaign',
-              href: `/Quickstart%20Guides/Inventory-Quickstart#step-6-get-list-of-groups-by-campaign`,
+              href: `/Tutorials/Optimize-Your-Inventory#step-6-get-list-of-groups-by-campaign`,
               className: 'sidebarItemQS'
             },
           ]
@@ -463,43 +463,43 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Insights',
-              href: `/Quickstart%20Guides/Insights-Quickstart#about-iqm-insights`,
+              href: `/Tutorials/Create-an-Insights-Report#about-iqm-insights`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Before You Begin',
-              href: `/Quickstart%20Guides/Insights-Quickstart#before-you-begin`,
+              href: `/Tutorials/Create-an-Insights-Report#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Eligibility Requirements',
-              href: `/Quickstart%20Guides/Insights-Quickstart#eligibility-requirements`,
+              href: `/Tutorials/Create-an-Insights-Report#eligibility-requirements`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Campaign Bidding Insights',
-              href: `/Quickstart%20Guides/Insights-Quickstart#campaign-bidding-insights`,
+              href: `/Tutorials/Create-an-Insights-Report#campaign-bidding-insights`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Audience Insights Report',
-              href: `/Quickstart%20Guides/Insights-Quickstart#audience-insights-report`,
+              href: `/Tutorials/Create-an-Insights-Report#audience-insights-report`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Voter Level Data Report',
-              href: `/Quickstart%20Guides/Insights-Quickstart#voter-level-data-report`,
+              href: `/Tutorials/Create-an-Insights-Report#voter-level-data-report`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Provider Level Data Report',
-              href: `/Quickstart%20Guides/Insights-Quickstart#provider-level-data-report`,
+              href: `/Tutorials/Create-an-Insights-Report#provider-level-data-report`,
               className: 'sidebarItemQS'
             },
           ]
