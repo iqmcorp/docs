@@ -13,9 +13,24 @@ IQM’s REST API enables you to interact with most of our platform's application
 
 The following endpoints will be used to create a Contextual Audience:
 
+<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/audience/contextual/add</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/audience/contextual/\{audienceId}</span>
+
 ## About IQM Contextual Audiences 
 
-The Audience API allows you to create different kinds of Audiences for Campaign targeting. 
+IQM's Contextual Audience allows you to make groupings of users based on their online activity. By specifying keywords and/or URLs, IQM will build an Audience as users visit sites relevant to those parameters within a target timeframe. 
+
+Contextual Audiences have two kinds of data collection periods:
+  * **static** - a timeframe set between two dates in the last 180 days and a maximum of a 30 day period
+  * **dynamic** - a rolling timeframe of up to the last 30 days from today with data refreshing every 24 hours
+
+
+
+More resources: 
+  * [Contextual Audience Overview<ExternalLink />](https://help.iqm.com/en/articles/6972375-contextual-audience-overview) Help Center Article
+  * [Create or Manage a Contextual Audience<ExternalLink />](https://help.iqm.com/en/articles/7018329-create-or-manage-a-contextual-audience) Help Center Article
+  * [Audience API](/Guidelines/Audience-API-Guidelines) Guidelines
 
 ## Before You Begin
 
@@ -25,6 +40,15 @@ To create a Contextual Audience, the following are required:
    *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
 
 ## Create a Contextual Audience Using the IQM API
+
+This Quickstart Guide will cover how to create a Contextual Audience using both keyword and URLs and each type of data collection period. 
+
+The minimum requirements to perform this task are: logging in with authentication credentials, creating an Audience, and checking the Audience status. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages. 
+
+1. Log In
+   * Optional if you have already logged in and have a token
+1. Create a Contextual Audience 
+1. Check the Audience Status
 
 ### Step 1: Log in
 
@@ -193,24 +217,25 @@ function Login(): Promise < Responses > {
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/contextual/add</span>
 
-<div class="container">
-  <div class="child1">
+<p />You can determine how a Contextual Audience forms groupings by indicating a list of relevant keywords and/or URLs. IQM adds users to the Contextual Audience when they visit a site that features those keywords or URLs. 
 
-You can create a Contextual Audience with just a few parameters. For this example, come up with your desired <var>audienceName</var>, select a few <var>keywords</var>, pass <var>2</var> as the <var>dataCollectionMethodId</var>, pass <var>20</var> as the <var>dataCollectionDays</var>, and pass a number between 1-10 for the <var>frequency</var>. 
+The Request Schema table below details the supported fields for creating a Contextual Audience. Review Steps 2a and 2b for detailed instructions on how to perform this action. 
 
-In the provided example, this will build an Audience of any user that visits a site relevant to the keywords "politics", "voters", or "california" at least 5 times. This Audience will collect data on a rolling basis for the previous 20 days, refreshing the data set every 24 hours. 
-
-
+<div style={{ maxWidth: "750px"}}>
 | Request Schema | |
 | --- | --- |
 | `audienceName` <br /><span class="type-text">string</span> | Audience name 
 | `keywords` <br /><span class="type-text">string</span> | Keywords to generate contextual Audience 
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
 | `frequency` <br /><span class="type-text">integer</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the contextual Audience. Integer between 1-10
+| `urls` <br /><span class="type-text">string</span> | The publisher sites visited by a user
 | `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones) specifies data collection start time
 | `dataCollectionMethodId` <br /><span class="type-text">integer</span> | **static** (<var>1</var>) collection period in a fixed set of dates <br />**dynamic** (<var>2</var>) data collection period over a rolling timeframe, with data refreshes every 24 hours
 | `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>30</var>)
+</div>
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+<details className="objectPropertiesDetails" style={{ maxWidth: "750px", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
@@ -224,6 +249,29 @@ In the provided example, this will build an Audience of any user that visits a s
     </table>
     </details>
 
+#### Step 2a: Contextual Audience with Keywords 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/contextual/add</span>
+
+<div class="container">
+  <div class="child1">
+
+You can create a Contextual Audience with keywords and just a few other parameters. You will need to pass an <var>audienceName</var> and select one or more <var>keywords</var>. In the provided request sample (seen in the code block in the right-side column) the chosen keywords are "politics", "voters", and "california". 
+
+Next you will need to decide a <var>frequency</var> from 1-10. This determines how many times a user must visit a site relevant to the chosen keywords to be added to the Audience. 
+
+A Contextual Audience also requires specifying a timeframe for data collection. In this example you can choose a **static** data collection method by passing <var>1</var> as the <var>dataCollectionMethodId</var>. This method requires [unix epoch](https://www.epochconverter.com/) values for the <var>startDate</var> and <var>endDate</var> fields.
+
+:::info 
+
+The start date of a Contextual Audience must be within the last 180 days. 
+
+The period between the start date and the end date cannot exceed 30 days. 
+
+:::
+
+Lastly, a timezone ID is required to determine the data collection timeframe. An ID of <var>29</var> designates EST timezone. 
+
 </div>
 <div class="child2">
 
@@ -235,8 +283,106 @@ In the provided example, this will build an Audience of any user that visits a s
   "audienceName": "California Politics",
   "frequency": 5,
   "keywords": "politics, voters, california",
+  "dataCollectionMethodId": 1,
+  "startDate": 1750737600000,
+  "endDate": 1753329599000,
+  "timezoneId": 29,
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1078146,
+    "message": "Contextual Audience created successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createContextualAudiences(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/audience/contextual/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          keywords?: `string`,
+          urls?: `string`,
+          frequency?: `number`,
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: 'number',
+          dataCollectionMethodId: 'number',
+          dataCollectionDays?: 'number',
+
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+#### Step 2b: Contextual Audience with URLs 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/contextual/add</span>
+
+<div class="container">
+  <div class="child1">
+
+You can also create a Contextual Audience with URLs. You will need to pass the desired websites as a string in the  <var>urls</var> field.
+
+As in Step 2a, you will need to pass integers for <var>frequency</var> and <var>timezoneId</var>.
+
+In this example you can choose a **dynamic** data collection method by passing <var>2</var> as the <var>dataCollectionMethodId</var>. This method requires passing a period of days (1-30) in the <var>dataCollectionDays</var> field. 
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "audienceName": "California Politics",
+  "frequency": 5,
+  "urls": "www.iqm.com",
   "dataCollectionMethodId": 2,
-  "dataCollectionDays": 20
+  "dataCollectionDays": 20,
+  "timezoneId": 29,
 }
 ```
 
@@ -307,3 +453,196 @@ function createContextualAudiences(): Promise<Responses> {
 </div></div>
 
 ### Step 3: Check Audience Status
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/contextual/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+You can check on the Audience status after creation to see if its "Ready" or still "Processing". This endpoint will also return various details about the Audience as described in the Response Properties table below. 
+
+Use the <var>id</var> from Steps 2a or 2b and pass it as the <var>audienceId</var> in the endpoint path to get the Audience's details.  
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">string</span> |  Audience ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`type` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+</tr>
+<tr>
+  <td>`includedCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns including this Audience</td>
+</tr>
+<tr>
+  <td>`excludedCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns excluding this Audience</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+  <td>Created by User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUser` <br /><span class="type-text">string</span></td>
+  <td>Created by user name</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`keywords` <br /><span class="type-text">string</span></td>
+  <td>Keywords</td>
+</tr>
+<tr>
+  <td>`urls` <br /><span class="type-text">integer</span></td>
+  <td>URLs</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start date, in milliseconds </td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`frequency` <br /><span class="type-text">integer</span></td>
+  <td>Frequency</td>
+</tr>
+<tr>
+  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has edit access for the requested resource</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1078361,
+    "name": "USA",
+    //highlight-next-line
+    "status": "Processing",
+    "type": 5,
+    "includedCount": 0,
+    "excludedCount": 0,
+    "createdOn": 1719382932,
+    "organizationName": "IQM Corporation",
+    "owId": 202314,
+    "createdByUowId": 117790,
+    "createdByUser": "Neeraj Khatri",
+    "createdByUserEmail": null,
+    "uniques": 0,
+    "dataCost": 1.5,
+    "keywords": "law,act,actions",
+    "urls": "",
+    "startDate": 1718873084000,
+    "endDate": 1719229978000,
+    "frequency": 2,
+    "editAccess": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+         id: number;
+         name: string;
+         status: string;
+         type: number;
+         includedCount: number;
+         excludedCount: number;
+         createdOn: number;
+         organizationName: string;
+         owId: number;
+         createdByUowId: number;
+         createdByUser: string;
+         createdByUserEmail: string;
+         uniques: number;
+         dataCost: number;
+         keywords: string;
+         urls: string;
+         startDate: number;
+         endDate: number;
+         frequency: number;
+         editAccess: boolean
+        };
+      };
+    };
+  };
+}
+
+function getContextualAudience(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/audience/contextual/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
