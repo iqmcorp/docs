@@ -160,6 +160,41 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Contextual Audience',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Contextual-Audience-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Contextual Audiences',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#about-iqm-contextual-audiences`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a Contextual Audience',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-2-create-a-contextual-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Check Audience Status',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-3-check-audience-status`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Run a Report',
           className: 'sidebarItem',
           link: {
@@ -787,7 +822,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#delete-audience"><span class="badge bar badge--warning">PUT</span>Delete Audience</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#delete-audience"><span class="badge bar badge--danger">DEL</span>Delete Audience</a>',
               defaultStyle: true,
             },
           ]
