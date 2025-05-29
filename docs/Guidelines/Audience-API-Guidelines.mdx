@@ -6375,10 +6375,13 @@ The period between the start date and the end date cannot exceed 30 days.
 | --- | --- |
 | `audienceName` <br /><span class="type-text">string</span> | Audience name 
 | `keywords` <br /><span class="type-text">string</span> | Keywords to generate contextual Audience 
-| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds
-| `endDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
 | `frequency` <br /><span class="type-text">integer</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the contextual Audience. Integer between 1-10
 | `urls` <br /><span class="type-text">string</span> | The publisher sites visited by a user
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones) specifies data collection start time
+| `dataCollectionMethodId` <br /><span class="type-text">integer</span> | **static** (<var>1</var>) collection period in a fixed set of dates <br />**dynamic** (<var>2</var>) data collection period over a rolling timeframe, with data refreshes every 24 hours
+| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>30</var>)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -6402,12 +6405,14 @@ The period between the start date and the end date cannot exceed 30 days.
 
 ```json title="Request Sample"
 {
-  "audienceName": "India",
-  "keywords": "law,act,actions",
-  "startDate": 1718873084000,
-  "endDate": 1719305084000,
-  "frequency": 3,
-  "urls": ""
+  "audienceName": "Test_aud",
+  "frequency": 5,
+  "startDate": 1750737600000,
+  "endDate": 1753329599000,
+  "keywords": "Test",
+  "urls": "http://iqm.com",
+  "timezoneId": 29,
+  "dataCollectionMethodId": 1
 }
 ```
 
@@ -6454,16 +6459,16 @@ function createContextualAudiences(): Promise<Responses> {
     requestBody: {
       content: {
         "application/json": {
-          advertiserId?: `number`,
-          dspId?: `number`,
-          owId?: `number`,
-          uowId?: `number`,
           audienceName: `string`,
           keywords?: `string`,
           urls?: `string`,
           frequency?: `number`,
           startDate?: `number`,
           endDate?: `number`,
+          timezoneId?: 'number',
+          dataCollectionMethodId: 'number',
+          dataCollectionDays?: 'number',
+
         }
       }
     }
@@ -7608,7 +7613,7 @@ function validateContextualUrl(): Promise<Responses> {
 
 ### Delete Audience 
 
-<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v2/audience/delete</span>
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v2/audience/delete</span>
 
 <div class="container">
   <div class="child1">
