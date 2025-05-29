@@ -173,6 +173,24 @@ const sidebars = {
               href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#about-iqm-contextual-audiences`,
               className: 'sidebarItemQS'
             },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a Contextual Audience',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-2-create-a-contextual-audience`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Check Audience Status',
+              href: `/Quickstart%20Guides/Contextual-Audience-Quickstart#step-3-check-audience-status`,
+              className: 'sidebarItemQS'
+            },
           ]
         },
         {
