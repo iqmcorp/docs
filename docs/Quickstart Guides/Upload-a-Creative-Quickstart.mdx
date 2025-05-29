@@ -1,0 +1,224 @@
+---
+title: Create a Campaign
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Upload Creative
+
+IQM’s REST API enables you to interact with most of our platform's applications.
+
+The following endpoints will be used to upload a Creative:
+
+<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
+
+
+## About IQM Creatives
+
+The IQM APIs provide access to upload a Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. The APIs can be used to connect to the desired applications. 
+
+## Before You Begin
+
+To upload a Creative and create a Campaign, the following are required:
+
+1. An Account On the IQM Platform
+   *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
+1. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX File to Upload Creative
+
+<div style={{ maxWidth: "1000px" }}>
+:::info 
+
+**File requirements for Creative file:**
+  * 2MB for JPG, JPEG, PNG
+  * 750KB for GIF
+  * 400MB for MOV, MP4
+  * 100MB for MP3, WAV, OGG, MPEG
+
+For more information on [VAST<ExternalLink />](https://www.iab.com/guidelines/vast/) and DAAST XML format specifications, please see [IAB Tech Lab's Documentation<ExternalLink />](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/).
+
+Sample CSV file: [https://app.iqm.com/creatives/example-files/sample_html_creatives.csv<ExternalLink />](https://app.iqm.com/creatives/example-files/sample_html_creatives.csv)
+
+:::
+</div>
+
+## Upload Creative Using the IQM API
+
+This Quickstart Guide will cover how to create a Campaign and upload a Creative. 
+
+The minimum requirements to perform this task are: logging in with authentication credentials, uploading a Creative, and creating a Campaign. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+
+1. Log In
+    * Optional if you have already logged in and have a token
+1. Upload Creative
+    * 2.1: Request Creative Types (Optional if you already know supported/desired types)
+    * 2.2: Upload Creative (Optional if already uploaded before)
+    * 2.3: Check Creative status
+
+### Step 1: Log in
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](/Guidelines/User-Profile-Guidelines#login).
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema  |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Schema"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
