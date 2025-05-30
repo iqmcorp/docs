@@ -1,5 +1,5 @@
 ---
-title: Create a Campaign
+title: Upload a Creative
 hide_table_of_contents: true
 ---
 
@@ -15,13 +15,18 @@ The following endpoints will be used to upload a Creative:
 
 <span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 <br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
+<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/asset</span>
+<br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/crt/creatives</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/crt/creatives/\{creativeId}</span>
 
 
 ## About IQM Creatives
 
 The IQM APIs provide access to upload a Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. The APIs can be used to connect to the desired applications. 
+
+More resources:
+  * [Creatives and Specifications<ExternalLink />](https://help.iqm.com/en/collections/1387054-creatives-and-specifications) Help Center Article
+  * [Creative API](/Guidelines/Creative-API-Guidelines) Guidelines
 
 ## Before You Begin
 
@@ -55,10 +60,12 @@ The minimum requirements to perform this task are: logging in with authenticatio
 
 1. Log In
     * Optional if you have already logged in and have a token
-1. Upload Creative
-    * 2.1: Request Creative Types (Optional if you already know supported/desired types)
-    * 2.2: Upload Creative (Optional if already uploaded before)
-    * 2.3: Check Creative status
+1. Request Creative Types
+    * Optional if you already know supported/desired types
+1. Upload Creative File
+    * 3.1: Upload Asset 
+    * 3.2: Add Creative Details
+1. Check Creative Status
 
 ### Step 1: Log in
 
@@ -217,6 +224,509 @@ function Login(): Promise < Responses > {
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Request Creative Types
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+
+<div class="container">
+  <div class="child1">
+
+To upload a Creative, a Creative Type must be provided. Use the Creative Type list endpoint to request a full list of allowed Creative Types.
+
+For further information see the complete [Creative Types API Documentation](/Guidelines/Master-API-Guidelines#get-creative-types).
+
+| Headers |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication Bearer Token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 17,
+        "name": "Audio",
+        "rtbTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "rtbTypeId": 4
+      },
+      {
+        "id": 14,
+        "name": "Video",
+        "rtbTypeId": 3
+      },
+      {
+        "id": 13,
+        "name": "HTML",
+        "rtbTypeId": 1
+      },
+      {
+        "id": 11,
+        "name": "Image",
+        "rtbTypeId": 1
+      }
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 5
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 500"
+{
+  "statusCode": 500,
+  "responseObject": {
+    "errorMsg": "Internal server error",
+    "errorCode": 500
+  }
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          label: string;
+          rtbTypeId: string;
+        }[];
+        totalRecords: number;
+        filteredRecords: number;
+      }
+    };
+  };
+};
+
+function getCreativeTypes_1(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/creativeTypes',
+    params: {
+      query?: {
+        creativeTypeIds?: `string`,
+        ids?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        order?: `string`,
+        searchField?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Upload a Creative
+
+#### Step 3.1: Upload Asset 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/asset</span>
+
+<div class="container">
+<div class="child1">
+
+Add multiple Assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
+
+| Headers |  |
+| ----| --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+| Query Parameters | |
+| --- | --- |
+| `filesMetaData` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | JSON string representing the metadata associated with the files |
+| `files` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Array of multipart file objects |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```c title="Query Sample"
+https://app.iqm.com/api/api/v3/asset?files=(MULTIPART-FORMDATA)&filesMetadata=[{"attachedFileName":"41455611-74cc-416e-894f-c34640aa6945~IQM-LOGO-RGB.png","originalFileName":"IQM-LOGO-RGB.png"}]
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "9d41a99a-9761-44cf-a3db-307a57b65795.jpg": {
+      "assetID": 697,
+      "assetCDNURL": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/IHp2jMI_1704987233847.jpg"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          files: {
+            assetID: number;
+            assetCDNURL: string
+          }
+        }
+      }
+    }
+  };
+  401: {
+    content: {
+      Authorization?: string;
+      "X-IAA-OW-ID"?: string;
+    };
+    path: {
+      assetId: number
+    }
+  }
+}
+
+function addAssets(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/asset',
+    params: {
+      query: {
+        filesMetadata: `string`,
+        files: `string`,
+      },
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+#### Step 3.2: Add Creative Details 
+
+<span class="badge badge--success">POST</span><span class="path-text">/api/v3/crt/creatives</span>
+
+<div class="container">
+  <div class="child1">
+
+| Headers |  |
+| ----| --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+| Query Parameters | |
+| --- | --- | 
+| `creativeRequest`<br /><span class="type-text">string</span> <span class="required-text">required</span> | This parameter accepts a Map of UUIDs to Creative details. Each UUID corresponds to a single Creative. |
+
+
+    <table>
+    <th><var>creativeRequest</var> Fields</th>
+      <tr>
+        <td>`creativeName` <br /><span class="type-text">string</span></td>
+        <td>Creative name</td>
+      </tr>
+        <tr>
+        <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
+        <td>[Creative type ID](/Guidelines/Creative-API-Guidelines#get-creative-types-list) </td>
+      </tr>
+        <tr>
+        <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
+        <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var></td>
+      </tr>
+          <tr>
+        <td>`creativeSource` <br /><span class="type-text">string</span></td>
+        <td>Creative source</td>
+      </tr>
+        <tr>
+        <td>`clickUrl` <br /><span class="type-text">string</span></td>
+        <td>Click URL</td>
+      </tr>
+ <tr>
+      <td>`imageDetails` <br /><span class="type-text">object</span></td>
+      <td>Image details</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`imageDetails` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+        <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
+        <td>Creative width (px)</td>
+      </tr>
+        <tr>
+        <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
+        <td>Creative height (px)</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+</tr>
+  </table>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```c title="Query Sample"
+https://app.iqm.com/api/v3/crt/creatives?creativeRequest={"840ab4ef-0e10-42eb-9683-ae9692ed5c9a":{"creativeName":"IQM-LOGO","platformCreativeTypeId":11,"clickUrl":"https://iqm.com/","creativeSource":"https://d3jme5si7t6llb.cloudfront.net/assets/203578/r6j1sV3_1748555808865.png","creativeSourceType":"URL","imageDetails":{"creativeWidth":1024,"creativeHeight":512}}}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "successData": {
+      "PS": "701388"
+    },
+    "failedData": {
+      "PF": "Creative file missing. Please attach the required file. : null"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          successData: {
+            PS: string;
+          };
+          failedData: {
+            PF: string;
+          }
+        }
+      };
+    };
+  };
+}
+
+function createCreatives(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/crt/creatives',
+    params: {
+      query: {
+        creativeRequest: `string`,
+        creativeFiles?: `array of strings`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 4: Check Creative Status
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/crt/creatives/\{creativeId}</span>
+
+<div class="container">
+  <div class="child1">
+
+This API checks a Creative's status. Use the <var>creativeId</var> (6 digit number under <var>data</var> parameter in response) retrieved from the previous step to get its details. 
+
+The Creative details endpoint returns a Status ID (highlighted in code sample). A status ID of <var>2</var> means the Creative is <var>running</var>.
+
+| Headers |  |
+| ----| --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+| Path Parameter || 
+| --- | --- |
+| `creativeId` <br /><span class="type-text">array of integers</span> | Creative ID |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creativeId": 686855,
+    "creativeName": "300x600-w23-01",
+    "rtbCreativeTypeId": 1,
+    "platformCreativeTypeId": 11,
+    //highlight-next-line
+    "creativeStatusId": 2,
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
+    "clickUrl": "http://iqm.com",
+    "imageDetails": {
+      "pixelUrl": "http://pixel.com",
+      "creativeWidth": 300,
+      "creativeHeight": 600
+    },
+    "creativeSourceType": "file",
+    "creativePreviewFlag": 1,
+    "createdAt": 1730201855165,
+    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
+    "userDetails": {
+      "uowId": 175891,
+      "userName": "Hardik",
+      "userEmail": "hardik.v+iqmsuper@iqm.com",
+      "hasApprovalAccess": true,
+      "hasEditAccess": true
+    },
+    "organizationDetails": {
+      "owId": 202760,
+      "organizationName": "AdWing"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          creativeName: string;
+          rtbCreativeTypeId: number;
+          platformCreativeTypeId: number;
+          //highlight-next-line
+          creativeStatusId: number;
+          creativeSource: string;
+          creativeCardSource: string;
+          clickUrl: string;
+          imageDetails: {
+            pixelUrl: string;
+            creativeWidth: number;
+            creativeHeight: number;
+          };
+          creativeSourceType: string;
+          creativePreviewFlag: number;
+          createdAt: number;
+          modifiedAt: number;
+          userDetails: {
+            uowId: number;
+            userName: string;
+            userEmail: string;
+            hasApprovalAccess: boolean;
+            hasEditAccess: boolean;
+          };
+          organizationDetails: {
+            owId: number;
+            organizationName: string
+          }
+        }
+      };
+    };
+  };
+}
+
+function getCreative(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    }
+  };
 ```
 
 </TabItem></Tabs>
