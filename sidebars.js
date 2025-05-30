@@ -105,55 +105,37 @@ const sidebars = {
           className: 'sidebarItem',
           link: {
             type: 'doc',
-            id: 'Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+            id: 'Quickstart Guides/Create-a-Campaign-Quickstart'
           },
           items: [
             {
               type: `link`,
-              label: 'About IQM Campaign & Creative',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#about-iqm-campaign--creative`,
+              label: 'About IQM Creatives',
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#about-iqm-campaigns`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Before You Begin',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#before-you-begin`,
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Upload Creative and Create a Campaign Using the IQM API',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#upload-creative-and-create-a-campaign-using-the-iqm-api`,
+              label: 'Create a Campaign Using the IQM API',
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#create-a-campaign-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log in',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-1-log-in`,
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 2: Upload Creative',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-2-upload-creative`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Create Insertion Order',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-3-create-insertion-order`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Create PG Deal',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-4-create-pg-deal`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 5: Create a Campaign',
-              href: `/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide#step-5-create-a-campaign`,
+              label: 'Step 2: Create an Insertion Order',
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#step-2-create-insertion-order`,
               className: 'sidebarItemQS'
             },
           ]
@@ -341,6 +323,65 @@ const sidebars = {
               type: `link`,
               label: 'Step 4: Check Audience Status',
               href: `/Tutorials/Upload-a-Matched-Audience#step-4-check-audience-status`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Create a PG Campaign',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Campaign & Creative',
+              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-campaign--creative`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Create-a-PG-Campaign#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Upload Creative and Create a Campaign Using the IQM API',
+              href: `/Tutorials/Create-a-PG-Campaign#upload-creative-and-create-a-campaign-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log in',
+              href: `/Tutorials/Create-a-PG-Campaign#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Upload Creative',
+              href: `/Tutorials/Create-a-PG-Campaign#step-2-upload-creative`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Create Insertion Order',
+              href: `/Tutorials/Create-a-PG-Campaign#step-3-create-insertion-order`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Create PG Deal',
+              href: `/Tutorials/Create-a-PG-Campaign#step-4-create-pg-deal`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 5: Create a Campaign',
+              href: `/Tutorials/Create-a-PG-Campaign#step-5-create-a-campaign`,
               className: 'sidebarItemQS'
             },
           ]
