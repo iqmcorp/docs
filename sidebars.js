@@ -338,8 +338,8 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'About IQM Campaign & Creative',
-              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-campaign--creative`,
+              label: 'About IQM PG Campaigns',
+              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-pg-campaigns`,
               className: 'sidebarItemQS'
             },
             {
@@ -350,8 +350,8 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Upload Creative and Create a Campaign Using the IQM API',
-              href: `/Tutorials/Create-a-PG-Campaign#upload-creative-and-create-a-campaign-using-the-iqm-api`,
+              label: 'Create a PG Campaign Using the IQM API',
+              href: `/Tutorials/Create-a-PG-Campaign#create-a-pg-campaign-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
@@ -362,26 +362,8 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 2: Upload Creative',
-              href: `/Tutorials/Create-a-PG-Campaign#step-2-upload-creative`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Create Insertion Order',
-              href: `/Tutorials/Create-a-PG-Campaign#step-3-create-insertion-order`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Create PG Deal',
-              href: `/Tutorials/Create-a-PG-Campaign#step-4-create-pg-deal`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 5: Create a Campaign',
-              href: `/Tutorials/Create-a-PG-Campaign#step-5-create-a-campaign`,
+              label: 'Step 2: Create a PG Campaign',
+              href: `/Tutorials/Create-a-PG-Campaign#step-2-create-a-pg-campaign`,
               className: 'sidebarItemQS'
             },
           ]
