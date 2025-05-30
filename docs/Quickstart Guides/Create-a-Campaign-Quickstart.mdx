@@ -1,0 +1,343 @@
+---
+title: Create a Campaign
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Create a Campaign
+
+## About IQM Campaign & Creative
+
+The IQM APIs provide access to create Insertion Orders, PG Deals, Campaigns and upload Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. The APIs can be used to connect to the desired applications. 
+
+Once an Insertion Order and PG Deal are created, an uploaded and processed Creative can be used for creating and running advertising Campaigns.
+
+## Before You Begin
+
+To upload a Creative and create a Campaign, the following are required:
+
+1. An Account On the IQM Platform
+   *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
+1. An Approved and Running Creative 
+   * See Upload a Creative Quickstart Guide to upload a Creative
+
+## Upload Creative and Create a Campaign Using the IQM API
+
+This Quickstart Guide will cover how to create a Campaign and upload a Creative. 
+
+The minimum requirements to perform this task are: logging in with authentication credentials, uploading a Creative, and creating a Campaign. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+
+1. Log In
+    * Optional if you have already logged in and have a token
+1. Create Insertion Order 
+    * Optional if already created
+1. Create a Campaign
+    * 5.1 Create a Campaign using Creative, provide necessary targeting parameters
+    * 5.2 Check Campaign's status
+
+### Step 1: Log in
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](/Guidelines/User-Profile-Guidelines#login).
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema  |  |
+| ----  | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Schema"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Create Insertion Order
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
+
+<div class="container">
+<div class="child1">
+
+Before a Campaign can be started an Insertion Order must be created. An Insertion Order is a contractual agreement that outlines the terms and conditions for one or more advertising Campaigns. Once created, a Campaign can be created and assigned to an Insertion Order. Read more about [Insertion Orders<ExternalLink />](https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order).
+
+The minimum required values for IO creation are as listed below. See a complete table of [Resource Properties](../Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties) for all supported values. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+| Request Schema | |
+| --- | --- |
+| `ioName` <br /><span class="type-text">string</span> | Insertion Order name |
+| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time |
+| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time |
+| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget |
+| `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](../Guidelines/Campaign-API-Guidelines#get-io-status-list) |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | IO timezone ID |
+| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included campaigns |
+| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [IO Budget Type ID](../Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)
+| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](../Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods) |
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample (budget based IO)" 
+{
+    "ioName": "IO Name 1",
+    "ioStartTime": 1690898148000,
+    "ioEndTime": 1690898888000,
+    "ioTotalBudget": 1000,
+    "ioTimeZoneId": 29,
+    "isAutoSumIoTotalBudget": true,
+    "ioBudgetTypeId": 1,
+    "ioBudgetDistributionMethodId": 1
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "ioId": 123456,
+        "ioName": "IO Name 1",
+        "ioStartTime": 1690898148000,
+        "ioEndTime": 1690898888000,
+        "ioTotalBudget": 0,
+        "ioTimeZoneId": 29,
+        "ioBudgetTypeId": 1,
+        "ioBudgetDistributionMethodId": 1,
+        "isAutoSumIoTotalBudget": true,
+        "ioTotalImpressions": null
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          ioId: number;
+          ioName: string;
+          ioStartTime: number;
+          ioEndTime: number;
+          ioTotalBudget: number;
+          ioTimeZoneId: number;
+          ioBudgetTypeId: number;
+          ioBudgetDistributionMethodId: number;
+          isAutoSumIoTotalBudget: boolean;
+          ioTotalImpressions: number
+        }
+      }
+    };
+  };
+};
+
+function createCampaignIO(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/cmp/io/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          ioId?: `number`,
+          ioName: `string`,
+          owId?: `number`,
+          createdByUowId?: `number`,
+          modifiedByUowId?: `number`,
+          ioStartTime?: `number`,
+          ioEndTime?: `number`,
+          ioTotalBudget?: `number`,
+          ioTimeZoneId?: `number`,
+          isAutoSumIoTotalBudget?: `boolean`,
+          ioBudgetDistributionMethodId?: `number`,
+          ioBudgetTypeId?: `number`,
+          ioTotalImpressions?: `number`,
+          ioStatusId?: `number`,
+          ioNextPerformanceCheck?: `number`,
+          ioLastPriorityShift?: `number`,
+          ioCurrentPriority?: `number`,
+          isIoPrioritise?: `boolean`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
