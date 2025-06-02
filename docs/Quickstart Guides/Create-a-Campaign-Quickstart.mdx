@@ -11,7 +11,7 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 
 IQM’s REST API enables you to interact with most of our platform's applications.
 
-The following endpoints will be used to create an insertion order and start a Campaign:
+The following endpoints will be used to create an Insertion Order and start a Campaign:
 
 <span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 <br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
@@ -19,7 +19,7 @@ The following endpoints will be used to create an insertion order and start a Ca
 
 ## About IQM Campaigns
 
-The IQM APIs provide access to create Insertion Orders, PG Deals, Campaigns and upload Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. The APIs can be used to connect to the desired applications. 
+The IQM APIs provide access to create Insertion Orders and Campaigns. The APIs can be used to connect to the desired applications. 
 
 Once an Insertion Order is created, an uploaded and processed Creative can be used for creating and running advertising Campaigns.
 
@@ -342,6 +342,327 @@ function createCampaignIO(): Promise<Responses> {
     }
   };
   
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Create a Campaign 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Create a new Campaign in <var>pending</var> status.
+
+Select <var>campaignType</var>: <var>1</var> for an "advanced" Campaign. 
+
+Use the <var>ioId</var> in the response from the Insertion Order you created in Step 2.
+
+The minimum required values for creating a Campaign are as listed below. See the [Create New Campaign](/Guidelines/Campaign-API-Guidelines#create-new-campaign) documentation for the complete request schema. 
+
+:::info
+
+Make sure that the <var>budgetTypeId</var> of your Campaign matches the <var>ioBudgetTypeId</var> of your Insertion Order. 
+
+:::
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Request Schema</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignName` <br /><span class="type-text">string</span></td>
+    <td>Campaign name</td>
+    </tr>
+            <tr>
+    <td>`isAgreementChecked` <br /><span class="type-text">boolean</span></td>
+    <td>Check to proceed: <var>true</var></td>
+    </tr>
+       <tr>
+    <td>`ioId` <br /><span class="type-text">string</span></td>
+    <td>Insertion Order ID that Campaign belongs to</td>
+    </tr>
+           <tr>
+    <td>`countryId` <br /><span class="type-text">string</span></td>
+    <td>[Country ID](/Guidelines/Master-API-Guidelines#get-country-segment)</td>
+    </tr>
+        <tr>
+    <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
+    <td>Advertiser domain</td>
+    </tr>
+        <tr>
+    <td>`creativeType` <br /><span class="type-text">integer</span></td>
+    <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+    </tr>
+        <tr>
+    <td>`campaignType` <br /><span class="type-text">integer</span></td>
+    <td>[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+    </tr>
+            <tr>
+    <td>`startTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign start time</td>
+    </tr>
+                   <tr>
+    <td>`endTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign end time (required if total budget pacing is enabled)</td>
+    </tr>
+        <tr>
+    <td>`totalBudgetPacing` <br /><span class="type-text">boolean</span></td>
+    <td>Budget is spent equally every hour: <var>true</var></td>
+    </tr>
+        <tr>
+    <td>`budgetDay` <br /><span class="type-text">integer</span></td>
+    <td>Daily budget for Campaign serving daily (not applicable if budget pacing is set to <var>true</var>)</td>
+    </tr>
+        <tr>
+    <td>`budgetTotal` <br /><span class="type-text">integer</span></td>
+    <td>Total budget for Campaign serving period</td>
+    </tr>
+        <tr>
+    <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
+    </tr>
+        <tr>
+    <td>`maxBid` <br /><span class="type-text">integer</span></td>
+    <td>Max bid for each bid request</td>
+    </tr>
+        <tr>
+    <td>`timezone` <br /><span class="type-text">integer</span></td>
+    <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones) for Campaign</td>
+    </tr>
+        <tr>
+    <td>`creativeIds` <br /><span class="type-text">string</span></td>
+    <td>Comma separated Creative IDs</td>
+    </tr>
+       <tr>
+    <td>`exchanges` <br /><span class="type-text">string</span> </td>
+    <td>Comma separated [Exchanges IDs](/Guidelines/Master-API-Guidelines#get-exchanges) for targeting (leave string empty to select all)</td>
+    </tr>
+           <tr>
+    <td>`publisherAdCategory` <br /><span class="type-text">string</span> </td>
+    <td>Comma separated [Publisher Ad Category IDs](/Guidelines/Master-API-Guidelines#get-publisher-ad-categories) for targeting (leave string empty to select all)</td>
+    </tr>
+    </table>
+    </details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID</td>
+    </tr>
+        <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+        <tr>
+    <td>`status` <br /><span class="type-text">string</span></td>
+    <td>Campaign status</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2a">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "campaignName": "NewTest",
+  "maxBid": 100,
+  "budgetTotal": 1500,
+  "startTime": 1748890201,
+  "endTime": 1749096000,
+  "timezone": 29,
+  "budgetDay": 50,
+  "creativeType": 11,
+  "isAgreementChecked":true,
+  "ioId": 17994,
+  "countryId": "30100001",
+  "creativeIds": "676384",
+  "advertiserDomain": "https://iqm.com",
+  "totalBudgetPacing": false,
+  "publisherAdCategory":"",
+  "exchanges": "",
+  "budgetTypeId": 1,
+  "campaignType": 1
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 201,
+  "responseObject": {
+    "data": 123456,
+    "message": "Campaign saved successfully.",
+    "status": "pending"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+      content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          data: number;
+          message: string;
+          status: string;
+        }
+      }
+    };
+  };
+}
+
+function saveCampaign(): Promise<Responses> {
+/*
+* or function saveDraftCampaign(): Promise<Responses> {
+*/
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v2/cmp/campaigns/add',
+/*
+* or url : 'https://app.iqm.com/api/v2/cmp/campaigns/draft/add',
+*/
+    requestBody: {
+         content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          id?: `number`,
+          campaignName?: `string`,
+          advertiserDomain?: `string`,
+          creativeType?: `number`,
+          campaignType?: `number`,
+          totalBudgetPacing?: `boolean`,
+          budgetDay?: `number`,
+          budgetTotal?: `number`,
+          maxBid?: `number`,
+          timezone?: `number`,
+          startTime?: `number`,
+          endTime?: `number`,
+          status?: `string`,
+          created?: `number`,
+          excludeFromPlatformServing?: `boolean`,
+          forTest?: `boolean`,
+          modifiedDate?: `string`,
+          dspMarginJson?: `string`,
+          platformMarginJson?: `string`,
+          dspMargin?: `number`,
+          platformMargin?: `number`,
+          userDealMargin?: `number`,
+          isAgreementChecked?: `boolean`,
+          spentScale?: `boolean`,
+          creativeIds?: `string`,
+          targetCPI?: `number`,
+          conversionType?: `string`,
+          conversionTypeId?: `number`,
+          appURL?: `string`,
+          bidOptimization?: `boolean`,
+          bidPacing?: `boolean`,
+          impressionCapping?: `number`,
+          maxDayImpressions?: `number`,
+          maxDayClicks?: `number`,
+          maxDayConversions?: `number`,
+          totalImpressions?: `number`,
+          totalClicks?: `number`,
+          totalConversions?: `number`,
+          bidStrategyFlag?: `boolean`,
+          ioId?: `number`,
+          prebidAudienceSegmentIdList?: `array of numbers`,
+          isBidShading?: `boolean`,
+          carriers?: `string`,
+          networkType?: `string`,
+          deviceType?: `string`,
+          trafficType?: `string`,
+          manufacturer?: `string`,
+          device?: `string`,
+          os?: `string`,
+          osVersion?: `string`,
+          technologyFlag?: `boolean`,
+          exchanges: `string`,
+          advancedFlag?: `boolean`,
+          userDealId?: `string`,
+          groupDealId?: `string`,
+          publisherAdCategory: `string`,
+          campaignIabCategoryIds?: `string`,
+          stateIds?: `string`,
+          countryId?: `number`,
+          dmaIds?: `string`,
+          zipcodes?: `string`,
+          locationFileIds?: `string`,
+          inventoryKeywords?: `array of strings`,
+          inventoryUrls?: `array of strings`,
+          pmpDealIds?: `array of numbers`,
+          politicalAdvertiserClientId?: `number`,
+          scheduling?: {
+            [key: `string`]: `Record<string, never>`,
+          },
+          ageRangeIds?: `string`,
+          genderIds?: `string`,
+          languageIds?: `string`,
+          incomeRangeIds?: `string`,
+          ethnicityIds?: `string`,
+          interestIds?: `string`,
+          demographicTargetingFlag?: `boolean`,
+          conversionIds?: `string`,
+          creativesPlacementMapping?: {
+            [key: `string`]: `number`,
+          },
+          isTvAd?: `boolean`,
+          creativeAdvanceTargeting?: {
+            [key: `string`]: `array of numbers`
+          },
+          budgetTypeId?: `number`,
+          campaignEstimatorMetaData?: {
+            reachMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            landScapeMeta?: {
+              [key: string]: Record<string, never>;
+            };
+            sliderMeta?: {
+              [key: string]: Record<string, never>;
+            },
+          },
+          customAudienceTargeted?: `boolean`,
+          advanceAudioVideoTargeted?: `boolean`,
+          isAdvanceAudioVideoTargeted?: `boolean`,
+        };
+      };
+    }
+  };
+
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
