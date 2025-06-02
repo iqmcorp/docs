@@ -1,0 +1,285 @@
+# Setting Up a Deal
+
+### Create PG Deal
+
+Before a Campaign can be created, a Programmatic Guarantee (PG) Deal must be created first. A PG Deal is a direct negotiation between one publisher and one Advertiser with a fixed amount of ad Inventory at a pre-negotiated price. Read more about [PG Deals<ExternalLink />](https://help.iqm.com/en/articles/9613540-what-is-a-programmatic-guaranteed-pg-deal). 
+
+#### Step 4.1 Request Exchange List
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/exchanges</span>
+
+<div class="container">
+<div class="child1">
+
+To create a PG Deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
+
+| Headers |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 90,
+        "name": "Aniview",
+        "urlName": "aniview"
+      },
+      {
+        "id": 89,
+        "name": "LoopMe",
+        "urlName": "loopme"
+      },
+      {
+        "id": 88,
+        "name": "One Tag",
+        "urlName": "onetag"
+      },
+      {
+        "id": 87,
+        "name": "Share Through",
+        "urlName": "sharethrough"
+      },
+      {
+        "id": 84,
+        "name": "Vidazoo",
+        "urlName": "vidazoo"
+      },
+      {
+        "id": 80,
+        "name": "Equativ",
+        "urlName": "equativ"
+      },
+      {
+        "id": 78,
+        "name": "Magnite",
+        "urlName": "magnite"
+      },
+      {
+        "id": 77,
+        "name": "Verve",
+        "urlName": "verve"
+      },
+      {
+        "id": 76,
+        "name": "Infolink",
+        "urlName": "infolink"
+      },
+      {
+        "id": 75,
+        "name": "Beachfront",
+        "urlName": "beachfront"
+      },
+      {
+        "id": 74,
+        "name": "Teads",
+        "urlName": "teads"
+      },
+      {
+        "id": 73,
+        "name": "Outbrain",
+        "urlName": "outbrain"
+      },
+      {
+        "id": 72,
+        "name": "Telaria",
+        "urlName": "telaria"
+      },
+      {
+        "id": 71,
+        "name": "33 Across",
+        "urlName": "ttacross"
+      },
+      {
+        "id": 69,
+        "name": "Media.net",
+        "urlName": "mnet"
+      },
+      {
+        "id": 66,
+        "name": "Unruly",
+        "urlName": "unruly"
+      },
+      {
+        "id": 47,
+        "name": "Index Exchange",
+        "urlName": "indexch"
+      },
+      {
+        "id": 46,
+        "name": "Triton Digital",
+        "urlName": "tdigital"
+      },
+      {
+        "id": 45,
+        "name": "Publisher Direct",
+        "urlName": "pbd"
+      },
+      {
+        "id": 41,
+        "name": "Column6",
+        "urlName": "adigital"
+      },
+      {
+        "id": 39,
+        "name": "Google DoubleClick",
+        "urlName": "adx"
+      },
+      {
+        "id": 37,
+        "name": "SpotXchange",
+        "urlName": "spotx"
+      },
+      {
+        "id": 19,
+        "name": "OpenX",
+        "urlName": "openx"
+      },
+      {
+        "id": 16,
+        "name": "Pubmatic",
+        "urlName": "pubmatic"
+      },
+      {
+        "id": 11,
+        "name": "Smaato",
+        "urlName": "smaato"
+      },
+      {
+        "id": 1,
+        "name": "iQM",
+        "urlName": "test"
+      }
+    ],
+    "totalRecords": 26,
+    "filteredRecords": 26
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            urlName: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    };
+  };
+};
+
+function getExchanges(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/master/exchanges',
+    params: {
+      query?: {
+        exchangeIds?: `string`,
+        ids?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        order?: `string`,
+        searchField?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+#### Step 4.2 Create PG Deal
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/pg/deals/add</span>
+
+<div class="container">
+<div class="child1">
+
+Once an exchange is selected, use the <var>exchangeId</var> from the response to create a PG deal. 
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+| Request Schema  |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PG Deal ID |
+| `dealName` <br /><span class="type-text">string</span>| PG Deal name |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG Deal | 
+| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal <br />Active: <var>1></var> <br />Inactive: <var>2</var> |
+| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
+| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID of PG Deal
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "dealId": "YT-Test-1234",
+    "dealName": "Test deal YT31",
+    "exchangeId": 11,
+    "statusId": 2,
+    "paymentTypeId": 1,
+    "description": "Test Deal"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "Deal Test deal YT31 created successfully",
+        "id": 2
+    }
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
