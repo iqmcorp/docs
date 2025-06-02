@@ -1,60 +1,48 @@
 ---
-title: Create a Campaign
+title: Create a PG Campaign
 hide_table_of_contents: true
+slug: /Tutorials/Create-a-PG-Campaign
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 
-# Upload Creative and Create a Campaign
+# Create a PG Campaign
 
 IQM’s REST API enables you to interact with most of our platform's applications.
 
-The following endpoints will be used to upload a Creative, create an insertion order, create a PG deal, and start a Campaign:
+The following endpoints will be used to create a PG Campaign:
 
 <span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
-<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v2/crt/add/image/banner/creative</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/crt/basic/list</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
-<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
 <br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
 <br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
 
 
-## About IQM Campaign & Creative
+## About IQM PG Campaigns
 
-The IQM APIs provide access to create Insertion Orders, PG Deals, Campaigns and upload Creative in Image, Video, Audio, HTML, XLSX, or CSV formats. The APIs can be used to connect to the desired applications. 
+IQM's Programmatic Guaranteed (PG) Campaigns define the individual marketing strategies of your ads with an inventory purchased directly from a specific publisher. By specifying the supported parameters you can use the API to create a new PG Campaign.
 
-Once an Insertion Order and PG Deal are created, an uploaded and processed Creative can be used for creating and running advertising Campaigns.
+
+
+See [How Do I Set Up a Programmatic Guaranteed (PG) Campaign<ExternalLink />](https://help.iqm.com/en/articles/9613547-how-do-i-set-up-a-programmatic-guaranteed-pg-campaign) for more information.
 
 ## Before You Begin
 
-To upload a Creative and create a Campaign, the following are required:
+To create a PG Campaign, the following are required:
 
 1. An Account On the IQM Platform
    *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
-1. Image, Video, Audio, HTML, VAST, DAAST, CSV, or XLSX File to Upload Creative
+1. An Approved and Running Creative 
+   * See Upload a Creative Quickstart Guide to upload a Creative
+1. An Insertion Order
+   * See [Create a Campaign](/Quickstart%20Guides/Create-a-Campaign-Quickstart) Quickstart Guide to create a new Insertion Order
+1. A Conversion
+   * See [Create a Conversion](/Tutorials/Create-a-Conversion) Tutorial
+1. A PG Deal
 
-<div style={{ maxWidth: "1000px" }}>
-:::info 
 
-**File requirements for Creative file:**
-  * 2MB for JPG, JPEG, PNG
-  * 750KB for GIF
-  * 400MB for MOV, MP4
-  * 100MB for MP3, WAV, OGG, MPEG
-
-For more information on [VAST<ExternalLink />](https://www.iab.com/guidelines/vast/) and DAAST XML format specifications, please see [IAB Tech Lab's Documentation<ExternalLink />](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/).
-
-Sample CSV file: [https://app.iqm.com/creatives/example-files/sample_html_creatives.csv<ExternalLink />](https://app.iqm.com/creatives/example-files/sample_html_creatives.csv)
-
-:::
-</div>
-
-## Upload Creative and Create a Campaign Using the IQM API
+## Create a PG Campaign Using the IQM API
 
 This Quickstart Guide will cover how to create a Campaign and upload a Creative. 
 
@@ -62,18 +50,9 @@ The minimum requirements to perform this task are: logging in with authenticatio
 
 1. Log In
     * Optional if you have already logged in and have a token
-1. Upload Creative
-    * 2.1: Request Creative Types (Optional if you already know supported/desired types)
-    * 2.2: Upload Creative (Optional if already uploaded before)
-    * 2.3: Check Creative status
-1. Create Insertion Order 
-    * Optional if already created
-1. Create PG Deal
-    * 4.1: Request Exchange List 
-    * 4.2: Create PG Deal
-1. Create a Campaign
-    * 5.1 Create a Campaign using Creative, provide necessary targeting parameters
-    * 5.2 Check Campaign's status
+1. Create a PG Campaign
+    * 2.1 Create a PG Campaign, provide necessary targeting parameters
+    * 2.2 Check Campaign's status
 
 ### Step 1: Log in
 
@@ -126,7 +105,7 @@ For further information see the complete [Login API Documentation](/Guidelines/U
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>>More Responses</summary>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
 
 ```json title="Response 400"
 {
@@ -238,866 +217,24 @@ function Login(): Promise < Responses > {
 
 </div></div>
 
-### Step 2: Upload Creative
 
-#### Step 2.1 Request Creative Types
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/creativeTypes</span>
+### Step 2: Create a PG Campaign
 
-<div class="container">
-  <div class="child1">
-
-To upload a Creative, a Creative Type must be provided. Use the Creative Type list endpoint to request a full list of allowed Creative Types.
-
-For further information see the complete [Creative Types API Documentation](/Guidelines/Master-API-Guidelines#get-creative-types).
-
-| Headers |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication Bearer Token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "data": [
-      {
-        "id": 17,
-        "name": "Audio",
-        "rtbTypeId": 2
-      },
-      {
-        "id": 15,
-        "name": "Native",
-        "rtbTypeId": 4
-      },
-      {
-        "id": 14,
-        "name": "Video",
-        "rtbTypeId": 3
-      },
-      {
-        "id": 13,
-        "name": "HTML",
-        "rtbTypeId": 1
-      },
-      {
-        "id": 11,
-        "name": "Image",
-        "rtbTypeId": 1
-      }
-    ],
-    "totalRecords": 5,
-    "filteredRecords": 5
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 500"
-{
-  "statusCode": 500,
-  "responseObject": {
-    "errorMsg": "Internal server error",
-    "errorCode": 500
-  }
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          label: string;
-          rtbTypeId: string;
-        }[];
-        totalRecords: number;
-        filteredRecords: number;
-      }
-    };
-  };
-};
-
-function getCreativeTypes_1(): Promise < Responses > {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/master/creativeTypes',
-    params: {
-      query?: {
-        creativeTypeIds?: `string`,
-        ids?: `string`,
-        pageNo?: `number`,
-        noOfEntries?: `number`,
-        sortBy?: `string`,
-        order?: `string`,
-        searchField?: `string`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-#### Step 2.2 Upload Creative
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/crt/creatives</span>
-
-<div class="container">
-  <div class="child1">
-
-When uploading a Creative, a file and Creative parameters (like tracking pixel and click URL) can be provided.
-
-Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_and_retrieving_form_data) on form data format.
-
-:::info
-
-For further information see the complete API Documentation:
-
-* [Add New Creative](/Guidelines/Creative-API-Guidelines#add-new-creative)
-
-* [Update Pixel URL](/Guidelines/Creative-API-Guidelines#update-pixel-url)
-
-* [Update Click URL](/Guidelines/Creative-API-Guidelines#update-click-url)
-
-:::
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-| `content-type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Media type of the resource |
-
-| Query Parameters | |
-| --- | --- | 
-| `creativeRequest`<br /><span class="type-text">string</span> | This parameter accepts a Map of UUIDs to Creative details. Each UUID corresponds to a single Creative. The metadata includes information such as Creative name, external Creative ID, Creative type, and click URL. Additionally, the Creative files are sent as multipart form data |
-| `creativeFiles`<br /><span class="type-text">array of strings</span> | Array of Creative files uploaded as multipart files. These files will be used for creating the Creatives. Each file is processed according to its type (image, video, etc.) |
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```application title="Request Sample (Form Data)"
-------WebKitFormBoundaryyTwoz48E2hTuXZoX
-Content-Disposition: form-data; name="dspId"
-
-------WebKitFormBoundaryyTwoz48E2hTuXZoX
-Content-Disposition: form-data; name="advertiserId"
-
-------WebKitFormBoundaryyTwoz48E2hTuXZoX
-Content-Disposition: form-data; name="creativeImageMetadata"
-
-{"8a9ab848-b302-40a6-bea1-17f7aca6f362":{"originalFileName":"Screenshot 2023-12-28 at 2.51.28 PM.png","creativeName":"Creative","clickUrl":"https://iqm.com","width":408,"height":364}}
-------WebKitFormBoundaryyTwoz48E2hTuXZoX
-Content-Disposition: form-data; name="creativeFiles"; filename="8a9ab848-b302-40a6-bea1-17f7aca6f362.png"
-Content-Type: image/png
-
-PNG
-
-IHDRlñ8¯Z
-±iCCPICC ProfileHTéÿôÐNèM"@J-té *!    J)ØÅ\
-*" ¬èRDÁFµcÁÂ¢ØûYDÔu±`Cå
-p»ûÎ{ï¼{Îû;÷¿÷þsæs²[(ÌÈHDþÞ´¸øn g±9b!#<< 2mÿ.îhÂÞ´Èõï÷ÿ«¨pybP8ÂÉ\1'
-ác¾çEPõßhD8Á=«Mpê¿àäIFã'c¢"ë'±Ù¢THæËIEò¶pùóöÈÊÊæ"Ü°9#Dx"?=ù/yRÿ3YÍNóÔ^&ïÃ
-3Ùùÿçãøß)®a()MX¤/è^FvÉ¡aÓÌçNÆOr4 z9bfÂ4sÙ>Aòµ¡ÁÓÂ÷cÉóHXQÓÌûFN³(;B^+EÄdL3[4SW-÷§ñXòüiQ±ÓË  fqFdÐLSîI#äýóþÞ3uýä{Ïÿe¿||­$-*@¾wöLÿ<c&§8NÞçã;-J¼åµáòx^¦¿Ü/Î¯ /äÌÚpù3LgO3 \ÀÙ|+B  Ø _ÂËLl-ÌñSÓ$4rÒx4c3fokïÀÄ¹z-ÞQ'Ï#D½2ã[Û{Çøøøñ_àu'@lñ/@yK'8RQî=qÁ _%ä     ô0ÖÀ87à|A Q ,²,ËÀjPJÀf°Tj°Ôàh'ÀYp\×ÁmðÈÀ x   FÀ0A"CHÒL +È¢C/E@ñP
-    )´Z
-@¥P´jCÐYè2ÔÝú¡aè-ôFÁ$X
-Ö�Má90fÀAp¼N�sà¸ÞÃ5ð¸>
-_�oÃ2ø%<(e²FÑQLT*¡V Qe¨TªÕº¡^¡>£±h
-¶F»¡ÐÑh:½½]®G·¢Ï£o¢ûÑ#èï2Fc�qÅ°0qTÌL¦SiÁ\ÀÜÆb>`±X*Öë
-ÀÆcÓ±K±°»°ÍØ3Ø>ìvÃiâ¬pî¸0'ÁávâàNãnàqð
-x}¼=Þà×àËðûñ§ð7ðCø12ÁàJ#p    ùM}NÂ5Â a¨B4#º£éÄÕÄrbñññ¡Â|¾Â*�r�C
-ú>TI$&)$%m$ÕÎîÞÉdS²9,!o$7Ï?)RmY\Å­7_+LJ
-Ê*]Sz¥LP6Uf*³W(W*w(ßUU¡¨Ø©©d©lPÙ¯rYå¹*NÕTÕW«Z¨ºWõêE1¢0)ÊZÊ>ÊÊ VÍL¥®V¢vP­WmD]U}®zzz¥úIuE5¥²¨ÔMÔ#Ô;Ô/³tg1fñf­Õ4ëÆ¬Ú^<bfÛ_4i¾[4Û4k¡µ,µæk-ÑÚ­uAë¶¶6G»XûöXÇR'Bg©Î^Q]=]]¡îNÝsº¯ô¨z^zézÛôNé
-ëSô=ôùúÛôOë¿ ©Ó´LZ9í<mÄ@Ç À@j°Ç ×`ÌÐÌ0Úpa³ác#¢Ý(ÅhQÑ±¾qñ2ãFã&ºIÉn¦f¦±¦ëLÛLi±Ì
-ÌÍÍ=ÍsÌkÌoY`-è»,®[Âi×¬`+'+¾Õ.«¾ÙÙ.³³kfßµ&Y3¬s­­ûm¨6Á6klÚl^Ï10gËî9ßmm3m÷Ù>´Sµ
-´[c×i÷ÖÞÒc_iËìàç°Ò¡ÝáÍ\«¹¼¹»çÞs¤88®sìrüæäì$rjrv6vNr®r¾KW£Ó7Ð/¹`\¼]Vºpùìêä*q=âú§µ[Û~·çóÌæñæí7ànèÎvßã.ó y$yüì!ó4ðd{Öx>õ2òâzÕz
-1,é×Þ¶Þ"ïïLWæræ¿O±O¯¯ªo´o�ï?C¿T¿F¿Gÿ¥þg0A[î²tYVk$Ð9pyàù RPdPEÐÓ`Ë`Qpg²5äQ¨I¨ ´-±Â¶=7
-Ï   ?>;?|~åügvË"º#)#÷G~òÚõ0Ú<ZÝ£Óó1Ö'¶4V7'nyÜÕx­x~|{.!&¡6atïí
-ï,4[·ðò"­EN.VZÌ^|4 ´?é+;]ÃMf%W%p\/î6î0ÏWÊJqO)Myêº5u8Í3­,íÉ¯à¿IH¯NÿQ1Ù�ÏJÊê¨
-2ç³õ²ó²ûVÂ"¡,Ç5g{Î(HT+Ä
-Åí5d@êKöçzäVæ~Z³ähJ ¯'ß2}þP_Á/KÑK9K»,[½¬9cùÐä]+V®\å¿ª~5quÆê_×Ø®)]ó~mìÚÎBÝÂU�?øÿÐX¤X$*º»Îm]õèù?ö®wX¿sý÷bnñÛ²¯8®üd÷SùOãS6önrÚ´{3v³`ó-[êKUJ
-J¶lmÝFÛV¼íýöÅÛ/Í-«ÞAÜ!Ý!+.oßi¼sóÎ¯i·+½+«tªÖW}ÜÅÝuc·×î¦jÝêê/?ó¾·ÇOkiMÙ^ìÞÜ½ÏöÅìëþ�þKC­VmIí·:A¬>¢þ|sCÃ~ýáFiãðÄ×úlo²nÚÓLm.9IShow more
-```
-
-```json title="Response 201"
-{
-  "success": true,
-  "data": {
-    "successData": {
-      "PS": "701388"
-    },
-    "failedData": {
-      "PF": "Creative file missing. Please attach the required file. : null"
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          successData: {
-            PS: string;
-          };
-          failedData: {
-            PF: string;
-          }
-        }
-      };
-    };
-  };
-}
-
-function createCreatives(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/crt/creatives',
-    params: {
-      query: {
-        creativeRequest: `string`,
-        creativeFiles?: `array of strings`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-#### Step 2.3 Check the Creative Status
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/crt/creatives/\{creativeId}</span>
-
-<div class="container">
-  <div class="child1">
-
-To create a Campaign, the Creative must be processed and approved. This API checks a Creative's status. Use the <var>creativeId</var> (6 digit number under <var>data</var> parameter in response) retrieved from the previous step to get its details. 
-
-The Creative details endpoint returns a Status ID (highlighted in code sample). A status ID of <var>2</var> means the Creative is <var>running</var>, which is the necessary status to continue creating a Campaign. See the [Get Creative Status List](/Guidelines/Creative-API-Guidelines#get-creative-status-list) endpoint documentation for more information.
-
-| Headers |  |
-| ----| --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-| Path Parameter || 
-| --- | --- |
-| `creativeId` <br /><span class="type-text">array of integers</span> | Creative ID |
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "creativeId": 686855,
-    "creativeName": "300x600-w23-01",
-    "rtbCreativeTypeId": 1,
-    "platformCreativeTypeId": 11,
-    //highlight-next-line
-    "creativeStatusId": 2,
-    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
-    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
-    "clickUrl": "http://iqm.com",
-    "imageDetails": {
-      "pixelUrl": "http://pixel.com",
-      "creativeWidth": 300,
-      "creativeHeight": 600
-    },
-    "creativeSourceType": "file",
-    "creativePreviewFlag": 1,
-    "createdAt": 1730201855165,
-    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
-    "userDetails": {
-      "uowId": 175891,
-      "userName": "Hardik",
-      "userEmail": "hardik.v+iqmsuper@iqm.com",
-      "hasApprovalAccess": true,
-      "hasEditAccess": true
-    },
-    "organizationDetails": {
-      "owId": 202760,
-      "organizationName": "AdWing"
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          creativeId: number;
-          creativeName: string;
-          rtbCreativeTypeId: number;
-          platformCreativeTypeId: number;
-          //highlight-next-line
-          creativeStatusId: number;
-          creativeSource: string;
-          creativeCardSource: string;
-          clickUrl: string;
-          imageDetails: {
-            pixelUrl: string;
-            creativeWidth: number;
-            creativeHeight: number;
-          };
-          creativeSourceType: string;
-          creativePreviewFlag: number;
-          createdAt: number;
-          modifiedAt: number;
-          userDetails: {
-            uowId: number;
-            userName: string;
-            userEmail: string;
-            hasApprovalAccess: boolean;
-            hasEditAccess: boolean;
-          };
-          organizationDetails: {
-            owId: number;
-            organizationName: string
-          }
-        }
-      };
-    };
-  };
-}
-
-function getCreative(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/crt/creatives/{creativeId}',
-    params: {
-      path: {
-        creativeId: `number`
-      }
-    }
-  };
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-### Step 3: Create Insertion Order
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
-
-<div class="container">
-<div class="child1">
-
-Before a Campaign can be started an Insertion Order must be created. An Insertion Order is a contractual agreement that outlines the terms and conditions for one or more advertising Campaigns. Once created, a Campaign can be created and assigned to an Insertion Order. Read more about [Insertion Orders<ExternalLink />](https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order).
-
-The minimum required values for IO creation are as listed below. See a complete table of [Resource Properties](../Guidelines/Campaign-API-Guidelines#insertion-order-resource-properties) for all supported values. 
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
-
-| Request Schema | |
-| --- | --- |
-| `ioName` <br /><span class="type-text">string</span> | Insertion Order name |
-| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time |
-| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time |
-| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget |
-| `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](../Guidelines/Campaign-API-Guidelines#get-io-status-list) |
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | IO timezone ID |
-| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included campaigns |
-| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [IO Budget Type ID](../Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)
-| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](../Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods) |
-
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample (budget based IO)" 
-{
-    "ioName": "IO Name 1",
-    "ioStartTime": 1690898148000,
-    "ioEndTime": 1690898888000,
-    "ioTotalBudget": 1000,
-    "ioTimeZoneId": 29,
-    "isAutoSumIoTotalBudget": true,
-    "ioBudgetTypeId": 1,
-    "ioBudgetDistributionMethodId": 1
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "ioId": 123456,
-        "ioName": "IO Name 1",
-        "ioStartTime": 1690898148000,
-        "ioEndTime": 1690898888000,
-        "ioTotalBudget": 0,
-        "ioTimeZoneId": 29,
-        "ioBudgetTypeId": 1,
-        "ioBudgetDistributionMethodId": 1,
-        "isAutoSumIoTotalBudget": true,
-        "ioTotalImpressions": null
-    }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          ioId: number;
-          ioName: string;
-          ioStartTime: number;
-          ioEndTime: number;
-          ioTotalBudget: number;
-          ioTimeZoneId: number;
-          ioBudgetTypeId: number;
-          ioBudgetDistributionMethodId: number;
-          isAutoSumIoTotalBudget: boolean;
-          ioTotalImpressions: number
-        }
-      }
-    };
-  };
-};
-
-function createCampaignIO(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/cmp/io/add',
-    requestBody: {
-      content: {
-        "application/json": {
-          ioId?: `number`,
-          ioName: `string`,
-          owId?: `number`,
-          createdByUowId?: `number`,
-          modifiedByUowId?: `number`,
-          ioStartTime?: `number`,
-          ioEndTime?: `number`,
-          ioTotalBudget?: `number`,
-          ioTimeZoneId?: `number`,
-          isAutoSumIoTotalBudget?: `boolean`,
-          ioBudgetDistributionMethodId?: `number`,
-          ioBudgetTypeId?: `number`,
-          ioTotalImpressions?: `number`,
-          ioStatusId?: `number`,
-          ioNextPerformanceCheck?: `number`,
-          ioLastPriorityShift?: `number`,
-          ioCurrentPriority?: `number`,
-          isIoPrioritise?: `boolean`,
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-### Step 4: Create PG Deal
-
-Before a Campaign can be created, a Programmatic Guarantee (PG) Deal must be created first. A PG Deal is a direct negotiation between one publisher and one Advertiser with a fixed amount of ad Inventory at a pre-negotiated price. Read more about [PG Deals<ExternalLink />](https://help.iqm.com/en/articles/9613540-what-is-a-programmatic-guaranteed-pg-deal). 
-
-#### Step 4.1 Request Exchange List
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/exchanges</span>
-
-<div class="container">
-<div class="child1">
-
-To create a PG Deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
-
-| Headers |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "data": [
-      {
-        "id": 90,
-        "name": "Aniview",
-        "urlName": "aniview"
-      },
-      {
-        "id": 89,
-        "name": "LoopMe",
-        "urlName": "loopme"
-      },
-      {
-        "id": 88,
-        "name": "One Tag",
-        "urlName": "onetag"
-      },
-      {
-        "id": 87,
-        "name": "Share Through",
-        "urlName": "sharethrough"
-      },
-      {
-        "id": 84,
-        "name": "Vidazoo",
-        "urlName": "vidazoo"
-      },
-      {
-        "id": 80,
-        "name": "Equativ",
-        "urlName": "equativ"
-      },
-      {
-        "id": 78,
-        "name": "Magnite",
-        "urlName": "magnite"
-      },
-      {
-        "id": 77,
-        "name": "Verve",
-        "urlName": "verve"
-      },
-      {
-        "id": 76,
-        "name": "Infolink",
-        "urlName": "infolink"
-      },
-      {
-        "id": 75,
-        "name": "Beachfront",
-        "urlName": "beachfront"
-      },
-      {
-        "id": 74,
-        "name": "Teads",
-        "urlName": "teads"
-      },
-      {
-        "id": 73,
-        "name": "Outbrain",
-        "urlName": "outbrain"
-      },
-      {
-        "id": 72,
-        "name": "Telaria",
-        "urlName": "telaria"
-      },
-      {
-        "id": 71,
-        "name": "33 Across",
-        "urlName": "ttacross"
-      },
-      {
-        "id": 69,
-        "name": "Media.net",
-        "urlName": "mnet"
-      },
-      {
-        "id": 66,
-        "name": "Unruly",
-        "urlName": "unruly"
-      },
-      {
-        "id": 47,
-        "name": "Index Exchange",
-        "urlName": "indexch"
-      },
-      {
-        "id": 46,
-        "name": "Triton Digital",
-        "urlName": "tdigital"
-      },
-      {
-        "id": 45,
-        "name": "Publisher Direct",
-        "urlName": "pbd"
-      },
-      {
-        "id": 41,
-        "name": "Column6",
-        "urlName": "adigital"
-      },
-      {
-        "id": 39,
-        "name": "Google DoubleClick",
-        "urlName": "adx"
-      },
-      {
-        "id": 37,
-        "name": "SpotXchange",
-        "urlName": "spotx"
-      },
-      {
-        "id": 19,
-        "name": "OpenX",
-        "urlName": "openx"
-      },
-      {
-        "id": 16,
-        "name": "Pubmatic",
-        "urlName": "pubmatic"
-      },
-      {
-        "id": 11,
-        "name": "Smaato",
-        "urlName": "smaato"
-      },
-      {
-        "id": 1,
-        "name": "iQM",
-        "urlName": "test"
-      }
-    ],
-    "totalRecords": 26,
-    "filteredRecords": 26
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          data: {
-            id: number;
-            name: string;
-            urlName: string;
-          }[];
-          totalRecords: number;
-          filteredRecords: number;
-        }
-      }
-    };
-  };
-};
-
-function getExchanges(): Promise < Responses > {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/master/exchanges',
-    params: {
-      query?: {
-        exchangeIds?: `string`,
-        ids?: `string`,
-        pageNo?: `number`,
-        noOfEntries?: `number`,
-        sortBy?: `string`,
-        order?: `string`,
-        searchField?: `string`,
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div>
-</div>
-
----
-
-#### Step 4.2 Create PG Deal
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/pg/deals/add</span>
-
-<div class="container">
-<div class="child1">
-
-Once an exchange is selected, use the <var>exchangeId</var> from the response to create a PG deal. 
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
-
-| Request Schema  |  |
-| ---- | --- |
-| `dealId` <br /><span class="type-text">string</span> | PG Deal ID |
-| `dealName` <br /><span class="type-text">string</span>| PG Deal name |
-| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG Deal | 
-| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
-| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal <br />Active: <var>1></var> <br />Inactive: <var>2</var> |
-| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
-| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID of PG Deal
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-    "dealId": "YT-Test-1234",
-    "dealName": "Test deal YT31",
-    "exchangeId": 11,
-    "statusId": 2,
-    "paymentTypeId": 1,
-    "description": "Test Deal"
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "message": "Deal Test deal YT31 created successfully",
-        "id": 2
-    }
-}
-```
-
-</TabItem></Tabs>
-
-</div>
-</div>
-
----
-
-### Step 5: Create a Campaign
-
-#### Step 5.1 Create Campaign
+#### Step 2.1 Create Campaign
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/pg/campaigns/add</span>
 
 <div class="container">
   <div class="child1">
 
-Once a Creative is approved, an Insertion Order is created, and a PG deal is created, a Campaign can be created. Use the following schema to define the desired targeting parameters of the new Campaign. Use the <var>creativeTypeId</var> identified in step 2.1, the <var>creativeId</var> from the response in step 2.3, and the <var>ioId</var> from step 3, and the <var>pgDealId</var> returned (<var>id</var>) in step 4.2 to create the Campaign.   
+Once you are logged in and have met the prerequisite conditions (see [Before You Begin](#before-you-begin)), you can create a PG Campaign. You will need a Creative, an Insertion Order, a Conversion, and a PG Deal to create a PG Campaign. Review the Request Schema table below for all the other parameters required for this endpoint.  
 
 :::info
 
-Make sure that <var>budgetTypeId</var> of Campaign matches <var>ioBudgetTypeId</var> from step 3. 
+Make sure that the <var>budgetTypeId</var> of your PG Campaign matches the <var>ioBudgetTypeId</var> of your Insertion Order. 
 
 :::
-
-For further information see the complete [Campaign Creation API Documentation](/Guidelines/Campaign-API-Guidelines#create-new-pg-campaign).
 
 | Headers |  |
 | ----  | --- |
@@ -1127,7 +264,7 @@ For further information see the complete [Campaign Creation API Documentation](/
   </tr>
     <tr>
   <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
-  <td>Timezone ID, see [Master API](/Guidelines/Master-API-Guidelines#get-timezones)</td>
+  <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)</td>
   </tr>
       <tr>
   <td>`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
@@ -1155,7 +292,7 @@ For further information see the complete [Campaign Creation API Documentation](/
   </tr>
         <tr>
   <td>`campaignTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign Type ID](#get-campaign-count-with-campaign-type)</td>
+  <td>[Campaign Type ID](#get-campaign-count-with-campaign-type) <br /><var>2</var>: PG Campaign</td>
   </tr>
         <tr>
   <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
@@ -1176,7 +313,7 @@ For further information see the complete [Campaign Creation API Documentation](/
   <table className="objectProperties">
   <tr>
   <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>Creative type ID, see [Master API](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+  <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
   </tr>
     <tr>
   <td>`creativeIds` <br /><span class="type-text">array of integers</span></td>
@@ -1243,33 +380,27 @@ For further information see the complete [Campaign Creation API Documentation](/
 {
   "pgCampaignInfo": {
     "campaignName": "test imps PG campaign",
-    //highlight-next-line
     "ioId": 95179,
     "timeZoneId": 29,
     "totalImpressions": 12345,
     "maxBid": 8,
     "startTime": 1715662337,
     "endTime": 1717128000,
-    //highlight-next-line
     "budgetTypeId": 2,
     "campaignTypeId": 2,
     "advertiserDomain": "https://www.xyz.com"
   },
   "creativeTargeting": {
-    //highlight-start
     "creativeTypeId": 11,
     "creativeIds": [
       644506
     ]
-    //highlight-end
   },
   "inventoryTargeting": {
-    //highlight-start
     "pgDealIds": [
       30,
       12
     ]
-    //highlight-end
   },
   "conversionTargeting": {
     "conversionTypeId": 1,
@@ -1360,16 +491,12 @@ function addPGCampaign(): Promise<Responses> {
             conversionIds: `array of numbers`,
           },
           creativeTargeting: {
-            //highlight-start
             creativeTypeId: `number`,
             creativeIds: `array of numbers`,
-            //highlight-end
           },
           inventoryTargeting: {
-            //highlight-start
             pgDealIds: `array of numbers`,
             paymentTypeId?: `number`,
-            //highlight-end
           },
           pgCampaignInfo: {
             campaignName: `string`,
@@ -1380,9 +507,7 @@ function addPGCampaign(): Promise<Responses> {
             endTime?: `number`,
             totalImpressions?: `number`,
             advertiserDomain: `string`,
-            //highlight-next-line
             ioId: `number`,
-            //highlight-next-line
             budgetTypeId: `number`,
             campaignTypeId?: `number`,
             owId?: `number`,
@@ -1406,7 +531,7 @@ function addPGCampaign(): Promise<Responses> {
 
 </div></div>
 
-#### Step 5.2: Check Campaign Status
+#### Step 2.2: Check Campaign Status
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
 
@@ -1415,11 +540,9 @@ function addPGCampaign(): Promise<Responses> {
 
 To run a Campaign, it must be approved. Use the <var>campaignId</var> returned from the last step to check the created Campaign's status. 
 
-For further information see the complete [Campaign Details API Documentation](/Guidelines/Campaign-API-Guidelines#get-campaign-details-by-id).
-
 | Path Parameter  |  |
 | ---  | --- |
-| `campaign_id` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Campaign ID
+| `campaignId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Campaign ID
 
 | Headers |  |
 | ---- | --- |
@@ -1452,7 +575,7 @@ For further information see the complete [Campaign Details API Documentation](/G
     "startTime": 1703794800,
     "endTime": 1704614400,
     //highlight-next-line
-    "status": "pending",
+    "status": "running",
     "dspMargin": 0,
     "platformMargin": 0,
     "userDealMargin": 0,
