@@ -214,6 +214,10 @@ const config = {
           {
             to: '/Tutorials/Create-an-Insights-Report',
             from: '/Quickstart Guides/Insights-Quickstart/'
+          },
+          {
+            to: '/Tutorials/Create-a-PG-Campaign',
+            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
           }
         ]
       }
