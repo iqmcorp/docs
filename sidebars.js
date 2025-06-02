@@ -138,6 +138,18 @@ const sidebars = {
               href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#step-2-create-insertion-order`,
               className: 'sidebarItemQS'
             },
+            {
+              type: `link`,
+              label: 'Step 3: Create a Campaign',
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#step-3-create-a-campaign`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Check Campaign Status',
+              href: `/Quickstart%20Guides/Create-a-Campaign-Quickstart#step-4-check-campaign-status`,
+              className: 'sidebarItemQS'
+            },
           ]
         },
         {
