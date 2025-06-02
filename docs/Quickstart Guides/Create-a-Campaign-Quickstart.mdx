@@ -16,16 +16,17 @@ The following endpoints will be used to create an Insertion Order and start a Ca
 <span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
 <br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/add</span>
 <br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v2/cmp/campaigns/add</span>
+<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId}</span>
 
 ## About IQM Campaigns
 
-The IQM APIs provide access to create Insertion Orders and Campaigns. The APIs can be used to connect to the desired applications. 
+IQM's Campaigns define the individual marketing strategies of your ads. By specifying the supported parameters you can use the API to create a new Campaign. 
 
-Once an Insertion Order is created, an uploaded and processed Creative can be used for creating and running advertising Campaigns.
+Learn more by reading the [Campaigns Overview<ExternalLink />](https://help.iqm.com/en/articles/11497668-campaigns-overview) Help Center Article. 
 
 ## Before You Begin
 
-To upload a Creative and create a Campaign, the following are required:
+To create a Campaign, the following are required:
 
 1. An Account On the IQM Platform
    *  See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
@@ -34,17 +35,16 @@ To upload a Creative and create a Campaign, the following are required:
 
 ## Create a Campaign Using the IQM API
 
-This Quickstart Guide will cover how to create a Campaign and upload a Creative. 
+This Quickstart Guide will cover how to create an Insertion Order and a new Campaign. 
 
-The minimum requirements to perform this task are: logging in with authentication credentials, uploading a Creative, and creating a Campaign. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
+The minimum requirements to perform this task are: logging in with authentication credentials, creating an Insertion Order, and starting a new Campaign. Once these steps are accomplished, more can be learned about IQM's API through the [Guidelines](/Guidelines/) pages.
 
 1. Log In
     * Optional if you have already logged in and have a token
 1. Create Insertion Order 
     * Optional if already created
 1. Create a Campaign
-    * 5.1 Create a Campaign using Creative, provide necessary targeting parameters
-    * 5.2 Check Campaign's status
+1. Check Campaign's Status
 
 ### Step 1: Log in
 
@@ -543,15 +543,10 @@ interface Responses {
 }
 
 function saveCampaign(): Promise<Responses> {
-/*
-* or function saveDraftCampaign(): Promise<Responses> {
-*/
+
   const options = {
     method: 'POST',
     url: 'https://app.iqm.com/api/v2/cmp/campaigns/add',
-/*
-* or url : 'https://app.iqm.com/api/v2/cmp/campaigns/draft/add',
-*/
     requestBody: {
          content: {
         "application/json": {
@@ -663,6 +658,197 @@ function saveCampaign(): Promise<Responses> {
     }
   };
 
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 4: Check Campaign Status
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId}</span>
+
+<div class="container">
+  <div class="child1">
+
+To run a Campaign, it must be approved. Use the <var>campaignId</var> returned from Step 3 to check the created Campaign's status and other details.
+
+| Path Parameters |  |
+| ---- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | Campaign ID |
+
+
+</div> <div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "statusCode": 200,
+    "responseObject": {
+        "owId": 203578,
+        "parentOrganizationName": "Signup testing 1",
+        "id": 537599,
+        "uowId": 188494,
+        "campaignName": "TestCampaign",
+        "advertiserDomain": "https://iqm.com",
+        "creativeType": 11,
+        "campaignType": 1,
+        "totalBudgetPacing": true,
+        "isTvAd": false,
+        "budgetDay": 1199.08,
+        "budgetTotal": 50000.0,
+        "maxBid": 15.0,
+        "timezone": 29,
+        "startTime": 1726518001,
+        "endTime": 1727668800,
+        //highlight-next-line
+        "status": "running",
+        "dspMargin": 0,
+        "platformMargin": 0,
+        "userDealMargin": 0,
+        "spentScale": false,
+        "creativeIds": "676384",
+        "conversionType": "None",
+        "bidOptimization": true,
+        "bidPacing": true,
+        "isBidShading": false,
+        "impressionCapping": 0,
+        "maxDayImpressions": 0,
+        "maxDayClicks": 0,
+        "maxDayConversions": 0,
+        "totalImpressions": 0,
+        "totalClicks": 0,
+        "totalConversions": 0,
+        "deviceType": "13,15,11,12",
+        "trafficType": "11,12",
+        "exchanges": "",
+        "isLocationWithOrFilter": true,
+        "countryId": "30100001",
+        "locationDetails": {},
+        "isCampaignFromNewPlatform": true,
+        "organizationName": "User's Org",
+        "userEmail": "User@iqm.com",
+        "userName": "User",
+        "conversionTypeId": 0,
+        "isUnapprovedAudienceTargeted": false,
+        "isAllAudienceUnapproved": false,
+        "createDate": 1726517360,
+        "ioId": 15844,
+        "ioName": "Test2",
+        "prebidAudienceSegmentIdList": [],
+        "campaignTypeId": 1,
+        "budgetTypeId": 1,
+        "isAdvanceAudioVideoTargeted": false,
+        "isEstimatorAvailable": true,
+        "isEditAccess": true,
+        "isMarginSet": false,
+        "isApprovalAccess": false,
+        "isParentInvoiceTemplateSet": true
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        statusCode: number;
+        responseObject: {
+          owId: number;
+          parentOrganizationName: string;
+          id: number;
+          uowId: number;
+          campaignName: string;
+          advertiserDomain: string;
+          creativeType: number;
+          campaignType: number;
+          totalBudgetPacing: boolean;
+          isTvAd: boolean;
+          budgetDay: number;
+          budgetTotal: number;
+          maxBid: number;
+          timezone: number;
+          startTime: number;
+          endTime: number;
+                  //highlight-next-line
+          status: string;
+          dspMargin: number;
+          platformMargin: number;
+          userDealMargin: number;
+          spentScale: boolean;
+          creativeIds: string;
+          conversionType: string;
+          bidOptimization: boolean;
+          bidPacing: boolean;
+          isBidShading: boolean;
+          impressionCapping: number;
+          maxDayImpressions: number;
+          maxDayClicks: number;
+          maxDayConversions: number;
+          totalImpressions: number;
+          totalClicks: number;
+          totalConversions: number;
+          deviceType: string;
+          trafficType: string;
+          exchanges: string;
+          isLocationWithOrFilter: boolean;
+          countryId: string;
+          locationDetails: {}
+          isCampaignFromNewPlatform: boolean;
+          organizationName: string;
+          userEmail: string;
+          userName: string;
+          conversionTypeId: number;
+          isUnapprovedAudienceTargeted: boolean;
+          isAllAudienceUnapproved: boolean;
+          createDate: number;
+          ioId: number;
+          ioName: number;
+          prebidAudienceSegmentIdList: number[];
+          campaignTypeId: number;
+          budgetTypeId: number;
+          isAdvanceAudioVideoTargeted: boolean;
+          isEstimatorAvailable: boolean;
+          isEditAccess: boolean;
+          isMarginSet: boolean;
+          isApprovalAccess: boolean;
+          isParentInvoiceTemplateSet: boolean;
+        }
+      }
+    }
+  }
+}
+
+function getCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/cmp/campaign/{campaignId}',
+    params: {
+      query?: {
+        isSpentRequired?: `boolean`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```
