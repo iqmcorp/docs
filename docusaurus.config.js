@@ -101,6 +101,10 @@ const config = {
         apiKey: "REDACTED_ALGOLIA_KEY",
         indexName: "iqmcorpio",
         contextualSearch: true,
+        replaceSearchResultPathname: {
+          from: `/docs/`,
+          to: `/`
+        }
       },
       image: "img/IQM-logo-dark.jpg",
       navbar: {
