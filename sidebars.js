@@ -288,100 +288,6 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Upload a Matched Audience',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM Matched Audience',
-              href: `/Tutorials/Upload-a-Matched-Audience#about-iqm-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Before You Begin',
-              href: `/Tutorials/Upload-a-Matched-Audience#before-you-begin`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Upload Matched Audience Using the IQM API',
-              href: `/Tutorials/Upload-a-Matched-Audience#upload-matched-audience-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Tutorials/Upload-a-Matched-Audience#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Request Column List',
-              href: `/Tutorials/Upload-a-Matched-Audience#step-2-request-column-list`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 3: Upload Matched Audience',
-              href: `/Tutorials/Upload-a-Matched-Audience#step-3-upload-matched-audience`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Check Audience Status',
-              href: `/Tutorials/Upload-a-Matched-Audience#step-4-check-audience-status`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Create a PG Campaign',
-          className: 'sidebarItem',
-          link: {
-            type: 'doc',
-            id: 'Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
-          },
-          items: [
-            {
-              type: `link`,
-              label: 'About IQM PG Campaigns',
-              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-pg-campaigns`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Before You Begin',
-              href: `/Tutorials/Create-a-PG-Campaign#before-you-begin`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Create a PG Campaign Using the IQM API',
-              href: `/Tutorials/Create-a-PG-Campaign#create-a-pg-campaign-using-the-iqm-api`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 1: Log in',
-              href: `/Tutorials/Create-a-PG-Campaign#step-1-log-in`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 2: Create a PG Campaign',
-              href: `/Tutorials/Create-a-PG-Campaign#step-2-create-a-pg-campaign`,
-              className: 'sidebarItemQS'
-            },
-          ]
-        },
-        {
-          type: 'category',
           label: 'Create a Bid Model',
           className: 'sidebarItem',
           link: {
@@ -464,6 +370,141 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Create a Deal',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Tutorials/Deal-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Conversions',
+              href: `/Tutorials/Create-a-Conversion#about-iqm-conversions`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Create a Conversion',
+              href: `/Tutorials/Create-a-Conversion#create-a-conversion-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Tutorials/Create-a-Conversion#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a Pixel Conversion',
+              href: `/Tutorials/Create-a-Conversion#step-2-create-a-pixel-conversion`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Assign a Conversion to a Campaign',
+              href: `/Tutorials/Create-a-Conversion#step-3-assign-a-conversion-to-a-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Create an Insights Report',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Insights-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Insights',
+              href: `/Tutorials/Create-an-Insights-Report#about-iqm-insights`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Create-an-Insights-Report#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Eligibility Requirements',
+              href: `/Tutorials/Create-an-Insights-Report#eligibility-requirements`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Campaign Bidding Insights',
+              href: `/Tutorials/Create-an-Insights-Report#campaign-bidding-insights`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Audience Insights Report',
+              href: `/Tutorials/Create-an-Insights-Report#audience-insights-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Voter Level Data Report',
+              href: `/Tutorials/Create-an-Insights-Report#voter-level-data-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Provider Level Data Report',
+              href: `/Tutorials/Create-an-Insights-Report#provider-level-data-report`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Create a PG Campaign',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM PG Campaigns',
+              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-pg-campaigns`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Create-a-PG-Campaign#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Create a PG Campaign Using the IQM API',
+              href: `/Tutorials/Create-a-PG-Campaign#create-a-pg-campaign-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log in',
+              href: `/Tutorials/Create-a-PG-Campaign#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a PG Campaign',
+              href: `/Tutorials/Create-a-PG-Campaign#step-2-create-a-pg-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Optimize Your Inventory',
           className: 'sidebarItem',
           link: {
@@ -523,53 +564,53 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Create an Insights Report',
+          label: 'Upload a Matched Audience',
           className: 'sidebarItem',
           link: {
             type: 'doc',
-            id: 'Quickstart Guides/Insights-Quickstart'
+            id: 'Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide'
           },
           items: [
             {
               type: `link`,
-              label: 'About IQM Insights',
-              href: `/Tutorials/Create-an-Insights-Report#about-iqm-insights`,
+              label: 'About IQM Matched Audience',
+              href: `/Tutorials/Upload-a-Matched-Audience#about-iqm-matched-audience`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Before You Begin',
-              href: `/Tutorials/Create-an-Insights-Report#before-you-begin`,
+              href: `/Tutorials/Upload-a-Matched-Audience#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Eligibility Requirements',
-              href: `/Tutorials/Create-an-Insights-Report#eligibility-requirements`,
+              label: 'Upload Matched Audience Using the IQM API',
+              href: `/Tutorials/Upload-a-Matched-Audience#upload-matched-audience-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Campaign Bidding Insights',
-              href: `/Tutorials/Create-an-Insights-Report#campaign-bidding-insights`,
+              label: 'Step 1: Log In',
+              href: `/Tutorials/Upload-a-Matched-Audience#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Audience Insights Report',
-              href: `/Tutorials/Create-an-Insights-Report#audience-insights-report`,
+              label: 'Step 2: Request Column List',
+              href: `/Tutorials/Upload-a-Matched-Audience#step-2-request-column-list`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Voter Level Data Report',
-              href: `/Tutorials/Create-an-Insights-Report#voter-level-data-report`,
+              label: 'Step 3: Upload Matched Audience',
+              href: `/Tutorials/Upload-a-Matched-Audience#step-3-upload-matched-audience`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Provider Level Data Report',
-              href: `/Tutorials/Create-an-Insights-Report#provider-level-data-report`,
+              label: 'Step 4: Check Audience Status',
+              href: `/Tutorials/Upload-a-Matched-Audience#step-4-check-audience-status`,
               className: 'sidebarItemQS'
             },
           ]
@@ -2550,7 +2591,7 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Programmatic Guarantee (PG) Deals Details`,
+          label: `Programmatic Guaranteed (PG) Deals Details`,
           className: 'sidebarItem',
           items: [
             {

@@ -1,22 +1,50 @@
-# Setting Up a Deal
+---
+title: Create a Deal
+hide_table_of_contents: true
+---
 
-### Create PG Deal
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
 
-Before a Campaign can be created, a Programmatic Guarantee (PG) Deal must be created first. A PG Deal is a direct negotiation between one publisher and one Advertiser with a fixed amount of ad Inventory at a pre-negotiated price. Read more about [PG Deals<ExternalLink />](https://help.iqm.com/en/articles/9613540-what-is-a-programmatic-guaranteed-pg-deal). 
+# Create a Deal
 
-#### Step 4.1 Request Exchange List
+## About IQM Deals
+
+The Inventory API allows you to create and manage advertising deals. IQM offers two kinds of private deals:
+
+  * **Private Marketplace (PMP) Deals** are a type of programmatic advertising arrangement that allows Advertisers to purchase ad Inventory through a private, invitation-only auction.
+  * **Programmatic Gauranteed (PG) Deals** are a direct negotiation between one publisher and one Advertiser that offer budget predictability and avoid auction volatility by ensuring a fixed amount of ad Inventory at a pre-negotiated price.
+
+More resources:
+  * [Inventory API](/Guidelines/Inventory-API-Guide)
+  * [Optimize Your Inventory](/Tutorials/Optimize-Your-Inventory/) Tutorial
+  * [Ad Inventory and Placements<ExternalLink />](https://help.iqm.com/en/collections/2908807-ad-inventory-and-placements) Help Center Article
+
+## Before You Begin
+
+
+### Authentication
+
+Use the following header parameters for all requests:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+### Request Exchange List 
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/exchanges</span>
 
 <div class="container">
 <div class="child1">
 
-To create a PG Deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
-
-| Headers |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+To create a PG or PMP Deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
 
 </div>
 <div class="child2">
@@ -226,9 +254,7 @@ function getExchanges(): Promise < Responses > {
 </div>
 </div>
 
----
-
-#### Step 4.2 Create PG Deal
+## Create a PG Deal
 
 <span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/pg/deals/add</span>
 
@@ -237,20 +263,15 @@ function getExchanges(): Promise < Responses > {
 
 Once an exchange is selected, use the <var>exchangeId</var> from the response to create a PG deal. 
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
-
 | Request Schema  |  |
 | ---- | --- |
 | `dealId` <br /><span class="type-text">string</span> | PG Deal ID |
 | `dealName` <br /><span class="type-text">string</span>| PG Deal name |
 | `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG Deal | 
 | `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
-| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal <br />Active: <var>1></var> <br />Inactive: <var>2</var> |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG Deal <br />Active: <var>1</var> <br />Inactive: <var>2</var> |
 | `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
-| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID of PG Deal
+| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID <br /><var>2</var>: platform-based payment
 
 </div>
 <div class="child2">
@@ -279,7 +300,252 @@ Once an exchange is selected, use the <var>exchangeId</var> from the response to
 }
 ```
 
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+          id: number;
+        }
+      }
+    };
+  };
+}
+
+function addPGDeal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/inv/pg/deals/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          dealId: `string`
+          dealName: `string`,
+          exchangeId: `number`,
+          statusId: `number`,
+          description?: `string`,
+          owId?: `number`,
+          paymentTypeId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
 </TabItem></Tabs>
 
 </div>
 </div>
+
+## Create a PMP Deal
+
+<span class="badge badge--success">POST</span> <span class="path-text">api/v3/inv/pmp/deals/add</span>
+
+<div class="container">
+  <div class="child1">
+
+:::tip 
+
+Consider creating a PMP Inventory group if you plan to target or block the same group of PMP Deals across multiple Campaigns. See the [Optimize Your Inventory](/Tutorials/Optimize-Your-Inventory#step-3-create-an-inventory-group) Tutorial for step-by-step instructions. 
+
+:::
+
+| Properties |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PMP Deal ID |
+| `dealName` <br /><span class="type-text">string</span> | PMP Deal name |
+| `description` <br /><span class="type-text">string</span> | PMP Deal description |
+| `cpm` <br /><span class="type-text">integer</span> | PMP Deal Cost Per Mille (CPM) value |
+| `dealCurationTypeId` <br /><span class="type-text">integer</span> | [Curation Type ID](/Guidelines/Master-API-Guidelines#get-deal-curation-types) |
+| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange associated with PMP Deal |
+| `assignToCustomers` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs |
+| `active` <br /><span class="type-text">boolean</span> | Deal status, active (<var>true</var>) or inactive (<var>false</var>) |
+
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>PMP Deal ID</td>
+  </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+  </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "dealId": "DIewkFZALX1taoLjQg6Gge1dD6YvZYO4RChUKmOLk",
+    "dealName": "Deal test123",
+    "description": "test deal description",
+    "cpm": 10,
+    "creativeTypes": [
+        11,
+        12
+    ],
+    "exchangeId": 39,
+    "active": true
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 461,
+        "message": "Deal test123 created successfully"
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Deal id can not be longer than 500 characters",
+            "field": "dealId"
+        }
+    ]
+}
+```
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Invalid exchange id/ids provided"
+        }
+    ]
+}
+```
+
+```json title="Response 500"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "server encountered an error !"
+        }
+    ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        }
+      }
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          field: string;
+        }[];
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      }
+    };
+  };
+}
+
+function addPMPDeal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/inv/pmp/deals/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          dealId: `string`,
+          dealName: `string`,
+          description?: `string`,
+          cpm?: `number`,
+          dealCurationTypeId?: `number`,
+          creativeTypes?: `array of numbers`,
+          exchangeId: `number`,
+          assignToCustomers?: `array of numbers`,
+          active: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
