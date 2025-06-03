@@ -379,32 +379,32 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'About IQM Conversions',
-              href: `/Tutorials/Create-a-Conversion#about-iqm-conversions`,
+              label: 'About IQM Deals',
+              href: `/Tutorials/Deal-Guide#about-iqm-deals`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Create a Conversion',
-              href: `/Tutorials/Create-a-Conversion#create-a-conversion-using-the-iqm-api`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Deal-Guide#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Tutorials/Create-a-Conversion#step-1-log-in`,
+              label: 'Request Exchange List',
+              href: `/Tutorials/Deal-Guide#request-exchange-list`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 2: Create a Pixel Conversion',
-              href: `/Tutorials/Create-a-Conversion#step-2-create-a-pixel-conversion`,
+              label: 'Create a PG Deal',
+              href: `/Tutorials/Deal-Guide#create-a-pg-deal`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 3: Assign a Conversion to a Campaign',
-              href: `/Tutorials/Create-a-Conversion#step-3-assign-a-conversion-to-a-campaign`,
+              label: 'Create a PMP Deal',
+              href: `/Tutorials/Deal-Guide#create-a-pmp-deal`,
               className: 'sidebarItemQS'
             },
           ]
