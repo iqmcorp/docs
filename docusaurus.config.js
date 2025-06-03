@@ -101,6 +101,10 @@ const config = {
         apiKey: "0a3dbfa566444b62a52591ad5db9b3c8",
         indexName: "iqmcorpio",
         contextualSearch: true,
+        replaceSearchResultPathname: {
+          from: `/docs/`,
+          to: `/`
+        }
       },
       image: "img/IQM-logo-dark.jpg",
       navbar: {
@@ -214,6 +218,10 @@ const config = {
           {
             to: '/Tutorials/Create-an-Insights-Report',
             from: '/Quickstart Guides/Insights-Quickstart/'
+          },
+          {
+            to: '/Tutorials/Create-a-PG-Campaign',
+            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
           }
         ]
       }
