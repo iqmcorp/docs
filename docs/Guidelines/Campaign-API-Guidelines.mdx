@@ -69,7 +69,7 @@ Use the following header parameters for all requests:
 </tr>
 <tr>
 <td>`creativeType` <br /><span class="type-text">integer</span></td>
-<td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+<td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
 </tr>
 <tr>
 <td>`campaignType` <br /><span class="type-text">integer</span></td>
@@ -824,7 +824,7 @@ Returns a paginated list of Campaigns with their basic details.
 | `no_of_entries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var> |
 | `pgno` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>1</var> |
 | `order` <br /><span class="type-text">string</span> | Sorts by ascending (<var>asc</var>) or descending (<var>desc</var>) | 
-| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by [Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)  |
+| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by [Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | `created_time_of_creative` <br /><span class="type-text">string</span> | Filter by Creative creation time |
 | `status` <br /><span class="type-text">string</span> | Filter by multiple statuses <br />Supported values: <var>running</var>, <var>pending</var>, <var>paused</var>, <var>draft</var>, <var>rejected</var>, <var>expired</var> |
 | `ow_ids` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
@@ -1790,6 +1790,130 @@ function getCampaignGroupList(): Promise<Responses> {
 </div></div>
 
 ---
+
+### Get Deals Associated with Campaigns
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/campaigns/\{campaignTypeId}/deals</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Campaigns and their associated deal IDs by Campaign Type ID. 
+
+| Path Parameter ||
+| --- | --- |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)<br /><var>1</var>: Advanced <br /><var>2</var>: PG |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and an array of deal IDs</td>
+  </tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "503584": [
+      468,
+      469,
+      23
+    ],
+    "503947": [
+      468,
+      469
+    ],
+    "504447": [
+      468,
+      469
+    ],
+    "504448": [
+      589,
+      588
+    ],
+    "505743": [
+      468,
+      469
+    ],
+    "505753": [
+      468,
+      469
+    ],
+    "505754": [
+      468,
+      469
+    ],
+    "505755": [
+      588,
+      589
+    ],
+    "505758": [
+      468,
+      469
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function getDealsPerCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/cmp/campaigns/{campaignTypeId}/deals',
+    params: {
+      path: {
+        campaignTypeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ### Get Campaign Count by Status
 
@@ -2820,7 +2944,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     </tr>
         <tr>
     <td>`creativeType` <br /><span class="type-text">integer</span></td>
-    <td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+    <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
     </tr>
         <tr>
     <td>`campaignType` <br /><span class="type-text">integer</span></td>
@@ -4061,7 +4185,7 @@ Update properties of a created or draft PG Campaign by Campaign ID.
   <table className="objectProperties">
   <tr>
   <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+  <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
   </tr>
     <tr>
   <td>`creativeIds` <br /><span class="type-text">array of integers</span></td>
@@ -5882,7 +6006,7 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`campaignType` <br /><span class="type-text">string</span></td>
-  <td>[Campaign type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+  <td>[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
   <td>`status` <br /><span class="type-text">string</span></td>
@@ -5930,7 +6054,7 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`ioBudgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Insertion Order budget type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
+  <td>[Insertion Order budget Type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
 </tr>
 <tr>
   <td>`ioStatusId` <br /><span class="type-text">integer</span></td>
@@ -5974,11 +6098,11 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Budget type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
+  <td>[Budget Type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
 </tr>
 <tr>
   <td>`campaignTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+  <td>[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
   <td>`isEligibleForVLDInsightsReport` <br /><span class="type-text">boolean</span></td>
