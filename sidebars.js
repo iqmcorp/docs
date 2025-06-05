@@ -1155,6 +1155,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-deals-associated-with-campaigns"><span class="badge bar badge--success">POST</span>List of Campaign Deals</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-campaign-count-by-status"><span class="badge bar badge--success">POST</span>Campaign Count by Status</a>',
               defaultStyle: true,
             },
