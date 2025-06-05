@@ -23,7 +23,14 @@ More resources:
 
 ## Before You Begin
 
-To create a deal you will need an account on the IQM Platform (see [Getting Started](/Getting%20Started/Before-You-Begin)). Once you have an account you can log in and request the Exchange list.
+To create a deal, the following are required:
+
+  * An Account On the IQM platform
+    * See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
+  * A Campaign
+    * See [Create a Campaign](/Quickstart%20Guides/Create-a-Campaign-Quickstart) Quickstart Guide
+    * See [Create a PG Campaign](/Tutorials/Create-a-PG-Campaign) Tutorial
+    * Required for assigning a deal to a Campaign
 
 ### Log In 
 
@@ -435,7 +442,7 @@ function getExchanges(): Promise < Responses > {
 <div class="container">
 <div class="child1">
 
-Once an exchange is selected, use the <var>exchangeId</var> from the response to create a PG deal. 
+Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var> field to create a PG deal. 
 
 | Request Schema  |  |
 | ---- | --- |
@@ -534,7 +541,7 @@ function addPGDeal(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Once an exchange is selected, use the <var>exchangeId</var> from the response to create a PMP deal. 
+Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var> field to create a PMP deal. 
 
 :::tip 
 
@@ -717,6 +724,258 @@ function addPMPDeal(): Promise<Responses> {
     }
   };
 
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Assign Deals to a Campaign
+
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/pg/campaigns/mappings</span>
+<br /><span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/cmp/pmp/campaigns/mappings</span>
+
+<div class="container">
+  <div class="child1">
+
+Deals can be assigned or removed to/from Camapaigns. PG deals may only be assigned to PG Campaigns; and PMP deals may only be assigned to Advanced Campaigns. 
+
+| Request Schema | |
+| --- | --- |
+| `operations` <br /><span class="type-text">array</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from |
+| `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/remove to/from Campaigns |
+| `pgDealIds` <br /><span class="type-text">array of integers</span> | PG deal IDs to assign/remove to/from Campaigns |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+        <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "operations": [
+     {
+      "action": "assign",
+      "campaignIds": [
+        201,
+        203
+      ],
+      "pmpDealIds": [
+        101,
+        102
+      ]
+    },
+    {
+      "action": "deassign",
+      "campaignIds": [
+        202
+      ],
+      "pmpDealIds": [
+        102
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "PMP deal campaign mappings updated successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts title="PMP–Campaign mapping"
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function managePMPDealCampaignMappings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/cmp/pmp/campaigns/mappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: [
+            {
+              action: `string`,
+              campaignIds: `array of numbers`,
+              pmpDealIds: `array of numbers`,
+            }
+          ]
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+```ts title="PG–Campaign mapping"
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function managePgDealCampaignMappings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://app.iqm.com/api/v3/cmp/pg/campaigns/mappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: [
+            {
+              action: `string`,
+              campaignIds: `array of numbers`,
+              pmpDealIds: `array of numbers`,
+            }
+          ]
+        }
+      }
+    }
+  };
+  
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```

@@ -407,6 +407,12 @@ const sidebars = {
               href: `/Tutorials/Deal-Guide#create-a-pmp-deal`,
               className: 'sidebarItemQS'
             },
+            {
+              type: `link`,
+              label: 'Assign Deals to Campaign',
+              href: `/Tutorials/Deal-Guide#assign-deals-to-a-campaign`,
+              className: 'sidebarItemQS'
+            },
           ]
         },
         {
