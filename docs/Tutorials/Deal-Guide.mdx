@@ -983,3 +983,127 @@ function managePgDealCampaignMappings(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+## Get List of Deals Associated with Campaigns
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/campaigns/\{campaignTypeId}/deals</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Campaigns and their associated deal IDs by Campaign Type ID. 
+
+| Path Parameter ||
+| --- | --- |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)<br /><var>1</var>: Advanced <br /><var>2</var>: PG |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and an array of deal IDs</td>
+  </tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "503584": [
+      468,
+      469,
+      23
+    ],
+    "503947": [
+      468,
+      469
+    ],
+    "504447": [
+      468,
+      469
+    ],
+    "504448": [
+      589,
+      588
+    ],
+    "505743": [
+      468,
+      469
+    ],
+    "505753": [
+      468,
+      469
+    ],
+    "505754": [
+      468,
+      469
+    ],
+    "505755": [
+      588,
+      589
+    ],
+    "505758": [
+      468,
+      469
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function getDealsPerCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/cmp/campaigns/{campaignTypeId}/deals',
+    params: {
+      path: {
+        campaignTypeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

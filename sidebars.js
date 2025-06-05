@@ -413,6 +413,12 @@ const sidebars = {
               href: `/Tutorials/Deal-Guide#assign-deals-to-a-campaign`,
               className: 'sidebarItemQS'
             },
+            {
+              type: `link`,
+              label: 'List of Deals and Campaigns',
+              href: `/Tutorials/Deal-Guide#get-list-of-deals-associated-with-campaigns`,
+              className: 'sidebarItemQS'
+            },
           ]
         },
         {
