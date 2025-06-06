@@ -98,13 +98,9 @@ const config = {
       },
       algolia: {
         appId: "09FZUVDE53",
-        apiKey: "0a3dbfa566444b62a52591ad5db9b3c8",
-        indexName: "iqmcorpio",
+        apiKey: "***REMOVED***",
+        indexName: "IQM API Docs",
         contextualSearch: true,
-        replaceSearchResultPathname: {
-          from: `/docs/`,
-          to: `/`
-        }
       },
       image: "img/IQM-logo-dark.jpg",
       navbar: {
