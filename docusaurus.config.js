@@ -101,6 +101,10 @@ const config = {
         apiKey: "***REMOVED***",
         indexName: "IQM API Docs",
         contextualSearch: true,
+        replaceSearchResultPathname: {
+          from: '/docs/',
+          to: '/'
+        }
       },
       image: "img/IQM-logo-dark.jpg",
       navbar: {
