@@ -110,20 +110,44 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'Sign Up',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#sign-up`,
+              label: 'About IQM Creatives',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#about-iqm-creatives`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Log In',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#log-in`,
+              label: 'Before You Begin',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Refresh Token',
-              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#refresh-token`,
+              label: 'Upload a Creative Using the IQM API',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#upload-a-creative-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log In',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Request Creative Types',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#step-2-request-creative-types`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Upload a Creative',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#step-3-upload-a-creative`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Check Creative Status',
+              href: `/Quickstart%20Guides/Upload-a-Creative-Quickstart#step-4-check-creative-status`,
               className: 'sidebarItemQS'
             },
           ]
