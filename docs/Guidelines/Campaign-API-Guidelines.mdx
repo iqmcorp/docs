@@ -16,7 +16,7 @@ The Campaign API allows you to create and manage Campaigns and Insertion Orders 
   * **Insertion Orders** are the parent hierarchy to Campaigns and they define the contracts between an Advertiser and a media partner, as well as the parameters of an advertising Campaign. 
 
 More resources:
-  * [Start a New Campaign](/Quickstart%20Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide) Quickstart guide
+  * [Create a Campaign](/Quickstart%20Guides/Create-a-Campaign-Quickstart) Quickstart guide
   * [Create a Campaign<ExternalLink />](https://help.iqm.com/en/collections/1962110-create-a-campaign) Help Center Article
 
 ### Authentication
@@ -28,7 +28,7 @@ Use the following header parameters for all requests:
 | Headers  |  |
 | ----  | --- |
 | `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
 </div>
 
@@ -69,7 +69,7 @@ Use the following header parameters for all requests:
 </tr>
 <tr>
 <td>`creativeType` <br /><span class="type-text">integer</span></td>
-<td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+<td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
 </tr>
 <tr>
 <td>`campaignType` <br /><span class="type-text">integer</span></td>
@@ -824,7 +824,7 @@ Returns a paginated list of Campaigns with their basic details.
 | `no_of_entries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>50</var> |
 | `pgno` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>1</var> |
 | `order` <br /><span class="type-text">string</span> | Sorts by ascending (<var>asc</var>) or descending (<var>desc</var>) | 
-| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by [Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)  |
+| `creative_type_ids` <br /><span class="type-text">integer</span> | Filter by [Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)  |
 | `created_time_of_creative` <br /><span class="type-text">string</span> | Filter by Creative creation time |
 | `status` <br /><span class="type-text">string</span> | Filter by multiple statuses <br />Supported values: <var>running</var>, <var>pending</var>, <var>paused</var>, <var>draft</var>, <var>rejected</var>, <var>expired</var> |
 | `ow_ids` <br /><span class="type-text">integer</span> | Filter by Organization Workspace IDs | 
@@ -1790,6 +1790,130 @@ function getCampaignGroupList(): Promise<Responses> {
 </div></div>
 
 ---
+
+### Get Deals Associated with Campaigns
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/cmp/campaigns/\{campaignTypeId}/deals</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Campaigns and their associated deal IDs by Campaign Type ID. 
+
+| Path Parameter ||
+| --- | --- |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)<br /><var>1</var>: Advanced <br /><var>2</var>: PG |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and an array of deal IDs</td>
+  </tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "503584": [
+      468,
+      469,
+      23
+    ],
+    "503947": [
+      468,
+      469
+    ],
+    "504447": [
+      468,
+      469
+    ],
+    "504448": [
+      589,
+      588
+    ],
+    "505743": [
+      468,
+      469
+    ],
+    "505753": [
+      468,
+      469
+    ],
+    "505754": [
+      468,
+      469
+    ],
+    "505755": [
+      588,
+      589
+    ],
+    "505758": [
+      468,
+      469
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function getDealsPerCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v3/cmp/campaigns/{campaignTypeId}/deals',
+    params: {
+      path: {
+        campaignTypeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ### Get Campaign Count by Status
 
@@ -2804,7 +2928,15 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     </tr>
         <tr>
     <td>`isAgreementChecked` <br /><span class="type-text">boolean</span></td>
-    <td></td>
+    <td>Check to proceed: <var>true</var></td>
+    </tr>
+     <tr>
+    <td>`ioId` <br /><span class="type-text">string</span></td>
+    <td>Insertion Order ID that Campaign belongs to</td>
+    </tr>
+              <tr>
+    <td>`countryId` <br /><span class="type-text">string</span></td>
+    <td>[Country ID](/Guidelines/Master-API-Guidelines#get-country-segment)</td>
     </tr>
         <tr>
     <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
@@ -2812,7 +2944,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     </tr>
         <tr>
     <td>`creativeType` <br /><span class="type-text">integer</span></td>
-    <td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+    <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
     </tr>
         <tr>
     <td>`campaignType` <br /><span class="type-text">integer</span></td>
@@ -2822,13 +2954,17 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>`startTime` <br /><span class="type-text">integer</span></td>
     <td>Campaign start time</td>
     </tr>
+                <tr>
+    <td>`endTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign end time (required if total budget pacing is enabled)</td>
+    </tr>
         <tr>
     <td>`totalBudgetPacing` <br /><span class="type-text">boolean</span></td>
     <td>Budget is spent equally every hour: <var>true</var></td>
     </tr>
         <tr>
     <td>`budgetDay` <br /><span class="type-text">integer</span></td>
-    <td>Daily budget for Campaign serving daily</td>
+    <td>Daily budget for Campaign serving daily (not applicable if budget pacing is set to <var>true</var>)</td>
     </tr>
         <tr>
     <td>`budgetTotal` <br /><span class="type-text">integer</span></td>
@@ -2845,10 +2981,6 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
         <tr>
     <td>`timezone` <br /><span class="type-text">integer</span></td>
     <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones) for Campaign</td>
-    </tr>
-        <tr>
-    <td>`status` <br /><span class="type-text">string</span></td>
-    <td>Campaign status</td>
     </tr>
         <tr>
     <td>`creativeIds` <br /><span class="type-text">string</span></td>
@@ -2891,7 +3023,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Total Conversions </td>
     </tr>
     <tr>
-    <td>`targetCPI` <br /><span class="type-text">integer</span></td>
+    <td>`targetCPI` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
     <td>Target CPI (cost per install) for Campaign Serving </td>
     </tr>
         <tr>
@@ -2935,8 +3067,8 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Comma separated OS version IDs for targeting </td>
     </tr>
     <tr>
-    <td>`exchanges` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
-    <td>Comma separated [Exchanges IDs](/Guidelines/Master-API-Guidelines#get-exchanges) for targeting </td>
+    <td>`exchanges` <br /><span class="type-text">string</span></td>
+    <td>Comma separated [Exchanges IDs](/Guidelines/Master-API-Guidelines#get-exchanges) for targeting (leave string empty to select all)</td>
     </tr>
     <tr>
     <td>`prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span><span class="required-text">optional</span></td>
@@ -2947,8 +3079,8 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Comma separated [Device Type IDs](/Guidelines/Master-API-Guidelines#get-device-type) for targeting </td>
     </tr>
         <tr>
-    <td>`publisherAdCategory` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
-    <td>Comma separated [Publisher Ad Category IDs](/Guidelines/Master-API-Guidelines#get-publisher-ad-categories) for targeting </td>
+    <td>`publisherAdCategory` <br /><span class="type-text">string</span></td>
+    <td>Comma separated [Publisher Ad Category IDs](/Guidelines/Master-API-Guidelines#get-publisher-ad-categories) for targeting (leave string empty to select all)</td>
     </tr>
         <tr>
     <td>`userDealId` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
@@ -3007,15 +3139,15 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Indicates advanced targeting is enabled (<var>true</var>):  <var>creativeAdvanceTargeting</var> is optional and it is assumed that every video Creative segment is targeted </td>
     </tr>
         <tr>
-    <td>`isBidShading` <br /><span class="type-text">boolean</span></td>
+    <td>`isBidShading` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span></td>
     <td>Indicates Bid shading is enabled: <var>true</var>  </td>
     </tr>
         <tr>
-    <td>`creativeAdvanceTargeting` <br /><span class="type-text">JSON</span></td>
+    <td>`creativeAdvanceTargeting` <br /><span class="type-text">JSON</span> <span class="required-text">optional</span></td>
     <td>String to integer	map of Creative advanced targeting group to list of Creative advance targeting segment IDs </td>
     </tr>
            <tr>
-    <td>`campaignEstimatorMetaData` <br /><span class="type-text">JSON</span></td>
+    <td>`campaignEstimatorMetaData` <br /><span class="type-text">JSON</span> <span class="required-text">optional</span></td>
     <td>Campaign Estimator data with <var>reachMeta</var>, <var>landScapeMeta</var> and <var>sliderMeta</var> </td>
     </tr>
     </table>
@@ -3748,7 +3880,7 @@ Create a new PG Campaign for Advertiser.
   <table className="objectProperties">
   <tr>
   <td>`pgDealIds` <br /><span class="type-text">array of integers</span></td>
-  <td>PG Deal IDs attached to this Campaign</td>
+  <td>PG deal IDs attached to this Campaign</td>
   </tr>
   </table></details>
   </td>
@@ -4053,7 +4185,7 @@ Update properties of a created or draft PG Campaign by Campaign ID.
   <table className="objectProperties">
   <tr>
   <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Creative type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
+  <td>[Creative Type ID](/Guidelines/Master-API-Guidelines#get-creative-types)</td>
   </tr>
     <tr>
   <td>`creativeIds` <br /><span class="type-text">array of integers</span></td>
@@ -4074,7 +4206,7 @@ Update properties of a created or draft PG Campaign by Campaign ID.
   <table className="objectProperties">
   <tr>
   <td>`pgDealIds` <br /><span class="type-text">array of integers</span></td>
-  <td>PG Deal IDs attached to this Campaign</td>
+  <td>PG deal IDs attached to this Campaign</td>
   </tr>
   </table></details>
   </td>
@@ -5060,7 +5192,7 @@ Assign or remove multiple PMP deals to/from Campaigns.
 | --- | --- |
 | `operations` <br /><span class="type-text">array</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
 | `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to be assigned/de-assigned PMP deals |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from |
 | `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/de-assign to/from Campaigns |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
@@ -5240,8 +5372,8 @@ Assign or remove multiple PG deals to/from Campaigns.
 | --- | --- |
 | `operations` <br /><span class="type-text">array</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
 | `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to be assigned/de-assigned PMP deals |
-| `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/de-assign to/from Campaigns |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from |
+| `pgDealIds` <br /><span class="type-text">array of integers</span> | PG deal IDs to assign/remove to/from Campaigns |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -5599,14 +5731,14 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 | `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID|
 | `ioName` <br /><span class="type-text">string</span> | Insertion Order name|
 | `owId` | integer | Organization|
-| `createdByUowId` <br /><span class="type-text">integer</span> | User Organization Worskpace ID associated with IO creation|
-| `modifiedByUowId` <br /><span class="type-text">integer</span> | User Organization Worskpace ID associated with IO modification|
+| `createdByUowId` <br /><span class="type-text">integer</span> | User Organization Workspace ID associated with IO creation|
+| `modifiedByUowId` <br /><span class="type-text">integer</span> | User Organization Workspace ID associated with IO modification|
 | `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time|
 | `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time|
 | `ioTotalBudget` <br /><span class="type-text">integer</span> | Budget of IO|
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)|
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones) for Insertion Order |
 | `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included Campaigns|
-| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | Budget Distribution Method ID|
+| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget Distribution Method ID](/Guidelines/Campaign-API-Guidelines#get-list-of-budget-distribution-methods)|
 | `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [Budget Type ID](#get-list-of-campaign-budget-types) |
 | `ioTotalImpression` <br /><span class="type-text">integer</span> | Number of impressions |
 | `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](#get-io-status-list) |
@@ -5874,7 +6006,7 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`campaignType` <br /><span class="type-text">string</span></td>
-  <td>[Campaign type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+  <td>[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
   <td>`status` <br /><span class="type-text">string</span></td>
@@ -5922,7 +6054,7 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`ioBudgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Insertion Order budget type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
+  <td>[Insertion Order budget Type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
 </tr>
 <tr>
   <td>`ioStatusId` <br /><span class="type-text">integer</span></td>
@@ -5966,11 +6098,11 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 <tr>
   <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Budget type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
+  <td>[Budget Type ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaign-budget-types)</td>
 </tr>
 <tr>
   <td>`campaignTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
+  <td>[Campaign Type ID](/Guidelines/Campaign-API-Guidelines#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
   <td>`isEligibleForVLDInsightsReport` <br /><span class="type-text">boolean</span></td>
@@ -8522,7 +8654,7 @@ Manage various aspects of an Insertion Order, use the following Header Parameter
 | ---- | --- |
 | `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)|
 | `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Worskpace ID Header |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
 
 </div>
 
