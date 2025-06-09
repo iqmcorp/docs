@@ -101,6 +101,10 @@ const config = {
         apiKey: "REDACTED_ALGOLIA_KEY",
         indexName: "iqmcorpio",
         contextualSearch: true,
+        replaceSearchResultPathname: {
+          from: `/docs/`,
+          to: `/`
+        }
       },
       image: "img/IQM-logo-dark.jpg",
       navbar: {
@@ -214,6 +218,10 @@ const config = {
           {
             to: '/Tutorials/Create-an-Insights-Report',
             from: '/Quickstart Guides/Insights-Quickstart/'
+          },
+          {
+            to: '/Tutorials/Create-a-PG-Campaign',
+            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
           }
         ]
       }
