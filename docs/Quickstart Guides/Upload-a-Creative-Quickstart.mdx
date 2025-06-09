@@ -63,8 +63,6 @@ The minimum requirements to perform this task are: logging in with authenticatio
 1. Request Creative Types
     * Optional if you already know supported/desired types
 1. Upload Creative File
-    * 3.1: Upload Asset 
-    * 3.2: Add Creative Details
 1. Check Creative Status
 
 ### Step 1: Log in
@@ -362,110 +360,16 @@ function getCreativeTypes_1(): Promise < Responses > {
 
 ### Step 3: Upload a Creative
 
-#### Step 3.1: Upload Asset 
-
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/asset</span>
-
-<div class="container">
-<div class="child1">
-
-Add multiple Assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
-
-| Headers |  |
-| ----| --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-| Query Parameters | |
-| --- | --- |
-| `filesMetaData` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | JSON string representing the metadata associated with the files |
-| `files` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Array of multipart file objects |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```c title="Query Sample"
-https://app.iqm.com/api/api/v3/asset?files=(MULTIPART-FORMDATA)&filesMetadata=[{"attachedFileName":"41455611-74cc-416e-894f-c34640aa6945~IQM-LOGO-RGB.png","originalFileName":"IQM-LOGO-RGB.png"}]
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "9d41a99a-9761-44cf-a3db-307a57b65795.jpg": {
-      "assetID": 697,
-      "assetCDNURL": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/IHp2jMI_1704987233847.jpg"
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        statusCode: number;
-        responseObject: {
-          files: {
-            assetID: number;
-            assetCDNURL: string
-          }
-        }
-      }
-    }
-  };
-  401: {
-    content: {
-      Authorization?: string;
-      "X-IAA-OW-ID"?: string;
-    };
-    path: {
-      assetId: number
-    }
-  }
-}
-
-function addAssets(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/asset',
-    params: {
-      query: {
-        filesMetadata: `string`,
-        files: `string`,
-      },
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
-#### Step 3.2: Add Creative Details 
-
 <span class="badge badge--success">POST</span><span class="path-text">/api/v3/crt/creatives</span>
 
 <div class="container">
   <div class="child1">
+
+Once you have the desired Creative Type ID, you can upload a Creative. With the two query parameters, <var>creativeRequest</var> and <var>creativeFiles</var>, you will add the Creative details and the Creative file respectively. 
+
+<var>creativeRequest</var> maps a UUID to fields defining the Creative details outlined in the table below and shown as an example in the Query Sample code block in the right-hand column. 
+
+<var>creativeFiles</var> are added as multipart format. See the [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/POST#multipart_form_submission) on Multipart/form-data encoding for more information.  
 
 | Headers |  |
 | ----| --- |
@@ -475,6 +379,7 @@ function addAssets(): Promise<Responses> {
 | Query Parameters | |
 | --- | --- | 
 | `creativeRequest`<br /><span class="type-text">string</span> <span class="required-text">required</span> | This parameter accepts a Map of UUIDs to Creative details. Each UUID corresponds to a single Creative. |
+| `creativeFiles` <br /><span class="type-text">string</span> | Array of Creative files uploaded as multipart files. These files will be used for creating the Creatives. Each file is processed according to its type (image, video, etc.)
 
 
     <table>
@@ -494,10 +399,6 @@ function addAssets(): Promise<Responses> {
           <tr>
         <td>`creativeSource` <br /><span class="type-text">string</span></td>
         <td>Creative source</td>
-      </tr>
-        <tr>
-        <td>`clickUrl` <br /><span class="type-text">string</span></td>
-        <td>Click URL</td>
       </tr>
  <tr>
       <td>`imageDetails` <br /><span class="type-text">object</span></td>
