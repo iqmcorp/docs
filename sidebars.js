@@ -101,6 +101,35 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Upload a Creative',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Quickstart Guides/Upload-a-Creative-Quickstart'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'Sign Up',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#sign-up`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Log In',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Refresh Token',
+              href: `/Quickstart%20Guides/Authentication-Quickstart-Guide#refresh-token`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Create a Campaign',
           className: 'sidebarItem',
           link: {
