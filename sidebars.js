@@ -638,32 +638,38 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'About IQM PG Campaigns',
-              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-pg-campaigns`,
+              label: 'About IQM Customers',
+              href: `/Tutorials/Customer-Guide#about-iqm-customers`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Before You Begin',
-              href: `/Tutorials/Create-a-PG-Campaign#before-you-begin`,
+              href: `/Tutorials/Customer-Guide#before-you-begin`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Create a PG Campaign Using the IQM API',
-              href: `/Tutorials/Create-a-PG-Campaign#create-a-pg-campaign-using-the-iqm-api`,
+              label: 'Invite a Customer',
+              href: `/Tutorials/Customer-Guide#invite-a-customer`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 1: Log in',
-              href: `/Tutorials/Create-a-PG-Campaign#step-1-log-in`,
+              label: 'Sign Up a Customer',
+              href: `/Tutorials/Customer-Guide#sign-up-a-customer`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 2: Create a PG Campaign',
-              href: `/Tutorials/Create-a-PG-Campaign#step-2-create-a-pg-campaign`,
+              label: 'Assign Customer to User',
+              href: `/Tutorials/Customer-Guide#assign-customer-to-user`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Add Customer App Access',
+              href: `/Tutorials/Customer-Guide#add-customer-app-access`,
               className: 'sidebarItemQS'
             },
           ]
