@@ -1343,7 +1343,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#target-campaigns-with-conversions"><span class="badge bar badge--success">POST</span>Target Campaign with Conversions</a>',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#assign-conversions-to-campaigns"><span class="badge bar badge--success">POST</span>Assign Conversions to Campaigns</a>',
               defaultStyle: true,
             },
             {
@@ -1713,7 +1713,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Creative-API-Guidelines#modify-creatives"><span class="badge bar badge--success">POST</span>Modify Creatives</a>',
+              value: '<a class="menu__link" href="/Guidelines/Creative-API-Guidelines#update-creative-groups"><span class="badge bar badge--success">POST</span>Update Creative Groups</a>',
               defaultStyle: true,
             },
             {
@@ -1728,7 +1728,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Creative-API-Guidelines#duplicate-creative-group"><span class="badge bar badge--success">POST</span>Duplicate Creative Group Name</a>',
+              value: '<a class="menu__link" href="/Guidelines/Creative-API-Guidelines#duplicate-creative-group"><span class="badge bar badge--success">POST</span>Duplicate Creative Group</a>',
               defaultStyle: true,
             },
             {
