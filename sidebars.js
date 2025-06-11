@@ -629,6 +629,47 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Sign Up a New Customer',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Tutorials/Customer-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM PG Campaigns',
+              href: `/Tutorials/Create-a-PG-Campaign#about-iqm-pg-campaigns`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Create-a-PG-Campaign#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Create a PG Campaign Using the IQM API',
+              href: `/Tutorials/Create-a-PG-Campaign#create-a-pg-campaign-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Log in',
+              href: `/Tutorials/Create-a-PG-Campaign#step-1-log-in`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Create a PG Campaign',
+              href: `/Tutorials/Create-a-PG-Campaign#step-2-create-a-pg-campaign`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Upload a Matched Audience',
           className: 'sidebarItem',
           link: {
