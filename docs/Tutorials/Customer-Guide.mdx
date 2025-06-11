@@ -1,0 +1,198 @@
+---
+title: Create a Deal
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Sign Up a New Customer
+
+## About IQM Customers
+
+## Before You Begin
+
+To create a new Customer, the following are required:
+
+  * An Account On the IQM platform
+    * See [Getting Started](/Getting%20Started/Before-You-Begin) section to create an account and request a Client ID and Client Secret
+
+### Log In 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+
+<div class="container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [Login API Documentation](/Guidelines/User-Profile-Guidelines#login).
+
+| Headers |  |
+| ---- | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| `X-IAA-HOST` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Workspace URL |
+
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+## Signing Up a New Customer with the IQM API 
