@@ -1,5 +1,5 @@
 ---
-title: Create a Deal
+title: Sign Up a New Customer
 hide_table_of_contents: true
 ---
 
@@ -10,6 +10,12 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 # Sign Up a New Customer
 
 ## About IQM Customers
+
+When Advertisers are assigned to users on the IQM platform, they become Customers in that relationship. Customers can be invited, assigned to existing users, and given app access through the IQM API. 
+
+More resources:
+  * [IQM Platform Overview](/Getting%20Started/Platform-overview)
+  * [Workspace API](/Guidelines/Workspace-Guidelines)
 
 ## Before You Begin
 
@@ -195,4 +201,454 @@ Use the following header parameters for all requests after logging in:
 
 </div>
 
-## Signing Up a New Customer with the IQM API 
+## Invite a Customer
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/invite</span>
+
+<div class="container">
+  <div class="child1">
+
+Invite a Customer to the platform (as Workspace or Advertiser).
+
+Refer to [Customer Operations Resource Property Table](#customer-operations-resource-properties) for request schema.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`successfulEmails` <br /><span class="type-text">array of strings</span></td>
+  <td>Invites succesfully sent to specified emails</td>
+  </tr>
+    <tr>
+  <td>`failedEmails` <br /><span class="type-text">array of strings</span></td>
+  <td>Invites failed to send to specified emails</td>
+  </tr>
+     <tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+[
+  {
+    "email": "user1@iqm.com",
+    "name": "ORG - 1",
+    "password": "password@123",
+    "ownerUserName": "User-1",
+    "verticalId": 1,
+    "logoUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/202753/Pd7Xx26_1721991655891.png",
+    "customerOperationDetails": {
+      "customerTypeId": 2,
+      "customerPaymentTypeId": 2,
+      "countryId": 30100001,
+      "adOpsAssigneeUserIds": [],
+      "sellerAssigneeUserIds": [
+        7184
+      ],
+      "labelIds": [
+        7,
+        8,
+        9
+      ]
+    }
+  }
+]
+```
+
+```json title="Response 200"
+{
+"success": true,
+"data": {
+  "successfulEmails": [
+    "user1.g@iqm.com"
+  ],
+  "failedEmails": [
+    "user2.p@iqm.com"
+  ],
+  "message": "1 invitations sent successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          successfulEmails: string[];
+          failedEmails: string[];
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function sendInvitations(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/customer/invite',
+    requestBody: {
+      content: {
+        "application/json": [
+          {
+            id?: `number`,
+            invitedUserOWId?: `number`,
+            email?: `string`,
+            password?: `string`,
+            name?: `string`,
+            ownerUserName?: `string`,
+            owId?: `number`,
+            uowId?: `number`,
+            modifiedByUOWId?: `number`,
+            status?: `number`,
+            expiresAt?: `number`,
+            modifiedAt?: `string`,
+            invitationUserType?: `string`,
+            verticalId?: `number`,
+            logoUrl?: `string`,
+            serviceType?: `number`,
+            customerOperationDetails?: {
+              customerTypeId?: `number`,
+              customerPaymentTypeId?: `number`,
+              countryId?: `number`,
+              createdByUowId?: `number`,
+              modifiedByUowId?: `number`,
+              adOpsAssigneeUserIds?: `array of numbers`,
+              sellerAssigneeUserIds?: `array of numbers`,
+              labelIds?: `array of numbers`,
+            }
+          }
+        ]
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Sign Up a Customer 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/signup</span>
+
+<div class="container">
+  <div class="child1">
+
+Sign up a new Customer.
+
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | Customer email |
+| `organizationName` <br /><span class="type-text">string</span> | Customer Organization name
+| `userName` <br /><span class="type-text">string</span> | Customer user name |
+| `industry` <br /><span class="type-text">integer</span> | Industry type ID |
+| `companySize` <br /><span class="type-text">integer</span> | [Company Size Type ID](#company-size) |
+| `mediaBudget` <br /><span class="type-text">integer</span> | [Media Budget ID](#media-budget)
+| `budgetSpent` <br /><span class="type-text">integer</span> | Budget spent |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+     <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "email": "email@domain.com",
+    "organizationName": "Organisation Name",
+    "userName": "User Name",
+    "industry": 1,
+    "companySize": 2,
+    "mediaBudget": 3,
+    "budgetSpent": 2000
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Customer sign up requested successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function Customersignup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/customer/signup',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          organizationName: `string`,
+          userName: `string`,
+          industry: `number`,
+          companySize: `number`,
+          mediaBudget: `number`,
+          budgetSpent: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Assign Customer to User
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3//ua/user/customer/assign</span>
+
+<div class="container">
+  <div class="child1">
+
+Assign a Customer to an existing user.
+
+| Request Schema  |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Comma separated OW IDs to assign to user |
+| `uowIds` <br /><span class="type-text">string</span>| Comma separated user IDs to assign Customers to |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+     <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "owIds": "170,58,167,900",
+    "uowIds": "166"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Added Customer association to User successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+        data: {
+          successfulCustomerIds: number[];
+        };
+      };
+    };
+  };
+}
+
+function AssignCustomerstoUser(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/customer/assign',
+    requestBody: {
+      content: {
+        "application/json": {
+          owIds: `string`,
+          uowIds: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Add Customer App Access
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/customer/application/add</span>
+
+
+<div class="container">
+  <div class="child1">
+
+Add Customer access to specified apps.
+
+| Request Schema  |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `appIds`<br /><span class="type-text">string</span> | Comma separated application IDs to add or revoke Customer access to |
+| `accessLevel` <br /><span class="type-text">string</span>| Gives Customer <var>full</var> or <var>limited</var> access to added applications |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+     <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "owId": 2,
+    "appIds": "1,2",
+    "accessLevel": "Full"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Application access added successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddAppaccessforCustomer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/ua/customer/application/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          owId: `number`,
+          appIds: `string`,
+          accessLevel: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
