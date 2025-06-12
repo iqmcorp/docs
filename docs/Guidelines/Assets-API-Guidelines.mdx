@@ -221,10 +221,35 @@ function getAssetDetails(): Promise<Responses> {
 
 Add multiple Assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
 
-| Query Parameters | |
-| --- | --- |
-| `filesMetadata` <br /><span class="type-text">string</span> <span class="required-text">required</span> | JSON string representing the metadata associated with the files |
-| `files` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Array of multipart file objects |
+
+<table>
+<th>Parameters</th>
+<tr>
+<td>`filesMetadata` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+<td>Object array in JSON string</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`filesMetadata` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`attachedFileName` <br /><span class="type-text">string</span></td>
+  <td>Name of asset</td>
+  </tr>
+    <tr>
+  <td>`originalFileName` <br /><span class="type-text">string</span></td>
+  <td>Name of uploaded multipart <var>file</var></td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`files` <br /><span class="type-text">multipart/formdata file</span> <span class="required-text">required</span></td>
+  <td>Array of multipart file objects</td>
+</tr>
+</table>
 
 </div>
 <div class="child2">
@@ -232,15 +257,23 @@ Add multiple Assets to the system. Request accepts an array of multipart file ob
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```c title="Query Sample"
-https://app.iqm.com/api/api/v3/asset?files=(MULTIPART-FORMDATA)&filesMetadata=[{"attachedFileName":"41455611-74cc-416e-894f-c34640aa6945~IQM-LOGO-RGB.png","originalFileName":"IQM-LOGO-RGB.png"}]
+```json title="Formdata Sample"
+------WebKitFormBoundaryAofpaWXja6BTaYQ9
+Content-Disposition: form-data; name="files"; filename="example.jpg"
+Content-Type: image/jpeg
+
+------WebKitFormBoundaryAofpaWXja6BTaYQ9
+Content-Disposition: form-data; name="filesMetadata"
+
+[{"attachedFileName":"example.jpg","originalFileName":"example.jpg"}]
+------WebKitFormBoundaryAofpaWXja6BTaYQ9--
 ```
 
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "9d41a99a-9761-44cf-a3db-307a57b65795.jpg": {
+    "example.jpg": {
       "assetID": 697,
       "assetCDNURL": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/IHp2jMI_1704987233847.jpg"
     }
@@ -251,54 +284,57 @@ https://app.iqm.com/api/api/v3/asset?files=(MULTIPART-FORMDATA)&filesMetadata=[{
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) page for usage.
-
 ```ts
-import {
-  getInstance
-} from "prerequisites"
+import axios from "axios";
+import * as fs from "fs";
+import * as path from "path";
+import FormData from "form-data";
 
-const axios = getInstance();
 
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        statusCode: number;
-        responseObject: {
-          files: {
-            assetID: number;
-            assetCDNURL: string
-          }
-        }
-      }
-    }
-  };
-  401: {
-    content: {
-      Authorization?: string;
-      "X-IAA-OW-ID"?: string;
-    };
-    path: {
-      assetId: number
-    }
-  }
+async function addAssets(filesMetadata: String, filePaths: string[]): Promise<any> {
+ const form = new FormData();
+ form.append("filesMetadata", filesMetadata);
+
+
+ for (const filePath of filePaths) {
+   const stream = fs.createReadStream(filePath);
+   form.append("files", stream, path.basename(filePath));
+ }
+
+ const headers = {
+   ...form.getHeaders(),
+   Authorization: `Bearer [TOKEN]`, // replace this with actual bearer token
+   "x-iaa-ow-id": '[OWID]', // replace with your actual ow id
+ };
+
+ const response = await axios.post(
+   "https://app.iqm.com/api/v3/asset",
+   form,
+   {
+     headers,
+     timeout: 10000,
+     timeoutErrorMessage: 'Request timed out after 10 seconds'
+   }
+ );
+ console.log(JSON.stringify(response.data));
+ return response.data;
 }
 
-function addAssets(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://app.iqm.com/api/v3/asset',
-    params: {
-      query: {
-        filesMetadata: `string`,
-        files: `string`,
-      },
-    }
-  };
+(async () => {
+ const metadata: { attachedFileName: string; originalFileName: string; }[] = [
+   {
+     attachedFileName: "example.png",
+     originalFileName: "example.png"
+   }
+ ]
 
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
+ try {
+   const result = await addAssets(JSON.stringify(metadata), ["example.png"]); // you should have this file in the folder
+   console.log("Upload successful:", result);
+ } catch (error) {
+   console.error("Upload failed:", error);
+ }
+})();
 ```
 
 </TabItem></Tabs>
