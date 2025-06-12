@@ -3644,7 +3644,12 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#static-details-lists"><span class="badge bar badge--primary">GET</span>Organization Workspace Status</a>',
+              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#application-ids"><span class="badge bar badge"></span>Application IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#organization-workspace-status"><span class="badge bar badge--primary">GET</span>Organization Workspace Status</a>',
               defaultStyle: true,
             },
             {
