@@ -672,6 +672,12 @@ const sidebars = {
               href: `/Tutorials/Customer-Guide#add-customer-app-access`,
               className: 'sidebarItemQS'
             },
+            {
+              type: `link`,
+              label: 'Add Payment for Customer',
+              href: `/Tutorials/Customer-Guide#add-payment-for-customer`,
+              className: 'sidebarItemQS'
+            },
           ]
         },
         {
@@ -2114,7 +2120,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#payment-management"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#add-payment-for-customer"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
               defaultStyle: true,
             },
             {

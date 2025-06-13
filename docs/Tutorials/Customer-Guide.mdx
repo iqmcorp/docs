@@ -16,6 +16,7 @@ When Advertisers are assigned to users on the IQM platform, they become Customer
 More resources:
   * [IQM Platform Overview](/Getting%20Started/Platform-overview)
   * [Workspace API](/Guidelines/Workspace-Guidelines)
+  * [Finance API](/Guidelines/Finance-Guidelines)
 
 ## Before You Begin
 
@@ -715,3 +716,114 @@ function AddAppaccessforCustomer(): Promise<Responses> {
 
 </div></div>
 
+## Add Payment for Customer
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/fa/customer/payment/add</span>
+
+<div class="container">
+  <div class="child1">
+
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> | Payment mode type ID <br />See [Static Details List](#invoice-payment-mode-types) for supported values |
+| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
+| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
+| `paymentType` <br /><span class="type-text">integer</span> | Payment type ID <br />See [Static Details List](#payment-types) for supported values |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates payments successfully added: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "owId": 123654,
+    "paymentAmount": 5000,
+    "paymentDate": "2025-12-01",
+    "paymentMode": 1,
+    "transactionId": 10,
+    "paymentProof": "image.png",
+    "paymentType": 2,
+    "invoiceId": 34
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Payment added Successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddPaymentforcustomer(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://app.iqm.com/api/v3/fa/customer/payment/add',
+    requestBody?: {
+      content: {
+        "application/x-www-form-urlencoded": {
+          owId: `number`,
+          paymentAmount: `number`,
+          paymentDate: `string`,
+          paymentMode: `number`,
+          transactionId: `string`,
+          paymentProof: `string`,
+          paymentType: `number`,
+          invoiceId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
