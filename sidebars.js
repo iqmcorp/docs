@@ -2780,7 +2780,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
@@ -4207,7 +4207,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
