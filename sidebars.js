@@ -629,6 +629,71 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Sign Up a New Customer',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'Tutorials/Customer-Guide'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About IQM Customers',
+              href: `/Tutorials/Customer-Guide#about-iqm-customers`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Customer-Guide#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Sign Up a New Customer Using the IQM API',
+              href: `/Tutorials/Customer-Guide#sign-up-a-new-customer-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Invite a Customer',
+              href: `/Tutorials/Customer-Guide#invite-a-customer`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Sign Up a Customer',
+              href: `/Tutorials/Customer-Guide#sign-up-a-customer`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Approve a Customer',
+              href: `/Tutorials/Customer-Guide#approve-a-customer`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Assign Customer to User',
+              href: `/Tutorials/Customer-Guide#assign-customer-to-user`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Add Customer App Access',
+              href: `/Tutorials/Customer-Guide#add-customer-app-access`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Add Payment for Customer',
+              href: `/Tutorials/Customer-Guide#add-payment-for-customer`,
+              className: 'sidebarItemQS'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'Upload a Matched Audience',
           className: 'sidebarItem',
           link: {
@@ -2067,7 +2132,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#payment-management"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#add-payment-for-customer"><span class="badge bar badge--success">POST</span>Add Payment for Customer</a>',
               defaultStyle: true,
             },
             {
@@ -2727,7 +2792,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
@@ -3280,6 +3345,12 @@ const sidebars = {
         },
         {
           type: 'html',
+          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-user-profile-details"><span class="badge bar badge--primary">GET</span>User Profile Details</a>',
+          defaultStyle: true,
+          className: "sidebarItem"
+        },
+        {
+          type: 'html',
           value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-list-of-users"><span class="badge bar badge--primary">GET</span>List of Users</a>',
           defaultStyle: true,
           className: "sidebarItem"
@@ -3597,7 +3668,12 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#static-details-lists"><span class="badge bar badge--primary">GET</span>Organization Workspace Status</a>',
+              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#application-ids"><span class="badge bar badge"></span>Application IDs</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#organization-workspace-status"><span class="badge bar badge--primary">GET</span>Organization Workspace Status</a>',
               defaultStyle: true,
             },
             {
@@ -4149,7 +4225,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines##request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#request-schema"><span class="badge bar badge"></span>Request Schema</a>',
               defaultStyle: true,
             },
             {
