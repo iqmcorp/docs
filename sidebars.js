@@ -650,6 +650,12 @@ const sidebars = {
             },
             {
               type: `link`,
+              label: 'Sign Up a New Customer Using the IQM API',
+              href: `/Tutorials/Customer-Guide#sign-up-a-new-customer-using-the-iqm-api`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
               label: 'Invite a Customer',
               href: `/Tutorials/Customer-Guide#invite-a-customer`,
               className: 'sidebarItemQS'
@@ -658,6 +664,12 @@ const sidebars = {
               type: `link`,
               label: 'Sign Up a Customer',
               href: `/Tutorials/Customer-Guide#sign-up-a-customer`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Approve a Customer',
+              href: `/Tutorials/Customer-Guide#approve-a-customer`,
               className: 'sidebarItemQS'
             },
             {
