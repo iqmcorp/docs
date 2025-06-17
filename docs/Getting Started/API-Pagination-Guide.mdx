@@ -2,29 +2,31 @@
 pagination_next: null
 ---
 
-# API Pagination
+# API Filtering and Pagination
 
 ## Overview
 
-IQM's API supports filtering and sorting in many of its endpoints. By either passing query or request parameters, results can be filtered for certain keywords or entity IDs, or, sorted to a specified order. 
+IQM's API supports filtering and pagination in many of its endpoints. By either passing query or request parameters, results can be filtered for certain keywords or entity IDs, or, paginated by number of entries and page number. 
 
-### Filtering and sorting parameters
+### Filtering and Pagination Parameters
 
-The Parameters Table below lists the most common filtering and sorting fields used in the IQM API. Their usage will vary based on the endpoint. They will often have a default value if a value is not specified. The default value will be listed as part of an endpoint's documentation if it exists. 
+The Parameters table below lists the most common filtering and pagination fields used in the IQM API. Their usage will vary based on the endpoint. They will often have a default value if a value is not specified. The default value will be listed as part of an endpoint's documentation if it exists. 
 
 | Parameters |  |
 | ---- | --- |
 | `ids` <br /><span class="type-text">integer</span> | Filter results by entity ID (varies by endpoint) |
-| `searchField` / `keywords` <br /><span class="type-text">string</span> | Search results by keyword |
+| `searchField` / `keywords` <br /><span class="type-text">string</span> | Filter results by keyword |
 | `limit` / `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned per page |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number for the returned data |
 | `sortBy` / `order` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), the supported values will be listed |
 | `offset` <br /><span class="type-text">integer</span> | Specifies the number of rows of results to skip before data is retrieved. Functions counter to <var>pageNo</var>, and only one can be used at a time with <var>limit</var>/<var>noOfEntries</var>. First priority will be given to <var>offset</var> if used at the same time as <var>pageNo</var>
 
 
-## Examples
+## Filtering Examples
 
-### Filter by ID
+In most cases, filtering the results will yield response data with <var>totalRecords</var>, the total number of records for the resource, and <var>filteredRecords</var>, the number of those total records filtered for this set of results. 
+
+### Filtering by ID
 
 Many endpoint will support filtering by some kind of entity ID. The exact parameter will vary based on the entity. For example, the [Get List of Campaigns](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) endpoint supports filtering by <var>conversionId</var>. When a Conversion ID is passed as a query, the endpoint returns all Campaign IDs that are associated with that Conversion at the top of the results. 
 
@@ -69,7 +71,7 @@ https://app.iqm.com/api/v2/cmp/campaigns/data?conversionId=18
 }
 ```
 
-### Filter by Keywords
+### Filtering by Keywords
 
 In this example the results are filtered with a search keyword. The [Get State Segment](/Guidelines/Master-API-Guidelines#get-state-segment) endpoint uses the POST method, and therefore its pagination parameters will be passed with a JSON formatted request instead of a query. 
 
@@ -110,7 +112,11 @@ In this example the results are filtered with a search keyword. The [Get State S
 }
 ```
 
-### Filter the Number of Entries
+## Pagination Examples
+
+Pagination allows you to specify how many results you want returned, what page of those results to return, and sort those results by various parameters. 
+
+### Pagination by Number of Entries
 
 The maximum number of entries returned can be specified with the <var>noOfEntries</var> (or sometimes <var>limit</var>) query parameter. Below two entries are retrieved from the [Get List of Inventories](/Guidelines/Inventory-API-Guide#get-list-of-inventories) endpoint. 
 
@@ -150,7 +156,7 @@ https://app.iqm.com/api/v3/inv/inventories/list?noOfEntries=2
 }
 ```
 
-### Filter by Page Number 
+### Pagination by Page Number 
 
 When the possible number of results exceeds the limit that can be returned, there will be a <var>pageNo</var> parameter to specify which page of results will be returned. Keeping with the example in the previous section, if a page number of "2" is appended in addition to the two entries, the next two records will be retrieved. 
 
@@ -190,7 +196,7 @@ https://app.iqm.com/api/v3/inv/inventories/list?noOfEntries=2&pageNo=2
 }
 ```
 
-### Sort the Results
+### Pagination by Sorting the Results
 
 Lists of results can often be sorted by a specified parameter. Using the <var>sortBy</var> query in the [Get List of Campaigns](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) endpoint, the returned list of Campaigns can be sorted by ascending or descending by appending a <var>+</var> or <var>-</var> symbol to the desired parameter. In this example, the results are sorted by <var>-created</var>: the descending order of creation date. 
 

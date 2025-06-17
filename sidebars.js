@@ -56,7 +56,7 @@ const sidebars = {
         {
           type: 'doc',
           id: 'Getting Started/API-Pagination-Guide',
-          label: 'API Pagination',
+          label: 'API Filtering and Pagination',
           className: 'sidebarItem',
         },
       ],
