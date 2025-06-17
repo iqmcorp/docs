@@ -3333,6 +3333,12 @@ const sidebars = {
         },
         {
           type: 'html',
+          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-user-profile-details"><span class="badge bar badge--primary">GET</span>User Profile Details</a>',
+          defaultStyle: true,
+          className: "sidebarItem"
+        },
+        {
+          type: 'html',
           value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-list-of-users"><span class="badge bar badge--primary">GET</span>List of Users</a>',
           defaultStyle: true,
           className: "sidebarItem"
