@@ -50,9 +50,9 @@ The GET method allows you to retrieve resources with the IQM API. Within each AP
 
 #### Common GET Fields
 
-| Parameter | Description |
+| Fields | Description |
 | --- | --- |
-| `success` <br /><span class="type-text">boolean</span> | Indicates resource retrieval was succesful: <var>true</var>
+| `success` <br /><span class="type-text">boolean</span> | Indicates resource retrieval was successful: <var>true</var>
 | `data` <br /><span class="type-text">object</span> | Object containing retrieved resource data
 | `id` <br /><span class="type-text">integer</span> | Unique ID of entity
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID that owns the resource 
@@ -62,7 +62,7 @@ The GET method allows you to retrieve resources with the IQM API. Within each AP
 | `modifiedAt` <br /><span class="type-text">integer</span> | The time of last modification of a resource, usually in unix epoch milliseconds
 | `status` <br /><span class="type-text">string</span> | The status of a resource, sometimes given as a type ID
 
-#### Get Response Sample
+#### GET Response Sample
 
 ```json title="Basic Campaign Details"
 {
@@ -105,7 +105,14 @@ The GET method allows you to retrieve resources with the IQM API. Within each AP
 
 The POST method allows you to create new resources with the IQM API. Every resource has a unique set of fields required to create it. These parameters are described in the [API Guidelines](/Guidelines/) for every endpoint. 
 
-In some cases, POST endpoint function like a GET endpoint, where the request schema uses the [API Filtering and Pagination](/Getting%20Started/API-Pagination-Guide) parameters to sort the retrieved data. 
+In some cases, POST endpoints function like a GET endpoint, where the request schema uses the [API Filtering and Pagination](/Getting%20Started/API-Pagination-Guide) parameters to sort the retrieved data. 
+
+#### Common POST Response Fields 
+
+| Fields | Descriptions |
+| --- | ---| 
+| `success` <br /><span class="type-text">boolean</span> | Indicates resource creation was successful: <var>true</var>
+| `data` / `message` <br /><span class="type-text">string</span> | Response message describing success or failure
 
 #### POST Resource Example
 
@@ -113,6 +120,8 @@ In some cases, POST endpoint function like a GET endpoint, where the request sch
 
 <div class="container">
   <div class="child1">
+
+This endpoint creates a new Advertiser profile. 
 
 | Request Schema |  |
 | ---- | --- |
@@ -129,7 +138,11 @@ In some cases, POST endpoint function like a GET endpoint, where the request sch
 
 <table className="objectProperties">
        <tr>
-  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates resource was created successfully: <var>true</var></td>
+  </tr>
+       <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
   <td>Success message</td>
   </tr>
   </table></details>
@@ -162,7 +175,104 @@ In some cases, POST endpoint function like a GET endpoint, where the request sch
 
 ### PUT/PATCH Method
 
+The PUT and PATCH methods allow you to update existing resources with the IQM API. Usually, PATCH endpoints partially update or modifiy the parameters of a resource whereas PUT endpoints change or replace a resource. 
+
+PUT/PATCH endpoints have the same common response fields as POST endpoints. Below is an example of a PATCH endpoint for a resource.  
+
+#### PATCH Resource Example
+
+<span class="badge badge--info">PATCH</span><span class="path-text">/api/v3/crt/creatives/groups/\{creativeGroupId}</span>
+
+<div class="container">
+  <div class="child1">
+
+This endpoint updates a Creative group name. The path parameter is required to specify by ID which resource to update. The request schema includes the supported fields to update in that resource. 
+
+| Path Parameters | |
+| --- | --- |
+| `creativeGroupId` <br /><span class="type-text">integer</span> | Creative group ID |
+
+| Request Schema | |
+| --- | --- |
+| `creativeGroupName` <br /><span class="type-text">string</span> | Creative group name |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+       <tr>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates resource was updated successfully: <var>true</var></td>
+  </tr>
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "creativeGroupName": "Group1"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Group1 group renamed successfully"
+  }
+}
+```
+
+</div></div>
+
 ### DELETE Method
+
+The DELETE method allows you to delete resources with the IQM API. DELETE endpoints have the same common response fields as POST endpoints. Below is an example of a PATCH endpoint for a resource. 
+
+#### DELETE Resource Example
+
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/ra/report/\{reportId\}</span>
+
+<div class="container">
+  <div class="child1">
+
+Delete a Report and its scheduling data by ID.
+
+| Path Parameters |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> | Report ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates Report was succesfully created: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Report with id 123 deleted successfully"
+}
+```
+
+</div></div>
 
 ## Response Codes and Samples 
 
