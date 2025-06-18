@@ -27,21 +27,24 @@ Use the following header parameters for all requests:
 
 ## Get Geographical Data
 
-### Request Schema
+### Filtering and Pagination 
 
-<span class="badge badge--success">POST</span> endpoints use the following request body schema (shown below) to retrieve paginated lists of geographical data based on provided filters:
+The following filtering and pagination fields can be passed as request parameters for POST endpoints or queried in GET endpoints. The filtering fields <var>ids</var>, <var>segmentIds</var>, and <var>parentSegmendIds</var> will be defined at each endpoint where applicable.
+
+For more information see [API Filtering and Pagination](/Getting%20Started/API-Pagination-Guide).
 
 <div class="child3">
 
-| Request Schema |  |
+| Filtering and Pagination Fields |  |
 |---|---|
 | `pageNo` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Page number for the required data, default: <var>1</var> |
 | `noOfEntries` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The maximum number of returned results per page, default: <var>300</var> |
 | `sortBy`<br /><span class="type-text">string</span> <span class="required-text">optional</span> | Sort the result set by specific field. For ascending use plus(<var>+</var>) sign and for descending use minus(<var>-</var>) sign, default: <var>-id</var> |
 | `searchField`<br /><span class="type-text">string</span>  <span class="required-text">optional</span> | Search the result by provided keyword in the <var>searchField</var> search country records by <var>name</var> |
 | `campaignId` <br /><span class="type-text">integer</span>  <span class="required-text">optional</span> | Country records associated with the provided Campaign will be returned first, prioritized over other country records |
-| `ids`<br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Selected country ID List, countries with provided IDswill be returned first compared to other records |
-| `segmentIds`<br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | country list filter by country IDs |
+| `ids`<br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Selected entity ID list, entities with provided IDs will be returned first compared to other records |
+| `segmentIds`<br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Entity segment IDs |
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Parent segment IDs 
 
 </div>
 
@@ -56,11 +59,18 @@ Use the following header parameters for all requests:
 
 Get a list of zip codes with state IDs. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Zip code IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Zip code IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+| `zipCodes` <br /><span class="type-text">array of strings</span> | Zip codes
+ 
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Zip code ID |
 | `name` <br /><span class="type-text">string</span> | Zip code name |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State IDs](#get-state-segment) |
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
   </div>
@@ -227,12 +237,18 @@ function getMasterSegmentZipCode(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | State IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | State IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [Country IDs](#get-country-segment)
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | State ID |
 | `name` <br /><span class="type-text">string</span> | State name |
 | `abbreviation` <br /><span class="type-text">string</span> | State abbreviation |
-| `parentId` <br /><span class="type-text">integer</span> | Country ID |
+| `parentId` <br /><span class="type-text">integer</span> | [Country ID](#get-country-segment) |
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
   </div>
@@ -409,12 +425,18 @@ function getStatesSegmentDetails(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Senate District IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Senate District IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Senate District ID |
 | `name` <br /><span class="type-text">string</span> | Senate District name |
 | `abbreviation` <br /><span class="type-text">string</span> | Senate District abbreviation |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment) |
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -591,12 +613,18 @@ function getSenateDistrictSegmentDetails(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | House District IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | House District IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | House District ID |
 | `name` <br /><span class="type-text">string</span> | House District name |
 | `abbreviation` <br /><span class="type-text">string</span> | House District abbreviation |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment) |
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -773,7 +801,12 @@ function getHouseDistrictSegmentDetails(): Promise<Responses> {
 <div class="container">
 <div class="child1">
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Gender IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Gender IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Gender ID |
 | `name` <br /><span class="type-text">string</span> | Gender name |
@@ -896,7 +929,12 @@ function getGenderSegmentDetails(): Promise<Responses> {
 
 Get list of age range IDs. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Age range IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Age range IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Age range ID |
 | `name` <br /><span class="type-text">string</span> | Age range name |
@@ -1029,7 +1067,12 @@ function getMasterSegmentAge(): Promise<Responses> {
 
 Get list of languages. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Language IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Language IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Language ID |
 | `name` <br /><span class="type-text">string</span> | Language name |
@@ -1171,7 +1214,12 @@ function getMasterSegmentLanguage(): Promise<Responses> {
 
 Get list of interests. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Interest IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Interest IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Interest ID |
 | `name` <br /><span class="type-text">string</span> | Interest name |
@@ -1305,7 +1353,12 @@ function getMasterSegmentInterest(): Promise<Responses> {
 
 Get list of income ranges.
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Income range IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Income range IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Income range ID |
 | `name` <br /><span class="type-text">string</span> | Income range name |
@@ -1427,11 +1480,16 @@ function getMasterSegmentIncome(): Promise<Responses> {
 
 Get list of ethnicity IDs. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Ethnicity IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Ethnicity IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Ethnicity ID |
 | `name` <br /><span class="type-text">string</span> | Ethnicity name |
-| `parentId` <br /><span class="type-text">integer</span> | Country ID |
+| `parentId` <br /><span class="type-text">integer</span> | [Country ID](#get-country-segment) |
 
 </div>
 <div class="child2">
@@ -1568,7 +1626,12 @@ function getMasterSegmentEthnicity(): Promise<Responses> {
 
 Get list of ethnicity group IDs. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Ethnicity group IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Ethnicity group IDs 
+
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Ethnicity group ID |
 | `name` <br /><span class="type-text">string</span> | Ethnicity group name |
@@ -1686,12 +1749,18 @@ function getMasterSegmentEthnicityGroup(): Promise<Responses> {
 
 Get list of Designated Market Area Codes.
 
-| Properties | |
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | DMA IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | DMA IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties | |
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | DMA ID |
 | `name` <br /><span class="type-text">string</span> | DMA name |
 | `abbreviation` <br /><span class="type-text">string</span> | DMA code |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment)|
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -1870,11 +1939,17 @@ function getDMACodeDetails(): Promise<Responses> {
 
 Get list of county segment. 
 
-| Properties | |
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | County IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | County IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties | |
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | County ID |
 | `name` <br /><span class="type-text">string</span> | County name |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment)|
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -2040,7 +2115,12 @@ function getCountySegmentDetails(): Promise<Responses> {
 
 Get list of country segment. 
 
-| Properties | |
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Country IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Country IDs
+
+| Response Properties | |
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Country ID |
 | `name` <br /><span class="type-text">string</span> | Country name |
@@ -2201,12 +2281,18 @@ function getCountrySegmentDetails(): Promise<Responses> {
 
 Get list of congressional district segment. 
 
-| Properties | |
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Congressional District IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Congressional District IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties | |
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | County ID |
 | `name` <br /><span class="type-text">string</span> | County name |
 | `abbreviation` <br /><span class="type-text">integer</span> | Country Abbreviation |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment) |
 | `geojsonUrl`  <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -2385,11 +2471,17 @@ function getCongressionalDistrictSegmentDetails(): Promise<Responses> {
 
 Get list of city segment. 
 
-| Properties | |
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | City IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | City IDs 
+| `parentSegmentIds` <br /><span class="type-text">array of integers</span> | [State IDs](#get-state-segment)
+
+| Response Properties | |
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | City ID |
 | `name` <br /><span class="type-text">string</span> | City name |
-| `parentId` <br /><span class="type-text">integer</span> | State ID |
+| `parentId` <br /><span class="type-text">integer</span> | [State ID](#get-state-segment) |
 | `geojsonUrl`  <br /><span class="type-text">string</span> | Json geographical data URL |
 
 </div>
@@ -2558,7 +2650,7 @@ function getCitySegmentDetails(): Promise<Responses> {
 
 Get a list of location types.
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Location type ID |
 | `name` <br /><span class="type-text">string</span> | Location type name |
@@ -2672,13 +2764,15 @@ Get location details by location type and search filters.
 | Query Parameters  |  |
 |---|---|
 | `searchField` <br /><span class="type-text">string</span> | Search the result by keyword |
-| `locationTypeIds` <br /><span class="type-text">string</span> | Filters result by location type IDs, comma separated |
+| `locationTypeIds` <br /><span class="type-text">string</span> | Filters result by [Location Type IDs](#get-location-types), comma separated |
+| `countryIds` <br /><span class="type-text">string</span> | Filter results by [Country ID](#get-country-segment)
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
-| `id` <br /><span class="type-text">integer</span> | ID of location as specified by <var>locationTypeId</var> |
+| <var>locationTypeId</var> <br /><span class="type-text">array of objects</span> | Results will be returned in name-value pairs of [Location Type IDs](#get-location-types) and an array of objects with the rest of the response properties in this table |
+| `id` <br /><span class="type-text">integer</span> | ID of location as specified by <var>locationTypeId</var> , e.g. for the object array with location type "302", the State location type, this ID will be a State ID |
 | `name` <br /><span class="type-text">string</span> | Location name |
-| `parentId` <br /><span class="type-text">integer</span> | Parent ID |
+| `parentId` <br /><span class="type-text">integer</span> | Location parent ID |
 | `geojsonUrl` <br /><span class="type-text">string</span> | Json geographical data URL |
 
 
@@ -2816,7 +2910,7 @@ function getMasterSegmentLocationTypeDetails(): Promise<Responses> {
 
 Get a static list of timezone IDs.
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Timezone name |
 | `id` <br /><span class="type-text">integer</span> | Timezone ID |
@@ -2918,7 +3012,7 @@ Get a list of carriers or states by country ID.
 |---|---|
 | `country_id` <br /><span class="type-text">string</span> | Country ID
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Carrier or state ID |
 | `name` <br /><span class="type-text">string</span> | Carrier or state name |
@@ -3063,6 +3157,10 @@ function StatesByCountry(): Promise<Responses> {
 
 ## Get Creative Data
 
+The following filtering and pagination fields can be passed as query parameters. The filtering fields <var>ids</var>, <var>segmentIds</var>, and <var>parentSegmendIds</var> will be defined at each endpoint where applicable.
+
+For more information see [API Filtering and Pagination](/Getting%20Started/API-Pagination-Guide).
+
 The following endpoints can be used to get details and specs on various Creative properties and lists. Most support paginated query parameters:
 
   <div class="child3">
@@ -3073,119 +3171,9 @@ The following endpoints can be used to get details and specs on various Creative
 | `limit` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The maximum number of returned results per page, default: <var>300</var> |
 | `sortBy` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>+id</var> |
 | `searchField` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Search the result by provided keyword in the <var>searchField</var>, search country records by <var>name</var> |
-| `ids` <br /><span class="type-text">array of integers</span> <span class="required-text">optional</span> | Selected country ID List, countries with provided IDswill be returned first compared to other records |
-| `segmentIds` <br /><span class="type-text">array of integers</span> <span class="required-text">optional</span> | Filters for property segment IDs |
+| `ids` <br /><span class="type-text">array of integers</span> <span class="required-text">optional</span> | Selected entity ID list, entities with provided IDs will be returned first compared to other records |
+| `segmentIds` <br /><span class="type-text">array of integers</span> <span class="required-text">optional</span> | Filters for entity segment IDs |
 
-</div>
-
----
-
-### Get Creative Types
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/master/static/creative-types</span>
-
-<div class="container">
-<div class="child1">
-
-Get a list of Creative types.
-
-| Properties ||
-| --- | --- |
-| `name` <br /><span class="type-text">string</span> | Creative type name |
-| `rtbCampaignTypeId` <br /><span class="type-text">integer</span> | [RTB Campaign Type ID](/Guidelines/Master-API-Guidelines#get-rtb-creative-types) |
-| `id` <br /><span class="type-text">integer</span> | Creative type ID |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "data": [
-      {
-        "name": "Image",
-        "rtbCampaignTypeId": 1,
-        "id": 11
-      },
-      {
-        "name": "HTML",
-        "rtbCampaignTypeId": 1,
-        "id": 13
-      },
-      {
-        "name": "Video",
-        "rtbCampaignTypeId": 3,
-        "id": 14
-      },
-      {
-        "name": "Native",
-        "rtbCampaignTypeId": 4,
-        "id": 15
-      },
-      {
-        "name": "Audio",
-        "rtbCampaignTypeId": 2,
-        "id": 17
-      }
-    ],
-    "totalRecords": 5,
-    "filteredRecords": 5
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          data: {
-            name: string;
-            rtbCampaignTypeId: number;
-            id: number;
-          }[];
-          totalRecords: number;
-          filteredRecords: number;
-        }
-      }
-    };
-  };
-};
-
-function getCreativeTypes(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v3/master/static/creative-types',
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-
-```
-
-</TabItem></Tabs>
-
-</div>
 </div>
 
 ---
@@ -3199,7 +3187,7 @@ function getCreativeTypes(): Promise<Responses> {
 
 Get list of RTB Creative types.
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | RTB Creative type name |
 | `id` <br /><span class="type-text">integer</span> | RTB Creative type ID |
@@ -3298,7 +3286,7 @@ function getCreativeRTBTypes(): Promise<Responses> {
 
 Get list of Creative sizes. 
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `standardDimensions` <br /><span class="type-text">string</span> | Dimensions in pixels |
 | `creativeDurations` <br /><span class="type-text">string</span> | Video/audio duration in seconds |
@@ -3429,7 +3417,12 @@ function getCreativeSizes(): Promise<Responses> {
 
 Get list of video skippability parameters. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Skippability IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Skippability IDs 
+
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Video skippability name |
 | `id` <br /><span class="type-text">integer</span> | Video skippability ID |
@@ -3532,7 +3525,12 @@ function getVideoTargetingSkippability(): Promise<Responses> {
 
 Get list of video roll position parameters. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Roll position IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Roll position IDs
+
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Video roll position name |
 | `id` <br /><span class="type-text">integer</span> | Video roll position ID |
@@ -3641,7 +3639,12 @@ function getVideoTargetingRollPosition(): Promise<Responses> {
 
 Get list of video player size parameters. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Player size IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | PLayer size IDs 
+
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Video player size name |
 | `id` <br /><span class="type-text">integer</span> | Video player size ID |
@@ -3746,7 +3749,12 @@ function getVideoTargetingPlayerSize(): Promise<Responses> {
 
 Get list of video playback method parameters. 
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Playback method IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Playback method IDs
+
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Video playback method name |
 | `id` <br /><span class="type-text">integer</span> | Video playback method ID |
@@ -3851,7 +3859,12 @@ function getVideoTargetingPlaybackMethod(): Promise<Responses> {
 
 Get a list of video placement type parameters.
 
-| Properties ||
+| Sorting and Filtering Fields | |
+| --- | --- |
+| `ids` <br /><span class="type-text">array of integers</span> | Placement type IDs 
+| `segmentIds` <br /><span class="type-text">array of integers</span> | Placement type IDs 
+
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Video placement type name |
 | `id` <br /><span class="type-text">integer</span> | Video placement type ID |
@@ -3956,7 +3969,7 @@ function getVideoTargetingPlacementTypes(): Promise<Responses> {
 
 Get list of network types for targeting. 
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Network type name |
 | `id` <br /><span class="type-text">integer</span> | Network type ID |
@@ -4045,7 +4058,7 @@ The following query paramters are supported by the <var>/device-os</var> endpoin
 | `campaignId` <br /><span class="type-text">integer</span> | Segment list by Campaign ID |
 
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Device OS name |
 | `id` <br /><span class="type-text">integer</span> | Device OS ID |
@@ -4235,7 +4248,7 @@ Get list of manufacturers for targeting.
 | `segmentIds` <br /><span class="type-text">array of integers</span>  | Filters for property segment IDs |
 | `campaignId` <br /><span class="type-text">integer</span> | Segment list by Campaign ID |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Manufacturer name |
 | `id` <br /><span class="type-text">integer</span> | Manufacturer ID |
@@ -4380,7 +4393,7 @@ Get list of channels for Inventory app.
 | `ids` <br /><span class="type-text">array of integers</span>  | Selected segment ID List, segments with provided IDs will be returned first compared to other records |
 | `segmentIds` <br /><span class="type-text">array of integers</span>  | Filters for property segment IDs |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Inventory channel name |
 | `id` <br /><span class="type-text">integer</span> | Inventory channel ID |
@@ -4476,7 +4489,7 @@ function getMasterSegmentChannel(): Promise < Responses > {
 
 Get list of verticals values.
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Vertical name |
 | `id` <br /><span class="type-text">integer</span> | Vertical ID |
@@ -4607,7 +4620,7 @@ function getVerticalsList(): Promise < Responses > {
 
 Get list of traffic types. 
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Traffic name |
 | `id` <br /><span class="type-text">integer</span> | Traffic ID |
@@ -4712,7 +4725,7 @@ function getTrafficTypes(): Promise < Responses > {
 
 Get list of Inventory types.
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Inventory type name |
 | `id` <br /><span class="type-text">integer</span> | Inventory type ID |
@@ -4816,7 +4829,7 @@ Get list of exchanges.
 | `ids` <br /><span class="type-text">array of integers</span>  | Selected segment ID List, segments with provided IDs will be returned first compared to other records |
 | `exchangeIds` <br /><span class="type-text">array of integers</span>  | Filters for exchange IDs |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Exchange name |
 | `id` <br /><span class="type-text">integer</span> | Exchange ID |
@@ -4962,7 +4975,7 @@ function getExchanges(): Promise < Responses > {
 
 Get list of deal curation types. 
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Deal curation type name |
 | `id` <br /><span class="type-text">integer</span> | Deal curation type ID |
@@ -5065,7 +5078,7 @@ Get list of publisher ad categories.
 | `ids` <br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Filter for specified IDs, matches will be returned first compared to other records |
 | `adCategoryIds` <br /><span class="type-text">array of integers</span> | Filter for ad category IDs |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Publisher ad category name |
 | `id` <br /><span class="type-text">integer</span> | Publisher ad category ID |
@@ -5248,7 +5261,7 @@ Get list of device types.
 | `ids` <br /><span class="type-text">array of integers</span>  <span class="required-text">optional</span> | Filter for specified IDs, matches will be returned first compared to other records |
 | `segmentIds` <br /><span class="type-text">array of integers</span> | Filters by device type IDs |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `name` <br /><span class="type-text">string</span> | Device type name |
 | `id` <br /><span class="type-text">integer</span> | Device type ID |
@@ -5376,7 +5389,7 @@ Get master Inventory list.
 | `publisherIds` <br /><span class="type-text">array of integers</span> | Filters for publisher IDs |
 | `inventoryIds`<br /><span class="type-text">array of integers</span> | Filters for Inventory IDs |
 
-| Properties ||
+| Response Properties ||
 | --- | --- |
 | `id` <br /><span class="type-text">integer</span> | Inventory ID |
 | `publisherId` <br /><span class="type-text">integer</span> | Publisher ID |
