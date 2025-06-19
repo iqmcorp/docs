@@ -1645,7 +1645,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign"><span class="badge bar badge--info">PATCH</span>Assign Conversion to a Campaign</a>',
+              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign"><span class="badge bar badge--success">POST</span>Assign Conversion to a Campaign</a>',
               defaultStyle: true,
             },
             {
