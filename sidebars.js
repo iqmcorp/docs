@@ -1608,7 +1608,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic"><span class="badge bar badge--primary">GET</span>Campaign Details by Conversion ID in Group or Basic</a>',
+              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic"><span class="badge bar badge--success">POST</span>Campaign Details by Conversion ID in Group or Basic</a>',
               defaultStyle: true,
             },
           ]
