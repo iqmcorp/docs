@@ -3321,6 +3321,12 @@ const sidebars = {
         },
         {
           type: 'html',
+          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#refresh-token"><span class="badge bar badge--success">POST</span>Refresh Token</a>',
+          defaultStyle: true,
+          className: "sidebarItem"
+        },
+        {
+          type: 'html',
           value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-logout"><span class="badge bar badge--success">POST</span>User Logout</a>',
           defaultStyle: true,
           className: "sidebarItem"
