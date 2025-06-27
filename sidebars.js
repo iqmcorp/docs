@@ -1608,7 +1608,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic"><span class="badge bar badge--primary">GET</span>Campaign Details by Conversion ID in Group or Basic</a>',
+              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#get-campaign-details-by-conversion-id-in-group-or-basic"><span class="badge bar badge--success">POST</span>Campaign Details by Conversion ID in Group or Basic</a>',
               defaultStyle: true,
             },
           ]
@@ -1645,7 +1645,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign"><span class="badge bar badge--info">PATCH</span>Assign Conversion to a Campaign</a>',
+              value: '<a class="menu__link" href="/Guidelines/Conversion-API-Guidelines#assign-conversion-to-a-campaign"><span class="badge bar badge--success">POST</span>Assign Conversion to a Campaign</a>',
               defaultStyle: true,
             },
             {
@@ -3316,6 +3316,12 @@ const sidebars = {
         {
           type: 'html',
           value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#login"><span class="badge bar badge--success">POST</span>Login</a>',
+          defaultStyle: true,
+          className: "sidebarItem"
+        },
+        {
+          type: 'html',
+          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#refresh-token"><span class="badge bar badge--success">POST</span>Refresh Token</a>',
           defaultStyle: true,
           className: "sidebarItem"
         },
