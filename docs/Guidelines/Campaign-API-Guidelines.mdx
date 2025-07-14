@@ -5082,7 +5082,7 @@ function CampaignAudienceTargetingList(): Promise<Responses> {
 
 ### Inventory Group Targeting
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/inventorygroups/\{groupId}/includeExclude</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/cmp/inventorygroups/\{groupId}/includeExclude</span>
 
 <div class="container">
   <div class="child1">
@@ -5097,8 +5097,8 @@ Review the Inventory API to [Create a New Inventory Group](/Guidelines/Inventory
 
 | Request Schema | |
 | --- | --- |
-| `excludedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to exclude targeting
-| `includedCampaigns` <br /><span class="type-text">string</span> | Comma separated Campaign IDs to include targeting
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated Campaign IDs
+| `isExcluded` <br /><span class="type-text">boolean</span> | Include Campaigns in Group: <var>0</var> <br />Exclude Campaigns from Group: <var>1</var>
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -6414,8 +6414,8 @@ Get an advanced list of Insertion Order details.
 
 | Query Parameters  |  |
 |---|---|
-| `pageNo` <br /><span class="type-text">integer</span> | page number for required data. |
-| `pageSize` <br /><span class="type-text">integer</span> | Number of records per page. |
+| `pageNo` <br /><span class="type-text">integer</span> | page number for returned data |
+| `pageSize` <br /><span class="type-text">integer</span> | Number of records per page |
 | `searchField` <br /><span class="type-text">string</span> | Name of search field <br />Supported values: <var>name</var> and <var>id</var> |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-ioId</var> |
 | `offset` <br /><span class="type-text">integer</span> | Offset is alternative of page number. Offset is number of records to be skipped |
@@ -6423,6 +6423,7 @@ Get an advanced list of Insertion Order details.
 | `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for returned data, in milliseconds |
 | `budgetTypeIds` <br /><span class="type-text">string</span> | Comma separated [Budget Type IDs](#get-list-of-campaign-budget-types) to include in data |
 | `ioStatusIds` <br /><span class="type-text">string</span> | Comma separated [Status IDs](#get-io-status-list) to include in data |
+
 
 </div><div class="child2">
 
@@ -7084,6 +7085,125 @@ function getIOListWithReportData(): Promise<Responses> {
 </div></div>
 
 ---
+
+### Download Advanced IO Details
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/io/advanced/list/download</span>
+
+<div class="container">
+  <div class="child1">
+
+Download advanced IO details as CSV or XLSX file. 
+
+| Request Schema |  |
+|---|---|
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for returned data |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of records per page |
+| `searchField` <br /><span class="type-text">string</span> | Name of search field <br />Supported values: <var>name</var> and <var>id</var> |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-ioId</var> |
+| `searchField` <br /><span class="type-text">string</span> | Filter data by search
+| `ioIdsList` <br /><span class="type-text">array of integers</span> | IO IDs to include in data
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)
+| `ioStatusIdsList` <br /><span class="type-text">array of integers</span> | [Status IDs](#get-io-status-list) to include in data |
+| `budgetTypeIdList` <br /><span class="type-text">array of integers</span> | [Budget Type IDs](#get-list-of-campaign-budget-types) to include in data |
+| `columns` <br /><span class="type-text">string</span> | Column names to display in Report as specified by <var>label</var> and <var>value</var> properties
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for returned data, in milliseconds |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for returned data, in milliseconds | 
+| `fileType` <br /><span class="type-text">string</span> | File type to download: <var>csv</var> or <var>xlsx</var>
+| `fileName` <br /><span class="type-text">string</span> | File name
+| `owIds` <br /><span class="type-text">string</span> | Download file will only contain data for comma separated customer OW IDs
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+        <tr>
+    <td>`url` <br /><span class="type-text">string</span></td>
+    <td>File download URL</td>
+    </tr>
+    </table>
+    </details>
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "startDate": "1698638400000",
+  "endDate": "1698724799000",
+  "timezoneId": 29,
+  "searchField": "",
+  "sortBy": "impressions",
+  "order": "DESC",
+  "owIds": "",
+  "ioIdsList": [],
+  "ioStatusIdsList": [
+    1,
+    2
+  ],
+  "fileType": "xlsx",
+  "fileName": "IO",
+  "budgetTypeIdList": [
+    1,
+    2
+  ],
+  "columns": [
+    {
+      "label": "Insertion Order ID",
+      "value": "ioId"
+    },
+    {
+      "label": "Insertion Order Name",
+      "value": "ioName"
+    },
+    {
+      "label": "Status",
+      "value": "ioStatus"
+    },
+    {
+      "label": "Start date",
+      "value": "ioStartTime"
+    },
+    {
+      "label": "End date",
+      "value": "ioEndTime"
+    },
+    {
+      "label": "Impressions",
+      "value": "targetImpression"
+    },
+    {
+      "label": "Clicks",
+      "value": "clicks"
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "url": "https://tmpd3vsekqsh1zre3k8n-stage.s3.amazonaws.com/"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
 
 ### Get IO Campaign Budget and Details
 
