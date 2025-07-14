@@ -47,6 +47,489 @@ Use the following header parameters for all requests:
 
 ## Audience Details
 
+### Audience Details List
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get list of Audiences with basic details by desired filters.
+
+| Query Parameters | |
+| --- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
+| `audienceTypeIds` <br /><span class="type-text">string</span> | [Audience type IDs](/Guidelines/Audience-API-Guidelines#create-campaign-audience)
+| `searchField` <br /><span class="type-text">string</span> | Filter results by keyword
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audienceType` <br /><span class="type-text">string</span></td>
+  <td>Audience type</td>
+</tr>
+<tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+</tr>
+<tr>
+  <td>`isVoterAudience` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Audience is made up of voters (<var>true</var>) or not (<var>false</var>)</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`statusDisplayName` <br /><span class="type-text">string</span></td>
+  <td>Status display name</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+</table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": [
+    {
+      "id": 1,
+      "audienceName": "Sample audinece name 1",
+      "audienceType": "Matched Audience",
+      "audienceTypeId": 1,
+      "isVoterAudience": true,
+      "status": "approved",
+      "statusDisplayName": "Ready",
+      "createdOn": 1653510068,
+      "dataCost": 1.5,
+      "uniques": 18850783
+    },
+    {
+      "id": 2,
+      "audienceName": "Sample audinece name 2",
+      "audienceType": "Contextual Audience",
+      "audienceTypeId": 5,
+      "isVoterAudience": false,
+      "status": "processing",
+      "statusDisplayName": "Processing",
+      "createdOn": 1653510068,
+      "dataCost": 1.3,
+      "uniques": 10000
+    },
+    {
+      "id": 3,
+      "audienceName": "Sample audinece name 3",
+      "audienceType": "Retargeted Audience",
+      "audienceTypeId": 3,
+      "isVoterAudience": false,
+      "status": "approved",
+      "statusDisplayName": "Ready",
+      "createdOn": 1653510068,
+      "dataCost": 1.6,
+      "uniques": 0
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          id: number;
+          audienceName: string;
+          audienceType: number;
+          isVoterAudience: boolean;
+          status: string;
+          statusDisplayName: string;
+          createdOn: number;
+          dataCost: number;
+          uniques: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/list',
+    params: {
+      query?: {
+        owIds?: `string`,
+        audienceTypeIds?: `string`,
+        searchField?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Paginated Audience Details List 
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/detailed/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get an advanced list of Audience details. Includes Insights details for eligible Matched Audiences.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Query Parameters</summary>
+<table className="objectProperties">
+<tr>
+  <td>`audienceTypeIds` <br /><span class="type-text">string</span></td>
+  <td>[Audience type IDs](/Guidelines/Audience-API-Guidelines#create-campaign-audience) </td>
+</tr>
+<tr>
+  <td>`searchField` <br /><span class="type-text">string</span></td>
+  <td>Filter results by keyword </td>
+</tr>
+<tr>
+  <td>`pageSize` <br /><span class="type-text">integer</span></td>
+  <td>Number of results reutnred per page </td>
+</tr>
+<tr>
+  <td>`pageNo` <br /><span class="type-text">integer</span></td>
+  <td>Page number for data, default: <var>1</var></td>
+</tr>
+<tr>
+  <td>`sortBy` <br /><span class="type-text">string</span></td>
+  <td>Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>modified_date</var></td>
+</tr>
+<tr>
+  <td>`audienceIds` <br /><span class="type-text">integer</span></td>
+  <td>Audience IDs </td>
+</tr>
+<tr>
+  <td>`owIds` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace IDs </td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status ID </td>
+</tr>
+<tr>
+  <td>`noOfEntries` <br /><span class="type-text">integer</span></td>
+  <td>Number of results returned, default: <var>10</var></td>
+</tr>
+<tr>
+  <td>`sortType` <br /><span class="type-text">string</span></td>
+  <td>Default: <var>desc</var></td>
+</tr>
+</table></details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audienceType` <br /><span class="type-text">string</span></td>
+  <td>Audience type</td>
+</tr>
+<tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+</tr>
+<tr>
+  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>The percentage of matched records compared to a reference set</td>
+</tr>
+<tr>
+  <td>`fileTotalCount` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records in the uploaded Audience file</td>
+</tr>
+<tr>
+  <td>`included` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns including this Audience</td>
+</tr>
+<tr>
+  <td>`excluded` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns excluding this Audience</td>
+</tr>
+<tr>
+  <td>`includedCampaignList` <br /><span class="type-text">array of integers</span></td>
+  <td>List of Campaign IDs including this Audience</td>
+</tr>
+<tr>
+  <td>`excludedCampaignList` <br /><span class="type-text">array of integers</span></td>
+  <td>List of Campaign IDs excluding this Audience</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Status</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`tagTime` <br /><span class="type-text">integer</span></td>
+  <td>Time when Audience was tagged, representing when the data was last updated or processed (Retargeted Audience)</td>
+</tr>
+<tr>
+  <td>`tagUniqueCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique tags associated with Audience or Insights, referring to either unique identifiers or categories (Retargeted Audience)</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`s3FileName` <br /><span class="type-text">string</span></td>
+  <td>S3 file name</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`runningCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns with status "ready"</td>
+</tr>
+<tr>
+  <td>`pendingCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns with status "pending"</td>
+</tr>
+<tr>
+  <td>`pausedCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns with status "paused"</td>
+</tr>
+<tr>
+  <td>`expiredCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of Campaigns with status "expired"</td>
+</tr>
+<tr>
+  <td>`timezone` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)</td>
+</tr>
+<tr>
+  <td>`partnerName` <br /><span class="type-text">string</span></td>
+  <td>Partner name</td>
+</tr>
+<tr>
+  <td>`partnerLogoUrl` <br /><span class="type-text">string</span></td>
+  <td>Partner logo URL</td>
+</tr>
+<tr>
+  <td>`isApprovalAcces` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has access to approve</td>
+</tr>
+<tr>
+  <td>`isEditAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has edit access for the requested resource</td>
+</tr>
+<tr>
+  <td>`insightDetails` <br /><span class="type-text">array of objects</span></td>
+  <td>Array of <var>audienceIds</var> and their <var>statusId</var> and Insight <var>id</var></td>
+</tr>
+
+</table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "totalRecords": 223,
+    "data": [
+      {
+        "id": 1003879,
+        "audienceName": "Insights 5",
+        "audienceType": "Matched Audience",
+        "audienceTypeId": 1,
+        "matchRate": 0.02,
+        "fileTotalCount": 1000000,
+        "included": 0,
+        "excluded": 0,
+        "includedCampaignList": [],
+        "excludedCampaignList": [],
+        "status": "Ready",
+        "createdOn": 1690264074,
+        "tagTime": 0,
+        "tagUniqueCount": 0,
+        "isAudienceNewPlatform": 1,
+        "dataCost": 1,
+        "s3FileName": "1690198084570_1689926593350_1689755440643_matched_audience_file_NY_1M.csv",
+        "organizationName": "Stage Shared Advertiser1",
+        "uniques": 200,
+        "runningCampaignCount": 0,
+        "pendingCampaignCount": 0,
+        "pausedCampaignCount": 0,
+        "expiredCampaignCount": 0,
+        "timezone": 0,
+        "partnerName": "Healthlink",
+        "partnerLogoUrl": "www.sample.com",
+        "isApprovalAccess": false,
+        "isEditAccess": false
+      }
+    ],
+    "filteredRecords": 223,
+    "insightDetails": {
+      "1003877": {
+        "statusId": 2,
+        "id": 784
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          totalRecords: number;
+          data: {
+            id: number;
+            audienceName: string;
+            audienceType: number;
+            matchRate: number;
+            fileTotalCount: number;
+            included: number;
+            excluded: number;
+            includedCampaignList: number[];
+            excludedCampaignList: number[];
+            status: string;
+            createdOn: number;
+            tagTime: number;
+            tagUniqueCount: number;
+            isAudienceNewPlatform: number;
+            dataCost: number;
+            s3FileName: string;
+            organizationName: string;
+            uniques: number;
+            runningCampaignCount: number;
+            pendingCampaignCount: number;
+            pausedCampaignCount: number;
+            expiredCampaignCount: number;
+            timezone: number;
+            partnerName: string;
+            partnerLogoUrl: string;
+            isApprovalAccess: boolean;
+            isEditAccess: boolean;
+          }[];
+          filteredRecords: number;
+          insightDetails: {
+            [number: number]: {
+              statusId: number;
+              id: number;
+            }
+          }
+        }
+      };
+    };
+  };
+}
+
+function getAudienceDetailedList_1(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://app.iqm.com/api/v2/audience/detailed/list',
+    params: {
+      query?: {
+        audienceTypeIds?: `string`,
+        searchField?: `string`,
+        pageSize?: `string`,
+        pageNo?: `number`,
+        sortBy?: `string`,
+        audienceIds?: `string`,
+        owIds?: `string`,
+        status?: `string`,
+        noOfEntries?: `number`,
+        sortType?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Matched Audience Details
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id}</span>
@@ -2576,489 +3059,6 @@ function getAudienceTypeWiseCount(): Promise<Responses> {
 
 </div></div>
 
----
-
-### Audience Details List
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/list</span>
-
-<div class="container">
-  <div class="child1">
-
-Get list of Audiences with basic information by desired filters.
-
-| Query Parameters | |
-| --- | --- |
-| `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
-| `audienceTypeIds` <br /><span class="type-text">string</span> | [Audience type IDs](/Guidelines/Audience-API-Guidelines#create-campaign-audience)
-| `searchField` <br /><span class="type-text">string</span> | Filter results by keyword
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-<table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
-</tr>
-<tr>
-  <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
-</tr>
-<tr>
-  <td>`audienceType` <br /><span class="type-text">string</span></td>
-  <td>Audience type</td>
-</tr>
-<tr>
-  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
-</tr>
-<tr>
-  <td>`isVoterAudience` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates whether the Audience is made up of voters (<var>true</var>) or not (<var>false</var>)</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status</td>
-</tr>
-<tr>
-  <td>`statusDisplayName` <br /><span class="type-text">string</span></td>
-  <td>Status display name</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
-</tr>
-<tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique Audiences reached</td>
-</tr>
-</table></details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": [
-    {
-      "id": 1,
-      "audienceName": "Sample audinece name 1",
-      "audienceType": "Matched Audience",
-      "audienceTypeId": 1,
-      "isVoterAudience": true,
-      "status": "approved",
-      "statusDisplayName": "Ready",
-      "createdOn": 1653510068,
-      "dataCost": 1.5,
-      "uniques": 18850783
-    },
-    {
-      "id": 2,
-      "audienceName": "Sample audinece name 2",
-      "audienceType": "Contextual Audience",
-      "audienceTypeId": 5,
-      "isVoterAudience": false,
-      "status": "processing",
-      "statusDisplayName": "Processing",
-      "createdOn": 1653510068,
-      "dataCost": 1.3,
-      "uniques": 10000
-    },
-    {
-      "id": 3,
-      "audienceName": "Sample audinece name 3",
-      "audienceType": "Retargeted Audience",
-      "audienceTypeId": 3,
-      "isVoterAudience": false,
-      "status": "approved",
-      "statusDisplayName": "Ready",
-      "createdOn": 1653510068,
-      "dataCost": 1.6,
-      "uniques": 0
-    }
-  ]
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        responseObject: {
-          id: number;
-          audienceName: string;
-          audienceType: number;
-          isVoterAudience: boolean;
-          status: string;
-          statusDisplayName: string;
-          createdOn: number;
-          dataCost: number;
-          uniques: number;
-        }[];
-      };
-    };
-  };
-}
-
-function getAudienceDetails(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v2/audience/list',
-    params: {
-      query?: {
-        owIds?: `string`,
-        audienceTypeIds?: `string`,
-        searchField?: `string`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Paginated Audience Details List 
-
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/detailed/list</span>
-
-<div class="container">
-  <div class="child1">
-
-Get Audience and Insight details for eligible Matched Audiences.
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Query Parameters</summary>
-<table className="objectProperties">
-<tr>
-  <td>`audienceTypeIds` <br /><span class="type-text">string</span></td>
-  <td>[Audience type IDs](/Guidelines/Audience-API-Guidelines#create-campaign-audience) </td>
-</tr>
-<tr>
-  <td>`searchField` <br /><span class="type-text">string</span></td>
-  <td>Filter results by keyword </td>
-</tr>
-<tr>
-  <td>`pageSize` <br /><span class="type-text">integer</span></td>
-  <td>Number of results reutnred per page </td>
-</tr>
-<tr>
-  <td>`pageNo` <br /><span class="type-text">integer</span></td>
-  <td>Page number for data, default: <var>1</var></td>
-</tr>
-<tr>
-  <td>`sortBy` <br /><span class="type-text">string</span></td>
-  <td>Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>modified_date</var></td>
-</tr>
-<tr>
-  <td>`audienceIds` <br /><span class="type-text">integer</span></td>
-  <td>Audience IDs </td>
-</tr>
-<tr>
-  <td>`owIds` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace IDs </td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status ID </td>
-</tr>
-<tr>
-  <td>`noOfEntries` <br /><span class="type-text">integer</span></td>
-  <td>Number of results returned, default: <var>10</var></td>
-</tr>
-<tr>
-  <td>`sortType` <br /><span class="type-text">string</span></td>
-  <td>Default: <var>desc</var></td>
-</tr>
-</table></details>
-
-<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-<table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
-</tr>
-<tr>
-  <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
-</tr>
-<tr>
-  <td>`audienceType` <br /><span class="type-text">string</span></td>
-  <td>Audience type</td>
-</tr>
-<tr>
-  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
-</tr>
-<tr>
-  <td>`matchRate` <br /><span class="type-text">integer</span></td>
-  <td>The percentage of matched records compared to a reference set</td>
-</tr>
-<tr>
-  <td>`fileTotalCount` <br /><span class="type-text">integer</span></td>
-  <td>Total number of records in the uploaded Audience file</td>
-</tr>
-<tr>
-  <td>`included` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns including this Audience</td>
-</tr>
-<tr>
-  <td>`excluded` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns excluding this Audience</td>
-</tr>
-<tr>
-  <td>`includedCampaignList` <br /><span class="type-text">array of integers</span></td>
-  <td>List of Campaign IDs including this Audience</td>
-</tr>
-<tr>
-  <td>`excludedCampaignList` <br /><span class="type-text">array of integers</span></td>
-  <td>List of Campaign IDs excluding this Audience</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Status</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`tagTime` <br /><span class="type-text">integer</span></td>
-  <td>Time when Audience was tagged, representing when the data was last updated or processed (Retargeted Audience)</td>
-</tr>
-<tr>
-  <td>`tagUniqueCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique tags associated with Audience or Insights, referring to either unique identifiers or categories (Retargeted Audience)</td>
-</tr>
-<tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
-</tr>
-<tr>
-  <td>`s3FileName` <br /><span class="type-text">string</span></td>
-  <td>S3 file name</td>
-</tr>
-<tr>
-  <td>`organizationName` <br /><span class="type-text">string</span></td>
-  <td>Organization name</td>
-</tr>
-<tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique Audiences reached</td>
-</tr>
-<tr>
-  <td>`runningCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "ready"</td>
-</tr>
-<tr>
-  <td>`pendingCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "pending"</td>
-</tr>
-<tr>
-  <td>`pausedCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "paused"</td>
-</tr>
-<tr>
-  <td>`expiredCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "expired"</td>
-</tr>
-<tr>
-  <td>`timezone` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/Guidelines/Master-API-Guidelines#get-timezones)</td>
-</tr>
-<tr>
-  <td>`partnerName` <br /><span class="type-text">string</span></td>
-  <td>Partner name</td>
-</tr>
-<tr>
-  <td>`partnerLogoUrl` <br /><span class="type-text">string</span></td>
-  <td>Partner logo URL</td>
-</tr>
-<tr>
-  <td>`isApprovalAcces` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has access to approve</td>
-</tr>
-<tr>
-  <td>`isEditAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has edit access for the requested resource</td>
-</tr>
-<tr>
-  <td>`insightDetails` <br /><span class="type-text">array of objects</span></td>
-  <td>Array of <var>audienceIds</var> and their <var>statusId</var> and Insight <var>id</var></td>
-</tr>
-
-</table></details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "totalRecords": 223,
-    "data": [
-      {
-        "id": 1003879,
-        "audienceName": "Insights 5",
-        "audienceType": "Matched Audience",
-        "audienceTypeId": 1,
-        "matchRate": 0.02,
-        "fileTotalCount": 1000000,
-        "included": 0,
-        "excluded": 0,
-        "includedCampaignList": [],
-        "excludedCampaignList": [],
-        "status": "Ready",
-        "createdOn": 1690264074,
-        "tagTime": 0,
-        "tagUniqueCount": 0,
-        "isAudienceNewPlatform": 1,
-        "dataCost": 1,
-        "s3FileName": "1690198084570_1689926593350_1689755440643_matched_audience_file_NY_1M.csv",
-        "organizationName": "Stage Shared Advertiser1",
-        "uniques": 200,
-        "runningCampaignCount": 0,
-        "pendingCampaignCount": 0,
-        "pausedCampaignCount": 0,
-        "expiredCampaignCount": 0,
-        "timezone": 0,
-        "partnerName": "Healthlink",
-        "partnerLogoUrl": "www.sample.com",
-        "isApprovalAccess": false,
-        "isEditAccess": false
-      }
-    ],
-    "filteredRecords": 223,
-    "insightDetails": {
-      "1003877": {
-        "statusId": 2,
-        "id": 784
-      }
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        responseObject: {
-          totalRecords: number;
-          data: {
-            id: number;
-            audienceName: string;
-            audienceType: number;
-            matchRate: number;
-            fileTotalCount: number;
-            included: number;
-            excluded: number;
-            includedCampaignList: number[];
-            excludedCampaignList: number[];
-            status: string;
-            createdOn: number;
-            tagTime: number;
-            tagUniqueCount: number;
-            isAudienceNewPlatform: number;
-            dataCost: number;
-            s3FileName: string;
-            organizationName: string;
-            uniques: number;
-            runningCampaignCount: number;
-            pendingCampaignCount: number;
-            pausedCampaignCount: number;
-            expiredCampaignCount: number;
-            timezone: number;
-            partnerName: string;
-            partnerLogoUrl: string;
-            isApprovalAccess: boolean;
-            isEditAccess: boolean;
-          }[];
-          filteredRecords: number;
-          insightDetails: {
-            [number: number]: {
-              statusId: number;
-              id: number;
-            }
-          }
-        }
-      };
-    };
-  };
-}
-
-function getAudienceDetailedList_1(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://app.iqm.com/api/v2/audience/detailed/list',
-    params: {
-      query?: {
-        audienceTypeIds?: `string`,
-        searchField?: `string`,
-        pageSize?: `string`,
-        pageNo?: `number`,
-        sortBy?: `string`,
-        audienceIds?: `string`,
-        owIds?: `string`,
-        status?: `string`,
-        noOfEntries?: `number`,
-        sortType?: `string`,
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
 ## Audience Segment Details
 
 ### Audience Segment Details
@@ -3375,50 +3375,103 @@ function getSegmentAudienceGroup(): Promise<Responses> {
 
 ### Search Audience Segment
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/segment/search</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/search/list</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/search/list-download</span>
 
 <div class="container">
   <div class="child1">
 
-Search Audience Segments by specified parameters. 
+Search Audience Segments by specified parameters. Search results can be downloaded as a CSV file. 
 
-| Request Schema | |
+| Query Parameters | |
 | --- | --- |
-| `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider ID](#provider-details-list)s 
-| `referenceId` <br /><span class="type-text">string</span> | Comma separated Reference IDs 
 | `searchField` <br /><span class="type-text">string</span> | Filters results by keyword 
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>1</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>100</var>
+| `sortBy` <br /><span class="type-text">string</span>| Sorts by ascending (<var>+</var>) or descending (<var>-</var>)<br />Supported values: <var>-cpm</var>, <var>reach</var>
+| `verticalIds` <br /><span class="type-text">string</span> | Comma separated [Vertical IDs](/Guidelines/Master-API-Guidelines#get-verticals)
+| `partnerIds` <br /><span class="type-text">string</span> | Comma seperated [Partner IDs](#data-partners-list-for-matched-audience)
+| `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider IDs](#provider-details-list)
+| `priceRangeIds` <br /><span class="type-text">string</span> | Comma separated [Price Range IDs](#price-range-list-for-audience-segment)
+| `reachRangeIds` <br /><span class="type-text">string</span> | Comma separated [Reach Range IDs](#reach-range-list-for-audience-segment)
+| `showOnlyReadySegments` <br /><span class="type-text">boolean</span> | Returns segments with "ready" status: <var>true</var>
+| `segmentIds` <br /><span class="type-text">string</span> | Comma separated Segmend IDs
+| `showOnlyNonZeroSegments` <br /><span class="type-text">boolean</span> | Returns segments with reach greater than 0: <var>true</var>, default: <var>false</var>
+
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 <table className="objectProperties">
 <tr>
+  <td>`segmentId` <br /><span class="type-text">integer</span></td>
+  <td>Segment ID</td>
+</tr>
+<tr>
+  <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+  <td>Taxonomy value</td>
+</tr>
+<tr>
   <td>`description` <br /><span class="type-text">string</span></td>
   <td>Description</td>
-</tr>
-<tr>
-  <td>`cpm` <br /><span class="type-text">integer</span></td>
-  <td>Cost per mille</td>
-</tr>
-<tr>
-  <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates that an Audience Segment is a leaf node in a hierarchical Audience structure: <var>true</var></td>
-</tr>
-<tr>
-  <td>`margin` <br /><span class="type-text">integer</span></td>
-  <td>Margin</td>
 </tr>
 <tr>
   <td>`pathKey` <br /><span class="type-text">string</span></td>
   <td>A hierarchichal key representing the taxonomy's path or structure</td>
 </tr>
 <tr>
-  <td>`id` <br /><span class="type-text">string</span></td>
-  <td>Audience Segment ID</td>
+  <td>`cpm` <br /><span class="type-text">integer</span></td>
+  <td>Cost per mille</td>
 </tr>
 <tr>
-  <td>`taxonomy_value` <br /><span class="type-text">string</span></td>
-  <td>Taxonomy value</td>
+  <td>`referenceId` <br /><span class="type-text">string</span></td>
+  <td>Reference ID</td>
 </tr>
+<tr>
+  <td>`lastUpdateDate` <br /><span class="type-text">string</span></td>
+  <td>Date when last updated</td>
+</tr>
+<tr>
+  <td>`totalReach` <br /><span class="type-text">integer</span></td>
+  <td>Total reach</td>
+</tr>
+<tr>
+  <td>`providerId` <br /><span class="type-text">integer</span></td>
+  <td>Provider ID</td>
+</tr>
+<tr>
+  <td>`partnerId` <br /><span class="type-text">integer</span></td>
+  <td>Partner ID</td>
+</tr>
+<tr>
+  <td>`reachMetadata` <br /><span class="type-text">object</span></td>
+  <td>Reach metadata object details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`reachMetadata` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`iosDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>IOS devices reach</td>
+  </tr>
+      <tr>
+    <td>`androidDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>Android devices reach</td>
+  </tr>
+        <tr>
+    <td>`cookiesReach` <br /><span class="type-text">integer</span></td>
+    <td>Cookies reach</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`logoUrl` <br /><span class="type-text">string</span></td>
+  <td>Logo URL</td>
+</tr>
+
 </table></details>
 
 </div>
@@ -3427,65 +3480,52 @@ Search Audience Segments by specified parameters.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-  "providerIds": "a6ff7585-dbb4-43cd-8022-8046883bbad5,7735f885-717e-4bd6-b924-f9552ff987ba,267fdd70-8655-4ad2-ad2b-538be580b139,4a163538-1dcb-4c42-909a-256c542e8820,ff6ae965-bd75-4809-b3c3-ed5c568a39b3,efe627d6-25fe-47c1-9dc6-1005c5e8afe5",
-  "referenceId": "ea5f5d49-cbd2-49df-bda1-f3d8f2d14223,6449205f-3be6-419b-924f-817f68b42ca9,63b762fc-a5f4-47ac-ba08-1991fbb29bcb",
-  "searchField": "rocks"
-}
-```
-
 ```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "0d5fcaea-0fe3-4b10-ba62-168f3dcb0281": [
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Digital Tribes > Gamers Not Lamers",
-        "id": "68da1011-aa51-48f3-9d55-45c9e63b9f99",
-        "taxonomy_value": "Gamers Not Lamers"
-      },
-      {
-        "description": "Sample discription.",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Style & Fashion > Makeup and Skincare",
-        "id": "d1e94b51-be6a-4ed7-9ad0-8b0b87bc3500",
-        "taxonomy_value": "Makeup and Skincare"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Grand Theft Auto",
-        "id": "a3ce828a-d33e-4391-a588-42c8b1332adf",
-        "taxonomy_value": "Grand Theft Auto"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Red Dead Redemption",
-        "id": "20574ff2-264f-42cc-940b-9356b35637d7",
-        "taxonomy_value": "Red Dead Redemption"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > CPG > Candy (Non-Chocolate)",
-        "id": "6dc06bea-938a-4725-b177-da9a861540ea",
-        "taxonomy_value": "Candy (Non-Chocolate)"
-      }
-    ]
+{    
+  "success": true,    
+  "data": {        
+    "filteredRecords": 45,        
+    "segmentsList": [            
+      {                
+        "segmentId": 5830140,                
+        "taxonomyValue": "Thriller/Horror",                
+        "description": "This audience contains people that are likely to watch Thriller/Horror TV content & are CBD purchasers. Data leverages Comscore's deterministic, single-source cross-platform dataset derived from set-top box (STB) data from households exposed to the target viewing criteria & is cultivated from industry-leading endemic companies (Point of Sale systems, eCommerce platforms, Delivery services, and Loyalty/CRM platforms).",                
+        "pathKey": "LiveRamp > Fyllo > Fyllo > Infused > Comscore > TV > Genre > Thriller/Horror",                
+        "cpm": 1.5,                
+        "referenceId": "a5b286f2-3b48-42b1-a0d3-1c349aa8800b",                
+        "lastUpdatedDate": "2021-07-04T10:48:42.296+00:00",                
+        "totalReach": 6000000,                
+        "providerId": 140,                
+        "partnerId": 1,                
+        "dataAvailable":true,                 
+        "reachMetadata": {                   
+          "iosDevicesReach":120,                    
+          "androidDevicesReach":120,                   
+          "cookiesReach":120                
+        },                
+        "logoUrl": "https://s3.amazonaws.com/advp0had0vuj7rad3niaw1eus2/data_partner/liveramp.png"            
+      },            
+      {                
+        "segmentId": 6164189,                
+        "taxonomyValue": "Thriller Crime & Mystery Films",                
+        "description": "ShareThis collects data from its network of 600 million publisher pages capturing site visitors' pageviews, clicks, shares, and searches.  ShareThis processes these signals and uses associated keywords and topics to build out its audience. ShareThis CTV targeting allows you to leverage this online behavioral data for CTV campaigns, merging the performance of online interest data with the impact and engagement of TV.",                
+        "pathKey": "LiveRamp > ShareThis > ShareThis > ShareThis for TV > Arts & Entertainment > Movies > Thriller Crime & Mystery Films",                
+        "cpm": 2.0,                
+        "referenceId": "e2b856fd-8777-42f1-b916-1f3042ed290d",                
+        "lastUpdatedDate": "2021-12-03T11:19:19.763+00:00",                
+        "totalReach": 8600000,                
+        "providerId": 21,                
+        "partnerId": 1,                
+        "dataAvailable":true,                 
+        "reachMetadata": {                   
+          "inputRecordsReach":120,                   
+          "iosDevicesReach":120,                    
+          "androidDevicesReach":120,                   
+          "cookiesReach":120                
+        },                
+        "logoUrl": "https://s3.amazonaws.com/advp0had0vuj7rad3niaw1eus2/data_partner/liveramp.png"            
+      }        
+    ]    
   }
 }
 ```
