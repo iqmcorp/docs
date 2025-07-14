@@ -1465,6 +1465,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#download-advanced-io-details"><span class="badge bar badge--success">POST</span>Download Advanced IO Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-io-campaign-budget-and-details"><span class="badge bar badge--primary">GET</span>Get IO Campaign Budget and Details</a>',
               defaultStyle: true,
             },
