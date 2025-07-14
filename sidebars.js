@@ -819,6 +819,16 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#paginated-audience-details-list"><span class="badge bar badge--primary">GET</span>Paginated Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
               defaultStyle: true,
             },
@@ -867,16 +877,6 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-count-by-type"><span class="badge bar badge--primary">GET</span>Audience Count by Type</a>',
               defaultStyle: true,
             },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#paginated-audience-details-list"><span class="badge bar badge--primary">GET</span>Paginated Audience Details List</a>',
-              defaultStyle: true,
-            },
           ]
         },
         {
@@ -891,7 +891,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-audience-segment"><span class="badge bar badge--primary">GET</span>Search Audience Segment</a>',
               defaultStyle: true,
             },
             {
@@ -4045,7 +4045,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--primary">GET</span>Search Audience Segment</a>',
               defaultStyle: true,
             },
             {
