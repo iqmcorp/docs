@@ -1966,6 +1966,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#campaign-margin-details"><span class="badge bar badge--primary">GET</span>Campaign Margin Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-pg-fees-details"><span class="badge bar badge--primary">GET</span>Customer PG Fees Details</a>',
               defaultStyle: true,
             },
@@ -2048,7 +2053,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#invoice-management"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-invoice-settings"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
               defaultStyle: true,
             },
             {
@@ -2100,7 +2105,12 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-management"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#customer-credit-list"><span class="badge bar badge--primary">GET</span>Customer Credit List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#add-credit-to-customer"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
               defaultStyle: true,
             },
             {
