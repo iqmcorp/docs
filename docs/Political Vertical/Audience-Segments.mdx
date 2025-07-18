@@ -21,7 +21,7 @@ The Audience API allows you to create Audience Segments for political Campaigns.
   | **Contextual Audience** | IQM adds users to an Audience when they visit sites featuring specified keywords or URLs.
 </div>
 
-More resources:
+### More Resources
   * [Selecting your Audiences<ExternalLink />](https://help.iqm.com/en/collections/1387061-selecting-your-audiences) Help Center article
   * [Audience API](/Guidelines/Audience-API-Guidelines) Guidelines
 
@@ -360,11 +360,11 @@ Get Geo-Farmed Audience Details by ID.
             </tr>
             <tr>
               <td>`stateSenates`<br /><span class="type-text">array of integers</span></td>
-              <td>[State senate IDs](/Guidelines/Master-API-Guidelines#get-senate-district-segment)</td>
+              <td>[State Senate IDs](/Guidelines/Master-API-Guidelines#get-senate-district-segment)</td>
             </tr>
             <tr>
               <td>`stateHouses`<br /><span class="type-text">array of integers</span></td>
-              <td>[State house IDs](/Guidelines/Master-API-Guidelines#get-house-district-segment)</td>
+              <td>[State House IDs](/Guidelines/Master-API-Guidelines#get-house-district-segment)</td>
             </tr>
             <tr>
               <td>`congressionalDistrictIds`<br /><span class="type-text">array of integers</span></td>
@@ -1658,50 +1658,103 @@ function getSegmentAudienceGroup(): Promise<Responses> {
 
 ### Search Audience Segment
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v2/audience/segment/search</span>
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/search/list</span>
+<br /><span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/audience/segment/search/list-download</span>
 
 <div class="container">
   <div class="child1">
 
-Search Audience Segments by specified parameters. 
+Search Audience Segments by specified parameters. Search results can be downloaded as a CSV file. 
 
-| Request Schema | |
+| Query Parameters | |
 | --- | --- |
-| `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider ID](#provider-details-list)s 
-| `referenceId` <br /><span class="type-text">string</span> | Comma separated Reference IDs 
 | `searchField` <br /><span class="type-text">string</span> | Filters results by keyword 
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the data, default: <var>1</var>
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries returned, default: <var>100</var>
+| `sortBy` <br /><span class="type-text">string</span>| Sorts by ascending (<var>+</var>) or descending (<var>-</var>)<br />Supported values: <var>-cpm</var>, <var>reach</var>
+| `verticalIds` <br /><span class="type-text">string</span> | Comma separated [Vertical IDs](/Guidelines/Master-API-Guidelines#get-verticals)
+| `partnerIds` <br /><span class="type-text">string</span> | Comma seperated [Partner IDs](#data-partners-list-for-matched-audience)
+| `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider IDs](#provider-details-list)
+| `priceRangeIds` <br /><span class="type-text">string</span> | Comma separated [Price Range IDs](#price-range-list-for-audience-segment)
+| `reachRangeIds` <br /><span class="type-text">string</span> | Comma separated [Reach Range IDs](#reach-range-list-for-audience-segment)
+| `showOnlyReadySegments` <br /><span class="type-text">boolean</span> | Returns segments with "ready" status: <var>true</var>
+| `segmentIds` <br /><span class="type-text">string</span> | Comma separated Segmend IDs
+| `showOnlyNonZeroSegments` <br /><span class="type-text">boolean</span> | Returns segments with reach greater than 0: <var>true</var>, default: <var>false</var>
+
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 <table className="objectProperties">
 <tr>
+  <td>`segmentId` <br /><span class="type-text">integer</span></td>
+  <td>Segment ID</td>
+</tr>
+<tr>
+  <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+  <td>Taxonomy value</td>
+</tr>
+<tr>
   <td>`description` <br /><span class="type-text">string</span></td>
   <td>Description</td>
-</tr>
-<tr>
-  <td>`cpm` <br /><span class="type-text">integer</span></td>
-  <td>Cost per mille</td>
-</tr>
-<tr>
-  <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates that an Audience Segment is a leaf node in a hierarchical Audience structure: <var>true</var></td>
-</tr>
-<tr>
-  <td>`margin` <br /><span class="type-text">integer</span></td>
-  <td>Margin</td>
 </tr>
 <tr>
   <td>`pathKey` <br /><span class="type-text">string</span></td>
   <td>A hierarchichal key representing the taxonomy's path or structure</td>
 </tr>
 <tr>
-  <td>`id` <br /><span class="type-text">string</span></td>
-  <td>Audience Segment ID</td>
+  <td>`cpm` <br /><span class="type-text">integer</span></td>
+  <td>Cost per mille</td>
 </tr>
 <tr>
-  <td>`taxonomy_value` <br /><span class="type-text">string</span></td>
-  <td>Taxonomy value</td>
+  <td>`referenceId` <br /><span class="type-text">string</span></td>
+  <td>Reference ID</td>
 </tr>
+<tr>
+  <td>`lastUpdateDate` <br /><span class="type-text">string</span></td>
+  <td>Date when last updated</td>
+</tr>
+<tr>
+  <td>`totalReach` <br /><span class="type-text">integer</span></td>
+  <td>Total reach</td>
+</tr>
+<tr>
+  <td>`providerId` <br /><span class="type-text">integer</span></td>
+  <td>Provider ID</td>
+</tr>
+<tr>
+  <td>`partnerId` <br /><span class="type-text">integer</span></td>
+  <td>Partner ID</td>
+</tr>
+<tr>
+  <td>`reachMetadata` <br /><span class="type-text">object</span></td>
+  <td>Reach metadata object details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`reachMetadata` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`iosDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>IOS devices reach</td>
+  </tr>
+      <tr>
+    <td>`androidDevicesReach` <br /><span class="type-text">integer</span></td>
+    <td>Android devices reach</td>
+  </tr>
+        <tr>
+    <td>`cookiesReach` <br /><span class="type-text">integer</span></td>
+    <td>Cookies reach</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`logoUrl` <br /><span class="type-text">string</span></td>
+  <td>Logo URL</td>
+</tr>
+
 </table></details>
 
 </div>
@@ -1710,65 +1763,52 @@ Search Audience Segments by specified parameters.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-  "providerIds": "a6ff7585-dbb4-43cd-8022-8046883bbad5,7735f885-717e-4bd6-b924-f9552ff987ba,267fdd70-8655-4ad2-ad2b-538be580b139,4a163538-1dcb-4c42-909a-256c542e8820,ff6ae965-bd75-4809-b3c3-ed5c568a39b3,efe627d6-25fe-47c1-9dc6-1005c5e8afe5",
-  "referenceId": "ea5f5d49-cbd2-49df-bda1-f3d8f2d14223,6449205f-3be6-419b-924f-817f68b42ca9,63b762fc-a5f4-47ac-ba08-1991fbb29bcb",
-  "searchField": "rocks"
-}
-```
-
 ```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "0d5fcaea-0fe3-4b10-ba62-168f3dcb0281": [
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Digital Tribes > Gamers Not Lamers",
-        "id": "68da1011-aa51-48f3-9d55-45c9e63b9f99",
-        "taxonomy_value": "Gamers Not Lamers"
-      },
-      {
-        "description": "Sample discription.",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Style & Fashion > Makeup and Skincare",
-        "id": "d1e94b51-be6a-4ed7-9ad0-8b0b87bc3500",
-        "taxonomy_value": "Makeup and Skincare"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Grand Theft Auto",
-        "id": "a3ce828a-d33e-4391-a588-42c8b1332adf",
-        "taxonomy_value": "Grand Theft Auto"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > B2C > Video Games & Mobile Apps > Red Dead Redemption",
-        "id": "20574ff2-264f-42cc-940b-9356b35637d7",
-        "taxonomy_value": "Red Dead Redemption"
-      },
-      {
-        "description": "Sample discription",
-        "cpm": 1.15,
-        "isLeaf": 1,
-        "margin": 0,
-        "pathKey": "StatSocial > StatSocial > Statsocial > Earned Audiences > CPG > Candy (Non-Chocolate)",
-        "id": "6dc06bea-938a-4725-b177-da9a861540ea",
-        "taxonomy_value": "Candy (Non-Chocolate)"
-      }
-    ]
+{    
+  "success": true,    
+  "data": {        
+    "filteredRecords": 45,        
+    "segmentsList": [            
+      {                
+        "segmentId": 5830140,                
+        "taxonomyValue": "Thriller/Horror",                
+        "description": "This audience contains people that are likely to watch Thriller/Horror TV content & are CBD purchasers. Data leverages Comscore's deterministic, single-source cross-platform dataset derived from set-top box (STB) data from households exposed to the target viewing criteria & is cultivated from industry-leading endemic companies (Point of Sale systems, eCommerce platforms, Delivery services, and Loyalty/CRM platforms).",                
+        "pathKey": "LiveRamp > Fyllo > Fyllo > Infused > Comscore > TV > Genre > Thriller/Horror",                
+        "cpm": 1.5,                
+        "referenceId": "a5b286f2-3b48-42b1-a0d3-1c349aa8800b",                
+        "lastUpdatedDate": "2021-07-04T10:48:42.296+00:00",                
+        "totalReach": 6000000,                
+        "providerId": 140,                
+        "partnerId": 1,                
+        "dataAvailable":true,                 
+        "reachMetadata": {                   
+          "iosDevicesReach":120,                    
+          "androidDevicesReach":120,                   
+          "cookiesReach":120                
+        },                
+        "logoUrl": "https://s3.amazonaws.com/advp0had0vuj7rad3niaw1eus2/data_partner/liveramp.png"            
+      },            
+      {                
+        "segmentId": 6164189,                
+        "taxonomyValue": "Thriller Crime & Mystery Films",                
+        "description": "ShareThis collects data from its network of 600 million publisher pages capturing site visitors' pageviews, clicks, shares, and searches.  ShareThis processes these signals and uses associated keywords and topics to build out its audience. ShareThis CTV targeting allows you to leverage this online behavioral data for CTV campaigns, merging the performance of online interest data with the impact and engagement of TV.",                
+        "pathKey": "LiveRamp > ShareThis > ShareThis > ShareThis for TV > Arts & Entertainment > Movies > Thriller Crime & Mystery Films",                
+        "cpm": 2.0,                
+        "referenceId": "e2b856fd-8777-42f1-b916-1f3042ed290d",                
+        "lastUpdatedDate": "2021-12-03T11:19:19.763+00:00",                
+        "totalReach": 8600000,                
+        "providerId": 21,                
+        "partnerId": 1,                
+        "dataAvailable":true,                 
+        "reachMetadata": {                   
+          "inputRecordsReach":120,                   
+          "iosDevicesReach":120,                    
+          "androidDevicesReach":120,                   
+          "cookiesReach":120                
+        },                
+        "logoUrl": "https://s3.amazonaws.com/advp0had0vuj7rad3niaw1eus2/data_partner/liveramp.png"            
+      }        
+    ]    
   }
 }
 ```
@@ -3287,11 +3327,11 @@ Create a Geo-Farmed Audience.
             </tr>
             <tr>
               <td>`stateSenates`<br /><span class="type-text">array of integers</span></td>
-              <td>[State senate IDs](/Guidelines/Master-API-Guidelines#get-senate-district-segment)</td>
+              <td>[State Senate IDs](/Guidelines/Master-API-Guidelines#get-senate-district-segment)</td>
             </tr>
             <tr>
               <td>`stateHouses`<br /><span class="type-text">array of integers</span></td>
-              <td>[State house IDs](/Guidelines/Master-API-Guidelines#get-house-district-segment)</td>
+              <td>[State House IDs](/Guidelines/Master-API-Guidelines#get-house-district-segment)</td>
             </tr>
             <tr>
               <td>`congressionalDistrictIds`<br /><span class="type-text">array of integers</span></td>

@@ -819,6 +819,16 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#paginated-audience-details-list"><span class="badge bar badge--primary">GET</span>Paginated Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
               defaultStyle: true,
             },
@@ -867,16 +877,6 @@ const sidebars = {
               value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-count-by-type"><span class="badge bar badge--primary">GET</span>Audience Count by Type</a>',
               defaultStyle: true,
             },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#paginated-audience-details-list"><span class="badge bar badge--primary">GET</span>Paginated Audience Details List</a>',
-              defaultStyle: true,
-            },
           ]
         },
         {
@@ -891,7 +891,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              value: '<a class="menu__link" href="/Guidelines/Audience-API-Guidelines#search-audience-segment"><span class="badge bar badge--primary">GET</span>Search Audience Segment</a>',
               defaultStyle: true,
             },
             {
@@ -1465,6 +1465,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#download-advanced-io-details"><span class="badge bar badge--success">POST</span>Download Advanced IO Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Campaign-API-Guidelines#get-io-campaign-budget-and-details"><span class="badge bar badge--primary">GET</span>Get IO Campaign Budget and Details</a>',
               defaultStyle: true,
             },
@@ -1961,6 +1966,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#campaign-margin-details"><span class="badge bar badge--primary">GET</span>Campaign Margin Details</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#get-customer-pg-fees-details"><span class="badge bar badge--primary">GET</span>Customer PG Fees Details</a>',
               defaultStyle: true,
             },
@@ -2043,7 +2053,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#invoice-management"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-invoice-settings"><span class="badge bar badge--info">PATCH</span>Update Invoice Settings</a>',
               defaultStyle: true,
             },
             {
@@ -2095,7 +2105,12 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#credit-management"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#customer-credit-list"><span class="badge bar badge--primary">GET</span>Customer Credit List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#add-credit-to-customer"><span class="badge bar badge--success">POST</span>Add Credit to Customer</a>',
               defaultStyle: true,
             },
             {
@@ -4045,7 +4060,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--success">POST</span>Search Audience Segment</a>',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#search-audience-segment"><span class="badge bar badge--primary">GET</span>Search Audience Segment</a>',
               defaultStyle: true,
             },
             {
