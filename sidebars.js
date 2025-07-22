@@ -3488,6 +3488,11 @@ const sidebars = {
             },
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#customer-operations-resource-properties"><span class="badge bar badge"></span>Customer Operations Resource Properties</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#get-customer-details"><span class="badge bar badge--primary">GET</span>Customer Details</a>',
               defaultStyle: true,
             },
@@ -3504,11 +3509,6 @@ const sidebars = {
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#get-immediate-customers-list"><span class="badge bar badge--primary">GET</span>Immediate Customers List</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Workspace-Guidelines#customer-operations-resource-properties"><span class="badge bar badge"></span>Customer Operations Resource Properties</a>',
               defaultStyle: true,
             },
             {
