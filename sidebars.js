@@ -4033,6 +4033,11 @@ const sidebars = {
           items: [
             {
               type: 'html',
+              value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#audience-details-list"><span class="badge bar badge--primary">GET</span>Audience Details List</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
               value: '<a class="menu__link" href="/Political%20Vertical/Audience-Segments#matched-audience-details"><span class="badge bar badge--primary">GET</span>Matched Audience Details</a>',
               defaultStyle: true,
             },
