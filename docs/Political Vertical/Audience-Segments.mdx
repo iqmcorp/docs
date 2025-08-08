@@ -40,6 +40,176 @@ Use the following header parameters for all requests:
 
 ## Audience Details
 
+### Audience Details List
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get list of Audiences with basic details by desired filters.
+
+An Audience <var>id</var> can be used to get more details in type-specific details endpoints. For example, a "Matched Audience" <var>id</var> can be used in the [Matched Audience Details](#matched-audience-details) endpoint to get more details. 
+
+The <var>id</var> can also be used to perform various actions in [Audience Management](#audience-management) PUT/PATCH endpoints. 
+
+| Query Parameters | |
+| --- | --- |
+| `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
+| `audienceTypeIds` <br /><span class="type-text">string</span> | [Audience Type IDs](/Guidelines/Audience-API-Guidelines#audience-type-list)
+| `searchField` <br /><span class="type-text">string</span> | Filter results by keyword
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audienceType` <br /><span class="type-text">string</span></td>
+  <td>Audience type</td>
+</tr>
+<tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
+</tr>
+<tr>
+  <td>`isVoterAudience` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Audience is made up of voters (<var>true</var>) or not (<var>false</var>)</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Audience status</td>
+</tr>
+<tr>
+  <td>`statusDisplayName` <br /><span class="type-text">string</span></td>
+  <td>Status display name</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+</table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": [
+    {
+      "id": 1,
+      "audienceName": "Sample audience name 1",
+      "audienceType": "Matched Audience",
+      "audienceTypeId": 1,
+      "isVoterAudience": true,
+      "status": "approved",
+      "statusDisplayName": "Ready",
+      "createdOn": 1653510068,
+      "dataCost": 1.5,
+      "uniques": 18850783
+    },
+    {
+      "id": 2,
+      "audienceName": "Sample audience name 2",
+      "audienceType": "Contextual Audience",
+      "audienceTypeId": 5,
+      "isVoterAudience": false,
+      "status": "processing",
+      "statusDisplayName": "Processing",
+      "createdOn": 1653510068,
+      "dataCost": 1.3,
+      "uniques": 10000
+    },
+    {
+      "id": 3,
+      "audienceName": "Sample audience name 3",
+      "audienceType": "Retargeted Audience",
+      "audienceTypeId": 3,
+      "isVoterAudience": false,
+      "status": "approved",
+      "statusDisplayName": "Ready",
+      "createdOn": 1653510068,
+      "dataCost": 1.6,
+      "uniques": 0
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        responseObject: {
+          id: number;
+          audienceName: string;
+          audienceType: number;
+          isVoterAudience: boolean;
+          status: string;
+          statusDisplayName: string;
+          createdOn: number;
+          dataCost: number;
+          uniques: number;
+        }[];
+      };
+    };
+  };
+}
+
+function getAudienceDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v2/audience/list',
+    params: {
+      query?: {
+        owIds?: `string`,
+        audienceTypeIds?: `string`,
+        searchField?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Matched Audience Details
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/audience/matched/\{id}</span>
@@ -51,7 +221,7 @@ Get Matched Audience details by ID.
 
 | Path Parameter | |
 | --- | --- |
-| `id` <br /><span class="type-text">string</span> | Matched Audience ID |
+| `id` <br /><span class="type-text">string</span> | Matched [Audience ID](#audience-details-list) |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -286,7 +456,7 @@ Get Geo-Farmed Audience Details by ID.
 
 | Path Parameter | |
 | --- | --- |
-| `geo-farmed_audience_id` <br /><span class="type-text">string</span> | Geo-Farmed Audience ID |
+| `geo-farmed_audience_id` <br /><span class="type-text">string</span> | Geo-Farmed [Audience ID](#audience-details-list) |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -1157,7 +1327,7 @@ Get Contextual Audience details by ID.
 
 | Path Parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">string</span> |  Audience ID |
+| `audienceId` <br /><span class="type-text">string</span> |  [Audience ID](#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1176,7 +1346,7 @@ Get Contextual Audience details by ID.
 </tr>
 <tr>
   <td>`type` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
 </tr>
 <tr>
   <td>`includedCount` <br /><span class="type-text">integer</span></td>
@@ -1355,7 +1525,7 @@ Get Audience Segment details by ID.
 
 | Path Parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">string</span> |  Audience ID |
+| `audienceId` <br /><span class="type-text">string</span> |  [Audience ID](#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1374,7 +1544,7 @@ Get Audience Segment details by ID.
 </tr>
 <tr>
   <td>`type` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#create-campaign-audience)</td>
+  <td>[Audience Type ID](/Guidelines/Audience-API-Guidelines#audience-type-list)</td>
 </tr>
 <tr>
   <td>`includedCount` <br /><span class="type-text">integer</span></td>
@@ -1675,8 +1845,8 @@ Search Audience Segments by specified parameters. Search results can be download
 | `verticalIds` <br /><span class="type-text">string</span> | Comma separated [Vertical IDs](/Guidelines/Master-API-Guidelines#get-verticals)
 | `partnerIds` <br /><span class="type-text">string</span> | Comma seperated [Partner IDs](#data-partners-list-for-matched-audience)
 | `providerIds` <br /><span class="type-text">string</span> | Comma separated [Provider IDs](#provider-details-list)
-| `priceRangeIds` <br /><span class="type-text">string</span> | Comma separated [Price Range IDs](#price-range-list-for-audience-segment)
-| `reachRangeIds` <br /><span class="type-text">string</span> | Comma separated [Reach Range IDs](#reach-range-list-for-audience-segment)
+| `priceRangeIds` <br /><span class="type-text">string</span> | Comma separated [Price Range IDs](/Guidelines/Audience-API-Guidelines#price-range-list-for-audience-segment)
+| `reachRangeIds` <br /><span class="type-text">string</span> | Comma separated [Reach Range IDs](/Guidelines/Audience-API-Guidelines#reach-range-list-for-audience-segment)
 | `showOnlyReadySegments` <br /><span class="type-text">boolean</span> | Returns segments with "ready" status: <var>true</var>
 | `segmentIds` <br /><span class="type-text">string</span> | Comma separated Segmend IDs
 | `showOnlyNonZeroSegments` <br /><span class="type-text">boolean</span> | Returns segments with reach greater than 0: <var>true</var>, default: <var>false</var>
@@ -2349,7 +2519,7 @@ Get a list of Segments based on Audience IDs.
 
 | Query Parameters | |
 | --- | --- |
-| `audienceIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Audience IDs
+| `audienceIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Audience IDs](#audience-details-list)
 | `segmentListSize` <br /><span class="type-text">integer</span> | Segment list size, default: <var>5</var>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -2513,7 +2683,7 @@ Get available Audience Insights like age, location, gender, etc.
 
 | Path Parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -2928,7 +3098,7 @@ Update a Matched Audience.
 
 | Path Parameter | |
 | --- | --- |
-| `matched_audience_id` <br /><span class="type-text">integer</span> | Matched Audience ID
+| `matched_audience_id` <br /><span class="type-text">integer</span> | Matched [Audience ID](#audience-details-list)
 
 | Request Schema | |
 | --- | --- |
@@ -3147,7 +3317,7 @@ Update an Audience Segment.
 
 | Path Parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) |
 
 | Request Schema | |
 | --- | --- |
