@@ -5,6 +5,7 @@ hide_table_of_contents: true
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
+import Caret from '@site/static/img/caret.svg'
 
 # Insights API
 
@@ -45,6 +46,7 @@ Use the following header parameters for all requests:
 
 Get a list of Insights available in the database.
 
+An Insights <var>id</var> can be used to perform various actions in [Insights Managment](#insights-management) endpoints.
 
 | Query Parameters |  |
 | ----  | --- |
@@ -189,12 +191,12 @@ A Campaign must meet the following eligibility criteria to generate bidding Insi
 
 | Path Parameters |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
 
 | Query Parameters |  |
 | ----| --- |
-| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
-| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeStart` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeEnd` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp, in milliseconds |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -769,11 +771,11 @@ function getInsightsTypeWiseCount(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Delete records from the database for valid insights IDs passed.
+Delete records from the database for valid Insights IDs passed.
 
 | Query Parameters |  |
 | ---- | --- |
-| `insightsIds` <br /><span class="type-text">string</span> | Comma separated insights IDs to delete | 
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated [Insights ID](#get-a-list-of-insights)s to delete | 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -865,11 +867,25 @@ function deleteInsights(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Regenerates an Insights Report if the insight fails.
+Regenerates an Insights Report.
 
 | Path Parameters |  |
 | ---- | --- |
-| `insightsIds` <br /><span class="type-text">string</span> | Comma separated Insights IDs to regenerate |
+| `insightsIds` <br /><span class="type-text">string</span> | Comma separated [Insights ID](#get-a-list-of-insights)s to regenerate |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Insights Report was succesfully regenerated: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
 
 </div><div class="child2">
 
@@ -940,7 +956,7 @@ Send an attached Insights Report file via email.
 
 | Query Parameters |  |
 | ---- | --- |
-| `id` <br /><span class="type-text">integer</span> | Insights ID |
+| `id` <br /><span class="type-text">integer</span> | [Insights ID](#get-a-list-of-insights) |
 | `attachmentType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var> |
 | `recipientEmails` <br /><span class="type-text">string</span> | Comma separated string of emails to send Insights Report to, up to 15 |
 
@@ -1040,7 +1056,13 @@ function sendInsightsEmail(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-Get a list of eligible Audiences which have 10k uniques (minimum).
+Get a list of Audiences eligible for an Insights Report.
+
+:::info
+
+Audiences must have a minimum of 10,000 uniques to be eligible for Insights Report generation.
+
+:::
 
 | Query Parameters |  |
 | ---- | --- |
@@ -1061,7 +1083,7 @@ Get a list of eligible Audiences which have 10k uniques (minimum).
 <td colSpan="2">
   <details className="objectPropertiesDetails">
   <summary>`insightsData` object properties</summary>
-  <table className="objectProperties">
+  <table className="objectProperties" style={{ minWidth: "400px"}}>
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
   <td>Audience ID</td>
@@ -1188,7 +1210,7 @@ Get matched Audience details by Audience ID.
 
 | Path Parameters |  |
 | ----| --- |
-| `audienceId` <br /><span class="type-text">integer</span> | Audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/Guidelines/Audience-API-Guidelines#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1325,8 +1347,16 @@ function getMatchedAudienceDetailsByAudienceId(): Promise<Responses> {
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audience/matched/download/\{audienceId\}</span>
 
+
+
 <div class="container">
   <div class="child1">
+
+  Get Matched Audience details as a file URL. 
+
+| Path Parameters |  |
+| ----| --- |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/Guidelines/Audience-API-Guidelines#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1410,6 +1440,8 @@ function downloadMatchedAudienceFile(): Promise<Responses> {
 
 Create an Insights Report for a given Audience ID.
 
+Check the [List of Eligible Audiences](#get-a-list-of-eligible-audiences) and [Matched Audience Details](#get-matched-audience-details) endpoints for eligibile Audiences.
+
 :::info 
 
 An Audience must meet the following eligibility criteria to generate Insights report:
@@ -1423,7 +1455,7 @@ An Audience must meet the following eligibility criteria to generate Insights re
 | Request Schema |  |
 | ----  | --- |
 | `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights Type ID](#get-list-of-insights-types) |
-| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
+| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs <br />(E.g. [Audience ID](/Guidelines/Audience-API-Guidelines#audience-details-list)s) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1585,7 +1617,7 @@ Download Insights Report for Audience (pdf or xlsx) by passing multipart/form-da
 
 | Query Parameters |  |
 | ---- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
+| `insightsId` <br /><span class="type-text">integer</span> | [Insights ID](#get-a-list-of-insights) |
 | `fileType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var>
 
 | Request Schema |  |
@@ -1702,7 +1734,7 @@ function downloadInsights(): Promise<Responses> {
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>[Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)</td>
 </tr>
 <tr>
   <td>`ioName` <br /><span class="type-text">string</span></td>
@@ -1730,7 +1762,7 @@ function downloadInsights(): Promise<Responses> {
 </tr>
 <tr>
   <td>`campaignId` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID</td>
+  <td>[Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)</td>
 </tr>
 <tr>
   <td>`campaignName` <br /><span class="type-text">string</span></td>
@@ -1793,12 +1825,16 @@ function downloadInsights(): Promise<Responses> {
 
 Get a list of VLD Reports based on search filters.
 
+A <var>vldId</var> can be used in the [Generate VLD Report](#generate-vld-report), [Download VLD Insight Report](#download-vld-insight-report), and [Delete VLD Report](#delete-vld-report) endpoints. 
+
 | Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>200</var> |
 | `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-vldId</var> |
+
+<a href="#vld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -1928,17 +1964,26 @@ Get a list of Campaign IDs by status eligible for VLD Report generation.
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`running` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "running" status</td>
+    <td>`running`, `paused`, `expired` <br /><span class="type-text">array of objects</span></td>
+    <td>Object array of Campaign IDs mapped to each of these three Campaign statuses</td>
     </tr>
     <tr>
-    <td>`paused` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "paused" status</td>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID</td>
     </tr>
-        <tr>
-    <td>`expired` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "expired" status</td>
+      <tr>
+    <td>`campaignTimezoneId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign timezone ID</td>
     </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
     </table>
     </details>
 
@@ -1952,16 +1997,22 @@ Get a list of Campaign IDs by status eligible for VLD Report generation.
   "success": true,
   "data": {
     "running": [
-      12345,
-      12543
+      {
+        "campaignId": 451351,
+        "campaignTimezoneId": 29
+      }
     ],
     "paused": [
-      54321,
-      34521
+      {
+        "campaignId": 451350,
+        "campaignTimezoneId": 29
+      }
     ],
     "expired": [
-      33452,
-      22453
+      {
+        "campaignId": 470839,
+        "campaignTimezoneId": 29
+      }
     ]
   }
 }
@@ -2035,8 +2086,10 @@ A Campaign must meet the following eligibility criteria to generate VLD Report:
 | ---- | --- |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-| `vldId` <br /><span class="type-text">integer</span> | Generate Insights Report again for VLD ID
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
+| `vldId` <br /><span class="type-text">integer</span> | Generate Insights Report again for [VLD ID](#get-list-of-vld-reports)
+
+<a href="#vld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -2142,9 +2195,11 @@ Calculates the cost for the impressions for the VLD Report based on impressions 
 
 | Request Schema |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds
+
+<a href="#vld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -2251,7 +2306,7 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 | Request Schema |  |
 | ---- | --- |
 | `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `vldId` <br /><span class="type-text">integer</span> | [VLD ID](#get-list-of-vld-reports) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -2338,7 +2393,7 @@ Deletes VLD Reports that are not marked as deleted and have a 'failed' status, r
 
 | Query Parameters |  |
 | ---- | --- |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `vldId` <br /><span class="type-text">integer</span> | [VLD ID](#get-list-of-vld-reports) |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -2433,7 +2488,7 @@ function deleteFailedVLDReport(): Promise<Responses> {
 </tr>
 <tr>
   <td>`campaignId` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID</td>
+  <td>[Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)</td>
 </tr>
 <tr>
   <td>`campaignName` <br /><span class="type-text">string</span></td>
@@ -2453,7 +2508,7 @@ function deleteFailedVLDReport(): Promise<Responses> {
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>[Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)</td>
 </tr>
 <tr>
   <td>`ioName` <br /><span class="type-text">string</span></td>
@@ -2520,6 +2575,8 @@ function deleteFailedVLDReport(): Promise<Responses> {
 
 Get a list of PLD Reports. 
 
+A <var>pldId</var> can be used in the [Generate PLD Report](#generate-pld-report), [Download PLD Insight Report](#download-pld-report), and [Delete PLD Report](#delete-pld-report) endpoints. 
+
 | Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
@@ -2527,7 +2584,7 @@ Get a list of PLD Reports.
 | `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data, default: <var>1</var> |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-pldId</var> |
 
-See [PLD Resource Properties](#pld-resource-properties) for response property descriptions.
+<a href="#pld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div>
 <div class="child2">
@@ -2661,21 +2718,28 @@ Get a list of Campaign IDs by status eligible for PLD Report generation.
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`running` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "running" status</td>
+    <td>`running`, `paused`, `expired` <br /><span class="type-text">array of objects</span></td>
+    <td>Object array of Campaign IDs mapped to each of these three Campaign statuses</td>
     </tr>
     <tr>
-    <td>`paused` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "paused" status</td>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID</td>
     </tr>
-        <tr>
-    <td>`expired` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "expired" status</td>
+      <tr>
+    <td>`campaignTimezoneId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign timezone ID</td>
     </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
     </table>
     </details>
-
-<p />See [PLD Resource Properties](#pld-resource-properties) for response property descriptions.
 
 </div><div class="child2">
 
@@ -2687,16 +2751,22 @@ Get a list of Campaign IDs by status eligible for PLD Report generation.
   "success": true,
   "data": {
     "running": [
-      12345,
-      12543
+      {
+        "campaignId": 451351,
+        "campaignTimezoneId": 29
+      }
     ],
     "paused": [
-      54321,
-      34521
+      {
+        "campaignId": 451350,
+        "campaignTimezoneId": 29
+      }
     ],
     "expired": [
-      33452,
-      22453
+      {
+        "campaignId": 470839,
+        "campaignTimezoneId": 29
+      }
     ]
   }
 }
@@ -2771,10 +2841,10 @@ A Campaign must meet the following eligibility criteria to generate PLD Report:
 | ---- | --- |
 | `pldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `pldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-| `pldId` <br /><span class="type-text">integer</span> | PLD ID to regenerate |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
+| `pldId` <br /><span class="type-text">integer</span> | [PLD ID](#get-list-of-pld-reports) to regenerate |
 
-See [PLD Resource Properties](#pld-resource-properties) for response property descriptions. 
+<a href="#pld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -3089,7 +3159,7 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 | Request Schema | |
 | --- | --- |
 | `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
-| `pldId` <br /><span class="type-text">integer</span> | Provider Level Data Report ID
+| `pldId` <br /><span class="type-text">integer</span> | [Provider Level Data Report ID](#get-list-of-pld-reports)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -3203,7 +3273,7 @@ Deletes PLD Reports that are not marked as deleted and have a 'failed' status, r
 
 | Query Parameters |  |
 | ---- | --- |
-| `pldIds` <br /><span class="type-text">string</span> | Comma separated PLD IDs |
+| `pldIds` <br /><span class="type-text">string</span> | Comma separated [PLD ID](#get-list-of-pld-reports)s |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -3299,7 +3369,7 @@ function deleteFailedPLDReport(): Promise<Responses> {
 </tr>
 <tr>
   <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Campaign IDs</td>
+  <td>[Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)s</td>
 </tr>
 <tr>
   <td>`slsStatusId` <br /><span class="type-text">integer</span></td>
@@ -3315,7 +3385,7 @@ function deleteFailedPLDReport(): Promise<Responses> {
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>[Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)</td>
 </tr>
 <tr>
   <td>`ioName` <br /><span class="type-text">string</span></td>
@@ -3382,12 +3452,16 @@ function deleteFailedPLDReport(): Promise<Responses> {
 
 Get a list of SLS Reports. 
 
+An <var>slsId</var> can be used in the [Generate SLS Report](#generate-sls-report), [Download SLS Report](#download-sls-report), and [Delete SLS Report](#delete-sls-report) endpoints. 
+
 | Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>200</var> |
 | `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-slsId</var> |
+
+<a href="#sls-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div>
 <div class="child2">
@@ -3477,12 +3551,12 @@ See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) 
 <div class="container">
   <div class="child1">
 
-This API calculates the cost for the impressions for the ScriptLift Studies Reports based on the impressions and mark up charged on the Organization and then creates the PLD Reports.
+This API calculates the cost for the impressions for the ScriptLift Studies Reports based on the impressions and mark up charged on the Organization and then creates the SLS Reports.
 
 | Request Schema | | 
 | --- | --- |
-| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs
+| `ioId` <br /><span class="type-text">integer</span> | [Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)
+| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)s
 | `slsStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds
 | `slsEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds
 | `slsName` <br /><span class="type-text">string</span> | SLS name
@@ -3490,6 +3564,10 @@ This API calculates the cost for the impressions for the ScriptLift Studies Repo
 | `conceptGroupId` <br /><span class="type-text">integer</span> | Concept group ID
 | `reportTypes` <br /><span class="type-text">array of integers</span> | Report type IDs
 | `competitorConceptGroupIds` <br /><span class="type-text">array of integers</span> | Competitor concept group IDs
+| `slsId` <br /><span class="type-text">integer</span> | [SLS ID](#get-list-of-sls-reports) to regenerate |
+
+
+<a href="#sls-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div>
 <div class="child2">
@@ -3641,8 +3719,8 @@ Calculates the cost for the impressions for the SLS Report based on impressions 
 
 | Request Schema | | 
 | --- | --- |
-| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs
+| `ioId` <br /><span class="type-text">integer</span> | [Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)
+| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)s
 | `slsStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds
 | `slsEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds
 | `slsName` <br /><span class="type-text">string</span> | SLS name
@@ -3650,6 +3728,8 @@ Calculates the cost for the impressions for the SLS Report based on impressions 
 | `conceptGroupId` <br /><span class="type-text">integer</span> | Concept group ID
 | `reportTypes` <br /><span class="type-text">array of integers</span> | Report type IDs
 | `competitorConceptGroupIds` <br /><span class="type-text">array of integers</span> | Competitor concept group IDs
+
+<a href="#sls-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div>
 <div class="child2">
@@ -3887,17 +3967,26 @@ Get a list of Campaign IDs by status eligible for VLD Report generation.
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`running` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "running" status</td>
+    <td>`running`, `paused`, `expired` <br /><span class="type-text">array of objects</span></td>
+    <td>Object array of Campaign IDs mapped to each of these three Campaign statuses</td>
     </tr>
     <tr>
-    <td>`paused` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "paused" status</td>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID</td>
     </tr>
-        <tr>
-    <td>`expired` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "expired" status</td>
+      <tr>
+    <td>`campaignTimezoneId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign timezone ID</td>
     </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
     </table>
     </details>
 
@@ -3912,16 +4001,22 @@ Get a list of Campaign IDs by status eligible for VLD Report generation.
   "success": true,
   "data": {
     "running": [
-      12345,
-      12543
+      {
+        "campaignId": 516038,
+        "campaignTimezoneId": 29
+      }
     ],
     "paused": [
-      54321,
-      34521
+      {
+        "campaignId": 523630,
+        "campaignTimezoneId": 29
+      }
     ],
     "expired": [
-      33452,
-      22453
+      {
+        "campaignId": 500291,
+        "campaignTimezoneId": 29
+      }
     ]
   }
 }
@@ -3987,7 +4082,7 @@ Get a download link for a SLS Insight Report in CSV or XLSX format.
 | Request Schema | |
 | --- | --- |
 | `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
-| `slsId` <br /><span class="type-text">integer</span> | Practitioner Level Data Report ID
+| `slsId` <br /><span class="type-text">integer</span> | [SLS Report ID](#get-list-of-sls-reports)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -4100,7 +4195,7 @@ Deletes SLS Reports that are not marked as deleted and have a 'failed' status, r
 
 | Query Parameters |  |
 | ---- | --- |
-| `slsIds` <br /><span class="type-text">string</span> | Comma separated SLS IDs |
+| `slsIds` <br /><span class="type-text">string</span> | Comma separated [SLS Report ID](#get-list-of-sls-reports)s|
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
