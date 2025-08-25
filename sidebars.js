@@ -2546,7 +2546,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#campaign-inventory-optimization"><span class="badge bar badge--success">POST</span>Campaign Inventory Targeting</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#campaign-inventory-targeting"><span class="badge bar badge--success">POST</span>Campaign Inventory Targeting</a>',
               defaultStyle: true,
             },
             {
@@ -2682,7 +2682,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#private-marketplace-pmp-deals-details"><span class="badge bar badge--success">POST</span>List of PMP Deals</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#get-pmp-deals-list"><span class="badge bar badge--success">POST</span>List of PMP Deals</a>',
               defaultStyle: true,
             },
             {
@@ -2746,7 +2746,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#programmatic-guarantee-pg-deals-details"><span class="badge bar badge--primary">GET</span>List of PG Deals</a>',
+              value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#get-pg-deals-list"><span class="badge bar badge--primary">GET</span>List of PG Deals</a>',
               defaultStyle: true,
             },
             {
