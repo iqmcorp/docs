@@ -4605,7 +4605,38 @@ const sidebars = {
         },
       ]
     }
-  ]
+  ],
+  mcpSidebar: [
+    {
+      type: 'doc',
+      id: 'MCP/index',
+      label: 'MCP Server',
+      className: 'sidebarCategory'
+    },
+    {
+      type: "category",
+      label: 'Getting Started',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'MCP/Getting Started/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Introduction',
+          id: `MCP/Getting Started/Introduction`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Getting Started',
+          id: `MCP/Getting Started/Getting-Started`,
+          className: 'sidebarItem'
+        },
+      ],
+    }
+  ],
 }
 
 export default sidebars;
