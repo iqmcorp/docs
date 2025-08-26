@@ -4635,6 +4635,23 @@ const sidebars = {
           className: 'sidebarItem'
         },
       ],
+    },
+    {
+      type: "category",
+      label: 'MCP Actions',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'MCP/MCP Actions/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Introduction',
+          id: `MCP/MCP Actions/Execute-Report`,
+          className: 'sidebarItem'
+        },
+      ],
     }
   ],
 }
