@@ -142,6 +142,15 @@ const config = {
             position: "left",
             to: "/Guidelines/",
             className: "navbarLink",
+            type: "dropdown",
+            items: [
+              {
+                label: "POLITICAL",
+                type: "doc",
+                docId: "Political Vertical/index",
+                className: "navbarLink",
+              },
+            ]
           },
           {
             label: "POLITICAL",
