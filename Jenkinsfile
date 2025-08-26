@@ -8,6 +8,7 @@ pipeline {
     }
     environment {
         PROJECT_NAME = 'api-docs'
+        HOME = "${env.WORKSPACE}"
     }
     stages {
         stage('Build') {
