@@ -4647,8 +4647,20 @@ const sidebars = {
       items: [
         {
           type: `doc`,
-          label: 'Introduction',
-          id: `MCP/MCP Actions/Execute-Report`,
+          label: 'Dashboard',
+          id: `MCP/MCP Actions/Dashboard`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Reports',
+          id: `MCP/MCP Actions/Reports`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Master API',
+          id: `MCP/MCP Actions/Master`,
           className: 'sidebarItem'
         },
       ],
