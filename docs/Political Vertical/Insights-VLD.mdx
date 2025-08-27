@@ -5,6 +5,7 @@ hide_table_of_contents: true
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
+import Caret from '@site/static/img/caret.svg'
 
 # Insights API
 
@@ -57,7 +58,7 @@ Use the following header parameters for all requests:
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>[Insertion Order ID](/Guidelines/Campaign-API-Guidelines#get-insertion-order-details)</td>
 </tr>
 <tr>
   <td>`ioName` <br /><span class="type-text">string</span></td>
@@ -85,7 +86,7 @@ Use the following header parameters for all requests:
 </tr>
 <tr>
   <td>`campaignId` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID</td>
+  <td>[Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)</td>
 </tr>
 <tr>
   <td>`campaignName` <br /><span class="type-text">string</span></td>
@@ -148,12 +149,16 @@ Use the following header parameters for all requests:
 
 Get a list of VLD Reports based on search filters.
 
+A <var>vldId</var> can be used in the [Generate VLD Report](#generate-vld-report), [Download VLD Insight Report](#download-vld-insight-report), and [Delete VLD Report](#delete-vld-report) endpoints. 
+
 | Query Parameters |  |
 | ---- | --- |
 | `searchField` <br /><span class="type-text">string</span> | Search results by keyword |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of entries per page, default: <var>200</var> |
 | `pageNo` <br /><span class="type-text">integer</span> | Number of pages for retrieved data |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-vldId</var> |
+
+<a href="#vld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -283,17 +288,26 @@ Get a list of Campaign IDs by status eligible for VLD Report generation.
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`running` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "running" status</td>
+    <td>`running`, `paused`, `expired` <br /><span class="type-text">array of objects</span></td>
+    <td>Object array of Campaign IDs mapped to each of these three Campaign statuses</td>
     </tr>
     <tr>
-    <td>`paused` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "paused" status</td>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID</td>
     </tr>
-        <tr>
-    <td>`expired` <br /><span class="type-text">array of integers</span></td>
-    <td>Campaign IDs with "expired" status</td>
+      <tr>
+    <td>`campaignTimezoneId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign timezone ID</td>
     </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
     </table>
     </details>
 
@@ -390,8 +404,8 @@ A Campaign must meet the following eligibility criteria to generate VLD Report:
 | ---- | --- |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-| `vldId` <br /><span class="type-text">integer</span> | Generate Insights Report again for VLD ID
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
+| `vldId` <br /><span class="type-text">integer</span> | Generate Insights Report again for [VLD ID](#get-list-of-vld-reports)
 
 </div><div class="child2">
 
@@ -497,9 +511,11 @@ Calculates the cost for the impressions for the VLD Report based on impressions 
 
 | Request Schema |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
 | `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
 | `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds
+
+<a href="#vld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 </div><div class="child2">
 
@@ -606,7 +622,7 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 | Request Schema |  |
 | ---- | --- |
 | `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `vldId` <br /><span class="type-text">integer</span> | [VLD ID](#get-list-of-vld-reports) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -693,7 +709,7 @@ Deletes VLD Reports that are not marked as deleted and have a 'failed' status, r
 
 | Query Parameters |  |
 | ---- | --- |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `vldId` <br /><span class="type-text">integer</span> |[VLD ID](#get-list-of-vld-reports)|
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
