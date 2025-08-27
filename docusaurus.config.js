@@ -132,27 +132,34 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "API GUIDELINES",
+            position: "left",
+            to: "/Guidelines/",
+            className: "navbarLink",
+            type: "dropdown",
+            items: [
+              {
+                label: "POLITICAL",
+                type: "doc",
+                docId: "Political Vertical/index",
+              },
+              {
+                label: "HEALTHCARE",
+                type: "doc",
+                docId: "Healthcare Vertical/index",
+              },
+            ]
+          },
+          {
             label: "MIGRATION GUIDES",
             position: "left",
             to: "/Migration%20Guides/",
             className: "navbarLink",
           },
           {
-            label: "API GUIDELINES",
+            label: "MCP",
             position: "left",
-            to: "/Guidelines/",
-            className: "navbarLink",
-          },
-          {
-            label: "POLITICAL",
-            position: "left",
-            to: "/Political Vertical/",
-            className: "navbarLink",
-          },
-          {
-            label: "HEALTHCARE",
-            position: "left",
-            to: "/Healthcare Vertical/",
+            to: "/MCP/",
             className: "navbarLink",
           },
           {
