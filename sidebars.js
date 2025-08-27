@@ -2807,7 +2807,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#request-schema"><span class="badge bar badge"></span>Request Schema</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#filtering-and-pagination"><span class="badge bar badge"></span>Filtering and Pagination</a>',
               defaultStyle: true,
             },
             {
@@ -2924,11 +2924,6 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-creative-types"><span class="badge bar badge--primary">GET</span>Creative Types</a>',
-              defaultStyle: true,
-            },
-            {
-              type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-rtb-creative-types"><span class="badge bar badge--primary">GET</span>RTB Creative Types</a>',
               defaultStyle: true,
             },
@@ -2971,7 +2966,7 @@ const sidebars = {
           items: [
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-more-data"><span class="badge bar badge--primary">GET</span>Network Types for Targeting</a>',
+              value: '<a class="menu__link" href="/Guidelines/Master-API-Guidelines#get-network-types-for-targeting"><span class="badge bar badge--primary">GET</span>Network Types for Targeting</a>',
               defaultStyle: true,
             },
             {
