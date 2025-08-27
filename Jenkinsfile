@@ -11,9 +11,14 @@ pipeline {
         HOME = "${env.WORKSPACE}"
     }
     stages {
-        stage('Build') {
+        stage('Pre-requisites') {
             steps {
                 sh 'npm ci'
+                sh 'git apply .ci.patch'
+            }
+        }
+        stage('Build') {
+            steps {
                 sh 'npm run build'
             }
         }
