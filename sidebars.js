@@ -4630,8 +4630,8 @@ const sidebars = {
         },
         {
           type: `doc`,
-          label: 'Getting Started',
-          id: `MCP/Getting Started/Getting-Started`,
+          label: 'Setup Guide',
+          id: `MCP/Getting Started/Setup-Guide`,
           className: 'sidebarItem'
         },
       ],
