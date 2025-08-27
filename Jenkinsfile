@@ -35,7 +35,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 withCredentials([string(credentialsId: "docs-${env.PROJECT_NAME}-deployment", variable: 'dep_uuid_secret')]) {
-                    sh "curl 'https://${dep_uuid_secret}?sync=true&arg=${GIT_BRANCH}'"
+                    sh "curl 'https://${dep_uuid_secret}?sync=true&arg=${GIT_BRANCH}&arg=build.tar.gz'"
                 }
             }
         }
