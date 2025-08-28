@@ -14,7 +14,7 @@ With the User Management API you can perform registration operations such as sig
 
 This page will go over the common endpoints associated with user management.
 
-Learn more about User Profiles with our [Help Center<ExternalLink />](https://help.iqm.com/en/collections/2908826-my-profile) articles. 
+Learn more about User Profiles with our [Help Center<ExternalLink />](https://help.iqm.com/en/collections/14628352-account-setup-and-management) articles. 
 
 ### Authentication
 
@@ -421,7 +421,7 @@ function UserSign-up/PasswordCreation(): Promise < Responses > {
 <div class="container">
   <div class="child1">
 
-Once the user/Customer logs in, the API will send an OAuth compliant response with OW ID which can be used for further API communications.
+Log in to the IQM platform with your email and password, and grant type set to <var>password</var>.
 
 | Request Schema |  |
 | ---- | --- |
@@ -607,27 +607,55 @@ function Login(): Promise < Responses > {
 
 ---
 
-## Refresh Token
+## OAuth Token
 
 <span class="badge badge--success">POST</span> <span class="path-text">api/v3/ua/oauth/token</span>
 
 <div class="container">
 <div class="child1">
 
-Exchange a refresh token for a new access token.
+This endpoint functions as the main authenticator for external connections. 
+
+The API will send an [OAuth Compliant Response<ExternalLink />](https://www.oauth.com/oauth2-servers/authorization/the-authorization-response/), as seen in the example <var>Response 200</var> on the right side column.
+
+Depending on the grant type, this endpoint can be used to log in via user password, authorization code or client credentials, or it can be used to refresh an access token. 
+
+
 
 | Request Parameters | |
 | --- | --- |
-| `grantType` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `refresh_token` <br /><span class="type-text">string</span> | Refresh token |
+| `grantType` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/): <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret <br /><var>password</var>: log in with username and password <br /><var>refresh_token</var>: obtain a new access token|
+| `refresh_token` <br /><span class="type-text">string</span> | Refresh token to obtain new access token |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
+| `client_id` <br /><span class="type-text">string</span> | Client ID |
+| `client_secret` <br /><span class="type-text">string</span> | Client secret |
+
 
 </div>
 <div class="child2">
 
-```json title="Request Sample"
+```json title="Request Sample (refresh token)"
 {
   "grant_type": "refresh_token",
   "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64"
+}
+```
+
+```json title="Request Sample (password)"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Request Sample (auth code)"
+{
+  "grantType": "authorization_code",
+  "redirect_uri": "http://iqm-authenticator.stage.iqm/showAuthCode",
+  "client_id": "demotest",
+  "client_secret": "12345"
 }
 ```
 
