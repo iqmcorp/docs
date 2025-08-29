@@ -1,0 +1,98 @@
+---
+title: Setup Guide
+pagination_prev: null
+---
+
+import MCPDevSettings from '@site/static/img/MCP-Dev-Settings.png';
+
+# Setup Guide
+
+## Overview 
+
+IQM MCP is a powerful interface that allows AI models to access information and functionality of IQM's various apps. Use this set up guide to get up and running with IQM MCP. 
+
+## Before You Begin
+
+Before you can use the IQM MCP, you will need access to use IQM's API service. See the [Getting Started](/Getting%20Started/Before-You-Begin) guide and [Authentication Quickstart Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) for more information. 
+
+## Setup Guide
+
+To use IQM MCP you will need the following tools:
+
+* UV 
+* mcp-proxy 
+* VS Code 
+* GitHub Copilot
+* [Claude Desktop](https://claude.ai/download)
+
+### Tools Installation
+
+Follow these steps and run the following commands to install the necessary tools to configure the MCP servers:
+
+##### 1. Install UV
+
+```bash 
+brew install uv
+```
+
+##### 2. Install MCP Proxy:
+
+```bash 
+uv tool install mcp-proxy
+```
+
+##### 3. Locate mcp-proxy Path
+
+Once these tools are installed, locate the exact path of mcp-proxy:
+
+```bash
+which mcp-proxy
+```
+
+##### 4. Configure MCP Server
+
+
+Then you can open **Claude Desktop → Settings → Developer → Edit Config**
+
+This will open a JSON config file, to which you can add the MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "iqm-mcp-1": {
+      "type": "stdio",
+      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+      // The above command value is your mcp-proxy path where <your-username> is your actual system name
+      "args": [
+        "--transport", "streamablehttp",
+        "http://maas-dashboard.data.stage.iqm/<MCP_SERVER_1>/mcp"
+      // <MCP_SERVER_1> is a placeholder for actual MCP servers
+      ]
+    },
+   "iqm-mcp-2": {
+    // Additional server blocks can be added like this
+      "type": "stdio",
+      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+      "args": [
+        "--transport", "streamablehttp",
+        "http://maas-dashboard.data.stage.iqm/<MCP_SERVER_2>/mcp"
+      ]
+    }
+  }
+ }
+```
+
+##### 5. Restart Claude Desktop
+
+Once the JSON config file is saved, you can quit and restart Claude desktop. On startup you should see a message confirming your connection the IQM's MCP servers. You can also check the **Claude Desktop → Settings → Developer** screen:
+
+<center><img className='diagram' src={MCPDevSettings} /></center>
+
+
+## Use IQM MCP!
+
+You are now ready to use IQM MCP! 
+
+Once you've restarted Claude Desktop and ask to access IQM's API, Claude will prompt you for your authentication credentials. You will need to provide your Organization Worskpace ID, a bearer token, and Workspace URL. See [Sign Up and Authenticate](/Quickstart%20Guides/Authentication-Quickstart-Guide/) for more information.
+
+Next, you can check out the [MCP Actions](/MCP/MCP%20Actions/) collection to see some example prompts and supported actions.
