@@ -159,6 +159,12 @@ const config = {
             className: "navbarLink",
           },
           {
+            label: "MCP",
+            position: "left",
+            to: "/MCP/",
+            className: "navbarLink",
+          },
+          {
             type: "search",
             position: "right",
           },
