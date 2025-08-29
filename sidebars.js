@@ -4610,7 +4610,7 @@ const sidebars = {
     {
       type: 'doc',
       id: 'MCP/index',
-      label: 'MCP Server',
+      label: 'IQM MCP',
       className: 'sidebarCategory'
     },
     {
@@ -4630,8 +4630,8 @@ const sidebars = {
         },
         {
           type: `doc`,
-          label: 'Getting Started',
-          id: `MCP/Getting Started/Getting-Started`,
+          label: 'Setup Guide',
+          id: `MCP/Getting Started/Setup-Guide`,
           className: 'sidebarItem'
         },
       ],
