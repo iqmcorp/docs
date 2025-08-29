@@ -4610,7 +4610,7 @@ const sidebars = {
     {
       type: 'doc',
       id: 'MCP/index',
-      label: 'MCP Server',
+      label: 'IQM MCP',
       className: 'sidebarCategory'
     },
     {
