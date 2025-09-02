@@ -52,6 +52,210 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 
 ## Bid Modeling Details
 
+### Get List of Bid Model Bundles
+
+<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bundles</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of Bid Model bundles for a given Campaign ID and dimension. 
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
+
+| Query Parameter | |
+| --- | --- |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by name or ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`bundleId` <br /><span class="type-text">integer</span></td>
+  <td>Bundle ID</td>
+</tr>
+<tr>
+  <td>`bundleName` <br /><span class="type-text">string</span></td>
+  <td>Bundle name</td>
+  </tr>
+<tr>
+  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
+  <td>Dimension ID</td>
+</tr>
+<tr>
+  <td>`entityIds` <br /><span class="type-text">array of integers</span></td>
+  <td>List of entity IDs in the bundle</td>
+</tr>
+<tr>
+  <td>`modellingApplied` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if modeling is applied to the bundle: <var>true</var></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "bundleId": 12,
+      "bundleName": "bundle#1",
+      "dimensionId": 1,
+      "entityIds": [
+        7,
+        8,
+        9
+      ],
+      "modellingApplied": false
+    },
+    {
+      "bundleId": 13,
+      "bundleName": "bundle#2",
+      "dimensionId": 2,
+      "entityIds": [
+        1,
+        2,
+        3
+      ],
+      "modellingApplied": true
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Modeled Entities 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/bid-models/dimension/entity</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of modeled entities and their associated modeling data for the provided Dimension ID and entity IDs.
+
+| Request Schema | |
+| --- | --- |
+| `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+| `entityIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | List of entity IDs |
+| `includeCampaignInfo` <br /><span class="type-text">boolean</span> | Indicates if Campaign info is to be included in the response, default: <var>false</var> |
+| `groupIdBased` <br /><span class="type-text">boolean</span> | Indicates if entity IDs are group IDs, default: <var>false</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`modelledEntityIds` <br /><span class="type-text">array of integers</span></td>
+  <td>List of modeled entity IDs</td>
+</tr>
+<tr>
+  <td>`modelledCampaignDetails` <br /><span class="type-text">array of objects</span></td>
+  <td>List of objects containing entity ID and associated Campaign IDs</td>
+</tr>
+</table>
+</details>
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "dimensionId": 10,
+  "entityIds": [
+    30200036,
+    30200031,
+    30200105,
+    4695
+  ],
+  "includeCampaignInfo": true,
+  "groupIdBased": true
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "modelledEntityIds": [
+      30200036,
+      30200031,
+      30200105
+    ],
+    "modelledCampaignDetails": [
+      {
+        "entityId": 30200036,
+        "campaignIds": [
+          555804,
+          556956,
+          556891,
+          557141,
+          560100
+        ]
+      },
+      {
+        "entityId": 30200031,
+        "campaignIds": [
+          556979,
+          555927,
+          555926,
+          560102,
+          555925,
+          555748
+        ]
+      },
+      {
+        "entityId": 30200105,
+        "campaignIds": [
+          555787
+        ]
+      },
+      {
+        "entityId": 4695,
+        "campaignIds": []
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ### Get Campaign Dimension Statistics
 
 <span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/bm/campaign/\{campaignId\}/dimensions/bid-models/count</span>
@@ -881,14 +1085,14 @@ function toggleCampaignDimensionStatus(): Promise<Responses> {
 
 ## Bid Modeling Management
 
-### Add Bid Modeling
+### Manage Bid Modeling 
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models/\{dimensionId\}</span>
 
 <div class="container">
-<div class="child1">
+  <div class="child1">
 
-Add Bid Modeling for different dimensions. Validates and calculates others as Bid Modeling as well.
+Manage Bid Modeling configurations for Campaigns with <var>ADD</var>, <var>UPDATE</var>, and <var>DELETE</var> operations on Bid Modeling attributes. 
 
 :::info
 
@@ -917,90 +1121,108 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 
 :::
 
-| Path Parameters | |
+| Path Parameters |  |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
 
 <table>
 <th>Request Schema</th>
 <tr>
-<td>`bidModelling` <br /><span class="type-text">object</span></td>
-<td>Object containing Bid Modeling properties</td>
+<td>`actionWiseBidModelEntities` <br /><span class="type-text">object</span></td>
+<td>Object containing Bid Model entity details mapped to operations <var>ADD</var>, <var>UPDATE</var>, <var>DELETE</var></td>
 </tr>
     <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`bidModelling` object properties</summary>
+      <summary>`actionWiseBidModelEntities` object properties</summary>
       <table className="objectProperties">
       <tr>
-      <td>`bidModelData` <br /><span class="type-text">object</span></td>
-      <td>Object containing Bid Model Data properties</td>
+      <td>`bidModelEntityDetails` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model entity details, for <var>ADD</var> and <var>UPDATE</var> operations </td>
       </tr>
        <tr>
           <td colSpan="2">
               <details className="objectPropertiesDetails">
-              <summary>`bidModelData` object properties</summary>
+              <summary>`bidModelEntityDetails` object properties</summary>
               <table className="objectProperties">
               <tr>
-              <td>`id`<br /><span class="type-text">integer</span></td>
-              <td>Bid Model data ID</td>
+              <td>`entityId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity ID</td>
+              </tr>
+              <tr>
+              <td>`entityTypeId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity type ID 
+              <br /><var>1</var>: Individual entity 
+              <br /><var>2</var>: Bundle entity 
+              <br /><var>3</var>: Other entity</td>
               </tr>
                 <tr>
-              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>`priority` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
               </tr>
                 <tr>
-              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
               </tr>
               <tr>
-              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>`spendRatio` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
               </tr>
               <tr>
-              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+                   <tr>
+              <td>`bundleName`<br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+              <td>Bundle name, required when <var>entityTypeId</var> is set to bundle entity</td>
+              </tr>
+                   <tr>
+              <td>`entityIds`<br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
+              <td>Entity IDs, required when <var>entityTypeId</var> is set to bundle entity</td>
               </tr>
               </table></details>
             </td>
             <td></td>
           </tr>
-       <tr>
-  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
+               <tr>
+        <td>`bidModelDataId` <br /><span class="type-text">array of integers</span></td>
+        <td>Array of Bid Model data IDs for <var>DELETE</var> operation</td>
+       </tr>
+        <tr>
+          <td>`bundleIds` <br /><span class="type-text">array of integers</span></td>
+          <td>Array of [Bundle ID](#get-list-of-bid-model-bundles)s for <var>DELETE</var> operation</td>
+        </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+     <tr>
+  <td>`inclusionExclusionEntityMap` <br /><span class="type-text">object</span></td>
   <td>Object containing entity mappings</td>
   </tr>
   <tr>
       <td colSpan="2">
         <details className="objectPropertiesDetails">
-        <summary>`dimensionEntityMappings` object properties</summary>
+        <summary>`inclusionExclusionEntityMap` object properties</summary>
         <table className="objectProperties">
           <tr>
-        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
-        <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
+        <td>`INCLUDE`  <br /><span class="type-text">array of integers</span></td>
+        <td>Entity IDs to include</td>
         </tr>
           <tr>
-        <td>`entityId` <br /><span class="type-text">integer</span></td>
-        <td>Entity ID</td>
+        <td>`EXCLUDE` <br /><span class="type-text">array of integers</span></td>
+        <td>Entity IDs to exclude</td>
         </tr>
         </table></details>
         </td>
         <td></td>
       </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
+<tr>
+  <td>`baseBid` <br /><span class="type-text">integer</span></td>
+  <td>Base bid amount</td>
+</tr>
 </table>
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
 
 </div>
 <div class="child2">
@@ -1010,30 +1232,121 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 
 ```json title="Request Sample"
 {
-  "bidModelling": [
-    {
-      "bidModelData": {
-        "id": 1,
-        "priority": 1,
-        "spendRatio": 100,
-        "spendRatioTypeId": 1,
-        "bidMultiplier": 1
-      },
-      "dimensionEntityMappings": [
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
         {
-          "dimensionId": 1,
-          "entityId": 583002
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": -2,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "entityId": 232,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "DELETE": {
+      "bidModelDataId": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "bundleIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    "UPDATE": {
+      "bidModelEntityDetails": [
+        {
+          "bidModelDataId": 50,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "bidModelDataId": 51,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "bidModelDataId": 52,
+          "priority": 1,
+          "spendRatio": 100
+        },
+        {
+          "bidModelDataId": 53,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
         }
       ]
     }
-  ]
+  },
+  "inclusionExclusionEntityMap": {
+    "INCLUDE": [
+      1
+    ],
+    "EXCLUDE": [
+      2,
+      3,
+      4
+    ]
+  },
+  "baseBid": 3
 }
 ```
 
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Priority Updated Successfully"
+  "data": "Bid Model updated successfully"
 }
 ```
 
@@ -1043,209 +1356,32 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
-import {
-  getInstance
-} from "prerequisites"
 
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
-    params: {
-      path: {
-        campaignId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          bidModelling: [
-            {
-              bidModelData?: {
-                id?: `number`,
-                priority?: `number`,
-                bidMultiplier?: `number`,
-                spendRatio?: `number`,
-                spendRatioTypeId?: `number`
-              },
-              dimensionEntityMappings?: [
-                {
-                  dimensionId?: `number`,
-                  entityId?: `number`,
-                }
-              ]
-            }
-          ]  
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
 ```
 
 </TabItem></Tabs>
 
-</div>
-</div>
+</div></div>
 
 ---
 
-### Update Bid Modeling Actions
+### Create Bid Model Bundle
 
-<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models/\{dimensionId}</span>
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/dimensions/\{dimensionId\}/bundles</span>
 
 <div class="container">
-<div class="child1">
+  <div class="child1">
 
-Update various actions such as `ADD`, `UPDATE`, or `DELETE` for Bid Modeling. 
-
-| Path Parameters | |
+Create a Bid Model bundle for the specified Campaign and Dimension IDs. A Bid Model Bundle allows you to group multiple dimension entities and apply bid modeling rules at the bundle level with the [Manage Bid Modeling](#manage-bid-modeling) endpoint.  
+| Path Parameters |  |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
 | `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
- 
-<table>
-<th>Request Schema</th>
-<tr>
-<td>`bidModelRequests` <br /><span class="type-text">array of objects</span></td>
-<td>Objects containing Bid Model actions</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`bidModelRequests` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td>`action` <br /><span class="type-text">string</span></td>
-  <td>Supported values specifying Bid Model action: `ADD`, `UPDATE`, `DELETE`</td>
-  </tr>
-    <tr>
-  <td>`bidModelData` <br /><span class="type-text">object</span></td>
-  <td>Object containing Bid Model data</td>
-  </tr>
-  <tr>
-      <td colSpan="2">
-        <details className="objectPropertiesDetails">
-        <summary>`bidModelData` object properties</summary>
-        <table className="objectProperties">
-        <tr>
-        <td>`id`<br /><span class="type-text">integer</span></td>
-        <td>Bid Model data ID</td>
-        </tr>
-          <tr>
-        <td>`priority` <br /><span class="type-text">integer</span></td>
-        <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
-        </tr>
-          <tr>
-        <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
-        <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
-        </tr>
-        <tr>
-        <td>`spendRatio` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
-        </tr>
-        <tr>
-        <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-        <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
-        </tr>
-        </table></details>
-        </td>
-        <td></td>
-      </tr>
-  <tr>
-  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
-  <td>Object containing entity mappings</td>
-  </tr>
-  <tr>
-      <td colSpan="2">
-        <details className="objectPropertiesDetails">
-        <summary>`dimensionEntityMappings` object properties</summary>
-        <table className="objectProperties">
-          <tr>
-        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
-        <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
-        </tr>
-          <tr>
-        <td>`entityId` <br /><span class="type-text">integer</span></td>
-        <td>Entity ID</td>
-        </tr>
-        </table></details>
-        </td>
-        <td></td>
-      </tr>
-   <tr>
-  <td>`bidModelDataIds` <br /><span class="type-text">array of integers</span></td>
-  <td>[Bid Model Data IDs](/Guidelines/Bid-Model-API-Guidelines#get-list-of-modeled-entities-for-a-campaign)</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-<td>`baseBid` <br /><span class="type-text">integer</span></td>
-<td>Base value on which bid modifiers are applied. For example, if base bid is 2, and bid modifier is 2, then bid price is: 2x2=4</td>
-</tr>
-<tr>
-<td>`excludeDimensionEntityMappings` <br /><span class="type-text">object</span></td>
-<td>Object containing dimension entity mappings to exclude</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`excludeDimensionEntityMappings` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td> `advertiserId` <br /><span class="type-text">integer</span></td>
-  <td>Advertiser ID</td>
-  </tr>
-    <tr>
-  <td>`dspId` <br /><span class="type-text">integer</span></td>
-  <td>DSP ID</td>
-  </tr>
-    <tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-  </tr>
-      <tr>
-  <td>`uowId` <br /><span class="type-text">integer</span></td>
-  <td>User Organization Workspace ID</td>
-  </tr>
-      <tr>
-  <td>`campaignId` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID</td>
-  </tr>
-      <tr>
-  <td>`ids` <br /><span class="type-text">string</span></td>
-  <td>Comma separated IDs</td>
-  </tr>
-      <tr>
-  <td>`isExcluded` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates the entity is excluded from the Bid Model: <var>true</var></td>
-  </tr>
-      <tr>
-  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
-  <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
+
+| Request Schema |  |
+| --- | --- |
+| `bundleName` <br /><span class="type-text">string</span> | Bundle name
+| `entityIds` <br /><span class="type-text">array of integers</span> | Entity IDs to include in the bundle
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -1258,83 +1394,16 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for Bid Modeling.
     </details>
 
 </div>
-<div class="child2">
+  <div class="child2">
 
-<Tabs>
+  <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
-  "bidModelRequests": [
-    {
-      "action": "ADD",
-      "bidModelData": {
-        "priority": 1,
-        "bidMultiplier": 1,
-        "spendRatio": 1,
-        "spendRatioTypeId": 1
-      },
-      "dimensionEntityMappings": [
-        {
-          "dimensionId": 1,
-          "entityId": 640245
-        }
-      ]
-    },
-    {
-      "action": "ADD",
-      "bidModelData": {
-        "priority": 1,
-        "bidMultiplier": 1,
-        "spendRatio": 1,
-        "spendRatioTypeId": 1
-      },
-      "dimensionEntityMappings": [
-        {
-          "dimensionId": 1,
-          "entityId": -1
-        }
-      ]
-    },
-    {
-      "action": "UPDATE",
-      "bidModelData": {
-        "id": 883,
-        "priority": 1,
-        "bidMultiplier": 1,
-        "spendRatio": 1,
-        "spendRatioTypeId": 1
-      }
-    },
-    {
-      "action": "UPDATE",
-      "bidModelData": {
-        "id": 894,
-        "priority": 1,
-        "bidMultiplier": 1,
-        "spendRatio": 1,
-        "spendRatioTypeId": 1
-      }
-    },
-    {
-      "action": "DELETE",
-      "bidModelDataIds": [
-        893
-      ]
-    }
-  ],
-  "baseBid": 3.1,
-  "excludeDimensionEntityMappings": [
-    {
-      "dimensionId": 1,
-      "ids": "1,2,3",
-      "isExcluded": 0
-    },
-    {
-      "dimensionId": 2,
-      "ids": "1,2,3",
-      "isExcluded": 1
-    }
+  "bundleName": "Bundle for campaign 1",
+  "entityIds": [
+    10895823
   ]
 }
 ```
@@ -1342,152 +1411,42 @@ Update various actions such as `ADD`, `UPDATE`, or `DELETE` for Bid Modeling.
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Bid Modelling updated successfully!"
+  "data": {
+    "message": "Bundle created successfully",
+    "id": 5
+  }
 }
 ```
+
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
-import {
-  getInstance
-} from "prerequisites"
 
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function manageBidModelling(): Promise<Responses> {
-  const options = {
-    method: 'PUT',
-    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
-    params: {
-      path: {
-        campaignId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          bidModelRequests?: [
-            {
-              bidModelData?: {
-                id?: `number`,
-                priority?: `number`,
-                bidMultiplier?: `number`,
-                spendRatio?: `number`,
-                spendRatioTypeId?: `number`,
-              },
-              dimensionEntityMappings?: [
-                {
-                  dimensionId?: `number`,
-                  entityId?: `number`,
-                }
-              ],
-              action: [ "ADD" | "UPDATE" | "DELETE" ],
-              bidModelDataIds?: `array of numbers`,
-            }
-          ],
-          baseBid?: `number`,
-          excludeDimensionEntityMappings?: [
-            {
-              advertiserId?: `number`,
-              dspId?: `number`,
-              owId?: `number`,
-              uowId?: `number`,
-              campaignId?: `number`,
-              ids?: `string`,
-              isExcluded?: `number`,
-              dimensionId?: `number`,
-            }
-          ]
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
 ```
 
 </TabItem></Tabs>
 
-</div>
-</div>
+</div></div>
 
 ---
 
-### Update Bid Modeling Dimensions
+### Update Bid Model Bundle
 
-<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<span class="badge badge--info">PATCH</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/dimensions/\{dimensionId\}/bundles</span>
 
 <div class="container">
-<div class="child1">
+  <div class="child1">
 
-Update Bid Modeling for different dimensions.
+Update a Bid Model bundle for the specified Campaign and Dimension IDs.
 
-| Path Parameters | |
+| Path Parameters |  |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns) |
-
-<table>
-<th>Request Schema</th>
-<tr>
-<td>`bidModelData` <br /><span class="type-text">object</span></td>
-<td>Object containing Bid Model Data properties</td>
-</tr>
-    <tr>
-    <td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`bidModelData` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`id` <br /><span class="type-text">integer</span></td>
-      <td>Bid Model data ID</td>
-      </tr>
-        <tr>
-      <td>`priority` <br /><span class="type-text">integer</span></td>
-      <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
-      </tr>
-        <tr>
-      <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
-      <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
-      </tr>
-       <tr>
-      <td>`spendRatio` <br /><span class="type-text">integer</span></td>
-      <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
-      </tr>
-       <tr>
-      <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-      <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
-      </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
-</table>
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
+| `dimensionId` <br /><span class="type-text">integer</span>  | [Dimension ID](#get-list-of-bid-model-dimensions) |
 
 </div>
 <div class="child2">
@@ -1497,20 +1456,25 @@ Update Bid Modeling for different dimensions.
 
 ```json title="Request Sample"
 {
-  "bidModelData": [
+  "bundleDetailList": [
     {
-      "id": 1,
-      "priority": 1,
-      "spendRatio": 50,
-      "spendRatioTypeId": 1,
-      "bidMultiplier": 1
+      "bundleId": 3,
+      "bundleName": "Bundle#3",
+      "entityIds": [
+        30,
+        31
+      ]
     },
     {
-      "id": 1,
-      "priority": 10,
-      "spendRatio": 50,
-      "spendRatioTypeId": 1,
-      "bidMultiplier": 1
+      "bundleId": 4,
+      "bundleName": "Bundle#4"
+    },
+    {
+      "bundleId": 5,
+      "entityIds": [
+        13,
+        14
+      ]
     }
   ]
 }
@@ -1519,7 +1483,7 @@ Update Bid Modeling for different dimensions.
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Bid Modelling updated successfully!"
+  "data": "Bundle updated successfully"
 }
 ```
 
@@ -1529,68 +1493,23 @@ Update Bid Modeling for different dimensions.
 See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
 
 ```ts
-import {
-  getInstance
-} from "prerequisites"
 
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    };
-  };
-};
-
-function updateBidModellingForCampaign(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
-    params: {
-      path: {
-        campaignId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          bidModelData?: [
-            {
-              id?: `number`,
-              priority?: `number`,
-              bidMultiplier?: `number`,
-              spendRatio?: `number`,
-              spendRatioTypeId?: `number`
-            }
-          ]
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
 ```
 
 </TabItem></Tabs>
 
-</div>
-</div>
+</div></div>
 
 ---
 
-### Delete Bid Modeling Data
+### Delete Bid Model Bundle
 
-<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<span class="badge badge--danger">DELETE</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/dimensions\{dimensionId\}/bundles</span>
 
 <div class="container">
 <div class="child1">
 
-Delete all Bid Modeling for a Campaign or dimension, or based on Bid Modeling data IDs.
+Delete a Bid Model bundle for the specified Campaign and Dimension IDs.
 
 | Path Parameters | |
 | --- | --- |
