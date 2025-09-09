@@ -4,6 +4,8 @@ pagination_prev: null
 ---
 
 import MCPDevSettings from '@site/static/img/MCP/MCP-Dev-Settings.png';
+import MCPTools from '@site/static/img/MCP/MCP-tools.png';
+
 
 # Setup Guide
 
@@ -56,7 +58,7 @@ Then you can open **Claude Desktop → Settings → Developer → Edit Config**
 
 This will open a JSON config file, to which you can add the MCP servers:
 
-```json
+```json title="claude_desktop_config.json"
 {
   "mcpServers": {
     "iqm-mcp-1": {
@@ -89,10 +91,57 @@ Once the JSON config file is saved, you can quit and restart Claude desktop. On 
 <center><img className='diagram' src={MCPDevSettings} /></center>
 
 
+### GitHub Copilot Setup
+
+IQM MCP also supports [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) integration. To set this up, follow these steps:
+
+##### 1. Configure MCP servers
+
+Create a **.vscode** folder in your project and create an **mcp.json** file in that folder. Use this configuration as a template:
+
+```json title=".vscode/mcp.json"
+{
+  "servers": {
+    "iqm-mcp-1": {
+      "type": "stdio",
+      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+      // The above command value is your mcp-proxy path where <your-username> is your actual system name
+      "args": [
+        "--transport", "streamablehttp",
+        "http://maas-dashboard.data.stage.iqm/<MCP_SERVER_1>/mcp"
+      // <MCP_SERVER_1> is a placeholder for actual MCP servers
+      ]
+    },
+   "iqm-mcp-2": {
+    // Additional server blocks can be added like this
+      "type": "stdio",
+      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+      "args": [
+        "--transport", "streamablehttp",
+        "http://maas-dashboard.data.stage.iqm/<MCP_SERVER_2>/mcp"
+      ]
+    }
+  }
+ }
+```
+
+##### 2. Open GitHub Copilot
+
+Now open GitHub Copilot and you will see the MCP servers you configured in the list of available servers. Ensure that you are in Agent mode, not Ask mode.
+
+:::warning[NOTE]
+
+You may need to de-select some tools for Github Copilot to be able to make a succesful request, as it only allows 128 tools at a time. 
+
+<center><img className='diagram' src={MCPTools} /></center>
+
+:::
+
+
 ## Use IQM MCP!
 
 You are now ready to use IQM MCP! 
 
-Once you've restarted Claude Desktop and ask to access IQM's API, Claude will prompt you for your authentication credentials. You will need to provide your Organization Worskpace ID, a bearer token, and Workspace URL. See [Sign Up and Authenticate](/Quickstart%20Guides/Authentication-Quickstart-Guide/) for more information.
+Once you've restarted Claude Desktop (or GitHub Copilot) and ask to access IQM's API, you will be prompted for your for your authentication credentials. You will need to provide your Organization Worskpace ID, a bearer token, and Workspace URL. See [Sign Up and Authenticate](/Quickstart%20Guides/Authentication-Quickstart-Guide/) for more information.
 
 Next, you can check out the [MCP Actions](/MCP/MCP%20Actions/) collection to see some example prompts and supported actions.
