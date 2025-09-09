@@ -18,7 +18,7 @@ The following endpoints will be used to check a Campaign's eligibility and creat
 <br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
 <br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/cmp/io/advanced/list</span>
 <br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/bm/static/dimensions</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<br /><span class="badge bar badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models/\{dimensionId\}</span>
 
 ## About IQM Bid Modeling 
 
@@ -1071,12 +1071,12 @@ function getDimensions(): Promise<Responses> {
 
 ### Step 4: Create a Bid Model 
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models</span>
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/bm/campaigns/\{campaignId\}/bid-models/\{dimensionId\}</span>
 
 <div class="container">
 <div class="child1">
 
-Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> to create Bid Modeling for it. Review the Bid Model tools descriptions in the [About](#about-iqm-bid-modeling) section and the Request Schema table below to create a Bid Model and apply it to your desired dimension(s).
+Once you have determined your Campaign is eligible, you can pass the <var>campaignId</var> and your selected <var>dimensionId</var> to create Bid Modeling. Review the Bid Model tools descriptions in the [About](#about-iqm-bid-modeling) section and the Request Schema table below to create a Bid Model.
 
 :::info
 
@@ -1100,75 +1100,79 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 
 :::
 
+:::tip
+
+Group multiple dimension entities into a bundle to apply the same bid modifier and spend ratio to all entities in the bundle. 
+
+See the [Create Bid Model Bundle](/Guidelines/Bid-Model-API-Guidelines/#create-bid-model-bundle) endpoint for more information on how to create a bundle, then use the `bundleName` and `entityIds` in your requests.
+
+:::
+
 | Path Parameters | |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `dimensionId` <br /><span class="type-text">integer</span> | Dimension ID |
+
 
 <table>
 <th>Request Schema</th>
 <tr>
-<td>`bidModelling` <br /><span class="type-text">object</span></td>
-<td>Object containing Bid Modeling properties</td>
+<td>`actionWiseBidModelEntities` <br /><span class="type-text">object</span></td>
+<td>Object containing Bid Model entity details mapped to operations <var>ADD</var>, <var>UPDATE</var>, <var>DELETE</var></td>
 </tr>
     <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`bidModelling` object properties</summary>
+      <summary>`actionWiseBidModelEntities` object properties</summary>
       <table className="objectProperties">
       <tr>
-      <td>`bidModelData` <br /><span class="type-text">object</span></td>
-      <td>Object containing Bid Model Data properties</td>
+      <td>`bidModelEntityDetails` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model entity details for <var>ADD</var> operation </td>
       </tr>
        <tr>
           <td colSpan="2">
               <details className="objectPropertiesDetails">
-              <summary>`bidModelData` object properties</summary>
+              <summary>`bidModelEntityDetails` object properties</summary>
               <table className="objectProperties">
               <tr>
-              <td>`id`<br /><span class="type-text">integer</span></td>
-              <td>Bid Model data ID</td>
+              <td>`entityId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity ID</td>
+              </tr>
+              <tr>
+              <td>`entityTypeId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity type ID 
+              <br /><var>1</var>: Individual entity 
+              <br /><var>2</var>: Bundle entity 
+              <br /><var>3</var>: Other entity</td>
               </tr>
                 <tr>
-              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>`priority` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
               </tr>
                 <tr>
-              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
               </tr>
               <tr>
-              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>`spendRatio` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
               </tr>
               <tr>
-              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+                   <tr>
+              <td>`bundleName`<br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+              <td>Bundle name, required when <var>entityTypeId</var> is set to bundle entity</td>
+              </tr>
+                   <tr>
+              <td>`entityIds`<br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
+              <td>Entity IDs, required when <var>entityTypeId</var> is set to bundle entity</td>
               </tr>
               </table></details>
             </td>
             <td></td>
           </tr>
-       <tr>
-  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
-  <td>Object containing entity mappings</td>
-  </tr>
-  <tr>
-      <td colSpan="2">
-        <details className="objectPropertiesDetails">
-        <summary>`dimensionEntityMappings` object properties</summary>
-        <table className="objectProperties">
-          <tr>
-        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
-        <td>Dimension ID</td>
-        </tr>
-          <tr>
-        <td>`entityId` <br /><span class="type-text">integer</span></td>
-        <td>Entity ID of chosen dimension<br />(For example: if chosen dimension is Creative, then pass the Creative ID here)</td>
-        </tr>
-        </table></details>
-        </td>
-        <td></td>
-      </tr>
       </table></details>
       </td>
       <td></td>
@@ -1193,23 +1197,48 @@ IQM's Bid Model currently supports applying bid modifiers to the following dimen
 
 ```json title="Request Sample"
 {
-  "bidModelling": [
-    {
-      "bidModelData": {
-        "id": 1,
-        "priority": 1,
-        "spendRatio": 100,
-        "spendRatioTypeId": 1,
-        "bidMultiplier": 1
-      },
-      "dimensionEntityMappings": [
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
         {
-          "dimensionId": 1,
-          "entityId": 583002
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": -2,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "entityId": 232,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
         }
       ]
     }
-  ]
+  }
 }
 ```
 
