@@ -354,28 +354,34 @@ const sidebars = {
               href: `/Tutorials/Create-a-Bid-Model#about-iqm-bid-modeling`,
               className: 'sidebarItemQS'
             },
-            {
+                 {
               type: `link`,
-              label: 'Step 1: Log In',
-              href: `/Tutorials/Create-a-Bid-Model#step-1-log-in`,
+              label: 'Before You Begin',
+              href: `/Tutorials/Create-a-Bid-Model#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+                 {
+              type: `link`,
+              label: 'Bid Modeling Criteria',
+              href: `/Tutorials/Create-a-Bid-Model#bid-modeling-criteria`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 2: Check Campaign for Eligibility',
-              href: `/Tutorials/Create-a-Bid-Model#step-2-check-campaign-for-eligibility`,
+              label: 'Step 1: Check Campaign for Eligibility',
+              href: `/Tutorials/Create-a-Bid-Model#step-1-check-campaign-for-eligibility`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 3: Select Dimension',
-              href: `/Tutorials/Create-a-Bid-Model#step-3-select-dimension`,
+              label: 'Step 2: Select Dimension',
+              href: `/Tutorials/Create-a-Bid-Model#step-2-select-dimension`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 4: Create a Bid Model',
-              href: `/Tutorials/Create-a-Bid-Model#step-4-create-a-bid-model`,
+              label: 'Step 3: Create a Bid Model',
+              href: `/Tutorials/Create-a-Bid-Model#step-3-create-a-bid-model`,
               className: 'sidebarItemQS'
             },
           ]
@@ -1218,6 +1224,11 @@ const sidebars = {
           label: `Bid Model Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#bid-modeling-criteria"><span class="badge bar badge"></span>Bid Modeling Criteria</a>',
+              defaultStyle: true,
+            },
             {
               type: 'html',
               value: '<a class="menu__link" href="/Guidelines/Bid-Model-API-Guidelines#manage-bid-modeling"><span class="badge bar badge--warning">PUT</span>Manage Bid Modeling</a>',
