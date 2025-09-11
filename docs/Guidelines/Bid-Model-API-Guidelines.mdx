@@ -2404,18 +2404,39 @@ function deletePriorityToCampaign(): Promise<Responses> {
 
 <div class="container">
   <div class="child1">
-
-Generate a detailed metrics Report for a specific Campaign, segmented by dimension.
-
 | Path Parameters | |
 | --- | --- |
 | `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/Guidelines/Campaign-API-Guidelines#get-list-of-campaigns)
 | `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions)
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Query Parameters</summary>
+</div>
+</div>
 
-<table className="objectProperties">
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Create a Basic Report</summary>
+<div class="container">
+  <div class="child1">
+
+Create a Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate`  <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/Guidelines/Master-API-Guidelines/#get-timezones)</td>
+</tr>
+<tr>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number for the data <br />Default: <var>1</var></td>
+</tr>
 <tr>
 <td>`searchField` <br /><span class="type-text">string</span></td>
 <td>Search results by keyword</td>
@@ -2425,17 +2446,465 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 <td> Sorts by ascending (<var>+</var>) or descending (<var>-</var>) <br />Default: <var>-impressions</var></td>
 </tr>
 <tr>
-<td>`pageNo` <br /><span class="type-text">integer</span></td>
-<td>Page number for the data <br />Default: <var>1</var></td>
+<td>`bundleIds` <br /><span class="type-text">array of integer</span></td>
+<td>Bundle IDs</td>
 </tr>
-<tr>
-<td>`pageSize` <br /><span class="type-text">integer</span></td>
-<td>Maximum number of results returned <br />Default: <var>50</var></td>
-</tr>
-<tr>
-<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
-<td>Timezone ID</td>
-</tr>
+</table>
+
+</div>
+<div class="child2">
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Simple Report">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1
+}
+```
+</CodeOption>
+  <CodeOption label="Simple Report with Sorting">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions"
+}
+```
+</CodeOption>
+  <CodeOption label="Report with Search">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions",
+  "searchField": ".com"
+}
+```
+</CodeOption>
+  <CodeOption label="Report with Bundle IDs">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions",
+  "searchField": ".com",
+  "bundleIds": [1,2]
+}
+```
+</CodeOption>
+  <CodeOption label="Advanced Search">
+
+```json
+{
+  "startDate": 1750651200000,
+  "endDate": 1752724799000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "searchKeywords": [
+    "9171361",
+    "keyword 1",
+    "33126",
+    "keyword N"
+  ]
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+<CodeDropdown label="Response 200 Examples">
+  <CodeOption label="Basic Report">
+```json
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 1,
+      "impressions": 25712,
+      "dataCost": 0,
+      "winRate": 99.4276875483372,
+      "clicks": 25651,
+      "eCPM": 1.0000000000000002,
+      "totalECPM": 1.0000000000000002,
+      "eCPC": 0.0010023780749288528,
+      "totalECPC": 0.0010023780749288528,
+      "mediaSpent": 25.712000000000003,
+      "CTR": 99.76275668948351,
+      "spent": 25.712000000000003,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 25860,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "recordsList": [
+      {
+        "id": 1001662598,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      },
+      {
+        "id": 1001662599,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 2
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Report With Bundles">
+```json
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 1,
+      "impressions": 25712,
+      "dataCost": 0,
+      "winRate": 99.4276875483372,
+      "clicks": 25651,
+      "eCPM": 1.0000000000000002,
+      "totalECPM": 1.0000000000000002,
+      "eCPC": 0.0010023780749288528,
+      "totalECPC": 0.0010023780749288528,
+      "mediaSpent": 25.712000000000003,
+      "CTR": 99.76275668948351,
+      "spent": 25.712000000000003,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 25860,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "recordsList": [
+      {
+        "bundleId": 1,
+        "bundleName": "bundle1",
+        "bundleEntityIds": [
+          1,
+          2,
+          3
+        ],
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "entityRecordsList": [
+          {
+            "id": 1001662596,
+            "name": "b.fast-stories.com",
+            "isExcluded": 0,
+            "modelled": false,
+            "inventoryTrafficType": "web",
+            "inventoryType": "Site",
+            "blocked": false,
+            "targeted": false,
+            "impressions": 25712,
+            "dataCost": 0,
+            "winRate": 99.4276875483372,
+            "clicks": 25651,
+            "eCPM": 1.0000000000000002,
+            "totalECPM": 1.0000000000000002,
+            "eCPC": 0.0010023780749288528,
+            "totalECPC": 0.0010023780749288528,
+            "mediaSpent": 25.712000000000003,
+            "CTR": 99.76275668948351,
+            "spent": 25.712000000000003,
+            "conversionCount": 0,
+            "conversionValue": 0,
+            "attributedClickThroughConversions": 0,
+            "attributedViewThroughConversions": 0,
+            "costPerAttributedConversions": 0,
+            "attributedConversionsRate": 0,
+            "returnOnAdSpend": 0,
+            "VCR": 0,
+            "eCPV": 0,
+            "eCPCV": 0,
+            "startCount": 0,
+            "firstCount": 0,
+            "midCount": 0,
+            "thirdCount": 0,
+            "completeCount": 0,
+            "bidImpressions": 25860,
+            "audioVideoViewed": 0,
+            "prebidCost": 0
+          },
+          {
+            "id": 1001662597,
+            "name": "b.fast-stories.com",
+            "isExcluded": 0,
+            "modelled": false,
+            "inventoryTrafficType": "web",
+            "inventoryType": "Site",
+            "blocked": false,
+            "targeted": false,
+            "impressions": 25712,
+            "dataCost": 0,
+            "winRate": 99.4276875483372,
+            "clicks": 25651,
+            "eCPM": 1.0000000000000002,
+            "totalECPM": 1.0000000000000002,
+            "eCPC": 0.0010023780749288528,
+            "totalECPC": 0.0010023780749288528,
+            "mediaSpent": 25.712000000000003,
+            "CTR": 99.76275668948351,
+            "spent": 25.712000000000003,
+            "conversionCount": 0,
+            "conversionValue": 0,
+            "attributedClickThroughConversions": 0,
+            "attributedViewThroughConversions": 0,
+            "costPerAttributedConversions": 0,
+            "attributedConversionsRate": 0,
+            "returnOnAdSpend": 0,
+            "VCR": 0,
+            "eCPV": 0,
+            "eCPCV": 0,
+            "startCount": 0,
+            "firstCount": 0,
+            "midCount": 0,
+            "thirdCount": 0,
+            "completeCount": 0,
+            "bidImpressions": 25860,
+            "audioVideoViewed": 0,
+            "prebidCost": 0
+          }
+        ]
+      },
+      {
+        "id": 1001662598,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      },
+      {
+        "id": 1001662599,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      }
+    ],
+    "totalRecords": 4,
+    "filteredRecords": 4
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+
+</div></div>
+</details>
+
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Create a Report with Performance Filters</summary>
+<div class="container">
+  <div class="child1">
+
+Create a Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated. Additionally, you can specify performance filters to refine the report results.
+
+<table>
+<th>Request Schema</th>
 <tr>
 <td>`startDate` <br /><span class="type-text">integer</span></td>
 <td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
@@ -2444,85 +2913,289 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 <td>`endDate`  <br /><span class="type-text">integer</span></td>
 <td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
 </tr>
-</table>
-
-</details>
-
-<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Request Schema</summary>
-    <table className="objectProperties">
 <tr>
-<td> `fileName` <br /><span class="type-text">string</span></td>
-<td>File name</td>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/Guidelines/Master-API-Guidelines/#get-timezones)</td>
 </tr>
 <tr>
-<td>`columns` <br /><span class="type-text">object</span></td>
-<td>Object containing <var>label</var> and <var>value</var></td>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number for the data <br />Default: <var>1</var></td>
+</tr>
+<tr>
+<td>`performanceFilters` <br /><span class="type-text">object</span></td>
+<td>Object containing performance filter criteria</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`columns` object properties</summary>
+  <summary>`performanceFilters` object properties</summary>
   <table className="objectProperties">
   <tr>
-  <td>`label` <br /><span class="type-text">string</span></td>
-  <td>Serves as the header row in the downloaded CSV/XLSX file, each label corresponds to a data field, displayed as the column header in the file</td>
+  <td>`operation` <br /><span class="type-text">string</span></td>
+  <td>Set to <var>AND</var> or <var>OR</var></td>
   </tr>
     <tr>
-  <td>`value` <br /><span class="type-text">string</span></td>
-  <td>Represents the data key used to retrieve values from the result map sourced from the database, ensures each column in the CSV/XLSX file accurately reflects the relevant data, with applied formatting and timezone adjustments as needed</td>
+  <td>`conditions` <br /><span class="type-text">object array</span></td>
+  <td>Object containing conditions details</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`conditions` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`column` <br /><span class="type-text">string</span></td>
+    <td>Column name</td>
+    </tr>
+      <tr>
+    <td>`condition` <br /><span class="type-text">string</span></td>
+    <td>Condition description</td>
+    </tr>
+      <tr>
+    <td>`value` <br /><span class="type-text">integer</span></td>
+    <td>Condition value</td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
   </tr>
   </table></details>
   </td>
-  <td></td>
-</tr>
-<tr>
-<td> `fileType` <br /><span class="type-text">string</span></td>
-<td>File type: <var>csv</var> or <var>xlsx</var></td>
-</tr>
-<tr>
-<td>`token`<br /><span class="type-text">string</span></td>
-<td>Access token</td>
-</tr>
-<tr>
-<td>`download` <br /><span class="type-text">boolean</span></td>
-<td>Generate download URL: <var>true</var></td>
-</tr>
+  </tr>
 </table>
-</details>
-
-<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`url` <br /><span class="type-text">string</span></td>
-    <td>Download URL</td>
-    </tr>
-    </table>
-    </details>
 
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Report With Single Performance Filter">
+
+```json
+{
+  "startDate": 1749873600000,
+  "endDate": 1752551999000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "performanceFilters": {
+    "conditions": [
+      {
+        "column": "impressions",
+        "condition": "<",
+        "value": 1000
+      }
+    ]
+  }
+}
+```
+</CodeOption>
+  <CodeOption label="Report With Multiple Performance Filters">
+
+```json
+{
+  "startDate": 1749873600000,
+  "endDate": 1752551999000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "performanceFilters": {
+    "operation": "AND",
+    "conditions": [
+      {
+        "column": "impressions",
+        "condition": "<",
+        "value": 1000
+      },
+      {
+        "column": "clicks",
+        "condition": "!=",
+        "value": 2000
+      }
+    ]
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</div></div>
+</details>
+
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Download a Report</summary>
+<div class="container">
+  <div class="child1">
+
+Create a downloadable Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated. The report will be generated in either CSV or XLSX format based on the request.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate`  <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/Guidelines/Master-API-Guidelines/#get-timezones)</td>
+</tr>
+<tr>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number for the data <br />Default: <var>1</var></td>
+</tr>
+<tr>
+<td>`sortBy` <br /><span class="type-text">string</span></td>
+<td> Sorts by ascending (<var>+</var>) or descending (<var>-</var>) <br />Default: <var>-impressions</var></td>
+</tr>
+<tr>
+<td>`download` <br /><span class="type-text">object</span></td>
+<td>Object containing download details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`download` object properties</summary>
+  <table className="objectProperties">
+      <tr>
+    <td> `fileType` <br /><span class="type-text">string</span></td>
+    <td>File type: <var>csv</var> or <var>xlsx</var></td>
+    </tr>
+    <tr>
+    <td>`columns` <br /><span class="type-text">object</span></td>
+    <td>Object containing <var>label</var> and <var>value</var></td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`columns` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`label` <br /><span class="type-text">string</span></td>
+      <td>Serves as the header row in the downloaded CSV/XLSX file, each label corresponds to a data field, displayed as the column header in the file</td>
+      </tr>
+        <tr>
+      <td>`value` <br /><span class="type-text">string</span></td>
+      <td>Represents the data key used to retrieve values from the result map sourced from the database, ensures each column in the CSV/XLSX file accurately reflects the relevant data, with applied formatting and timezone adjustments as needed</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+  </table></details>
+  </td>
+  </tr>
+</table>
+
+</div>
+<div class="child2">
 
 ```json title="Request Sample"
 {
-  "fileName": "Stage Shared Advertiser_deal_id_1708536470049",
-  "columns": [
-    {
-      "label": "Deal ID",
-      "value": "name"
-    },
-    {
-      "label": "eCPM($)",
-      "value": "eCPM"
-    }
-  ],
-  "fileType": "csv",
-  "token": "fd5b502b-3c49-4703-83d9-df1b397011a2",
-  "download": true
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "-impressions",
+  "download": {
+    "fileType": "csv",
+    "columns": [
+      {
+        "label": "ID",
+        "value": "id"
+      },
+      {
+        "label": "Inventory Name",
+        "value": "name"
+      },
+      {
+        "label": "Type",
+        "value": "inventoryType"
+      },
+      {
+        "label": "Modeling",
+        "value": "modelled"
+      },
+      {
+        "label": "Impressions",
+        "value": "impressions"
+      },
+      {
+        "label": "Clicks",
+        "value": "clicks"
+      },
+      {
+        "label": "Win Rate",
+        "value": "winRate"
+      },
+      {
+        "label": "CTR",
+        "value": "CTR"
+      },
+      {
+        "label": "Media eCPM",
+        "value": "eCPM"
+      },
+      {
+        "label": "Total eCPM",
+        "value": "totalECPM"
+      },
+      {
+        "label": "Media eCPC",
+        "value": "eCPC"
+      },
+      {
+        "label": "Total eCPC",
+        "value": "totalECPC"
+      },
+      {
+        "label": "Media Cost",
+        "value": "mediaSpent"
+      },
+      {
+        "label": "Data Cost",
+        "value": "dataCost"
+      },
+      {
+        "label": "Pre-bid Cost",
+        "value": "prebidCost"
+      },
+      {
+        "label": "Total Spent",
+        "value": "spent"
+      },
+      {
+        "label": "Total Attributed Conversion Value",
+        "value": "conversionValue"
+      },
+      {
+        "label": "Total Attributed Conversions",
+        "value": "conversionCount"
+      },
+      {
+        "label": "Return On Ad Spend",
+        "value": "returnOnAdSpend"
+      },
+      {
+        "label": "Attributed Click Through Conversions",
+        "value": "attributedClickThroughConversions"
+      },
+      {
+        "label": "Attributed View Through Conversions",
+        "value": "attributedViewThroughConversions"
+      },
+      {
+        "label": "Cost Per Attributed Conversions",
+        "value": "costPerAttributedConversions"
+      },
+      {
+        "label": "Attributed Conversions Rate",
+        "value": "attributedConversionsRate"
+      }
+    ]
+  }
 }
 ```
 
@@ -2535,143 +3208,8 @@ Generate a detailed metrics Report for a specific Campaign, segmented by dimensi
 }
 ```
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "The campaign ID is missing or invalid. Please provide a valid campaign ID."
-    }
-  ]
-}
-```
-
-```json title="Response 500"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "server encountered an error !"
-    }
-  ]
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        data?: {
-          url: string
-        }
-      };
-    };
-  };
-  401: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    }
-  };
-  422: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    }
-  };
-  500: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }[]
-      }
-    }
-  };
-}
-
-function fetchCampaignMetricsByDimension(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}',
-    params: {
-      query?: {
-        searchField?: `string`,
-        sortBy?: `string`,
-        pageNo?: `number`,
-        pageSize?: `number`,
-        timeZoneId?: `number`,
-        startDate?: `number`,
-        endDate?: `number`,
-      },
-      path: {
-        campaignId: `number`,
-        dimensionId: `number`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          fileName: `string`,
-          columns: [
-            {
-              label: `string`,
-              value: `string`
-            }
-          ],
-          fileType: `string`,
-          token: `string`,
-          download: `boolean`
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
 </div></div>
+</details>
 
 ---
 
