@@ -4653,6 +4653,12 @@ const sidebars = {
         },
         {
           type: `doc`,
+          label: 'Bid Model',
+          id: `MCP/MCP Actions/Bid-Model`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
           label: 'Reports',
           id: `MCP/MCP Actions/Reports`,
           className: 'sidebarItem'
