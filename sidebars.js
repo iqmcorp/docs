@@ -2697,6 +2697,12 @@ const sidebars = {
           ]
         },
         {
+          type: 'html',
+          value: '<a class="menu__link" href="/Guidelines/Inventory-API-Guide#list-of-deals"><span class="badge bar badge--success">POST</span>List of Deals</a>',
+          defaultStyle: true,
+              className: 'sidebarItem',
+        },
+        {
           type: `category`,
           label: `Private Marketplace (PMP) Deals Details`,
           className: 'sidebarItem',
