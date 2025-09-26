@@ -4097,31 +4097,6 @@ function addInventoryGroup(): Promise<Responses> {
 ---
 </details>
 
-<details className="endpointPropertiesDetails">
-<summary style={{ fontSize: "16px" }}>Validations</summary>
-<div class="container">
-  <div class="child1">
-
-Pass different combinations of fields for validation. 
-
-| Validate Group Name |  |
-| ---- | --- |
-| `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-
-| Validate Group Type |  |
-| ---- | --- |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
-
-| Validate Inventory Group |  |
-| ---- | --- |
-| `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
-
-
-</div><div class="child2">
-
-</div></div>
-</details>
 ---
 
 ### Add or Remove Mappings to an Inventory Group
@@ -4868,6 +4843,127 @@ function deleteInventoryGroup(): Promise<Responses> {
 ```
 
 </TabItem></Tabs>
+
+</div></div>
+
+---
+
+## List of Deals 
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/inv/deals/list</span>
+
+<div class="container">
+  <div class="child1">
+
+Get a list of deals based on desired filters available for user.
+
+You can also get more detailed lists of [PMP Deals](/Guidelines/Inventory-API-Guide#get-pmp-deals-list) or [PG Deals](/Guidelines/Inventory-API-Guide#get-pg-deals-list), in their respective list endpoints.
+
+| Request Schema  |  |
+| ---- | --- |
+| `deal` <br /><span class="type-text">object</span> | Contains key-value pairs of <var>PG</var>/<var>PMP</var> and an array of their IDs to filter results by |
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `dealStatus` <br /><span class="type-text">array of strings</span> | Deal statuses, allowed values: <var>Active</var>, <var>Inactive</var> |
+| `searchField` <br /><span class="type-text">string</span> | Search deals by keywords specified by `searchBy` |
+| `searchBy` <br /><span class="type-text">array of strings</span> | Search by <var>dealId</var>, <var>dealName</var>, or <var>exchangeName</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Pages of retrieved details desired, default: <var>1</var> |
+| `noOfEntries` <br /><span class="type-text">integer</span>| Maximum number of deals to retrieve, default: <var>50</var> |
+| `sortBy` <br /><span class="type-text">string</span>| Sort entries |
+
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary> 
+<table className="objectProperties">
+                <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Deal ID</td>
+        </tr>
+              <tr>
+        <td>`dealId` <br /><span class="type-text">string</span></td>
+        <td>Deal identifier</td>  
+      </tr> 
+              <tr>
+        <td>`dealStatus` <br /><span class="type-text">string</span></td>
+        <td>Deal status</td>
+        </tr>
+              <tr>
+        <td>`dealName` <br /><span class="type-text">string</span></td>
+        <td>Deal name</td>
+        </tr>
+              <tr>
+        <td>`exchangeName` <br /><span class="type-text">string</span></td>
+        <td>Exchange name</td>
+        </tr>
+              <tr>
+        <td>`dealType` <br /><span class="type-text">string</span></td>
+        <td>Deal type, either <var>PG</var> or <var>PMP</var></td>
+        </tr>
+              <tr>
+        <td>`campaignCount` <br /><span class="type-text">integer</span></td>
+        <td>Number of campaigns associated with the deal</td>
+        </tr>
+  </table>
+  </details>
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "deal": {
+    "PG": [
+      3
+    ],
+    "PMP": [
+      378
+    ]
+  },
+  "owIds": [
+    201427
+  ],
+  "dealStatus": [
+    "Active"
+  ],
+  "searchField": "Smaato  ",
+  "searchBy": [
+    "dealId",
+    "dealName",
+    "exchangeName"
+  ],
+  "pageNo": 1,
+  "noOfEntries": 50,
+  "sortBy": "dealId"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 2511,
+    "filteredRecords": 2,
+    "dealList": [
+      {
+        "id": 3,
+        "dealId": "PM-Ny3ey3-2",
+        "dealStatus": "Active",
+        "dealName": "Test deal IV91",
+        "exchangeName": "Smaato",
+        "dealType": "PG",
+        "campaignCount": 3
+      },
+      {
+        "id": 378,
+        "dealId": "gp8n",
+        "dealStatus": "Active",
+        "dealName": "Smaato CTV Deal",
+        "exchangeName": "Smaato",
+        "dealType": "PMP",
+        "campaignCount": 22
+      }
+    ]
+  }
+}
+```
 
 </div></div>
 
@@ -5792,6 +5888,13 @@ Create or update PMP deals using the following properties in the Request Body Sc
 
 Create a new PMP deal referencing the resource properties for the request schema.
 
+Required fields:
+
+* `dealId`
+* `dealName`
+* `exchangeId`
+* `active`
+
 <a href="#resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -6623,6 +6726,13 @@ Create or update PG deals using the following properties in the Request Body Sch
   <div class="child1">
 
 Create a new PG deal referencing the resource properties for the request schema.
+
+Required fields:
+
+* `dealId`
+* `dealName`
+* `exchangeId`
+* `statusId`
 
 <a href="#resource-properties-1"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
 
