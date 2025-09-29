@@ -143,11 +143,15 @@ function UserSign-up/PasswordCreation(): Promise < Responses > {
 <div class="container">
   <div class="child1">
 
-Once you have created an account, you can log in. This API will send OAuth compliant response with an Organization Workspace ID (<var>owId</var>) which can be used for any further API communications.
+Once you have created an account, you can log in. This API accepts a URL encoded form with the user's email and password. Using your Client ID and Client Secret in the header, you can authenticate and log in.
+
+The response will include an access token, refresh token, and the Organization Workspace ID. These credentials will be used to maintain your session and authenticate your access to the IQM platform.
+
 
 | Headers |  |
 | ---- | --- |
 | `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Client ID and Client Secret |
+| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | application/x-www-form-urlencoded |
 
 | Request Schema |  |
 | ---- | --- |
@@ -160,12 +164,14 @@ Once you have created an account, you can log in. This API will send OAuth compl
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-    "grantType": "password",
-    "email": "user1@iqm.com",
-    "password": "123456"
-}
+```curl title="Request Sample"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+               --header 'accept: application/json, text/plain, */*' \
+               --header 'Authorization: Basic <Client ID/Client Secret>' \
+               --header 'Content-Type: application/x-www-form-urlencoded' \
+               --data-urlencode 'grant_type=password' \
+               --data-urlencode 'username=user@iqm.com' \
+               --data-urlencode 'password=<your password>'
 ```
 
 ```json title="Response 200"

@@ -616,10 +616,14 @@ function Login(): Promise < Responses > {
 
 This endpoint functions as the main authenticator for external connections. 
 
+This API accepts a URL encoded form with different grant types. This endpoint can be used to log in via user password, authorization code or client credentials, or it can be used to refresh an access token. 
+
 The API will send an [OAuth Compliant Response<ExternalLink />](https://www.oauth.com/oauth2-servers/authorization/the-authorization-response/), as seen in the example <var>Response 200</var> on the right side column.
 
-Depending on the grant type, this endpoint can be used to log in via user password, authorization code or client credentials, or it can be used to refresh an access token. 
-
+| Authentication |  |
+| --- | --- |   
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Client ID and Client Secret |
+| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | application/x-www-form-urlencoded |
 
 
 | Request Parameters | |
@@ -635,28 +639,36 @@ Depending on the grant type, this endpoint can be used to log in via user passwo
 </div>
 <div class="child2">
 
-```json title="Request Sample (refresh token)"
-{
-  "grant_type": "refresh_token",
-  "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64"
-}
+```curl title="Request Sample (refresh token)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=refresh_token' \
+--data-urlencode 'refresh_token=eac4c1f6-781e-4b04-baff-9c2e415d1f64'
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
 ```
 
-```json title="Request Sample (password)"
-{
-  "grantType": "password",
-  "email": "pratik.t+ihp@iqm.com",
-  "password": "123456"
-}
+```curl title="Request Sample (password)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
 ```
 
-```json title="Request Sample (auth code)"
-{
-  "grantType": "authorization_code",
-  "redirect_uri": "http://iqm-authenticator.stage.iqm/showAuthCode",
-  "client_id": "demotest",
-  "client_secret": "12345"
-}
+```curl title="Request Sample (auth code)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=authorization_code' \
+--data-urlencode 'client_id=<client_id>' \
+--data-urlencode 'client_secret=<client_secret>' \
+--data-urlencode 'redirect_uri=http://iqm-authenticator.stage.iqm/showAuthCode'
 ```
 
 ```json title="Response 200"
