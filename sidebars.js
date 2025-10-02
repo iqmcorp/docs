@@ -3410,6 +3410,43 @@ const sidebars = {
           defaultStyle: true,
           className: "sidebarItem"
         },
+         {
+          type: 'category',
+          label: 'Validations',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-invite"><span class="badge bar badge--success">POST</span>User Invite</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-password-reset-hash"><span class="badge bar badge--success">POST</span>Password Reset Hash</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-email"><span class="badge bar badge--success">POST</span>User Email</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-workspace-domain"><span class="badge bar badge--success">POST</span>Workspace Domain</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-email-for-signup"><span class="badge bar badge--success">POST</span>User Email for Sign-Up</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-password"><span class="badge bar badge--success">POST</span>User Password</a>',
+              defaultStyle: true,
+            },
+          ]
+        },
       ],
     },
     {
