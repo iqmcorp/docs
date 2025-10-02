@@ -3327,88 +3327,164 @@ const sidebars = {
       },
       items: [
         {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#overview"><span class="badge bar badge"></span>Overview</a>',
-          defaultStyle: true,
-          className: 'sidebarItem'
+          type: 'category',
+          label: 'User Details',
+          className: 'sidebarItem',
+          items: [
+              {
+                type: 'html',
+                value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-list-of-users"><span class="badge bar badge--primary">GET</span>List of Users</a>',
+                defaultStyle: true,
+                className: "sidebarItem"
+              },
+              {
+                type: 'html',
+                value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-user-profile-details"><span class="badge bar badge--primary">GET</span>User Profile Details</a>',
+                defaultStyle: true,
+                className: "sidebarItem"
+              },
+              {
+                type: 'html',
+                value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-config-details"><span class="badge bar badge--primary">GET</span>User Config Details</a>',
+                defaultStyle: true,
+                className: "sidebarItem"
+              },
+          ]
         },
         {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#send-user-invitation"><span class="badge bar badge--success">POST</span>Send User Invitation</a>',
-          defaultStyle: true,
-          className: 'sidebarItem'
+          type: 'category',
+          label: 'User Management',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#send-user-invitation"><span class="badge bar badge--success">POST</span>Send User Invitation</a>',
+              defaultStyle: true,
+              className: 'sidebarItem'
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-sign-up"><span class="badge bar badge--success">POST</span>User Sign-Up</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#login"><span class="badge bar badge--success">POST</span>Login</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#oauth-token"><span class="badge bar badge--success">POST</span>OAuth Token</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-logout"><span class="badge bar badge--success">POST</span>User Logout</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#change-password"><span class="badge bar badge--success">POST</span>Change Password</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#reset-user-password"><span class="badge bar badge--success">POST</span>Reset User Password</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#reset-password-email"><span class="badge bar badge--success">POST</span>Reset Password Email</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#update-user-profile"><span class="badge bar badge--info">PATCH</span>Update User Profile</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+                    {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#update-user-status"><span class="badge bar badge--warning">PUT</span>Update User Status</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+          ]
         },
         {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#validate-user-invite"><span class="badge bar badge--success">POST</span>Validate User Invite</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
+          type: 'category',
+          label: 'User Application Access',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#allowed-applications-list"><span class="badge bar badge--primary">GET</span>Allowed Applications List</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-app-access-list"><span class="badge bar badge--primary">GET</span>User App Access List</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#add-app-access-for-user"><span class="badge bar badge--success">POST</span>Add App Access for User</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#revoke-app-access-for-user"><span class="badge bar badge--danger">DEL</span>Revoke App Access for User</a>',
+              defaultStyle: true,
+              className: "sidebarItem"
+            },
+          ]
         },
         {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-sign-up"><span class="badge bar badge--success">POST</span>User Sign-Up</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#login"><span class="badge bar badge--success">POST</span>Login</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#oauth-token"><span class="badge bar badge--success">POST</span>OAuth Token</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-logout"><span class="badge bar badge--success">POST</span>User Logout</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#change-password"><span class="badge bar badge--success">POST</span>Change Password</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#reset-password-email"><span class="badge bar badge--success">POST</span>Reset Password Email</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#update-user-profile"><span class="badge bar badge--info">PATCH</span>Update User Profile</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-user-profile-details"><span class="badge bar badge--primary">GET</span>User Profile Details</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#get-list-of-users"><span class="badge bar badge--primary">GET</span>List of Users</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#user-app-access-list"><span class="badge bar badge--primary">GET</span>User App Access List</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
-        },
-        {
-          type: 'html',
-          value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines#add-app-access-for-user"><span class="badge bar badge--success">POST</span>Add App Access for User</a>',
-          defaultStyle: true,
-          className: "sidebarItem"
+          type: 'category',
+          label: 'Validations',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-invite"><span class="badge bar badge--success">POST</span>User Invite</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-password-reset-hash"><span class="badge bar badge--success">POST</span>Password Reset Hash</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-email"><span class="badge bar badge--success">POST</span>User Email</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-workspace-domain"><span class="badge bar badge--success">POST</span>Workspace Domain</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-email-for-signup"><span class="badge bar badge--success">POST</span>User Email for Sign-Up</a>',
+              defaultStyle: true,
+            },
+            {
+              type: 'html',
+              value: '<a class="menu__link" href="/Guidelines/User-Profile-Guidelines/#validate-user-password"><span class="badge bar badge--success">POST</span>User Password</a>',
+              defaultStyle: true,
+            },
+          ]
         },
       ],
     },
