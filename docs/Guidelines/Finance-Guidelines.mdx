@@ -2865,12 +2865,25 @@ function CancelInvoice(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
-| Request Schema  |  |
+Pay an invoice by invoice ID. API also accepts query parameters as multipart/form-data along with <var>paymentProof</var> file upload.
+
+| Query Parameters  |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentType` <br /><span class="type-text">integer</span> | [Payment Type ID](#payment-types) |
-| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID |
+| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Invoice ID |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount |
+| `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment Type ID](#payment-types) |
+| `paymentDate` <br /><span class="type-text">integer</span> | Payment date as Unix epoch timestamp, in milliseconds (default: current date/time) |
+| `paymentMode` <br /><span class="type-text">integer</span> | [Payment Mode ID](#invoice-payment-mode-types) |
+| `transactionId` <br /><span class="type-text">string</span> | Transaction ID/reference number |
+| `bankName` <br /><span class="type-text">string</span> | Bank name |
+| `isCustomerRequest` <br /><span class="type-text">boolean</span> | Indicates whether this invoice download is made as a customer request (default: <var>true</var>) or as the customer’s own (<var>false</var>) |
+
+
+| Request Schema | |
+| ---- | --- |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Payment proof file upload |
+
 
  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -2888,16 +2901,23 @@ function CancelInvoice(): Promise<Responses> {
 
 </div><div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-    "owId": 678345,
-    "paymentAmount": 10000,
-    "paymentType": 1,
-    "invoiceId": 23
-}
+```curl title="Request Sample"
+curl -X POST "https://api.iqm.com/api/v3/fa/pay-invoice" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "X-IAA-OW-ID: 200001" \
+  -H "Content-Type: multipart/form-data" \
+  -F "invoiceId=12345" \
+  -F "owId=200001" \
+  -F "paymentAmount=1250.50" \
+  -F "paymentDate=2025-10-07T12:00:00Z" \
+  -F "paymentMode=2" \
+  -F "transactionId=TXN-987654321" \
+  -F "paymentType=1" \
+  -F "bankName=First National Bank" \
+  -F "isCustomerRequest=true" \
+  -F "paymentProof=@/path/to/payment_receipt.pdf"
+
 ```
 
 ```json title="Response 200"
@@ -2906,67 +2926,6 @@ function CancelInvoice(): Promise<Responses> {
     "data": "Payment added Successfully."
 }
 ```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      };
-    };
-  };
-  422: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-}
-
-function MarkInvoiceAsPaid(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/fa/pay-invoice',
-    requestBody?: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          owId: `number`,
-          paymentAmount: `number`,
-          paymentType: `number`,
-          invoiceId: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
 
 </div></div>
 
@@ -4442,16 +4401,21 @@ function ListPaymentforCustomer(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+Add a payment for a Customer. API also accepts query parameters as multipart/form-data along with image file upload for proof of payment.
+
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
+| `transactionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Transaction ID |
+| `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |[Payment Type ID](#payment-types) |
+| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+
 | Request Schema |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
-| `paymentMode` <br /><span class="type-text">integer</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
-| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
-| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
-| `paymentType` <br /><span class="type-text">integer</span> |[Payment Type ID](#payment-types) |
-| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -4472,17 +4436,20 @@ function ListPaymentforCustomer(): Promise<Responses> {
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-    "owId": 123654,
-    "paymentAmount": 5000,
-    "paymentDate": "2025-12-01",
-    "paymentMode": 1,
-    "transactionId": 10,
-    "paymentProof": "image.png",
-    "paymentType": 2,
-    "invoiceId": 34
-}
+```curl title="Request Sample"
+curl -X POST "https://api.example.com/api/v3/fa/customer/payment/add" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "X-IAA-OW-ID: 200001" \
+  -H "Content-Type: multipart/form-data" \
+  -F "invoiceId=12345" \
+  -F "owId=200001" \
+  -F "paymentAmount=1250.50" \
+  -F "paymentDate=2025-10-07T12:00:00Z" \
+  -F "paymentMode=2" \
+  -F "transactionId=TXN-987654321" \
+  -F "paymentType=1" \
+  -F "paymentProof=@/path/to/payment_receipt.pdf"
+
 ```
 
 ```json title="Response 200"
@@ -4556,9 +4523,26 @@ function AddPaymentforcustomer(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+Update a payment for a Customer. API also accepts query parameters as multipart/form-data along with image file upload for proof of payment.
+
 | Path Parameter |  |
 | ---- | --- |
 | `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
+| `transactionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Transaction ID |
+| `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |[Payment Type ID](#payment-types) |
+| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+| `refundReason` <br /><span class="type-text">string</span> | Reason for refund (provide only if <var>paymentType</var> is **Refund**) |
+
+| Request Schema |  |
+| ---- | --- |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -4579,11 +4563,20 @@ function AddPaymentforcustomer(): Promise<Responses> {
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Response 200"
-{
-    "success": true,
-    "data": "Payment updated Successfully."
-}
+```curl title="Request Sample"
+curl -X POST "https://api.example.com/api/v3/fa/customer/payment/{paymentId}" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "X-IAA-OW-ID: 200001" \
+  -H "Content-Type: multipart/form-data" \
+  -F "invoiceId=12345" \
+  -F "owId=200001" \
+  -F "paymentAmount=1250.50" \
+  -F "paymentDate=2025-10-07T12:00:00Z" \
+  -F "paymentMode=2" \
+  -F "transactionId=TXN-987654321" \
+  -F "paymentType=1" \
+  -F "paymentProof=@/path/to/payment_receipt.pdf"
+
 ```
 
 </TabItem>
@@ -4970,13 +4963,18 @@ function RejectPayment(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+Add a payment from logged-in organization. API also accepts query parameters as multipart/form-data along with image file upload for proof of payment.
+
+| Query Parameters |  |
+| ---- | --- |
+| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
+| `bankName` <br /><span class="type-text">string</span> | Required only if <var>paymentMode</var> is **Check** or **Wire Transfer** |
+
 | Request Schema |  |
 | ---- | --- |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
-| `paymentMode` <br /><span class="type-text">integer</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
-| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
-| `bankName` <br /><span class="type-text">string</span> | Required only if <var>paymentMode</var> is **Check** or **Wire Transfer** |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -4997,10 +4995,21 @@ function RejectPayment(): Promise<Responses> {
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```curl title="Request Sample"
+curl -X POST "https://api.example.com/api/v3/fa/payment/add-fund" \
+-H "Authorization: Bearer <ACCESS_TOKEN>" \
+-H "X-IAA-OW-ID: 200001" \
+-H "Content-Type: multipart/form-data" \
+-F "paymentAmount=1250.50" \
+-F "paymentDate=2025-10-07T12:00:00Z" \
+-F "paymentMode=2" \
+-F "paymentProof=@/path/to/payment_receipt.pdf"
+```
+
 ```json title="Response 200"
 {
     "success": true,
-    "data": "Payment Successful."
+    "data": "Payment added Successfully."
 }
 ```
 
@@ -5150,14 +5159,20 @@ function PaymentwithPayPal(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+Add a payment for refund to a customer. API also accepts query parameters as multipart/form-data along with image file upload for proof of payment.
+
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
+| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
+| `refundReason` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Reason for refund |
+
 | Request Schema |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
-| `paymentMode` <br /><span class="type-text">integer</span> | [Payment Mode Type ID](#invoice-payment-mode-types) |
-| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
-| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -5178,11 +5193,17 @@ function PaymentwithPayPal(): Promise<Responses> {
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Response 200"
-{
-    "success": true,
-    "data": "Refund Initiated."
-}
+```curl title="Request Sample"
+curl -X POST "https://api.example.com/api/v3/fa/customer/payment/refund" \
+  -H "Authorization Bearer <token>" \
+  -H "X-IAA-OW-ID: 200001" \
+  -H "Content-Type: multipart/form-data" \
+  -F "owId=200001" \
+  -F "paymentAmount=1250.50" \
+  -F "paymentDate=2025-10-07T12:00:00Z" \
+  -F "paymentMode=2" \
+  -F "transactionId=TXN-987654321" \
+  -F "paymentProof=@/path/to/payment_receipt.pdf"
 ```
 
 </TabItem>
@@ -5246,14 +5267,20 @@ function InitiateRefund(): Promise<Responses> {
 <div class="container">
   <div class="child1">
 
+Approve a refund for a customer. API also accepts query parameters as multipart/form-data along with image file upload for proof of payment.
+
 | Path Parameter |  |
 | ---- | --- |
 | `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
 
-| Request Schema |  |
+| Query Parameters |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `actionNote` <br /><span class="type-text">string</span> | Description of status change |
+
+| Request Schema |  |
+| ---- | --- |
+| `paymentProof` <br /><span class="type-text">multipart/form-data</span> | Proof of payment image (jpeg/png) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -5274,11 +5301,13 @@ function InitiateRefund(): Promise<Responses> {
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-  "owId": 200485,
-  "actionNote": "Payment paid partially"
-}
+```curl title="Request Sample"
+curl -X POST "https://api.example.com/api/v3/fa/customer/payment/approve-refund/{paymentId}" \
+-H "Authorization Bearer <token>" \
+-H "X-IAA-OW-ID: 200001" \
+-H "Content-Type: multipart/form-data" \
+-F "owId=200001" \
+-F "paymentProof=@/path/to/payment_receipt.pdf"
 ```
 
 ```json title="Response 200"
