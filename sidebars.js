@@ -2007,7 +2007,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Update Customer VLD Details</a>',
               defaultStyle: true,
             },
             {
@@ -2017,7 +2017,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Update Customer PLD Details</a>',
               defaultStyle: true,
             },
             {
@@ -2027,7 +2027,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Update Customer SLS Details</a>',
               defaultStyle: true,
             },
             {
@@ -2037,7 +2037,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-doubleverify"><span class="badge bar badge--info">PATCH</span>Updates Customer DoubleVerify IVT Flag</a>',
+              value: '<a class="menu__link" href="/Guidelines/Finance-Guidelines#update-customer-doubleverify"><span class="badge bar badge--info">PATCH</span>Update Customer DoubleVerify IVT Flag</a>',
               defaultStyle: true,
             },
             {
@@ -4265,7 +4265,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Political%20Vertical/Finance#updates-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer VLD Details</a>',
+              value: '<a class="menu__link" href="/Political%20Vertical/Finance#update-customer-vld-details"><span class="badge bar badge--info">PATCH</span>Update Customer VLD Details</a>',
               defaultStyle: true,
             },
           ]
@@ -4575,7 +4575,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Updates Customer PLD Details</a>',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#update-customer-pld-details"><span class="badge bar badge--info">PATCH</span>Update Customer PLD Details</a>',
               defaultStyle: true,
             },
             {
@@ -4585,7 +4585,7 @@ const sidebars = {
             },
             {
               type: 'html',
-              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#updates-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Updates Customer SLS Details</a>',
+              value: '<a class="menu__link" href="/Healthcare%20Vertical/Finance#update-customer-sls-details"><span class="badge bar badge--info">PATCH</span>Update Customer SLS Details</a>',
               defaultStyle: true,
             },
           ]
