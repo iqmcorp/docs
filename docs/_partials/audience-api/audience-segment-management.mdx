@@ -1,0 +1,221 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Create Audience Segment
+
+<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/audience/segment/add</span>
+
+<div class="container">
+  <div class="child1">
+
+Create an Audience Segment. 
+
+Using Segment IDs (from the [Master API](/Guidelines/Master-API-Guidelines)), you can build an Audience with the <var>equation</var> field. Segment IDs in parentheses, separated by a vertical bar (|), will be in an 'or' relationship, which will combine the sets of Segments; groups of Segments in parentheses, separated by an ampersand (&), will be in an 'and' relationship, which will build an Audience based on the intersection of those groups. You can see an example of this format in the Request Sample code block on the right-hand side of the page.
+
+
+| Request Schema | |
+| --- | --- |
+| `groupName` <br /><span class="type-text">string</span> | Audience Segment name
+| `segmentPartnerId` <br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
+| `equation` <br /><span class="type-text">string</span> | Equation string describing the or-and relationship between Segment groups 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "equation": "((6388749|6388750)&(6388751|6402730|6392754|5776004))",
+  "name": "football-temp"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1063316,
+    "message": "Audience created successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/segment/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Audience Segment 
+
+<span class="badge badge--warning">PUT</span> <span class="path-text">/api/v3/audience/segment/\{audienceId}</span>
+
+<div class="container">
+  <div class="child1">
+
+Update an Audience Segment.
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) |
+
+| Request Schema | |
+| --- | --- |
+| `groupName` <br /><span class="type-text">string</span> | Audience Segment name 
+| `dataPartnerId`<br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
+| `segmentIdList` <br /><span class="type-text">string</span> | Segment IDs 
+| `equation` <br /><span class="type-text">string</span> | Equation string describing or-and relationship between Segment groups 
+| `dataPartnerName` <br /><span class="type-text">string</span> | Data partner name 
+| `taxonomyIdList` <br /><span class="type-text">array of integers</span> | Taxonomy ID list
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "equation": "((5613837|5638265)&(5613844))",
+  "name": "Segment audience - 1"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Your changes have been saved successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/Getting%20Started/Typescript-Prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function updateSegmentAudienceGroup(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/audience/segment/{audienceId}',
+    params: {
+      path: {
+        audienceId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId?: `number`,
+          dspId?: `number`,
+          owId?: `number`,
+          uowId?: `number`,
+          name?: `string`,
+          equation?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
