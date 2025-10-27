@@ -5233,7 +5233,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'insights-vld'
+        id: 'Political Vertical/insights-vld'
       },
       items: [
         {
