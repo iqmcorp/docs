@@ -5239,7 +5239,7 @@ const sidebars = {
         {
           type: 'link',
           label: 'Overview',
-          href: '/Political%20Vertical/Insights-VLD#overview',
+          href: '/political-vertical/insights-vld/#overview',
           className: 'sidebarItem'
         },
         {
@@ -5250,48 +5250,48 @@ const sidebars = {
             {
               type: 'link',
               label: 'VLD Resource Properties',
-              href: '/Political%20Vertical/insights-vld#vld-resource-properties',
+              href: '/political-vertical/insights-vld/#vld-resource-properties',
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'List of VLD Reports',
-              href: '/Political%20Vertical/insights-vld#get-list-of-vld-reports',
+              href: '/political-vertical/insights-vld/#get-list-of-vld-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'List of Campaigns Eligible for VLD Reports',
-              href: '/Political%20Vertical/insights-vld#get-list-of-campaigns-eligible-for-vld-reports',
+              href: '/political-vertical/insights-vld/#get-list-of-campaigns-eligible-for-vld-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Generate VLD Report',
-              href: '/Political%20Vertical/insights-vld#generate-vld-report',
+              href: '/political-vertical/insights-vld/#generate-vld-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Cost Assessment for VLD Report',
-              href: '/Political%20Vertical/insights-vld#get-cost-assessment-for-vld-report',
+              href: '/political-vertical/insights-vld/#get-cost-assessment-for-vld-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Download VLD Insight Report',
-              href: '/Political%20Vertical/insights-vld#download-vld-insight-report',
+              href: '/political-vertical/insights-vld/#download-vld-insight-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Delete VLD Report',
-              href: '/Political%20Vertical/insights-vld#delete-vld-report',
+              href: '/political-vertical/insights-vld/#delete-vld-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
