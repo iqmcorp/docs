@@ -6,6 +6,8 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import Caret from '@site/static/img/caret.svg'
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+
 
 # Reports API
 
@@ -674,6 +676,10 @@ See the Quickstart Guide on [Creating a Report](/Quickstart%20Guides/Reporting-A
   <td>[Report Request Type ID](#get-report-request-types)</td>
 </tr>
 <tr>
+  <td>`fileType` <br /><span class="type-text">integer</span></td>
+  <td>[Report File Type ID](#get-report-file-types)</td>
+</tr>
+<tr>
   <td>`reportAggregated` <br /><span class="type-text">string</span></td>
   <td>Identifies whether Report is "aggregated" (<var>1</var>) or "disaggregated" (daily) (<var>0</var>)</td>
 </tr>
@@ -692,6 +698,10 @@ See the Quickstart Guide on [Creating a Report](/Quickstart%20Guides/Reporting-A
 <tr>
   <td>`timezoneName` <br /><span class="type-text">string</span></td>
   <td>Timezone name</td>
+</tr>
+<tr>
+  <td> `order` <br /><span class="type-text">string</span></td>
+  <td>Sorts by ascending (<var>asc</var>) or descending (<var>desc</var>)</td>
 </tr>
 <tr>
   <td> `sortBy` <br /><span class="type-text">string</span></td>
@@ -750,7 +760,37 @@ The date range for a Report cannot exceed one year.
 <Tabs>
   <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
+
+<CodeDropdown label="Request Examples">
+<CodeOption value="Create Report" label="Create Report">
+```json
+{
+  "reportName": "Campaign by Gender by Device type ",
+  "startDate": 1650177200000,
+  "endDate": 1666938296000,
+  "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+  "columns": [
+    "gender",
+    "deviceType",
+    "campaignId",
+    "campaignName",
+    "startTime",
+    "endTime",
+    "maxBid",
+    "budgetDay",
+    "budgetTotal",
+    "impressions",
+    "clicks"
+  ],
+  "requestType": 1,
+  "reportAggregated": "0",
+  "timezoneId": 29,
+  "timezoneName": "US/Eastern"
+}
+```
+</CodeOption>
+<CodeOption value="Create Report with Scheduling" label="Create Report with Scheduling">
+```json
 {
     "reportName": "Campaign by Gender by Device type with customer and filtering",
     "customerIds": [
@@ -790,6 +830,8 @@ The date range for a Report cannot exceed one year.
     }
 }
 ```
+</CodeOption>
+</CodeDropdown>
 
 Response 200
 
@@ -889,7 +931,7 @@ function saveReport(): Promise < Responses > {
 <div class="container">
   <div class="child1">
 
-Once a Report is created, execute it with this endpoint.
+Execute a report by ID or with new Report data. 
 
 :::warning[NOTE]
 
@@ -1044,13 +1086,102 @@ The date range for a Report cannot exceed one year.
 <Tabs>
   <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
+<CodeDropdown label="Request Examples">
+<CodeOption value="Execute Report by ID" label="Execute Report by ID">
+```json
 {
   "id": 1001
 }
 ```
+</CodeOption>
+<CodeOption value="Execute with New Report Data" label="Execute with New Report Data">
+```json
+{
+  "startDate": 1670410001000,
+  "endDate": 1675766802000,
+  "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
+  "columns": [
+    "campaignId",
+    "campaignName",
+    "deviceType",
+    "completeCount",
+    "gender",
+    "startTime",
+    "endTime",
+    "maxBid",
+    "budgetDay",
+    "VCR",
+    "eCPC",
+    "totalECPC",
+    "budgetTotal",
+    "impressions",
+    "clicks",
+    "winRate",
+    "reach"
+  ],
+  "customerIds": [
+    201353,
+    201352
+  ],
+  "filters": {
+    "campaignIds": [
+      123,
+      234,
+      345
+    ],
+    "creativeTypeIds": [
+      11
+    ],
+    "campaignStatuses": [
+      "expired",
+      "running"
+    ]
+  },
+  "searchField": "123",
+  "requestType": 1,
+  "reportAggregated": "0",
+  "timezoneId": 11,
+  "timezoneName": "UTC",
+  "order": "desc",
+  "sortBy": "impressions",
+  "noOfEntries": 50,
+  "pageNo": 1
+}
+```
+</CodeOption>
+<CodeOption label="Execute Weekly Report" value="Execute Weekly Report">
+```json
+{
+  "customerIds": [],
+  "startDate": 1749614400000,
+  "endDate": 1757649599000,
+  "dimensions": "[{\"filter\":\"campaign\"}]",
+  "columns": [
+    "impressions",
+    "clicks",
+    "CTR",
+    "VCR",
+    "spent",
+    "dataCost",
+    "mediaSpent",
+    "eCPM"
+  ],
+  "requestType": 3,
+  "reportAggregated": "0",
+  "timezoneName": "US/Eastern",
+  "timezoneId": 29,
+  "counter": 1,
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "sortBy": "-impressions"
+}
+```
+</CodeOption>
+</CodeDropdown>
 
-```json title="Response 200"
+<CodeDropdown label="Response 200 Examples">
+<CodeOption value="Execute Report (Daily)" label="Execute Report (Daily)">
+```json
 {
   "success": true,
   "data": {
@@ -1246,6 +1377,168 @@ The date range for a Report cannot exceed one year.
   }
 }
 ```
+</CodeOption>
+<CodeOption value="Execute Report with Date Range (Weekly or Monthly)" label="Execute Report with Date Range (Weekly or Monthly)">
+```json
+{
+  "success": true,
+  "data": {
+    "total": {
+      "CTR": 0.042882,
+      "baseBid": null,
+      "totalRecords": 4,
+      "VCR": 0,
+      "budgetTypeId": 1,
+      "totalBudget": 8200,
+      "dateRange": null,
+      "dataCost": 0,
+      "budgetMappingDataCost": null,
+      "totalECPM": 2.4288164665523158,
+      "campaignTimezone": null,
+      "eCPM": 2.4288164665523158,
+      "bidImpressions": 2352,
+      "preBidCost": 0,
+      "mediaSpent": 5.664,
+      "startCount": 0,
+      "campaignId": null,
+      "spent": 5.664,
+      "impressions": 2332,
+      "completeCount": 0,
+      "budgetMappingSpent": null,
+      "dailyBudget": 30.25,
+      "maxBid": null,
+      "clicks": 1,
+      "campaign": null,
+      "budgetCompletion": 0.08358536585365853,
+      "status": null,
+      "reach": 2332,
+      "frequency": 1
+    },
+    "totalRecords": 4,
+    "data": [
+      {
+        "CTR": 0,
+        "baseBid": null,
+        "totalRecords": null,
+        "VCR": 0,
+        "budgetTypeId": 1,
+        "totalBudget": 5000,
+        "dateRange": "08/31/2025 - 09/06/2025",
+        "dataCost": 0,
+        "budgetMappingDataCost": 0,
+        "totalECPM": 2,
+        "campaignTimezone": "US/Eastern",
+        "eCPM": 2,
+        "bidImpressions": 2214,
+        "preBidCost": 0,
+        "mediaSpent": 4.394,
+        "startCount": 0,
+        "campaignId": 562558,
+        "spent": 4.394,
+        "impressions": 2197,
+        "completeCount": 0,
+        "budgetMappingSpent": 4.394,
+        "dailyBudget": 18.03,
+        "maxBid": 2,
+        "clicks": 0,
+        "campaign": "test campaign for aud vert 2",
+        "budgetCompletion": 0.08788,
+        "status": "running"
+      },
+      {
+        "CTR": 0,
+        "baseBid": null,
+        "totalRecords": null,
+        "VCR": 0,
+        "budgetTypeId": 1,
+        "totalBudget": 1000,
+        "dateRange": "08/31/2025 - 09/06/2025",
+        "dataCost": 0,
+        "budgetMappingDataCost": 0,
+        "totalECPM": 10,
+        "campaignTimezone": "US/Eastern",
+        "eCPM": 10,
+        "bidImpressions": 119,
+        "preBidCost": 0,
+        "mediaSpent": 1.18,
+        "startCount": 0,
+        "campaignId": 562797,
+        "spent": 1.18,
+        "impressions": 118,
+        "completeCount": 0,
+        "budgetMappingSpent": 1.19,
+        "dailyBudget": 3.81,
+        "maxBid": 10,
+        "clicks": 0,
+        "campaign": "test campaign for aud vert 6",
+        "budgetCompletion": 0.11899999999999998,
+        "status": "running"
+      },
+      {
+        "CTR": 6.25,
+        "baseBid": null,
+        "totalRecords": null,
+        "VCR": 0,
+        "budgetTypeId": 1,
+        "totalBudget": 1200,
+        "dateRange": "06/08/2025 - 06/14/2025",
+        "dataCost": 0,
+        "budgetMappingDataCost": 0,
+        "totalECPM": 5,
+        "campaignTimezone": "US/Eastern",
+        "eCPM": 5,
+        "bidImpressions": 16,
+        "preBidCost": 0,
+        "mediaSpent": 0.08,
+        "startCount": 0,
+        "campaignId": 562466,
+        "spent": 0.08,
+        "impressions": 16,
+        "completeCount": 0,
+        "budgetMappingSpent": 0.08,
+        "dailyBudget": 4.6,
+        "maxBid": 5,
+        "clicks": 1,
+        "campaign": "test campaign for aud vert 1",
+        "budgetCompletion": 0.006666666666666667,
+        "status": "running"
+      },
+      {
+        "CTR": 0,
+        "baseBid": null,
+        "totalRecords": null,
+        "VCR": 0,
+        "budgetTypeId": 1,
+        "totalBudget": 1000,
+        "dateRange": "09/07/2025 - 09/13/2025",
+        "dataCost": 0,
+        "budgetMappingDataCost": 0,
+        "totalECPM": 10,
+        "campaignTimezone": "US/Eastern",
+        "eCPM": 10,
+        "bidImpressions": 3,
+        "preBidCost": 0,
+        "mediaSpent": 0.01,
+        "startCount": 0,
+        "campaignId": 562797,
+        "spent": 0.01,
+        "impressions": 1,
+        "completeCount": 0,
+        "budgetMappingSpent": 1.19,
+        "dailyBudget": 3.81,
+        "maxBid": 10,
+        "clicks": 0,
+        "campaign": "test campaign for aud vert 6",
+        "budgetCompletion": 0.11899999999999998,
+        "status": "running"
+      }
+    ],
+    "filteredRecords": 4
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -1805,10 +2098,10 @@ Create and save a Report schedule.
 
 | Request Schema |  |
 | ---- | --- |
-| `reportId` <br /><span class="type-text">integer</span> | [Report ID](#get-a-list-of-reports) |
-| `subscriberEmails` <br /><span class="type-text">array of strings</span> | List of emails to which the Report will be sent |
-| `fileType` <br /><span class="type-text">integer</span>| [Report File Type ID](#get-report-file-types) |
-| `deliveryFrequency` <br /><span class="type-text">integer</span> | [Delivery Frequency Type ID](#get-report-delivery-frequency-types) |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report ID](#get-a-list-of-reports) |
+| `subscriberEmails` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | List of emails to which the Report will be sent |
+| `fileType` <br /><span class="type-text">integer</span> <span class="required-text">required</span>| [Report File Type ID](#get-report-file-types) |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Delivery Frequency Type ID](#get-report-delivery-frequency-types) |
 | `deliveryDay` <br /><span class="type-text">string</span> | [<span class="required-text">Required</span>, if <var>deliveryFrequency</var> is not "once"] Delivery day to specify the day-time when the Report should be sent. <br />Weekly delivery day: [<var>sunday</var>, <var>monday</var>, ...] <br />Monthly delivery day: [<var>first</var>, <var>last</var>, <var>2</var>,<var>3</var>, ... <var>29</var>] |
 | `eventEndDate` <br /><span class="type-text">integer</span> | [<span class="required-text">Required</span> if <var>deliveryFrequency</var> is not "once"] Unix epoch timestamp, time when scheduled Report will stop
 | `runningTotalEnabled` <br /><span class="type-text">boolean</span> | Flag to indicate if the 'Total' Running is enabled for the Report. Only supported with 'Campaign' dimension. If <var>true</var>, start date for Report will be earliest Campaign start date, ending with Report end date |
@@ -2267,7 +2560,18 @@ This section covers more endpoints for getting various details about Reports.
 <div class="container">
   <div class="child1">
 
-Run a Report and get a S3 file URL for download.
+Generate a URL for downloading a Report based on Report ID or Report data. If using Report data, the following parameters are required:
+- `fileType`
+- `dimensions`
+- `columns`
+- `customerIds`
+- `requestType`
+- `reportAggregated`
+- `startDate`
+- `endDate`
+- `timezoneId`
+- `timezoneName`
+- `sortBy`
 
 Refer to the [Resource Properties](#resource-properties) table for request schema supported parameters.
 
@@ -2291,11 +2595,82 @@ Refer to the [Resource Properties](#resource-properties) table for request schem
 <Tabs>
   <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
+<CodeDropdown label="Request Examples">
+<CodeOption value="By Report ID" label="By Report ID" default>
+
+```json
 {
     "id": 123
 }
 ```
+
+</CodeOption>
+<CodeOption value="By Report Data" label="By Report Data">
+```json
+{
+  "startDate": 1670410001000,
+  "endDate": 1675766802000,
+  "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
+  "columns": [
+    "campaignId",
+    "campaignName",
+    "deviceType",
+    "completeCount",
+    "gender",
+    "startTime",
+    "endTime",
+    "maxBid",
+    "budgetDay",
+    "VCR",
+    "eCPC",
+    "totalECPC",
+    "budgetTotal",
+    "impressions",
+    "clicks",
+    "winRate"
+  ],
+  "customerIds": [
+    201353,
+    201352
+  ],
+  "requestType": 1,
+  "reportAggregated": "0",
+  "timezoneId": 11,
+  "timezoneName": "UTC",
+  "order": "desc",
+  "sortBy": "impressions",
+  "noOfEntries": 50,
+  "pageNo": 1
+}
+```
+</CodeOption>
+<CodeOption value="Weekly" label="Weekly">
+```json
+{
+  "fileType": 1,
+  "dimensions": "[{\"filter\":\"campaignId\"},{\"filter\":\"campaign\"}]",
+  "columns": [
+    "impressions",
+    "clicks",
+    "CTR",
+    "VCR",
+    "spent",
+    "dataCost",
+    "mediaSpent",
+    "eCPM"
+  ],
+  "customerIds": [],
+  "requestType": 3,
+  "reportAggregated": "0",
+  "startDate": 1749960000000,
+  "endDate": 1757995199000,
+  "timezoneId": 29,
+  "timezoneName": "US/Eastern",
+  "sortBy": "-impressions"
+}
+```
+</CodeOption>
+</CodeDropdown>
 
 ```json title-"Response 200"
 {
@@ -2555,6 +2930,14 @@ Get a static list of Report request type.
 <td> `2`</td>
 <td>Aggregated</td>
 </tr>
+<tr>
+<td> `3`</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td> `4`</td>
+<td>Monthly</td>
+</tr>
 </table>
 
 </div><div class="child2">
@@ -2564,19 +2947,33 @@ Get a static list of Report request type.
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": [
-        {
-        "name": "daily",
-        "id": 1,
-        "label": "Daily"
-        },
-        {
-        "name": "total",
-        "id": 2,
-        "label": "Aggregated"
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "id": 2,
+      "name": "total",
+      "order": 1,
+      "displayName": "Aggregated"
+    },
+    {
+      "id": 1,
+      "name": "daily",
+      "order": 2,
+      "displayName": "Daily"
+    },
+    {
+      "id": 3,
+      "name": "weekly",
+      "order": 3,
+      "displayName": "Weekly"
+    },
+    {
+      "id": 4,
+      "name": "monthly",
+      "order": 4,
+      "displayName": "Monthly"
+    }
+  ]
 }
 ```
 
