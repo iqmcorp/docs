@@ -5757,7 +5757,73 @@ const sidebars = {
         },
       ]
     }
-  ]
+  ],
+  mcpSidebar: [
+    {
+      type: 'doc',
+      id: 'MCP/index',
+      label: 'IQM MCP',
+      className: 'sidebarCategory'
+    },
+    {
+      type: "category",
+      label: 'Getting Started',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'MCP/Getting Started/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Introduction',
+          id: `MCP/Getting Started/Introduction`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Setup Guide',
+          id: `MCP/Getting Started/Setup-Guide`,
+          className: 'sidebarItem'
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: 'MCP Actions',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'MCP/MCP Actions/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Dashboard',
+          id: `MCP/MCP Actions/Dashboard`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Bid Model',
+          id: `MCP/MCP Actions/Bid-Model`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Reports',
+          id: `MCP/MCP Actions/Reports`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Master API',
+          id: `MCP/MCP Actions/Master`,
+          className: 'sidebarItem'
+        },
+      ],
+    }
+  ],
 }
 
 export default sidebars;
