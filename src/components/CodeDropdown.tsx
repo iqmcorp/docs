@@ -46,34 +46,48 @@ export const CodeDropdown: React.FC<CodeDropdownProps> = ({
     <div
       className="code-dropdown"
       style={{
-        border: '1px solid var(--ifm-toc-border-color)',
-        borderRadius: 12,
+        borderRadius: 'var(--ifm-code-border-radius)',
         marginBottom: 16,
-        overflow: 'hidden',
       }}
     >
       <div
+        className="code-dropdown__menu"
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 12,
           justifyContent: 'space-between',
           padding: '8px 12px',
-          borderBottom: '1px solid var(--ifm-toc-border-color)',
           background: 'var(--ifm-background-surface-color)',
+          borderRadius: 'var(--ifm-code-border-radius)',
+          border: '1px solid var(--ifm-toc-border-color)',
         }}
       >
-        <label htmlFor={id} style={{ fontWeight: 600 }}>
+        <label htmlFor={id} style={{ 
+          fontWeight: 400, 
+        }}>
           {label}
         </label>
         <select
           id={id}
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          style={{ marginLeft: 'auto' }}
+          style={{ marginLeft: 'auto',
+            padding: '4px 8px',
+            border: '1px solid var(--ifm-toc-border-color)',
+            borderRadius: 'var(--ifm-code-border-radius)',
+            backgroundColor: 'transparent',
+            color: 'inherit',
+           }}
         >
           {items.map(o => (
-            <option key={o.value} value={o.value}>
+            <option key={o.value} value={o.value}
+              style={{
+                padding: '4px 8px',
+                backgroundColor: o.value === selected ? 'var(--ifm-primary-color)' : 'transparent',
+                color: o.value === selected ? 'white' : 'inherit',
+              }}
+            >
               {o.label}
             </option>
           ))}
@@ -82,7 +96,9 @@ export const CodeDropdown: React.FC<CodeDropdownProps> = ({
 
       <div style={{ padding: 0 }}>
         {items.map(o => (
-          <div key={o.value} style={{ display: o.value === selected ? 'block' : 'none' }}>
+          <div key={o.value} style={{ display: o.value === selected ? 'block' : 'none',
+            backgroundColor: 'transparent',
+           }}>
             {o.node}
           </div>
         ))}
