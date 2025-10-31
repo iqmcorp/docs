@@ -15,12 +15,6 @@
 const sidebars = {
   tutorialSidebar: [
     {
-      type: 'doc',
-      id: 'intro',
-      label: 'IQM API',
-      className: 'sidebarCategory'
-    },
-    {
       type: 'category',
       label: 'Getting Started',
       className: 'sidebarCategory',
