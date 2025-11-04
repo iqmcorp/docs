@@ -8,6 +8,7 @@ slug: /Tutorials/Create-an-Insights-Report
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
 
 # Create an Insights Report
 
@@ -15,16 +16,16 @@ IQM’s REST API enables you to interact with most of our platform's application
 
 The following endpoints will be used to check Campaigns for eligibility and create different types of Insights Reports:
 
-<span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
-<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
-<br /><span class="badge bar badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/\{campaignId\}</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report/download</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report</span>
-<br /><span class="badge bar badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report/download</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/add" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/audience/targeting" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report/download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report/download" />
 
 ## About IQM Insights
 
@@ -47,7 +48,7 @@ To generate an Insights Report you will need an account on the IQM Platform (see
 
 ### Log In 
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ua/login</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 
 <div class="container">
   <div class="child1">
@@ -57,40 +58,41 @@ To log in, the <var>Authentication: Basic</var> header is required. The Login AP
 For further information see the complete [OAuth API Documentation](/Guidelines/User-Profile-Guidelines#oauth-token).
 
 | Headers |  |
-| ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide)<br /> |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. See [Authentication Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) |
 
-| Request Schema |  |
-| ---- | --- |
+
+| Request Schema  |  |
+| ----  | --- |
 | `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
 | `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
+```json title="Request Schema"
 {
-   "grantType": "password",
-   "email": "pratik.t+ihp@iqm.com",
-   "password": "123456"
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
 }
 ```
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "success": true,
+  "data":
+  {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
 }
 ```
 
@@ -255,7 +257,7 @@ The table below outlines the eligibility requirements for each Insights Report t
 
 ### Step 1: Check Campaign for Eligibility
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
 
 <div class="container">
   <div class="child1">
@@ -451,7 +453,7 @@ function getCampaign(): Promise<Responses> {
 
 ### Step 2: Generate Insights
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/campaign/bid-insights/\{campaignId\}</span>
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}" />
 
 <div class="container">
   <div class="child1">
@@ -929,7 +931,7 @@ function getCampaignBiddingInsight(): Promise<Responses> {
 
 ### Step 1: Check for Eligible Audiences
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v3/ins/audiences/list</span>
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/audiences/list" />
 
 <div class="container">
   <div class="child1">
@@ -1071,7 +1073,7 @@ function getInsightsCreateEligibleAudienceList(): Promise<Responses> {
 
 ### Step 2: Generate Insights Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/add</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/add" />
 
 <div class="container">
   <div class="child1">
@@ -1232,7 +1234,7 @@ function createInsightsDetails(): Promise<Responses> {
 
 ### Step 3: Download Insights Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/insights/download</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/download" />
 
 <div class="container">
   <div class="child1">
@@ -1335,7 +1337,7 @@ function downloadInsights(): Promise<Responses> {
 
 ### Step 1: Check Campaign for Eligibility
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
 
 <div class="container">
   <div class="child1">
@@ -1539,7 +1541,7 @@ function getCampaign(): Promise<Responses> {
 
 #### Step 1.1: Check Campaign Audience Type
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/audience/targeting" />
 
 <div class="container">
   <div class="child1">
@@ -1698,7 +1700,7 @@ function getAudienceBasicDetailByCampaign(): Promise<Responses> {
 
 ### Step 2: Generate VLD Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report" />
 
 <div class="container">
   <div class="child1">
@@ -1854,7 +1856,7 @@ function generateVLDReports(): Promise<Responses> {
 
 ### Step 3: Download VLD Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/vld-report/download</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report/download" />
 
 <div class="container">
   <div class="child1">
@@ -1942,7 +1944,7 @@ function getVLDReportDownloadUrl(): Promise<Responses> {
 
 ### Step 1: Check Campaign for Eligibility 
 
-<span class="badge badge--primary">GET</span> <span class="path-text">/api/v2/cmp/campaign/\{campaignId\}</span>
+<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
 
 <div class="container">
   <div class="child1">
@@ -2140,7 +2142,7 @@ function getCampaign(): Promise<Responses> {
 
 #### Step 1.1 Check Campaign Audience Details
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/cmp/audience/targeting</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/audience/targeting" />
 
 <div class="container">
   <div class="child1">
@@ -2299,7 +2301,7 @@ function getAudienceBasicDetailByCampaign(): Promise<Responses> {
 
 ### Step 2: Generate PLD Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report" />
 
 <div class="container">
   <div class="child1">
@@ -2468,7 +2470,7 @@ function generatePLDReports(): Promise<Responses> {
 
 ### Step 3: Download PLD Report
 
-<span class="badge badge--success">POST</span> <span class="path-text">/api/v3/ins/pld-report/download</span>
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report/download" />
 
 <div class="container">
   <div class="child1">
