@@ -5171,12 +5171,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/political-vertical/insights-vld/#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: `category`,
           label: `Voter Level Data Reports`,
           className: 'sidebarItem',
@@ -5559,12 +5553,6 @@ const sidebars = {
         id: 'Healthcare Vertical/Insights-PLD'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Healthcare%20Vertical/Insights-PLD#overview',
-          className: 'sidebarItem'
-        },
         {
           type: `category`,
           label: `Provider Level Data Reports`,
