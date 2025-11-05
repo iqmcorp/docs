@@ -38,7 +38,7 @@ const sidebars = {
         {
           type: 'doc',
           id: 'Getting Started/Before-You-Begin',
-          label: 'Getting Started',
+          label: 'Before You Begin',
           className: 'sidebarItem',
         },
         {
@@ -1289,12 +1289,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Bid-Model-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: 'category',
           label: 'Bid Model Details',
           className: 'sidebarItem',
@@ -1444,12 +1438,6 @@ const sidebars = {
         id: 'Guidelines/Campaign-API-Guidelines'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Campaign-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Campaign Details',
@@ -1845,12 +1833,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Conversion-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: 'category',
           label: 'Conversion Details',
           className: 'sidebarItem',
@@ -2020,12 +2002,6 @@ const sidebars = {
         id: 'Guidelines/Creative-API-Guidelines'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Creative-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Creative Details',
@@ -2313,12 +2289,6 @@ const sidebars = {
         id: 'Guidelines/Finance-Guidelines'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Finance-Guidelines#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Finance Details',
@@ -2730,12 +2700,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Insights-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: 'category',
           label: 'Insights Details',
           className: 'sidebarItem',
@@ -3044,12 +3008,6 @@ const sidebars = {
         id: 'Guidelines/Inventory-API-Guide'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Inventory-API-Guide#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Inventory Details',
@@ -3444,12 +3402,6 @@ const sidebars = {
         id: 'Guidelines/Master-API-Guidelines'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Master-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Geographical Data',
@@ -3926,12 +3878,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Reports-API-Guidelines#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: 'category',
           label: 'Reports Details',
           className: 'sidebarItem',
@@ -4302,12 +4248,6 @@ const sidebars = {
         id: 'Guidelines/Workspace-Guidelines'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Guidelines/Workspace-Guidelines#overview',
-          className: 'sidebarItem'
-        },
         {
           type: 'category',
           label: 'Organization Details',
@@ -5231,12 +5171,6 @@ const sidebars = {
       },
       items: [
         {
-          type: 'link',
-          label: 'Overview',
-          href: '/political-vertical/insights-vld/#overview',
-          className: 'sidebarItem'
-        },
-        {
           type: `category`,
           label: `Voter Level Data Reports`,
           className: 'sidebarItem',
@@ -5619,12 +5553,6 @@ const sidebars = {
         id: 'Healthcare Vertical/Insights-PLD'
       },
       items: [
-        {
-          type: 'link',
-          label: 'Overview',
-          href: '/Healthcare%20Vertical/Insights-PLD#overview',
-          className: 'sidebarItem'
-        },
         {
           type: `category`,
           label: `Provider Level Data Reports`,
