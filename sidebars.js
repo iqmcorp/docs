@@ -5692,6 +5692,23 @@ const sidebars = {
           ]
         },
       ]
+    },
+    {
+      type: 'category',
+      label: 'Planner API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'Healthcare Vertical/Planner'
+      },
+      items: [
+            {
+              type: 'link',
+              label: 'Healthcare Proposal Planner Details',
+              href: '/Healthcare%20Vertical/Planner-API#healthcare-proposal-planner-details',
+              className: 'sidebarItem',
+            },
+          ]
     }
   ]
 }
