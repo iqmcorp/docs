@@ -1540,6 +1540,20 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+          {
+              type: 'link',
+              label: 'Campaign Conversion List',
+              href: '/Guidelines/Campaign-API-Guidelines#get-campaign-conversion-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Basic Conversion List',
+              href: '/Guidelines/Campaign-API-Guidelines#get-basic-conversion-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'Campaign Start Date',
