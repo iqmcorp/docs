@@ -5,6 +5,7 @@ pagination_prev: null
 
 import MCPDevSettings from '@site/static/img/MCP/MCP-Dev-Settings.png';
 import MCPTools from '@site/static/img/MCP/MCP-tools.png';
+import MCPowid from '@site/static/img/MCP/MCP-owid.png';
 
 
 # Setup Guide
@@ -26,6 +27,30 @@ To use IQM MCP you will need the following tools:
 * [VS Code](https://code.visualstudio.com/)
 * [GitHub Copilot](https://github.com/features/copilot)
 * [Claude Desktop](https://claude.ai/download)
+
+### Credentials 
+
+You will need the following credentials to connect to IQM's MCP servers:
+* Organization Workspace ID
+* Bearer Token
+
+##### OW ID 
+
+To find your Organization Workspace ID (OW ID):
+1. Log in to the [IQM Platform](https://app.iqm.com/)
+2. Click on your profile icon in the top right corner
+3. Select "Manage my profile"
+4. Navigate to "Organizations" tab
+5. Your OW ID is listed on the User's Org card 
+
+<center><img className='diagram' src={MCPowid} /></center>
+
+##### Bearer Token 
+
+To generate a Bearer Token:
+1. Log in to the [MCP-IQM Platform](https://mcp.iqm.com/) portal
+2. In the "Profile Details" section, you'll see your "Authorization Token"
+
 
 ### Tools Installation
 
@@ -56,34 +81,41 @@ which mcp-proxy
 
 Then you can open **Claude Desktop → Settings → Developer → Edit Config**
 
-This will open a JSON config file, to which you can add the MCP servers:
+This will open a JSON config file, to which you can add the MCP servers and your credentials:
 
 ```json title="claude_desktop_config.json"
 {
   "mcpServers": {
-    "iqm-mcp-1": {
-      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
-      // The above command value is your mcp-proxy path where <your-username> is your actual system name
+    "iqm-mcp-report": {
+      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
       "args": [
-        "--transport", "streamablehttp",
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/<MCP_SERVER_1>/mcp"
-      // <MCP_SERVER_1> is a placeholder for actual MCP servers
+        "--transport", "streamablehttp", 
+        "-H", "authorization", "{BEARER_TOKEN}",
+        "-H", "x-iaa-ow-id", "{OW_ID}",
+        "https://mcp.iqm.com/v1/report/mcp"
       ]
     },
-   "iqm-mcp-2": {
-    // Additional server blocks can be added like this
-      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+    "iqm-mcp-dash": {
+      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
       "args": [
-        "--transport", "streamablehttp",
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/<MCP_SERVER_2>/mcp"
+        "--transport", "streamablehttp", 
+        "-H", "authorization", "{BEARER_TOKEN}",
+        "-H", "x-iaa-ow-id", "{OW_ID}",
+        "https://mcp.iqm.com/v1/dash/mcp"
+      ]
+    },
+    "iqm-mcp-bm": {
+      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
+      "args": [
+        "--transport", "streamablehttp", 
+        "-H", "authorization", "{BEARER_TOKEN}",
+        "-H", "x-iaa-ow-id", "{OW_ID}",
+        "https://mcp.iqm.com/v1/bidmodel/mcp"
       ]
     }
   }
 }
+
 ```
 
 ##### 5. Restart Claude Desktop
@@ -99,30 +131,36 @@ IQM MCP also supports [GitHub Copilot](https://marketplace.visualstudio.com/item
 
 ##### 1. Configure MCP servers
 
-Create a **.vscode** folder in your project and create an **mcp.json** file in that folder. Use this configuration as a template:
+Create a **.vscode** folder in your project and create an **mcp.json** file in that folder. Use this configuration and add your credentials:
 
 ```json title=".vscode/mcp.json"
 {
   "servers": {
-    "iqm-mcp-1": {
-      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
-      // The above command value is your mcp-proxy path where <your-username> is your actual system name
+    "iqm-mcp-report": {
+        "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
+        "args": [
+          "--transport", "streamablehttp", 
+          "-H", "authorization", "{BEARER_TOKEN}",
+          "-H", "x-iaa-ow-id", "{OW_ID}",
+          "https://mcp.iqm.com/v1/report/mcp"
+        ]
+    },
+    "iqm-mcp-dash": {
+      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
       "args": [
-        "--transport", "streamablehttp",
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/<MCP_SERVER_1>/mcp"
-      // <MCP_SERVER_1> is a placeholder for actual MCP servers
+        "--transport", "streamablehttp", 
+        "-H", "authorization", "{BEARER_TOKEN}",
+        "-H", "x-iaa-ow-id", "{OW_ID}",
+        "https://mcp.iqm.com/v1/dash/mcp"
       ]
     },
-   "iqm-mcp-2": {
-    // Additional server blocks can be added like this
-      "command": "/Users/<your-username>/.local/bin/mcp-proxy",
+    "iqm-mcp-bm": {
+      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
       "args": [
-        "--transport", "streamablehttp",
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/<MCP_SERVER_2>/mcp"
+        "--transport", "streamablehttp", 
+        "-H", "authorization", "{BEARER_TOKEN}",
+        "-H", "x-iaa-ow-id", "{OW_ID}",
+        "https://mcp.iqm.com/v1/bidmodel/mcp"
       ]
     }
   }
