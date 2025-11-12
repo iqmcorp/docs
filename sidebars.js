@@ -5703,11 +5703,151 @@ const sidebars = {
       },
       items: [
             {
-              type: 'link',
-              label: 'Healthcare Proposal Planner Details',
-              href: '/Healthcare%20Vertical/Planner-API#healthcare-proposal-planner-details',
+              type: 'category',
+              label: 'HCP Planner Details',
               className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'HCP Planner Resource Properties',
+                    href: '/healthcare-vertical/planner/#hcp-planner-resource-properties',
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'HCP Planner Details by ID',
+                    href: '/healthcare-vertical/planner/#hcp-planner-details-by-id',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },    
+                  {
+                    type: 'link',
+                    label: 'List of HCP Planners',
+                    href: '/healthcare-vertical/planner/#get-list-of-hcp-planners',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'List of Accounts',
+                    href: '/healthcare-vertical/planner/#get-list-of-accounts',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+               ]
             },
+            {
+              type: 'category',
+              label: 'HCP Planner Management',
+              className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'Create HCP Planner',
+                    href: '/healthcare-vertical/planner/#create-hcp-planner',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },    
+                  {
+                    type: 'link',
+                    label: 'Update HCP Planner',
+                    href: '/healthcare-vertical/planner/#update-hcp-planner',
+                    customProps: { method: 'PUT' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Delete HCP Planner',
+                    href: '/healthcare-vertical/planner/#delete-hcp-planner',
+                    customProps: { method: 'DEL' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Validate Planner Name',
+                    href: '/healthcare-vertical/planner/#validate-planner-name',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Targeting Graphs',
+                    href: '/healthcare-vertical/planner/#get-targeting-graphs',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Generate Campaigns',
+                    href: '/healthcare-vertical/planner/#generate-campaigns',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Audience Graph',
+                    href: '/healthcare-vertical/planner/#audience-graph',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  }
+               ]
+            },
+            {
+              type: 'category',
+              label: 'More HCP Details',
+              className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'Split Strategy List',
+                    href: '/healthcare-vertical/planner/#get-split-strategy-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'NPI Type List',
+                    href: '/healthcare-vertical/planner/#npi-type-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Geography Segments',
+                    href: '/healthcare-vertical/planner/#get-geography-segments',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Data Partners List',
+                    href: '/healthcare-vertical/planner/#get-data-partners-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Audience Selection Methods List',
+                    href: '/healthcare-vertical/planner/#get-audience-selection-methods-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Specialties List',
+                    href: '/healthcare-vertical/planner/#get-specialties-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Account Types',
+                    href: '/healthcare-vertical/planner/#get-account-types',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  }
+              ]
+            }          
           ]
     }
   ]
