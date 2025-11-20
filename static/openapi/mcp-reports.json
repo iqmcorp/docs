@@ -1,0 +1,1165 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9096",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/v3/ra/report/execute": {
+      "post": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Execute report and fetch serving data",
+        "description": "This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - This is report Id, report data will be fetched for this report id. |\n| dimensions | JSON String | [Optional] - JSON string representing dimension details. |\n| columns | Array of String | [Optional] - Metrics for showing serving result |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | JSON String | [Optional] - JSON string supporting campaignId, creativeTypeId and campaignStatus filtering. |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Optional] - ID to identify if report request is of Daily or Aggregate. \u003Cbr\u003Esample : [1- Daily, 2- Aggregated]  |\n| reportAggregated | String | [Optional] - Field to identify if report dimension is Aggregated or not. \u003Cbr\u003Esample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report start time.|\n| endDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report end time.|\n| timezoneId | Integer | [Optional] - Timezone ID|\n| timezoneName | String | [Optional] - Timezone Name|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is 50|\n",
+        "operationId": "executeReportData",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteRequestVO"
+              },
+              "examples": {
+                "Execute Report (By Report ID)": {
+                  "description": "Execute Report (By Report ID)",
+                  "value": {
+                    "id": 3219
+                  }
+                },
+                "Execute Report (By Report Data)": {
+                  "description": "Execute Report (By Report Data)",
+                  "value": {
+                    "startDate": 1670410001000,
+                    "endDate": 1675766802000,
+                    "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
+                    "columns": [
+                      "campaignId",
+                      "campaignName",
+                      "deviceType",
+                      "completeCount",
+                      "gender",
+                      "startTime",
+                      "endTime",
+                      "maxBid",
+                      "budgetDay",
+                      "VCR",
+                      "eCPC",
+                      "totalECPC",
+                      "budgetTotal",
+                      "impressions",
+                      "clicks",
+                      "winRate",
+                      "reach"
+                    ],
+                    "customerIds": [201353, 201352],
+                    "filters": {
+                      "campaignIds": [123, 234, 345],
+                      "creativeTypeIds": [11],
+                      "campaignStatuses": [
+                        "expired",
+                        "running"
+                      ]
+                    },
+                    "searchField": "123",
+                    "requestType": 1,
+                    "reportAggregated": "0",
+                    "timezoneId": 11,
+                    "timezoneName": "UTC",
+                    "order": "desc",
+                    "sortBy": "impressions",
+                    "noOfEntries": 50,
+                    "pageNo": 1
+                  }
+                },
+                "Invalid input sample": {
+                  "description": "Invalid input sample",
+                  "value": {
+                    "startDate": 1670410001000,
+                    "endDate": 1675766802000,
+                    "dimensions": "[{\"filter\":\"campaign\"}]",
+                    "requestType": 1
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please select columns for report creation",
+                          "field": "columns"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecuteResponse"
+                },
+                "examples": {
+                  "Execute Report": {
+                    "description": "Execute Report",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "total": {
+                          "CTR": 0.26809,
+                          "date": null,
+                          "deviceTypeId": null,
+                          "VCR": 51.452171,
+                          "budgetDay": null,
+                          "gender": null,
+                          "budgetPacing": null,
+                          "dataCost": 0,
+                          "totalRecords": 135,
+                          "campaignTimezone": null,
+                          "eCPM": 4.50311429853875,
+                          "totalECPM": 4.50311429853875,
+                          "bidImpressions": 4678583,
+                          "startTime": null,
+                          "mediaSpent": 8485.86672119556,
+                          "eCPC": 1.67970441828891,
+                          "totalECPC": 1.67970441828891,
+                          "deviceType": null,
+                          "startCount": 351095,
+                          "campaignType": null,
+                          "campaignId": null,
+                          "spent": 8485.86672119556,
+                          "impressions": 1884444,
+                          "eCPCV": 0.0215601437130939,
+                          "completeCount": 180646,
+                          "budgetTotal": null,
+                          "maxBid": null,
+                          "clicks": 5052,
+                          "endTime": null,
+                          "campaignName": null,
+                          "status": null
+                        },
+                        "data": [
+                          {
+                            "CTR": 0.2796,
+                            "date": "2022-01-30",
+                            "deviceTypeId": 20300001,
+                            "VCR": 0,
+                            "budgetDay": 0.07,
+                            "gender": "Unknown",
+                            "budgetPacing": true,
+                            "dataCost": 0,
+                            "totalRecords": null,
+                            "campaignTimezone": "America/Costa_Rica",
+                            "eCPM": 3,
+                            "totalECPM": 3,
+                            "bidImpressions": 628344,
+                            "startTime": 1643428296,
+                            "mediaSpent": 457.098,
+                            "eCPC": 1.073,
+                            "totalECPC": 1.073,
+                            "deviceType": "Mobile",
+                            "startCount": 0,
+                            "campaignType": "cpm",
+                            "campaignId": 15474,
+                            "spent": 457.098,
+                            "impressions": 152366,
+                            "eCPCV": 0,
+                            "completeCount": 0,
+                            "budgetTotal": 1549,
+                            "maxBid": 3,
+                            "clicks": 426,
+                            "endTime": 1644192000,
+                            "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
+                            "status": "expired"
+                          },
+                          {
+                            "CTR": 0.2122,
+                            "date": "2022-01-30",
+                            "deviceTypeId": 20300001,
+                            "VCR": 0,
+                            "budgetDay": 0.21,
+                            "gender": "Unknown",
+                            "budgetPacing": true,
+                            "dataCost": 0,
+                            "totalRecords": null,
+                            "campaignTimezone": "America/Costa_Rica",
+                            "eCPM": 3,
+                            "totalECPM": 3,
+                            "bidImpressions": 271620,
+                            "startTime": 1643423160,
+                            "mediaSpent": 418.488,
+                            "eCPC": 1.41381081081081,
+                            "totalECPC": 1.41381081081081,
+                            "deviceType": "Mobile",
+                            "startCount": 0,
+                            "campaignType": "cpm",
+                            "campaignId": 15472,
+                            "spent": 418.488,
+                            "impressions": 139496,
+                            "eCPCV": 0,
+                            "completeCount": 0,
+                            "budgetTotal": 1548,
+                            "maxBid": 3,
+                            "clicks": 296,
+                            "endTime": 1644192000,
+                            "campaignName": "Costa Rica Universidad Latina Profile: All Gender: All Ages: 18 to 75 Geo: All Costa Rica",
+                            "status": "expired"
+                          },
+                          {
+                            "CTR": 0.1065,
+                            "date": "2022-01-30",
+                            "deviceTypeId": 20300001,
+                            "VCR": 0,
+                            "budgetDay": 0.43,
+                            "gender": "Unknown",
+                            "budgetPacing": true,
+                            "dataCost": 0,
+                            "totalRecords": null,
+                            "campaignTimezone": "America/Costa_Rica",
+                            "eCPM": 3.00002495259008,
+                            "totalECPM": 3.00002495259008,
+                            "bidImpressions": 239865,
+                            "startTime": 1643431623,
+                            "mediaSpent": 360.687,
+                            "eCPC": 2.8178671875,
+                            "totalECPC": 2.8178671875,
+                            "deviceType": "Mobile",
+                            "startCount": 0,
+                            "campaignType": "cpm",
+                            "campaignId": 15477,
+                            "spent": 360.687,
+                            "impressions": 120228,
+                            "eCPCV": 0,
+                            "completeCount": 0,
+                            "budgetTotal": 1551,
+                            "maxBid": 3,
+                            "clicks": 128,
+                            "endTime": 1644192000,
+                            "campaignName": "Costa Rica TICOS AL DIA 24-25 ENE Profile: All Gender: All Ages: 18 to 25 and 60+ and over Geo: Heredia, Alajuela, Cartago and San Jose",
+                            "status": "expired"
+                          },
+                          {
+                            "CTR": 0.3118,
+                            "date": "2022-01-31",
+                            "deviceTypeId": 20300001,
+                            "VCR": 0,
+                            "budgetDay": 0.07,
+                            "gender": "Unknown",
+                            "budgetPacing": true,
+                            "dataCost": 0,
+                            "totalRecords": null,
+                            "campaignTimezone": "America/Costa_Rica",
+                            "eCPM": 3,
+                            "totalECPM": 3,
+                            "bidImpressions": 280562,
+                            "startTime": 1643428296,
+                            "mediaSpent": 219.363,
+                            "eCPC": 0.962118421052632,
+                            "totalECPC": 0.962118421052632,
+                            "deviceType": "Mobile",
+                            "startCount": 0,
+                            "campaignType": "cpm",
+                            "campaignId": 15474,
+                            "spent": 219.363,
+                            "impressions": 73121,
+                            "eCPCV": 0,
+                            "completeCount": 0,
+                            "budgetTotal": 1549,
+                            "maxBid": 3,
+                            "clicks": 228,
+                            "endTime": 1644192000,
+                            "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
+                            "status": "expired"
+                          },
+                          {
+                            "CTR": 0.3154,
+                            "date": "2022-01-30",
+                            "deviceTypeId": 20300001,
+                            "VCR": 0,
+                            "budgetDay": 1,
+                            "gender": "Unknown",
+                            "budgetPacing": true,
+                            "dataCost": 0,
+                            "totalRecords": null,
+                            "campaignTimezone": "America/Costa_Rica",
+                            "eCPM": 3,
+                            "totalECPM": 3,
+                            "bidImpressions": 233754,
+                            "startTime": 1643131598,
+                            "mediaSpent": 211.161,
+                            "eCPC": 0.951175675675676,
+                            "totalECPC": 0.951175675675676,
+                            "deviceType": "Mobile",
+                            "startCount": 0,
+                            "campaignType": "cpm",
+                            "campaignId": 15455,
+                            "spent": 211.161,
+                            "impressions": 70387,
+                            "eCPCV": 0,
+                            "completeCount": 0,
+                            "budgetTotal": 1749,
+                            "maxBid": 3,
+                            "clicks": 222,
+                            "endTime": 1644192000,
+                            "campaignName": "Costa Rica MEMES COMPILADOS Profile: Undecided Gender: All Ages: 18 to 35 Geo: Heredia, Alajuela, Cartago, San Jose",
+                            "status": "expired"
+                          }
+                        ],
+                        "totalRecords": 135
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/report/dimension-metrics/detail": {
+      "get": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Get Dimension & Metrics Details",
+        "description": "This API offers Dimension and Metrics information grouped by Category in predetermined order",
+        "operationId": "getDimensionAndMetricDetails",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "example": 1
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Get Dimension & Metrics Details": {
+                    "description": "Get Dimension & Metrics Details",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "metrics": [
+                          {
+                            "Budget": [
+                              {
+                                "id": 1,
+                                "label": "Daily Budget",
+                                "order": 1,
+                                "fieldDataType": "currencyUSD",
+                                "aggregationType": "sum",
+                                "description": "Amount up to which you allow platform to spend on average each day",
+                                "defaultEnabled": false,
+                                "key": "dailyBudget",
+                                "dependentDimensions": [1, 2, 43, 44]
+                              },
+                              {
+                                "id": 2,
+                                "label": "Total Budget",
+                                "order": 2,
+                                "defaultEnabled": false,
+                                "key": "totalBudget",
+                                "dependentDimensions": [1, 2, 43, 44]
+                              }
+                            ]
+                          },
+                          {
+                            "Counts": [
+                              {
+                                "id": 5,
+                                "label": "Impressions",
+                                "order": 1,
+                                "defaultEnabled": true,
+                                "key": "impressions",
+                                "dependentDimensions": null
+                              }
+                            ]
+                          }
+                        ],
+                        "dimensions": [
+                          {
+                            "Campaign Specifics": [
+                              {
+                                "id": 1,
+                                "label": "Campaign",
+                                "order": 1,
+                                "isFilterSupported": true,
+                                "isRowToColumn": false,
+                                "isCustomerDependent": true,
+                                "fieldDataType": "text",
+                                "description": "Campaign Name",
+                                "groupId": 1,
+                                "key": "campaign"
+                              },
+                              {
+                                "id": 2,
+                                "label": "Campaign ID",
+                                "order": 2,
+                                "isFilterSupported": true,
+                                "isRowToColumn": false,
+                                "isCustomerDependent": true,
+                                "fieldDataType": "text",
+                                "description": "Unique system-generated number assigned to each Campaign",
+                                "groupId": 1,
+                                "key": "campaignId"
+                              }
+                            ]
+                          },
+                          {
+                            "Locations": [
+                              {
+                                "id": 34,
+                                "label": "Country",
+                                "order": 1,
+                                "isFilterSupported": true,
+                                "isRowToColumn": false,
+                                "isCustomerDependent": false,
+                                "fieldDataType": "country",
+                                "description": "Country the ad ran in",
+                                "groupId": 29,
+                                "key": "country"
+                              },
+                              {
+                                "id": 35,
+                                "label": "State",
+                                "order": 2,
+                                "isFilterSupported": true,
+                                "isRowToColumn": false,
+                                "isCustomerDependent": false,
+                                "fieldDataType": "regionCode",
+                                "description": "State the ad ran in",
+                                "groupId": 30,
+                                "key": "state"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecuteRequestVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the report",
+            "format": "int32",
+            "example": 1
+          },
+          "reportName": {
+            "type": "string",
+            "description": "Name of the report",
+            "example": "Campaign Performance Report"
+          },
+          "startDate": {
+            "type": "integer",
+            "description": "Start date of the report, unix epoch timestamp",
+            "format": "int64",
+            "example": 1622505600000
+          },
+          "endDate": {
+            "type": "integer",
+            "description": "End date of the report, unix epoch timestamp",
+            "format": "int64",
+            "example": 1625097600000
+          },
+          "dimensions": {
+            "type": "string",
+            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array. Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]",
+            "example": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]"
+          },
+          "customerIds": {
+            "type": "array",
+            "description": "List of customer IDs associated with the report",
+            "nullable": true,
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "List of customer IDs associated with the report",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "columns": {
+            "type": "array",
+            "description": "List of columns to be included in the report",
+            "items": {
+              "type": "string",
+              "description": "List of columns to be included in the report",
+              "example": "['column1', 'column2']"
+            }
+          },
+          "timezoneId": {
+            "type": "integer",
+            "description": "ID of the timezone for the report: 29=eastern",
+            "format": "int32",
+            "example": 1,
+            "default": 29
+          },
+          "requestType": {
+            "type": "integer",
+            "description": "Report request type ID: 1=disaggregated(daily), 2=aggregated, 3=weekly, 4=monthly",
+            "format": "int32",
+            "example": 1,
+            "default": 2
+          },
+          "reportAggregated": {
+            "type": "string",
+            "description": "Aggregation level of the report: 1=aggregated, 2=disaggregated(daily)",
+            "example": "2",
+            "default": "1"
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Ow ID associated with the report",
+            "format": "int32",
+            "example": 1
+          },
+          "createdByUOWId": {
+            "type": "integer",
+            "description": "Created by User ID",
+            "format": "int32",
+            "example": 1
+          },
+          "modifiedByUOWId": {
+            "type": "integer",
+            "description": "Modified by User ID",
+            "format": "int32",
+            "example": 1
+          },
+          "timezoneName": {
+            "type": "string",
+            "description": "Timezone name. Keep as \"US/Eastern\" if not specified otherwise.",
+            "example": "US/Eastern"
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "Name of the organization",
+            "example": "Acme Corp"
+          },
+          "resultType": {
+            "type": "string",
+            "description": "Result type"
+          },
+          "fileType": {
+            "type": "integer",
+            "description": "File type: 1=CSV, 2=XLSX",
+            "format": "int32"
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "description": "Filters",
+              "items": {
+                "type": "object",
+                "description": "Filters"
+              }
+            },
+            "description": "Filters"
+          },
+          "internalRequest": {
+            "type": "boolean"
+          },
+          "pageNo": {
+            "type": "integer",
+            "description": "Page number",
+            "format": "int32",
+            "example": 1
+          },
+          "noOfEntries": {
+            "type": "integer",
+            "description": "Number of entries",
+            "format": "int32",
+            "example": 50
+          },
+          "sortBy": {
+            "type": "string",
+            "description": "Sorting field",
+            "example": "-impressions"
+          },
+          "searchField": {
+            "type": "string",
+            "description": "Search field",
+            "example": "Report 1"
+          }
+        },
+        "description": "Execute report request"
+      },
+      "ExecuteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ModeledItemsData"
+          }
+        }
+      },
+      "ModeledItem": {
+        "type": "object",
+        "properties": {
+          "dataCost": {
+            "type": "number",
+            "description": "Data cost",
+            "format": "double",
+            "example": 0
+          },
+          "bidImpressions": {
+            "type": "integer",
+            "description": "Bid impressions",
+            "format": "int32",
+            "example": 4678583
+          },
+          "mediaSpent": {
+            "type": "number",
+            "description": "Media spent",
+            "format": "double",
+            "example": 8485.87
+          },
+          "startCount": {
+            "type": "integer",
+            "description": "Video starts",
+            "format": "int32",
+            "example": 351095
+          },
+          "spent": {
+            "type": "number",
+            "description": "Total spend",
+            "format": "double",
+            "example": 8485.87
+          },
+          "impressions": {
+            "type": "integer",
+            "description": "Impressions",
+            "format": "int32",
+            "example": 1884444
+          },
+          "completeCount": {
+            "type": "integer",
+            "description": "Completed views count",
+            "format": "int32",
+            "example": 180646
+          },
+          "clicks": {
+            "type": "integer",
+            "description": "Clicks",
+            "format": "int32",
+            "example": 5052
+          },
+          "date": {
+            "type": "string",
+            "description": "Date value",
+            "example": "2022-01-30"
+          },
+          "deviceTypeId": {
+            "type": "integer",
+            "description": "Device type ID",
+            "format": "int32",
+            "example": 20300001
+          },
+          "budgetDay": {
+            "type": "number",
+            "description": "Daily budget",
+            "format": "double",
+            "example": 0.07
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "example": "Unknown"
+          },
+          "budgetPacing": {
+            "type": "boolean",
+            "description": "Budget pacing enabled",
+            "example": true
+          },
+          "campaignTimezone": {
+            "type": "string",
+            "description": "Campaign timezone",
+            "example": "America/Costa_Rica"
+          },
+          "deviceType": {
+            "type": "string",
+            "description": "Device type",
+            "example": "Mobile"
+          },
+          "campaignType": {
+            "type": "string",
+            "description": "Campaign type",
+            "example": "cpm"
+          },
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID",
+            "format": "int32",
+            "example": 15474
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name",
+            "example": "Costa Rica MEMES COMPILADOS ..."
+          },
+          "status": {
+            "type": "string",
+            "description": "Campaign status",
+            "example": "expired"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start time epoch",
+            "format": "int64",
+            "example": 1643428296
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End time epoch",
+            "format": "int64",
+            "example": 1644192000
+          },
+          "budgetTotal": {
+            "type": "number",
+            "description": "Total budget",
+            "format": "double",
+            "example": 1549
+          },
+          "maxBid": {
+            "type": "number",
+            "description": "Maximum bid",
+            "format": "double",
+            "example": 3
+          },
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total records (null in rows)",
+            "format": "int32",
+            "nullable": true,
+            "example": 12
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "CTR": {
+            "type": "number",
+            "description": "Click-through rate",
+            "format": "double",
+            "example": 0.26809
+          },
+          "VCR": {
+            "type": "number",
+            "description": "Video completion rate",
+            "format": "double",
+            "example": 51.452171
+          },
+          "eCPM": {
+            "type": "number",
+            "description": "Effective CPM",
+            "format": "double",
+            "example": 4.5031
+          },
+          "eCPC": {
+            "type": "number",
+            "description": "Effective CPC",
+            "format": "double",
+            "example": 1.6797
+          },
+          "eCPCV": {
+            "type": "number",
+            "description": "Effective cost per completed view",
+            "format": "double",
+            "example": 0.02156
+          }
+        },
+        "description": "Row item in the data array",
+        "example": [
+          {
+            "CTR": 0.2796,
+            "date": "2022-01-30"
+          }
+        ]
+      },
+      "ModeledItemsData": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 135
+          },
+          "total": {
+            "$ref": "#/components/schemas/ReportTotals"
+          },
+          "data": {
+            "type": "array",
+            "description": "Array of row items",
+            "example": [
+              {
+                "CTR": 0.2796,
+                "date": "2022-01-30"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ModeledItem"
+            }
+          }
+        },
+        "description": "Container for totals and row data"
+      },
+      "ReportTotals": {
+        "type": "object",
+        "properties": {
+          "dataCost": {
+            "type": "number",
+            "description": "Data cost",
+            "format": "double",
+            "example": 0
+          },
+          "bidImpressions": {
+            "type": "integer",
+            "description": "Bid impressions",
+            "format": "int32",
+            "example": 4678583
+          },
+          "mediaSpent": {
+            "type": "number",
+            "description": "Media spent",
+            "format": "double",
+            "example": 8485.87
+          },
+          "startCount": {
+            "type": "integer",
+            "description": "Video starts",
+            "format": "int32",
+            "example": 351095
+          },
+          "spent": {
+            "type": "number",
+            "description": "Total spend",
+            "format": "double",
+            "example": 8485.87
+          },
+          "impressions": {
+            "type": "integer",
+            "description": "Impressions",
+            "format": "int32",
+            "example": 1884444
+          },
+          "completeCount": {
+            "type": "integer",
+            "description": "Completed views count",
+            "format": "int32",
+            "example": 180646
+          },
+          "clicks": {
+            "type": "integer",
+            "description": "Clicks",
+            "format": "int32",
+            "example": 5052
+          },
+          "date": {
+            "type": "string",
+            "description": "Date value",
+            "nullable": true,
+            "example": "2022-01-30"
+          },
+          "deviceTypeId": {
+            "type": "integer",
+            "description": "Device type ID",
+            "format": "int32",
+            "nullable": true,
+            "example": 1
+          },
+          "budgetDay": {
+            "type": "number",
+            "description": "Daily budget",
+            "format": "double",
+            "nullable": true,
+            "example": 0.07
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "nullable": true,
+            "example": "Unknown"
+          },
+          "budgetPacing": {
+            "type": "boolean",
+            "description": "Budget pacing enabled",
+            "nullable": true,
+            "example": true
+          },
+          "campaignTimezone": {
+            "type": "string",
+            "description": "Campaign timezone",
+            "nullable": true,
+            "example": "America/New_York"
+          },
+          "deviceType": {
+            "type": "string",
+            "description": "Device type",
+            "nullable": true,
+            "example": "Mobile"
+          },
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total records",
+            "format": "int32",
+            "example": 135
+          },
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID",
+            "format": "int32",
+            "nullable": true,
+            "example": 123432
+          },
+          "campaignType": {
+            "type": "string",
+            "description": "Campaign type",
+            "nullable": true,
+            "example": "1"
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name",
+            "nullable": true,
+            "example": "Campaign1"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start time epoch",
+            "format": "int64",
+            "nullable": true,
+            "example": 1643428296
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End time epoch",
+            "format": "int64",
+            "nullable": true,
+            "example": 1644192000
+          },
+          "budgetTotal": {
+            "type": "number",
+            "description": "Total budget",
+            "format": "double",
+            "nullable": true,
+            "example": 0.07
+          },
+          "maxBid": {
+            "type": "number",
+            "description": "Maximum bid",
+            "format": "double",
+            "nullable": true,
+            "example": 3
+          },
+          "status": {
+            "type": "string",
+            "description": "Campaign status",
+            "nullable": true,
+            "example": "active"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "CTR": {
+            "type": "number",
+            "description": "Click-through rate",
+            "format": "double",
+            "example": 0.26809
+          },
+          "VCR": {
+            "type": "number",
+            "description": "Video completion rate",
+            "format": "double",
+            "example": 51.452171
+          },
+          "eCPM": {
+            "type": "number",
+            "description": "Effective CPM",
+            "format": "double",
+            "example": 4.5031
+          },
+          "eCPC": {
+            "type": "number",
+            "description": "Effective CPC",
+            "format": "double",
+            "example": 1.6797
+          },
+          "eCPCV": {
+            "type": "number",
+            "description": "Effective cost per completed view",
+            "format": "double",
+            "example": 0.02156
+          }
+        },
+        "description": "Totals across the current filter",
+        "example": {
+          "CTR": 0.26809,
+          "impressions": 1884444
+        }
+      }
+    }
+  }
+}
