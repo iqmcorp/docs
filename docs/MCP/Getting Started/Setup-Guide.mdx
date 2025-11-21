@@ -6,6 +6,12 @@ pagination_prev: null
 import MCPDevSettings from '@site/static/img/MCP/MCP-Dev-Settings.png';
 import MCPTools from '@site/static/img/MCP/MCP-tools.png';
 import MCPowid from '@site/static/img/MCP/MCP-owid.png';
+import MCPInstallerSecurity from '@site/static/img/MCP/MCP-security-installer.png';
+import MCPInstSetup from '@site/static/img/MCP/MCP-inst-setup.png';
+import MCPBearer from '@site/static/img/MCP/MCP-bearer.png';
+import MCPExe from '@site/static/img/MCP/MCP-make-exe.png';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 
 # Setup Guide
@@ -18,17 +24,7 @@ IQM MCP is a powerful interface that allows AI models to access information and 
 
 Before you can use the IQM MCP, you will need access to use IQM's API service. See the [Getting Started](/Getting%20Started/Before-You-Begin) guide and [Authentication Quickstart Guide](/Quickstart%20Guides/Authentication-Quickstart-Guide) for more information. 
 
-## Setup Guide
-
-To use IQM MCP you will need the following tools:
-
-* UV 
-* mcp-proxy 
-* [VS Code](https://code.visualstudio.com/)
-* [GitHub Copilot](https://github.com/features/copilot)
-* [Claude Desktop](https://claude.ai/download)
-
-### Credentials 
+### Authorization Credentials 
 
 You will need the following credentials to connect to IQM's MCP servers:
 * Organization Workspace ID
@@ -47,143 +43,66 @@ To find your Organization Workspace ID (OW ID):
 
 ##### Bearer Token 
 
-To generate a Bearer Token:
-1. Log in to the [MCP-IQM Platform](https://mcp.iqm.com/) portal
-2. In the "Profile Details" section, you'll see your "Authorization Token"
+To find your Bearer Token:
+1. While logged in to the [IQM Platform](https://app.iqm.com/), right click anywhere on the page and select "Inspect" to open the Developer Tools.
+2. Navigate to the "Application" tab in the Developer Tools.
+3. In the left sidebar, under "Storage", click on "Local Storage" and then select the URL for the IQM Platform (https://app.iqm.com).
+4. Look for the key named "auth" in the list of local storage items.
+5. The value associated with the <var>access_token</var> is your Bearer Token. Copy this value for use in the MCP setup.
+
+<center><img className='diagram' src={MCPBearer} /></center>
 
 
-### Tools Installation
 
-Follow these steps and run the following commands to install the necessary tools to configure the MCP servers:
+## Installation Guide 
 
-##### 1. Install UV
+### Download Installer 
 
-```bash 
-brew install uv
-```
+Download the installer for your operating system:
+* [MacOS](/mcp-installer/iqm-mcp-macos.zip)
+* [Windows](/mcp-installer/iqm-mcp-windows.zip)
 
-##### 2. Install MCP Proxy:
+### Install MCP 
 
-```bash 
-uv tool install mcp-proxy
-```
+The installer contains an executable file to install the IQM MCP. You will be prompted to set up with Claude Desktop or GitHub Copilot. The installer will set up the config files and download the necessary specifications to get started with your chosen AI model. You will also be prompted for your [Authorization Credentials](#authorization-credentials).
 
-##### 3. Locate mcp-proxy Path
+<Tabs>
+<TabItem value="macos" label="MacOS" className='genericTab'>
+  
+  To install IQM MCP on MacOS:
+  1. Double-click the downloaded .zip file to extract installer contents.
+  2. Open the <var>IQM MCP Installer</var> folder and Double-click <var>Installation Setup.workflow</var>.
+    <center><img style={{ width:"50%"}} className='diagram' src={MCPInstSetup} /></center>
+  3. Right-click <var>Install IQM MCP.command</var> and select `Quick Actions > Make Executable`.
+    <center><img style={{ width:"50%"}} className='diagram' src={MCPExe} /></center>
+  4. Double-click <var>Install IQM MCP.command</var> and follow the on-screen instructions to complete the installation.
 
-Once these tools are installed, locate the exact path of mcp-proxy:
+  :::warning[NOTE]
+  If you encounter a security warning when trying to run the installer, you may need to adjust your MacOS security settings to allow the installation of applications from unidentified developers. 
+  
+  To do this, go to `System Settings > Privacy & Security > Security`, and under the "Allow apps downloaded from" section, select "Open Anyway". You may need to click the lock icon and enter your administrator password to make changes.
 
-```bash
-which mcp-proxy
-```
+  <center><img style={{ width:"65%"}} className='diagram' src={MCPInstallerSecurity} /></center>
+  :::
 
-##### 4. Configure MCP Server
-
-
-Then you can open **Claude Desktop → Settings → Developer → Edit Config**
-
-This will open a JSON config file, to which you can add the MCP servers and your credentials:
-
-```json title="claude_desktop_config.json"
-{
-  "mcpServers": {
-    "iqm-mcp-report": {
-      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-      "args": [
-        "--transport", "streamablehttp", 
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/report/mcp"
-      ]
-    },
-    "iqm-mcp-dash": {
-      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-      "args": [
-        "--transport", "streamablehttp", 
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/dash/mcp"
-      ]
-    },
-    "iqm-mcp-bm": {
-      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-      "args": [
-        "--transport", "streamablehttp", 
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/bidmodel/mcp"
-      ]
-    }
-  }
-}
-
-```
-
-##### 5. Restart Claude Desktop
-
-Once the JSON config file is saved, you can quit and restart Claude desktop. On startup you should see a message confirming your connection the IQM's MCP servers. You can also check the **Claude Desktop → Settings → Developer** screen:
-
-<center><img className='diagram' src={MCPDevSettings} /></center>
+</TabItem>
+  <TabItem value="windows" label="Windows" className='genericTab'>
 
 
-### GitHub Copilot Setup
+  
+  To install IQM MCP on Windows:
 
-IQM MCP also supports [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) integration. To set this up, follow these steps:
+1. Unzip the downloaded installer contents. 
+2. Open the <var>IQM MCP Installer</var> folder and double-click <var>Install IQM MCP.cmd</var>. Follow the on-screen instructions to complete the installation.
+</TabItem>
+</Tabs>
 
-##### 1. Configure MCP servers
+### Update Specifications or Credentials
 
-Create a **.vscode** folder in your project and create an **mcp.json** file in that folder. Use this configuration and add your credentials:
-
-```json title=".vscode/mcp.json"
-{
-  "servers": {
-    "iqm-mcp-report": {
-        "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-        "args": [
-          "--transport", "streamablehttp", 
-          "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-          "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-          "https://mcp.iqm.com/v1/report/mcp"
-        ]
-    },
-    "iqm-mcp-dash": {
-      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-      "args": [
-        "--transport", "streamablehttp", 
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/dash/mcp"
-      ]
-    },
-    "iqm-mcp-bm": {
-      "command": "/Users/<YOUR_USERNAME>/.local/bin/mcp-proxy",
-      "args": [
-        "--transport", "streamablehttp", 
-        "-H", "authorization", "Bearer YOUR_AUTH_TOKEN_HERE",
-        "-H", "x-iaa-ow-id", "YOUR_OW_ID_HERE",
-        "https://mcp.iqm.com/v1/bidmodel/mcp"
-      ]
-    }
-  }
-}
-```
-
-##### 2. Open GitHub Copilot
-
-Now open GitHub Copilot and you will see the MCP servers you configured in the list of available servers. Ensure that you are in Agent mode, not Ask mode.
-
-:::warning[NOTE]
-
-You may need to de-select some tools for Github Copilot to be able to make a succesful request, as it only allows 128 tools at a time. 
-
-<center><img className='diagram' src={MCPTools} /></center>
-
-:::
-
+To get the latest IQM MCP specifications or to update your authorization credentials, run the <var>.command</var> (MacOS) or <var>.cmd</var> (Windows) executables again.
 
 ## Use IQM MCP!
 
 You are now ready to use IQM MCP! 
-
-Once you've restarted Claude Desktop (or GitHub Copilot) and ask to access IQM's API, you will be prompted for your for your authentication credentials. You will need to provide your Organization Worskpace ID, a bearer token, and Workspace URL. See [Sign Up and Authenticate](/Quickstart%20Guides/Authentication-Quickstart-Guide/) for more information.
 
 Next, you can check out the [MCP Actions](/MCP/MCP%20Actions/) collection to see some example prompts and supported actions.
