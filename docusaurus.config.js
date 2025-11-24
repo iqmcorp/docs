@@ -140,7 +140,7 @@ const config = {
           {
             label: "API GUIDELINES",
             position: "left",
-            to: "/Guidelines/",
+            to: "/guidelines/",
             className: "navbarLink",
             type: "dropdown",
             items: [
@@ -180,7 +180,7 @@ const config = {
               },
               {
                 label: "API Guidelines",
-                to: "/Guidelines",
+                to: "/guidelines",
               },
               {
                 label: "Help Center",
