@@ -152,7 +152,7 @@ const config = {
               {
                 label: "HEALTHCARE",
                 type: "doc",
-                docId: "Healthcare Vertical/index",
+                docId: "healthcare-vertical/index",
               },
             ]
           },
