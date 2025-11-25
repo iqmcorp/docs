@@ -1,0 +1,134 @@
+---
+hide_table_of_contents: true
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Migrate a Bid Model
+
+Migrate a Bid Model from Beeswax to IQM by comparing each platform's API methods for creating and managing Bid Modeling.
+
+The Definitions and API Comparison tables highlight the shared terminology, actions and API methods between IQM and Beeswax for creating and managing Bid Modeling. Select an endpoint to review each platform's relevant API documentation. By comparing APIs, you can migrate your workflow from Beeswax to IQM. 
+
+For a comprehensive overview of IQM's Bid Model services, see the [Bid Model API](/guidelines/bid-model-api) Guidelines.
+
+## Definitions
+
+<center>
+<table className='platformTable'>
+<th>IQM</th>
+<th style={{ textWrap: "nowrap" }}>Beeswax</th>
+<th>Description</th>
+<tr>
+  <td>Bid Model</td>
+  <td>Bid Model</td>
+  <td>	The set of optimizations applied to a Campaign or Insertion Order. These optimizations control where ads appear, manage priorities, and dimensions.</td>
+</tr>
+<tr>
+  <td>Bid Model Data</td>
+  <td>Terms</td>
+  <td>A Bid Model setting that adjusts a Campaign's base bid based on specified parameters.</td>
+</tr>
+<tr>
+  <td>Dimension</td>
+  <td>[Targeting Key<ExternalLink />](https://api-docs.freewheel.tv/beeswax/v2.0/docs/bid-modifiers#supported-targeting-keys)</td>
+  <td>A property in digital advertising used to categorize, filter, or analyze Audiences, Campaigns or Inventories. Serves as a targeting parameter for Advertisers, specifying where an ad appears.</td>
+</tr>
+<tr>
+  <td>Bid Modifier</td>
+  <td>Bid Modifier</td>
+  <td>A multiplier applied to a base bid.</td>
+</tr>
+<tr>
+  <td>Spend Ratio</td>
+  <td style={{ textWrap: "nowrap" }}>[Delivery Modifiers<ExternalLink />](https://api-docs.freewheel.tv/beeswax/v2.0/docs/delivery-modifiers)</td>
+  <td>A setting that determines how the Campaign budget is distributed across targeting dimensions.</td>
+</tr>
+<tr>
+  <td>Dimension Priority</td>
+  <td>Weight</td>
+  <td>A setting that dictates the order in which a Campaign should attempt to deliver impressions based on the available budget.</td>
+</tr>
+</table></center>
+
+<div style={{ maxWidth: "1000px" }}>
+:::warning[NOTE]
+
+IQM's Bid Model currently supports applying bid modifiers to the following dimensions: 
+
+* **Creative**: Creative ID
+* **Location**: State, City, Zip Code 
+* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
+
+*Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio Overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
+
+**Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier Overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
+
+:::
+</div>
+
+## API Comparison
+
+<div class="smallTable">
+```c title="Base URLs"
+  IQM: https://api.iqm.com
+  
+  Beeswax: https://{buzz_key}.api.beeswax.com
+```
+</div>
+
+<center>
+<table className='endpointTable'>
+<th>Action</th>
+<th>IQM Endpoint</th>
+<th style={{textWrap: 'nowrap' }}>Beeswax Endpoint</th>
+<th>Notes</th>
+<tr>
+  <td>Add Bid Modeling</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/guidelines/bid-model-api#add-bid-modeling)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/rest/v2/bid-modifiers</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/createbidmodifier)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Add Bid Modeling to Insertion Order/Campaign</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/io/\{ioId}/bid-models</span>](/guidelines/bid-model-api#manage-insertion-order-bid-modeling)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/rest/v2/campaigns</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/createcampaign) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/rest/v2/line-items</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/createlineitem)</td>
+  <td>Add Bid Modeling to an Insertion Order and its associated Campaigns. <p />Beeswax endpoints use the <var>bid_modifier_id</var> parameter when creating/updating a Campaign or Line Item to add a bid modifier.</td>
+</tr>
+<tr>
+  <td>Update Bid Modeling</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/guidelines/bid-model-api#update-bid-modeling-dimensions)</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/rest/v2/campaigns/\{id}</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/partialupdatecampaign)<br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/rest/v2/line-items/\{id}</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/partialupdatelineitem)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Add/Update Multiple Bid Models</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models</span>](/guidelines/bid-model-api#update-bid-modeling-actions)</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/rest/v2/campaigns/bulk</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/bulkcampaign-update)<br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/rest/v2/line-items/bulk</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/bulklineitem-update)</td>
+  <td>IQM endpoint supports adding, updating, and deleting Bid Model data.</td>
+</tr>
+<tr>
+  <td>Get Bid Model Details</td>
+   <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaign/\{campaignId}/dimensions/bid-models/count</span>](/guidelines/bid-model-api#get-campaign-dimension-statistics) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/dimension/\{dimensionId}/spent</span>](/guidelines/bid-model-api#get-dimension-specific-spending-for-a-campaign) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/bid-models/dimensions/\{dimensionId}</span>](/guidelines/bid-model-api#get-list-of-modeled-entities-for-a-campaign)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/rest/v2/ref/bid-models</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/listbidmodelrefs)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/rest/v2/bid-modifiers</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/listbidmodifiers)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/rest/v2/bid-modifiers/\{id}</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/retrievebidmodifier)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/rest/v2/bid-modifiers/\{id}/campaigns</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/campaignsbidmodifier)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/rest/v2/bid-modifiers/\{id}/line-items</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/lineitemsbidmodifier)</td>
+  <td>IQM endpoints get counts of dimensions, spending by dimension, and modeled items count by <var>campaignId</var>.<p />Beeswax endpoints get lists of Bid Models, bid modifiers, and lists of Campaigns and Line items by bid modifier ID.</td>
+</tr>
+<tr>
+  <td>Include/Exclude Management</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/deviceType/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/exchange/includeExclude</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v2/cmp/trafficsource/includeExclude</span>](/guidelines/bid-model-api#devices-exchanges-traffic)<br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/bm/campaigns/\{campaignId}/include-Exclude/dimensions/\{dimensionId}</span>](/guidelines/bid-model-api#includeexclude-entities-from-a-campaign)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/rest/v2/bid-modifiers</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/createbidmodifier)<br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/rest/v2/bid-modifiers/\{id}</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/updatebidmodifier)<br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/rest/v2/bid-modifiers/\{id}</span>](https://api-docs.freewheel.tv/beeswax/v2.0/reference/partialupdatebidmodifier)</td>
+  <td>IQM has separate endpoints for including/excluding device types, exchanges, traffic sources, and dimensions. <p />Beeswax specifies include/exclude options with the <var>targeting_key</var> parameter when creating/updating a Bid Modifier.</td>
+</tr>
+</table></center>
+
+## More Bid Model Resources
+
+IQM:
+  * [Bid Model API](/guidelines/bid-model-api) Guidelines
+  * [Create a Bid Model](/tutorials/create-a-bid-model/) Tutorial
+  * [Advanced Modeling<ExternalLink />](https://help.iqm.com/en/collections/11511670-advanced-modeling) Help Center article
+
+Beeswax: 
+  * [Bid Modifiers<ExternalLink />](https://api-docs.freewheel.tv/beeswax/v2.0/docs/bid-modifiers)
+  * [Delivery Modifiers<ExternalLink />](https://api-docs.freewheel.tv/beeswax/v2.0/docs/delivery-modifiers)
+  * [Supported Targeting Keys<ExternalLink />](https://api-docs.freewheel.tv/beeswax/v2.0/docs/bid-modifiers#supported-targeting-keys)

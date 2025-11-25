@@ -1,0 +1,3413 @@
+---
+hide_table_of_contents: true
+---
+
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+# Bid Model API
+
+The Bid Model API allows you to optimize advertising Campaigns for better performance. 
+
+You can fine-tune metrics such as where ads appear (Include/Exclude), manage Campaign priority, and dimensions by which a Campaign is subdivided. This page covers the common endpoints and methods associated with the Bid Model API.
+
+Bid Modeling comprises the following tools:
+  * **Spend Ratio**: determines how the Campaign budget is distributed across various dimensions, expressed as a percentage in two types 
+    1.  Strict: budget is allocated up to its specified percentage as able, but will underspend if unable to meet that ratio
+    1.  Flexible: budget will reallocate if unable to fulfill its specified percentage
+  * **Dimension Priority**: dictates the sequence of bidding for specified targeting Dimensions, expressed as a range of 1-10
+  * **Bid Modifier**: adjusts the base bid of a Campaign for the specified Dimension that is modified, expressed as a multiplier in a range of 0.1-100
+
+<div style={{ maxWidth: "1000px" }}>
+:::warning[NOTE]
+
+IQM's Bid Model currently supports applying bid modifiers to the following dimensions: 
+
+* **Creative**: Creative ID
+* **Location**: State, City, Zip Code 
+* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
+
+*Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio Overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
+
+**Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier Overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
+
+:::
+</div>
+
+### More resources
+  * [Create a Bid Model](/tutorials/create-a-bid-model/) Tutorial
+  * [Campaign Delivery and Optimization<ExternalLink />](https://help.iqm.com/en/collections/3156335-campaign-delivery-and-optimization) Help Center article 
+
+### Authentication
+
+<div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+## Bid Modeling Details
+
+### Get List of Bid Model Bundles
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bundles" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of Bid Model bundles for a given Campaign ID and dimension. 
+
+A <var>bundleId</var> can be used in various [Bid Model Management](#bid-modeling-management) endpoints to add, update, or delete Bid Modeling attributes.
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+
+| Query Parameter | |
+| --- | --- |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by search field |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`bundleId` <br /><span class="type-text">integer</span></td>
+  <td>Bundle ID</td>
+</tr>
+<tr>
+  <td>`bundleName` <br /><span class="type-text">string</span></td>
+  <td>Bundle name</td>
+  </tr>
+<tr>
+  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
+  <td>Dimension ID</td>
+</tr>
+<tr>
+  <td>`entityIds` <br /><span class="type-text">array of integers</span></td>
+  <td>List of entity IDs in the bundle</td>
+</tr>
+<tr>
+  <td>`modellingApplied` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if modeling is applied to the bundle: <var>true</var></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "bundleId": 12,
+      "bundleName": "bundle#1",
+      "dimensionId": 1,
+      "entityIds": [
+        7,
+        8,
+        9
+      ],
+      "modellingApplied": false
+    },
+    {
+      "bundleId": 13,
+      "bundleName": "bundle#2",
+      "dimensionId": 2,
+      "entityIds": [
+        1,
+        2,
+        3
+      ],
+      "modellingApplied": true
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Modeled Entities 
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/bid-models/dimension/entity" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of modeled entities and their associated modeling data for the provided Dimension ID and entity IDs.
+
+| Request Schema | |
+| --- | --- |
+| `dimensionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+| `entityIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | List of entity IDs |
+| `includeCampaignInfo` <br /><span class="type-text">boolean</span> | Indicates if Campaign info is to be included in the response, default: <var>false</var> |
+| `groupIdBased` <br /><span class="type-text">boolean</span> | Indicates if entity IDs are group IDs, default: <var>false</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`modelledEntityIds` <br /><span class="type-text">array of integers</span></td>
+  <td>List of modeled entity IDs</td>
+</tr>
+<tr>
+  <td>`modelledCampaignDetails` <br /><span class="type-text">array of objects</span></td>
+  <td>List of objects containing entity ID and associated Campaign IDs</td>
+</tr>
+</table>
+</details>
+
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "dimensionId": 10,
+  "entityIds": [
+    30200036,
+    30200031,
+    30200105,
+    4695
+  ],
+  "includeCampaignInfo": true,
+  "groupIdBased": true
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "modelledEntityIds": [
+      30200036,
+      30200031,
+      30200105
+    ],
+    "modelledCampaignDetails": [
+      {
+        "entityId": 30200036,
+        "campaignIds": [
+          555804,
+          556956,
+          556891,
+          557141,
+          560100
+        ]
+      },
+      {
+        "entityId": 30200031,
+        "campaignIds": [
+          556979,
+          555927,
+          555926,
+          560102,
+          555925,
+          555748
+        ]
+      },
+      {
+        "entityId": 30200105,
+        "campaignIds": [
+          555787
+        ]
+      },
+      {
+        "entityId": 4695,
+        "campaignIds": []
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Get Campaign Dimension Statistics
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/bm/campaign/{campaignId}/dimensions/bid-models/count" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get dimension statistics for a given Campaign ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+
+| Query Parameters | |
+| --- | --- |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count
+| `attributes` <br /><span class="type-text">string</span> | List of statistics to return <br />Supported values: <var>totalCount</var>, <var>modelledCount</var>, <var>modelledIds</var>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>dimensionId</var> and attributes object</td>
+</tr>
+<tr>
+  <td>`totalCount` <br /><span class="type-text">integer</span></td>
+  <td>Total count of entities in a dimension</td>
+</tr>
+<tr>
+  <td>`modelledCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of entities modeled in a dimension</td>
+</tr>
+<tr>
+  <td>`modelledIds` <br /><span class="type-text">object</span></td>
+  <td>List of modeled entity IDs</td>
+</tr>
+</table></details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "1": {
+      "totalCount": 5,
+      "modelledCount": 3,
+      "modelledIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    "3": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "4": {
+      "totalCount": 10,
+      "modelledCount": 5,
+      "modelledIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "5": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "11": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "12": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    },
+    "13": {
+      "totalCount": 0,
+      "modelledCount": 0,
+      "modelledIds": null
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Dimension Specific Spending for a Campaign
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get details on total spent by dimension for a Campaign.
+
+| Path Parameters     |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span>  | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`entityWiseSpent` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>dimensionId</var> and amount spent</td>
+</tr>
+</table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "entityWiseSpent": {
+      "1": 5.1,
+      "2": 5.76,
+      "3": 5.34
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          entityWiseSpent: {
+            dimensionId: number
+          }
+        }
+      }
+    }
+  }
+};
+
+function getDimensionWiseEntitySpentForCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent',
+    params: {
+      path: {
+        campaignId: `number`,
+        dimensionId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get List of Modeled Entities for a Campaign
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/dimensions/{dimensionId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of modeled entities and their associated modeling data for the provided Campaign ID. 
+
+A Bid Model data <var>id</var> can be used in various [Bid Model Management](#bid-modeling-management) endpoints to update or delete Bid Modeling attributes.
+
+| Path Parameters     |  |
+| ---- | --- |
+| `campaignId` <br /><span class="type-text">integer</span>  | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+| Request Schema | |
+| --- | --- |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) 
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds)
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones)
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>+priority</var>
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>
+| `searchField` <br /><span class="type-text">string</span> | Filter results by search field
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>10</var>
+| `skipReporting` <br /><span class="type-text">boolean</span> | Indicates the reporting data is to be skipped, e.g. <var>impressions</var> and <var>clicks</var> will be skipped, and only Bid Modeling data will be returned
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "startDate": 1700758597000,
+  "endDate": 1708194599000,
+  "timezoneId": 105,
+  "sortBy": "+priority",
+  "pageNo": 1,
+  "searchField": "ad",
+  "noOfEntries": 10,
+  "skipReporting": false
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "total": {
+      "totalCount": 5,
+      "impressions": 1,
+      "winRate": 25,
+      "clicks": 0,
+      "eCPM": 4,
+      "eCPC": 0,
+      "dataCost": 0,
+      "mediaSpent": 0.004,
+      "CTR": 0,
+      "spent": 0.004,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0.004,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 4,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "data": [
+      {
+        "bidModelData": {
+          "id": 1,
+          "priority": 5,
+          "bidMultiplier": 1.5,
+          "spendRatio": 0.8,
+          "spendRatioTypeId": 2
+        },
+        "id": 604676,
+        "name": "ad-60s",
+        "isExcluded": 0,
+        "modelled": false,
+        "targeted": true,
+        "impressions": 0,
+        "winRate": 0,
+        "clicks": 0,
+        "eCPM": 0,
+        "eCPC": 0,
+        "dataCost": 0,
+        "mediaSpent": 0,
+        "CTR": 0,
+        "spent": 0,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 0,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "creativeStatus": "Deleted",
+        "creativeThumbnailSource": "https://i.gifer.com/g2vO.gif",
+        "creativeCardSource": "https://i.gifer.com/g2vO.gif",
+        "creativeType": "Video",
+        "spentDistribution": 0
+      },
+      {
+        "bidModelData": {
+          "id": 1,
+          "priority": 5,
+          "bidMultiplier": 1.5,
+          "spendRatio": 0.8,
+          "spendRatioTypeId": 2
+        },
+        "id": 604675,
+        "name": "ad-45s",
+        "isExcluded": 1,
+        "modelled": false,
+        "targeted": true,
+        "impressions": 1,
+        "winRate": 100,
+        "clicks": 0,
+        "eCPM": 4,
+        "eCPC": 0,
+        "dataCost": 0,
+        "mediaSpent": 0.004,
+        "CTR": 0,
+        "spent": 0.004,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0.004,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 1,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "creativeStatus": "Running",
+        "creativeThumbnailSource": "https://i.gifer.com/g2vO.gif",
+        "creativeCardSource": "https://i.gifer.com/g2vO.gif",
+        "creativeType": "Video",
+        "spentDistribution": 0
+      }
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 2,
+    "campaignBidDetails": {
+      "baseBid": 20,
+      "maxBid": 20,
+      "currentPriority": 1,
+      "nextPerformanceCheck": 1740736800000
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalCount: number;
+          dimensionWiseCount: {
+            dimensionId: number;
+            count: number
+          }[]
+        }
+      }
+    }
+  }
+};
+
+function getModelledItemsCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/count',
+    params: {
+      query: {
+        dimensionId: `number`
+      },
+      path: {
+        campaignId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+      <td>`bidModelData` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model Data properties</td>
+      </tr>
+       <tr>
+          <td colSpan="2">
+              <details className="objectPropertiesDetails">
+              <summary>`bidModelData` object properties</summary>
+              <table className="objectProperties">
+              <tr>
+              <td>`id`<br /><span class="type-text">integer</span></td>
+              <td>Bid Model data ID</td>
+              </tr>
+                <tr>
+              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              </tr>
+                <tr>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+              </table></details>
+            </td>
+            <td></td>
+          </tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Campaign ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Campaign name</td>
+</tr>
+<tr>
+  <td>`isExcluded` <br /><span class="type-text">integer</span></td>
+  <td>Indicates the entity is excluded from the Bid Model: <var>true</var></td>
+</tr>
+<tr>
+  <td>`modelled` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates entity is modeled: <var>true</var> </td>
+</tr>
+<tr>
+  <td>`targeted` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates entity is targeted in the Campaign or served via other targeting parameter: <var>true</var></td>
+</tr>
+<tr>
+  <td>`totalCount` <br /><span class="type-text">integer</span></td>
+  <td>Count of total records</td>
+</tr>
+<tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Impressions count</td>
+</tr>
+<tr>
+  <td>`winRate` <br /><span class="type-text">integer</span></td>
+  <td>Percentage of impressions bid on and won</td>
+</tr>
+<tr>
+  <td>`clicks` <br /><span class="type-text">integer</span></td>
+  <td>The number of times a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`eCPM` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per mille</td>
+</tr>
+<tr>
+  <td>`eCPC` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per click</td>
+</tr>
+<tr>
+  <td>`dataCost` <br /><span class="type-text">integer</span></td>
+  <td>Data cost applied on Campaigns of given Customer</td>
+</tr>
+<tr>
+  <td>`mediaSpent` <br /><span class="type-text">integer</span></td>
+  <td>Media spent</td>
+</tr>
+<tr>
+  <td>`CTR` <br /><span class="type-text">integer</span></td>
+  <td>Click-through rate</td>
+</tr>
+<tr>
+  <td>`spent` <br /><span class="type-text">integer</span></td>
+  <td>Amount spent</td>
+</tr>
+<tr>
+  <td>`conversionCount` <br /><span class="type-text">integer</span></td>
+  <td>Conversion count</td>
+</tr>
+<tr>
+  <td>`conversionValue` <br /><span class="type-text">integer</span></td>
+  <td>Conversion value</td>
+</tr>
+<tr>
+  <td>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user viewed an ad but did not click on it</td>
+</tr>
+<tr>
+  <td>`costPerAttributedConversions` <br /><span class="type-text">integer</span></td>
+  <td>Cost per attributed Conversion</td>
+</tr>
+<tr>
+  <td>`attributedConversionsRate` <br /><span class="type-text">integer</span></td>
+  <td>Total attributed Conversion rate</td>
+</tr>
+<tr>
+  <td>`returnOnAdSpend` <br /><span class="type-text">integer</span></td>
+  <td>Return on ad spend</td>
+</tr>
+<tr>
+  <td>`VCR` <br /><span class="type-text">integer</span></td>
+  <td>Video completion rate</td>
+</tr>
+<tr>
+  <td>`eCPV` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per visit</td>
+</tr>
+<tr>
+  <td>`eCPCV` <br /><span class="type-text">integer</span></td>
+  <td>Effective cost per completed view</td>
+</tr>
+<tr>
+  <td>`startCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video start</td>
+</tr>
+<tr>
+  <td>`firstCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video first quarter</td>
+</tr>
+<tr>
+  <td>`midCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video midpoint</td>
+</tr>
+<tr>
+  <td>`thirdCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video last quarter</td>
+</tr>
+<tr>
+  <td>`completeCount` <br /><span class="type-text">integer</span></td>
+  <td>Ad viewing metric, video completed</td>
+</tr>
+<tr>
+  <td>`bidImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Bid on impressions count</td>
+</tr>
+<tr>
+  <td>`audioVideoViewed` <br /><span class="type-text">integer</span></td>
+  <td>Audio/video viewed</td>
+</tr>
+<tr>
+  <td>`prebidCost` <br /><span class="type-text">integer</span></td>
+  <td>Data cost of Pre-bid Audiences</td>
+</tr>
+</table></details>
+
+## Include/Exclude Management
+
+### Devices, Exchanges, Traffic
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/deviceType/includeExclude" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/exchange/includeExclude" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/trafficsource/includeExclude" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+The **Include** and **Exclude** options allow the you to control where ads appear. 
+
+For IDs see endpoint documentation for [Device Type](/guidelines/master-api#get-device-type), [Exchanges](/guidelines/master-api#get-exchanges), and [Traffic Source](/guidelines/master-api#get-traffic-types) in the [Master API](/guidelines/master-api).
+
+See the [Allowlist and Blocklist Overview](https://help.iqm.com/en/articles/10472012-allowlist-and-blocklist-overview#h_1ee82b6de6) Help Center article for more information. 
+
+| Request Schema | |
+| --- | --- |
+| <span class="code-text">ids</span> <br /><span class="type-text">string</span> | ID of entity |
+| <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span> | Allow targeted entity: <var>0</var> <br />Block targeted entity: <var>1</var> |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)   |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+  <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "ids": "15",
+  "isExcluded": 0,
+  "campaignId": 214269
+}
+```
+
+```json title="Response 200 (device type)"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "message": "The Device Types have been allowed."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          message: string;
+        };
+      };
+    };
+  };
+};
+
+function DeviceType-includeExclude(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v2/cmp/deviceType/includeExclude',
+    params: {
+      header: {
+        "X-IAA-HOST": `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          ids: `string`,
+          isExcluded: `number`,
+          campaignId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Include/Exclude Entities From a Campaign
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/include-Exclude/dimensions/{dimensionId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Optimize a Campaign by updating the status of specified entities to be either included or excluded with path parameters <var>campaignId</var> and <var>dimensionId</var>.
+
+| Path  ||
+| --- | --- |
+| <span class="code-text">campaignId</span> <br /><span class="type-text">integer</span>  | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)  |
+| <span class="code-text">dimensionId</span> <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+| Request Schema |  |
+| ---- | --- |
+| <span class="code-text">ids</span> <br /><span class="type-text">string</span>  | Entity ID(s) to target or block  |
+| <span class="code-text">isExcluded</span> <br /><span class="type-text">integer</span>  | Target entity: <var>0</var> <br />Block entity: <var>1</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+  <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample (Creatives)"
+{
+  "ids": "604675,604084",
+  "isExcluded": 0
+}
+```
+
+```json title="Response 200 (Creatives)"
+{
+  "success": true,
+  "data": "Creatives successfully targeted for the campaign."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function toggleCampaignDimensionStatus(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/include-exclude/dimensions/{dimensionId}',
+    params: {
+      path: {
+        campaignId: `number`,
+        dimensionId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          advertiserId: `number`,
+          dspId: `number`,
+          owId: `number`,
+          uowId: `number`,
+          campaignId: `number`,
+          ids: `string`,
+          isExcluded: `number`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Bid Modeling Management
+
+### Bid Modeling Criteria
+
+  * Bid Multiplier & Dimension Priority
+    * Campaign must be at least 3 days long
+    * Campaign's daily budget must be at least $100
+    * Base bid and max bid price must be defined for the Campaign
+  * Spend Ratio
+    * Strict spend ratios must equal 100% across all allocated dimensions
+    * Flexible spend ratios require a dimension priority
+
+:::warning[NOTE]
+
+IQM currently supports Bid Modeling for the following dimensions: 
+
+* **Creative**: Creative ID
+* **Location**: State, City, Zip Code 
+* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
+
+*Note that Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio Overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
+
+**Not that Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier Overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
+
+:::
+
+### Manage Bid Modeling 
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Manage Bid Modeling configurations for a given Campaign and Dimension. Supports operations for adding, updating, and deleting Bid Modeling attributes for single entities or entity bundles. 
+
+See the request examples in the right-hand code block to see how to structure requests for each operation. Be sure to review [Bid Modeling Criteria](#bid-modeling-criteria) before applying Bid Modeling to a Campaign.
+
+**ADD**: Create new Bid Modeling for a single entity or entity bundles. 
+  * **Create a bundle:** set <var>entityTypeId</var> to bundle (<var>2</var>), and <var>entityId</var> to any negative number, this will create a new bundle with the provided <var>bundleName</var> and <var>entityIds</var>.
+  * **Existing bundle:** set <var>entityTypeId</var> to bundle (<var>2</var>), and <var>entityId</var> to the existing bundle ID to add Bid Modeling to the existing bundle. 
+
+**UPDATE**: Update existing Bid Modeling attributes for a single entity or entity bundles.
+
+**DELETE**: Remove Bid Modeling or unbundle a bundle. 
+
+**INCLUDE/EXCLUDE Map**: Defines which entity IDs are explicitly included or excluded in bid modeling.
+
+
+| Path Parameters |  |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`actionWiseBidModelEntities` <br /><span class="type-text">object</span></td>
+<td>Object containing Bid Model entity details mapped to operations <var>ADD</var>, <var>UPDATE</var>, <var>DELETE</var></td>
+</tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`actionWiseBidModelEntities` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`bidModelEntityDetails` <br /><span class="type-text">object</span></td>
+      <td>Object containing Bid Model entity details, for <var>ADD</var> and <var>UPDATE</var> operations </td>
+      </tr>
+       <tr>
+          <td colSpan="2">
+              <details className="objectPropertiesDetails">
+              <summary>`bidModelEntityDetails` object properties</summary>
+              <table className="objectProperties">
+              <tr>
+              <td>`entityId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity ID</td>
+              </tr>
+              <tr>
+              <td>`entityTypeId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Model entity type ID 
+              <br /><var>1</var>: Individual entity 
+              <br /><var>2</var>: Bundle entity 
+              <br /><var>3</var>: Other entity</td>
+              </tr>
+                <tr>
+              <td>`priority` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              </tr>
+                <tr>
+              <td>`bidMultiplier` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatio` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              </tr>
+              <tr>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              </tr>
+                   <tr>
+              <td>`bundleName`<br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+              <td>Bundle name, required when <var>entityTypeId</var> is set to bundle entity</td>
+              </tr>
+                   <tr>
+              <td>`entityIds`<br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
+              <td>Entity IDs, required when <var>entityTypeId</var> is set to bundle entity</td>
+              </tr>
+              </table></details>
+            </td>
+            <td></td>
+          </tr>
+               <tr>
+        <td>`bidModelDataId` <br /><span class="type-text">array of integers</span></td>
+        <td>Array of [Bid Model Data ID](#get-list-of-modeled-entities-for-a-campaign)s for <var>DELETE</var> operation</td>
+       </tr>
+        <tr>
+          <td>`bundleIds` <br /><span class="type-text">array of integers</span></td>
+          <td>Array of [Bundle ID](#get-list-of-bid-model-bundles)s for <var>DELETE</var> operation</td>
+        </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+     <tr>
+  <td>`inclusionExclusionEntityMap` <br /><span class="type-text">object</span></td>
+  <td>Object containing entity mappings</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`inclusionExclusionEntityMap` object properties</summary>
+        <table className="objectProperties">
+          <tr>
+        <td>`INCLUDE`  <br /><span class="type-text">array of integers</span></td>
+        <td>Entity IDs to include</td>
+        </tr>
+          <tr>
+        <td>`EXCLUDE` <br /><span class="type-text">array of integers</span></td>
+        <td>Entity IDs to exclude</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+<tr>
+  <td>`baseBid` <br /><span class="type-text">integer</span></td>
+  <td>Base bid amount</td>
+</tr>
+</table>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Full Bid Modeling Update">
+```json
+{
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
+        {
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": -2,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "entityId": 232,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "DELETE": {
+      "bidModelDataId": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "bundleIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    "UPDATE": {
+      "bidModelEntityDetails": [
+        {
+          "bidModelDataId": 50,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "bidModelDataId": 51,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "bidModelDataId": 52,
+          "priority": 1,
+          "spendRatio": 100
+        },
+        {
+          "bidModelDataId": 53,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    }
+  },
+  "inclusionExclusionEntityMap": {
+    "INCLUDE": [
+      1
+    ],
+    "EXCLUDE": [
+      2,
+      3,
+      4
+    ]
+  },
+  "baseBid": 3
+}
+```
+</CodeOption>
+<CodeOption label="Add Bid Modeling (initial setup)">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
+        {
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": -2,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "entityId": 232,
+          "entityTypeId": 2,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Update Existing Bid Modeling">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "UPDATE": {
+      "bidModelEntityDetails": [
+        {
+          "bidModelDataId": 50,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "Bundle-1",
+          "bundleId": 52,
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "bidModelDataId": 51,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "bidModelDataId": 52,
+          "priority": 1,
+          "spendRatio": 100
+        },
+        {
+          "bidModelDataId": 53,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Update Bid Modeling Attributes">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "UPDATE": {
+      "bidModelEntityDetails": [
+        {
+          "bidModelDataId": 50,
+          "priority": 1
+        },
+        {
+          "bidModelDataId": 51,
+          "bidMultiplier": 2
+        },
+        {
+          "bidModelDataId": 52,
+          "priority": 1,
+          "spendRatio": 100
+        },
+        {
+          "bidModelDataId": 53,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "bidModelDataId": 51,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "bidModelDataId": 51,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1,
+          "bundleName": "Bundle-1",
+          "entityIds": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Remove Bid Modeling Entities">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "DELETE": {
+      "bidModelDataId": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Delete Bundles">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "DELETE": {
+      "bundleIds": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Unbundle Entities">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
+        {
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": 51,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        },
+        {
+          "entityId": -1,
+          "entityTypeId": 3,
+          "priority": 1,
+          "bidMultiplier": 2,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        }
+      ]
+    },
+    "DELETE": {
+      "bundleIds": [
+        1
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Set Include/Exclude Entities">
+```json 
+{
+  "inclusionExclusionEntityMap": {
+    "INCLUDE": [
+      1
+    ],
+    "EXCLUDE": [
+      2,
+      3,
+      4
+    ]
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Update Base Bid With Include/Exclude">
+```json 
+{
+  "inclusionExclusionEntityMap": {
+    "INCLUDE": [
+      1
+    ],
+    "EXCLUDE": [
+      2,
+      3,
+      4
+    ]
+  },
+  "baseBid": 3
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bid Model updated successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create Bid Model Bundle
+
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Bid Model bundle for the specified Campaign and Dimension IDs. A Bid Model Bundle allows you to group multiple dimension entities and apply bid modeling rules at the bundle level with the [Manage Bid Modeling](#manage-bid-modeling) endpoint.  
+| Path Parameters |  |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+| Request Schema |  |
+| --- | --- |
+| `bundleName` <br /><span class="type-text">string</span> | Bundle name
+| `entityIds` <br /><span class="type-text">array of integers</span> | Entity IDs to include in the bundle
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+  <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "bundleName": "Bundle for campaign 1",
+  "entityIds": [
+    10895823
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Bundle created successfully",
+    "id": 5
+  }
+}
+```
+
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Bid Model Bundle
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a Bid Model bundle for the specified Campaign and Dimension IDs.
+
+| Path Parameters |  |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionId` <br /><span class="type-text">integer</span>  | [Dimension ID](#get-list-of-bid-model-dimensions) |
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`bundleDetailList` <br /><span class="type-text">array of objects</span></td>
+<td>Array of objects containing bundle details to update</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`bundleDetailList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`bundleId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Bundle ID](#get-list-of-bid-model-bundles)</td>
+  </tr>
+  <tr>
+  <td>`bundleName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Bundle name</td>
+  </tr>
+  <tr>
+  <td>`entityIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Entity IDs to include in the bundle</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "bundleDetailList": [
+    {
+      "bundleId": 3,
+      "bundleName": "Bundle#3",
+      "entityIds": [
+        30,
+        31
+      ]
+    },
+    {
+      "bundleId": 4,
+      "bundleName": "Bundle#4"
+    },
+    {
+      "bundleId": 5,
+      "entityIds": [
+        13,
+        14
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bundle updated successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Delete Bid Model Bundle
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles" />
+
+<div class="endpoint-container">
+<div class="child1">
+
+Delete a Bid Model bundle for the specified Campaign and Dimension IDs.
+
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+| `dimensionIds` <br /><span class="type-text">string</span> | Comma separated [Dimension IDs](#get-list-of-bid-model-dimensions) to delete Bid Modeling data for |
+
+| Request Schema |  |
+| --- | --- |
+| `bundleIds` <br /><span class="type-text">array of integers</span> | [Bundle ID](#get-list-of-bid-model-bundles)s to delete
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Bid Modelling deleted successfully!"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function deleteBidModelling(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    params: {
+      query?: {
+        dimensionIds?: `string`,
+        bidModelDataIds?: `string`,
+        campaignId?: `number`,
+      },
+      path: {
+        campaignId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+---
+
+### Manage Insertion Order Bid Modeling
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add, update, or remove Bid Modeling at the Insertion Order level. Changes will be applied to all Campaigns associated with specified Insertion Order.
+
+| Path  |     |
+| ---- | --- |
+| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`bidModelRequests` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+<td>Objects containing Bid Model actions</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`bidModelRequests` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`action` <br /><span class="type-text">string</span></td>
+  <td>Supported values specifying Bid Model action: `ADD`, `UPDATE`, `DELETE`</td>
+  </tr>
+    <tr>
+  <td>`bidModelData` <br /><span class="type-text">object</span></td>
+  <td>Object containing Bid Model data</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`bidModelData` object properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`id`<br /><span class="type-text">integer</span></td>
+        <td>Bid Model data ID</td>
+        </tr>
+          <tr>
+        <td>`priority` <br /><span class="type-text">integer</span></td>
+        <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+        </tr>
+          <tr>
+        <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
+        <td>Bid Multiplier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+        </tr>
+        <tr>
+        <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+        <td>Spend ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+        </tr>
+        <tr>
+        <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+        <td>Spend ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+  <tr>
+  <td>`dimensionEntityMappings` <br /><span class="type-text">object</span></td>
+  <td>Object containing entity mappings</td>
+  </tr>
+  <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`dimensionEntityMappings` object properties</summary>
+        <table className="objectProperties">
+          <tr>
+        <td>`dimensionId`  <br /><span class="type-text">integer</span></td>
+        <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
+        </tr>
+          <tr>
+        <td>`entityId` <br /><span class="type-text">integer</span></td>
+        <td>Entity ID</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
+   <tr>
+  <td>`bidModelDataIds` <br /><span class="type-text">array of integers</span></td>
+  <td>[Bid Model Data IDs](/guidelines/bid-model-api#get-list-of-modeled-entities-for-a-campaign)</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+<td>`baseBid` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>Base value on which bid modifiers are applied. For example, if base bid is 2, and bid modifier is 2, then bid price is: 2x2=4</td>
+</tr>
+<tr>
+<td>`excludeDimensionEntityMappings` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing dimension entity mappings to exclude</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`excludeDimensionEntityMappings` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td> `advertiserId` <br /><span class="type-text">integer</span></td>
+  <td>Advertiser ID</td>
+  </tr>
+    <tr>
+  <td>`dspId` <br /><span class="type-text">integer</span></td>
+  <td>DSP ID</td>
+  </tr>
+    <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+  </tr>
+      <tr>
+  <td>`uowId` <br /><span class="type-text">integer</span></td>
+  <td>User Organization Workspace ID</td>
+  </tr>
+      <tr>
+  <td>`campaignId` <br /><span class="type-text">integer</span></td>
+  <td>Campaign ID</td>
+  </tr>
+      <tr>
+  <td>`ids` <br /><span class="type-text">string</span></td>
+  <td>Comma separated IDs</td>
+  </tr>
+      <tr>
+  <td>`isExcluded` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the entity is excluded from the Bid Model: <var>true</var></td>
+  </tr>
+      <tr>
+  <td>`dimensionId` <br /><span class="type-text">integer</span></td>
+  <td>[Dimension ID](#get-list-of-bid-model-dimensions)</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+  <div class="child2">
+
+  <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "bidModelRequests": [
+    {
+      "action": "ADD",
+      "bidModelData": {
+        "priority": 1
+      },
+      "dimensionEntityMappings": [
+        {
+          "campaignId": 1
+        }
+      ]
+    },
+    {
+      "action": "UPDATE",
+      "bidModelData": {
+        "id": 3677,
+        "priority": 2
+      }
+    },
+    {
+      "action": "DELETE",
+      "bidModelDataIds": [
+        893
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Cannot assign priority as campaign is in invalid status"
+    }
+  ]
+}
+```
+
+```json title="Response 500"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "server encountered an error !"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }[]
+      }
+    };
+  };
+};
+
+function managePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          bidModelRequests?: [
+            {
+              bidModelData?: {
+                id?: `number`,
+                priority?: `number`,
+                bidMultiplier?: `number`,
+                spendRatio?: `number`,
+                spendRatioTypeId?: `number`,
+              },
+              dimensionEntityMappings?: [
+                {
+                  dimensionId?: `number`,
+                  entityId?: `number`,
+                }
+              ],
+              action: [ "ADD" | "UPDATE" | "DELETE" ],
+              bidModelDataIds?: `[number]`,
+            }
+          ],
+          baseBid?: `number`,
+          excludeDimensionEntityMappings?: [
+            {
+              advertiserId?: `number`,
+              dspId?: `number`,
+              owId?: `number`,
+              uowId?: `number`,
+              campaignId?: `number`,
+              ids?: `string`,
+              isExcluded?: `number`,
+              dimensionId?: `number`,
+            }
+          ]  
+        } 
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Manage Insertion Order Priority
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models" />
+<br /><CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models" />
+<br /><CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add, update, or delete priorities at the Insertion Order level. Changes will be applied to all Campaigns associated with the Insertion Order. 
+
+Assigning priority to Campaigns allows the you to establish a sequential order of bidding to fine-tune their targeting strategy. Priority may be assigned (ranging 1 to 10) to multiple <var>campaignIds</var>.
+
+| Query Parameters   | <span class="badge badge--danger">DELETE</span> only|
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s
+
+| Path Parameters  | |
+| --- | --- |
+| <span class="code-text">ioId</span> <br /><span class="type-text">integer</span> | Insertion Order ID |
+
+| Request Schema  |  |
+| --- | --- |
+| <span class="code-text">priority</span> <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ] |
+| <span class="code-text">campaignIds</span> <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s   |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "priority": 1,
+  "campaignIds": [
+    123456, 
+    234567, 
+    345678, 
+    456789
+  ]
+}
+```
+
+```json title="response 200"
+{
+  "success": true,
+  "data": "Priority Updated Successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+};
+
+function addPriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'POST'
+    url: 'https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+function deletePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'DELETE'
+    url: 'https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+
+  function updatePriorityToCampaign(): Promise<Responses> {
+  const options = {
+    method: 'PATCH'
+  url: 'https://api.iqm.com/api/v3/bm/io/{ioId}/bid-models',
+    params: {
+      path: {
+        ioId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          priority: `number`,
+          campaignIds: `array of numbers`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Bid Model Metrics and Dimensions
+
+### Get Metrics Report For a Given Campaign and Dimension
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+| Path Parameters | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)
+| `dimensionId` <br /><span class="type-text">integer</span> | [Dimension ID](#get-list-of-bid-model-dimensions)
+
+</div>
+</div>
+
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Create a Basic Report</summary>
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate`  <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/guidelines/master-api/#get-timezones)</td>
+</tr>
+<tr>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number of retrieved data <br />Default: <var>1</var></td>
+</tr>
+<tr>
+<td>`searchField` <br /><span class="type-text">string</span></td>
+<td>Filter results by search field</td>
+</tr>
+<tr>
+<td>`sortBy` <br /><span class="type-text">string</span></td>
+<td> Sorts by ascending (<var>+</var>) or descending (<var>-</var>) <br />Default: <var>-impressions</var></td>
+</tr>
+<tr>
+<td>`bundleIds` <br /><span class="type-text">array of integer</span></td>
+<td>Bundle IDs</td>
+</tr>
+</table>
+
+</div>
+<div class="child2">
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Simple Report">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1
+}
+```
+</CodeOption>
+  <CodeOption label="Simple Report with Sorting">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions"
+}
+```
+</CodeOption>
+  <CodeOption label="Report with Search">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions",
+  "searchField": ".com"
+}
+```
+</CodeOption>
+  <CodeOption label="Report with Bundle IDs">
+
+```json
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "+impressions",
+  "searchField": ".com",
+  "bundleIds": [1,2]
+}
+```
+</CodeOption>
+  <CodeOption label="Advanced Search">
+
+```json
+{
+  "startDate": 1750651200000,
+  "endDate": 1752724799000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "searchKeywords": [
+    "9171361",
+    "keyword 1",
+    "33126",
+    "keyword N"
+  ]
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+<CodeDropdown label="Response 200 Examples">
+  <CodeOption label="Basic Report">
+```json
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 1,
+      "impressions": 25712,
+      "dataCost": 0,
+      "winRate": 99.4276875483372,
+      "clicks": 25651,
+      "eCPM": 1.0000000000000002,
+      "totalECPM": 1.0000000000000002,
+      "eCPC": 0.0010023780749288528,
+      "totalECPC": 0.0010023780749288528,
+      "mediaSpent": 25.712000000000003,
+      "CTR": 99.76275668948351,
+      "spent": 25.712000000000003,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 25860,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "recordsList": [
+      {
+        "id": 1001662598,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      },
+      {
+        "id": 1001662599,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 2
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Report With Bundles">
+```json
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 1,
+      "impressions": 25712,
+      "dataCost": 0,
+      "winRate": 99.4276875483372,
+      "clicks": 25651,
+      "eCPM": 1.0000000000000002,
+      "totalECPM": 1.0000000000000002,
+      "eCPC": 0.0010023780749288528,
+      "totalECPC": 0.0010023780749288528,
+      "mediaSpent": 25.712000000000003,
+      "CTR": 99.76275668948351,
+      "spent": 25.712000000000003,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "attributedClickThroughConversions": 0,
+      "attributedViewThroughConversions": 0,
+      "costPerAttributedConversions": 0,
+      "attributedConversionsRate": 0,
+      "returnOnAdSpend": 0,
+      "VCR": 0,
+      "eCPV": 0,
+      "eCPCV": 0,
+      "startCount": 0,
+      "firstCount": 0,
+      "midCount": 0,
+      "thirdCount": 0,
+      "completeCount": 0,
+      "bidImpressions": 25860,
+      "audioVideoViewed": 0,
+      "prebidCost": 0
+    },
+    "recordsList": [
+      {
+        "bundleId": 1,
+        "bundleName": "bundle1",
+        "bundleEntityIds": [
+          1,
+          2,
+          3
+        ],
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0,
+        "entityRecordsList": [
+          {
+            "id": 1001662596,
+            "name": "b.fast-stories.com",
+            "isExcluded": 0,
+            "modelled": false,
+            "inventoryTrafficType": "web",
+            "inventoryType": "Site",
+            "blocked": false,
+            "targeted": false,
+            "impressions": 25712,
+            "dataCost": 0,
+            "winRate": 99.4276875483372,
+            "clicks": 25651,
+            "eCPM": 1.0000000000000002,
+            "totalECPM": 1.0000000000000002,
+            "eCPC": 0.0010023780749288528,
+            "totalECPC": 0.0010023780749288528,
+            "mediaSpent": 25.712000000000003,
+            "CTR": 99.76275668948351,
+            "spent": 25.712000000000003,
+            "conversionCount": 0,
+            "conversionValue": 0,
+            "attributedClickThroughConversions": 0,
+            "attributedViewThroughConversions": 0,
+            "costPerAttributedConversions": 0,
+            "attributedConversionsRate": 0,
+            "returnOnAdSpend": 0,
+            "VCR": 0,
+            "eCPV": 0,
+            "eCPCV": 0,
+            "startCount": 0,
+            "firstCount": 0,
+            "midCount": 0,
+            "thirdCount": 0,
+            "completeCount": 0,
+            "bidImpressions": 25860,
+            "audioVideoViewed": 0,
+            "prebidCost": 0
+          },
+          {
+            "id": 1001662597,
+            "name": "b.fast-stories.com",
+            "isExcluded": 0,
+            "modelled": false,
+            "inventoryTrafficType": "web",
+            "inventoryType": "Site",
+            "blocked": false,
+            "targeted": false,
+            "impressions": 25712,
+            "dataCost": 0,
+            "winRate": 99.4276875483372,
+            "clicks": 25651,
+            "eCPM": 1.0000000000000002,
+            "totalECPM": 1.0000000000000002,
+            "eCPC": 0.0010023780749288528,
+            "totalECPC": 0.0010023780749288528,
+            "mediaSpent": 25.712000000000003,
+            "CTR": 99.76275668948351,
+            "spent": 25.712000000000003,
+            "conversionCount": 0,
+            "conversionValue": 0,
+            "attributedClickThroughConversions": 0,
+            "attributedViewThroughConversions": 0,
+            "costPerAttributedConversions": 0,
+            "attributedConversionsRate": 0,
+            "returnOnAdSpend": 0,
+            "VCR": 0,
+            "eCPV": 0,
+            "eCPCV": 0,
+            "startCount": 0,
+            "firstCount": 0,
+            "midCount": 0,
+            "thirdCount": 0,
+            "completeCount": 0,
+            "bidImpressions": 25860,
+            "audioVideoViewed": 0,
+            "prebidCost": 0
+          }
+        ]
+      },
+      {
+        "id": 1001662598,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      },
+      {
+        "id": 1001662599,
+        "name": "b.fast-stories.com",
+        "isExcluded": 0,
+        "modelled": false,
+        "inventoryTrafficType": "web",
+        "inventoryType": "Site",
+        "blocked": false,
+        "targeted": false,
+        "impressions": 25712,
+        "dataCost": 0,
+        "winRate": 99.4276875483372,
+        "clicks": 25651,
+        "eCPM": 1.0000000000000002,
+        "totalECPM": 1.0000000000000002,
+        "eCPC": 0.0010023780749288528,
+        "totalECPC": 0.0010023780749288528,
+        "mediaSpent": 25.712000000000003,
+        "CTR": 99.76275668948351,
+        "spent": 25.712000000000003,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0,
+        "attributedConversionsRate": 0,
+        "returnOnAdSpend": 0,
+        "VCR": 0,
+        "eCPV": 0,
+        "eCPCV": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bidImpressions": 25860,
+        "audioVideoViewed": 0,
+        "prebidCost": 0
+      }
+    ],
+    "totalRecords": 4,
+    "filteredRecords": 4
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+
+</div></div>
+</details>
+
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Create a Report with Performance Filters</summary>
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated. Additionally, you can specify performance filters to refine the report results.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate`  <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/guidelines/master-api/#get-timezones)</td>
+</tr>
+<tr>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number of retrieved data <br />Default: <var>1</var></td>
+</tr>
+<tr>
+<td>`performanceFilters` <br /><span class="type-text">object</span></td>
+<td>Object containing performance filter criteria</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`performanceFilters` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`operation` <br /><span class="type-text">string</span></td>
+  <td>Set to <var>AND</var> or <var>OR</var></td>
+  </tr>
+    <tr>
+  <td>`conditions` <br /><span class="type-text">object array</span></td>
+  <td>Object containing conditions details</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`conditions` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`column` <br /><span class="type-text">string</span></td>
+    <td>Column name</td>
+    </tr>
+      <tr>
+    <td>`condition` <br /><span class="type-text">string</span></td>
+    <td>Condition description</td>
+    </tr>
+      <tr>
+    <td>`value` <br /><span class="type-text">integer</span></td>
+    <td>Condition value</td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
+  </table></details>
+  </td>
+  </tr>
+</table>
+
+</div>
+<div class="child2">
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Report With Single Performance Filter">
+
+```json
+{
+  "startDate": 1749873600000,
+  "endDate": 1752551999000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "performanceFilters": {
+    "conditions": [
+      {
+        "column": "impressions",
+        "condition": "<",
+        "value": 1000
+      }
+    ]
+  }
+}
+```
+</CodeOption>
+  <CodeOption label="Report With Multiple Performance Filters">
+
+```json
+{
+  "startDate": 1749873600000,
+  "endDate": 1752551999000,
+  "timeZoneId": 29,
+  "sortBy": "+impressions",
+  "pageNo": 1,
+  "performanceFilters": {
+    "operation": "AND",
+    "conditions": [
+      {
+        "column": "impressions",
+        "condition": "<",
+        "value": 1000
+      },
+      {
+        "column": "clicks",
+        "condition": "!=",
+        "value": 2000
+      }
+    ]
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</div></div>
+</details>
+
+<p /><details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Download a Report</summary>
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a downloadable Bid Model metrics report for the specified Campaign and Dimension IDs. The report can be filtered, sorted, and paginated. The report will be generated in either CSV or XLSX format based on the request.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate`  <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of Campaign end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+<td>[Timezone ID](/guidelines/master-api/#get-timezones)</td>
+</tr>
+<tr>
+<td>`pageNo` <br /><span class="type-text">integer</span></td>
+<td>Page number of retrieved data <br />Default: <var>1</var></td>
+</tr>
+<tr>
+<td>`sortBy` <br /><span class="type-text">string</span></td>
+<td> Sorts by ascending (<var>+</var>) or descending (<var>-</var>) <br />Default: <var>-impressions</var></td>
+</tr>
+<tr>
+<td>`download` <br /><span class="type-text">object</span></td>
+<td>Object containing download details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`download` object properties</summary>
+  <table className="objectProperties">
+      <tr>
+    <td> `fileType` <br /><span class="type-text">string</span></td>
+    <td>File type: <var>csv</var> or <var>xlsx</var></td>
+    </tr>
+    <tr>
+    <td>`columns` <br /><span class="type-text">object</span></td>
+    <td>Object containing <var>label</var> and <var>value</var></td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`columns` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`label` <br /><span class="type-text">string</span></td>
+      <td>Serves as the header row in the downloaded CSV/XLSX file, each label corresponds to a data field, displayed as the column header in the file</td>
+      </tr>
+        <tr>
+      <td>`value` <br /><span class="type-text">string</span></td>
+      <td>Represents the data key used to retrieve values from the result map sourced from the database, ensures each column in the CSV/XLSX file accurately reflects the relevant data, with applied formatting and timezone adjustments as needed</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+  </table></details>
+  </td>
+  </tr>
+</table>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "-impressions",
+  "download": {
+    "fileType": "csv",
+    "columns": [
+      {
+        "label": "ID",
+        "value": "id"
+      },
+      {
+        "label": "Inventory Name",
+        "value": "name"
+      },
+      {
+        "label": "Type",
+        "value": "inventoryType"
+      },
+      {
+        "label": "Modeling",
+        "value": "modelled"
+      },
+      {
+        "label": "Impressions",
+        "value": "impressions"
+      },
+      {
+        "label": "Clicks",
+        "value": "clicks"
+      },
+      {
+        "label": "Win Rate",
+        "value": "winRate"
+      },
+      {
+        "label": "CTR",
+        "value": "CTR"
+      },
+      {
+        "label": "Media eCPM",
+        "value": "eCPM"
+      },
+      {
+        "label": "Total eCPM",
+        "value": "totalECPM"
+      },
+      {
+        "label": "Media eCPC",
+        "value": "eCPC"
+      },
+      {
+        "label": "Total eCPC",
+        "value": "totalECPC"
+      },
+      {
+        "label": "Media Cost",
+        "value": "mediaSpent"
+      },
+      {
+        "label": "Data Cost",
+        "value": "dataCost"
+      },
+      {
+        "label": "Pre-bid Cost",
+        "value": "prebidCost"
+      },
+      {
+        "label": "Total Spent",
+        "value": "spent"
+      },
+      {
+        "label": "Total Attributed Conversion Value",
+        "value": "conversionValue"
+      },
+      {
+        "label": "Total Attributed Conversions",
+        "value": "conversionCount"
+      },
+      {
+        "label": "Return On Ad Spend",
+        "value": "returnOnAdSpend"
+      },
+      {
+        "label": "Attributed Click Through Conversions",
+        "value": "attributedClickThroughConversions"
+      },
+      {
+        "label": "Attributed View Through Conversions",
+        "value": "attributedViewThroughConversions"
+      },
+      {
+        "label": "Cost Per Attributed Conversions",
+        "value": "costPerAttributedConversions"
+      },
+      {
+        "label": "Attributed Conversions Rate",
+        "value": "attributedConversionsRate"
+      }
+    ]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "url": "DownloadURL"
+  }
+}
+```
+
+</div></div>
+</details>
+
+---
+
+### Get List of Bid Model Dimensions
+
+<CopyUrl method="GET" url="/api/v3/bm/static/dimensions" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+This API will provide values of Bid Model dimensions and sub-dimensions.
+
+| Dimensions | |
+| ------- | --- |
+| `1`  | Creative |
+| `2` | Inventory |
+| `3` | Deal ID |
+| `4` | Open Exchange |
+| `5` | Publisher Category |
+| `6` | Device |
+| `7` | Traffic Type |
+| `8` | Device Type |
+| `9` | Location |
+| `10` | State |
+| `11` | City |
+| `12` | Zip |
+| `13` | Exchange |
+
+</div>
+ <div class="child2">
+
+ <Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 5,
+    "filteredRecords": 5,
+    "dimensions": [
+      {
+        "name": "creative",
+        "id": 1,
+        "label": "Creative",
+        "order": 1,
+        "modellingEnabled": true
+      },
+      {
+        "name": "inventory",
+        "id": 2,
+        "label": "Inventory",
+        "order": 2,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "deal_id",
+            "id": 3,
+            "label": "Deal ID",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "open_exchange",
+            "id": 4,
+            "label": "Open Exchange",
+            "order": 2,
+            "modellingEnabled": false
+          },
+          {
+            "name": "publisher_category",
+            "id": 5,
+            "label": "Publisher Category",
+            "order": 3,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "device",
+        "id": 6,
+        "label": "Device",
+        "order": 3,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "traffic_type",
+            "id": 7,
+            "label": "Traffic Type",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "device_type",
+            "id": 8,
+            "label": "Device Type",
+            "order": 2,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "location",
+        "id": 9,
+        "label": "Location",
+        "order": 4,
+        "modellingEnabled": false,
+        "subdimensions": [
+          {
+            "name": "state",
+            "id": 10,
+            "label": "State",
+            "order": 1,
+            "modellingEnabled": false
+          },
+          {
+            "name": "city",
+            "id": 11,
+            "label": "City",
+            "order": 2,
+            "modellingEnabled": false
+          },
+          {
+            "name": "zip",
+            "id": 12,
+            "label": "Zip",
+            "order": 3,
+            "modellingEnabled": false
+          }
+        ]
+      },
+      {
+        "name": "exchange",
+        "id": 13,
+        "label": "Exchange",
+        "order": 5,
+        "modellingEnabled": false
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          dimensions: {
+            name: string;
+            id: number;
+            label: string;
+            order: number;
+            modellingEnabled: boolean
+            subdimensions?: {
+              name: string;
+              id: number;
+              label: string;
+              order: number;
+              modellingEnabled: boolean
+            }[]
+          }[]
+        }
+      }
+    };
+  };
+}
+
+function getDimensions(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/bm/static/dimensions',
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+

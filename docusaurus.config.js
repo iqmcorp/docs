@@ -123,43 +123,43 @@ const config = {
           {
             position: "left",
             label: "GETTING STARTED",
-            to: "Getting%20Started/"
+            to: "getting-started/"
           },
           {
             label: "QUICKSTART GUIDES",
             position: "left",
-            to: "/Quickstart%20Guides/",
+            to: "/quickstart-guides/",
             className: "navbarLink",
           },
           {
             label: "TUTORIALS",
             position: "left",
-            to: "/Tutorials/",
+            to: "/tutorials/",
             className: "navbarLink",
           },
           {
             label: "API GUIDELINES",
             position: "left",
-            to: "/Guidelines/",
+            to: "/guidelines/",
             className: "navbarLink",
             type: "dropdown",
             items: [
               {
                 label: "POLITICAL",
                 type: "doc",
-                docId: "Political Vertical/index",
+                docId: "political-vertical/index",
               },
               {
                 label: "HEALTHCARE",
                 type: "doc",
-                docId: "Healthcare Vertical/index",
+                docId: "healthcare-vertical/index",
               },
             ]
           },
           {
             label: "MIGRATION GUIDES",
             position: "left",
-            to: "/Migration%20Guides/",
+            to: "/migration-guides/",
             className: "navbarLink",
           },
           {
@@ -180,7 +180,7 @@ const config = {
               },
               {
                 label: "API Guidelines",
-                to: "/Guidelines",
+                to: "/guidelines",
               },
               {
                 label: "Help Center",
@@ -207,30 +207,75 @@ const config = {
       {
         redirects: [
           {
-            to: '/Tutorials/Create-a-Conversion',
-            from: '/Quickstart Guides/Conversion-Quickstart'
+            to: '/tutorials/create-a-conversion',
+            from: '/quickstart-guides/conversion-quickstart'
           },
           {
-            to: '/Tutorials/Upload-a-Matched-Audience',
-            from: '/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide/'
+            to: '/tutorials/upload-a-matched-audience',
+            from: '/quickstart-guides/matched-audience-upload-api-quickstart-guide/'
           },
           {
-            to: '/Tutorials/Create-a-Bid-Model',
-            from: '/Quickstart Guides/Bid-Model-Quickstart/'
+            to: '/tutorials/create-a-bid-model',
+            from: '/quickstart-guides/bid-model-quickstart/'
           },
           {
-            to: '/Tutorials/Optimize-Your-Inventory',
-            from: '/Quickstart Guides/Inventory-Quickstart/'
+            to: '/tutorials/optimize-your-inventory',
+            from: '/quickstart-guides/inventory-quickstart/'
           },
           {
-            to: '/Tutorials/Create-an-Insights-Report',
-            from: '/Quickstart Guides/Insights-Quickstart/'
+            to: '/tutorials/create-an-insights-report',
+            from: '/quickstart-guides/insights-quickstart/'
           },
           {
-            to: '/Tutorials/Create-a-PG-Campaign',
-            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+            to: '/tutorials/create-a-pg-campaign',
+            from: '/quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide'
           }
-        ]
+        ],
+        createRedirects(existingPath) {
+          // Handle folder renames with both encoded and unencoded versions
+          
+          // Getting Started folder
+          if (existingPath.includes('/getting-started')) {
+            return [
+              existingPath.replace('/getting-started', '/Getting Started'),
+              existingPath.replace('/getting-started', '/Getting%20Started'),
+            ];
+          }
+          
+          // Healthcare Vertical folder
+          if (existingPath.includes('/healthcare-vertical')) {
+            return [
+              existingPath.replace('/healthcare-vertical', '/Healthcare Vertical'),
+              existingPath.replace('/healthcare-vertical', '/Healthcare%20Vertical'),
+            ];
+          }
+          
+          // Political Vertical folder
+          if (existingPath.includes('/political-vertical')) {
+            return [
+              existingPath.replace('/political-vertical', '/Political Vertical'),
+              existingPath.replace('/political-vertical', '/Political%20Vertical'),
+            ];
+          }
+          
+          // Quickstart Guides folder
+          if (existingPath.includes('/quickstart-guides')) {
+            return [
+              existingPath.replace('/quickstart-guides', '/Quickstart Guides'),
+              existingPath.replace('/quickstart-guides', '/Quickstart%20Guides'),
+            ];
+          }
+          
+          // Migration Guides folder
+          if (existingPath.includes('/migration-guides')) {
+            return [
+              existingPath.replace('/migration-guides', '/Migration Guides'),
+              existingPath.replace('/migration-guides', '/Migration%20Guides'),
+            ];
+          }
+          
+          return undefined; // Return undefined when no redirect is needed
+        },
       }
     ]
   ]

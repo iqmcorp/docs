@@ -1,0 +1,1111 @@
+---
+title: Create a Deal
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+# Create a Deal
+
+Create a deal with this in-depth Tutorial using IQM's Inventory API.
+
+## About IQM Deals
+
+The Inventory API allows you to create and manage advertising deals. IQM offers two kinds of private deals:
+
+  * **Private Marketplace (PMP)** deals are a type of programmatic advertising arrangement that allows Advertisers to purchase ad Inventory through a private, invitation-only auction.
+  * **Programmatic Gauranteed (PG)** deals are a direct negotiation between one publisher and one Advertiser that offer budget predictability and avoid auction volatility by ensuring a fixed amount of ad Inventory at a pre-negotiated price.
+
+### More Resources
+  * [Inventory API](/guidelines/inventory-api) Guidelines
+  * [Optimize Your Inventory](/tutorials/optimize-your-inventory/) Tutorial
+  * [Ad Inventory and Placements<ExternalLink />](https://help.iqm.com/en/collections/2908807-ad-inventory-and-placements) Help Center article
+
+## Before You Begin
+
+To create a deal, the following are required:
+
+  * An Account On the IQM platform
+    * See [Getting Started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
+  * A Campaign
+    * See [Create a Campaign](/quickstart-guides/create-a-campaign-quickstart) Quickstart Guide
+    * See [Create a PG Campaign](/tutorials/create-a-pg-campaign) Tutorial
+    * Required for assigning a deal to a Campaign
+
+### Log In 
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID will be used for any further API communications.
+
+For further information see the complete [OAuth API Documentation](/guidelines/user-api#oauth-token).
+
+| Headers |  |
+| ---- | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Authentication Guide](/quickstart-guides/authentication-quickstart-guide)<br /> |
+
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Authentication Guide](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+### Request Exchange List 
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/master/exchanges" />
+
+<div class="endpoint-container">
+<div class="child1">
+
+To create a PG or PMP deal, an exchange must be provided. Use the master exchange endpoint to get a list of available exchanges. 
+
+| Query Parameters |  |
+|---|---|
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var> |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>300</var> |
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>+id</var> |
+| `searchField` <br /><span class="type-text">string</span> | Search the result by provided keyword in the <var>searchField</var>, search country records by <var>name</var> |
+| `ids` <br /><span class="type-text">array of integers</span> | Selected country ID List, countries with provided IDs will be returned first compared to other records |
+| `exchangeIds` <br /><span class="type-text">array of integers</span> | Filters for Exchange IDs |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 90,
+        "name": "Aniview",
+        "urlName": "aniview"
+      },
+      {
+        "id": 89,
+        "name": "LoopMe",
+        "urlName": "loopme"
+      },
+      {
+        "id": 88,
+        "name": "One Tag",
+        "urlName": "onetag"
+      },
+      {
+        "id": 87,
+        "name": "Share Through",
+        "urlName": "sharethrough"
+      },
+      {
+        "id": 84,
+        "name": "Vidazoo",
+        "urlName": "vidazoo"
+      },
+      {
+        "id": 80,
+        "name": "Equativ",
+        "urlName": "equativ"
+      },
+      {
+        "id": 78,
+        "name": "Magnite",
+        "urlName": "magnite"
+      },
+      {
+        "id": 77,
+        "name": "Verve",
+        "urlName": "verve"
+      },
+      {
+        "id": 76,
+        "name": "Infolink",
+        "urlName": "infolink"
+      },
+      {
+        "id": 75,
+        "name": "Beachfront",
+        "urlName": "beachfront"
+      },
+      {
+        "id": 74,
+        "name": "Teads",
+        "urlName": "teads"
+      },
+      {
+        "id": 73,
+        "name": "Outbrain",
+        "urlName": "outbrain"
+      },
+      {
+        "id": 72,
+        "name": "Telaria",
+        "urlName": "telaria"
+      },
+      {
+        "id": 71,
+        "name": "33 Across",
+        "urlName": "ttacross"
+      },
+      {
+        "id": 69,
+        "name": "Media.net",
+        "urlName": "mnet"
+      },
+      {
+        "id": 66,
+        "name": "Unruly",
+        "urlName": "unruly"
+      },
+      {
+        "id": 47,
+        "name": "Index Exchange",
+        "urlName": "indexch"
+      },
+      {
+        "id": 46,
+        "name": "Triton Digital",
+        "urlName": "tdigital"
+      },
+      {
+        "id": 45,
+        "name": "Publisher Direct",
+        "urlName": "pbd"
+      },
+      {
+        "id": 41,
+        "name": "Column6",
+        "urlName": "adigital"
+      },
+      {
+        "id": 39,
+        "name": "Google DoubleClick",
+        "urlName": "adx"
+      },
+      {
+        "id": 37,
+        "name": "SpotXchange",
+        "urlName": "spotx"
+      },
+      {
+        "id": 19,
+        "name": "OpenX",
+        "urlName": "openx"
+      },
+      {
+        "id": 16,
+        "name": "Pubmatic",
+        "urlName": "pubmatic"
+      },
+      {
+        "id": 11,
+        "name": "Smaato",
+        "urlName": "smaato"
+      },
+      {
+        "id": 1,
+        "name": "iQM",
+        "urlName": "test"
+      }
+    ],
+    "totalRecords": 26,
+    "filteredRecords": 26
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            id: number;
+            name: string;
+            urlName: string;
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+        }
+      }
+    };
+  };
+};
+
+function getExchanges(): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/master/exchanges',
+    params: {
+      query?: {
+        exchangeIds?: `string`,
+        ids?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        order?: `string`,
+        searchField?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+## Create a PG Deal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/pg/deals/add" />
+
+<div class="endpoint-container">
+<div class="child1">
+
+Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var> field to create a PG deal. 
+
+| Request Schema  |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PG deal ID |
+| `dealName` <br /><span class="type-text">string</span>| PG deal name |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG deal | 
+| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
+| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG deal <br />Active: <var>1</var> <br />Inactive: <var>2</var> |
+| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
+| `paymentTypeId` <br /><span class="type-text">integer</span> | Payment type ID <br /><var>2</var>: platform-based payment
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "dealId": "YT-Test-1234",
+    "dealName": "Test deal YT31",
+    "exchangeId": 11,
+    "statusId": 2,
+    "paymentTypeId": 1,
+    "description": "Test Deal"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "Deal Test deal YT31 created successfully",
+        "id": 2
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+          id: number;
+        }
+      }
+    };
+  };
+}
+
+function addPGDeal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/pg/deals/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          dealId: `string`
+          dealName: `string`,
+          exchangeId: `number`,
+          statusId: `number`,
+          description?: `string`,
+          paymentTypeId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div>
+</div>
+
+## Create a PMP Deal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/pmp/deals/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var> field to create a PMP deal. 
+
+:::tip 
+
+Consider creating a PMP Inventory group if you plan to target or block the same group of PMP deals across multiple Campaigns. See the [Optimize Your Inventory](/tutorials/optimize-your-inventory#step-3-create-an-inventory-group) Tutorial for step-by-step instructions. 
+
+:::
+
+| Properties |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">string</span> | PMP deal ID |
+| `dealName` <br /><span class="type-text">string</span> | PMP deal name |
+| `description` <br /><span class="type-text">string</span> | PMP deal description |
+| `cpm` <br /><span class="type-text">integer</span> | PMP deal Cost Per Mille (CPM) value |
+| `dealCurationTypeId` <br /><span class="type-text">integer</span> | [Curation Type ID](/guidelines/master-api#get-deal-curation-types) |
+| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs |
+| `exchangeId` <br /><span class="type-text">integer</span> | Exchange associated with PMP deal |
+| `assignToCustomers` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs |
+| `active` <br /><span class="type-text">boolean</span> | Deal status, active (<var>true</var>) or inactive (<var>false</var>) |
+
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>PMP deal ID</td>
+  </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+  </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "dealId": "DIewkFZALX1taoLjQg6Gge1dD6YvZYO4RChUKmOLk",
+    "dealName": "Deal test123",
+    "description": "test deal description",
+    "cpm": 10,
+    "creativeTypes": [
+        11,
+        12
+    ],
+    "exchangeId": 39,
+    "active": true
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 461,
+        "message": "Deal test123 created successfully"
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Deal id can not be longer than 500 characters",
+            "field": "dealId"
+        }
+    ]
+}
+```
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Invalid exchange id/ids provided"
+        }
+    ]
+}
+```
+
+```json title="Response 500"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "server encountered an error !"
+        }
+    ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        }
+      }
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          field: string;
+        }[];
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      }
+    };
+  };
+  500: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      }
+    };
+  };
+}
+
+function addPMPDeal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/pmp/deals/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          dealId: `string`,
+          dealName: `string`,
+          description?: `string`,
+          cpm?: `number`,
+          dealCurationTypeId?: `number`,
+          creativeTypes?: `array of numbers`,
+          exchangeId: `number`,
+          assignToCustomers?: `array of numbers`,
+          active: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Assign Deals to a Campaign
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pg/campaigns/mappings" />
+<br /><CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pmp/campaigns/mappings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Deals can be assigned or removed to/from Camapaigns. PG deals may only be assigned to PG Campaigns; and PMP deals may only be assigned to Advanced Campaigns. 
+
+| Request Schema | |
+| --- | --- |
+| `operations` <br /><span class="type-text">array</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from |
+| `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/remove to/from Campaigns |
+| `pgDealIds` <br /><span class="type-text">array of integers</span> | PG deal IDs to assign/remove to/from Campaigns |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+        <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "operations": [
+     {
+      "action": "assign",
+      "campaignIds": [
+        201,
+        203
+      ],
+      "pmpDealIds": [
+        101,
+        102
+      ]
+    },
+    {
+      "action": "deassign",
+      "campaignIds": [
+        202
+      ],
+      "pmpDealIds": [
+        102
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "PMP deal campaign mappings updated successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts title="PMP–Campaign mapping"
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function managePMPDealCampaignMappings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/cmp/pmp/campaigns/mappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: [
+            {
+              action: `string`,
+              campaignIds: `array of numbers`,
+              pmpDealIds: `array of numbers`,
+            }
+          ]
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+```ts title="PG–Campaign mapping"
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string
+        }
+      }
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function managePgDealCampaignMappings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/cmp/pg/campaigns/mappings',
+    requestBody: {
+      content: {
+        "application/json": {
+          operations: [
+            {
+              action: `string`,
+              campaignIds: `array of numbers`,
+              pmpDealIds: `array of numbers`,
+            }
+          ]
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Get List of Deals Associated with Campaigns
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/campaigns/{campaignTypeId}/deals" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of Campaigns and their associated deal IDs by Campaign Type ID. 
+
+| Path Parameter ||
+| --- | --- |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)<br /><var>1</var>: Advanced <br /><var>2</var>: PG |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+      <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-Value pairs of <var>campaignId</var> and an array of deal IDs</td>
+  </tr>
+  </table>
+  </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "503584": [
+      468,
+      469,
+      23
+    ],
+    "503947": [
+      468,
+      469
+    ],
+    "504447": [
+      468,
+      469
+    ],
+    "504448": [
+      589,
+      588
+    ],
+    "505743": [
+      468,
+      469
+    ],
+    "505753": [
+      468,
+      469
+    ],
+    "505754": [
+      468,
+      469
+    ],
+    "505755": [
+      588,
+      589
+    ],
+    "505758": [
+      468,
+      469
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success?: boolean;
+        errorObjects?: {
+          error?: string;
+          reason?: string;
+          field?: string;
+        }[];
+        data?: Record<string, never>;
+      };
+    };
+  };
+}
+
+function getDealsPerCampaign(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/cmp/campaigns/{campaignTypeId}/deals',
+    params: {
+      path: {
+        campaignTypeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
