@@ -232,49 +232,126 @@ const config = {
           }
         ],
         createRedirects(existingPath) {
-          // Handle folder renames with both encoded and unencoded versions
+          const redirects = [];
           
-          // Getting Started folder
+          // Helper function to convert dash-case to PascalCase with dashes
+          const toPascalCase = (str) => {
+            return str.split('-').map(word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join('-');
+          };
+          
+          // Getting Started: OLD /Getting Started & /Getting%20Started -> NEW /getting-started
           if (existingPath.includes('/getting-started')) {
-            return [
-              existingPath.replace('/getting-started', '/Getting Started'),
-              existingPath.replace('/getting-started', '/Getting%20Started'),
-            ];
+            // Extract the file path after the folder
+            const afterFolder = existingPath.split('/getting-started')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              // Convert file name to PascalCase for old URLs
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              // Only add PascalCase filenames (old style), not lowercase
+              redirects.push(
+                '/Getting Started' + pascalPath,
+                '/Getting%20Started' + pascalPath
+              );
+            } else {
+              // Just the folder index
+              redirects.push(
+                '/Getting Started/',
+                '/Getting%20Started/'
+              );
+            }
           }
           
-          // Healthcare Vertical folder
+          // Healthcare Vertical: /healthcare-vertical -> /Healthcare Vertical & /Healthcare%20Vertical
           if (existingPath.includes('/healthcare-vertical')) {
-            return [
-              existingPath.replace('/healthcare-vertical', '/Healthcare Vertical'),
-              existingPath.replace('/healthcare-vertical', '/Healthcare%20Vertical'),
-            ];
+            const afterFolder = existingPath.split('/healthcare-vertical')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Healthcare Vertical' + pascalPath,
+                '/Healthcare%20Vertical' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Healthcare Vertical/',
+                '/Healthcare%20Vertical/'
+              );
+            }
           }
           
-          // Political Vertical folder
+          // Political Vertical: /political-vertical -> /Political Vertical & /Political%20Vertical
           if (existingPath.includes('/political-vertical')) {
-            return [
-              existingPath.replace('/political-vertical', '/Political Vertical'),
-              existingPath.replace('/political-vertical', '/Political%20Vertical'),
-            ];
+            const afterFolder = existingPath.split('/political-vertical')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Political Vertical' + pascalPath,
+                '/Political%20Vertical' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Political Vertical/',
+                '/Political%20Vertical/'
+              );
+            }
           }
           
-          // Quickstart Guides folder
+          // Quickstart Guides: /quickstart-guides -> /Quickstart Guides & /Quickstart%20Guides
           if (existingPath.includes('/quickstart-guides')) {
-            return [
-              existingPath.replace('/quickstart-guides', '/Quickstart Guides'),
-              existingPath.replace('/quickstart-guides', '/Quickstart%20Guides'),
-            ];
+            const afterFolder = existingPath.split('/quickstart-guides')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Quickstart Guides' + pascalPath,
+                '/Quickstart%20Guides' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Quickstart Guides/',
+                '/Quickstart%20Guides/'
+              );
+            }
           }
           
-          // Migration Guides folder
+          // Migration Guides: /migration-guides -> /Migration Guides & /Migration%20Guides
           if (existingPath.includes('/migration-guides')) {
-            return [
-              existingPath.replace('/migration-guides', '/Migration Guides'),
-              existingPath.replace('/migration-guides', '/Migration%20Guides'),
-            ];
+            const afterFolder = existingPath.split('/migration-guides')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Migration Guides' + pascalPath,
+                '/Migration%20Guides' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Migration Guides/',
+                '/Migration%20Guides/'
+              );
+            }
           }
           
-          return undefined; // Return undefined when no redirect is needed
+          // Return unique redirects only
+          return redirects.length > 0 ? [...new Set(redirects)] : undefined;
         },
       }
     ]
