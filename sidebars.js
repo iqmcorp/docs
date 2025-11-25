@@ -5411,7 +5411,7 @@ const sidebars = {
   healthcareSidebar: [
     {
       type: 'doc',
-      id: 'Healthcare Vertical/index',
+      id: 'healthcare-vertical/index',
       label: 'Healthcare',
       className: 'sidebarCategory'
     },
@@ -5421,7 +5421,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Healthcare Vertical/Audience-Healthcare'
+        id: 'healthcare-vertical/audience-healthcare'
       },
       items: [
         {
@@ -5432,13 +5432,13 @@ const sidebars = {
             {
               type: 'link',
               label: 'Matched Audience Details',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#matched-audience-details',
+              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'Create Matched Audience',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#create-matched-audience',
+              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
               customProps: { method: 'POST' },
             },
           ]
@@ -5451,61 +5451,61 @@ const sidebars = {
             {
               type: 'link',
               label: 'ABM Audience Details',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#abm-audience-details',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'ABM Audience Statistics',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#abm-audience-statistics',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'Healthcare Titles List',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-titles-list',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-titles-list',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'Healthcare Specialties List',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-specialties-list',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-specialties-list',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'Healthcare Systems List',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-systems-list',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-systems-list',
               customProps: { method: 'GET' },
             },
             {
               type: 'link',
               label: 'Healthcare Data',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-data',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-data',
               customProps: { method: 'POST' },
             },
             {
               type: 'link',
               label: 'Healthcare Statistics',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-statistics',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-statistics',
               customProps: { method: 'POST' },
             },
             {
               type: 'link',
               label: 'Healthcare Account Types',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-types',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-account-types',
               customProps: { method: 'POST' },
             },
             {
               type: 'link',
               label: 'Healthcare Account Subtypes',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-subtypes',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-account-subtypes',
               customProps: { method: 'POST' },
             },
             {
               type: 'link',
               label: 'Healthcare Account Names',
-              href: '/Healthcare%20Vertical/Audience-Healthcare#healthcare-account-names',
+              href: '/healthcare-vertical/audience-healthcare#healthcare-account-names',
               customProps: { method: 'POST' },
             },
           ]
@@ -5513,7 +5513,7 @@ const sidebars = {
         {
           type: 'link',
           label: 'Create ABM Audience',
-          href: '/Healthcare%20Vertical/Audience-Healthcare#create-abm-audience',
+          href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
           customProps: { method: 'POST' },
           className: 'sidebarItem',
         }
@@ -5525,34 +5525,34 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Healthcare Vertical/Finance'
+        id: 'healthcare-vertical/finance'
       },
       items: [
             {
               type: 'link',
               label: 'Customer PLD Finance Details',
-              href: '/Healthcare%20Vertical/Finance#get-customer-pld-finance-details',
+              href: '/healthcare-vertical/finance#get-customer-pld-finance-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Update Customer PLD Details',
-              href: '/Healthcare%20Vertical/Finance#update-customer-pld-details',
+              href: '/healthcare-vertical/finance#update-customer-pld-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Customer SLS Finance Details',
-              href: '/Healthcare%20Vertical/Finance#get-customer-sls-finance-details',
+              href: '/healthcare-vertical/finance#get-customer-sls-finance-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Update Customer SLS Details',
-              href: '/Healthcare%20Vertical/Finance#update-customer-sls-details',
+              href: '/healthcare-vertical/finance#update-customer-sls-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             }
@@ -5564,7 +5564,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Healthcare Vertical/Insights-PLD'
+        id: 'healthcare-vertical/insights-pld'
       },
       items: [
         {
@@ -5575,54 +5575,54 @@ const sidebars = {
             {
               type: 'link',
               label: 'PLD Resource Properties',
-              href: '/Healthcare%20Vertical/Insights-PLD#pld-resource-properties'
+              href: '/healthcare-vertical/insights-pld#pld-resource-properties'
             },
             {
               type: 'link',
               label: 'List of PLD Reports',
-              href: '/Healthcare%20Vertical/Insights-PLD#get-list-of-pld-reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-pld-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'List of Campaigns Eligible for PLD Reports',
-              href: '/Healthcare%20Vertical/Insights-PLD#get-list-of-campaigns-eligible-for-pld-reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-pld-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Generate PLD Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#generate-pld-report',
+              href: '/healthcare-vertical/insights-pld#generate-pld-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'PLD Reports Columns',
-              href: '/Healthcare%20Vertical/Insights-PLD#get-pld-reports-columns',
+              href: '/healthcare-vertical/insights-pld#get-pld-reports-columns',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Update PLD Reports Columns',
-              href: '/Healthcare%20Vertical/Insights-PLD#update-pld-reports-columns',
+              href: '/healthcare-vertical/insights-pld#update-pld-reports-columns',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Download PLD Insight Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#download-pld-report',
+              href: '/healthcare-vertical/insights-pld#download-pld-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Delete PLD Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#delete-pld-report',
+              href: '/healthcare-vertical/insights-pld#delete-pld-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
@@ -5636,56 +5636,56 @@ const sidebars = {
             {
               type: 'link',
               label: 'SLS Resource Properties',
-              href: '/Healthcare%20Vertical/Insights-PLD#sls-resource-properties',
+              href: '/healthcare-vertical/insights-pld#sls-resource-properties',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'List of SLS Reports',
-              href: '/Healthcare%20Vertical/Insights-PLD#get-list-of-sls-reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-sls-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Generate SLS Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#generate-sls-report',
+              href: '/healthcare-vertical/insights-pld#generate-sls-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'SLS Reports Computation',
-              href: '/Healthcare%20Vertical/Insights-PLD#sls-reports-computation',
+              href: '/healthcare-vertical/insights-pld#sls-reports-computation',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Validate SLS Report Name',
-              href: '/Healthcare%20Vertical/Insights-PLD#validate-sls-report-name',
+              href: '/healthcare-vertical/insights-pld#validate-sls-report-name',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Campaigns Eligible for SLS Reports',
-              href: '/Healthcare%20Vertical/Insights-PLD#get-list-of-campaigns-eligible-for-sls-reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-sls-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Download SLS Insight Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#download-sls-report',
+              href: '/healthcare-vertical/insights-pld#download-sls-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Delete SLS Report',
-              href: '/Healthcare%20Vertical/Insights-PLD#delete-sls-report',
+              href: '/healthcare-vertical/insights-pld#delete-sls-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
