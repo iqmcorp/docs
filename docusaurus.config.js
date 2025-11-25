@@ -134,7 +134,7 @@ const config = {
           {
             label: "TUTORIALS",
             position: "left",
-            to: "/Tutorials/",
+            to: "/tutorials/",
             className: "navbarLink",
           },
           {
@@ -207,28 +207,28 @@ const config = {
       {
         redirects: [
           {
-            to: '/Tutorials/Create-a-Conversion',
-            from: '/Quickstart Guides/Conversion-Quickstart'
+            to: '/tutorials/Create-a-Conversion',
+            from: '/quickstart-guides/conversion-quickstart'
           },
           {
-            to: '/Tutorials/Upload-a-Matched-Audience',
-            from: '/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide/'
+            to: '/tutorials/upload-a-matched-audience',
+            from: '/quickstart-guides/matched-audience-upload-api-quickstart-guide/'
           },
           {
-            to: '/Tutorials/Create-a-Bid-Model',
-            from: '/Quickstart Guides/Bid-Model-Quickstart/'
+            to: '/tutorials/create-a-bid-model',
+            from: '/quickstart-guides/bid-model-quickstart/'
           },
           {
-            to: '/Tutorials/Optimize-Your-Inventory',
-            from: '/Quickstart Guides/Inventory-Quickstart/'
+            to: '/tutorials/optimize-your-inventory',
+            from: '/quickstart-guides/inventory-quickstart/'
           },
           {
-            to: '/Tutorials/Create-an-Insights-Report',
-            from: '/Quickstart Guides/Insights-Quickstart/'
+            to: '/tutorials/create-an-insights-report',
+            from: '/quickstart-guides/insights-quickstart/'
           },
           {
-            to: '/Tutorials/Create-a-PG-Campaign',
-            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+            to: '/tutorials/create-a-pg-campaign',
+            from: '/quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide'
           }
         ]
       }
