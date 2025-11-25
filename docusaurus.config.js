@@ -123,7 +123,7 @@ const config = {
           {
             position: "left",
             label: "GETTING STARTED",
-            to: "Getting%20Started/"
+            to: "getting-started/"
           },
           {
             label: "QUICKSTART GUIDES",
