@@ -4728,7 +4728,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Migration Guides/index'
+        id: 'migration-guides/index'
       },
       items: [
         {
@@ -4739,55 +4739,55 @@ const sidebars = {
             {
               type: `doc`,
               label: 'Overview',
-              id: `Migration Guides/Beeswax/Overview`,
+              id: `migration-guides/beeswax/overview`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Audience',
-              id: `Migration Guides/Beeswax/Audience-Migration`,
+              id: `migration-guides/beeswax/audience-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Campaigns',
-              id: `Migration Guides/Beeswax/Campaign-Migration-Guide`,
+              id: `migration-guides/beeswax/campaign-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Bid Model',
-              id: `Migration Guides/Beeswax/Bid-Model-Migration`,
+              id: `migration-guides/beeswax/bid-model-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/Beeswax/Conversions-Migration`,
+              id: `migration-guides/beeswax/conversions-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/Beeswax/Inventories-Migration`,
+              id: `migration-guides/beeswax/inventories-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/Beeswax/Reports-Migration`,
+              id: `migration-guides/beeswax/reports-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Workspace',
-              id: `Migration Guides/Beeswax/Workspace-Migration`,
+              id: `migration-guides/beeswax/workspace-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Finances',
-              id: `Migration Guides/Beeswax/Finance-Migration`,
+              id: `migration-guides/beeswax/finance-migration`,
               className: 'sidebarItem'
             },
           ]
@@ -4800,55 +4800,55 @@ const sidebars = {
             {
               type: `doc`,
               label: 'Overview',
-              id: `Migration Guides/DV360/Overview`,
+              id: `migration-guides/dv360/overview`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Audience',
-              id: `Migration Guides/DV360/Audience-Migration`,
+              id: `migration-guides/dv360/audience-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Campaigns',
-              id: `Migration Guides/DV360/Campaign-Migration`,
+              id: `migration-guides/dv360/campaign-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Bid Model',
-              id: `Migration Guides/DV360/Bid-Model-Migration`,
+              id: `migration-guides/dv360/bid-model-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/DV360/Conversions-Migration`,
+              id: `migration-guides/dv360/conversions-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/DV360/Inventories-Migration`,
+              id: `migration-guides/dv360/inventories-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/DV360/Reports-Migration`,
+              id: `migration-guides/dv360/reports-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Workspace',
-              id: `Migration Guides/DV360/Workspace-Migration`,
+              id: `migration-guides/dv360/workspace-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Finances',
-              id: `Migration Guides/DV360/Finance-Migration`,
+              id: `migration-guides/dv360/finance-migration`,
               className: 'sidebarItem'
             },
           ]
@@ -4861,55 +4861,55 @@ const sidebars = {
             {
               type: `doc`,
               label: 'Overview',
-              id: `Migration Guides/The Trade Desk/Overview`,
+              id: `migration-guides/the-trade-desk/overview`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Audiences',
-              id: `Migration Guides/The Trade Desk/Audience-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/audience-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Campaigns',
-              id: `Migration Guides/The Trade Desk/Campaign-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/campaign-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Bid Model',
-              id: `Migration Guides/The Trade Desk/Bid-Model-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/bid-model-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/The Trade Desk/Conversions-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/conversions-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/The Trade Desk/Inventories-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/inventories-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/The Trade Desk/Reports-Migration-Guide`,
+              id: `migration-guides/the-trade-desk/reports-migration-guide`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Workspace',
-              id: `Migration Guides/The Trade Desk/Workspace-Migration`,
+              id: `migration-guides/the-trade-desk/workspace-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Finances',
-              id: `Migration Guides/The Trade Desk/Finance-Migration`,
+              id: `migration-guides/the-trade-desk/finance-migration`,
               className: 'sidebarItem'
             },
           ]
@@ -4922,55 +4922,55 @@ const sidebars = {
             {
               type: `doc`,
               label: 'Overview',
-              id: `Migration Guides/Xandr/Overview`,
+              id: `migration-guides/xandr/overview`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Audience',
-              id: `Migration Guides/Xandr/Audience-Migration`,
+              id: `migration-guides/xandr/audience-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Campaigns',
-              id: `Migration Guides/Xandr/Campaign-Migration`,
+              id: `migration-guides/xandr/campaign-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Bid Model',
-              id: `Migration Guides/Xandr/Bid-Model-Migration`,
+              id: `migration-guides/xandr/bid-model-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Conversions',
-              id: `Migration Guides/Xandr/Conversions-Migration`,
+              id: `migration-guides/xandr/conversions-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Inventories',
-              id: `Migration Guides/Xandr/Inventories-Migration`,
+              id: `migration-guides/xandr/inventories-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Reports',
-              id: `Migration Guides/Xandr/Reports-Migration`,
+              id: `migration-guides/xandr/reports-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Workspace',
-              id: `Migration Guides/Xandr/Workspace-Migration`,
+              id: `migration-guides/xandr/workspace-migration`,
               className: 'sidebarItem'
             },
             {
               type: `doc`,
               label: 'Finances',
-              id: `Migration Guides/Xandr/Finance-Migration`,
+              id: `migration-guides/xandr/finance-migration`,
               className: 'sidebarItem'
             },
           ]
