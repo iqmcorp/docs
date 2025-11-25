@@ -633,7 +633,7 @@ const sidebars = {
           className: 'sidebarItem',
           link: {
             type: 'doc',
-            id: 'Tutorials/customer-guide'
+            id: 'tutorials/customer-guide'
           },
           items: [
             {
