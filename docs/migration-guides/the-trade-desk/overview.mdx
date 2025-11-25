@@ -1,0 +1,95 @@
+---
+hide_table_of_contents: true
+pagination_prev: null
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# The Trade Desk Migration Guide
+
+This guide provides you with tools to assist migrating common ad-tech workflows from The Trade Desk to the IQM platform: platform terminology, entity mapping, and endpoint-specific API protocol comparisons. These workflows use the unique REST API protocols of each platform to create and manage Campaigns and Insertion Orders, optimize budgets and Audience-targeting parameters, apply advanced Conversion settings, and more. 
+
+Refer to the Entities Comparison table for naming conventions and their descriptions, and to the migration guide's subsequent pages to compare detailed endpoint-specific protocols. 
+
+## Entities Comparison 
+
+Both IQM and The Trade Desk use similar organizational frameworks for their advertising management. While each platform has different naming conventions, their hierarchical structure is similar and involves some of the same relationships.
+
+This table compares each platform's terminology and entity relationships. The descriptions use IQM's terminology. For full naming and hierarchy details, refer to [IQM Platform Overview](/getting-started/platform-overview) and [Entity Relationships<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/EntityRelationships).
+
+<center>
+<table className='platformTable'>
+<th>IQM</th>
+<th>TTD</th>
+<th>Description</th>
+<th>Resources</th>
+<tr>
+  <td>Organization</td>
+  <td>Partner</td>
+  <td>The entity containing an Organization's or company's details (address, email, website, etc.).</td>
+  <td rowSpan={3}>IQM: <ul><li>[Workspace API](/guidelines/workspace-api)</li><li style={{ overflow: "visible" }}>[IQM Platform Overview](/getting-started/platform-overview)</li></ul><p />TTD: <ul><li>[Entity Relationships<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/EntityRelationships)</li></ul>  </td>
+</tr>
+<tr>
+  <td>Workspace (User)</td>
+  <td>Partner</td>
+  <td>A user that signs up with the platform and receives authentication credentials: Organization Workspace ID (<var>owId</var>) for IQM; Partner ID for The Trade Desk. Workspace Users are also referred to as Advertisers or Customers in different contexts.</td>
+</tr>
+<tr>
+  <td>Advertiser (Customer)</td>
+  <td>Advertiser</td>
+  <td>Once an Advertiser is assigned to a Workspace User, they become a Customer (they also operate as their own Workspaces). An Advertiser can be assigned to one Workspace; and they can have multiple Insertion Orders assigned to them.</td>
+</tr>
+<tr>
+  <td>Insertion Order</td>
+  <td>Campaign</td>
+  <td>The contract between Advertisers and a media partner that outlines the budget details and parameters of an advertising Campaign. An Insertion Order is assigned to one Advertiser.</td>
+  <td rowSpan={2}>IQM: <ul><li>[Campaign API](/guidelines/campaign-api)</li><li style={{ overflow: "visible" }}> [Create a Campaign](/quickstart-guides/create-a-campaign-quickstart)</li><li> [Media Planning and Campaign Setup<ExternalLink />](https://help.iqm.com/en/collections/1962110-create-a-campaign)</li></ul> <p />TTD: <ul><li>[Campaigns<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/Campaigns)</li><li style={{ overflow: "visible" }}> [Ad Groups<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/AdGroup)</li></ul>  </td>
+</tr>
+<tr>
+  <td>Campaign</td>
+  <td>Ad Group</td>
+  <td>The targeting and optimization strategies of an advertising run: select Inventories, set goals, and attach Creatives.</td>
+</tr>
+<tr>
+  <td>Creative</td>
+  <td>Creative</td>
+  <td>The media file used in the advertisement. A Creative can be assigned to multiple Campaigns/Ad Groups.</td>
+  <td>IQM: <ul><li>[Creative API](/guidelines/creative-api)</li></ul><p />TTD: <ul><li>[Creatives<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/Creative)</li></ul> </td>
+</tr>
+<tr>
+  <td>Audience</td>
+  <td>Audience</td>
+  <td>The group of people targeted for a Campaign. Audiences are made up of included/excluded demographic data used to optimize targeting. On the IQM platform, this is referred to as the "Audience segment" (static lists of segment data are in the Master API); The Trade Desk refers to this as "data groups" or "data elements".</td>
+  <td>IQM: <ul><li>[Audience API](/guidelines/audience-api)</li><li style={{ overflow: "visible" }}> [Audience Targeting<ExternalLink />](https://help.iqm.com/en/collections/1387061-selecting-your-audiences)</li><li>[Master API](/guidelines/master-api)</li><li style={{ overflow: "visible" }}> [Audience API](/guidelines/audience-api)</li></ul>  <p />TTD: <ul><li>[Audiences and Targeting<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/AudiencesAndTargeting)</li></ul></td>
+</tr>
+<tr>
+  <td>Bid Model</td>
+  <td>Bid Lists</td>
+  <td>Advanced bidding options that tailor bid prices for various targeting dimensions within Campaigns (or, Ad Groups for TTD). Fine-tune where ads appear, manage Campaign priority and dimensions.</td>
+  <td>IQM: <ul><li>[Bid Model API](/guidelines/bid-model-api)</li><li style={{ overflow: "visible" }}> [Campaign Delivery and Optimization<ExternalLink />](https://help.iqm.com/en/collections/3156335-campaign-delivery-and-optimization)</li></ul> <p />TTD: <ul><li>[Bid Lists<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/doc/BidList)</li></ul> </td>
+</tr>
+<tr>
+  <td>Reports</td>
+  <td>My Reports</td>
+  <td>The tool used to execute and schedule Reports to generate Insights and inform current and future Campaign optimization. Customizable by quantitative metrics and qualitative dimensions. Downloadable in CSV or Excel format.</td>
+  <td>IQM: <ul><li>[Reports API](/guidelines/reports-api)</li><li style={{ overflow: "visible" }}> [Reporting and Analytics<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics)</li></ul> <p />TTD: <ul><li>[My Reports<ExternalLink />](https://partner.thetradedesk.com/v3/portal/reds/doc/MyReportsGetStarted)</li></ul></td>
+</tr>
+<tr>
+  <td>Inventory</td>
+  <td>Inventory</td>
+  <td>An organizational tool that provides Advertisers a way to create collections or groups based on ad format, placement type, targeting options, and other properties. IQM has options to bid on Open Exchange Inventory or create Private Marketplace Deals or Programmatic Guaranteed Deals as a way for Advertisers to negotiate directly with publishers. The Trade Desk uses their OpenPath product to manage bidding activities.</td>
+  <td>IQM: <ul><li>[Inventory API](/guidelines/inventory-api)</li><li style={{ overflow: "visible" }}> [Ad Inventory and Placements <ExternalLink />](https://help.iqm.com/en/collections/2908807-select-inventory)</li></ul> <p />TTD: <ul><li>[Inventory Integrations<ExternalLink />](https://partner.thetradedesk.com/v3/portal/ssp/overview)</li></ul></td>
+</tr>
+<tr>
+  <td>Conversions</td>
+  <td>Tracking Tags</td>
+  <td>The string of HTML code that can be placed on your website to measure Conversions. IQM supports client-side (Pixel) and server-side (Postback) Conversions to track visitor activity. The Trade Desk refers to these respectively as Static Tracking Tag or Universal Pixel options.</td>
+  <td>IQM: <ul><li>[Conversions API](/guidelines/conversion-api)</li><li style={{ overflow: "visible" }}> [Conversions and Tracking<ExternalLink />](https://help.iqm.com/en/collections/3219750-choose-your-conversion)</li></ul><p />TTD: <ul><li>[Tracking Tags<ExternalLink />](https://partner.thetradedesk.com/v3/portal/data/doc/TrackingTagsOverview)</li></ul></td>
+</tr>
+<tr>
+  <td>Planner</td>
+  <td>n/a</td>
+  <td>The tool for managing proposals to draft ad strategies, a media plan's potential reach, and impressions, that meet clients' requirements and targeting goals.</td>
+  <td>IQM: <ul><li>[Planner API](/guidelines/planner-api)</li><li style={{ overflow: "visible" }}> [Planner Proposal Overview<ExternalLink />](https://help.iqm.com/en/articles/10104696-planner-proposal-overview)</li></ul></td>
+</tr>
+</table></center>
