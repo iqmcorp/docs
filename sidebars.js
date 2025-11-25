@@ -4981,7 +4981,7 @@ const sidebars = {
   politicalSidebar: [
     {
       type: 'doc',
-      id: 'Political Vertical/index',
+      id: 'political-vertical/index',
       label: 'Political',
       className: 'sidebarCategory'
     },
@@ -4991,7 +4991,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Political Vertical/Audience-Segments'
+        id: 'political-vertical/audience-segments'
       },
       items: [
         {
@@ -5002,28 +5002,28 @@ const sidebars = {
             {
               type: 'link',
               label: 'Audience Details List',
-              href: '/Political%20Vertical/Audience-Segments#audience-details-list',
+              href: '/political-vertical/audience-segments#audience-details-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Matched Audience Details',
-              href: '/Political%20Vertical/Audience-Segments#matched-audience-details',
+              href: '/political-vertical/audience-segments#matched-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Geo-Farmed Audience Details',
-              href: '/Political%20Vertical/Audience-Segments#geo-farmed-audience-details',
+              href: '/political-vertical/audience-segments#geo-farmed-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Contextual Audience Details',
-              href: '/Political%20Vertical/Audience-Segments#contextual-audience-details',
+              href: '/political-vertical/audience-segments#contextual-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5037,42 +5037,42 @@ const sidebars = {
             {
               type: 'link',
               label: 'Audience Segment Details',
-              href: '/Political%20Vertical/Audience-Segments#audience-segment-details-1',
+              href: '/political-vertical/audience-segments#audience-segment-details-1',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Search Audience Segment',
-              href: '/Political%20Vertical/Audience-Segments#search-audience-segment',
+              href: '/political-vertical/audience-segments#search-audience-segment',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Segment Partner Provider List',
-              href: '/Political%20Vertical/Audience-Segments#segment-partner-provider-list',
+              href: '/political-vertical/audience-segments#segment-partner-provider-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Segment List by Provider/Partner IDs',
-              href: '/Political%20Vertical/Audience-Segments#segment-list-by-providerpartner-ids',
+              href: '/political-vertical/audience-segments#segment-list-by-providerpartner-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Segment List by Audience IDs',
-              href: '/Political%20Vertical/Audience-Segments#segment-list-by-audience-ids',
+              href: '/political-vertical/audience-segments#segment-list-by-audience-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Audience Segment Insights',
-              href: '/Political%20Vertical/Audience-Segments#audience-segment-insights',
+              href: '/political-vertical/audience-segments#audience-segment-insights',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5086,42 +5086,42 @@ const sidebars = {
             {
               type: 'link',
               label: 'Create Matched Audience',
-              href: '/Political%20Vertical/Audience-Segments#create-matched-audience',
+              href: '/political-vertical/audience-segments#create-matched-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Update Matched Audience',
-              href: '/Political%20Vertical/Audience-Segments#update-matched-audience',
+              href: '/political-vertical/audience-segments#update-matched-audience',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Create Audience Segment',
-              href: '/Political%20Vertical/Audience-Segments#create-audience-segment',
+              href: '/political-vertical/audience-segments#create-audience-segment',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Update Audience Segment',
-              href: '/Political%20Vertical/Audience-Segments#update-audience-segment',
+              href: '/political-vertical/audience-segments#update-audience-segment',
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Create Geo-Farmed Audience',
-              href: '/Political%20Vertical/Audience-Segments#create-geo-farmed-audience',
+              href: '/political-vertical/audience-segments#create-geo-farmed-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Create Contextual Audience',
-              href: '/Political%20Vertical/Audience-Segments#create-contextual-audience',
+              href: '/political-vertical/audience-segments#create-contextual-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
@@ -5135,14 +5135,14 @@ const sidebars = {
             {
               type: 'link',
               label: 'Matched Data Partners',
-              href: '/Political%20Vertical/Audience-Segments#data-partners-list-for-matched-audience',
+              href: '/political-vertical/audience-segments#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Provider Details List',
-              href: '/Political%20Vertical/Audience-Segments#provider-details-list',
+              href: '/political-vertical/audience-segments#provider-details-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5156,20 +5156,20 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Political Vertical/Finance'
+        id: 'political-vertical/finance'
       },
       items: [
             {
               type: 'link',
               label: 'Customer VLD Finance Details',
-              href: '/Political%20Vertical/Finance#get-customer-vld-finance-details',
+              href: '/political-vertical/finance#get-customer-vld-finance-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Update Customer VLD Details',
-              href: '/Political%20Vertical/Finance#update-customer-vld-details',
+              href: '/political-vertical/finance#update-customer-vld-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
@@ -5181,7 +5181,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Political Vertical/insights-vld'
+        id: 'political-vertical/insights-vld'
       },
       items: [
         {
