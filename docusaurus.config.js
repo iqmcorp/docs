@@ -147,7 +147,7 @@ const config = {
               {
                 label: "POLITICAL",
                 type: "doc",
-                docId: "Political Vertical/index",
+                docId: "political-vertical/index",
               },
               {
                 label: "HEALTHCARE",
