@@ -230,7 +230,52 @@ const config = {
             to: '/tutorials/create-a-pg-campaign',
             from: '/quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide'
           }
-        ]
+        ],
+        createRedirects(existingPath) {
+          // Handle folder renames with both encoded and unencoded versions
+          
+          // Getting Started folder
+          if (existingPath.includes('/getting-started')) {
+            return [
+              existingPath.replace('/getting-started', '/Getting Started'),
+              existingPath.replace('/getting-started', '/Getting%20Started'),
+            ];
+          }
+          
+          // Healthcare Vertical folder
+          if (existingPath.includes('/healthcare-vertical')) {
+            return [
+              existingPath.replace('/healthcare-vertical', '/Healthcare Vertical'),
+              existingPath.replace('/healthcare-vertical', '/Healthcare%20Vertical'),
+            ];
+          }
+          
+          // Political Vertical folder
+          if (existingPath.includes('/political-vertical')) {
+            return [
+              existingPath.replace('/political-vertical', '/Political Vertical'),
+              existingPath.replace('/political-vertical', '/Political%20Vertical'),
+            ];
+          }
+          
+          // Quickstart Guides folder
+          if (existingPath.includes('/quickstart-guides')) {
+            return [
+              existingPath.replace('/quickstart-guides', '/Quickstart Guides'),
+              existingPath.replace('/quickstart-guides', '/Quickstart%20Guides'),
+            ];
+          }
+          
+          // Migration Guides folder
+          if (existingPath.includes('/migration-guides')) {
+            return [
+              existingPath.replace('/migration-guides', '/Migration Guides'),
+              existingPath.replace('/migration-guides', '/Migration%20Guides'),
+            ];
+          }
+          
+          return undefined; // Return undefined when no redirect is needed
+        },
       }
     ]
   ]
