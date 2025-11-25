@@ -2874,7 +2874,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'PLD Resource Properties',
-              href: '/guidelines/Insights-API-guidelines/#pld-resource-properties',
+              href: '/guidelines/insights-api/#pld-resource-properties',
               className: 'sidebarItem'
             },
             {
@@ -4210,42 +4210,42 @@ const sidebars = {
             {
               type: 'link',
               label: 'User Invite',
-              href: '/guidelines/User-Profile-guidelines/#validate-user-invite',
+              href: '/guidelines/user-api/#validate-user-invite',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Password Reset Hash',
-              href: '/guidelines/User-Profile-guidelines/#validate-password-reset-hash',
+              href: '/guidelines/user-api/#validate-password-reset-hash',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'User Email',
-              href: '/guidelines/User-Profile-guidelines/#validate-user-email',
+              href: '/guidelines/user-api/#validate-user-email',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Workspace Domain',
-              href: '/guidelines/User-Profile-guidelines/#validate-workspace-domain',
+              href: '/guidelines/user-api/#validate-workspace-domain',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'User Email for Sign-Up',
-              href: '/guidelines/User-Profile-guidelines/#validate-user-email-for-signup',
+              href: '/guidelines/user-api/#validate-user-email-for-signup',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'User Password',
-              href: '/guidelines/User-Profile-guidelines/#validate-user-password',
+              href: '/guidelines/user-api/#validate-user-password',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
