@@ -20,36 +20,36 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Getting Started/index'
+        id: 'getting-started/index'
       },
       items: [
         {
           type: 'doc',
-          id: 'Getting Started/Platform-overview',
+          id: 'getting-started/platform-overview',
           label: 'IQM Platform Overview',
           className: 'sidebarItem',
         },
         {
           type: 'doc',
-          id: 'Getting Started/REST-API-Reference',
+          id: 'getting-started/rest-api-reference',
           label: 'REST API Overview',
           className: 'sidebarItem',
         },
         {
           type: 'doc',
-          id: 'Getting Started/Before-You-Begin',
+          id: 'getting-started/before-you-begin',
           label: 'Before You Begin',
           className: 'sidebarItem',
         },
         {
           type: 'doc',
-          id: 'Getting Started/Typescript-Prerequisites',
+          id: 'getting-started/typescript-prerequisites',
           label: 'TypeScript Prerequisites',
           className: 'sidebarItem',
         },
         {
           type: 'doc',
-          id: 'Getting Started/API-Pagination-Guide',
+          id: 'getting-started/api-pagination-guide',
           label: 'API Filtering and Pagination',
           className: 'sidebarItem',
         },
