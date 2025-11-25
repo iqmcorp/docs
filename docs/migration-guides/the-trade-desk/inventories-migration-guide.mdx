@@ -1,0 +1,88 @@
+---
+hide_table_of_contents: true
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Migrate Inventory
+
+Migrate Inventories from The Trade Desk to IQM by comparing each platform's API methods for creating and managing Inventories.
+
+IQM and The Trade Desk use similar terms and approaches for Inventory, with the following exceptions:
+  * IQM's "deal" is equivalent to TTD's "contract".
+  * IQM uses the Private Marketplace (PMP), while TTD uses Publisher Direct.
+
+The API Comparison table highlights the shared actions and API methods between IQM and The Trade Desk for creating and managing Inventories. Select an endpoint to review each platform's relevant API documentation. By comparing APIs, you can migrate your workflow from The Trade Desk to IQM.
+
+For a comprehensive overview of IQM's finance services, see the [Inventory API](/guidelines/inventory-api) Guidelines.
+
+## API Comparisons
+
+<div class="smallTable">
+```c title="Base URLs"
+  IQM: https://api.iqm.com
+  
+  TTD: https://api.thetradedesk.com
+```
+</div>
+
+<center>
+<table className='endpointTable'>
+<th>Action</th>
+<th>IQM Endpoint</th>
+<th style={{textWrap: 'nowrap' }}>The Trade Desk Endpoint</th>
+<th>Notes</th>
+<tr>
+  <td>Get List of Deals</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/pmp/deals/list</span>](/guidelines/inventory-api#get-pmp-deals-list) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pg/deals/list</span>](/guidelines/inventory-api#get-pg-deals-list)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/contract/query/partner</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-contract-query-partner) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/contract/query/advertiser/available</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-contract-query-advertiser-available)</td>
+  <td>IQM endpoints return lists of deals available to Customers (<var>owIds</var>) or to the user (<var>owId</var>). <p />The Trade Desk endpoints get lists of deals belonging to a partner (<var>PartnerId</var>) or available to Advertisers (<var>AdvertiserId</var>).</td>
+</tr>
+<tr>
+  <td>Get Deal Details by ID</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/pmp/deals/\{id}</span>](/guidelines/inventory-api#get-pmp-deal-details-by-ids) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/pg/deals/\{id}</span>](/guidelines/inventory-api#get-pg-deals-details-by-id)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/contract/\{contractId}</span>](https://partner.thetradedesk.com/v3/portal/api/ref/get-contract-contractid)</td>
+  <td rowSpan={3}>The Trade Desk endpoints specify deal type with the <var>ContractType</var> parameter.</td>
+</tr>
+<tr>
+  <td>Create Deal</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pmp/deals/add</span>](/guidelines/inventory-api#create-pmp-deal) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pg/deals/add</span>](/guidelines/inventory-api#create-pg-deal)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/contract</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-contract)</td>
+</tr>
+<tr>
+  <td>Update Deal</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/inv/pmp/deals/\{id}</span>](/guidelines/inventory-api#update-pmp-deal) <br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/inv/pg/deals/\{id}</span>](/guidelines/inventory-api#update-pg-deal-details)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/contract</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-contract)</td>
+</tr>
+<tr>
+  <td>Get Inventory Group Details</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/groups/list</span>](/guidelines/inventory-api#get-list-of-inventory-groups)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/v3/contractGroup/\{contractGroupId}</span>](https://partner.thetradedesk.com/v3/portal/api/ref/get-contractgroup-contractgroupid) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/contractGroup/query/partner</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-contractgroup-query-partner)</td>
+  <td>IQM endpoint can return group by <var>id</var> or, if unspecified, all groups.</td>
+</tr>
+<tr>
+  <td>Create Inventory Group</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/groups</span>](/guidelines/inventory-api#create-a-new-inventory-group)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/v3/contractGroup</span>](https://partner.thetradedesk.com/v3/portal/api/ref/post-contractgroup)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Update Inventory Group</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/group/addMappings</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/group/removeMappings</span>](/guidelines/inventory-api#add-or-remove-mappings-to-an-inventory-group)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/v3/contractGroup</span>](https://partner.thetradedesk.com/v3/portal/api/ref/put-contractgroup)</td>
+  <td>IQM endpoints support adding/removing Inventories to a group by specifying filters, deal IDs, contextual Inventory keywords or URLs, or Inventory IDs.</td>
+</tr>
+</table></center>
+
+## More Inventory Resources
+
+IQM:
+
+  * [Inventory API](/guidelines/inventory-api) Guidelines
+  * [Optimize Your Inventory](/tutorials/optimize-your-inventory/) Tutorial
+  * [Ad Inventory and Placements<ExternalLink />](https://help.iqm.com/en/collections/2908807-select-inventory) Help Center article
+
+TTD: 
+
+  *  [Inventory Integrations<ExternalLink />](https://partner.thetradedesk.com/v3/portal/ssp/overview)
+  *  [Contract API reference<ExternalLink />](https://partner.thetradedesk.com/v3/portal/api/area/Contract)
