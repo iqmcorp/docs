@@ -17,10 +17,24 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.x
           cache: npm
 
       - name: Install dependencies
         run: npm ci
       - name: Test build website
         run: npm run build
+
+      - name: Crawl external links (JSON report for post-processing)
+        run: npx linkinator ./build --recurse --json > link-report.json
+
+      - name: Upload raw link report (always, for debugging)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: link-report.json
+
+      # 👇 Soft-404 detection specifically for help.iqm.com
+      - name: Check help.iqm.com for soft 404s
+        run: ./scripts/check-soft404-help.sh link-report.json

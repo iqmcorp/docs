@@ -1,0 +1,271 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Get Customer SLS Finance Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/sls-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get finance details for a Customer's Script Lift Study (SLS).
+
+Read more about SLS in our [Insights API](/guidelines/insights-api/#overview) or our Help Center articles: [Script Lift Study (SLS) Insights Reports](https://help.iqm.com/en/collections/12083517-script-lift-study-sls-insights-reports).
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Customer ID</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`slsRate` <br /><span class="type-text">integer</span></td>
+  <td>SLS rate for workspace Customer </td>
+</tr>
+<tr>
+  <td>`slsEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Boolean flag to enable and disable SLS feature for Advertiser Customer</td>
+</tr>
+<tr>
+  <td>`slsMarkupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>SLS markup type ID: "Absolute" or "Percentage"</td>
+</tr>
+  <tr>
+  <td>`slsMarkupType` <br /><span class="type-text">string</span></td>
+  <td>SLS markup type: "Absolute" or "Percentage"</td>
+</tr>
+<tr>
+  <td>`slsMarkupValue` <br /><span class="type-text">integer</span></td>
+  <td>SLS markup value for Advertiser Customer</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown value="Response Examples" label="Response">
+<CodeOption value="SLS Details" label="SLS Details" default>
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "slsRate": 3
+    }
+}
+```
+</CodeOption>
+<CodeOption value="SLS Flag Enabled" label="SLS Flag Enabled">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "owId": 201427,
+        "slsRate": 3,
+        "slsEnabled": true,
+        "slsMarkupType": "Percentage",
+        "slsMarkupValue": 10
+    }
+}
+```
+</CodeOption>
+<CodeOption value="SLS Flag Disabled" label="SLS Flag Disabled">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "slsRate": 3,
+    "slsEnabled": false
+  }
+}
+``` 
+
+</CodeOption>
+</CodeDropdown>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          slsRate: number;
+        }
+      }
+    };
+  };
+}
+
+function getSLSFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/customer/{customerOwId}/sls-fees',
+    params: {
+      path: {
+        customerowId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Customer SLS Details
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/sls-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a Customer's SLS details.
+
+| Request Schema |  |
+| ---- | --- |
+| `id`<br /><span class="type-text">integer</span> | ID |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span>  | OW ID of the Customer to update details|
+| `slsRate` <br /><span class="type-text">integer</span> | SLS rate for workspace Customer |
+| `slsEnabled` <br /><span class="type-text">boolean</span> | Boolean flag to enable and disable SLS feature for Advertiser Customer |
+| `slsMarkupType` <br /><span class="type-text">string</span> | SLS markup type: "Absolute" or "Percentage" |
+| `slsMarkupTypeId` <br /><span class="type-text">integer</span> | SLS markup type ID: Absolute or Percentage |
+| `slsMarkupValue` <br /><span class="type-text">integer</span> | SLS markup value for Advertiser Customer |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "id": 0,
+    "owId": 0,
+    "slsRate": 0,
+    "slsEnabled": true,
+    "slsMarkupType": "string",
+    "slsMarkupTypeId": 0,
+    "slsMarkupValue": 9999
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "SLS Rate updated successfully. The new rate applies only to newly created VLDs"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        id: number;
+        owId: number;
+        slsRate: number;
+        slsEnabled: boolean;
+        slsMarkupType: string;
+        slsMarkupTypeId: number;
+        slsMarkupValue: number;
+      }
+    };
+  };
+}
+
+function editSLSFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/fa/customer/sls-fees',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          owId: `number`,
+          slsRate?: `number`,
+          slsEnabled?: `boolean`,
+          slsMarkupType?: `string`,
+          slsMarkupTypeId?: `number`,
+          slsMarkupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

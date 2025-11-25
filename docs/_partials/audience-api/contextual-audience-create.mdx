@@ -1,0 +1,131 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/contextual/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Contextual Audience. 
+
+Data Collection Period: Timeframe during which a user visits the publisher(s) relevant to one or more keywords or URLs added  to the contextual Audience. 
+
+:::info 
+
+The start date of a Contextual Audience must be within the last 180 days. 
+
+The period between the start date and the end date cannot exceed 30 days. 
+
+:::
+
+| Request Schema | |
+| --- | --- |
+| `audienceName` <br /><span class="type-text">string</span> | Audience name 
+| `keywords` <br /><span class="type-text">string</span> | Keywords to generate contextual Audience 
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
+| `frequency` <br /><span class="type-text">integer</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the contextual Audience. Integer between 1-10
+| `urls` <br /><span class="type-text">string</span> | The publisher sites visited by a user
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time
+| `dataCollectionMethodId` <br /><span class="type-text">integer</span> | **static** (<var>1</var>) collection period in a fixed set of dates <br />**dynamic** (<var>2</var>) data collection period over a rolling timeframe, with data refreshes every 24 hours
+| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>30</var>)
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "audienceName": "Test_aud",
+  "frequency": 5,
+  "startDate": 1750737600000,
+  "endDate": 1753329599000,
+  "keywords": "Test",
+  "urls": "http://iqm.com",
+  "timezoneId": 29,
+  "dataCollectionMethodId": 1
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1078146,
+    "message": "Contextual Audience created successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function createContextualAudiences(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/contextual/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          keywords?: `string`,
+          urls?: `string`,
+          frequency?: `number`,
+          startDate?: `number`,
+          endDate?: `number`,
+          timezoneId?: 'number',
+          dataCollectionMethodId: 'number',
+          dataCollectionDays?: 'number',
+
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
