@@ -392,31 +392,31 @@ const sidebars = {
             {
               type: `link`,
               label: 'About IQM Conversions',
-              href: `/tutorials/Create-a-Conversion#about-iqm-conversions`,
+              href: `/tutorials/create-a-conversion#about-iqm-conversions`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Create a Conversion',
-              href: `/tutorials/Create-a-Conversion#create-a-conversion-using-the-iqm-api`,
+              href: `/tutorials/create-a-conversion#create-a-conversion-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 1: Log In',
-              href: `/tutorials/Create-a-Conversion#step-1-log-in`,
+              href: `/tutorials/create-a-conversion#step-1-log-in`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 2: Create a Pixel Conversion',
-              href: `/tutorials/Create-a-Conversion#step-2-create-a-pixel-conversion`,
+              href: `/tutorials/create-a-conversion#step-2-create-a-pixel-conversion`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Step 3: Assign a Conversion to a Campaign',
-              href: `/tutorials/Create-a-Conversion#step-3-assign-a-conversion-to-a-campaign`,
+              href: `/tutorials/create-a-conversion#step-3-assign-a-conversion-to-a-campaign`,
               className: 'sidebarItemQS'
             },
           ]
