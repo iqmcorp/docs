@@ -165,7 +165,7 @@ const config = {
           {
             label: "MCP",
             position: "left",
-            to: "/MCP/",
+            to: "/mcp/",
             className: "navbarLink",
           },
           {
