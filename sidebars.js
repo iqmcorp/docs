@@ -5707,19 +5707,19 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'mcp/getting-started/index'
+        id: 'mcp/mcp-getting-started/index'
       },
       items: [
         {
           type: `doc`,
           label: 'Introduction',
-          id: `mcp/getting-started/introduction`,
+          id: `mcp/mcp-getting-started/introduction`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
           label: 'Setup Guide',
-          id: `mcp/getting-started/setup-guide`,
+          id: `mcp/mcp-getting-started/setup-guide`,
           className: 'sidebarItem'
         },
       ],
