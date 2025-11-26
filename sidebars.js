@@ -5697,7 +5697,7 @@ const sidebars = {
   mcpSidebar: [
     {
       type: 'doc',
-      id: 'MCP/index',
+      id: 'mcp/index',
       label: 'IQM MCP',
       className: 'sidebarCategory'
     },
@@ -5707,19 +5707,19 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'MCP/Getting Started/index'
+        id: 'mcp/getting-started/index'
       },
       items: [
         {
           type: `doc`,
           label: 'Introduction',
-          id: `MCP/Getting Started/Introduction`,
+          id: `mcp/getting-started/introduction`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
           label: 'Setup Guide',
-          id: `MCP/Getting Started/Setup-Guide`,
+          id: `mcp/getting-started/setup-guide`,
           className: 'sidebarItem'
         },
       ],
@@ -5730,31 +5730,31 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'MCP/MCP Actions/index'
+        id: 'mcp/mcp-actions/index'
       },
       items: [
         {
           type: `doc`,
           label: 'Dashboard',
-          id: `MCP/MCP Actions/Dashboard`,
+          id: `mcp/mcp-actions/dashboard`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
           label: 'Bid Model',
-          id: `MCP/MCP Actions/Bid-Model`,
+          id: `mcp/mcp-actions/bid-model`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
           label: 'Reports',
-          id: `MCP/MCP Actions/Reports`,
+          id: `mcp/mcp-actions/reports`,
           className: 'sidebarItem'
         },
         {
           type: `doc`,
           label: 'Master API',
-          id: `MCP/MCP Actions/Master`,
+          id: `mcp/mcp-actions/master`,
           className: 'sidebarItem'
         },
       ],
