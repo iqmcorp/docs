@@ -305,7 +305,7 @@ const sidebars = {
             {
               type: `link`,
               label: 'Schedule a Report',
-              href: `/quickstart-guides/schedule-report-api-quickstart-guide#schedule-a-report`,
+              href: `/quickstart-guides/schedule-report-api-quickstart-guide#schedule-a-report-1`,
               className: 'sidebarItemQS'
             },
             {
@@ -5037,7 +5037,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'Audience Segment Details',
-              href: '/political-vertical/audience-segments#audience-segment-details-1',
+              href: '/political-vertical/audience-segments#audience-segment-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5249,7 +5249,7 @@ const sidebars = {
         {
           type: 'link',
           label: 'Overview',
-          href: '/guidelines/master-api#overview',
+          href: '/guidelines/master-api',
           className: 'sidebarItem'
         },
         {
