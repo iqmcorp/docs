@@ -108,6 +108,27 @@
   gap: 20px;
 }
 
+.theme-doc-markdown .endpoint-container {
+  /* Break out of the markdown content width just to the gutters */
+  margin-left: calc(-1 * var(--ifm-spacing-horizontal));
+  margin-right: calc(-1 * var(--ifm-spacing-horizontal));
+  padding-left: var(--ifm-spacing-horizontal);
+
+  /* IMPORTANT: don't use 100vw here */
+  width: 75vw;
+  box-sizing: border-box;
+}
+
+.endpoint-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+  padding-top: 16px;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+
 .child1 {
   flex: 0 0 500px;
   background-color: transparent;
@@ -212,6 +233,8 @@ var {
   font-weight: 600;
 }
 
+.copy-url { display: inline-flex; align-items: center; gap: .5rem; }
+
 .path-text:hover {
   background-color: #edf1f4;
   border-radius: 4px;
@@ -221,10 +244,52 @@ var {
   background-color: #35404c;
 }
 
+.path-text:focus-visible { outline: 2px solid var(--ifm-primary-color); outline-offset: 2px; }
+
+/* NEW: dim just the origin by default; match the path color on hover */
+.path-text__origin {
+  color: var(--cd-origin-fg, var(--ifm-color-emphasis-600));
+}
+.path-text:hover .path-text__origin,
+.path-text:focus-visible .path-text__origin {
+  color: inherit;
+}
+
+/* Tweak grey for dark theme */
+[data-theme="dark"] .path-text__origin {
+  --cd-origin-fg: var(--ifm-color-emphasis-500);
+}
+
 .path-text {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
   font-size: 90%;
+  cursor: pointer;
+    /* remove button chrome */
+  background: transparent;
+  border: 0;
+  padding: 2px 6px;           /* padding so the hover bg has room */
+  margin: 0;
+  line-height: 1.6;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+
+  border-radius: 4px;         /* rounded hover bg */
+  transition: background-color .12s ease;
+}
+
+.path-text[data-copied] {
+  outline: 2px solid var(--ifm-primary-color);
+  outline-offset: 2px;
+}
+
+/* Optional: tiny "Copied!" toast */
+.path-text[data-copied]::after {
+  content: "Copied!";
+  margin-left: .5rem;
+  font-size: 0.85em;
+  color: var(--ifm-color-primary);
 }
 
 :root .type-text {
@@ -289,6 +354,11 @@ code {
   background-color: #1e1e1e !important;
 }
 
+.code-dropdown .theme-code-block,
+.code-dropdown pre {
+  margin: 0 !important;
+  background-color: inherit(theme-code-block);
+}
 
 /* Code Tabs */
 
@@ -357,57 +427,10 @@ code {
   letter-spacing: 0.1em;
   border-color: transparent;
   font-family: "avenirMed";
+  width: 6em;
+  min-width: 5.5em;
+  text-align: center;
 }
-
-/* .badge--primary {
-  background-color: #97DFD5;
-  color: #066363;
-} */
-
-/* [data-theme="dark"] .badge--primary {
-  background-color: #066363;
-  color: #97DFD5;
-}*/
-
-/*.badge--success {
-  background-color: #a7eea2;
-  color: #005907;
-}*/
-
-/*[data-theme="dark"] .badge--success {
-  background-color: #005907;
-  color: #a7eea2;
-}*/
-
-/*.badge--info {
-  background-color: #91CCEA;
-  color: #005580;
-}*/
-
-/*[data-theme="dark"] .badge--info {
-  background-color: #005580;
-  color: #91CCEA;
-}*/
-
-/*.badge--warning {
-  background-color: #f0e989;
-  color: #645a00;
-}*/
-
-/*[data-theme="dark"] .badge--warning {
-  background-color: #645a00;
-  color: #f0e989;
-}*/
-
-/*.badge--danger {
-  background-color: #F9C5C5;
-  color: #B30000;
-}*/
-
-/*[data-theme="dark"] .badge--danger {
-  background-color: #B30000;
-  color: #F9C5C5;
-}*/
 
 .badge--primary {
   background-color: #018b0d;
@@ -453,8 +476,9 @@ a.card {
 }
 
 .indexCards {
-  background-color: #ccf2e8;
-  border: 1.5px solid #067275;
+
+  /* border: 1.5px solid #067275; */
+  border: 1.75px solid var(--ifm-toc-border-color);
   height: 175px;
   font-size: 14px;
   padding-left: 1.25rem;
@@ -465,16 +489,41 @@ a.card {
 }
 
 [data-theme="dark"] .indexCards {
-  background-color: #063d3d;
-  border: 1.5px solid #a1dbcb;
+  /*border: 1.5px solid #a1dbcb;*/
 }
 
 .indexCards:hover {
-  border: 1.5px solid black;
+  border: 1.5px solid #2B9E98;
+  background-color: #ccf2e8;
 }
 
 [data-theme="dark"] .indexCards:hover {
-  border: 1.5px solid rgb(61, 61, 61);
+    background-color: #063d3d;
+  /*border: 1.5px solid rgb(61, 61, 61);*/
+}
+
+.pagination-nav__link--next, .pagination-nav__link {
+   border: 1.75px solid var(--ifm-toc-border-color);
+   box-shadow: var(--ifm-global-shadow-lw);
+
+}
+
+.pagination-nav__link:hover {
+     border: 1.5px solid #2B9E98;
+  background-color: #ccf2e8;
+}
+
+[data-theme="dark"] .pagination-nav__link:hover {
+     border: 1.5px solid #2B9E98;
+  background-color: #063d3d;
+}
+
+.menu__list-item-collapsible:hover, .menu__link:hover {
+    background: #ccf2e8;
+  }
+
+[data-theme="dark"] .menu__list-item-collapsible:hover, [data-theme="dark"] .menu__link:hover {
+  background: #063d3d;
 }
 
 
@@ -490,6 +539,10 @@ a.card {
   font-size: 14px;
   font-weight: 600;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.DocSearch-Button {
+  background-color: transparent !important;
 }
 
 
