@@ -1,0 +1,269 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Get Customer VLD Finance Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/vld-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get finance details for a Customer's Voter Level Data (VLD).
+
+Read more about VLD in our [Insights API](/guidelines/insights-api/) or our Help Center articles: [Voter Level Data (VLD) Insights Reports](https://help.iqm.com/en/collections/10358580-voter-level-data-vld-insights-reports).
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Customer ID</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`vldRate` <br /><span class="type-text">integer</span></td>
+  <td>VLD rate for workspace Customer </td>
+</tr>
+<tr>
+  <td>`vldEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Boolean flag to enable and disable VLD feature for Advertiser Customer</td>
+</tr>
+<tr>
+  <td>`vldMarkupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>VLD markup type ID: "Absolute" or "Percentage"</td>
+</tr>
+<tr>
+  <td>`vldMarkupType` <br /><span class="type-text">integer</span></td>
+  <td>VLD markup type: "Absolute" or "Percentage"</td>
+</tr>
+<tr>
+  <td>`vldMarkupValue` <br /><span class="type-text">integer</span></td>
+  <td>VLD markup value for Advertiser Customer</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown value="Response Examples" label="Response Examples">
+  <CodeOption value="VLD Details" label="VLD Details">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "vldRate": 3
+    }
+}
+```
+</CodeOption>
+  <CodeOption value="VLD Flag Enabled" label="VLD Flag Enabled">
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "owId": 201427,
+        "vldRate": 3,
+        "vldEnabled": true,
+        "vldMarkupType": "Percentage",
+        "vldMarkupValue": 10
+    }
+}
+```
+</CodeOption>
+<CodeOption value="VLD Flag Disabled" label="VLD Flag Disabled">
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "vldRate": 3,
+    "vldEnabled": false
+  }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          vldRate: number;
+        }
+      }
+    };
+  };
+}
+
+function getVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/customer/{customerOwId}/vld-fees',
+    params: {
+      path: {
+        customerowId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Customer VLD Details
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/vld-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a Customer's VLD details.
+
+| Request Schema |  |
+| ---- | --- |
+| `id`<br /><span class="type-text">integer</span> | ID |
+| `owId` <br /><span class="type-text">integer</span>  <span class="required-text">required</span>| OW ID of the Customer to update details |
+| `vldRate` <br /><span class="type-text">integer</span> | VLD rate for workspace Customer |
+| `vldEnabled` <br /><span class="type-text">boolean</span> | Boolean flag to enable and disable VLD feature for Advertiser Customer |
+| `vldMarkupTypeId` <br /><span class="type-text">integer</span> | VLD markup type: "Absolute" or "Percentage" |
+| `vldMarkupType` <br /><span class="type-text">string</span> | VLD markup type: "Absolute" or "Percentage" |
+| `vldMarkupValue` <br /><span class="type-text">integer</span> | VLD markup value for Advertiser Customer |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "id": 0,
+    "owId": 0,
+    "vldRate": 0,
+    "vldEnabled": true,
+    "vldMarkupType": "string",
+    "vldMarkupTypeId": 0,
+    "vldMarkupValue": 9999
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "VLD Rate updated successfully. The new rate applies only to newly created VLDs"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        id: number;
+        owId: number;
+        vldRate: number;
+        vldEnabled: boolean;
+        vldMarkupType: string;
+        vldMarkupTypeId: number;
+        vldMarkupValue: number;
+      }
+    };
+  };
+}
+
+function editVLDFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/fa/customer/vld-fees',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          owId: `number`,
+          vldRate?: `number`,
+          vldEnabled?: `boolean`,
+          vldMarkupType?: `string`,
+          vldMarkupTypeId?: `number`,
+          vldMarkupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

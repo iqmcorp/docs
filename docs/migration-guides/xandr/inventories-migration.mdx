@@ -1,0 +1,101 @@
+---
+hide_table_of_contents: true
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Migrate an Inventory
+
+Migrate Inventories from Xandr to IQM by comparing each platform's API methods for creating and managing Inventories.
+
+IQM and Xandr use similar terms and approaches for Inventory, with the following exceptions:
+
+  * IQM uses the Private Marketplace (PMP), while Xandr uses Private Auction.
+  * IQM uses Inventory Groups, while Xandr uses Inventory Lists and Inventory List Items.
+
+The API Comparison table highlights the shared actions and API methods between IQM and Xandr for creating and managing Inventories. Select an endpoint to review each platform's relevant API documentation. By comparing APIs, you can migrate your workflow from Xandr to IQM.
+
+For a comprehensive overview of IQM's finance services, see the [Inventory API](/guidelines/inventory-api) Guidelines.
+
+## API Comparisons
+
+<div class="smallTable">
+```c title="Base URLs"
+  IQM: https://api.iqm.com
+  
+  Xandr: https://api.appnexus.com
+```
+</div>
+
+<center>
+<table className='endpointTable'>
+<th>Action</th>
+<th>IQM Endpoint</th>
+<th style={{textWrap: 'nowrap' }}>Xandr Endpoint</th>
+<th>Notes</th>
+<tr>
+  <td>Get List of Deals</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/pmp/deals/list</span>](/guidelines/inventory-api#get-pmp-deals-list) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pg/deals/list</span>](/guidelines/inventory-api#get-pg-deals-list)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/deal</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service#rest-api)</td>
+  <td>IQM endpoints return lists of deals available to Customers (<var>owIds</var>) or to the user (<var>owId</var>).</td>
+</tr>
+<tr>
+  <td>Get Deal Details by ID</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/pmp/deals/\{id}</span>](/guidelines/inventory-api#get-pmp-deal-details-by-ids) <br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/pg/deals/\{id}</span>](/guidelines/inventory-api#get-pg-deals-details-by-id)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/deal</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service#rest-api)</td>
+  <td>Xandr endpoint uses query parameter <var>id</var> to retrieve deal details.</td>
+</tr>
+<tr>
+  <td>Create Deal</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pmp/deals/add</span>](/guidelines/inventory-api#create-pmp-deal) <br />[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/pg/deals/add</span>](/guidelines/inventory-api#create-pg-deal)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/deal</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service#rest-api)</td>
+  <td rowSpan={2}>Xandr endpoint specifies deal type with [<var>type</var><ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service#rest-api) parameter.</td>
+</tr>
+<tr>
+  <td>Update Deal</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/inv/pmp/deals/\{id}</span>](/guidelines/inventory-api#update-pmp-deal) <br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/inv/pg/deals/\{id}</span>](/guidelines/inventory-api#update-pg-deal-details)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/deal</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service#rest-api)</td>
+</tr>
+<tr>
+  <td>Get Inventory Item</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/inventories/list</span>](/guidelines/inventory-api#get-list-of-inventories)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/inventory-list/%5BLIST_ID%5D/item</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-item-service#rest-api)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/inventory-list/%5BLIST_ID%5D/item?search=SEARCH_TERM</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-item-service#rest-api)</td>
+  <td>IQM and Xandr endpoints use query parameters to search for Inventories.</td>
+</tr>
+<tr>
+  <td>Create Inventory Item</td>
+  <td>n/a</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/inventory-list/%5BLIST_ID%5D/item</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-item-service#rest-api)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Get Inventory Group Details</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/inv/groups/list</span>](/guidelines/inventory-api#get-list-of-inventory-groups)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/inventory-list</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-service#rest-api)</td>
+  <td>IQM endpoint can return group by <var>id</var> or, if unspecified, all groups.</td>
+</tr>
+<tr>
+  <td>Create Inventory Group</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/groups</span>](/guidelines/inventory-api#create-a-new-inventory-group)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/inventory-list</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-service#rest-api)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Update Inventory Group</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/group/addMappings</span><br /><span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/inv/group/removeMappings</span>](/guidelines/inventory-api#add-or-remove-mappings-to-an-inventory-group)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/inventory-list/%5BINVENTORY_LIST_ID%5D</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-service#rest-api)</td>
+  <td>IQM endpoints support adding/removing Inventories to a group by specifying filters, deal IDs, contextual inventory keywords or URLs, or by inventory ID.</td>
+</tr>
+</table></center>
+
+## More Inventory Resources
+
+IQM: 
+  * [Inventory API](/guidelines/inventory-api) Guidelines
+  * [Optimize Your Inventory](/tutorials/optimize-your-inventory/) Tutorial
+  * [Ad Inventory and Placements<ExternalLink />](https://help.iqm.com/en/collections/2908807-select-inventory) Help Center article
+
+Xandr: 
+  * [Inventory List Service<ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-service)
+  * [Inventory List Item Service<ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/inventory-list-item-service)
+  * [Deal Service<ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/deal-service)
