@@ -1,0 +1,80 @@
+---
+hide_table_of_contents: true
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+# Migrate a Conversion
+
+Migrate Conversions from Xandr to IQM by comparing each platform's API methods for creating and managing Conversions.
+
+Xandr refers to their Conversions as Conversion Pixels and Universal Pixels. This page uses IQM's terminology.
+
+The API Comparison table highlights the shared actions and API methods between IQM and Xandr for creating and managing Conversions. Select an endpoint to review each platform's relevant API documentation. By comparing APIs, you can migrate your workflow from Xandr to IQM.
+
+For a comprehensive overview of IQM's Conversion services, see the [Conversions API](/guidelines/conversion-api) Guidelines.
+
+## API Comparison
+
+<div class="smallTable">
+```c title="Base URLs"
+  IQM: https://api.iqm.com
+  
+  Xandr: https://api.appnexus.com
+```
+</div>
+
+<center>
+<table className='endpointTable'>
+<th>Action</th>
+<th>IQM Endpoint</th>
+<th style={{textWrap: 'nowrap' }}>Xandr Endpoint</th>
+<th>Notes</th>
+<tr>
+  <td>Get Conversion Details</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/conversion/\{conversionId}</span>](/guidelines/conversion-api#get-conversion-details-by-id)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/conversion-pixel-service#rest-api)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/universal-pixel/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/universal-pixel-service#universal-pixel-rest-api)</td>
+  <td>IQM endpoint returns <var>typeId</var> parameter specifying whether the Conversion is a Pixel (<var>1</var>) or Postback (<var>2</var>).<p />Xandr endpoints use <var>id</var> query to return Conversion details.</td>
+</tr>
+<tr>
+  <td>Get List of Conversions</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/api/v3/conversion/list</span>](/guidelines/conversion-api#get-list-of-conversions)</td>
+  <td>[<span class="badge bar badge--primary">GET</span><span class="path-text">/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/conversion-pixel-service#rest-api)<br />[<span class="badge bar badge--primary">GET</span><span class="path-text">/universal-pixel/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/universal-pixel-service#universal-pixel-rest-api)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Create a Pixel Conversion</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/conversion/pixel/add</span>](/guidelines/conversion-api#create-pixel-conversion)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/conversion-pixel-service#rest-api)</td>
+  <td>Xandr endpoint requires <var>advertiser_id</var> or <var>advertiser_code</var> to create a Pixel Conversion.</td>
+</tr>
+<tr>
+  <td>Create a Postback Conversion</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/api/v3/conversion/postback/add</span>](/guidelines/conversion-api#create-postback-conversion)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/universal-pixel/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/universal-pixel-service#universal-pixel-rest-api)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Update a Conversion</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/conversion/pixel/update</span>](/guidelines/conversion-api#update-pixel-conversion)<br />[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/conversion/postback/update</span>](/guidelines/conversion-api#update-postback-conversion)</td>
+  <td>[<span class="badge bar badge--warning">PUT</span><span class="path-text">/pixel</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/conversion-pixel-service#rest-api)<br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/universal-pixel/pixel/\{PIXEL_ID}</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/universal-pixel-service#universal-pixel-rest-api)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Assign Conversion to a Campaign</td>
+  <td>[<span class="badge bar badge--info">PATCH</span><span class="path-text">/api/v3/conversion/assign-to/campaign</span>](/guidelines/conversion-api#assign-conversion-to-a-campaign)</td>
+  <td>[<span class="badge bar badge--success">POST</span><span class="path-text">/line-item</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/line-item-service---ali#rest-api)<br />[<span class="badge bar badge--warning">PUT</span><span class="path-text">/line-item</span>](https://learn.microsoft.com/en-us/xandr/digital-platform-api/line-item-service---ali#rest-api)</td>
+  <td>IQM endpoint supports assigning multiple Conversions to multiple Campaigns, or removing from multiple Campaigns.<p />Xandr assigns Pixel Conversions when a Line Item is created or updated with the [<var>pixels</var><ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/line-item-service#pixels) object.  </td>
+</tr>
+</table></center>
+
+## More Conversions Resources 
+
+IQM:
+  * [Conversions API](/guidelines/conversion-api) Guidelines
+  * [Create a Conversion](/tutorials/create-a-conversion/) Tutorial
+  * [Conversions and Tracking<ExternalLink />](https://help.iqm.com/en/collections/3219750-choose-your-conversion) Help Center article
+
+Xandr: 
+  * [Conversion Pixel Service<ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/conversion-pixel-service)
+  * [Universal Pixel Service<ExternalLink />](https://learn.microsoft.com/en-us/xandr/digital-platform-api/universal-pixel-service)

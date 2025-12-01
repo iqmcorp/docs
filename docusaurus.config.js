@@ -123,43 +123,43 @@ const config = {
           {
             position: "left",
             label: "GETTING STARTED",
-            to: "Getting%20Started/"
+            to: "getting-started/"
           },
           {
             label: "QUICKSTART GUIDES",
             position: "left",
-            to: "/Quickstart%20Guides/",
+            to: "/quickstart-guides/",
             className: "navbarLink",
           },
           {
             label: "TUTORIALS",
             position: "left",
-            to: "/Tutorials/",
+            to: "/tutorials/",
             className: "navbarLink",
           },
           {
             label: "API GUIDELINES",
             position: "left",
-            to: "/Guidelines/",
+            to: "/guidelines/",
             className: "navbarLink",
             type: "dropdown",
             items: [
               {
                 label: "POLITICAL",
                 type: "doc",
-                docId: "Political Vertical/index",
+                docId: "political-vertical/index",
               },
               {
                 label: "HEALTHCARE",
                 type: "doc",
-                docId: "Healthcare Vertical/index",
+                docId: "healthcare-vertical/index",
               },
             ]
           },
           {
             label: "MIGRATION GUIDES",
             position: "left",
-            to: "/Migration%20Guides/",
+            to: "/migration-guides/",
             className: "navbarLink",
           },
           {
@@ -180,7 +180,7 @@ const config = {
               },
               {
                 label: "API Guidelines",
-                to: "/Guidelines",
+                to: "/guidelines",
               },
               {
                 label: "Help Center",
@@ -207,30 +207,152 @@ const config = {
       {
         redirects: [
           {
-            to: '/Tutorials/Create-a-Conversion',
-            from: '/Quickstart Guides/Conversion-Quickstart'
+            to: '/tutorials/create-a-conversion',
+            from: '/quickstart-guides/conversion-quickstart'
           },
           {
-            to: '/Tutorials/Upload-a-Matched-Audience',
-            from: '/Quickstart Guides/Matched-Audience-Upload-API-Quickstart-Guide/'
+            to: '/tutorials/upload-a-matched-audience',
+            from: '/quickstart-guides/matched-audience-upload-api-quickstart-guide/'
           },
           {
-            to: '/Tutorials/Create-a-Bid-Model',
-            from: '/Quickstart Guides/Bid-Model-Quickstart/'
+            to: '/tutorials/create-a-bid-model',
+            from: '/quickstart-guides/bid-model-quickstart/'
           },
           {
-            to: '/Tutorials/Optimize-Your-Inventory',
-            from: '/Quickstart Guides/Inventory-Quickstart/'
+            to: '/tutorials/optimize-your-inventory',
+            from: '/quickstart-guides/inventory-quickstart/'
           },
           {
-            to: '/Tutorials/Create-an-Insights-Report',
-            from: '/Quickstart Guides/Insights-Quickstart/'
+            to: '/tutorials/create-an-insights-report',
+            from: '/quickstart-guides/insights-quickstart/'
           },
           {
-            to: '/Tutorials/Create-a-PG-Campaign',
-            from: '/Quickstart Guides/Upload-Creative-and-Create-a-Campaign-API-Quickstart-Guide'
+            to: '/tutorials/create-a-pg-campaign',
+            from: '/quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide'
           }
-        ]
+        ],
+        createRedirects(existingPath) {
+          const redirects = [];
+          
+          // Helper function to convert dash-case to PascalCase with dashes
+          const toPascalCase = (str) => {
+            return str.split('-').map(word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join('-');
+          };
+          
+          // Getting Started: OLD /Getting Started & /Getting%20Started -> NEW /getting-started
+          if (existingPath.includes('/getting-started')) {
+            // Extract the file path after the folder
+            const afterFolder = existingPath.split('/getting-started')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              // Convert file name to PascalCase for old URLs
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              // Only add PascalCase filenames (old style), not lowercase
+              redirects.push(
+                '/Getting Started' + pascalPath,
+                '/Getting%20Started' + pascalPath
+              );
+            } else {
+              // Just the folder index
+              redirects.push(
+                '/Getting Started/',
+                '/Getting%20Started/'
+              );
+            }
+          }
+          
+          // Healthcare Vertical: /healthcare-vertical -> /Healthcare Vertical & /Healthcare%20Vertical
+          if (existingPath.includes('/healthcare-vertical')) {
+            const afterFolder = existingPath.split('/healthcare-vertical')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Healthcare Vertical' + pascalPath,
+                '/Healthcare%20Vertical' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Healthcare Vertical/',
+                '/Healthcare%20Vertical/'
+              );
+            }
+          }
+          
+          // Political Vertical: /political-vertical -> /Political Vertical & /Political%20Vertical
+          if (existingPath.includes('/political-vertical')) {
+            const afterFolder = existingPath.split('/political-vertical')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Political Vertical' + pascalPath,
+                '/Political%20Vertical' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Political Vertical/',
+                '/Political%20Vertical/'
+              );
+            }
+          }
+          
+          // Quickstart Guides: /quickstart-guides -> /Quickstart Guides & /Quickstart%20Guides
+          if (existingPath.includes('/quickstart-guides')) {
+            const afterFolder = existingPath.split('/quickstart-guides')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Quickstart Guides' + pascalPath,
+                '/Quickstart%20Guides' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Quickstart Guides/',
+                '/Quickstart%20Guides/'
+              );
+            }
+          }
+          
+          // Migration Guides: /migration-guides -> /Migration Guides & /Migration%20Guides
+          if (existingPath.includes('/migration-guides')) {
+            const afterFolder = existingPath.split('/migration-guides')[1];
+            
+            if (afterFolder && afterFolder !== '/') {
+              const pathParts = afterFolder.split('/').filter(p => p);
+              const pascalParts = pathParts.map(toPascalCase);
+              const pascalPath = '/' + pascalParts.join('/') + '/';
+              
+              redirects.push(
+                '/Migration Guides' + pascalPath,
+                '/Migration%20Guides' + pascalPath
+              );
+            } else {
+              redirects.push(
+                '/Migration Guides/',
+                '/Migration%20Guides/'
+              );
+            }
+          }
+          
+          // Return unique redirects only
+          return redirects.length > 0 ? [...new Set(redirects)] : undefined;
+        },
       }
     ]
   ]
