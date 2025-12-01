@@ -5734,6 +5734,13 @@ const sidebars = {
                     customProps: { method: 'GET' },
                     className: 'sidebarItem',
                   },
+                  {
+                    type: 'link',
+                    label: 'Download HCP Planner',
+                    href: '/healthcare-vertical/planner/#download-hcp-planner',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  }
                ]
             },
             {
@@ -5778,15 +5785,22 @@ const sidebars = {
                   },
                   {
                     type: 'link',
-                    label: 'Generate Campaigns',
-                    href: '/healthcare-vertical/planner/#generate-campaigns',
+                    label: 'Get Audience Graph',
+                    href: '/healthcare-vertical/planner/#get-audience-graph',
                     customProps: { method: 'POST' },
                     className: 'sidebarItem',
                   },
                   {
                     type: 'link',
-                    label: 'Audience Graph',
-                    href: '/healthcare-vertical/planner/#audience-graph',
+                    label: 'Generate Campaigns Plan',
+                    href: '/healthcare-vertical/planner/#generate-campaigns-plan',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Publish Campaigns Plan',
+                    href: '/healthcare-vertical/planner/#publish-campaigns-plan',
                     customProps: { method: 'POST' },
                     className: 'sidebarItem',
                   }
