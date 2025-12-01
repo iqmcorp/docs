@@ -5699,7 +5699,7 @@ const sidebars = {
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'Healthcare Vertical/Planner'
+        id: 'healthcare-vertical/planner'
       },
       items: [
             {
