@@ -5758,6 +5758,23 @@ const sidebars = {
           className: 'sidebarItem'
         },
       ],
+    },
+    {
+      type: "category",
+      label: 'MCP Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'mcp/mcp-tutorials/index'
+      },
+      items: [
+        {
+          type: 'doc',
+          label: 'Bid Model Tutorial',
+          id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
+          className: 'sidebarItem'
+        }
+      ]
     }
   ],
 }
