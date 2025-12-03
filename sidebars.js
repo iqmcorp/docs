@@ -5722,6 +5722,12 @@ const sidebars = {
           id: `mcp/mcp-getting-started/setup-guide`,
           className: 'sidebarItem'
         },
+        {
+          type: `doc`,
+          label: 'Prompts and Examples',
+          id: `mcp/mcp-getting-started/mcp-actions`,
+          className: 'sidebarItem'
+        }
       ],
     },
     {
