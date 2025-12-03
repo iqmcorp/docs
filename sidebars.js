@@ -5732,41 +5732,6 @@ const sidebars = {
     },
     {
       type: "category",
-      label: 'MCP Actions',
-      className: 'sidebarCategory',
-      link: {
-        type: 'doc',
-        id: 'mcp/mcp-actions/index'
-      },
-      items: [
-        {
-          type: `doc`,
-          label: 'Dashboard',
-          id: `mcp/mcp-actions/dashboard`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Bid Model',
-          id: `mcp/mcp-actions/bid-model`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Reports',
-          id: `mcp/mcp-actions/reports`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Master API',
-          id: `mcp/mcp-actions/master`,
-          className: 'sidebarItem'
-        },
-      ],
-    },
-    {
-      type: "category",
       label: 'MCP Tutorials',
       className: 'sidebarCategory',
       link: {
