@@ -5722,42 +5722,30 @@ const sidebars = {
           id: `mcp/mcp-getting-started/setup-guide`,
           className: 'sidebarItem'
         },
+        {
+          type: `doc`,
+          label: 'Prompts and Examples',
+          id: `mcp/mcp-getting-started/mcp-actions`,
+          className: 'sidebarItem'
+        }
       ],
     },
     {
       type: "category",
-      label: 'MCP Actions',
+      label: 'MCP Tutorials',
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'mcp/mcp-actions/index'
+        id: 'mcp/mcp-tutorials/index'
       },
       items: [
         {
-          type: `doc`,
-          label: 'Dashboard',
-          id: `mcp/mcp-actions/dashboard`,
+          type: 'doc',
+          label: 'Bid Model Tutorial',
+          id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
           className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Bid Model',
-          id: `mcp/mcp-actions/bid-model`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Reports',
-          id: `mcp/mcp-actions/reports`,
-          className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Master API',
-          id: `mcp/mcp-actions/master`,
-          className: 'sidebarItem'
-        },
-      ],
+        }
+      ]
     }
   ],
 }
