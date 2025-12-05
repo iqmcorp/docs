@@ -3091,6 +3091,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Block Inventory File',
+              href: '/guidelines/inventory-api#block-inventory-file',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Download CSV Inventory List',
               href: '/guidelines/inventory-api#download-csv-inventory-list',
               customProps: { method: 'POST' },
