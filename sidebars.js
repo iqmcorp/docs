@@ -5744,6 +5744,12 @@ const sidebars = {
           label: 'Bid Model Tutorial',
           id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
           className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Reports Tutorial',
+          id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
+          className: 'sidebarItem'  
         }
       ]
     }
