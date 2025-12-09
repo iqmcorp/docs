@@ -21,6 +21,33 @@
         "summary": "Execute report and fetch serving data",
         "description": "This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - This is report Id, report data will be fetched for this report id. |\n| dimensions | JSON String | [Optional] - JSON string representing dimension details. |\n| columns | Array of String | [Optional] - Metrics for showing serving result |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | JSON String | [Optional] - JSON string supporting campaignId, creativeTypeId and campaignStatus filtering. |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Optional] - ID to identify if report request is of Daily or Aggregate. \u003Cbr\u003Esample : [1- Daily, 2- Aggregated]  |\n| reportAggregated | String | [Optional] - Field to identify if report dimension is Aggregated or not. \u003Cbr\u003Esample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report start time.|\n| endDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report end time.|\n| timezoneId | Integer | [Optional] - Timezone ID|\n| timezoneName | String | [Optional] - Timezone Name|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is 50|\n",
         "operationId": "executeReportData",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -369,6 +396,580 @@
         }
       }
     },
+    "/api/v3/ra/report/email/schedule": {
+      "post": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Save report scheduling event.",
+        "description": "This API saves the report scheduling event.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| reportId | Integer | [Required] - This is report Id, event will be created on this report id. |\n| subscriberEmails | Array of String | [Required] - List of the emails on which the report will be sent. |\n| fileType | Integer | [Required] - Report file type id. The report will be sent in the selected file format . \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | [Required] - Delivery frequency type id for the emails to be sent.\u003Cbr\u003Esample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
+        "operationId": "saveReportScheduleEvent",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportSchedulingEventDetailsVO"
+              },
+              "examples": {
+                "Save Report Scheduling Sample(Monthly)": {
+                  "description": "Save Report Scheduling Sample(Monthly)",
+                  "value": {
+                    "reportId": 1234,
+                    "subscriberEmails": [
+                      "sample_email1@example.com",
+                      "sample_email2@example.com"
+                    ],
+                    "fileType": 2,
+                    "deliveryFrequency": 4,
+                    "eventEndDate": 1670674106000,
+                    "deliveryDay": "4",
+                    "runningTotalEnabled": true,
+                    "earliestCampaignStartDate": 1670674108900
+                  }
+                },
+                "Save Report Scheduling Sample(Weekly)": {
+                  "description": "Save Report Scheduling Sample(Weekly)",
+                  "value": {
+                    "reportId": 1235,
+                    "subscriberEmails": [
+                      "sample_email1@example.com",
+                      "sample_email2@example.com"
+                    ],
+                    "fileType": 2,
+                    "deliveryFrequency": 3,
+                    "eventEndDate": 1670674106000,
+                    "deliveryDay": "MONDAY",
+                    "runningTotalEnabled": true,
+                    "earliestCampaignStartDate": 1670674108900
+                  }
+                },
+                "Invalid input sample": {
+                  "description": "Invalid input sample",
+                  "value": {
+                    "reportId": -1,
+                    "subscriberEmails": [
+                      "sample_email1@example.com",
+                      "sample_email2@example.com"
+                    ],
+                    "fileType": 2,
+                    "deliveryFrequency": 3,
+                    "eventEndDate": 1670674106000,
+                    "deliveryDay": "MONDAY",
+                    "runningTotalEnabled": true,
+                    "earliestCampaignStartDate": 1670674108900
+                  }
+                },
+                "A few invalid email Example": {
+                  "description": "A few invalid email Example",
+                  "value": {
+                    "reportId": 1234,
+                    "subscriberEmails": [
+                      "sample_email1@example.com",
+                      "sample_email2@invalid"
+                    ],
+                    "fileType": 2,
+                    "deliveryFrequency": 3,
+                    "eventEndDate": 1670674106000,
+                    "deliveryDay": "MONDAY",
+                    "runningTotalEnabled": true,
+                    "earliestCampaignStartDate": 1670674108900
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden!"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSchedulingResponse"
+                },
+                "examples": {
+                  "Save Report Scheduling Sample(Monthly)": {
+                    "description": "Save Report Scheduling Sample(Monthly)",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "scheduledData": {
+                          "earliestCampaignStartDate": 0,
+                          "reportId": 1234,
+                          "deliveryFrequency": 4,
+                          "fileType": 1,
+                          "subscriberEmails": [
+                            "sample_email@sample.com",
+                            "sample_email2@sample.com"
+                          ],
+                          "eventEndDate": 1696270980000,
+                          "deliveryDay": "5",
+                          "runningTotalEnabled": false
+                        },
+                        "message": "Report schedule has been successfully updated."
+                      }
+                    }
+                  },
+                  "Save Report Scheduling Sample(Weekly)": {
+                    "description": "Save Report Scheduling Sample(Weekly)",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "scheduledData": {
+                          "earliestCampaignStartDate": 0,
+                          "reportId": 12345,
+                          "deliveryFrequency": 3,
+                          "fileType": 1,
+                          "subscriberEmails": [
+                            "sample_email@sample.com",
+                            "sample_email2@sample.com"
+                          ],
+                          "eventEndDate": 1696270980000,
+                          "deliveryDay": "MONDAY",
+                          "runningTotalEnabled": false
+                        },
+                        "message": "Report schedule has been successfully updated."
+                      }
+                    }
+                  },
+                  "A few invalid email Example": {
+                    "description": "A few invalid email Example",
+                    "value": {
+                      "success": true,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid email provided - invalid Emails : [sample_email2@invalid].",
+                          "reason": "One or more subscribers emails are empty or not provided as per the email format",
+                          "field": "subscriberEmails"
+                        }
+                      ],
+                      "data": {
+                        "scheduledData": {
+                          "earliestCampaignStartDate": 0,
+                          "reportId": 12345,
+                          "deliveryFrequency": 3,
+                          "fileType": 1,
+                          "subscriberEmails": [
+                            "sample_email@sample.com"
+                          ],
+                          "eventEndDate": 1696270980000,
+                          "deliveryDay": "MONDAY",
+                          "runningTotalEnabled": false
+                        },
+                        "message": "Report schedule has been successfully updated."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": {
+                        "error": "Report does not exists for the given id"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/report/email/schedule/{reportId}": {
+      "delete": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Remove report scheduling event",
+        "description": "This API removes the report scheduling event.",
+        "operationId": "deleteReportScheduleEvent",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          },
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden!"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "remove Report Scheduling": {
+                    "description": "remove Report Scheduling",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Report event is removed."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": {
+                        "error": "Report event does not exists for the given id"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Update report scheduling event",
+        "description": "This API update the report scheduling event. Whichever field is to be updated, that can be sent in the request body.\n \n**Request Body Description:**\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| subscriberEmails | Array of String | List of the emails on which the report will be sent. |\n| fileType | Integer | Report file type id. The report will be sent in the selected file format. \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | Delivery frequency type id for the emails to be sent. \u003Cbr\u003E sample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency updated and is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
+        "operationId": "updateReportScheduleEvent",
+        "parameters": [
+                     {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          },
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportSchedulingEventDetailsVO"
+              },
+              "examples": {
+                "update Report Scheduling": {
+                  "description": "update Report Scheduling",
+                  "value": {
+                    "subscriberEmails": [
+                      "sample_email1@example.com",
+                      "sample_email2@example.com",
+                      "sample_email3@example.com"
+                    ]
+                  }
+                },
+                "Invalid email Example": {
+                  "description": "Invalid email Example",
+                  "value": {
+                    "subscriberEmails": [
+                      "sample_email1@invalid",
+                      "sample_email2@invalid",
+                      "sample_email3@example.com"
+                    ]
+                  }
+                },
+                "Invalid input": {
+                  "description": "Invalid input",
+                  "value": {
+                    "fileType": 0
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden!"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": {
+                        "error": "Invalid file type."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSchedulingResponse"
+                },
+                "examples": {
+                  "update Report Scheduling": {
+                    "description": "update Report Scheduling",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "scheduledData": {
+                          "earliestCampaignStartDate": 0,
+                          "reportId": 1234,
+                          "deliveryFrequency": 4,
+                          "fileType": 1,
+                          "subscriberEmails": [
+                            "sample_email1@example.com",
+                            "sample_email2@example.com",
+                            "sample_email3@example.com"
+                          ],
+                          "eventEndDate": 1696270980000,
+                          "deliveryDay": "4",
+                          "runningTotalEnabled": false
+                        },
+                        "message": "Report schedule has been successfully updated."
+                      }
+                    }
+                  },
+                  "Invalid email Example": {
+                    "description": "Invalid email Example",
+                    "value": {
+                      "success": true,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid email provided - invalid Emails : [sample_email1@invalid, sample_email2@invalid].",
+                          "reason": "One or more subscribers emails are empty or not provided as per the email format",
+                          "field": "subscriberEmails"
+                        }
+                      ],
+                      "data": {
+                        "scheduledData": {
+                          "earliestCampaignStartDate": 0,
+                          "reportId": 1234,
+                          "deliveryFrequency": 4,
+                          "fileType": 1,
+                          "subscriberEmails": [
+                            "sample_email3@example.com"
+                          ],
+                          "eventEndDate": 1696270980000,
+                          "deliveryDay": "4",
+                          "runningTotalEnabled": false
+                        },
+                        "message": "Report schedule has been successfully updated."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/ra/report/dimension-metrics/detail": {
       "get": {
         "tags": [
@@ -380,17 +981,30 @@
         "description": "This API offers Dimension and Metrics information grouped by Category in predetermined order",
         "operationId": "getDimensionAndMetricDetails",
         "parameters": [
-          {
+           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
           }
         ],
         "responses": {
@@ -538,6 +1152,976 @@
           }
         }
       }
+    },
+    "/api/v3/ra/report/add": {
+      "post": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Create Report",
+        "description": "This API will create new Report based on given fields",
+        "operationId": "saveReport",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportDetailsVO"
+              },
+              "examples": {
+                "Report with Scheduling": {
+                  "description": "Report with Scheduling",
+                  "value": {
+                    "reportName": "Campaign by Gender by Device type with customer and filtering",
+                    "customerIds": [200, 201],
+                    "startDate": 1650177200000,
+                    "endDate": 1666938296000,
+                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                    "columns": [
+                      "gender",
+                      "deviceType",
+                      "campaignId",
+                      "campaignName",
+                      "startTime",
+                      "endTime",
+                      "maxBid",
+                      "budgetDay",
+                      "budgetTotal",
+                      "impressions",
+                      "clicks"
+                    ],
+                    "requestType": 1,
+                    "reportAggregated": "0",
+                    "timezoneId": 29,
+                    "timezoneName": "US/Eastern",
+                    "reportSchedulingEventDetails": {
+                      "runningTotalEnabled": true,
+                      "deliveryFrequency": 3,
+                      "deliveryDay": "Friday",
+                      "fileType": 2,
+                      "subscriberEmails": [
+                        "demoUser1@gmail.com",
+                        "demoUser1@gmail.com"
+                      ],
+                      "eventEndDate": 1671148799999
+                    }
+                  }
+                },
+                "Create Report": {
+                  "description": "Create Report",
+                  "value": {
+                    "reportName": "Campaign by Gender by Device type ",
+                    "startDate": 1650177200000,
+                    "endDate": 1666938296000,
+                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                    "columns": [
+                      "gender",
+                      "deviceType",
+                      "campaignId",
+                      "campaignName",
+                      "startTime",
+                      "endTime",
+                      "maxBid",
+                      "budgetDay",
+                      "budgetTotal",
+                      "impressions",
+                      "clicks"
+                    ],
+                    "requestType": 1,
+                    "reportAggregated": "0",
+                    "timezoneId": 29,
+                    "timezoneName": "US/Eastern"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseId"
+                },
+                "examples": {
+                  "Report with Scheduling": {
+                    "description": "Report with Scheduling",
+                    "value": {
+                      "success": true,
+                      "data": 1001
+                    }
+                  },
+                  "Create Report": {
+                    "description": "Create Report",
+                    "value": {
+                      "success": true,
+                      "data": 1002
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/report/{reportId}": {
+      "get": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Get Report By ID",
+        "description": "This API fetches report data by report ID",
+        "operationId": "getReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "ID of report",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Report does not exists for the given id"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportDetails"
+                },
+                "examples": {
+                  "Report data": {
+                    "description": "Report data",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 123,
+                        "reportName": "Campaign by Gender by Device type",
+                        "startDate": 1650177000,
+                        "endDate": 1666938000,
+                        "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                        "columns": [
+                          "gender",
+                          "deviceType",
+                          "campaignId",
+                          "campaignName",
+                          "startTime",
+                          "endTime",
+                          "maxBid",
+                          "budgetDay",
+                          "budgetTotal",
+                          "impressions",
+                          "clicks"
+                        ],
+                        "timezoneId": 29,
+                        "requestType": 1,
+                        "reportSchedulingEventDetails": {
+                          "eventId": 18,
+                          "deliveryFrequency": 3,
+                          "fileType": 2,
+                          "subscriberEmails": [
+                            "demoUser1@gmail.com",
+                            "demoUser2@iqm.com"
+                          ],
+                          "eventEndDate": 1671148799,
+                          "deliveryDay": "Friday",
+                          "runningTotalEnabled": true,
+                          "earliestCampaignStartDate": 1670674108900
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Delete Report and Scheduling Data By ID",
+        "description": "This API deletes report and it's scheduling data",
+        "operationId": "deleteReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "ID of report",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Report does not exists for the given id"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "examples": {
+                  "Delete success": {
+                    "description": "Delete success",
+                    "value": {
+                      "success": true,
+                      "data": "Report with id 123 deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Edit Report",
+        "description": "This API will edit Report data based on given fields",
+        "operationId": "updateReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportDetailsVO"
+              },
+              "examples": {
+                "Edit report": {
+                  "description": "Edit report",
+                  "value": {
+                    "startDate": 1642013200000,
+                    "reportName": "Updated report name 1",
+                    "timezoneId": 29,
+                    "timezoneName": "US/Eastern",
+                    "dimensions": "[{\"filter\": \"campaign\"}, {\"filter\": \"creative\"}]",
+                    "columns": [
+                      "campaignId",
+                      "campaignName",
+                      "startTime",
+                      "endTime"
+                    ],
+                    "customerIds": [12345],
+                    "requestType": 1,
+                    "reportAggregated": "0"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "examples": {
+                  "Edit Report": {
+                    "description": "Edit Report",
+                    "value": {
+                      "success": true,
+                      "data": "Report with id 123 updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/reports/list": {
+      "get": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Get List of Reports",
+        "description": "This API fetches list of reports as per the given filters",
+        "operationId": "getReportList",
+        "parameters": [
+          {
+            "name": "customerIds",
+            "in": "query",
+            "description": "Comma separated Customer Ids for filtering. Passing `all` will fetch all eligible customer's report. Default value is `all`",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "all"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Response will be sorted on the given field. Allowed sorting values needs to be specified with `-` and `+` prefix.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "-modifyDate"
+            }
+          },
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search keyword",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit defines the number of records returned in the response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page number defines which page entries will be fetched in response. Pagination will not be applied with value -1",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportList"
+                },
+                "examples": {
+                  "Report data": {
+                    "description": "Report data",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "data": [
+                          {
+                            "id": 1,
+                            "reportName": "Campaign by Gender by Device type",
+                            "startDate": 1650177200,
+                            "endDate": 1666938296,
+                            "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                            "customerIds": null,
+                            "customerDetails": null,
+                            "timezoneId": 11,
+                            "reportSchedulingEventDetails": {
+                              "eventId": 29,
+                              "deliveryFrequency": 3,
+                              "fileType": 2,
+                              "subscriberEmails": [
+                                "demoUser1@gmail.com",
+                                "demoUser2@iqm.com"
+                              ],
+                              "eventEndDate": 1671148799999,
+                              "deliveryDay": "Friday"
+                            }
+                          },
+                          {
+                            "id": 2,
+                            "reportName": "Campaigns by Zip Codes with filters",
+                            "startDate": 1660521600,
+                            "endDate": 1668470399,
+                            "dimensions": "[{\"filter\": \"campaign\"}, {\"value\": [123, 234, 345, 456], \"filter\": \"zip5\"}]",
+                            "customerIds": null,
+                            "customerDetails": null,
+                            "timezoneId": 12,
+                            "reportSchedulingEventDetails": {
+
+                            }
+                          },
+                          {
+                            "id": 3,
+                            "reportName": "Creatives by Income Ranges and Operating System with filters",
+                            "startDate": 1660521600,
+                            "endDate": 1668470399,
+                            "timezoneId": 11,
+                            "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
+                            "customerIds": [200, 201],
+                            "customerDetails": [
+                              {
+                                "owId": 200,
+                                "organizationName": "Test Organization",
+                                "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/200/1637314301025.png",
+                                "statusId": 1,
+                                "status": "Active",
+                                "supportEmail": "demoSupport@gmail.com",
+                                "timezone": 29
+                              }
+                            ],
+                            "reportSchedulingEventDetails": {
+
+                            }
+                          }
+                        ],
+                        "totalRecords": 3,
+                        "filteredRecords": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspace",
+          "Organization",
+          "Internal"
+        ],
+        "summary": "Get List of Reports",
+        "description": "This API fetches list of reports as per the given filters\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| customerIds | String | [Optional] - Comma separated String of Customer IDs for which Report's list is requested. Default value is `all` |\n| searchField | String | [Optional] - Search field for report listing data. Search is supported for Report ID and Report name |\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is `-modifyDate`|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is `1`|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is `20`|\n",
+        "operationId": "fetchReportList",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportSearchRequestVO"
+              },
+              "examples": {
+                "Report List": {
+                  "description": "Report List",
+                  "value": {
+                    "customerIds": "123,234,345",
+                    "pageNo": 1,
+                    "noOfEntries": 30,
+                    "sortBy": "+id",
+                    "searchField": "search field"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportList"
+                },
+                "examples": {
+                  "Report data": {
+                    "description": "Report data",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "data": [
+                          {
+                            "id": 1,
+                            "reportName": "Campaign by Gender by Device type",
+                            "startDate": 1650177200,
+                            "endDate": 1666938296,
+                            "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                            "customerIds": null,
+                            "customerDetails": null,
+                            "timezoneId": 11,
+                            "reportSchedulingEventDetails": {
+                              "eventId": 29,
+                              "deliveryFrequency": 3,
+                              "fileType": 2,
+                              "subscriberEmails": [
+                                "demoUser1@gmail.com",
+                                "demoUser2@iqm.com"
+                              ],
+                              "eventEndDate": 1671148799999,
+                              "deliveryDay": "Friday"
+                            }
+                          },
+                          {
+                            "id": 2,
+                            "reportName": "Campaigns by Zip Codes with filters",
+                            "startDate": 1660521600,
+                            "endDate": 1668470399,
+                            "dimensions": "[{\"filter\": \"campaign\"}, {\"value\": [123, 234, 345, 456], \"filter\": \"zip5\"}]",
+                            "customerIds": null,
+                            "customerDetails": null,
+                            "timezoneId": 12,
+                            "reportSchedulingEventDetails": {
+
+                            }
+                          },
+                          {
+                            "id": 3,
+                            "reportName": "Creatives by Income Ranges and Operating System with filters",
+                            "startDate": 1660521600,
+                            "endDate": 1668470399,
+                            "timezoneId": 11,
+                            "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
+                            "customerIds": [200, 201],
+                            "customerDetails": [
+                              {
+                                "owId": 200,
+                                "organizationName": "Test Organization",
+                                "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/200/1637314301025.png",
+                                "statusId": 1,
+                                "status": "Active",
+                                "supportEmail": "demoSupport@gmail.com",
+                                "timezone": 29
+                              }
+                            ],
+                            "reportSchedulingEventDetails": {
+
+                            }
+                          }
+                        ],
+                        "totalRecords": 3,
+                        "filteredRecords": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -555,6 +2139,60 @@
             "type": "string"
           }
         }
+      },
+      "ReportSchedulingEventDetailsVO": {
+        "type": "object",
+        "properties": {
+          "earliestCampaignStartDate": {
+            "type": "integer",
+            "description": "Earliest start date from selected Campaigns (required when runningTotalEnabled = true)",
+            "format": "int64",
+            "example": 1704067200000
+          },
+          "reportId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deliveryFrequency": {
+            "type": "integer",
+            "description": "Delivery Frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2, 3, 4]
+          },
+          "fileType": {
+            "type": "integer",
+            "description": "File Type: 1 = CSV ; 2 = XLS",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2]
+          },
+          "subscriberEmails": {
+            "type": "array",
+            "description": "List of Subscriber Emails",
+            "items": {
+              "type": "string",
+              "description": "List of Subscriber Emails"
+            }
+          },
+          "eventEndDate": {
+            "type": "integer",
+            "description": "Unix epoch timestamp in milliseconds of event End Date (required if deliveryFrequency = 2,3,4)",
+            "format": "int64",
+            "example": 1704067200000
+          },
+          "deliveryDay": {
+            "type": "string",
+            "description": "Delivery Day (required if deliveryFrequency = 2,3,4)",
+            "example": "Monday"
+          },
+          "runningTotalEnabled": {
+            "type": "boolean",
+            "description": "Running Total Enabled",
+            "example": true
+          }
+        },
+        "description": "Report Scheduling Event Details"
       },
       "ExecuteRequestVO": {
         "type": "object",
@@ -719,6 +2357,226 @@
           },
           "data": {
             "$ref": "#/components/schemas/ModeledItemsData"
+          }
+        }
+      },
+      "OrganizationBasicDetailVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 123321
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "Organization Name",
+            "example": "IQM Corporation"
+          },
+          "organizationLogo": {
+            "type": "string",
+            "description": "Organization Logo",
+            "example": "logo.png"
+          },
+          "statusId": {
+            "type": "integer",
+            "description": "Organization Status ID",
+            "format": "int32",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Organization Status",
+            "example": "Active"
+          },
+          "supportEmail": {
+            "type": "string",
+            "description": "Organization Support Email",
+            "example": "support@iqm.com"
+          },
+          "timezone": {
+            "type": "integer",
+            "description": "Organization Timezone",
+            "format": "int32",
+            "example": 1
+          },
+          "organizationType": {
+            "type": "string",
+            "description": "Organization Type",
+            "example": "Customer"
+          }
+        },
+        "description": "Organization Basic Detail Object",
+        "nullable": true
+      },
+      "ReportData": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "description": "Report details data list",
+            "items": {
+              "$ref": "#/components/schemas/ReportDetailsVO"
+            }
+          }
+        },
+        "description": "Generic success response data wrapper"
+      },
+      "ReportDetailsVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the report",
+            "format": "int32",
+            "example": 1
+          },
+          "reportName": {
+            "type": "string",
+            "description": "Name of the report",
+            "example": "Campaign Performance Report"
+          },
+          "startDate": {
+            "type": "integer",
+            "description": "Start date of the report",
+            "format": "int64",
+            "example": 1622505600000
+          },
+          "endDate": {
+            "type": "integer",
+            "description": "End date of the report",
+            "format": "int64",
+            "example": 1625097600000
+          },
+          "dimensions": {
+            "type": "string",
+            "description": "Dimensions of the report",
+            "example": "['age', 'gender']"
+          },
+          "customerIds": {
+            "type": "array",
+            "description": "List of customer IDs associated with the report",
+            "nullable": true,
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "List of customer IDs associated with the report",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "columns": {
+            "type": "array",
+            "description": "List of columns to be included in the report",
+            "example": "['column1', 'column2']",
+            "items": {
+              "type": "string",
+              "description": "List of columns to be included in the report",
+              "example": "['column1', 'column2']"
+            }
+          },
+          "timezoneId": {
+            "type": "integer",
+            "description": "ID of the timezone for the report",
+            "format": "int32",
+            "example": 1
+          },
+          "requestType": {
+            "type": "integer",
+            "description": "Type of the report request",
+            "format": "int32",
+            "example": 1
+          },
+          "reportAggregated": {
+            "type": "string",
+            "description": "Aggregation level of the report",
+            "example": "daily"
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Ow ID associated with the report",
+            "format": "int32",
+            "example": 1
+          },
+          "createdByUOWId": {
+            "type": "integer",
+            "description": "Created by User ID",
+            "format": "int32",
+            "example": 1
+          },
+          "modifiedByUOWId": {
+            "type": "integer",
+            "description": "Modified by User ID",
+            "format": "int32",
+            "example": 1
+          },
+          "timezoneName": {
+            "type": "string",
+            "description": "Timezone Name",
+            "example": "America/New_York"
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "Name of the organization",
+            "example": "Acme Corp"
+          },
+          "customerDetails": {
+            "type": "array",
+            "description": "List of Customer Details",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/OrganizationBasicDetailVO"
+            }
+          },
+          "reportSchedulingEventDetails": {
+            "$ref": "#/components/schemas/ReportSchedulingEventDetailsVO"
+          }
+        }
+      },
+      "ReportList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReportData"
+          }
+        }
+      },
+       "ReportDetails": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReportDetailsVO"
           }
         }
       },
@@ -1158,6 +3016,187 @@
         "example": {
           "CTR": 0.26809,
           "impressions": 1884444
+        }
+      },
+      "ReportSchedulingDetails": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message about scheduling operation",
+            "example": "Report schedule has been successfully updated."
+          },
+          "scheduledData": {
+            "$ref": "#/components/schemas/ScheduledData"
+          }
+        },
+        "description": "Report scheduling details response"
+      },
+      "ReportSchedulingResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReportSchedulingDetails"
+          }
+        },
+        "description": "Response for report scheduling update"
+      },
+      "ScheduledData": {
+        "type": "object",
+        "properties": {
+          "earliestCampaignStartDate": {
+            "type": "integer",
+            "description": "Earliest campaign start date epoch (ms)",
+            "format": "int64",
+            "example": 0
+          },
+          "reportId": {
+            "type": "integer",
+            "description": "Report ID",
+            "format": "int32",
+            "example": 1234
+          },
+          "deliveryFrequency": {
+            "type": "integer",
+            "description": "Delivery Frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
+            "format": "int32",
+            "example": 4,
+            "enum": [1, 2, 3, 4]
+          },
+          "fileType": {
+            "type": "integer",
+            "description": "File type identifier",
+            "format": "int32",
+            "example": 1
+          },
+          "subscriberEmails": {
+            "type": "array",
+            "description": "List of subscriber emails",
+            "example": [
+              "sample_email@sample.com",
+              "sample_email2@sample.com"
+            ],
+            "items": {
+              "type": "string",
+              "description": "List of subscriber emails",
+              "example": "[\"sample_email@sample.com\",\"sample_email2@sample.com\"]"
+            }
+          },
+          "eventEndDate": {
+            "type": "integer",
+            "description": "Event end date epoch (ms)",
+            "format": "int64",
+            "example": 1696270980000
+          },
+          "deliveryDay": {
+            "type": "string",
+            "description": "Delivery day (e.g. day of week or month depending on frequency)",
+            "example": "5"
+          },
+          "runningTotalEnabled": {
+            "type": "boolean",
+            "description": "Running total enabled",
+            "example": false
+          }
+        },
+        "description": "Report schedule configuration data"
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "CommonResponseMessage": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response"
+          },
+          "data": {
+            "type": "string",
+            "description": "Success message"
+          }
+        },
+        "description": "Common response with data as message"
+      },
+      "CommonResponseId": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response"
+          },
+          "data": {
+            "type": "integer",
+            "description": "Entity ID",
+            "format": "int32"
+          }
+        },
+        "description": "Common Response with ID"
+      },
+      "ReportSearchRequestVO": {
+        "type": "object",
+        "properties": {
+          "sortCriteriaMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerIds": {
+            "type": "string"
+          },
+          "uowId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noOfEntries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "searchField": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "SortOrderEnum[id=1, name='asc', symbol='+']",
+              "SortOrderEnum[id=2, name='desc', symbol='-']"
+            ]
+          }
         }
       }
     }
