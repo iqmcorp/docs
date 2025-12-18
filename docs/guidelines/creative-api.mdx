@@ -1632,14 +1632,14 @@ function getCreativeStatusCount(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-This API allows you to create creatives of various types by providing the creative metadata and creative files using multipart/form-data. The metadata is sent as a JSON string in the <var>creativeRequest</var> form field, and files (when creativeSourceType is <var>FILE</var>) are uploaded in the <var>creativeFiles</var> form field. The API supports batch creation of multiple creatives in a single request, with partial success/failure handling.
+This API allows you to add Creatives of various types by providing the Creative metadata and Creative files using multipart/form-data. The metadata is sent as a JSON string in the <var>creativeRequest</var> form field, and files (when creativeSourceType is <var>FILE</var>) are uploaded in the <var>creativeFiles</var> form field. The API supports batch creation of multiple Creatives in a single request, with partial success/failure handling.
 
 Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US/Learn/Forms/Sending_and_retrieving_form_data) on form data format.
 
 | Request Schema | |
 | --- | --- | 
 | `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to Creative metadata. Each ID corresponds to a single Creative. |
-| `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of creative files to upload. Required only when creative source type is <var>FILE</var> in the creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding creative object. Supports multiple file uploads for batch creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
+| `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of Creative files to upload. Required only when Creative source type is <var>FILE</var> in the Creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding Creative object. Supports multiple file uploads for batch Creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Creative Metadata</summary>
@@ -1952,7 +1952,10 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
 </div>
 <div class="child2">
 
-```Bash title="Form Data Sample"
+
+<CodeDropdown label="Request Samples">
+<CodeOption label="Form Data Sample">
+```bash
 POST /api/v3/crt/creatives HTTP/1.1
 Host: https://api.iqm.com
 Authorization: Bearer YOUR_TOKEN_HERE
@@ -1975,6 +1978,18 @@ Content-Type: video/mp4
 [Binary video data]
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
+</CodeOption>
+<CodeOption label="curl Sample">
+```bash
+curl -X POST https://api.iqm.com/api/v3/crt/creatives \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "X-IAA-OW-ID: 12345" \
+  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrl":"https://tracker.example.com/pixel","creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","clickUrl":"https://www.example.com","htmlDetails":{"creativeWidth":300,"creativeHeight":250}}}' \
+  -F 'creativeFiles=@summer-banner.jpg' \
+  -F 'creativeFiles=@product-demo.mp4'
+```
+</CodeOption>
+</CodeDropdown>
 
 <CodeDropdown label="Creative Details Samples">
 <CodeOption label="HTML Creative (H001)">
