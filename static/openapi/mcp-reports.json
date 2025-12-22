@@ -2,21 +2,31 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "v0"
+    "version": "v0",
+    "description": "MCP Creative API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
   },
   "servers": [
     {
-      "url": "http://localhost:9096",
-      "description": "Generated server url"
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
     }
   ],
   "paths": {
     "/api/v3/ra/report/execute": {
       "post": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Execute report and fetch serving data",
         "description": "This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - This is report Id, report data will be fetched for this report id. |\n| dimensions | JSON String | [Optional] - JSON string representing dimension details. |\n| columns | Array of String | [Optional] - Metrics for showing serving result |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | JSON String | [Optional] - JSON string supporting campaignId, creativeTypeId and campaignStatus filtering. |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Optional] - ID to identify if report request is of Daily or Aggregate. \u003Cbr\u003Esample : [1- Daily, 2- Aggregated]  |\n| reportAggregated | String | [Optional] - Field to identify if report dimension is Aggregated or not. \u003Cbr\u003Esample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report start time.|\n| endDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report end time.|\n| timezoneId | Integer | [Optional] - Timezone ID|\n| timezoneName | String | [Optional] - Timezone Name|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is 50|\n",
@@ -399,9 +409,7 @@
     "/api/v3/ra/report/email/schedule": {
       "post": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Save report scheduling event.",
         "description": "This API saves the report scheduling event.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| reportId | Integer | [Required] - This is report Id, event will be created on this report id. |\n| subscriberEmails | Array of String | [Required] - List of the emails on which the report will be sent. |\n| fileType | Integer | [Required] - Report file type id. The report will be sent in the selected file format . \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | [Required] - Delivery frequency type id for the emails to be sent.\u003Cbr\u003Esample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
@@ -651,9 +659,7 @@
     "/api/v3/ra/report/email/schedule/{reportId}": {
       "delete": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Remove report scheduling event",
         "description": "This API removes the report scheduling event.",
@@ -771,9 +777,7 @@
       },
       "patch": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Update report scheduling event",
         "description": "This API update the report scheduling event. Whichever field is to be updated, that can be sent in the request body.\n \n**Request Body Description:**\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| subscriberEmails | Array of String | List of the emails on which the report will be sent. |\n| fileType | Integer | Report file type id. The report will be sent in the selected file format. \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | Delivery frequency type id for the emails to be sent. \u003Cbr\u003E sample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency updated and is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
@@ -973,9 +977,7 @@
     "/api/v3/ra/report/dimension-metrics/detail": {
       "get": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Get Dimension & Metrics Details",
         "description": "This API offers Dimension and Metrics information grouped by Category in predetermined order",
@@ -1156,9 +1158,7 @@
     "/api/v3/ra/report/add": {
       "post": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Create Report",
         "description": "This API will create new Report based on given fields",
@@ -1329,9 +1329,7 @@
     "/api/v3/ra/report/{reportId}": {
       "get": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Get Report By ID",
         "description": "This API fetches report data by report ID",
@@ -1484,9 +1482,7 @@
       },
       "delete": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Delete Report and Scheduling Data By ID",
         "description": "This API deletes report and it's scheduling data",
@@ -1605,9 +1601,7 @@
       },
       "patch": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Edit Report",
         "description": "This API will edit Report data based on given fields",
@@ -1735,9 +1729,7 @@
     "/api/v3/ra/reports/list": {
       "get": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Get List of Reports",
         "description": "This API fetches list of reports as per the given filters",
@@ -1952,9 +1944,7 @@
       },
       "post": {
         "tags": [
-          "Workspace",
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Get List of Reports",
         "description": "This API fetches list of reports as per the given filters\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| customerIds | String | [Optional] - Comma separated String of Customer IDs for which Report's list is requested. Default value is `all` |\n| searchField | String | [Optional] - Search field for report listing data. Search is supported for Report ID and Report name |\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is `-modifyDate`|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is `1`|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is `20`|\n",
