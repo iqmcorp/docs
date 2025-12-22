@@ -5741,6 +5741,12 @@ const sidebars = {
       items: [
         {
           type: 'doc',
+          label: 'Creative Tutorial',
+          id: `mcp/mcp-tutorials/mcp-creative-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
           label: 'Bid Model Tutorial',
           id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
           className: 'sidebarItem'
