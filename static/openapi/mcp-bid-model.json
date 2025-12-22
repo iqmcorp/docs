@@ -2,20 +2,31 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "v0"
+    "version": "v0",
+    "description": "MCP Creative API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
   },
   "servers": [
     {
-      "url": "http://localhost:10199",
-      "description": "Generated server url"
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
     }
   ],
   "paths": {
     "/api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}": {
       "put": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "summary": "Manage bid modelling attributes for a campaign and dimension",
         "description": "This API allows advertisers to manage bid modelling configurations for campaigns, providing full Create, Update, and Delete operations on bid modelling attributes.\n\n**Campaign Criteria for Bid Modeling Eligibility**\n- A duration of at least 3 days\n- A daily budget of at least $100\n- Base bid and max bid price must be defined\n\nBid Modeling attributes control campaign prioritization and spending distribution across various dimensions such as:\n\n**Supported Dimensions**\n- Creative\n- Location: State, City, Zip Code\n- Inventory: Open Exchange, Publisher Category, Deal IDs\n- Device: Traffic Type, Device Type\n- AdExchange\n\n**Bid model attributes include:**\n- Priority: The priority of the bid model.\n- Bid Multiplier: The multiplier applied to the base bid.\n- Spend Ratio: The ratio of spend allocated to the bid model.\n- Spend Ratio Type: The type of spend ratio.\n\n**Bundle support details:**\n- Bundles can be created to group entities together for bid modelling.\n- Entities can be bundled or unbundled as needed.\n- Bundles can be added, updated, or deleted in the bid modelling configuration.\n- Bundle's bid modelling attributes are propagated to all entities present in the bundle.\n\n**The API supports the following actions:**\n- ADD: Add new bid model entities or bundles.\n- DELETE: Remove existing bid model entities or bundles.\n- UPDATE: Modify existing bid model entities or bundles.\n- INCLUDE/EXCLUDE: Set inclusion or exclusion for entities in the bid modelling configuration.\n- Base Bid: Update the base bid for the campaign.\n\n**Request Structure (BidModelManagement schema)**\n1. `actionWiseBidModelEntities`: Contains ADD / UPDATE / DELETE operations (accepts a dictionary or JSON string).\n2. `inclusionExclusionEntityMap`: Contains INCLUDE / EXCLUDE lists.\n3. `baseBid`: Base bid amount for the campaign.\n\n**Validation Rules**\n- When providing `spendRatio`, you must also provide `spendRatioTypeId` (`2 = Fixed`, `1 = Flexible`).\n- When providing `spendRatioTypeId`, you must also provide `spendRatio`.\n- When adding modeled entities (`entityTypeId = 1` or `2`), include at least one **Other** entity (`entityId = -1`, `entityTypeId = 3`).\n- For ADD: `spendRatio` must be `1–100`; for UPDATE: `spendRatio` can be `0–100`.\n- Refer to `#/components/schemas/BidModelManagement` for the detailed request structure.\n\n**Note**\n`actionWiseBidModelEntities` can be passed as either:\n- A dictionary object: `{ \"UPDATE\": [{ \"bidModelDataId\": 123, \"priority\": 3 }] }`\n- A JSON string: `\"{\"UPDATE\": [{\"bidModelDataId\": 123, \"priority\": 3}]}\"`\n",
@@ -487,8 +498,7 @@
     "/api/v3/bm/campaigns/{campaignId}/reports/{dimensionId}": {
       "post": {
         "tags": [
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Fetch campaign metrics report by dimension Id",
         "description": "Fetches and returns a detailed metrics report for a specified campaign and dimension,\nproviding granular insights such as impressions, clicks, eCPM, conversions, and additional breakdowns by the selected dimension.\nSupports advanced filtering, sorting, and pagination, and can return either downloadable report URLs or in-depth data tables depending on the request parameters.\n",
@@ -1228,8 +1238,7 @@
     "/api/v3/bm/campaigns/{campaignId}/include-exclude/dimensions/{dimensionId}": {
       "post": {
         "tags": [
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Include/Exclude entities from a campaign",
         "description": "This API allows clients to include or exclude entities from a campaign by updating their status.",
@@ -1404,8 +1413,7 @@
     "/api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles": {
       "post": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "summary": "Create Bundle for Campaign and Dimension",
         "description": "This API is used to create a bundle for a specific campaign and dimension. It allows the user to group entities into a bundle for advanced modelling. The request body should contain the details of the bundle to be created, including the entities and their associated data.",
@@ -1588,8 +1596,7 @@
       },
       "delete": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "summary": "Delete Bundle for Campaign and Dimension",
         "description": "This API is used to delete a bundle for a specific campaign and dimension. It allows the user to remove a bundle and its associated entities from the system. The request body should contain the details of the bundle to be deleted.",
@@ -1746,8 +1753,7 @@
       },
       "patch": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "summary": "Update Bundle for Campaign and Dimension",
         "description": "This API is used to update an existing bundle for a specific campaign and dimension. It allows the user to modify the bundle's name and the entities associated with it. The request body should contain the updated details of the bundle.",
@@ -1946,8 +1952,7 @@
     "/api/v3/bm/campaigns/{campaignId}/bid-models/dimensions/{dimensionId}": {
       "post": {
         "tags": [
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "List modelled entities reporting with modelling data for a campaign",
         "description": "Retrieves a list of modelled entities with reporting and their associated modelling data for the provided campaign ID.\nThe modelling data includes priority, spend ratio, spend ratio type, and bid multiplier for each dimension.\nAlso Bundle details are included if available with modelling data.\n",
@@ -2724,8 +2729,7 @@
     "/api/v3/bm/bid-models/dimension/entity": {
       "post": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "description": "Retrieves the modelled entity for given dimension and entity ids with campaign data",
         "operationId": "getModelledEntityData",
@@ -2889,9 +2893,7 @@
     "/api/v3/bm/static/dimensions": {
       "get": {
         "tags": [
-          "Organization",
-          "Internal",
-          "Workspace"
+          "MCP"
         ],
         "summary": "This API will provide the list of bid-model dimensions .",
         "description": "This API will provide values of bid-model dimensions and sub-dimensions",
@@ -3019,8 +3021,7 @@
     "/api/v3/bm/campaigns/{campaignId}/dimension/{dimensionId}/spent": {
       "get": {
         "tags": [
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Retrieves the total spent dimension-wise for a specified campaign",
         "description": "Retrieves the total spent dimension-wise for a specified campaign, supporting filtering by dimension ID through a query parameter, For ",
@@ -3187,8 +3188,7 @@
     "/api/v3/bm/campaigns/{campaignId}/bundles": {
       "get": {
         "tags": [
-          "Internal",
-          "Organization"
+          "MCP"
         ],
         "summary": "This API fetches list of bundles linked to a specific campaign and dimension, along with their entities details and modelling status.\nIt supports optional filtering by bundle name, bundle ID, and dimension ID\n",
         "description": "This API retrieves bundle details for a given campaign and dimension.\nIt returns a list of bundles, including their associated entities and modelling status.\nYou can optionally filter results by bundle name or ID using the search field.\nAdditionally, you can filter by dimension ID — if not provided, all bundles for the campaign are returned\n",
@@ -3388,8 +3388,7 @@
     "/api/v3/bm/campaign/{campaignId}/dimensions/bid-models/count": {
       "get": {
         "tags": [
-          "Organization",
-          "Internal"
+          "MCP"
         ],
         "summary": "Retrieves the total count(number of items associate with campaign), dimension-wise id and count of modelled items for a specified campaign",
         "description": "This retrieves dimension statistics for a campaign :\nDimension Statistics includes :\n     * dimension : Dimension ID (creative, state, city, deal... etc\n     * Total count : Total number of entities in a dimension, ex : state : number of status attach to campaign id.\n     * Modelled count : Number of entities modelled in a dimension\n     * modelledIds : List of modelled entity ids.\nParameters :\n         * campaignId : The campaign ID to fetch the total spent for\n         * startDate : The start date for the spent\n         * endDate : The end date for the spent\nThrough startDate & endDate we will get total count(target + serve) for campaign.\n",
