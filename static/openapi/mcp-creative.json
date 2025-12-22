@@ -1,0 +1,2652 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0",
+    "description": "MCP Creative API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
+    }
+  ],
+  "paths": {
+    "/api/v3/crt/creatives": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Add creative",
+        "description": "This API allows you to create creatives of various types by providing the creative metadata and creative files using multipart/form-data. The metadata is sent as a JSON string in the 'creativeRequest' form field, and files (when creativeSourceType is 'FILE') are uploaded in the 'creativeFiles' form field. The API supports batch creation of multiple creatives in a single request, with partial success/failure handling.",
+        "operationId": "createCreatives",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Multipart form data containing creative metadata as JSON string and optional file uploads",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCreativeMultipartRequest"
+              },
+              "examples": {
+                "Create html creative": {
+                  "description": "Create html creative",
+                  "value": {
+                    "H001": {
+                      "creativeName": "html",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 13,
+                      "creativeSourceType": "HTML",
+                      "creativeSource": "\u003Ca href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1\u003E\u003Cimg src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg\u003E\u003C/a\u003E",
+                      "clickUrl": "www.example.com",
+                      "htmlDetails": {
+                        "creativeWidth": 500,
+                        "creativeHeight": 1200
+                      }
+                    }
+                  }
+                },
+                "Create image creative - file": {
+                  "description": "Create image creative - file",
+                  "value": {
+                    "I001": {
+                      "creativeName": "image-file",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 11,
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "green.jpeg",
+                      "clickUrl": "www.example.com",
+                      "imageDetails": {
+                        "pixelUrl": "www.example.com",
+                        "creativeWidth": 750,
+                        "creativeHeight": 750
+                      }
+                    }
+                  }
+                },
+                "Create image creative - URL": {
+                  "description": "Create image creative - URL",
+                  "value": {
+                    "I002": {
+                      "creativeName": "image-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 11,
+                      "creativeSourceType": "URL",
+                      "creativeSource": "https://tmpd3vsekqsh1zre3k8n-stage.s3.amazonaws.com/Image/200001/Mcn7L08_1731899937158.png",
+                      "clickUrl": "www.example.com",
+                      "imageDetails": {
+                        "pixelUrl": "www.example.com",
+                        "creativeWidth": 3800,
+                        "creativeHeight": 2534
+                      }
+                    }
+                  }
+                },
+                "Create audio creative - file": {
+                  "description": "Create audio creative - file",
+                  "value": {
+                    "A001": {
+                      "creativeName": "audio-file",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "38823f5d-8dea-40ed-8a53-78ff9910befa-wl.mp3",
+                      "audioDetails": {
+                        "duration": 15,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        },
+                        "logoSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg"
+                      }
+                    }
+                  }
+                },
+                "Create audio creative - URL": {
+                  "description": "Create audio creative - URL",
+                  "value": {
+                    "A002": {
+                      "creativeName": "audio-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "URL",
+                      "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20250116/163554.948946-38823f5d-8dea-40ed-8a53-78ff9910befa.mp3",
+                      "audioDetails": {
+                        "duration": 19,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        }
+                      }
+                    }
+                  }
+                },
+                "Create audio creative - VAST URL": {
+                  "description": "Create audio creative - VAST URL",
+                  "value": {
+                    "A003": {
+                      "creativeName": "audio-vast-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "creativeSourceType": "VAST_URL",
+                      "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/180837.894423-nisha-dev-audio-vast.xml"
+                    }
+                  }
+                },
+                "Create audio creative - VAST XML": {
+                  "description": "Create audio creative - VAST XML",
+                  "value": {
+                    "A004": {
+                      "creativeName": "audio-vast",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "creativeSourceType": "VAST_XML",
+                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E"
+                    }
+                  }
+                },
+                "Create audio creative - DAAST URL": {
+                  "description": "Create audio creative - DAAST URL",
+                  "value": {
+                    "A005": {
+                      "creativeName": "audio-daast-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "creativeSourceType": "DAAST_URL",
+                      "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241014/112237.434288-DAAST1_(1).xml"
+                    }
+                  }
+                },
+                "Create audio creative - DAAST XML": {
+                  "description": "Create audio creative - DAAST XML",
+                  "value": {
+                    "A006": {
+                      "creativeName": "audio-daast",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "creativeSourceType": "DAAST_XML",
+                      "creativeSource": "\u003CDAAST ... \u003E...\u003C/DAAST\u003E"
+                    }
+                  }
+                },
+                "Create video creative - file": {
+                  "description": "Create video creative - file",
+                  "value": {
+                    "V001": {
+                      "creativeName": "video-file",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 14,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "4b2c2dca-6919-432a-9ac6-91405b8c4489.mp4",
+                      "videoDetails": {
+                        "creativeHeight": 2160,
+                        "creativeWidth": 4096,
+                        "duration": 22,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        }
+                      }
+                    }
+                  }
+                },
+                "Create video creative - URL": {
+                  "description": "Create video creative - URL",
+                  "value": {
+                    "V002": {
+                      "creativeName": " video-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 14,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "URL",
+                      "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241204/094645.459858-4b2c2dca-6919-432a-9ac6-91405b8c4489.mp4",
+                      "videoDetails": {
+                        "creativeHeight": 2160,
+                        "creativeWidth": 4096,
+                        "duration": 22,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        }
+                      }
+                    }
+                  }
+                },
+                "Create video creative - VAST URL": {
+                  "description": "Create video creative - VAST URL",
+                  "value": {
+                    "V003": {
+                      "creativeName": " vast-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 14,
+                      "creativeSourceType": "VAST_URL",
+                      "creativeSource": "https://cdn-cfy-p0.iqm.com/wreckathon/2024/Videos/vast-static-DVP-15s-playbook.xml"
+                    }
+                  }
+                },
+                "Create video creative - VAST XML": {
+                  "description": "Create video creative - VAST XML",
+                  "value": {
+                    "V004": {
+                      "creativeName": "video-vast",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 14,
+                      "creativeSourceType": "VAST_XML",
+                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E"
+                    }
+                  }
+                },
+                "Create native image creative - file": {
+                  "description": "Create native image creative - file",
+                  "value": {
+                    "NI001": {
+                      "creativeName": "native-image-file",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "subMediaType": "image",
+                      "platformCreativeTypeId": 15,
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "image_creative.jpeg",
+                      "clickUrl": "www.example.com",
+                      "imageDetails": {
+                        "pixelUrl": "www.example.com"
+                      },
+                      "nativeDetails": {
+                        "title": "Native image file upload",
+                        "description": "Native image file upload, with pixel url, no CTA",
+                        "brandName": "iqm",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create native image creative - URL": {
+                  "description": "Create native image creative - URL",
+                  "value": {
+                    "NI002": {
+                      "creativeName": "native-image-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "subMediaType": "image",
+                      "platformCreativeTypeId": 15,
+                      "creativeSourceType": "URL",
+                      "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/y4SLpav_1734345286762.jpeg",
+                      "clickUrl": "www.example.com",
+                      "imageDetails": {
+                        "pixelUrl": "www.example.com"
+                      },
+                      "nativeDetails": {
+                        "title": "Native image url upload",
+                        "description": "Native image with pixel url and existing CTA",
+                        "brandName": "green",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create native video creative - file": {
+                  "description": "Create native video creative - file",
+                  "value": {
+                    "NV001": {
+                      "creativeName": "native-video-file",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "subMediaType": "video",
+                      "platformCreativeTypeId": 15,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "4b2c2dca-6919-432a-9ac6-91405b8c4489.mp4",
+                      "videoDetails": {
+                        "creativeHeight": 2160,
+                        "creativeWidth": 4096,
+                        "duration": 22,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        }
+                      },
+                      "nativeDetails": {
+                        "title": "native-video-file-title",
+                        "description": "native-video-file-description",
+                        "cta": {
+                          "id": 1,
+                          "ctaText": "Sign Up",
+                          "defaultCta": true
+                        },
+                        "brandName": "green",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750,
+                        "thumbnailSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "thumbnailHeight": 750,
+                        "thumbnailWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create native video creative - URL": {
+                  "description": "Create native video creative - URL",
+                  "value": {
+                    "NV002": {
+                      "creativeName": "native-video-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "subMediaType": "video",
+                      "platformCreativeTypeId": 15,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "URL",
+                      "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241204/094645.459858-4b2c2dca-6919-432a-9ac6-91405b8c4489.mp4",
+                      "videoDetails": {
+                        "creativeHeight": 2160,
+                        "creativeWidth": 4096,
+                        "duration": 22,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        }
+                      },
+                      "nativeDetails": {
+                        "title": "native-video-url-title",
+                        "description": "native-video-url-description",
+                        "cta": {
+                          "id": 1,
+                          "ctaText": "Sign Up",
+                          "defaultCta": true
+                        },
+                        "brandName": "green",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750,
+                        "thumbnailSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "thumbnailHeight": 750,
+                        "thumbnailWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create native video creative - VAST URL": {
+                  "description": "Create native video creative - VAST URL",
+                  "value": {
+                    "NV003": {
+                      "creativeName": " native-video-vast-url",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 15,
+                      "subMediaType": "video",
+                      "creativeSourceType": "VAST_URL",
+                      "creativeSource": "https://cdn-cfy-p0.iqm.com/wreckathon/2024/Videos/vast-static-DVP-15s-playbook.xml",
+                      "nativeDetails": {
+                        "title": "native-video-url-title",
+                        "description": "native-video-url-description",
+                        "cta": {
+                          "id": 1,
+                          "ctaText": "Sign Up",
+                          "defaultCta": true
+                        },
+                        "brandName": "green",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750,
+                        "thumbnailSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "thumbnailHeight": 750,
+                        "thumbnailWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create native video creative - VAST XML": {
+                  "description": "Create native video creative - VAST XML",
+                  "value": {
+                    "NV004": {
+                      "creativeName": "native-video-vast-xml",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "subMediaType": "video",
+                      "platformCreativeTypeId": 15,
+                      "creativeSourceType": "VAST_XML",
+                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E",
+                      "nativeDetails": {
+                        "title": "native-video-url-title",
+                        "description": "native-video-url-description",
+                        "cta": {
+                          "id": 1,
+                          "ctaText": "Sign Up",
+                          "defaultCta": true
+                        },
+                        "brandName": "green",
+                        "brandIconSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "brandIconHeight": 750,
+                        "brandIconWidth": 750,
+                        "thumbnailSourceUrl": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg",
+                        "thumbnailHeight": 750,
+                        "thumbnailWidth": 750
+                      }
+                    }
+                  }
+                },
+                "Create Creatives - partial success and partial failure": {
+                  "description": "Create Creatives - partial success and partial failure",
+                  "value": {
+                    "PS": {
+                      "creativeName": "audio-file-attached",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "38823f5d-8dea-40ed-8a53-78ff9910befa.mp3",
+                      "audioDetails": {
+                        "duration": 15,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        },
+                        "logoSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg"
+                      }
+                    },
+                    "PF": {
+                      "creativeName": "audio-file-not-attached",
+                      "externalCreativeId": "google_421_dcm_435",
+                      "platformCreativeTypeId": 17,
+                      "clickUrl": "www.example.com",
+                      "creativeSourceType": "FILE",
+                      "creativeSource": "38823f5d-8dea-40ed-8a53-78ff9910befa-wl.mp3",
+                      "audioDetails": {
+                        "duration": 15,
+                        "customTracking": {
+                          "startUrl": "www.example.com",
+                          "firstQuartileURL": "www.example.com",
+                          "midPointURL": "www.example.com",
+                          "thirdQuartileURL": "www.example.com",
+                          "completeURL": "www.example.com",
+                          "impressionURL": "www.example.com"
+                        },
+                        "logoSource": "https://d15mohg007lzeb.cloudfront.net/mu/20241210/182931.406010-green.jpeg"
+                      }
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "creativeRequest": {
+                  "contentType": "application/json"
+                },
+                "creativeFiles": {
+                  "contentType": "application/octet-stream"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCreativeResponseWrapper"
+                },
+                "examples": {
+                  "Create Creatives - partial success and partial failure": {
+                    "description": "Create Creatives - partial success and partial failure",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "successData": {
+                          "PS": "701388"
+                        },
+                        "failedData": {
+                          "PF": "Creative file missing. Please attach the required file. : null"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/crt/creatives/list": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "To fetch creative detail list",
+        "description": "This API will provide list of creatives with details",
+        "operationId": "getCreatives_1",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreativeListRequest"
+              },
+              "examples": {
+                "Get creative list - Advertiser": {
+                  "description": "Get creative list - Advertiser",
+                  "value": {
+                    "pageNo": 1,
+                    "noOfEntries": 2,
+                    "sortBy": "-creativeId",
+                    "searchField": "creative",
+                    "platformCreativeTypeIds": [11, 13, 14, 15, 17],
+                    "creativeStatusIds": [1, 2, 3, 4],
+                    "creativeIds": [130141, 130142],
+                    "creativeGroupId": null,
+                    "campaignIds": [20141],
+                    "startTime": 1734998399000,
+                    "endTime": 1735206867000,
+                    "includeCreativeSourceDetails": true,
+                    "includeOrganizationDetails": false,
+                    "includeUserDetails": false
+                  }
+                },
+                "Get creative list - Super/Workspace": {
+                  "description": "Get creative list - Super/Workspace",
+                  "value": {
+                    "pageNo": 1,
+                    "noOfEntries": 2,
+                    "sortBy": "-creativeId",
+                    "searchField": "creative",
+                    "platformCreativeTypeIds": [11, 13, 14, 15, 17],
+                    "creativeStatusIds": [1, 2, 3, 4],
+                    "creativeIds": [130141, 130142],
+                    "creativeGroupId": null,
+                    "campaignIds": [20141],
+                    "startTime": 1734998399000,
+                    "endTime": 1735206867000,
+                    "owIds": [201353],
+                    "allOwIds": true,
+                    "includeOrganizationDetails": true,
+                    "includeUserDetails": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreativeListCommonResponseWrapper"
+                },
+                "examples": {
+                  "Creative list - Advertiser": {
+                    "description": "Creative list - Advertiser",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "totalRecords": 120,
+                        "filteredRecords": 2,
+                        "filteredList": [
+                          {
+                            "creativeId": 130141,
+                            "creativeName": "Creative 1",
+                            "platformCreativeTypeId": 11,
+                            "creativeStatusId": 2,
+                            "creativePreviewFlag": 1,
+                            "creativeSourceType": "file",
+                            "creativeSource": "https://cdn-cfy-p0.iqm.com/image/457/3W8FRdl_1671813949060.gif",
+                            "creativeThumbnailSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/136x82/3W8FRdl_1671813949060.gif",
+                            "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/278x220/3W8FRdl_1671813949060.gif",
+                            "createdAt": 1671813949233,
+                            "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                            "clickUrl": "https://example.com/id=130141",
+                            "creativeHeight": 50,
+                            "creativeWidth": 320,
+                            "campaignDetails": {
+                              "campaignIds": [20141]
+                            },
+                            "userDetails": {
+                              "uowId": 981
+                            },
+                            "organizationDetails": {
+                              "owId": 201353
+                            }
+                          },
+                          {
+                            "creativeId": 130142,
+                            "creativeName": "Creative 2",
+                            "platformCreativeTypeId": 14,
+                            "creativeStatusId": 2,
+                            "creativePreviewFlag": 1,
+                            "creativeSourceType": "file",
+                            "creativeSource": "&lt;VAST xmlns=&quot;http://www.iab.com/VAST&quot; version=&quot;4.0&quot;&gt; &lt;Ad conditionalAd=&quot;false&quot; id=&quot;{IAA_CREATIVE_ID}&quot; sequence=&quot;1&quot;&gt; &lt;InLine&gt; &lt;AdSystem version=&quot;4.0&quot;&gt;4.0&lt;/AdSystem&gt; &lt;Impression id=&quot;Impression-ID&quot;&gt; &lt;![CDATA[http://example.com/track/impression]]&gt; &lt;/Impression&gt; &lt;/InLine&gt; &lt;/Ad&gt; &lt;/VAST&gt;",
+                            "creativeThumbnailSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/136x82/EQ4SWN1_1671813949262.png",
+                            "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/278x220/EQ4SWN1_1671813949262.png",
+                            "createdAt": 1671813949351,
+                            "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                            "clickUrl": "https://example.com/id=130142",
+                            "duration": 16,
+                            "campaignDetails": {
+                              "campaignIds": [20141]
+                            },
+                            "userDetails": {
+                              "uowId": 981
+                            },
+                            "organizationDetails": {
+                              "owId": 201353
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Creative list - Super/Workspace": {
+                    "description": "Creative list - Super/Workspace",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "totalRecords": 120,
+                        "filteredRecords": 2,
+                        "filteredList": [
+                          {
+                            "creativeId": 130141,
+                            "creativeName": "Creative 1",
+                            "platformCreativeTypeId": 11,
+                            "creativeStatusId": 2,
+                            "creativePreviewFlag": 1,
+                            "creativeSourceType": "file",
+                            "creativeThumbnailSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/136x82/3W8FRdl_1671813949060.gif",
+                            "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/278x220/3W8FRdl_1671813949060.gif",
+                            "createdAt": 1671813949233,
+                            "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                            "clickUrl": "https://example.com/id=130141",
+                            "pixelUrl": "http://app.iqm.com",
+                            "creativeHeight": 50,
+                            "creativeWidth": 320,
+                            "subMediaType": "Image",
+                            "approvalRequiredPostUrlUpdate": true,
+                            "campaignDetails": {
+                              "campaignIds": [20141]
+                            },
+                            "userDetails": {
+                              "uowId": 981,
+                              "userName": "User Name",
+                              "userEmail": "email@domain.com",
+                              "hasEditAccess": true,
+                              "hasApprovalAccess": true
+                            },
+                            "organizationDetails": {
+                              "owId": 201353,
+                              "organizationName": "Organization Name",
+                              "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/ON.png"
+                            }
+                          },
+                          {
+                            "creativeId": 130142,
+                            "creativeName": "Creative 2",
+                            "platformCreativeTypeId": 14,
+                            "creativeStatusId": 2,
+                            "creativePreviewFlag": 1,
+                            "creativeSourceType": "file",
+                            "creativeThumbnailSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/136x82/EQ4SWN1_1671813949262.png",
+                            "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201353/278x220/EQ4SWN1_1671813949262.png",
+                            "createdAt": 1671813949351,
+                            "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                            "clickUrl": "https://example.com/id=130142",
+                            "duration": 16,
+                            "subMediaType": "Video",
+                            "approvalRequiredPostUrlUpdate": false,
+                            "campaignDetails": {
+                              "campaignIds": [20141]
+                            },
+                            "userDetails": {
+                              "uowId": 981,
+                              "userName": "User Name",
+                              "userEmail": "email@domain.com",
+                              "hasEditAccess": true,
+                              "hasApprovalAccess": true
+                            },
+                            "organizationDetails": {
+                              "owId": 201353,
+                              "organizationName": "Organization Name",
+                              "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/ON.png"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/crt/creatives/{creativeId}": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get creative details",
+        "description": "This API can be used to fetch creative details of all the types of creatives",
+        "operationId": "getCreative",
+        "parameters": [
+          {
+            "name": "creativeId",
+            "in": "path",
+            "description": "creativeId of the creative (primary key) to retrieve details",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreativeResponseWrapper"
+                },
+                "examples": {
+                  "Image creative details fetched successfully": {
+                    "description": "Image creative details fetched successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "creativeId": 686855,
+                        "creativeName": "300x600-w23-01",
+                        "rtbCreativeTypeId": 1,
+                        "platformCreativeTypeId": 11,
+                        "creativeStatusId": 2,
+                        "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
+                        "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
+                        "clickUrl": "http://iqm.com",
+                        "imageDetails": {
+                          "pixelUrl": "http://pixel.com",
+                          "creativeWidth": 300,
+                          "creativeHeight": 600
+                        },
+                        "creativeSourceType": "file",
+                        "creativePreviewFlag": 1,
+                        "createdAt": 1730201855165,
+                        "modifiedAt": "2024-10-29T06:10:15.000+00:00",
+                        "userDetails": {
+                          "uowId": 175891,
+                          "userName": "Hardik",
+                          "userEmail": "hardik.v+iqmsuper@iqm.com",
+                          "hasApprovalAccess": true,
+                          "hasEditAccess": true
+                        },
+                        "organizationDetails": {
+                          "owId": 202760,
+                          "organizationName": "AdWing"
+                        }
+                      }
+                    }
+                  },
+                  "Html creative details fetched successfully": {
+                    "description": "Html creative details fetched successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "creativeId": 686855,
+                        "creativeName": "300x600-w23-01",
+                        "rtbCreativeTypeId": 1,
+                        "platformCreativeTypeId": 11,
+                        "creativeStatusId": 2,
+                        "creativeSource": "&lt;a href=https://iqm.com/political?utm_medium=rtb&amp;utm_campaign=wreckathon-2024-play-1&gt;&lt;img src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg&gt;&lt;/a&gt;",
+                        "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201427/278x220/6qfdQrD_1733727160404.png",
+                        "clickUrl": "http://iqm.com ",
+                        "htmlDetails": {
+                          "creativeWidth": 500,
+                          "creativeHeight": 1200
+                        },
+                        "creativeSourceType": "html",
+                        "creativePreviewFlag": 1,
+                        "createdAt": 1730201855165,
+                        "modifiedAt": "2024-10-29T06:10:15.000+00:00",
+                        "userDetails": {
+                          "uowId": 175891,
+                          "userName": "Hardik",
+                          "userEmail": "hardik.v+iqmsuper@iqm.com",
+                          "hasApprovalAccess": true,
+                          "hasEditAccess": true
+                        },
+                        "organizationDetails": {
+                          "owId": 202760,
+                          "organizationName": "AdWing"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid creativeId passed": {
+                    "description": "Invalid creativeId passed",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No creative details found for creativeId: 686855"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update creative details",
+        "description": " This API endpoint allows authorized users to update the details of an existing creative. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n The creative can be updated with a name, external creative ID, rejection reason, and remarks.  \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeName | String | Represents name of the creative |\n| externalCreativeId | String | Represents 3rd party id |\n| creativeRejectionReason | String | Represents reason for rejecting the creative if applicable |\n| creativeRemarks | String | Represents remarks to be added for this creative |\n",
+        "operationId": "updateCreative",
+        "parameters": [
+          {
+            "name": "creativeId",
+            "in": "path",
+            "description": "id of the creative (primary key) to update details",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCreativeRequest"
+              },
+              "examples": {
+                "Edit existing creative by Advertiser": {
+                  "description": "Edit existing creative by Advertiser",
+                  "value": {
+                    "creativeName": "New creative name",
+                    "externalCreativeId": "3rd party id"
+                  }
+                },
+                "Edit existing creative by workspace/super user ": {
+                  "description": "Edit existing creative by workspace/super user ",
+                  "value": {
+                    "creativeName": "New creative name",
+                    "externalCreativeId": "3rd party id",
+                    "creativeRejectionReason": "rejection",
+                    "creativeRemarks": "remarks"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCreativeResponseWrapper"
+                },
+                "examples": {
+                  "Creative updated successfully": {
+                    "description": "Creative updated successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 68798,
+                        "message": "New creative name updated successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid creative id passed for update": {
+                    "description": "Invalid creative id passed for update",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No creative details found for creativeId: 6897989"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/crt/creatives/{creativeId}/creative-campaign-details": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Fetch creative and associated campaigns",
+        "description": "Retrieve details of a specific creative along with its associated campaigns. Includes an option to fetch modeling details if requested.",
+        "operationId": "getCreativeAndCampaignDetails",
+        "parameters": [
+          {
+            "name": "creativeId",
+            "in": "path",
+            "description": "Unique ID of the creative whose associated campaigns are to be retrieved",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "includeModelingInfo",
+            "in": "query",
+            "description": "Flag indicating whether modeling details should be included (default: false)",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Creative and associated campaigns retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreativeWithCampaignsResponseWrapper"
+                },
+                "examples": {
+                  "Response with modeling info": {
+                    "description": "Response with modeling info",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "creativeId": 604675,
+                        "creativeName": "ad-45s",
+                        "rtbCreativeTypeId": 3,
+                        "platformCreativeTypeId": 14,
+                        "creativeStatusId": 2,
+                        "creativeSource": "VAST...",
+                        "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201427/278x220/fgx01xo_1701846672033.jpg",
+                        "clickUrl": "https://iqm.com/?utm_medium=rtb&utm_campaign=wreckathon-2022-play-4",
+                        "videoDetails": {
+                          "duration": 45,
+                          "xmlType": "inline",
+                          "creativeSourceUrl": "https://cdn-cfy-p0.iqm.com/wreckathon/Videos/iqm-video-202206-45s-720p.mp4",
+                          "availableXmlVersions": "2.0,3.0,4.0,4.1",
+                          "transformed": true
+                        },
+                        "creativeSourceType": "vast-xml",
+                        "creativePreviewFlag": 1,
+                        "createdAt": 1701846671694,
+                        "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                        "userDetails": {
+                          "uowId": 9483,
+                          "userName": "Hardik Vagadia",
+                          "userEmail": "hardik.v+stageadv@iqm.com"
+                        },
+                        "organizationDetails": {
+                          "owId": 201427,
+                          "organizationName": "Stage Shared Advertiser"
+                        },
+                        "approvalRequiredPostUrlUpdate": true,
+                        "campaignDetails": [
+                          {
+                            "id": 452308,
+                            "name": "Test Campaign - Pre-bid segment not attched",
+                            "status": "pending",
+                            "totalCreativesCount": 3,
+                            "isModelled": false
+                          },
+                          {
+                            "id": 452330,
+                            "name": "checking video campaign",
+                            "status": "expired",
+                            "totalCreativesCount": 7,
+                            "isModelled": true
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Response without modeling info": {
+                    "description": "Response without modeling info",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "creativeId": 604675,
+                        "creativeName": "ad-45s",
+                        "rtbCreativeTypeId": 3,
+                        "platformCreativeTypeId": 14,
+                        "creativeStatusId": 2,
+                        "creativeSource": "VAST...",
+                        "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/201427/278x220/fgx01xo_1701846672033.jpg",
+                        "clickUrl": "https://iqm.com/?utm_medium=rtb&utm_campaign=wreckathon-2022-play-4",
+                        "videoDetails": {
+                          "duration": 45,
+                          "xmlType": "inline",
+                          "creativeSourceUrl": "https://cdn-cfy-p0.iqm.com/wreckathon/Videos/iqm-video-202206-45s-720p.mp4",
+                          "availableXmlVersions": "2.0,3.0,4.0,4.1",
+                          "transformed": true
+                        },
+                        "creativeSourceType": "vast-xml",
+                        "creativePreviewFlag": 1,
+                        "createdAt": 1701846671694,
+                        "modifiedAt": "2023-12-13T02:23:26.000+00:00",
+                        "userDetails": {
+                          "uowId": 9483,
+                          "userName": "Hardik Vagadia",
+                          "userEmail": "hardik.v+stageadv@iqm.com"
+                        },
+                        "organizationDetails": {
+                          "owId": 201427,
+                          "organizationName": "Stage Shared Advertiser"
+                        },
+                        "approvalRequiredPostUrlUpdate": true,
+                        "campaignDetails": [
+                          {
+                            "id": 452308,
+                            "name": "Test Campaign - Pre-bid segment not attched",
+                            "status": "pending",
+                            "totalCreativesCount": 3
+                          },
+                          {
+                            "id": 452330,
+                            "name": "checking video campaign",
+                            "status": "expired",
+                            "totalCreativesCount": 7
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/cmp/target/creative": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Assign/Un-assign creatives targeting from campaigns",
+        "description": "This API assigns/un-assigns creatives from campaigns.\n\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| assignedCampaignIds `[optional]` | Array of Integer | List of campaign IDs for assigning creative targeting. |\n| removedCampaignIds `[optional]` | Array of Integer | List of campaign IDs for un-assigning/removing creative targeting. |\n| creativeIds | Array of Integer | List of creatives for assign/un-assign. |\n",
+        "operationId": "createCampaignCreativeTargeting",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignCreativeTargetingRequestVO"
+              },
+              "examples": {
+                "Assign Creatives to Campaigns": {
+                  "description": "Assign Creatives to Campaigns",
+                  "value": {
+                    "assignedCampaignIds": [1, 2, 3],
+                    "creativeIds": [11, 22]
+                  }
+                },
+                "Unassign Creatives from Campaigns": {
+                  "description": "Unassign Creatives from Campaigns",
+                  "value": {
+                    "removedCampaignIds": [2],
+                    "creativeIds": [11]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Operation completed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Success": {
+                    "description": "Success",
+                    "value": {
+                      "success": true,
+                      "data": "Creatives assigned/un-assigned successfully."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid Ids for assign/un-assign": {
+                    "description": "Invalid Ids for assign/un-assign",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please provide valid Campaign IDs for assign/un-assign action"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/crt/creatives/update-status": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update creative details",
+        "description": " This API endpoint allows authorized users to update the status of an existing creative. \n Updating a Creative's status to \"deleted\" is how to remove a Creative from the system. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeIds | List\u003CInteger\u003E | Represents list of creative ids |\n| creativeStatusId | Integer | Creative status ID: 1=pending, 2=running, 3=paused, 4=deleted, 5=rejected|\n| creativeRejectionReason | String | Represents the reason for rejecting a creative |\n",
+        "operationId": "updateCreativeStatus",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request to update the status of creatives",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStatusRequestWrapper"
+              },
+              "examples": {
+                "Delete creative": {
+                  "summary": "Set creativeStatusId to 4 to mark as deleted",
+                  "description": "Delete creative",
+                  "value": {
+                    "creativeIds": [688549],
+                    "creativeStatusId": 4
+                  }
+                },
+                "Reject creative": {
+                  "summary": "Set creativeStatusId to 5 and provide rejection reason",
+                  "description": "Reject creative",
+                  "value": {
+                    "creativeIds": [688549],
+                    "creativeStatusId": 5,
+                    "creativeRejectionReason": "Harmful content found!"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseWrapper"
+                },
+                "examples": {
+                  "Single Creative updated successfully": {
+                    "description": "Single Creative updated successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "asdf creative updated successfully"
+                      }
+                    }
+                  },
+                  "Multiple creatives updated successfully": {
+                    "description": "Multiple creatives updated successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "3 Creatives updated successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid/Unaccessible creative id/s passed for update status": {
+                    "description": "Invalid/Unaccessible creative id/s passed for update status",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid creative ids found. Please provide valid creative ids"
+                        }
+                      ]
+                    }
+                  },
+                  "Creative with invalid status is passed for update status": {
+                    "description": "Creative with invalid status is passed for update status",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Creative/s not in running/pending/paused/rejected state. Please pass valid creative/s."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden to update the status of the creative": {
+                    "description": "Forbidden to update the status of the creative",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Logged in user does not have access to reject/approve/pause/delete/restore the creative"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Rejection reason not provided while rejecting the creative": {
+                    "description": "Rejection reason not provided while rejecting the creative",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Rejection reason not provided. Please provide the reason for rejecting the creative/s."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreativeListRequest": {
+        "type": "object",
+        "properties": {
+          "sortCriteriaMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "creativeStatusIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of Creative status IDs to filter by",
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "Set of Creative status IDs to filter by",
+              "format": "int32"
+            }
+          },
+          "platformCreativeTypeIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of platform Creative type IDs to filter by",
+            "example": [11, 14, 17],
+            "items": {
+              "type": "integer",
+              "description": "Set of platform Creative type IDs to filter by",
+              "format": "int32"
+            }
+          },
+          "creativeIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of specific Creative IDs to retrieve",
+            "example": [688549, 688550],
+            "items": {
+              "type": "integer",
+              "description": "Set of specific Creative IDs to retrieve",
+              "format": "int32"
+            }
+          },
+          "creativeGroupId": {
+            "type": "integer",
+            "description": "Filter creatives belonging to this Creative group ID",
+            "format": "int32",
+            "nullable": true,
+            "example": 1024
+          },
+          "campaignIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of campaign IDs associated with the Creatives",
+            "example": [321, 322],
+            "items": {
+              "type": "integer",
+              "description": "Set of campaign IDs associated with the Creatives",
+              "format": "int32"
+            }
+          },
+          "owIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of Organization Workspac IDs that own the Creatives",
+            "example": [2001, 2002],
+            "items": {
+              "type": "integer",
+              "description": "Set of Organization Workspac IDs that own the Creatives",
+              "format": "int32"
+            }
+          },
+          "allOwIds": {
+            "type": "boolean",
+            "description": "If true, include creatives from all Workspaces. Overrides owIds",
+            "example": false
+          },
+          "includeCreativeSourceDetails": {
+            "type": "boolean",
+            "description": "Whether to include Creative source metadata (e.g. URL, file name)",
+            "example": true
+          },
+          "includeOrganizationDetails": {
+            "type": "boolean",
+            "description": "Whether to include organization details (e.g. advertiser name)",
+            "example": true
+          },
+          "includeUserDetails": {
+            "type": "boolean",
+            "description": "Whether to include user details for created/modified users",
+            "example": false
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start of date range filter in epoch milliseconds",
+            "format": "int64",
+            "example": 1715122800000
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End of date range filter in epoch milliseconds",
+            "format": "int64",
+            "example": 1717801199000
+          },
+          "pageNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noOfEntries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "searchField": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "SortOrderEnum[id=1, name='asc', symbol='+']",
+              "SortOrderEnum[id=2, name='desc', symbol='-']"
+            ]
+          }
+        },
+        "description": "Request for filtering and listing creatives with optional metadata and ownership filters."
+      },
+      "CreateCreativeMultipartRequest": {
+        "type": "object",
+        "properties": {
+          "creativeRequest": {
+            "type": "string",
+            "description": "JSON string containing a map of unique identifiers to creative metadata. Each key is a temporary reference ID used to track the creative through the creation process and correlate it with uploaded files. Common key patterns include: H001-H999 (HTML creatives), I001-I999 (Image creatives), V001-V999 (Video creatives), A001-A999 (Audio creatives), NI001-NI999 (Native Image creatives), NV001-NV999 (Native Video creatives). The key can be any unique string identifier. The value is a CreateCreativeRequest object containing all creative metadata including creativeName, platformCreativeTypeId, creativeSourceType, clickUrl, and type-specific details. When creativeSourceType is 'FILE', the creativeSource field should contain the filename that matches one of the files in the creativeFiles array.",
+            "example": "{\"H001\":{\"creativeName\":\"Summer Campaign Banner\",\"externalCreativeId\":\"ext-12345\",\"platformCreativeTypeId\":13,\"creativeSourceType\":\"HTML\",\"creativeSource\":\"\u003Ca href='https://example.com'\u003E\u003Cimg src='banner.jpg'\u003E\u003C/a\u003E\",\"clickUrl\":\"https://example.com\",\"htmlDetails\":{\"creativeWidth\":728,\"creativeHeight\":90}},\"I001\":{\"creativeName\":\"Product Image\",\"platformCreativeTypeId\":11,\"creativeSourceType\":\"FILE\",\"creativeSource\":\"product.jpg\",\"clickUrl\":\"https://example.com/product\",\"imageDetails\":{\"creativeWidth\":1200,\"creativeHeight\":628}}}"
+          },
+          "creativeFiles": {
+            "type": "array",
+            "description": "Array of creative files to upload. This field is required when any creative in the creativeRequest has creativeSourceType set to 'FILE'. The filename of each uploaded file must match the creativeSource value specified in the corresponding creative metadata. Supported file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV). Multiple files can be uploaded in a single request to support batch creative creation.",
+            "format": "binary",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        },
+        "description": "Multipart form data for creating creatives with optional file uploads"
+      },
+      "CreateCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "successData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "A map containing key-value pairs for the successful Creative operations. Each entry represents a successful Creative addition from request as a key and creativeId as value."
+            },
+            "description": "A map containing key-value pairs for the successful Creative operations. Each entry represents a successful Creative addition from request as a key and creativeId as value."
+          },
+          "failedData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "A map containing key-value pairs for the failed Creative operations. Each entry represents a failed attempt to add a Creative with unique identifier from request as a key and exception/error message as value."
+            },
+            "description": "A map containing key-value pairs for the failed Creative operations. Each entry represents a failed attempt to add a Creative with unique identifier from request as a key and exception/error message as value."
+          }
+        },
+        "description": "Response object for adding a Creative"
+      },
+      "CreateCreativeResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateCreativeResponse"
+          }
+        },
+        "description": "Response wrapper for create Creatives"
+      },
+      "CtaDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ctaText": {
+            "type": "string"
+          },
+          "defaultCta": {
+            "type": "boolean"
+          }
+        },
+        "description": "Call to action (CTA) details"
+      },
+      "CreativeListCommonResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreativeListResponseWrapper"
+          }
+        },
+        "description": "Common response wrapping Creative list with metadata"
+      },
+      "CreativeListResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "filteredList": {
+            "type": "array",
+            "description": "List of creatives matching the filter",
+            "items": {
+              "$ref": "#/components/schemas/GetCreativeResponse"
+            }
+          }
+        },
+        "description": "Wrapper for Creative list API response"
+      },
+      "GetCreativeResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetCreativeResponse"
+          }
+        },
+        "description": "Response wrapper for create Creatives"
+      },
+      "GetCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "creativeId": {
+            "type": "integer",
+            "description": "Unique ID of the creative",
+            "format": "int32",
+            "example": 130141
+          },
+          "creativeName": {
+            "type": "string",
+            "description": "Name of the creative",
+            "example": "Creative 1"
+          },
+          "rtbCreativeTypeId": {
+            "type": "integer",
+            "description": "RTB-specific Creative type ID",
+            "format": "int32",
+            "example": 2
+          },
+          "platformCreativeTypeId": {
+            "type": "integer",
+            "description": "Platform-specific Creative type ID",
+            "format": "int32",
+            "example": 11
+          },
+          "externalCreativeId": {
+            "type": "string",
+            "description": "External or third-party Creative ID",
+            "example": "EXT-4451"
+          },
+          "subMediaType": {
+            "type": "string",
+            "description": "Sub media type (image, video, etc.)",
+            "example": "video"
+          },
+          "creativeStatusId": {
+            "type": "integer",
+            "description": "Creative status ID",
+            "format": "int32",
+            "example": 4
+          },
+          "creativeSource": {
+            "type": "string",
+            "description": "Creative source reference (e.g., URL or inline content)",
+            "example": "https://cdn.example.com/file.jpg"
+          },
+          "creativeCardSource": {
+            "type": "string",
+            "description": "URL to the card-style preview for this creative",
+            "example": "https://cdn.example.com/card.jpg"
+          },
+          "clickUrl": {
+            "type": "string",
+            "description": "Click-through URL assigned to the creative",
+            "example": "https://www.example.com"
+          },
+          "imageDetails": {
+            "$ref": "#/components/schemas/ImageCreativeResponse"
+          },
+          "videoDetails": {
+            "$ref": "#/components/schemas/AVCreativeResponse"
+          },
+          "audioDetails": {
+            "$ref": "#/components/schemas/AVCreativeResponse"
+          },
+          "htmlDetails": {
+            "$ref": "#/components/schemas/HtmlCreativeResponse"
+          },
+          "nativeDetails": {
+            "$ref": "#/components/schemas/NativeCreativeResponse"
+          },
+          "creativeSourceType": {
+            "type": "string",
+            "description": "Type of source content for the creative",
+            "example": "URL"
+          },
+          "creativeRejectionReason": {
+            "type": "string",
+            "description": "Optional reason for rejection",
+            "example": "Low-quality image"
+          },
+          "creativeRemarks": {
+            "type": "string",
+            "description": "Optional remarks associated with the creative",
+            "example": "Creative was auto-approved"
+          },
+          "creativePreviewFlag": {
+            "type": "integer",
+            "description": "Indicates if preview is available (0 = no, 1 = yes)",
+            "format": "int32",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "integer",
+            "description": "Epoch timestamp of when the Creative was created",
+            "format": "int64",
+            "example": 1671813949233
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "Timestamp of last modification",
+            "format": "date-time",
+            "example": "2025-08-01T14:25:43Z"
+          },
+          "userDetails": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "organizationDetails": {
+            "$ref": "#/components/schemas/OrganizationResponse"
+          }
+        },
+        "description": "Base Creative response containing common fields"
+      },
+      "HtmlCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "creativeWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "creativeHeight": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "HTML-specific metadata details"
+      },
+      "ImageCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "pixelUrl": {
+            "type": "string"
+          },
+          "creativeWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "creativeHeight": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Image-specific metadata details"
+      },
+      "NativeCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "ctaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandName": {
+            "type": "string"
+          },
+          "brandIconHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandIconWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandIconSourceUrl": {
+            "type": "string"
+          },
+          "thumbnailHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thumbnailWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thumbnailSourceUrl": {
+            "type": "string"
+          },
+          "thumbnailMimetype": {
+            "type": "string"
+          }
+        },
+        "description": "Native-specific metadata details"
+      },
+      "AVCreativeResponse": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "xmlType": {
+            "type": "string"
+          },
+          "creativeSourceUrl": {
+            "type": "string"
+          },
+          "availableXmlVersions": {
+            "type": "string"
+          },
+          "trackingData": {
+            "$ref": "#/components/schemas/TrackingData"
+          },
+          "transformed": {
+            "type": "boolean"
+          }
+        },
+        "description": "Audio-specific metadata details"
+      },
+      "OrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "organizationLogo": {
+            "type": "string"
+          }
+        },
+        "description": "Details about the organization to which this Creative belongs"
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "uowId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
+          },
+          "hasEditAccess": {
+            "type": "boolean"
+          },
+          "hasApprovalAccess": {
+            "type": "boolean"
+          }
+        },
+        "description": "Details about the user who owns or created this creative"
+      },
+      "TrackingData": {
+        "type": "object",
+        "properties": {
+          "startUrl": {
+            "type": "string"
+          },
+          "firstQuartileUrl": {
+            "type": "string"
+          },
+          "midPointUrl": {
+            "type": "string"
+          },
+          "thirdQuartileUrl": {
+            "type": "string"
+          },
+          "completeUrl": {
+            "type": "string"
+          },
+          "impressionUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateCreativeRequest": {
+        "type": "object",
+        "properties": {
+          "creativeName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "New name for the creative",
+            "example": "New Creative name"
+          },
+          "externalCreativeId": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string",
+            "description": "Third-party Creative ID or external reference",
+            "example": "3rd party id"
+          },
+          "clickUrl": {
+            "type": "string",
+            "description": "Click URL",
+            "example": "https://example.com/click"
+          },
+          "pixelUrl": {
+            "type": "string",
+            "description": "Pixel URL",
+            "example": "https://example.com"
+          },
+          "creativeRemarks": {
+            "type": "string",
+            "description": "Optional remarks or reviewer comments",
+            "example": "remarks"
+          },
+          "creativeSource": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "cta": {
+            "$ref": "#/components/schemas/CtaDetails"
+          },
+          "brandName": {
+            "type": "string"
+          },
+          "brandIconSourceUrl": {
+            "type": "string"
+          },
+          "brandIconHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandIconWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thumbnailSourceUrl": {
+            "type": "string"
+          },
+          "thumbnailWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thumbnailHeight": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Update a Creative"
+      },
+      "UpdateCreativeResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateCreativeResult"
+          }
+        },
+        "description": "Common response wrapping the update creative result"
+      },
+      "UpdateCreativeResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Updated creative ID (if applicable)",
+            "format": "int32",
+            "example": 68798
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Creative updated successfully"
+          }
+        },
+        "description": "Result payload returned after updating a creative"
+      },
+      "GetCreativeWithCampaignsResponse": {
+        "type": "object",
+        "properties": {
+          "creativeId": {
+            "type": "integer",
+            "description": "Unique ID of the creative",
+            "format": "int32",
+            "example": 130141
+          },
+          "creativeName": {
+            "type": "string",
+            "description": "Name of the creative",
+            "example": "Creative 1"
+          },
+          "rtbCreativeTypeId": {
+            "type": "integer",
+            "description": "RTB-specific Creative type ID",
+            "format": "int32",
+            "example": 2
+          },
+          "platformCreativeTypeId": {
+            "type": "integer",
+            "description": "Platform-specific Creative type ID",
+            "format": "int32",
+            "example": 11
+          },
+          "externalCreativeId": {
+            "type": "string",
+            "description": "External or third-party Creative ID",
+            "example": "EXT-4451"
+          },
+          "subMediaType": {
+            "type": "string",
+            "description": "Sub media type (image, video, etc.)",
+            "example": "video"
+          },
+          "creativeStatusId": {
+            "type": "integer",
+            "description": "Creative status ID",
+            "format": "int32",
+            "example": 4
+          },
+          "creativeSource": {
+            "type": "string",
+            "description": "Creative source reference (e.g., URL or inline content)",
+            "example": "https://cdn.example.com/file.jpg"
+          },
+          "creativeCardSource": {
+            "type": "string",
+            "description": "URL to the card-style preview for this creative",
+            "example": "https://cdn.example.com/card.jpg"
+          },
+          "clickUrl": {
+            "type": "string",
+            "description": "Click-through URL assigned to the creative",
+            "example": "https://www.example.com"
+          },
+          "imageDetails": {
+            "$ref": "#/components/schemas/ImageCreativeResponse"
+          },
+          "videoDetails": {
+            "$ref": "#/components/schemas/AVCreativeResponse"
+          },
+          "audioDetails": {
+            "$ref": "#/components/schemas/AVCreativeResponse"
+          },
+          "htmlDetails": {
+            "$ref": "#/components/schemas/HtmlCreativeResponse"
+          },
+          "nativeDetails": {
+            "$ref": "#/components/schemas/NativeCreativeResponse"
+          },
+          "creativeSourceType": {
+            "type": "string",
+            "description": "Type of source content for the creative",
+            "example": "URL"
+          },
+          "creativeRejectionReason": {
+            "type": "string",
+            "description": "Optional reason for rejection",
+            "example": "Low-quality image"
+          },
+          "creativeRemarks": {
+            "type": "string",
+            "description": "Optional remarks associated with the creative",
+            "example": "Creative was auto-approved"
+          },
+          "creativePreviewFlag": {
+            "type": "integer",
+            "description": "Indicates if preview is available (0 = no, 1 = yes)",
+            "format": "int32",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "integer",
+            "description": "Epoch timestamp of when the Creative was created",
+            "format": "int64",
+            "example": 1671813949233
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "Timestamp of last modification",
+            "format": "date-time",
+            "example": "2025-08-01T14:25:43Z"
+          },
+          "userDetails": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "organizationDetails": {
+            "$ref": "#/components/schemas/OrganizationResponse"
+          },
+          "approvalRequiredPostUrlUpdate": {
+            "type": "boolean",
+            "description": "Flag indicating whether approval is required after click URL update",
+            "example": true
+          },
+          "campaignDetails": {
+            "type": "array",
+            "description": "List of associated Campaign details",
+            "items": {
+              "$ref": "#/components/schemas/CampaignDetails"
+            }
+          },
+          "creativePreviewSource": {
+            "type": "string",
+            "description": "Creative preview URL shown in Campaign context",
+            "example": "https://cdn.example.com/preview.jpg"
+          }
+        },
+        "description": "Creative with Campaigns and approval info"
+      },
+      "GetCreativeWithCampaignsResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetCreativeWithCampaignsResponse"
+          }
+        },
+        "description": "Response wrapper for getting Creatives with campaigns"
+      },
+      "CampaignDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "totalCreativesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isModelled": {
+            "type": "boolean"
+          }
+        },
+        "description": "List of associated Campaign details"
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateStatusRequestWrapper": {
+        "required": [
+          "creativeIds",
+          "creativeStatusId"
+        ],
+        "type": "object",
+        "properties": {
+          "creativeIds": {
+            "type": "array",
+            "description": "List of Creative internal IDs to update",
+            "example": [688549],
+            "items": {
+              "type": "integer",
+              "description": "List of Creative internal IDs to update",
+              "format": "int32"
+            }
+          },
+          "creativeStatusId": {
+            "type": "integer",
+            "description": "New status ID to assign to the creatives",
+            "format": "int32",
+            "example": 5
+          },
+          "creativeRejectionReason": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Reason for rejecting the Creative (if applicable)",
+            "example": "Harmful content found!"
+          }
+        },
+        "description": "Wrapper for updating the status of one or more creatives."
+      },
+      "CommonResponseWrapper": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataWrapper"
+          }
+        },
+        "description": "Generic response structure with success flag and message"
+      },
+      "DataWrapper": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User-facing message about the result",
+            "example": "asdf creative updated successfully"
+          }
+        },
+        "description": "Wrapper for user-facing response message"
+      },
+      "CampaignCreativeTargetingRequestVO": {
+        "required": [
+          "creativeIds"
+        ],
+        "type": "object",
+        "properties": {
+          "creativeIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of creative IDs involved in the targeting operation",
+            "example": [101, 102, 103],
+            "items": {
+              "type": "integer",
+              "description": "Set of creative IDs involved in the targeting operation",
+              "format": "int32"
+            }
+          },
+          "assignedCampaignIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of campaign IDs to assign to the creatives",
+            "example": [201, 202],
+            "items": {
+              "type": "integer",
+              "description": "Set of campaign IDs to assign to the creatives",
+              "format": "int32"
+            }
+          },
+          "removedCampaignIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Set of campaign IDs to remove from the creatives",
+            "example": [301, 302],
+            "items": {
+              "type": "integer",
+              "description": "Set of campaign IDs to remove from the creatives",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Request object for campaign-creative targeting operations"
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          }
+        },
+        "description": "Common error response wrapper"
+      }
+    }
+  }
+}
