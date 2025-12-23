@@ -1243,7 +1243,14 @@ const sidebars = {
             {
               type: 'link',
               label: 'Matched Column List',
-              href: '/guidelines/audience-api#column-list-for-matched-audience',
+              href: '/guidelines/audience-api#matched-column-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Column Combinations',
+              href: '/guidelines/audience-api#matched-column-combinations',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -1251,6 +1258,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience Type List',
               href: '/guidelines/audience-api#audience-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Subtype List',
+              href: '/guidelines/audience-api#audience-subtype-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
