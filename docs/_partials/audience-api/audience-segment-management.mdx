@@ -4,21 +4,20 @@ import CopyUrl from '@site/src/components/CopyUrl';
 
 ### Create Audience Segment
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/segment/add" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/segmented" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Create an Audience Segment. 
+Creates a segmented audience based on the provided request parameters. Allows creating a new segmented audience with the specified details.
 
 Using Segment IDs (from the [Master API](/guidelines/master-api)), you can build an Audience with the <var>equation</var> field. Segment IDs in parentheses, separated by a vertical bar (|), will be in an 'or' relationship, which will combine the sets of Segments; groups of Segments in parentheses, separated by an ampersand (&), will be in an 'and' relationship, which will build an Audience based on the intersection of those groups. You can see an example of this format in the Request Sample code block on the right-hand side of the page.
 
 
 | Request Schema | |
 | --- | --- |
-| `groupName` <br /><span class="type-text">string</span> | Audience Segment name
-| `segmentPartnerId` <br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
-| `equation` <br /><span class="type-text">string</span> | Equation string describing the or-and relationship between Segment groups 
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation string representing the segment ID groups in AND/OR relationship
+| `audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Name of the segmented audience to be created (maximum 255 characters) 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -43,7 +42,7 @@ Using Segment IDs (from the [Master API](/guidelines/master-api)), you can build
 ```json title="Request Sample"
 {
   "equation": "((6388749|6388750)&(6388751|6402730|6392754|5776004))",
-  "name": "football-temp"
+  "audienceName": "football-temp"
 }
 ```
 
@@ -51,8 +50,8 @@ Using Segment IDs (from the [Master API](/guidelines/master-api)), you can build
 {
   "success": true,
   "data": {
-    "id": 1063316,
-    "message": "Audience created successfully"
+    "audienceId": 1140623,
+    "message": "<Audience Name> audience created successfully"
   }
 }
 ```
@@ -86,16 +85,12 @@ interface Responses {
 function createSegmentAudienceGroup(): Promise<Responses> {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/segment/add',
+    url: 'https://api.iqm.com/api/v3/audience/segmented',
     requestBody: {
       content: {
         "application/json": {
-          advertiserId?: `number`,
-          dspId?: `number`,
-          owId?: `number`,
-          uowId?: `number`,
-          name?: `string`,
-          equation?: `string`,
+          equation: `string`,
+          audienceName: `string`,
         }
       }
     }
@@ -113,12 +108,12 @@ function createSegmentAudienceGroup(): Promise<Responses> {
 
 ### Update Audience Segment 
 
-<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/segment/{audienceId}" />
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/segmented/{audienceId}" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Update an Audience Segment.
+Updates an existing segmented audience based on the provided request parameters. Allows modifying the details of an existing segmented audience (name and segments).
 
 | Path Parameter | |
 | --- | --- |
@@ -126,16 +121,16 @@ Update an Audience Segment.
 
 | Request Schema | |
 | --- | --- |
-| `groupName` <br /><span class="type-text">string</span> | Audience Segment name 
-| `dataPartnerId`<br /><span class="type-text">integer</span> | [Partner ID](#data-partners-list-for-matched-audience)  of selected segments 
-| `segmentIdList` <br /><span class="type-text">string</span> | Segment IDs 
-| `equation` <br /><span class="type-text">string</span> | Equation string describing or-and relationship between Segment groups 
-| `dataPartnerName` <br /><span class="type-text">string</span> | Data partner name 
-| `taxonomyIdList` <br /><span class="type-text">array of integers</span> | Taxonomy ID list
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation string representing the segment ID groups in AND/OR relationship
+| `audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Name of the segmented audience to be updated (maximum 255 characters)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
+    <tr>
+    <td>`audienceId` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
     <tr>
     <td>`message` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
@@ -160,7 +155,8 @@ Update an Audience Segment.
 {
   "success": true,
   "data": {
-    "message": "Your changes have been saved successfully"
+    "audienceId": 1140623,
+    "message": "<Audience Name> audience updated successfully"
   }
 }
 ```
