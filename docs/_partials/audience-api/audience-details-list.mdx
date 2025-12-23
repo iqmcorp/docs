@@ -2,7 +2,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CopyUrl from '@site/src/components/CopyUrl';
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/list" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/list" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -13,17 +13,24 @@ An Audience <var>id</var> can be used to get more details in type-specific detai
 
 The <var>id</var> can also be used to perform various actions in [Audience Management](#audience-management) PUT/PATCH endpoints. 
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- |
-| `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
-| `audienceTypeIds` <br /><span class="type-text">string</span> | [Audience Type IDs](/guidelines/audience-api#audience-type-list)
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field
+| `audienceIds` <br /><span class="type-text">array of integers</span> | Audience IDs to filter by
+| `audienceTypeIds` <br /><span class="type-text">array of integers</span> | [Audience Type IDs](/guidelines/audience-api#audience-type-list) to filter by
+| `audienceSubtypeIds` <br /><span class="type-text">array of integers</span> | [Audience Subtype IDs](/guidelines/audience-api/#audience-subtype-list) to filter by
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to filter by
+| `audienceStatusIds` <br /><span class="type-text">array of integers</span> | [Audience Status IDs](/guidelines/audience-api/#audience-status-list) to filter by
+| `includeGenericAudience` <br /><span class="type-text">boolean</span> | Include generic audiences
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page
+| `sortBy` <br /><span class="type-text">string</span> | Field to sort by
+| `searchFields` <br /><span class="type-text">array</span> | Search field values
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 <table className="objectProperties">
 <tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
   <td>Audience ID</td>
 </tr>
 <tr>
@@ -31,36 +38,72 @@ The <var>id</var> can also be used to perform various actions in [Audience Manag
   <td>Audience name</td>
 </tr>
 <tr>
-  <td>`audienceType` <br /><span class="type-text">string</span></td>
-  <td>Audience type</td>
-</tr>
-<tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
   <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
 </tr>
 <tr>
-  <td>`isVoterAudience` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates whether the Audience is made up of voters (<var>true</var>) or not (<var>false</var>)</td>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>Audience Status ID</td>
 </tr>
 <tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status</td>
+  <td>`cpm` <br /><span class="type-text">number</span></td>
+  <td>Cost per thousand impressions</td>
 </tr>
 <tr>
-  <td>`statusDisplayName` <br /><span class="type-text">string</span></td>
-  <td>Status display name</td>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Creation timestamp (epoch milliseconds)</td>
 </tr>
 <tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Audience reach</td>
 </tr>
 <tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
+  <td>`verticalId` <br /><span class="type-text">integer</span></td>
+  <td>Vertical ID</td>
 </tr>
 <tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique Audiences reached</td>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`runningCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of running campaigns</td>
+</tr>
+<tr>
+  <td>`pendingCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of pending campaigns</td>
+</tr>
+<tr>
+  <td>`pausedCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of paused campaigns</td>
+</tr>
+<tr>
+  <td>`expiredCampaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of expired campaigns</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Start date (epoch milliseconds)</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>End date (epoch milliseconds)</td>
+</tr>
+<tr>
+  <td>`timezone` <br /><span class="type-text">integer</span></td>
+  <td>Timezone ID</td>
+</tr>
+<tr>
+  <td>`regeneratedCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of times regenerated</td>
+</tr>
+<tr>
+  <td>`approvalAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Approval access permission</td>
+</tr>
+<tr>
+  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Edit access permission</td>
 </tr>
 </table></details>
 
@@ -70,47 +113,90 @@ The <var>id</var> can also be used to perform various actions in [Audience Manag
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request Sample"
+{
+  "audienceIds": [
+    1003879,
+    1003880
+  ],
+  "audienceTypeIds": [
+    1,
+    2
+  ],
+  "audienceSubtypeIds": [
+    3,
+    4
+  ],
+  "owIds": [
+    12345,
+    67890
+  ],
+  "audienceStatusIds": [
+    1,
+    2
+  ],
+  "includeGenericAudience": true,
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "sortBy": "audienceName",
+  "searchFields": [
+    "test audience",
+    123456
+  ]
+}
+```
+
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": [
-    {
-      "id": 1,
-      "audienceName": "Sample audience name 1",
-      "audienceType": "Matched Audience",
-      "audienceTypeId": 1,
-      "isVoterAudience": true,
-      "status": "approved",
-      "statusDisplayName": "Ready",
-      "createdOn": 1653510068,
-      "dataCost": 1.5,
-      "uniques": 18850783
-    },
-    {
-      "id": 2,
-      "audienceName": "Sample audience name 2",
-      "audienceType": "Contextual Audience",
-      "audienceTypeId": 5,
-      "isVoterAudience": false,
-      "status": "processing",
-      "statusDisplayName": "Processing",
-      "createdOn": 1653510068,
-      "dataCost": 1.3,
-      "uniques": 10000
-    },
-    {
-      "id": 3,
-      "audienceName": "Sample audience name 3",
-      "audienceType": "Retargeted Audience",
-      "audienceTypeId": 3,
-      "isVoterAudience": false,
-      "status": "approved",
-      "statusDisplayName": "Ready",
-      "createdOn": 1653510068,
-      "dataCost": 1.6,
-      "uniques": 0
+    "success": true,
+    "data": {
+        "totalRecords": 16,
+        "filteredRecords": 16,
+        "audienceList": [
+            {
+                "audienceId": 1099385,
+                "audienceName": "test Seattle",
+                "audienceTypeId": 4,
+                "audienceStatusId": 3,
+                "cpm": 1.5,
+                "createdAt": 1727982437000,
+                "reach": 0,
+                "verticalId": 1,
+                "organizationName": "Conor's Org",
+                "runningCampaignCount": 0,
+                "pendingCampaignCount": 0,
+                "pausedCampaignCount": 0,
+                "expiredCampaignCount": 0,
+                "startDate": 1727982365000,
+                "endDate": 1730358000000,
+                "timezone": 433,
+                "regeneratedCount": 0,
+                "approvalAccess": false,
+                "editAccess": false
+            },
+            {
+                "audienceId": 1099456,
+                "audienceName": "test ny",
+                "audienceTypeId": 4,
+                "audienceStatusId": 3,
+                "cpm": 1.5,
+                "createdAt": 1727989989000,
+                "reach": 600,
+                "verticalId": 1,
+                "organizationName": "Conor's Org",
+                "runningCampaignCount": 0,
+                "pendingCampaignCount": 0,
+                "pausedCampaignCount": 0,
+                "expiredCampaignCount": 0,
+                "startDate": 1727989939000,
+                "endDate": 1730347200000,
+                "timezone": 29,
+                "regeneratedCount": 0,
+                "approvalAccess": false,
+                "editAccess": false
+            }
+        ]
     }
-  ]
 }
 ```
 
