@@ -929,7 +929,7 @@ const sidebars = {
               type: 'link',
               label: 'Search Audience Segment',
               href: '/guidelines/audience-api#search-audience-segment',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -5066,7 +5066,7 @@ const sidebars = {
               type: 'link',
               label: 'Search Audience Segment',
               href: '/political-vertical/audience-segments#search-audience-segment',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
