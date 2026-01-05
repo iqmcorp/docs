@@ -850,13 +850,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Retargeted Audience Details',
-              href: '/guidelines/audience-api#retargeted-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Geo-Farmed Audience Details',
               href: '/guidelines/audience-api#geo-farmed-audience-details',
               customProps: { method: 'GET' },
@@ -866,27 +859,6 @@ const sidebars = {
               type: 'link',
               label: 'Campaign Audience Details',
               href: '/guidelines/audience-api#campaign-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Pre-bid Audience Details',
-              href: '/guidelines/audience-api#pre-bid-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Search Pre-bid Audience Details',
-              href: '/guidelines/audience-api#search-pre-bid-audience-details',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'DoubleVerify Pre-bid Audience Segment',
-              href: '/guidelines/audience-api#doubleverify-pre-bid-audience-segment-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -908,55 +880,6 @@ const sidebars = {
               type: 'link',
               label: 'Audience Count by Type',
               href: '/guidelines/audience-api#audience-count-by-type',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Segment Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Audience Segment Details',
-              href: '/guidelines/audience-api#audience-segment-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Search Audience Segment',
-              href: '/guidelines/audience-api#search-audience-segment',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment Partner Provider List',
-              href: '/guidelines/audience-api#segment-partner-provider-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Provider/Partner IDs',
-              href: '/guidelines/audience-api#segment-list-by-providerpartner-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Audience IDs',
-              href: '/guidelines/audience-api#segment-list-by-audience-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Audience Segment Insights',
-              href: '/guidelines/audience-api#audience-segment-insights',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -1027,20 +950,6 @@ const sidebars = {
               type: 'link',
               label: 'Update Audience Segment',
               href: '/guidelines/audience-api#update-audience-segment',
-              customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Pre-bid Audience',
-              href: '/guidelines/audience-api#create-pre-bid-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Pre-bid Audience',
-              href: '/guidelines/audience-api#update-pre-bid-audience',
               customProps: { method: 'PUT' },
               className: 'sidebarItem'
             },
@@ -1125,79 +1034,107 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Healthcare Details`,
+          label: `Audience Segments`,
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'ABM Audience Details',
-              href: '/guidelines/audience-api#abm-audience-details',
+              label: 'Audience Segment Details',
+              href: '/guidelines/audience-api#audience-segment-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'ABM Audience Statistics',
-              href: '/guidelines/audience-api#abm-audience-statistics',
+              label: 'Search Audience Segment',
+              href: '/guidelines/audience-api#search-audience-segment',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Segment Partner Provider List',
+              href: '/guidelines/audience-api#segment-partner-provider-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Titles List',
-              href: '/guidelines/audience-api#healthcare-titles-list',
+              label: 'Segment List by Provider/Partner IDs',
+              href: '/guidelines/audience-api#segment-list-by-providerpartner-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Specialties List',
-              href: '/guidelines/audience-api#healthcare-specialties-list',
+              label: 'Segment List by Audience IDs',
+              href: '/guidelines/audience-api#segment-list-by-audience-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Systems List',
-              href: '/guidelines/audience-api#healthcare-systems-list',
+              label: 'Audience Segment Insights',
+              href: '/guidelines/audience-api#audience-segment-insights',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Pre-bid Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Pre-bid Audience Details',
+              href: '/guidelines/audience-api#pre-bid-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Data',
-              href: '/guidelines/audience-api#healthcare-data',
+              label: 'Search Pre-bid Audience Details',
+              href: '/guidelines/audience-api#search-pre-bid-audience-details',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Statistics',
-              href: '/guidelines/audience-api#healthcare-statistics',
+              label: 'Create Pre-bid Audience',
+              href: '/guidelines/audience-api#create-pre-bid-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Account Types',
-              href: '/guidelines/audience-api#healthcare-account-types',
-              customProps: { method: 'POST' },
+              label: 'Update Pre-bid Audience',
+              href: '/guidelines/audience-api#update-pre-bid-audience',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Account Subtypes',
-              href: '/guidelines/audience-api#healthcare-account-subtypes',
-              customProps: { method: 'POST' },
+              label: 'Get Prebid Provider Child Segment Details',
+              href: '/guidelines/audience-api#get-prebid-provider-child-segment-details',
+              customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Healthcare Account Names',
-              href: '/guidelines/audience-api#healthcare-account-names',
-              customProps: { method: 'POST' },
+              label: 'Get Prebid Child Segment Details',
+              href: '/guidelines/audience-api#get-pre-bid-child-segment-details',
+              customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'DoubleVerify Pre-bid Audience Segment',
+              href: '/guidelines/audience-api#doubleverify-pre-bid-audience-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
           ]
         },
         {
