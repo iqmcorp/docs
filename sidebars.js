@@ -920,29 +920,8 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Audience Segment',
-              href: '/guidelines/audience-api#create-audience-segment',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Audience Segment',
-              href: '/guidelines/audience-api#update-audience-segment',
-              customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Contextual Audience',
               href: '/guidelines/audience-api#create-contextual-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create ABM Audience',
-              href: '/guidelines/audience-api#create-abm-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -1084,6 +1063,20 @@ const sidebars = {
               label: 'Search Audience Segment',
               href: '/guidelines/audience-api#search-audience-segment',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Audience Segment',
+              href: '/guidelines/audience-api#create-audience-segment',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Audience Segment',
+              href: '/guidelines/audience-api#update-audience-segment',
+              customProps: { method: 'PUT' },
               className: 'sidebarItem'
             },
             {
