@@ -2,7 +2,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CopyUrl from '@site/src/components/CopyUrl';
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/geo-farmed/add" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/geo-farmed" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -16,12 +16,16 @@ Create a Geo-Farmed Audience.
   <td>Audience name</td>
 </tr>
 <tr>
-  <td>`frequency` <br /><span class="type-text">string</span></td>
-  <td>The frequency of visit to the geographical location, based on <var>frequencyType</var></td>
+  <td>`frequency` <br /><span class="type-text">integer</span></td>
+  <td>The frequency of visit to the geographical location (1-10), based on <var>frequencyTypeId</var></td>
 </tr>
 <tr>
-  <td>`frequencyType` <br /><span class="type-text">string</span></td>
-  <td>[Frequency Type ID](/guidelines/audience-api#frequency-type-list)</td>
+  <td>`frequencyTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Frequency Type ID](/guidelines/audience-api#frequency-type-list) (1-3)</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>Timezone ID</td>
 </tr>
 <tr>
   <td>`startDate` <br /><span class="type-text">integer</span></td>
@@ -34,6 +38,14 @@ Create a Geo-Farmed Audience.
 <tr>
   <td>`timeRange` <br /><span class="type-text">object</span></td>
   <td>Name-Value pairs of day of the week (e.g. Monday: <var>1</var>, Tuesday: <var>2</var>, etc.) and an object containing a time range (see example below this table)</td>
+</tr>
+<tr>
+  <td>`timeRangeWithTimezone` <br /><span class="type-text">object</span></td>
+  <td>Alternative time range configuration with timezone support</td>
+</tr>
+<tr>
+  <td>`audienceSubtypeIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Audience subtype IDs</td>
 </tr>
 <tr>
   <td>`removedLocationsIds` <br /><span class="type-text">array of integers</span></td>
@@ -62,40 +74,16 @@ Create a Geo-Farmed Audience.
           <summary>`included` object properties</summary>
           <table className="objectProperties">
             <tr>
+              <td>`zipCodes`<br /><span class="type-text">array of strings</span></td>
+              <td>Zip codes</td>
+            </tr>
+            <tr>
+              <td>`customAreas`<br /><span class="type-text">array of objects</span></td>
+              <td>Custom areas</td>
+            </tr>
+            <tr>
               <td>`locationIds` <br /><span class="type-text">array of integers</span></td>
               <td>Location IDs</td>
-            </tr>
-            <tr>
-              <td>`states`<br /><span class="type-text">array of integers</span></td>
-              <td>[State IDs](/guidelines/master-api#get-state-segment)</td>
-            </tr>
-            <tr>
-              <td>`counties`<br /><span class="type-text">array of integers</span></td>
-              <td>[County IDs](/guidelines/master-api#get-county-segment)</td>
-            </tr>
-            <tr>
-              <td>`cities`<br /><span class="type-text">array of integers</span></td>
-              <td>[City IDs](/guidelines/master-api#get-city-segment)</td>
-            </tr>
-            <tr>
-              <td>`stateSenates`<br /><span class="type-text">array of integers</span></td>
-              <td>[State Senate IDs](/guidelines/master-api#get-senate-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`stateHouses`<br /><span class="type-text">array of integers</span></td>
-              <td>[State House IDs](/guidelines/master-api#get-house-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`congressionalDistrictIds`<br /><span class="type-text">array of integers</span></td>
-              <td>[Congressional District IDs](/guidelines/master-api#get-congressional-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`zipCodes`<br /><span class="type-text">array of integers</span></td>
-              <td>[Zip code IDs](/guidelines/master-api#get-zip-codes-and-state-ids)</td>
-            </tr>
-            <tr>
-              <td>`customAreas`<br /><span class="type-text">object</span></td>
-              <td>Custom areas</td>
             </tr>
             <tr>
               <td colSpan="2">
@@ -112,15 +100,27 @@ Create a Geo-Farmed Audience.
                 </tr>
                 <tr>
                   <td>`radius`<br /><span class="type-text">integer</span></td>
-                  <td>Radius (miles)</td>
+                  <td>Radius</td>
                 </tr>
                  <tr>
                   <td>`address`<br /><span class="type-text">string</span></td>
-                  <td>Addresses to add to custom area</td>
+                  <td>Address</td>
+                </tr>
+                 <tr>
+                  <td>`stateShortName`<br /><span class="type-text">string</span></td>
+                  <td>State short name</td>
+                </tr>
+                 <tr>
+                  <td>`countryShortName`<br /><span class="type-text">string</span></td>
+                  <td>Country short name</td>
                 </tr>
                  <tr>
                   <td>`locationId`<br /><span class="type-text">integer</span></td>
                   <td>Location ID</td>
+                </tr>
+                 <tr>
+                  <td>`rejectionReason`<br /><span class="type-text">string</span></td>
+                  <td>Rejection reason (if applicable)</td>
                 </tr>
                  <tr>
                   <td>`polypath`<br /><span class="type-text">object</span></td>
@@ -144,16 +144,16 @@ Create a Geo-Farmed Audience.
                   <td></td>
                 </tr>
                  <tr>
-                  <td>`isIncluded`<br /><span class="type-text">boolean</span></td>
-                  <td>Indicates if custom area is included in Geo-Farmed Audience: <var>true</var></td>
+                  <td>`placemarkName`<br /><span class="type-text">string</span></td>
+                  <td>Placemark name</td>
                 </tr>
                  <tr>
                   <td>`cid`<br /><span class="type-text">string</span></td>
-                  <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+                  <td>Country ID reference</td>
                 </tr>
                  <tr>
                   <td>`sid`<br /><span class="type-text">string</span></td>
-                  <td>[State ID](/guidelines/master-api#get-state-segment)</td>
+                  <td>State ID reference</td>
                 </tr>
                  <tr>
                   <td>`type`<br /><span class="type-text">string</span></td>
@@ -161,7 +161,7 @@ Create a Geo-Farmed Audience.
                 </tr>
                  <tr>
                   <td>`unit`<br /><span class="type-text">string</span></td>
-                  <td>Measurement unit for radius of area</td>
+                  <td>Measurement unit for radius</td>
                 </tr>
                  <tr>
                   <td>`cdId`<br /><span class="type-text">integer</span></td>
@@ -173,7 +173,11 @@ Create a Geo-Farmed Audience.
                 </tr>
                  <tr>
                   <td>`hdId`<br /><span class="type-text">integer</span></td>
-                  <td>[House District ID](/guidelines/master-api#get-house-district-segment) </td>
+                  <td>[House District ID](/guidelines/master-api#get-house-district-segment)</td>
+                </tr>
+                 <tr>
+                  <td>`isIncluded`<br /><span class="type-text">boolean</span></td>
+                  <td>Indicates if custom area is included in Geo-Farmed Audience</td>
                 </tr>
                 </table></details>
                 </td>
@@ -193,40 +197,16 @@ Create a Geo-Farmed Audience.
           <summary>`excluded` object properties</summary>
           <table className="objectProperties">
             <tr>
+              <td>`zipCodes`<br /><span class="type-text">array of strings</span></td>
+              <td>Zip codes</td>
+            </tr>
+            <tr>
+              <td>`customAreas`<br /><span class="type-text">array of objects</span></td>
+              <td>Custom areas</td>
+            </tr>
+            <tr>
               <td>`locationIds` <br /><span class="type-text">array of integers</span></td>
               <td>Location IDs</td>
-            </tr>
-            <tr>
-              <td>`states`<br /><span class="type-text">array of integers</span></td>
-              <td>[State IDs](/guidelines/master-api#get-state-segment)</td>
-            </tr>
-            <tr>
-              <td>`counties`<br /><span class="type-text">array of integers</span></td>
-              <td>[County IDs](/guidelines/master-api#get-county-segment) </td>
-            </tr>
-            <tr>
-              <td>`cities`<br /><span class="type-text">array of integers</span></td>
-              <td>[City IDs](/guidelines/master-api#get-city-segment)</td>
-            </tr>
-            <tr>
-              <td>`stateSenates`<br /><span class="type-text">array of integers</span></td>
-              <td>[Senate District IDs](/guidelines/master-api#get-senate-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`stateHouses`<br /><span class="type-text">array of integers</span></td>
-              <td>[House District IDs](/guidelines/master-api#get-house-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`congressionalDistrictIds`<br /><span class="type-text">array of integers</span></td>
-              <td>[Congressional District IDs](/guidelines/master-api#get-congressional-district-segment)</td>
-            </tr>
-            <tr>
-              <td>`zipCodes`<br /><span class="type-text">array of integers</span></td>
-              <td>Zip code IDs</td>
-            </tr>
-            <tr>
-              <td>`customAreas`<br /><span class="type-text">object</span></td>
-              <td>Custom areas</td>
             </tr>
             <tr>
               <td colSpan="2">
@@ -243,15 +223,27 @@ Create a Geo-Farmed Audience.
                 </tr>
                 <tr>
                   <td>`radius`<br /><span class="type-text">integer</span></td>
-                  <td>Radius (miles)</td>
+                  <td>Radius</td>
                 </tr>
                  <tr>
                   <td>`address`<br /><span class="type-text">string</span></td>
                   <td>Address</td>
                 </tr>
                  <tr>
+                  <td>`stateShortName`<br /><span class="type-text">string</span></td>
+                  <td>State short name</td>
+                </tr>
+                 <tr>
+                  <td>`countryShortName`<br /><span class="type-text">string</span></td>
+                  <td>Country short name</td>
+                </tr>
+                 <tr>
                   <td>`locationId`<br /><span class="type-text">integer</span></td>
                   <td>Location ID</td>
+                </tr>
+                 <tr>
+                  <td>`rejectionReason`<br /><span class="type-text">string</span></td>
+                  <td>Rejection reason (if applicable)</td>
                 </tr>
                 <tr>
                   <td>`polypath`<br /><span class="type-text">object</span></td>
@@ -274,17 +266,17 @@ Create a Geo-Farmed Audience.
                   </td>
                   <td></td>
                 </tr>
-                <tr>
-                  <td>`isIncluded`<br /><span class="type-text">boolean</span></td>
-                  <td>Indicates if custom area is included in Geo-Farmed Audience: <var>true</var></td>
+                 <tr>
+                  <td>`placemarkName`<br /><span class="type-text">string</span></td>
+                  <td>Placemark name</td>
                 </tr>
                  <tr>
                   <td>`cid`<br /><span class="type-text">string</span></td>
-                  <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+                  <td>Country ID reference</td>
                 </tr>
                  <tr>
                   <td>`sid`<br /><span class="type-text">string</span></td>
-                  <td>[State ID](/guidelines/master-api#get-state-segment)</td>
+                  <td>State ID reference</td>
                 </tr>
                  <tr>
                   <td>`type`<br /><span class="type-text">string</span></td>
@@ -292,7 +284,7 @@ Create a Geo-Farmed Audience.
                 </tr>
                  <tr>
                   <td>`unit`<br /><span class="type-text">string</span></td>
-                  <td>Measurement unit for radius of area</td>
+                  <td>Measurement unit for radius</td>
                 </tr>
                  <tr>
                   <td>`cdId`<br /><span class="type-text">integer</span></td>
@@ -304,7 +296,11 @@ Create a Geo-Farmed Audience.
                 </tr>
                  <tr>
                   <td>`hdId`<br /><span class="type-text">integer</span></td>
-                  <td>[House District ID](/guidelines/master-api#get-house-district-segment) </td>
+                  <td>[House District ID](/guidelines/master-api#get-house-district-segment)</td>
+                </tr>
+                 <tr>
+                  <td>`isIncluded`<br /><span class="type-text">boolean</span></td>
+                  <td>Indicates if custom area is excluded from Geo-Farmed Audience</td>
                 </tr>
                 </table></details>
                 </td>
@@ -388,193 +384,50 @@ Create a Geo-Farmed Audience.
 
 ```json title="Request Sample"
 {
-  "audienceName": "string",
-  "frequency": 0,
-  "frequencyType": 0,
-  "startDate": 0,
-  "endDate": 0,
-  "timezone": 0,
-  "timeRange": {
-    "additionalProp1": "string",
-    "additionalProp2": "string",
-    "additionalProp3": "string"
-  },
-  "removedLocationsIds": [
-    0
+  "audienceName": "Healthcare Professionals NYC",
+  "frequency": 5,
+  "frequencyTypeId": 2,
+  "startDate": 1697040000,
+  "endDate": 1699641600,
+  "timezoneId": 1,
+  "audienceSubtypeIds": [
+    3,
+    4
   ],
-  "locations": {
-    "country": 30100001,
-    "included": {
-      "locationIds": [
-        50488,
-        50487
-      ],
-      "states": [
-        30200028,
-        30200041
-      ],
-      "counties": [
-        30315199,
-        30315203,
-        30322340
-      ],
-      "cities": [
-        30430094,
-        30430093,
-        30445951
-      ],
-      "stateSenates": [
-        30714553,
-        30721606
-      ],
-      "stateHouses": [
-        30802998,
-        30802999
-      ],
-      "congressionalDistricts": [
-        30613735
-      ],
-      "zipCodes": [
-        27513,
-        27502
-      ],
-      "customAreas": [
-        {
-          "latitude": 35.406129635621866,
-          "longitude": -78.33474172529601,
-          "radius": 0.5,
-          "address": "Four Oaks, NC 27524, USA",
-          "locationId": 0,
-          "isIncluded": true,
-          "cid": "246",
-          "sid": "4695",
-          "type": "circle",
-          "unit": "mile",
-          "cdId": 0,
-          "sdId": 0,
-          "hdId": 0
-        },
-        {
-          "latitude": 35.43298954844131,
-          "longitude": -78.3107305901947,
-          "radius": 0.5,
-          "address": "Smithfield, NC 27577, USA",
-          "locationId": 0,
-          "isIncluded": true,
-          "cid": "246",
-          "sid": "4695",
-          "type": "circle",
-          "unit": "mile",
-          "cdId": 0,
-          "sdId": 0,
-          "hdId": 0
-        },
-        {
-          "latitude": 35.43904739191802,
-          "longitude": -78.20096345526908,
-          "radius": 3.41,
-          "address": "Princeton, NC 27569, USA",
-          "locationId": 0,
-          "polypath": [
-            {
-              "lat": 35.45918892465155,
-              "lng": -78.23392243964408
-            },
-            {
-              "lat": 35.465900156326505,
-              "lng": -78.16525788886283
-            },
-            {
-              "lat": 35.41890977772045,
-              "lng": -78.17624421698783
-            },
-            {
-              "lat": 35.41219462750953,
-              "lng": -78.23666902167533
-            }
-          ],
-          "isIncluded": true,
-          "cid": "246",
-          "sid": "4695",
-          "type": "custom",
-          "unit": "mile",
-          "cdId": 0,
-          "sdId": 0,
-          "hdId": 0
-        }
+  "timeRange": {
+    "0": [
+      [
+        "09:00:00",
+        "17:00:00"
       ]
-    },
-    "excluded": {
-      "locationIds": [
-        50486,
-        50485
-      ],
-      "cities": [
-        30430078,
-        30430028
-      ],
-      "counties": [
-        30322361
-      ],
-      "stateSenates": [
-        30714556
-      ],
-      "stateHouses": [
-        30804307,
-        30804308
-      ],
-      "congressionalDistricts": [
-        30613736,
-        30620347
-      ],
+    ],
+    "1": [
+      [
+        "10:00:00",
+        "18:00:00"
+      ]
+    ]
+  },
+  "locations": {
+    "country": 1,
+    "included": {
       "zipCodes": [
-        27519
+        "10001",
+        "10002",
+        "10003"
       ],
       "customAreas": [
         {
-          "latitude": 35.406129635621866,
-          "longitude": -78.33474172529601,
-          "radius": 0.5,
-          "address": "Four Oaks, NC 27524, USA",
-          "locationId": 0,
-          "isIncluded": true,
-          "cid": "246",
-          "sid": "4695",
           "type": "circle",
-          "unit": "mile",
-          "cdId": 0,
-          "sdId": 0,
-          "hdId": 0
-        },
-        {
-          "latitude": 35.47596252362811,
-          "longitude": -78.08560700995658,
-          "radius": 4.56,
-          "address": "Pikeville, NC 27863, USA",
-          "locationId": 0,
-          "polypath": [
-            {
-              "lat": 35.45247713304938,
-              "lng": -78.12680574042533
-            },
-            {
-              "lat": 35.49944791420684,
-              "lng": -78.04440827948783
-            }
-          ],
-          "isIncluded": true,
-          "cid": "246",
-          "sid": "4695",
-          "type": "square",
-          "unit": "mile",
-          "cdId": 0,
-          "sdId": 0,
-          "hdId": 0
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "radius": 5,
+          "unit": "mile"
         }
       ]
     },
     "locationFileIds": [
-      1656
+      123
     ]
   }
 }
@@ -584,8 +437,10 @@ Create a Geo-Farmed Audience.
 {
   "success": true,
   "data": {
-    "id": 1,
-    "message": "Geofarmed Audience created successfully."
+    "audienceIds": [
+      1142280
+    ],
+    "message": "Test_aud audience created successfully"
   }
 }
 ```

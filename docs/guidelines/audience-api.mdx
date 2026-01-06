@@ -14,6 +14,7 @@ import ContextualAudienceDetails from '@site/docs/_partials/audience-api/context
 import AudienceSegmentDetails from '@site/docs/_partials/audience-api/audience-segment-details.mdx';
 import MatchedAudienceManagement from '@site/docs/_partials/audience-api/matched-audience-management.mdx';
 import AudienceSegmentManagement from '@site/docs/_partials/audience-api/audience-segment-management.mdx';
+import AudienceSegmentStatic from '@site/docs/_partials/audience-api/audience-segment-static.mdx';
 import CreateGeofarmedAudience from '@site/docs/_partials/audience-api/geo-farmed-audience-create.mdx';
 import CreateContextualAudience from '@site/docs/_partials/audience-api/contextual-audience-create.mdx';
 import MatchedDataPartners from '@site/docs/_partials/audience-api/audience-matched-data-partners.mdx';
@@ -28,6 +29,8 @@ import PrebidAudiences from '@site/docs/_partials/audience-api/audience-prebid.m
 
 The Audience API allows you to create different types of Audiences for Campaign targeting based on desired specifications. 
 
+See the [Healthcare](/healthcare-vertical/audience-healthcare/) and [Political](/political-vertical/audience-segments/) verticals for specialized Audience API capabilities.
+
 The following table describes each type of Audience:
 
 <div class="definitionsTable">
@@ -41,7 +44,7 @@ The following table describes each type of Audience:
   | **Pre-bid Audience** | Select multiple pre-bid segments and group them together into an Audience. 
   | **Contextual Audience** | IQM adds users to an Audience when they visit sites featuring specified keywords or URLs.
   | **Lookalike Audience** | Analyzes an existing Audience and generates a new one based on specified size and similarity percentage. 
-  | **ABM Audience** | Account-Based Marketing for healthcare Campaigns.
+  | **ABM Audience** | Account-Based Marketing for [Healthcare](/healthcare-vertical/audience-healthcare/) Campaigns.
 </div>
 
 ### More Resources
@@ -620,14 +623,14 @@ function GetCampaignAudienceDetails(): Promise<Responses> {
 
 ### Audience Count by Status 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/count/bystatus" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/count-by-status" />
 
 <div class="endpoint-container">
   <div class="child1">
 
 Get a count of Audiences by status type. 
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- | 
 | `searchField` <br /><span class="type-text">string</span> | Filter results by search field
 | `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
@@ -638,28 +641,12 @@ Get a count of Audiences by status type.
 
 <table className="objectProperties">
 <tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience Status Type ID</td>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>Audience Status ID</td>
 </tr>
 <tr>
-  <td>`statusKey` <br /><span class="type-text">string</span></td>
-  <td>Audience status key</td>
-</tr>
-<tr>
-  <td>`statusLabel` <br /><span class="type-text">string</span></td>
-  <td>Audience status label</td>
-</tr>
-<tr>
-  <td>`logDescription` <br /><span class="type-text">string</span></td>
-  <td>Log description</td>
-</tr>
-<tr>
-  <td>`statusCount` <br /><span class="type-text">integer</span></td>
+  <td>`audienceCount` <br /><span class="type-text">integer</span></td>
   <td>Audience count</td>
-</tr>
-<tr>
-  <td>`order` <br /><span class="type-text">integer</span></td>
-  <td>Order</td>
 </tr>
 </table></details>
 
@@ -672,57 +659,21 @@ Get a count of Audiences by status type.
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data": [
-    {
-      "id": 2,
-      "statusKey": "Pending",
-      "statusLabel": "Pending",
-      "logDescription": null,
-      "statusCount": 39,
-      "order": 1
-    },
-    {
-      "id": 1,
-      "statusKey": "Processing",
-      "statusLabel": "Processing",
-      "logDescription": null,
-      "statusCount": 356,
-      "order": 2
-    },
-    {
-      "id": 3,
-      "statusKey": "Ready",
-      "statusLabel": "Ready",
-      "logDescription": null,
-      "statusCount": 174,
-      "order": 3
-    },
-    {
-      "id": 4,
-      "statusKey": "Rejected",
-      "statusLabel": "Rejected",
-      "logDescription": null,
-      "statusCount": 20,
-      "order": 5
-    },
-    {
-      "id": 6,
-      "statusKey": "Failed",
-      "statusLabel": "Failed",
-      "logDescription": null,
-      "statusCount": 9,
-      "order": 6
-    },
-    {
-      "id": 0,
-      "statusKey": "all",
-      "statusLabel": "All",
-      "logDescription": null,
-      "statusCount": 598,
-      "order": 0
-    }
-  ]
+    "success": true,
+    "data": [
+        {
+            "audienceStatusId": 1,
+            "audienceCount": 2
+        },
+        {
+            "audienceStatusId": 3,
+            "audienceCount": 10
+        },
+        {
+            "audienceStatusId": 6,
+            "audienceCount": 4
+        }
+    ]
 }
 ```
 
@@ -744,12 +695,8 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          id: number;
-          statusKey: string;
-          statusLabel: string;
-          logDescription: string | null;
-          statusCount: number;
-          order: number;
+          audienceStatusId: number;
+          audienceCount: number;
         }[];
       };
     };
@@ -758,8 +705,8 @@ interface Responses {
 
 function GetStatuswiseaudiencecount(): Promise<Responses> {
   const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/count/bystatus',
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/count-by-status',
     params: {
       query: {
         searchField: `string`,
@@ -788,12 +735,6 @@ function GetStatuswiseaudiencecount(): Promise<Responses> {
 
 Get an Audience count by Audience type. 
 
-| Query Parameters | |
-| --- | --- |
-| `audienceTypeIds` <br /><span class="type-text">string</span> | Audience type IDs 
-| `status` <br /><span class="type-text">string</span> | Audience status ID 
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field
-
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 <table className="objectProperties">
@@ -802,11 +743,7 @@ Get an Audience count by Audience type.
   <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
 </tr>
 <tr>
-  <td>`audienceTypeName` <br /><span class="type-text">string</span></td>
-  <td>Audience type name</td>
-</tr>
-<tr>
-  <td>`audienceCount` <br /><span class="type-text">string</span></td>
+  <td>`audienceCount` <br /><span class="type-text">integer</span></td>
   <td>Audience count</td>
 </tr>
 </table></details>
@@ -819,47 +756,15 @@ Get an Audience count by Audience type.
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": [
+  "success": true,
+  "data": [
     {
       "audienceTypeId": 1,
-      "audienceTypeName": "Matched Audience",
-      "audienceCount": 227
+      "audienceCount": 10
     },
     {
       "audienceTypeId": 2,
-      "audienceTypeName": "Segmented Audience",
-      "audienceCount": 135
-    },
-    {
-      "audienceTypeId": 3,
-      "audienceTypeName": "Retargeted Audience",
-      "audienceCount": 97
-    },
-    {
-      "audienceTypeId": 4,
-      "audienceTypeName": "Geofarmed Audience",
-      "audienceCount": 186
-    },
-    {
-      "audienceTypeId": 5,
-      "audienceTypeName": "Contextual Audience",
-      "audienceCount": 140
-    },
-    {
-      "audienceTypeId": 6,
-      "audienceTypeName": "Lookalike Audience",
-      "audienceCount": 111
-    },
-    {
-      "audienceTypeId": 7,
-      "audienceTypeName": "Campaign Audience",
-      "audienceCount": 26
-    },
-    {
-      "audienceTypeId": 8,
-      "audienceTypeName": "Pre-Bid Audience",
-      "audienceCount": 23
+      "audienceCount": 25
     }
   ]
 }
@@ -882,9 +787,8 @@ interface Responses {
     content: {
       "application/json": {
         success: boolean;
-        responseObject: {
+        data: {
           audienceTypeId: number;
-          audienceTypeName: string;
           audienceCount: number;
         }[];
       };
@@ -1438,25 +1342,16 @@ function CreateCampaignAudience(): Promise<Responses> {
 
 ---
 
-<AudienceSegmentManagement />
-
----
-
 ### Create Contextual Audience
 
 <CreateContextualAudience />
 
 ---
 
-### Create ABM Audience
-
-<CreateABMAudience />
-
----
 
 ### Create Lookalike Audience 
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/lookalike/add" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/lookalike" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -1480,7 +1375,7 @@ Create a Lookalike Audience.
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>`audienceId` <br /><span class="type-text">integer</span></td>
     <td>Audience ID</td>
     </tr>
     <tr>
@@ -1497,27 +1392,44 @@ Create a Lookalike Audience.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+<CodeDropdown>
+<CodeOption label="Minimal Location Fields Sample">
+
 ```json title="Request Sample"
 {
-  "audienceName": "Sample audience name",
-  "sourceAudienceIds": "1,2",
-  "countryIds": "246,113",
-  "stateIds": "4660,4661",
-  "cityIds": "30400001,30400002",
-  "countyIds": "30300001,30300003",
-  "senateDistrictIds": "687,688",
-  "houseDistrictIds": "5098,5121",
-  "congressionalDistrictIds": "350,78",
-  "audienceSize": 90
+  "audienceName": "Test Lookalike Audience",
+  "sourceAudienceIds": "12345,67890",
+  "audienceSize": 5,
+  "countryIds": "1",
+  "stateIds": "10,20,30"
+}
+
+```
+</CodeOption>
+<CodeOption label="All Location Fields Sample">
+```json title="Request Sample"
+{
+  "audienceName": "Test Lookalike Audience with Full Geo",
+  "sourceAudienceIds": "12345",
+  "audienceSize": 3,
+  "countryIds": "1",
+  "stateIds": "10,20",
+  "cityIds": "100,200,300",
+  "countyIds": "50,60",
+  "senateDistrictIds": "1,2,3",
+  "houseDistrictIds": "10,20",
+  "congressionalDistrictIds": "5,6,7"
 }
 ```
+</CodeOption>
+</CodeDropdown>
 
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "id": 1,
-    "message": "Lookalike Audience created successfully"
+    "audienceId": 1140586,
+    "message": "Test Lookalike Audience audience created successfully"
   }
 }
 ```
@@ -1540,7 +1452,7 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          id: number;
+          audienceId: number;
           message: string;
         };
       };
@@ -1551,7 +1463,7 @@ interface Responses {
 function CreateLookalikeAudience(): Promise<Responses> {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/lookalike/add',
+    url: 'https://api.iqm.com/api/v3/audience/lookalike',
     requestBody: {
       content: {
         "application/json": {
@@ -1806,9 +1718,9 @@ function Duplicatematchedaudience(): Promise<Responses> {
 
 Generate Insights for any given Audience IDs. 
 
-| Query Parameter | |
+| Request Schema | |
 | --- | --- |
-| `audienceIds` <br /><span class="type-text">string</span> | Comma separated [Audience IDs](#audience-details-list) |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | [Audience IDs](#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -2621,6 +2533,10 @@ function getMatchedAudienceDataFormats(): Promise<Responses> {
 ## Audience Segments
 
 <AudienceSegmentDetails />
+
+<AudienceSegmentManagement />
+
+<AudienceSegmentStatic />
 
 
 ## Pre-bid Audiences 
