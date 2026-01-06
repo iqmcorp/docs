@@ -843,13 +843,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Geo-Farmed Audience Details',
-              href: '/guidelines/audience-api#geo-farmed-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Audience Count by Status',
               href: '/guidelines/audience-api#audience-count-by-status',
               customProps: { method: 'GET' },
@@ -869,41 +862,6 @@ const sidebars = {
           label: `Audience Management`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'link',
-              label: 'Create Retargeted Audience',
-              href: '/guidelines/audience-api#create-retargeted-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Retargeted Audience',
-              href: '/guidelines/audience-api#update-retargeted-audience',
-              customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Retargeted Audience Email',
-              href: '/guidelines/audience-api#retargeted-audience-email-notification',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Geo-Farmed Audience',
-              href: '/guidelines/audience-api#create-geo-farmed-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Lookalike Audience',
-              href: '/guidelines/audience-api#create-lookalike-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
             {
               type: 'link',
               label: 'Update Audience Name',
@@ -1076,6 +1034,55 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Retargeted Audiences`,
+          className: 'sidebarItem',
+          items: [
+          {
+              type: 'link',
+              label: 'Create Retargeted Audience',
+              href: '/guidelines/audience-api#create-retargeted-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Retargeted Audience',
+              href: '/guidelines/audience-api#update-retargeted-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Retargeted Audience Email',
+              href: '/guidelines/audience-api#retargeted-audience-email-notification',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Geo-Farmed Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geo-Farmed Audience Details',
+              href: '/guidelines/audience-api#geo-farmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          {
+              type: 'link',
+              label: 'Create Geo-Farmed Audience',
+              href: '/guidelines/audience-api#create-geo-farmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
           label: `Contextual Audiences`,
           className: 'sidebarItem',
           items: [
@@ -1097,6 +1104,27 @@ const sidebars = {
               type: 'link',
               label: 'Validate URL for Contextual Audience',
               href: '/guidelines/audience-api#validate-url-for-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Lookalike Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Lookalike Audience Details',
+              href: '/guidelines/audience-api#get-lookalike-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Lookalike Audience',
+              href: '/guidelines/audience-api#create-lookalike-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             }
