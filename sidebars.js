@@ -850,20 +850,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Campaign Audience Details',
-              href: '/guidelines/audience-api#campaign-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Contextual Audience Details',
-              href: '/guidelines/audience-api#contextual-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Audience Count by Status',
               href: '/guidelines/audience-api#audience-count-by-status',
               customProps: { method: 'GET' },
@@ -913,20 +899,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Campaign Audience',
-              href: '/guidelines/audience-api#create-campaign-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Contextual Audience',
-              href: '/guidelines/audience-api#create-contextual-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Lookalike Audience',
               href: '/guidelines/audience-api#create-lookalike-audience',
               customProps: { method: 'POST' },
@@ -971,13 +943,6 @@ const sidebars = {
               type: 'link',
               label: 'Download Insights Report',
               href: '/guidelines/audience-api#download-audience-insights-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Validate URL for Contextual Audience',
-              href: '/guidelines/audience-api#validate-url-for-contextual-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -1048,34 +1013,34 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Audience Segments`,
+          label: `Segmented Audiences`,
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'Audience Segment Details',
-              href: '/guidelines/audience-api#audience-segment-details',
+              label: 'Segmented Audience Details',
+              href: '/guidelines/audience-api#segmented-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Search Audience Segment',
-              href: '/guidelines/audience-api#search-audience-segment',
+              label: 'Search Segmented Audiences',
+              href: '/guidelines/audience-api#search-segmented-audiences',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Create Audience Segment',
-              href: '/guidelines/audience-api#create-audience-segment',
+              label: 'Create Segmented Audience',
+              href: '/guidelines/audience-api#create-segmented-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Audience Segment',
-              href: '/guidelines/audience-api#update-audience-segment',
+              label: 'Update Segmented Audience',
+              href: '/guidelines/audience-api#update-segmented-audience',
               customProps: { method: 'PUT' },
               className: 'sidebarItem'
             },
@@ -1102,11 +1067,67 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Audience Segment Insights',
-              href: '/guidelines/audience-api#audience-segment-insights',
+              label: 'Segmented Audience Insights',
+              href: '/guidelines/audience-api#segmented-audience-insights',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Contextual Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Contextual Audience Details',
+              href: '/guidelines/audience-api#contextual-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Contextual Audience',
+              href: '/guidelines/audience-api#create-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate URL for Contextual Audience',
+              href: '/guidelines/audience-api#validate-url-for-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Campaign Audience Details',
+              href: '/guidelines/audience-api#campaign-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Audience',
+              href: '/guidelines/audience-api#create-campaign-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaign Audience History',
+              href: '/guidelines/audience-api#get-campaign-audience-history',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
           ]
         },
         {
