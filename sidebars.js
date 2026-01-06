@@ -843,13 +843,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Matched Audience Details',
-              href: '/guidelines/audience-api#matched-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Geo-Farmed Audience Details',
               href: '/guidelines/audience-api#geo-farmed-audience-details',
               customProps: { method: 'GET' },
@@ -890,20 +883,6 @@ const sidebars = {
           label: `Audience Management`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'link',
-              label: 'Create Matched Audience',
-              href: '/guidelines/audience-api#create-matched-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Matched Audience',
-              href: '/guidelines/audience-api#update-matched-audience',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
             {
               type: 'link',
               label: 'Create Retargeted Audience',
@@ -1034,6 +1013,62 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Matched Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Matched Audience Details',
+              href: '/guidelines/audience-api#matched-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Matched Audience',
+              href: '/guidelines/audience-api#create-matched-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Matched Audience',
+              href: '/guidelines/audience-api#update-matched-audience',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Data Partners',
+              href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Data Formats',
+              href: '/guidelines/audience-api#data-formats-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Column List',
+              href: '/guidelines/audience-api#matched-column-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Column Combinations',
+              href: '/guidelines/audience-api#matched-column-combinations',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
           label: `Audience Segments`,
           className: 'sidebarItem',
           items: [
@@ -1144,13 +1179,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Matched Audience Fields',
-              href: '/guidelines/audience-api#matched-audience-fields',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Segment Reach Range',
               href: '/guidelines/audience-api#reach-range-list-for-audience-segment',
               customProps: { method: 'GET' },
@@ -1160,34 +1188,6 @@ const sidebars = {
               type: 'link',
               label: 'Segment Price Range',
               href: '/guidelines/audience-api#price-range-list-for-audience-segment',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Matched Data Partners',
-              href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Matched Data Formats',
-              href: '/guidelines/audience-api#data-formats-list-for-matched-audience',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Matched Column List',
-              href: '/guidelines/audience-api#matched-column-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Matched Column Combinations',
-              href: '/guidelines/audience-api#matched-column-combinations',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
