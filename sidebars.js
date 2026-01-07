@@ -836,16 +836,16 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Paginated Audience Details List',
-              href: '/guidelines/audience-api#paginated-audience-details-list',
-              customProps: { method: 'GET' },
+              label: 'Basic Audience Details',
+              href: '/guidelines/audience-api#basic-audience-details',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Audience Count by Status',
               href: '/guidelines/audience-api#audience-count-by-status',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -862,6 +862,27 @@ const sidebars = {
           label: `Audience Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Update Audience Name',
+              href: '/guidelines/audience-api#update-audience-name',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Audience',
+              href: '/guidelines/audience-api#regenerate-audience',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Insights',
+              href: '/guidelines/audience-api#get-audience-insights',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'Create Audience Insights',
@@ -938,6 +959,13 @@ const sidebars = {
               href: '/guidelines/audience-api#matched-column-combinations',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Matched Audience File',
+              href: '/guidelines/audience-api#download-matched-audience-file',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
             }
           ]
         },
@@ -987,21 +1015,7 @@ const sidebars = {
               href: '/guidelines/audience-api#segment-list-by-providerpartner-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Audience IDs',
-              href: '/guidelines/audience-api#segment-list-by-audience-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segmented Audience Insights',
-              href: '/guidelines/audience-api#segmented-audience-insights',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
+            }
           ]
         },
         {
@@ -1044,7 +1058,7 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
-          {
+            {
               type: 'link',
               label: 'Create Geofarmed Audience',
               href: '/guidelines/audience-api#create-geofarmed-audience',
@@ -1165,8 +1179,8 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Get Prebid Provider Child Segment Details',
-              href: '/guidelines/audience-api#get-prebid-provider-child-segment-details',
+              label: 'Get Pre-bid Provider Child Segment Details',
+              href: '/guidelines/audience-api#get-pre-bid-provider-child-segment-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -1232,14 +1246,7 @@ const sidebars = {
               href: '/guidelines/audience-api#frequency-type-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Provider Details List',
-              href: '/guidelines/audience-api#provider-details-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
+            }
           ]
         },
       ],

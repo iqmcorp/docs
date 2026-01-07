@@ -18,7 +18,6 @@ import AudienceSegmentStatic from '@site/docs/_partials/audience-api/audience-se
 import CreateGeofarmedAudience from '@site/docs/_partials/audience-api/geo-farmed-audience-create.mdx';
 import CreateContextualAudience from '@site/docs/_partials/audience-api/contextual-audience-create.mdx';
 import MatchedDataPartners from '@site/docs/_partials/audience-api/audience-matched-data-partners.mdx';
-import ProviderDetails from '@site/docs/_partials/audience-api/audience-provider-details.mdx';
 import HealthcareDetails from '@site/docs/_partials/audience-api/audience-healthcare-details.mdx';
 import CreateABMAudience from '@site/docs/_partials/audience-api/audience-abm-create.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
@@ -73,7 +72,7 @@ Use the following header parameters for all requests:
 
 ---
 
-### Basic Audience details
+### Basic Audience Details
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/basic/list" />
 
@@ -84,11 +83,11 @@ Get a basic list of Audience details.
 
 | Request Schema | |
 | --- | --- |
-| `audienceIds` <br /><span class="type-text">array of integers</span> | Audience IDs to filter by |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | [Audience IDs](/guidelines/audience-api#audience-details-list) to filter by |
 | `audienceTypeIds` <br /><span class="type-text">array of integers</span> | [Audience Type IDs](/guidelines/audience-api#audience-type-list) to filter by |
-| `audienceSubtypeIds` <br /><span class="type-text">array of integers</span> | Audience subtype IDs to filter by |
+| `audienceSubtypeIds` <br /><span class="type-text">array of integers</span> | [Audience Subtype IDs](/guidelines/audience-api#audience-subtype-list) to filter by |
 | `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to filter by |
-| `audienceStatusIds` <br /><span class="type-text">array of integers</span> | Audience status IDs to filter by |
+| `audienceStatusIds` <br /><span class="type-text">array of integers</span> | [Audience Status IDs](/guidelines/audience-api#audience-status-list) to filter by |
 | `includeGenericAudience` <br /><span class="type-text">boolean</span> | Include generic audiences |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
@@ -328,7 +327,7 @@ function GetStatuswiseaudiencecount(): Promise<Responses> {
 
 ### Audience Count by Type
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/typeWiseCount" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/count-by-type" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -399,7 +398,7 @@ interface Responses {
 function getAudienceTypeWiseCount(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/typeWiseCount',
+    url: 'https://api.iqm.com/api/v3/audience/count-by-type',
     params: {
       query?: {
         audienceTypeIds?: `string`,
@@ -418,6 +417,206 @@ function getAudienceTypeWiseCount(): Promise<Responses> {
 </div></div>
 
 ## Audience Management
+
+### Update Audience Name
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/audience/{audienceId}/update-name" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the name of an existing Audience.
+
+| Path Parameters | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to update |
+
+| Request Schema | |
+| --- | --- |
+| `audienceName` <br /><span class="type-text">string</span> | New Audience name |
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "audienceName": "Updated Audience Name"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Changes saved successfully"
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Regenerate Audience
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/audience/{audienceId}/regenerate" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Regenerate a failed Audience. 
+
+| Path Parameters | |
+| --- | --- | 
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to regenerate |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Audience regeneration initiated successfully"
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Audience Insights
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/{audienceId}/insights" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get Insights details for a given Audience ID.
+
+| Path Parameters | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to get Insights for |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audience_id` <br /><span class="type-text">string</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audience_name` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audience_date` <br /><span class="type-text">string</span></td>
+  <td>Audience date (YYYY-MM-DD format)</td>
+</tr>
+<tr>
+  <td>`vertical_id` <br /><span class="type-text">string</span></td>
+  <td>Vertical ID</td>
+</tr>
+<tr>
+  <td>`vertical` <br /><span class="type-text">string</span></td>
+  <td>Vertical name</td>
+</tr>
+<tr>
+  <td>`widgets` <br /><span class="type-text">array of objects</span></td>
+  <td>Widgets array containing insight data</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`widgets` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`title` <br /><span class="type-text">string</span></td>
+        <td>Widget title</td>
+      </tr>
+      <tr>
+        <td>`type` <br /><span class="type-text">string</span></td>
+        <td>Widget type (e.g., "table")</td>
+      </tr>
+      <tr>
+        <td>`data` <br /><span class="type-text">array of objects</span></td>
+        <td>Widget data array</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`data` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`Sr no.` <br /><span class="type-text">integer</span></td>
+              <td>Serial number</td>
+            </tr>
+            <tr>
+              <td>`Key` <br /><span class="type-text">string</span></td>
+              <td>Data key/label</td>
+            </tr>
+            <tr>
+              <td>`Audience Value` <br /><span class="type-text">string</span></td>
+              <td>Audience value</td>
+            </tr>
+          </table></details>
+        </td>
+        <td></td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "audience_id": "1139300",
+    "audience_name": "new hcp 1",
+    "audience_date": "2025-06-27",
+    "vertical_id": "2",
+    "vertical": "Healthcare",
+    "widgets": [
+      {
+        "title": "Audience Summary",
+        "type": "table",
+        "data": [
+          {
+            "Sr no.": 1,
+            "Key": "Total Healthcare Facilities",
+            "Audience Value": "14,219"
+          },
+          {
+            "Sr no.": 2,
+            "Key": "Total People",
+            "Audience Value": "5,917"
+          },
+          {
+            "Sr no.": 3,
+            "Key": "Total Phones",
+            "Audience Value": "4,833"
+          },
+          {
+            "Sr no.": 4,
+            "Key": "Total Emails",
+            "Audience Value": "3,010"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
 
 ### Create Audience Insights
 
@@ -749,7 +948,7 @@ function DeleteAudience(): Promise<Responses> {
 
 ### Data Formats List for Matched Audience 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/matched/data-format" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/data-formats" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -858,7 +1057,7 @@ interface Responses {
 function getMatchedAudienceDataFormats(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/static/matched/data-format',
+    url: 'https://api.iqm.com/api/v3/audience/static/data-formats',
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -873,7 +1072,42 @@ function getMatchedAudienceDataFormats(): Promise<Responses> {
 
 <MatchedAudienceStatic />
 
+### Download Matched Audience File 
 
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}/file-url" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a presigned S3 URL to download a Matched Audience file.
+
+| Path Parameters | |
+| --- | --- | 
+| `audienceId` <br /><span class="type-text">integer</span> | Matched [Audience ID](/guidelines/audience-api/#audience-details-list) to download file for |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`matchedAudienceFileUrl` <br /><span class="type-text">string</span></td>
+    <td>Presigned S3 URL to download Matched Audience file</td>
+    </tr>
+    </table>  
+    </details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "matchedAudienceFileUrl": "https://cdn.com/CAM-FILES/Client%3D204389/Audience%3D1143824/1762502664252_3524Download___Impression__NPI_Nurse_iqvia_Filtere6956185605.csv?response-content-disposition=attachment%3Bfilename%3D%2217664252_3524Download___Impression__NPI_Nurse_iqvia_Filtered9185605.csv%22&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIABRMU%2F20251205%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251205T121547Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJAWPe%2FrI%3D&X-Amz-Signature=19fb8f0208181cd011414bad4e3e"
+  }
+}
+```
+
+</div></div>
 
 ## Segmented Audiences
 
@@ -1258,6 +1492,115 @@ function RetargetAudienceemailnotify(): Promise<Responses> {
 
 <CreateGeofarmedAudience />
 
+## Contextual Audiences
+
+### Contextual Audience Details
+
+<ContextualAudienceDetails />
+
+---
+
+### Create Contextual Audience
+
+<CreateContextualAudience />
+
+---
+
+### Validate URL for Contextual Audience
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/contextual/validate-programmatic-urls" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Validate given URLs to be targeted in a Contextual Audience. 
+
+| Request Schema | |
+| --- | --- |
+| URLs<br /><span class="type-text">array of strings</span> | URLs to validate 
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Report was succesfully created: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">array of strings</span></td>
+    <td>Validated URLs</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+[
+  "https://sample-url-1.com",
+  "https://sample-url-2.com",
+  "https://sample-url-3.com"
+]
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "https://sample-url-1.com": false,
+    "https://sample-url-2.me": true,
+    "https://sample-url-3.me": null,
+    "https://sample-url-4.com": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string[];
+      };
+    };
+  };
+}
+
+function validateContextualUrl(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/contextual/programmatic/url/validate',
+    requestBody: {
+      content: {
+        "application/json": `string[]`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ## Lookalike Audiences
 
 ### Get Lookalike Audience Details
@@ -1613,114 +1956,6 @@ function CreateLookalikeAudience(): Promise<Responses> {
 </div></div>
 
 
-## Contextual Audiences
-
-### Contextual Audience Details
-
-<ContextualAudienceDetails />
-
----
-
-### Create Contextual Audience
-
-<CreateContextualAudience />
-
----
-
-### Validate URL for Contextual Audience
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/contextual/validate-programmatic-urls" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Validate given URLs to be targeted in a Contextual Audience. 
-
-| Request Schema | |
-| --- | --- |
-| URLs<br /><span class="type-text">array of strings</span> | URLs to validate 
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Report was succesfully created: <var>true</var></td>
-    </tr>
-    <tr>
-    <td>`data` <br /><span class="type-text">array of strings</span></td>
-    <td>Validated URLs</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-[
-  "https://sample-url-1.com",
-  "https://sample-url-2.com",
-  "https://sample-url-3.com"
-]
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "https://sample-url-1.com": false,
-    "https://sample-url-2.me": true,
-    "https://sample-url-3.me": null,
-    "https://sample-url-4.com": true
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string[];
-      };
-    };
-  };
-}
-
-function validateContextualUrl(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/contextual/programmatic/url/validate',
-    requestBody: {
-      content: {
-        "application/json": `string[]`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
 
 ## Campaign Audiences
 
@@ -2055,10 +2290,10 @@ Get the Audience history details for specified Campaigns.
 
 | Request Schema | |
 | --- | --- |
-| `campaignId` <br /><span class="type-text">array of integers</span> | Campaign IDs |
-| `subTypeIds` <br /><span class="type-text">array of integers</span> | Audience subtype IDs |
+| `campaignId` <br /><span class="type-text">array of integers</span> | [Campaign IDs](/guidelines/campaign-api/#get-list-of-campaigns) |
+| `subTypeIds` <br /><span class="type-text">array of integers</span> | [Audience Subtype IDs](/guidelines/audience-api/#audience-subtype-list) |
 | `historicalData` <br /><span class="type-text">boolean</span> | Fetches historical data (<var>true</var>) or current data (<var>false</var>) |
-| `typeIds` <br /><span class="type-text">array of integers</span> | Audience type IDs |
+| `typeIds` <br /><span class="type-text">array of integers</span> | [Audience Type IDs](/guidelines/audience-api/#audience-type-list) |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
 
@@ -2556,7 +2791,7 @@ Get a static list of Audience subtypes.
 | Query Parameter | |
 | --- | --- |
 | `audienceTypeIds` <br /><span class="type-text">integer</span> | [Audience Type IDs](#audience-type-list) 
-| `verticalId` <br /><span class="type-text">integer</span> | [Vertical ID](/guidelines/master-api/#get-verticals)
+| `verticalId` <br /><span class="type-text">integer</span> | [Vertical ID](/guidelines/workspace-api/#verticals)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -2625,7 +2860,7 @@ Get a static list of Audience subtypes.
 
 ### Audience Status List 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/status" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/audience-status" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -2644,8 +2879,12 @@ Get a static list of Audience subtypes.
   <td>Audience status ID</td>
 </tr>
 <tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>`name` <br /><span class="type-text">string</span></td>
   <td>Status name</td>
+</tr>
+<tr>
+  <td>`order` <br /><span class="type-text">integer</span></td>
+  <td>Order</td>
 </tr>
 <tr>
   <td>`displayName` <br /><span class="type-text">string</span></td>
@@ -2662,34 +2901,51 @@ Get a static list of Audience subtypes.
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": [
+  "success": true,
+  "data": [
     {
       "id": 6,
-      "status": "Failed",
+      "name": "failed",
+      "order": 1,
       "displayName": "Failed"
     },
     {
       "id": 2,
-      "status": "Pending",
+      "name": "pending",
+      "order": 2,
       "displayName": "Pending"
     },
     {
       "id": 1,
-      "status": "Processing",
+      "name": "processing",
+      "order": 3,
       "displayName": "Processing"
     },
     {
+      "id": 7,
+      "name": "fetching data",
+      "order": 4,
+      "displayName": "Fetching Data"
+    },
+    {
+      "id": 8,
+      "name": "data fetched",
+      "order": 5,
+      "displayName": "Data Fetched"
+    },
+    {
       "id": 4,
-      "status": "Rejected",
+      "name": "rejected",
+      "order": 6,
       "displayName": "Rejected"
     },
     {
-      "id": 10,
-      "status": "Ready",
+      "id": 3,
+      "name": "ready",
+      "order": 7,
       "displayName": "Ready"
     }
-  ]
+]
 }
 ```
 
@@ -2712,7 +2968,8 @@ interface Responses {
         statusCode: number;
         responseObject: {
           id: number;
-          status: string;
+          name: string;
+          order: number;
           displayName: string;
         }[];
       };
@@ -2723,7 +2980,7 @@ interface Responses {
 function GetAudienceStatus(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/status',
+    url: 'https://api.iqm.com/api/v3/audience/static/audience-status',
     params: {
       query: {
         audienceTypeIds: `number`
@@ -2846,7 +3103,3 @@ function GetGeofarmedFrequencyTypes(): Promise<Responses> {
 </div></div>
 
 ---
-
-### Provider Details List 
-
-<ProviderDetails />
