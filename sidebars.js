@@ -864,20 +864,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Update Audience Name',
-              href: '/guidelines/audience-api#update-audience-name',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Duplicate Matched Audience',
-              href: '/guidelines/audience-api#duplicate-matched-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Audience Insights',
               href: '/guidelines/audience-api#create-audience-insights',
               customProps: { method: 'POST' },
@@ -885,22 +871,8 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Send Insights Email',
-              href: '/guidelines/audience-api#send-insights-email',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Regenerate Insights Report',
-              href: '/guidelines/audience-api#regenerate-audience-insights-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download Insights Report',
-              href: '/guidelines/audience-api#download-audience-insights-report',
+              label: 'Attach Data Partner',
+              href: '/guidelines/audience-api#attach-data-partner',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -1062,20 +1034,20 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Geo-Farmed Audiences`,
+          label: `Geofarmed Audiences`,
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'Geo-Farmed Audience Details',
-              href: '/guidelines/audience-api#geo-farmed-audience-details',
+              label: 'Geofarmed Audience Details',
+              href: '/guidelines/audience-api#geofarmed-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
           {
               type: 'link',
-              label: 'Create Geo-Farmed Audience',
-              href: '/guidelines/audience-api#create-geo-farmed-audience',
+              label: 'Create Geofarmed Audience',
+              href: '/guidelines/audience-api#create-geofarmed-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             }
@@ -5015,8 +4987,8 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Geo-Farmed Audience Details',
-              href: '/political-vertical/audience-segments#geo-farmed-audience-details',
+              label: 'Geofarmed Audience Details',
+              href: '/political-vertical/audience-segments#geofarmed-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5113,8 +5085,8 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Geo-Farmed Audience',
-              href: '/political-vertical/audience-segments#create-geo-farmed-audience',
+              label: 'Create Geofarmed Audience',
+              href: '/political-vertical/audience-segments#create-geofarmed-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
