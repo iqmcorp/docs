@@ -6,6 +6,7 @@ displayed_sidebar: tutorialSidebar
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import AudienceDetailsList from '@site/docs/_partials/audience-api/audience-details-list.mdx';
 import MatchedAudienceDetails from '@site/docs/_partials/audience-api/matched-audience-details.mdx';
 import GeoFarmedAudienceDetails from '@site/docs/_partials/audience-api/geo-farmed-audience-details.mdx';
@@ -13,18 +14,21 @@ import ContextualAudienceDetails from '@site/docs/_partials/audience-api/context
 import AudienceSegmentDetails from '@site/docs/_partials/audience-api/audience-segment-details.mdx';
 import MatchedAudienceManagement from '@site/docs/_partials/audience-api/matched-audience-management.mdx';
 import AudienceSegmentManagement from '@site/docs/_partials/audience-api/audience-segment-management.mdx';
+import AudienceSegmentStatic from '@site/docs/_partials/audience-api/audience-segment-static.mdx';
 import CreateGeofarmedAudience from '@site/docs/_partials/audience-api/geo-farmed-audience-create.mdx';
 import CreateContextualAudience from '@site/docs/_partials/audience-api/contextual-audience-create.mdx';
 import MatchedDataPartners from '@site/docs/_partials/audience-api/audience-matched-data-partners.mdx';
-import ProviderDetails from '@site/docs/_partials/audience-api/audience-provider-details.mdx';
 import HealthcareDetails from '@site/docs/_partials/audience-api/audience-healthcare-details.mdx';
 import CreateABMAudience from '@site/docs/_partials/audience-api/audience-abm-create.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
 import MatchedAudienceStatic from '@site/docs/_partials/audience-api/matched-audience-static.mdx';
+import PrebidAudiences from '@site/docs/_partials/audience-api/audience-prebid.mdx';
 
 # Audience API
 
 The Audience API allows you to create different types of Audiences for Campaign targeting based on desired specifications. 
+
+See the [Healthcare](/healthcare-vertical/audience-healthcare/) and [Political](/political-vertical/audience-segments/) verticals for specialized Audience API capabilities.
 
 The following table describes each type of Audience:
 
@@ -33,13 +37,13 @@ The following table describes each type of Audience:
   | --- | --- |
   | **Matched Audience** | Upload a CSV or XLSX file with Audience details which is then matched with IQM's user database to create a custom Audience segment. 
   | **Retargeted Audience** | Add a tracking tag to your website allowing you to track users who visit so they can be retargeted to receive ads in the future. 
-  | **Geo-Farmed Audience** | Define an Audience by a custom geographical area.
+  | **Geofarmed Audience** | Define an Audience by a custom geographical area.
   | **Campaign Audience** | Retarget an Audience associated with a Campaign. 
   | **Audience Segment** | Group users by common characteristics to reach specific target Audiences. 
   | **Pre-bid Audience** | Select multiple pre-bid segments and group them together into an Audience. 
   | **Contextual Audience** | IQM adds users to an Audience when they visit sites featuring specified keywords or URLs.
   | **Lookalike Audience** | Analyzes an existing Audience and generates a new one based on specified size and similarity percentage. 
-  | **ABM Audience** | Account-Based Marketing for healthcare Campaigns.
+  | **ABM Audience** | Account-Based Marketing for [Healthcare](/healthcare-vertical/audience-healthcare/) Campaigns.
 </div>
 
 ### More Resources
@@ -68,1285 +72,164 @@ Use the following header parameters for all requests:
 
 ---
 
-### Paginated Audience Details List 
+### Basic Audience Details
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/detailed/list" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/basic/list" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get an advanced list of Audience details. Includes Insights details for eligible Matched Audiences.
+Get a basic list of Audience details.
+
+| Request Schema | |
+| --- | --- |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | [Audience IDs](/guidelines/audience-api#audience-details-list) to filter by |
+| `audienceTypeIds` <br /><span class="type-text">array of integers</span> | [Audience Type IDs](/guidelines/audience-api#audience-type-list) to filter by |
+| `audienceSubtypeIds` <br /><span class="type-text">array of integers</span> | [Audience Subtype IDs](/guidelines/audience-api#audience-subtype-list) to filter by |
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to filter by |
+| `audienceStatusIds` <br /><span class="type-text">array of integers</span> | [Audience Status IDs](/guidelines/audience-api#audience-status-list) to filter by |
+| `includeGenericAudience` <br /><span class="type-text">boolean</span> | Include generic audiences |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts results by specified field |
+| `searchFields` <br /><span class="type-text">array</span> | Filter results by search fields |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Query Parameters</summary>
-<table className="objectProperties">
-<tr>
-  <td>`audienceTypeIds` <br /><span class="type-text">string</span></td>
-  <td>[Audience Type IDs](/guidelines/audience-api#audience-type-list) </td>
-</tr>
-<tr>
-  <td>`searchField` <br /><span class="type-text">string</span></td>
-  <td>Filter results by search field </td>
-</tr>
-<tr>
-  <td>`pageSize` <br /><span class="type-text">integer</span></td>
-  <td>Number of entries returned per page </td>
-</tr>
-<tr>
-  <td>`pageNo` <br /><span class="type-text">integer</span></td>
-  <td>Page number of retrieved data, default: <var>1</var></td>
-</tr>
-<tr>
-  <td>`sortBy` <br /><span class="type-text">string</span></td>
-  <td>Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>modified_date</var></td>
-</tr>
-<tr>
-  <td>`audienceIds` <br /><span class="type-text">integer</span></td>
-  <td>[Audience IDs](#audience-details-list) </td>
-</tr>
-<tr>
-  <td>`owIds` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace IDs </td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status ID </td>
-</tr>
-<tr>
-  <td>`noOfEntries` <br /><span class="type-text">integer</span></td>
-  <td>Number of entries returned per page, default: <var>10</var></td>
-</tr>
-<tr>
-  <td>`sortType` <br /><span class="type-text">string</span></td>
-  <td>Default: <var>desc</var></td>
-</tr>
-</table></details>
-
-<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-<table className="objectProperties">
+ <table className="objectProperties">
 <tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total records count</td>
 </tr>
 <tr>
-  <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Filtered records count</td>
 </tr>
 <tr>
-  <td>`audienceType` <br /><span class="type-text">string</span></td>
-  <td>Audience type</td>
+  <td>`audienceBasicList` <br /><span class="type-text">array of objects</span></td>
+  <td>Audience basic list</td>
 </tr>
 <tr>
-  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`audienceBasicList` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`audienceId` <br /><span class="type-text">integer</span></td>
+        <td>Audience ID</td>
+      </tr>
+      <tr>
+        <td>`audienceName` <br /><span class="type-text">string</span></td>
+        <td>Audience name</td>
+      </tr>
+      <tr>
+        <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+        <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
+      </tr>
+      <tr>
+        <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
+        <td>Audience subtype ID</td>
+      </tr>
+      <tr>
+        <td>`isIqmIdTargeted` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates if IQM ID targeted</td>
+      </tr>
+      <tr>
+        <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+        <td>Audience status ID</td>
+      </tr>
+      <tr>
+        <td>`createdOn` <br /><span class="type-text">integer</span></td>
+        <td>Creation timestamp (epoch seconds)</td>
+      </tr>
+      <tr>
+        <td>`cpm` <br /><span class="type-text">number</span></td>
+        <td>Cost per thousand impressions</td>
+      </tr>
+      <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>Audience reach</td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
 </tr>
-<tr>
-  <td>`matchRate` <br /><span class="type-text">integer</span></td>
-  <td>The percentage of matched records compared to a reference set</td>
-</tr>
-<tr>
-  <td>`fileTotalCount` <br /><span class="type-text">integer</span></td>
-  <td>Total number of records in the uploaded Audience file</td>
-</tr>
-<tr>
-  <td>`included` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns including this Audience</td>
-</tr>
-<tr>
-  <td>`excluded` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns excluding this Audience</td>
-</tr>
-<tr>
-  <td>`includedCampaignList` <br /><span class="type-text">array of integers</span></td>
-  <td>List of Campaign IDs including this Audience</td>
-</tr>
-<tr>
-  <td>`excludedCampaignList` <br /><span class="type-text">array of integers</span></td>
-  <td>List of Campaign IDs excluding this Audience</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Status</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`tagTime` <br /><span class="type-text">integer</span></td>
-  <td>Time when Audience was tagged, representing when the data was last updated or processed (Retargeted Audience)</td>
-</tr>
-<tr>
-  <td>`tagUniqueCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique tags associated with Audience or Insights, referring to either unique identifiers or categories (Retargeted Audience)</td>
-</tr>
-<tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Fees charged by the platform if the Audience is used in any Campaign</td>
-</tr>
-<tr>
-  <td>`s3FileName` <br /><span class="type-text">string</span></td>
-  <td>S3 file name</td>
-</tr>
-<tr>
-  <td>`organizationName` <br /><span class="type-text">string</span></td>
-  <td>Organization name</td>
-</tr>
-<tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique Audiences reached</td>
-</tr>
-<tr>
-  <td>`runningCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "ready"</td>
-</tr>
-<tr>
-  <td>`pendingCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "pending"</td>
-</tr>
-<tr>
-  <td>`pausedCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "paused"</td>
-</tr>
-<tr>
-  <td>`expiredCampaignCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns with status "expired"</td>
-</tr>
-<tr>
-  <td>`timezone` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
-</tr>
-<tr>
-  <td>`partnerName` <br /><span class="type-text">string</span></td>
-  <td>Partner name</td>
-</tr>
-<tr>
-  <td>`partnerLogoUrl` <br /><span class="type-text">string</span></td>
-  <td>Partner logo URL</td>
-</tr>
-<tr>
-  <td>`isApprovalAcces` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has access to approve</td>
-</tr>
-<tr>
-  <td>`isEditAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has edit access for the requested resource</td>
-</tr>
-<tr>
-  <td>`insightDetails` <br /><span class="type-text">array of objects</span></td>
-  <td>Array of <var>audienceIds</var> and their <var>statusId</var> and Insight <var>id</var></td>
-</tr>
+</table>
+</details>
 
-</table></details>
+</div><div class="child2">
 
-</div>
-<div class="child2">
+```json title="Request Sample"
+{
+  "audienceIds": [
+    1003879,
+    1003880
+  ],
+  "audienceTypeIds": [
+    1,
+    2
+  ],
+  "audienceSubtypeIds": [
+    3,
+    4
+  ],
+  "owIds": [
+    12345,
+    67890
+  ],
+  "audienceStatusIds": [
+    1,
+    2
+  ],
+  "includeGenericAudience": true,
+  "pageNo": 1,
+  "noOfEntries": 20,
+  "sortBy": "audienceName",
+  "searchFields": [
+    "test audience",
+    123456
+  ]
+}
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
+```
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "totalRecords": 223,
-    "data": [
+  "success": true,
+  "data": {
+    "totalRecords": 874,
+    "filteredRecords": 874,
+    "audienceBasicList": [
       {
-        "id": 1003879,
-        "audienceName": "Insights 5",
-        "audienceType": "Matched Audience",
+        "audienceId": 1,
+        "audienceName": "Sample audience name 1",
         "audienceTypeId": 1,
-        "matchRate": 0.02,
-        "fileTotalCount": 1000000,
-        "included": 0,
-        "excluded": 0,
-        "includedCampaignList": [],
-        "excludedCampaignList": [],
-        "status": "Ready",
-        "createdOn": 1690264074,
-        "tagTime": 0,
-        "tagUniqueCount": 0,
-        "isAudienceNewPlatform": 1,
-        "dataCost": 1,
-        "s3FileName": "1690198084570_1689926593350_1689755440643_matched_audience_file_NY_1M.csv",
-        "organizationName": "Stage Shared Advertiser1",
-        "uniques": 200,
-        "runningCampaignCount": 0,
-        "pendingCampaignCount": 0,
-        "pausedCampaignCount": 0,
-        "expiredCampaignCount": 0,
-        "timezone": 0,
-        "partnerName": "Healthlink",
-        "partnerLogoUrl": "www.sample.com",
-        "isApprovalAccess": false,
-        "isEditAccess": false
-      }
-    ],
-    "filteredRecords": 223,
-    "insightDetails": {
-      "1003877": {
-        "statusId": 2,
-        "id": 784
-      }
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        responseObject: {
-          totalRecords: number;
-          data: {
-            id: number;
-            audienceName: string;
-            audienceType: number;
-            matchRate: number;
-            fileTotalCount: number;
-            included: number;
-            excluded: number;
-            includedCampaignList: number[];
-            excludedCampaignList: number[];
-            status: string;
-            createdOn: number;
-            tagTime: number;
-            tagUniqueCount: number;
-            isAudienceNewPlatform: number;
-            dataCost: number;
-            s3FileName: string;
-            organizationName: string;
-            uniques: number;
-            runningCampaignCount: number;
-            pendingCampaignCount: number;
-            pausedCampaignCount: number;
-            expiredCampaignCount: number;
-            timezone: number;
-            partnerName: string;
-            partnerLogoUrl: string;
-            isApprovalAccess: boolean;
-            isEditAccess: boolean;
-          }[];
-          filteredRecords: number;
-          insightDetails: {
-            [number: number]: {
-              statusId: number;
-              id: number;
-            }
-          }
-        }
-      };
-    };
-  };
-}
-
-function getAudienceDetailedList_1(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/detailed/list',
-    params: {
-      query?: {
-        audienceTypeIds?: `string`,
-        searchField?: `string`,
-        pageSize?: `string`,
-        pageNo?: `number`,
-        sortBy?: `string`,
-        audienceIds?: `string`,
-        owIds?: `string`,
-        status?: `string`,
-        noOfEntries?: `number`,
-        sortType?: `string`,
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Matched Audience Details
-
-<MatchedAudienceDetails />
-
----
-
-### Retargeted Audience Details
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/retarget/{retargeted_audience_id}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get Retargeted Audience details by ID.
-
-| Path Parameter | |
-| --- | --- |
-| `retargeted_audience_id` <br /><span class="type-text">string</span> | Retargeted [Audience ID](#audience-details-list) |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status</td>
-</tr>
-<tr>
-  <td>`type` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](#audience-type-list)</td>
-</tr>
-<tr>
-  <td>`includedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns including this Audience</td>
-</tr>
-<tr>
-  <td>`excludedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns excluding this Audience</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`organizationName` <br /><span class="type-text">string</span></td>
-  <td>Organization name</td>
-</tr>
-<tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Created by User Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUser` <br /><span class="type-text">string</span></td>
-  <td>Created by User</td>
-</tr>
-<tr>
-  <td>`tagId` <br /><span class="type-text">string</span></td>
-  <td>Audience Conversion tag ID</td>
-</tr>
-<tr>
-  <td>`duration` <br /><span class="type-text">string</span></td>
-  <td>Retargeted Audience duration <br />Supported values: <var>month</var>, <var>date_range</var></td>
-</tr>
-<tr>
-  <td>`time` <br /><span class="type-text">integer</span></td>
-  <td>If <var>duration</var> is set to <var>month</var>, indicates the number of months</td>
-</tr>
-<tr>
-  <td>`startDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has edit access for the requested resource</td>
-</tr>
-</table></details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "name": "Sample Audience Name",
-    "status": "Processing",
-    "type": 3,
-    "includedCount": 0,
-    "excludedCount": 0,
-    "createdOn": 1610357876000,
-    "organizationName": "Sample organization name",
-    "owId": 1,
-    "createdByUowId": 1,
-    "createdByUser": "Sample user name",
-    "tagId": "08008997-b894-4ebb-afd8-a1304537f2d0",
-    "duration": "MONTH",
-    "time": 1,
-    "startDate": 0,
-    "endDate": 0,
-    "editAccess": true
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {            
-            id: number;
-            name: string;
-            status: string;           
-            type: number;             
-            includedCount: number;             
-            excludedCount: number;             
-            createdOn: number;
-            organizationName: string;              
-            owId: number;             
-            createdByUowId: number;
-            createdByUser: string;
-            tagId: string;
-            duration: string;            
-            time: number;             
-            startDate: number;            
-            endDate: number;
-            editAccess: boolean;
-        };
-      };
-    };
-  };
-}
-
-function GetRetargetedAudienceDetails(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/retarget/{retargeted_audience_Id}',
-    params: {
-      path: {
-        retargeted_audience_Id: `string`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Geo-Farmed Audience Details 
-
-<GeoFarmedAudienceDetails />
-
----
-
-### Campaign Audience Details
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/campaign/{campaign_audience_id}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get Campaign Audience details by ID. 
-
-| Path Parameter | |
-| --- | --- |
-| `campaign_audience_id` <br /><span class="type-text">string</span> | Campaign [Audience ID](#audience-details-list) |
-
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
- <table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status</td>
-</tr>
-<tr>
-  <td>`type` <br /><span class="type-text">integer</span></td>
-  <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
-</tr>
-<tr>
-  <td>`includedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns including this Audience</td>
-</tr>
-<tr>
-  <td>`excludedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of Campaigns excluding this Audience</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`organizationName` <br /><span class="type-text">string</span></td>
-  <td>Organization name</td>
-</tr>
-<tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Created by User Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUser` <br /><span class="type-text">string</span></td>
-  <td>Created by user name</td>
-</tr>
-<tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique Audiences reached</td>
-</tr>
-<tr>
-  <td>`campaignDetail` <br /><span class="type-text">object</span></td>
-  <td>Campaign details</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`campaignDetail` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td>`impressions` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and <var>campaignName</var></td>
-  </tr>
-    <tr>
-  <td>`clicks`<br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and <var>campaignName</var></td>
-  </tr>
-    <tr>
-  <td>`conversions`<br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and <var>campaignName</var></td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`startDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds </td>
-</tr>
-<tr>
-  <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has edit access for the requested resource</td>
-</tr>
-</table>
-</details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "name": "Sample audience name",
-    "status": "Ready",
-    "type": 7,
-    "includedCount": 4,
-    "excludedCount": 0,
-    "createdOn": 1641911753,
-    "organizationName": "Sample organiation name",
-    "owId": 1,
-    "createdByUowId": 1,
-    "createdByUser": "Sample username",
-    "uniques": 0,
-    "campaignDetail": {
-      "impression": {
-        "1": "Sample campaign name 1",
-        "2": "Sample campaign name 2"
-      },
-      "clicks": {
-        "3": "Sample campaign name 3"
-      },
-      "conversion": {
-        "4": "Sample campaign name 4"
-      }
-    },
-    "startDate": 1638316800,
-    "endDate": 1640085173,
-    "editAccess": true
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          name: string;
-          status: string;
-          type: number;
-          includedCount: number;
-          excludedCount: number;
-          createdOn: number;
-          organizationName: string;
-          owId: number;
-          createdByUowId: number;
-          createdByUser: string;
-          uniques: number;
-          campaignDetail: {
-            impression: {
-              [key: string]: string;
-            };
-            clicks: {
-              [key: string]: string;
-            };
-            conversion: {
-              [key: string]: string;
-            };
-          };
-          startDate: number;
-          endDate: number;
-          editAccess: boolean;
-        };
-      };
-    };
-  };
-}
-
-function GetCampaignAudienceDetails(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/campaign/{campaign_audience_Id}',
-    params: {
-      path: {
-        campaign_audience_Id: `string`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Pre-bid Audience Details
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/prebid/{prebidAudienceId}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get Pre-bid Audience details by ID. 
-
-| Path Parameter | |
-| --- | --- |
-| `prebidAudienceId` <br /><span class="type-text">string</span> | Pre-bid [Audience ID](#audience-details-list) |
-
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
- <table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
-</tr>
-<tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Created by User Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`cpm` <br /><span class="type-text">integer</span></td>
-  <td>Cost per mille</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`prebidSegmentData` <br /><span class="type-text">array of objects</span></td>
-  <td>Pre-bid Segment Data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`prebidSegmentData` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`prebidAudienceSegmentId` <br /><span class="type-text">integer</span></td>
-    <td>Pre-bid Audience Segment ID</td>
-  </tr>
-    <tr>
-    <td>`prebidAudienceSegmentName` <br /><span class="type-text">string</span></td>
-    <td>Pre-bid Audience Segment name</td>
-  </tr>
-    <tr>
-    <td>`prebidAudienceSegmentRootId` <br /><span class="type-text">integer</span></td>
-    <td>Pre-bid Audience Segment root ID</td>
-  </tr>
-    <tr>
-    <td>`description` <br /><span class="type-text">string</span></td>
-    <td>Description</td>
-  </tr>
-    <tr>
-    <td>`parentPathKey` <br /><span class="type-text">string</span></td>
-    <td>Key representing parent path or category that an Audience Segment belongs to</td>
-  </tr>
-    <tr>
-    <td>`cpm` <br /><span class="type-text">integer</span></td>
-    <td>Cost per mille</td>
-  </tr>
-    <tr>
-    <td>`creativeTypeIdList` <br /><span class="type-text">array of integers</span></td>
-    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) list</td>
-  </tr>
-    <tr>
-    <td>`providerId` <br /><span class="type-text">integer</span></td>
-    <td>[Provider ID](/guidelines/audience-api#provider-details-list)</td>
-  </tr>
-    <tr>
-    <td>`providerName` <br /><span class="type-text">string</span></td>
-    <td>Provider name</td>
-  </tr>
-    <tr>
-    <td>`providerLogoUrl` <br /><span class="type-text">string</span></td>
-    <td>Provider logo URL</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
-</details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1023240,
-    "name": "CA-1 relation",
-    "owId": 201427,
-    "createdByUowId": 9491,
-    "cpm": 0.05,
-    "createdOn": 1698049238,
-    "prebidSegmentData": [
-      {
-        "prebidAudienceSegmentId": 100,
-        "prebidAudienceSegmentName": "prebidSegmentName",
-        "prebidAudienceSegmentRootId": 3,
-        "description": "Target 50% or Higher viewability rate for display on Mobile App",
-        "parentPathKey": "Viewability > Display",
-        "cpm": 0.1,
-        "creativeTypeIdList": [
-          11,
-          14
-        ],
-        "providerId": 1,
-        "providerName": "Integral Ad Science",
-        "providerLogoUrl": "logourl.com"
-      },
-      {
-        "prebidAudienceSegmentId": 64,
-        "prebidAudienceSegmentName": "prebidSegmentName",
-        "prebidAudienceSegmentRootId": 1,
-        "description": "Avoid High and Moderate risk Hate Speech content apps on Mobile App",
-        "parentPathKey": "Brand Safety > Video",
-        "cpm": 0.1,
-        "creativeTypeIdList": [
-          11,
-          14
-        ],
-        "providerId": 1,
-        "providerName": "Integral Ad Science",
-        "providerLogoUrl": "logourl.com"
+        "audienceSubtypeId": 1,
+        "isIqmIdTargeted": true,
+        "audienceStatusId": 1,
+        "createdOn": 1653510068,
+        "cpm": 1.5,
+        "reach": 18850783
       }
     ]
   }
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          name: string;
-          status: string;
-          owId: number;
-          createdByUowId: number;
-          cpm: number;
-          createdOn: number;
-          prebidSegmentData: {
-            prebidAudienceSegmentId: number;
-            prebidAudienceSegmentName: string;
-            prebidAudienceSegmentRootId: number;
-            description: string;
-            parentPathKey: string;
-            cpm: number;
-            creativeTypeIdList: number[];
-            providerId: number;
-            providerName: string;
-            providerLogoUrl: string;
-          }[];
-        };
-      };
-    };
-  };
-}
-
-function getPrebidAudienceDetailsByAudienceId(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/prebid/{prebidAudienceId}',
-    params: {
-      path: {
-        prebidAudienceId: `string`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
 </div></div>
-
----
-
-### Search Pre-bid Audience Details 
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/prebid/details/search/list" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Search Pre-bid Audiences by specified parameters. 
-
-| Request Schema | |
-| --- | --- |
-| `prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> | Pre-bid Audience Segment ID list 
-| `prebidAudienceIdList` <br /><span class="type-text">array of integers</span> | Pre-bid [Audience ID](#audience-details-list) list 
-| `providerIdList` <br /><span class="type-text">array of integers</span> | [Provider ID](#provider-details-list) list 
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
- <table className="objectProperties">
-<tr>
-  <td>`prebidSegmentData` <br /><span class="type-text">array of objects</span></td>
-  <td>Pre-bid Segment Data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`prebidSegmentData` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`prebidAudienceSegmentId` <br /><span class="type-text">integer</span></td>
-    <td>Pre-bid Audience Segment ID</td>
-  </tr>
-    <tr>
-    <td>`prebidAudienceSegmentName` <br /><span class="type-text">string</span></td>
-    <td>Pre-bid Audience Segment name</td>
-  </tr>
-    <tr>
-    <td>`prebidAudienceSegmentRootId` <br /><span class="type-text">integer</span></td>
-    <td>Pre-bid Audience Segment root ID</td>
-  </tr>
-    <tr>
-    <td>`description` <br /><span class="type-text">string</span></td>
-    <td>Description</td>
-  </tr>
-    <tr>
-    <td>`parentPathKey` <br /><span class="type-text">string</span></td>
-    <td>Parent path key</td>
-  </tr>
-    <tr>
-    <td>`cpm` <br /><span class="type-text">integer</span></td>
-    <td>Cost per mille</td>
-  </tr>
-      <tr>
-    <td>`isLeaf` <br /><span class="type-text">booelan</span></td>
-    <td>Indicates that an Audience Segment is a leaf node in a hierarchical Audience structure: <var>true</var></td>
-  </tr>
-    <tr>
-    <td>`creativeTypeIdList` <br /><span class="type-text">array of integers</span></td>
-    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) list</td>
-  </tr>
-    <tr>
-    <td>`providerId` <br /><span class="type-text">integer</span></td>
-    <td>[Provider ID](/guidelines/audience-api#provider-details-list)</td>
-  </tr>
-    <tr>
-    <td>`providerName` <br /><span class="type-text">string</span></td>
-    <td>Provider name</td>
-  </tr>
-    <tr>
-    <td>`providerLogoUrl` <br /><span class="type-text">string</span></td>
-    <td>Provider logo URL</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
-</details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "prebidAudienceSegmentIdList": [
-    156,
-    157
-  ],
-  "prebidAudienceIdList": [
-    1033983
-  ],
-  "providerIdList": [
-    1
-  ],
-  "searchField": "risk"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "totalRecords": 2,
-    "prebidSegmentData": [
-      {
-        "prebidAudienceSegmentId": 158,
-        "prebidAudienceSegmentName": "Avoid High and Moderate risk Alcohol content pages",
-        "description": "Avoid High and Moderate risk Alcohol content pages",
-        "parentPathKey": "Brand Safety > Display",
-        "cpm": 0.05,
-        "isLeaf": true,
-        "creativeTypeIdList": [
-          11,
-          14
-        ],
-        "prebidAudienceSegmentRootId": 1,
-        "providerId": 1
-      },
-      {
-        "prebidAudienceSegmentId": 156,
-        "prebidAudienceSegmentName": "Avoid High and Moderate risk Adult content pages",
-        "description": "Avoid High and Moderate risk Adult content pages",
-        "parentPathKey": "Brand Safety > Display",
-        "cpm": 0.05,
-        "isLeaf": true,
-        "creativeTypeIdList": [
-          11,
-          14
-        ],
-        "prebidAudienceSegmentRootId": 1,
-        "providerId": 1
-      }
-    ],
-    "filteredRecords": 2
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          prebidSegmentData: {
-            prebidAudienceSegmentId: number;
-            prebidAudienceSegmentName: string;
-            prebidAudienceSegmentRootId: number;
-            description: string;
-            parentPathKey: string;
-            cpm: number;
-            creativeTypeIdList: number[];
-            providerId: number;
-            providerName: string;
-            providerLogoUrl: string;
-          }[];
-        };
-      };
-    };
-  };
-}
-
-function getPrebidSegmentDetailsBySearch(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/prebid/details/search/list',
-    requestBody: {
-      content: {
-        "application/json": {
-          providerIdList?: `number[]`,
-          prebidAudienceSegmentIdList?: `number[]`,
-          prebidAudienceIdList?: `number[]`,
-          searchField?: `string`
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### DoubleVerify Pre-bid Audience Segment Details
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/prebid/dv-ivt/free-segments" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get the DoubleVerify IVT Pre-bid Audience Segments which are free and available to an Advertiser. 
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`prebidAudienceSegmentId` <br /><span class="type-text">integer</span></td>
-    <td>Pre-bid Audience Segment ID</td>
-    </tr>
-    <tr>
-    <td>`providerId` <br /><span class="type-text">integer</span></td>
-    <td>[Provider ID](#provider-details-list)</td>
-    </tr>
-        <tr>
-    <td>`isSelectedByDefault` <br /><span class="type-text">boolean</span></td>
-    <td></td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{     
-  "success": true,     
-  "data": {         
-    [             
-      {                 
-        "prebidAudienceSegmentId": 234,                
-        "providerId": 2,                 
-        "isSelectedByDefault": true             
-      },             
-      {                 
-        "prebidAudienceSegmentId": 235,                 
-        "providerId": 2,                 
-        "isSelectedByDefault": true             
-      },             
-      {                
-        "prebidAudienceSegmentId": 236,                
-        "providerId": 2,                 
-        "isSelectedByDefault": true             
-      },             
-      {                 
-        "prebidAudienceSegmentId": 237,                 
-        "providerId": 2,                 
-        "isSelectedByDefault": true             
-      },             
-      {                 
-        "prebidAudienceSegmentId": 238,              
-        "providerId": 2,                
-        "isSelectedByDefault": false           
-      },             
-      {             
-        "prebidAudienceSegmentId": 239,                
-        "providerId": 2,               
-        "isSelectedByDefault": false             
-      }        
-    ]    
-  }
-}"
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          prebidAudienceSegmentId: number;
-          providerId: number;
-          isSelectedByDefault: boolean;
-        }[];
-      }
-    }
-  };
-}
-
-function getDvIvtFreePrebidSegments(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/prebid/dv-ivt/free-segments',
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Contextual Audience Details
-
-<ContextualAudienceDetails />
 
 ---
 
 ### Audience Count by Status 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/count/bystatus" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/count-by-status" />
 
 <div class="endpoint-container">
   <div class="child1">
 
 Get a count of Audiences by status type. 
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- | 
 | `searchField` <br /><span class="type-text">string</span> | Filter results by search field
 | `owIds` <br /><span class="type-text">string</span> | Organization Workspace IDs 
@@ -1357,28 +240,12 @@ Get a count of Audiences by status type.
 
 <table className="objectProperties">
 <tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience Status Type ID</td>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>Audience Status ID</td>
 </tr>
 <tr>
-  <td>`statusKey` <br /><span class="type-text">string</span></td>
-  <td>Audience status key</td>
-</tr>
-<tr>
-  <td>`statusLabel` <br /><span class="type-text">string</span></td>
-  <td>Audience status label</td>
-</tr>
-<tr>
-  <td>`logDescription` <br /><span class="type-text">string</span></td>
-  <td>Log description</td>
-</tr>
-<tr>
-  <td>`statusCount` <br /><span class="type-text">integer</span></td>
+  <td>`audienceCount` <br /><span class="type-text">integer</span></td>
   <td>Audience count</td>
-</tr>
-<tr>
-  <td>`order` <br /><span class="type-text">integer</span></td>
-  <td>Order</td>
 </tr>
 </table></details>
 
@@ -1391,57 +258,21 @@ Get a count of Audiences by status type.
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data": [
-    {
-      "id": 2,
-      "statusKey": "Pending",
-      "statusLabel": "Pending",
-      "logDescription": null,
-      "statusCount": 39,
-      "order": 1
-    },
-    {
-      "id": 1,
-      "statusKey": "Processing",
-      "statusLabel": "Processing",
-      "logDescription": null,
-      "statusCount": 356,
-      "order": 2
-    },
-    {
-      "id": 3,
-      "statusKey": "Ready",
-      "statusLabel": "Ready",
-      "logDescription": null,
-      "statusCount": 174,
-      "order": 3
-    },
-    {
-      "id": 4,
-      "statusKey": "Rejected",
-      "statusLabel": "Rejected",
-      "logDescription": null,
-      "statusCount": 20,
-      "order": 5
-    },
-    {
-      "id": 6,
-      "statusKey": "Failed",
-      "statusLabel": "Failed",
-      "logDescription": null,
-      "statusCount": 9,
-      "order": 6
-    },
-    {
-      "id": 0,
-      "statusKey": "all",
-      "statusLabel": "All",
-      "logDescription": null,
-      "statusCount": 598,
-      "order": 0
-    }
-  ]
+    "success": true,
+    "data": [
+        {
+            "audienceStatusId": 1,
+            "audienceCount": 2
+        },
+        {
+            "audienceStatusId": 3,
+            "audienceCount": 10
+        },
+        {
+            "audienceStatusId": 6,
+            "audienceCount": 4
+        }
+    ]
 }
 ```
 
@@ -1463,12 +294,8 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          id: number;
-          statusKey: string;
-          statusLabel: string;
-          logDescription: string | null;
-          statusCount: number;
-          order: number;
+          audienceStatusId: number;
+          audienceCount: number;
         }[];
       };
     };
@@ -1477,8 +304,8 @@ interface Responses {
 
 function GetStatuswiseaudiencecount(): Promise<Responses> {
   const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/count/bystatus',
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/count-by-status',
     params: {
       query: {
         searchField: `string`,
@@ -1500,18 +327,12 @@ function GetStatuswiseaudiencecount(): Promise<Responses> {
 
 ### Audience Count by Type
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/typeWiseCount" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/count-by-type" />
 
 <div class="endpoint-container">
   <div class="child1">
 
 Get an Audience count by Audience type. 
-
-| Query Parameters | |
-| --- | --- |
-| `audienceTypeIds` <br /><span class="type-text">string</span> | Audience type IDs 
-| `status` <br /><span class="type-text">string</span> | Audience status ID 
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -1521,11 +342,7 @@ Get an Audience count by Audience type.
   <td>[Audience Type ID](/guidelines/audience-api#audience-type-list)</td>
 </tr>
 <tr>
-  <td>`audienceTypeName` <br /><span class="type-text">string</span></td>
-  <td>Audience type name</td>
-</tr>
-<tr>
-  <td>`audienceCount` <br /><span class="type-text">string</span></td>
+  <td>`audienceCount` <br /><span class="type-text">integer</span></td>
   <td>Audience count</td>
 </tr>
 </table></details>
@@ -1538,47 +355,15 @@ Get an Audience count by Audience type.
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": [
+  "success": true,
+  "data": [
     {
       "audienceTypeId": 1,
-      "audienceTypeName": "Matched Audience",
-      "audienceCount": 227
+      "audienceCount": 10
     },
     {
       "audienceTypeId": 2,
-      "audienceTypeName": "Segmented Audience",
-      "audienceCount": 135
-    },
-    {
-      "audienceTypeId": 3,
-      "audienceTypeName": "Retargeted Audience",
-      "audienceCount": 97
-    },
-    {
-      "audienceTypeId": 4,
-      "audienceTypeName": "Geofarmed Audience",
-      "audienceCount": 186
-    },
-    {
-      "audienceTypeId": 5,
-      "audienceTypeName": "Contextual Audience",
-      "audienceCount": 140
-    },
-    {
-      "audienceTypeId": 6,
-      "audienceTypeName": "Lookalike Audience",
-      "audienceCount": 111
-    },
-    {
-      "audienceTypeId": 7,
-      "audienceTypeName": "Campaign Audience",
-      "audienceCount": 26
-    },
-    {
-      "audienceTypeId": 8,
-      "audienceTypeName": "Pre-Bid Audience",
-      "audienceCount": 23
+      "audienceCount": 25
     }
   ]
 }
@@ -1601,9 +386,8 @@ interface Responses {
     content: {
       "application/json": {
         success: boolean;
-        responseObject: {
+        data: {
           audienceTypeId: number;
-          audienceTypeName: string;
           audienceCount: number;
         }[];
       };
@@ -1614,7 +398,7 @@ interface Responses {
 function getAudienceTypeWiseCount(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/typeWiseCount',
+    url: 'https://api.iqm.com/api/v3/audience/count-by-type',
     params: {
       query?: {
         audienceTypeIds?: `string`,
@@ -1632,63 +416,31 @@ function getAudienceTypeWiseCount(): Promise<Responses> {
 
 </div></div>
 
-## Audience Segment Details
-
-<AudienceSegmentDetails />
-
 ## Audience Management
 
-<MatchedAudienceManagement />
+### Update Audience Name
 
----
-
-### Create Retargeted Audience
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/retarget/tag" />
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/audience/{audienceId}/update-name" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Create a Retargeted Audience. 
+Update the name of an existing Audience.
+
+| Path Parameters | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to update |
 
 | Request Schema | |
 | --- | --- |
-| `tag_name` <br /><span class="type-text">string</span> | Audience name
-| `tag_duration` <br /><span class="type-text">string</span> | Duration can be either <var>month</var> or <var>date_range</var>
-| `tag_time ` <br /><span class="type-text">integer</span> | Number of months, required if <var>tag_duration</var> is set to <var>month</var>
-| `start_date` <br /><span class="type-text">integer</span> | Start date, requird if <var>tag_duration</var> is set to <var>date_range</var>
-| `end_date` <br /><span class="type-text">integer</span> | End date, requird if <var>tag_duration</var> is set to <var>date_range</var> 
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-      <tr>
-    <td>`tag_script` <br /><span class="type-text">string</span></td>
-    <td>Tag script</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
+| `audienceName` <br /><span class="type-text">string</span> | New Audience name |
 
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
-  "tag_duration": "date_range",
-  "tag_name": "Sample audience name",
-  "start_date": 1643810939810,
-  "end_date": 1645381800000
+  "audienceName": "Updated Audience Name"
 }
 ```
 
@@ -1696,1013 +448,171 @@ Create a Retargeted Audience.
 {
   "success": true,
   "data": {
-    "id": 1,
-    "tag_script": "<script src='https://sample.url.com/c/1a04d3b3-3d78-49b2-bb0f-829b5bd082ab' async></script>",
-    "message": "Audience created successfully"
+    "message": "Changes saved successfully"
   }
 }
 ```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          tag_script: string;
-          message: string;
-        };
-      }
-    };
-  };
-}
-
-function CreateRetargetedAudience(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/retarget/tag',
-    requestBody: {
-      content: {
-        "application/json": {
-          tag_duration: `string`,
-          tag_name: `string`,
-          start_date: `number`,
-          end_date: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
 
 </div></div>
 
 ---
 
-### Update Retargeted Audience
+### Regenerate Audience
 
-<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/retarget/{retargeted_audience_id}" />
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/audience/{audienceId}/regenerate" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Update a Retargeted Audience. 
+Regenerate a failed Audience. 
 
-| Path Parameter | |
+| Path Parameters | |
 | --- | --- | 
-| `retargeted_audience_id` <br /><span class="type-text">string</span> | Retargeted [Audience ID](#audience-details-list) |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to regenerate |
 
-| Request Schema | |
-| --- | --- |
-| `tag_duration` <br /><span class="type-text">string</span> | Duration can be either <var>month</var> or <var>date_range</var>
-| `tag_name` <br /><span class="type-text">string</span> | Audience name
-| `tag_time` <br /><span class="type-text">integer</span> | Number of months, required if <var>tag_duration</var> is set to <var>month</var>
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-      <tr>
-    <td>`tag_script` <br /><span class="type-text">string</span></td>
-    <td>Tag script</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "tag_duration": "month",
-  "tag_name": "Sample audience name",
-  "tag_time": 5
-}
-```
+</div><div class="child2">
 
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "tag_script": "<script src='https://sample.url.com/c/02e378aa-275b-40aa-9a2c-a41ce2e02c88' async></script>",
-    "message": "Your changes have been saved successfully"
+    "message": "Audience regeneration initiated successfully"
   }
 }
 ```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          tag_script: string;
-          message: string;
-        };
-      }
-    };
-  };
-}
-
-function EditRetargetAudience(): Promise<Responses> {
-  const options = {
-    method: 'PUT',
-    url: 'https://api.iqm.com/api/v3/audience/retarget/{retargeted_audience_id}',
-    param: {
-      path: {
-        retargeted_audience_id: `string`
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          tag_duration: `string`,
-          tag_name: `string`,
-          tag_time: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
 
 </div></div>
 
 ---
 
-### Retargeted Audience Email Notification
+### Get Audience Insights
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v2/audience/email/notify" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/{audienceId}/insights" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Send email notification on Retargeted Audience creation. 
+Get Insights details for a given Audience ID.
 
-| Request Schema | |
+| Path Parameters | |
 | --- | --- |
-| `pixelCode` <br /><span class="type-text">string</span> | Pixel code |
-| `recipients` <br /><span class="type-text">string</span> | Recipient email |
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api#audience-details-list) to get Insights for |
 
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audience_id` <br /><span class="type-text">string</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audience_name` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audience_date` <br /><span class="type-text">string</span></td>
+  <td>Audience date (YYYY-MM-DD format)</td>
+</tr>
+<tr>
+  <td>`vertical_id` <br /><span class="type-text">string</span></td>
+  <td>Vertical ID</td>
+</tr>
+<tr>
+  <td>`vertical` <br /><span class="type-text">string</span></td>
+  <td>Vertical name</td>
+</tr>
+<tr>
+  <td>`widgets` <br /><span class="type-text">array of objects</span></td>
+  <td>Widgets array containing insight data</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`widgets` object properties</summary>
     <table className="objectProperties">
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "pixelCode": "<script src='https://scripturl.com' async></script>",
-  "recipients": "user@email.com"
-}
-```
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "message": "e-mail sent successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json;charset=UTF-8": {
-        statusCode: number;
-        responseObject: {
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function RetargetAudienceemailnotify(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v2/audience/email/notify',
-    requestBody: {
-      content: {
-        "application/json": {
-          pixelCode: `string`,
-          recipients: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Create Geo-Farmed Audience
-
-<CreateGeofarmedAudience />
-
----
-
-### Create Campaign Audience
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/campaign/add" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Create a Campaign Audience. 
-
-  <table>
-<th>Request Schema</th>
-<tr>
-<td>`audienceName` <br /><span class="type-text">string</span></td>
-<td>Audience name</td>
-</tr>
-<tr>
-  <td>`startDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds </td>
-</tr>
-<tr>
-  <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`campaignDetail` <br /><span class="type-text">object</span></td>
-  <td>Campaign details</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`campaignDetail` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-  <td>`impressions` <br /><span class="type-text">array of integers</span></td>
-  <td>Campaign IDs</td>
-  </tr>
-    <tr>
-  <td>`clicks`<br /><span class="type-text">array of integers</span></td>
-  <td>Campaign IDs</td>
-  </tr>
-    <tr>
-  <td>`conversions`<br /><span class="type-text">array of integers</span></td>
-  <td>Campaign IDs</td>
-  </tr>
-  </table></details>
+      <tr>
+        <td>`title` <br /><span class="type-text">string</span></td>
+        <td>Widget title</td>
+      </tr>
+      <tr>
+        <td>`type` <br /><span class="type-text">string</span></td>
+        <td>Widget type (e.g., "table")</td>
+      </tr>
+      <tr>
+        <td>`data` <br /><span class="type-text">array of objects</span></td>
+        <td>Widget data array</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`data` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`Sr no.` <br /><span class="type-text">integer</span></td>
+              <td>Serial number</td>
+            </tr>
+            <tr>
+              <td>`Key` <br /><span class="type-text">string</span></td>
+              <td>Data key/label</td>
+            </tr>
+            <tr>
+              <td>`Audience Value` <br /><span class="type-text">string</span></td>
+              <td>Audience value</td>
+            </tr>
+          </table></details>
+        </td>
+        <td></td>
+      </tr>
+    </table></details>
   </td>
   <td></td>
 </tr>
 </table>
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
+</details>
 
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
+```json title="Response 200"
 {
-  "audienceName": "Sample audience name",
-  "startDate": 1638316800,
-  "endDate": 1640085173,
-  "campaignDetail": {
-    "impressions": [
-      1,
-      2
-    ],
-    "clicks": [
-      3
-    ],
-    "conversions": [
-      4
+  "success": true,
+  "data": {
+    "audience_id": "1139300",
+    "audience_name": "new hcp 1",
+    "audience_date": "2025-06-27",
+    "vertical_id": "2",
+    "vertical": "Healthcare",
+    "widgets": [
+      {
+        "title": "Audience Summary",
+        "type": "table",
+        "data": [
+          {
+            "Sr no.": 1,
+            "Key": "Total Healthcare Facilities",
+            "Audience Value": "14,219"
+          },
+          {
+            "Sr no.": 2,
+            "Key": "Total People",
+            "Audience Value": "5,917"
+          },
+          {
+            "Sr no.": 3,
+            "Key": "Total Phones",
+            "Audience Value": "4,833"
+          },
+          {
+            "Sr no.": 4,
+            "Key": "Total Emails",
+            "Audience Value": "3,010"
+          }
+        ]
+      }
     ]
   }
 }
 ```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "message": "Campaign Audience created successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function CreateCampaignAudience(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/campaign/add',
-    requestBody: {
-      content: {
-        "application/json": {
-          audienceName: `string`,
-          startDate: `number`,
-          endDate: `number`,
-          campaignDetail: {
-            impressions: `number[]`,
-            clicks: `number[]`,
-            conversions: `number[]`,
-          }
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-<AudienceSegmentManagement />
-
----
-
-### Create Pre-bid Audience
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/prebid/add" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Pre-bid Audiences are groups of [Fraud , Brand Safety, and Viewability<ExternalLink />](https://help.iqm.com/en/articles/8698600-fraud-brand-safety-and-viewability-pre-bid-targeting-overview) pre-bid segments that you select. You can create these audiences and seamlessly integrate them into new or existing Campaigns. 
-
-
-:::warning
-
-The IQM platform supports one Creative type per Campaign. Pre-bid segments include both **display** and **video** that can be selected. Choose only one format for each Pre-bid Audience to avoid incurring extra charges. 
-
-:::
-
-
-| Request Schema | |
-| --- | --- |
-| `prebidAudienceName` <br /><span class="type-text">string</span> | Pre-bid Audience name |
-| `prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> | Pre-bid Audience Segment ID list 
-| `prebidAudienceProviderId` <br /><span class="type-text">integer</span> | Pre-bid Audience [Provider ID](#provider-details-list) |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "prebidAudienceName": "string",
-  "prebidAudienceSegmentIdList": [
-    0
-  ],
-  "prebidAudienceProviderId": 0
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1026631,
-    "message": "Audience created successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function createPrebidAudience(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/prebid/add',
-    requestBody: {
-      content: {
-        "application/json": {
-          prebidAudienceName: `string`,
-          prebidAudienceSegmentIdList: `number[]`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Update Pre-bid Audience
-
-<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/prebid/{prebidAudienceId}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Update a Pre-bid Audience. 
-
-| Request Schema | |
-| --- | --- |
-| `prebidAudienceName` <br /><span class="type-text">string</span> | Pre-bid Audience Name 
-| `prebidAudienceSegmentIdList` <br /><span class="type-text">array of integers</span> | Pre-bid Audience Segment ID list
-| `prebidAudienceIdList` <br /><span class="type-text">array of integers</span> | Pre-bid [Audience ID](#audience-details-list) list 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`prebidAudienceId` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "prebidAudienceIdList": [
-    156,
-    157
-  ],
-  "prebidAudienceName": "prebid Aud 1"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "prebidAudienceId": 1023240,
-    "message": "Your changes have been saved successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          prebidAudienceId: number;
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function editPrebidAudience(): Promise<Responses> {
-  const options = {
-    method: 'PUT',
-    url: 'https://api.iqm.com/api/v3/audience/prebid/{prebidAudienceId}',
-    params: {
-      path: {
-        prebidAudienceId: `number`,
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          prebidAudienceName: `string`,
-          prebidAudienceSegmentIdList: `number[]`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Create Contextual Audience
-
-<CreateContextualAudience />
-
----
-
-### Create ABM Audience
-
-<CreateABMAudience />
-
----
-
-### Create Lookalike Audience 
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/lookalike/add" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Create a Lookalike Audience. 
-
-| Request Schema | |
-| --- | --- |
-| `audienceName` <br /><span class="type-text">string</span> | Audience name 
-| `sourceAudienceIds` <br /><span class="type-text">string</span> | Source [Audience IDs](#audience-details-list) 
-| `countryIds`<br /><span class="type-text">string</span> | [Country IDs](/guidelines/master-api#get-country-segment) 
-| `stateIds`<br /><span class="type-text">string</span> | [State IDs](/guidelines/master-api#get-state-segment) 
-| `cityIds`<br /><span class="type-text">string</span> | [City IDs](/guidelines/master-api#get-city-segment)
-| `countyIds`<br /><span class="type-text">string</span> | [County IDs](/guidelines/master-api#get-county-segment) 
-| `senateDistrictIds`<br /><span class="type-text">string</span> | [Senate District IDs](/guidelines/master-api#get-senate-district-segment)
-| `houseDistrictIds`<br /><span class="type-text">string</span> | [House District IDs](/guidelines/master-api#get-house-district-segment) 
-| `congressionalDistrictIds`<br /><span class="type-text">string</span> | [Congressional District IDs](/guidelines/master-api/#get-congressional-district-segment) 
-| `audienceSize`<br /><span class="type-text">integer</span> | Audience size 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "audienceName": "Sample audience name",
-  "sourceAudienceIds": "1,2",
-  "countryIds": "246,113",
-  "stateIds": "4660,4661",
-  "cityIds": "30400001,30400002",
-  "countyIds": "30300001,30300003",
-  "senateDistrictIds": "687,688",
-  "houseDistrictIds": "5098,5121",
-  "congressionalDistrictIds": "350,78",
-  "audienceSize": 90
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "message": "Lookalike Audience created successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function CreateLookalikeAudience(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/lookalike/add',
-    requestBody: {
-      content: {
-        "application/json": {
-          audienceName: `string`,
-          sourceAudienceIds: `string`,
-          countryIds: `string`,
-          stateIds: `string`,
-          cityIds: `string`,
-          countyIds: `string`,
-          senateDistrictIds: `string`,
-          houseDistrictIds: `string`,
-          congressionalDistrictIds: `string`,
-          audienceSize: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Update Audience Name 
-
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/audience/updateName/{audience_id}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Update an Audience's name. 
-
-| Path Parameter | |
-| --- | --- |
-| `audience_id` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) 
-
-| Request Schema | |
-| --- | --- |
-| `audienceName` <br /><span class="type-text">string</span> | Audience name 
-| `audienceTypeId` <br /><span class="type-text">integer</span> | [Audience Type ID](/guidelines/audience-api#audience-type-list)
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "audienceName": "name_update_check",
-  "audienceTypeId": 3
-}
-```
-
-```json title="Response 200"
-{
-  "statusCode": 200,
-  "responseObject": {
-    "id": 1,
-    "message": "Your changes have been saved successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json;charset=UTF-8": {
-        statusCode: number;
-        responseObject: {
-          id: number;
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function UpdateAudienceName(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v2/audience/updateName/{audience_id}',
-    params: {
-      path: {
-        audience_id: `string`,
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          audienceName: `string`,
-          audienceTypeId: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
---- 
-
-### Duplicate Matched Audience 
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/matched/duplicate/{audienceId}" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Duplicate a Matched Audience. 
-
-| Path Parameter | |
-| --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) 
-
-| Request Schema | |
-| --- | --- |
-| `name` <br /><span class="type-text">string</span> | Audience name 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Audience ID</td>
-    </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "name": "Sample audience name"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "audienceId": 1,
-    "message": "Audience created successfully"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          audienceId: number;
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function Duplicatematchedaudience(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/matched/duplicate/{audienceId}',
-    params: {
-      path: {
-        audienceId: `string`,
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          name: `string`
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
 
 </div></div>
 
@@ -2717,9 +627,9 @@ function Duplicatematchedaudience(): Promise<Responses> {
 
 Generate Insights for any given Audience IDs. 
 
-| Query Parameter | |
+| Request Schema | |
 | --- | --- |
-| `audienceIds` <br /><span class="type-text">string</span> | Comma separated [Audience IDs](#audience-details-list) |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | [Audience IDs](#audience-details-list) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -2864,32 +774,70 @@ function createInsightsForMatchedAudience(): Promise<Responses> {
 
 ---
 
-### Send Insights Email 
+### Attach Data Partner
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/ins/insights/send-email" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/attach-data-partner" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Send an Audience Insights as an email. 
+Attach a data partner to a Geofarmed Audience or a Contextual Audience. 
 
-| Query Parameter | |
+| Request Schema ||
 | --- | --- |
-| `id` <br /><span class="type-text">string</span> | Insights ID |
-| `attachmentType` <br /><span class="type-text">string</span> | File type: <var>xlsx</var> or <var>pdf</var>
-| `recipientEmails` <br /><span class="type-text">string</span> | Comm separated string of emails to send Insights Report to. Up to 15 may be specified at a time 
-| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) 
+| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) |
+| `dataPartnerId` <br /><span class="type-text">integer</span> | [Data Partner ID](#data-partners-list-for-matched-audience) |
+
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "audienceId": 124,
+  "dataPartnerId": 7
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Data partner attached successfully."
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Delete Audience 
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/audience" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Delete an Audience. Endpoint first checks two validations before deleting an Audience:
+  1. User's access to Audience IDs
+  2. Whether Audience IDs are attached to any Campaigns. 
+
+If the user is not authorized to delete an Audience, or the Audience IDs are attached to a Campaign, the request will return an error.
+
+| Query Parameters | |
+| --- | --- |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | [Audience IDs](#audience-details-list) |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
-    <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Report was succesfully created: <var>true</var></td>
+            <tr>
+    <td>`successfulAudienceIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Audience IDs successfully deleted</td>
     </tr>
     <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>`failedAudienceIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Audience IDs not eligible for deletion</td>
     </tr>
     </table>
     </details>
@@ -2900,19 +848,35 @@ Send an Audience Insights as an email.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request Sample"
-{
-  "file": "string"
-}
-```
-
 
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Insights-1 pdf email sent successfully."
+  "data": {
+    "successfulAudienceIds": [
+      123456,
+      123457
+    ],
+    "failedAudienceIds": []
+  }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "statusCode": 400,
+  "responseObject": {
+    "errorMsg": "Request body either not provided or not valid.",
+    "errorCode": 400,
+    "description": "uri=/api/v2/audience/delete"
+  }
+}
+```
+
+</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -2930,28 +894,26 @@ interface Responses {
   200: {
     content: {
       "application/json": {
-        success: boolean;
-        data: string;
+        statusCode: number;
+        responseObject: {
+          audienceFailedIds: string[];
+          message: string;
+          audienceSuccessfulIds: number[];
+          status: boolean;
+        };
       };
     };
   };
 }
 
-function sendAudienceInsightsEmail(): Promise<Responses> {
+function DeleteAudience(): Promise<Responses> {
   const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/ins/insights/send-email',
-    params: {
-      query: {          
-        attachmentType: `string`,    
-        recipientEmails: `string`,
-        audienceId: `number`,
-      }
-    },
-    requestBody?: {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v2/audience/delete',
+    requestBody: {
       content: {
-        "application/json": {           
-          file?: `string`
+        "application/json": {
+          audienceIds: `string`
         }
       }
     }
@@ -2965,45 +927,103 @@ function sendAudienceInsightsEmail(): Promise<Responses> {
 
 </div></div>
 
+
+## Matched Audiences 
+
+### Matched Audience Details
+
+<MatchedAudienceDetails />
+
 ---
 
-### Regenerate Audience Insights Report
+<MatchedAudienceManagement />
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/ins/insights/regenerate/{insightsId}" />
+---
+
+### Data Partners List for Matched Audience 
+
+<MatchedDataPartners />
+
+---
+
+### Data Formats List for Matched Audience 
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/data-formats" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Regenerate the Insights Report for a given Insight ID, if the Insights fails.
+Get a static list of Matched Audience hashed data formats. 
 
-| Path Parameter | |
-| --- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Report was succesfully created: <var>true</var></td>
-    </tr>
-    <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Data format ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Data format name</td>
+</tr>
+<tr>
+  <td>`order` <br /><span class="type-text">integer</span></td>
+  <td>Display order</td>
+</tr>
+<tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Data format display name</td>
+</tr>
+</table>
+</details>
 
 </div>
-<div class="child2"> 
+<div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data": "Insights regenerated successfully."
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "name": "Raw",
+            "order": 1,
+            "displayName": "Raw"
+        },
+        {
+            "id": 2,
+            "name": "MD5",
+            "order": 2,
+            "displayName": "Hashed (MD5)"
+        },
+        {
+            "id": 3,
+            "name": "SHA1",
+            "order": 3,
+            "displayName": "Hashed (SHA1)"
+        },
+        {
+            "id": 4,
+            "name": "SHA256",
+            "order": 4,
+            "displayName": "Hashed (SHA256)"
+        },
+        {
+            "id": 5,
+            "name": "SHA512",
+            "order": 5,
+            "displayName": "Hashed (SHA512)"
+        },
+        {
+            "id": 6,
+            "name": "Other",
+            "order": 6,
+            "displayName": "Hashed (other)"
+        }
+    ]
 }
 ```
 
@@ -3022,23 +1042,22 @@ const axios = getInstance();
 interface Responses {
   200: {
     content: {
-      "application/json": {
+      "application/json;charset=UTF-8": {
         success: boolean;
-        data: string;
+        data: {
+          id: number;
+          label: string;
+          keyName: string;
+        }[];
       };
     };
   };
 }
 
-function regenerateInsightsFromAudience(): Promise<Responses> {
+function getMatchedAudienceDataFormats(): Promise<Responses> {
   const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/ins/insights/regenerate/{insightsId}',
-    params: {
-      path: {
-        insightsId: `number`
-      }
-    }
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/audience/static/data-formats',
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -3051,30 +1070,86 @@ function regenerateInsightsFromAudience(): Promise<Responses> {
 
 ---
 
-### Download Audience Insights Report 
+<MatchedAudienceStatic />
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/ins/insights/download" />
+### Download Matched Audience File 
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}/file-url" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Download an Audience Insights Report as an XLSX or PDF file. 
+Get a presigned S3 URL to download a Matched Audience file.
 
-| Query Parameters | |
-| --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](#audience-details-list) |
-| `fileType` <br /><span class="type-text">string</span> | File type: <var>xlsx</var> or <var>pdf</var>
+| Path Parameters | |
+| --- | --- | 
+| `audienceId` <br /><span class="type-text">integer</span> | Matched [Audience ID](/guidelines/audience-api/#audience-details-list) to download file for |
 
-| Request Schema | |
-| --- | --- |
-| `customLogoFile` <br /><span class="type-text">string</span> | Custom logo file |
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`insightsReportUrl` <br /><span class="type-text">string</span></td>
-    <td>Insights Report URL</td>
+    <td>`matchedAudienceFileUrl` <br /><span class="type-text">string</span></td>
+    <td>Presigned S3 URL to download Matched Audience file</td>
+    </tr>
+    </table>  
+    </details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "matchedAudienceFileUrl": "https://cdn.com/CAM-FILES/Client%3D204389/Audience%3D1143824/1762502664252_3524Download___Impression__NPI_Nurse_iqvia_Filtere6956185605.csv?response-content-disposition=attachment%3Bfilename%3D%2217664252_3524Download___Impression__NPI_Nurse_iqvia_Filtered9185605.csv%22&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIABRMU%2F20251205%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251205T121547Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJAWPe%2FrI%3D&X-Amz-Signature=19fb8f0208181cd011414bad4e3e"
+  }
+}
+```
+
+</div></div>
+
+## Segmented Audiences
+
+<AudienceSegmentDetails />
+
+<AudienceSegmentManagement />
+
+<AudienceSegmentStatic />
+
+## Retargeted Audiences
+
+### Create Retargeted Audience
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/retargeted" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Retargeted Audience. 
+
+| Request Schema | |
+| --- | --- |
+| `audienceName` <br /><span class="type-text">string</span> | Audience name
+| `dateCollectionBy` <br /><span class="type-text">string</span> | Date collection can be either <var>month</var> or <var>date_range</var>
+| `dateCollectionPeriod` <br /><span class="type-text">integer</span> | Data collection period 
+| `startDate` <br /><span class="type-text">integer</span> | Start date in Unix epoch milliseconds, required if <var>dateCollectionBy</var> is set to <var>date_range</var>
+| `endDate` <br /><span class="type-text">integer</span> | End date in Unix epoch milliseconds, required if <var>dateCollectionBy</var> is set to <var>date_range</var>
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`audienceId` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+      <tr>
+    <td>`tag_script` <br /><span class="type-text">string</span></td>
+    <td>Tag script</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
     </tr>
     </table>
     </details>
@@ -3085,17 +1160,37 @@ Download an Audience Insights Report as an XLSX or PDF file.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+<CodeDropdown>
+<CodeOption label="By Month" value="by-month">
+
 ```json title="Request Sample"
 {
-  "customLogoFile": "string"
+  "audienceName": "Test audience by month",
+  "dataCollectionBy": "month",
+  "dataCollectionPeriod": 1
 }
 ```
+</CodeOption>
+<CodeOption label="By Date Range" value="by-date-range">
+
+```json title="Request Sample"
+{
+  "audienceName": "Test audience by date_range",
+  "dataCollectionBy": "date_range",
+  "startDate": 1753262493020,
+  "endDate": 1753900200000
+}
+```
+</CodeOption>
+</CodeDropdown>
 
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "insightsReportUrl": "https://domain.com/insights.pdf"
+    "tag_script": "<script src='https://pxl.stage.iqm.com/c/4c90b124-bfbe-4af1-b780-d2a1d3cb93c1' async></script>",
+    "audienceId": 1140586,
+    "message": "Test audience by month audience created successfully"
   }
 }
 ```
@@ -3118,27 +1213,27 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          insightsReportUrl: string;
-        }
-      };
+          id: number;
+          tag_script: string;
+          message: string;
+        };
+      }
     };
   };
 }
 
-function downloadInsightsReportOfAudience(): Promise<Responses> {
+function CreateRetargetedAudience(): Promise<Responses> {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/audience/ins/insights/download',
-    params: {
-      query: {
-        audienceId: `number`,
-        fileType: `string`,
-      }
-    },
-    requestBody?: {
+    url: 'https://api.iqm.com/api/v3/audience/retargeted',
+    requestBody: {
       content: {
         "application/json": {
-          customLogoFile?: `string`
+          audienceName: `string`,
+          dateCollectionBy: `string`,
+          dateCollectionPeriod: `number`,
+          startDate?: `number`,
+          endDate?: `number`
         }
       }
     }
@@ -3154,9 +1249,266 @@ function downloadInsightsReportOfAudience(): Promise<Responses> {
 
 ---
 
+### Update Retargeted Audience
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/retargeted/{audienceId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a Retargeted Audience. 
+
+| Path Parameter | |
+| --- | --- | 
+| `audienceId` <br /><span class="type-text">string</span> | Retargeted [Audience ID](#audience-details-list) |
+
+| Request Schema | |
+| --- | --- |
+| `audienceName` <br /><span class="type-text">string</span> | Audience name
+| `dateCollectionBy` <br /><span class="type-text">string</span> | Date collection can be either <var>month</var> or <var>date_range</var>
+| `dateCollectionPeriod` <br /><span class="type-text">integer</span> | Data collection period 
+| `startDate` <br /><span class="type-text">integer</span> | Start date in Unix epoch milliseconds, required if <var>dateCollectionBy</var> is set to <var>date_range</var>
+| `endDate` <br /><span class="type-text">integer</span> | End date in Unix epoch milliseconds, required if <var>dateCollectionBy</var> is set to <var>date_range</var>
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+      <tr>
+    <td>`tag_script` <br /><span class="type-text">string</span></td>
+    <td>Tag script</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown>
+<CodeOption label="By Month" value="by-month">
+
+```json title="Request Sample"
+{
+  "audienceName": "Test audience by month",
+  "dataCollectionBy": "month",
+  "dataCollectionPeriod": 1
+}
+```
+</CodeOption>
+<CodeOption label="By Date Range" value="by-date-range">
+
+```json title="Request Sample"
+{
+  "audienceName": "Test audience by date_range",
+  "dataCollectionBy": "date_range",
+  "startDate": 1753262493020,
+  "endDate": 1753900200000
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "tag_script": "<script src='https://sample.url.com/c/02e378aa-275b-40aa-9a2c-a41ce2e02c88' async></script>",
+    "message": "Your changes have been saved successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          tag_script: string;
+          message: string;
+        };
+      }
+    };
+  };
+}
+
+function EditRetargetAudience(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/audience/retargeted/{audienceId}',
+    param: {
+      path: {
+        audienceId: `string`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          tag_duration: `string`,
+          tag_name: `string`,
+          tag_time: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Retargeted Audience Email Notification
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/retargeted/{audienceId}/email-notification" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send email with Retargeted audience Pixel code to specified recipients.
+
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">string</span> | Retargeted [Audience ID](#audience-details-list) |
+
+| Request Schema | |
+| --- | --- |
+| `recipientEmails` <br /><span class="type-text">array of strings</span> | Recipient emails |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "recipientEmails": [
+    "test.s@gmail.com"
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Pixel Code emailed successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        statusCode: number;
+        responseObject: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function RetargetAudienceemailnotify(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/retargeted/{audienceId}/email-notification',
+    requestBody: {
+      content: {
+        "application/json": {
+          pixelCode: `string`,
+          recipients: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+## Geofarmed Audiences
+
+### Geofarmed Audience Details 
+
+<GeoFarmedAudienceDetails />
+
+---
+
+### Create Geofarmed Audience
+
+<CreateGeofarmedAudience />
+
+## Contextual Audiences
+
+### Contextual Audience Details
+
+<ContextualAudienceDetails />
+
+---
+
+### Create Contextual Audience
+
+<CreateContextualAudience />
+
+---
+
 ### Validate URL for Contextual Audience
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/contextual/programmatic/url/validate" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/contextual/validate-programmatic-urls" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -3249,46 +1601,255 @@ function validateContextualUrl(): Promise<Responses> {
 
 </div></div>
 
----
+## Lookalike Audiences
 
-### Delete Audience 
+### Get Lookalike Audience Details
 
-<CopyUrl method="DELETE" url="https://api.iqm.com/api/v2/audience/delete" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/lookalike/{audienceId}" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Delete an Audience. Endpoint first checks two validations before deleting an Audience:
-  1. User's access to Audience IDs
-  2. Whether Audience IDs are attached to any Campaigns. 
+Get Lookalike Audience details.
 
-If the user is not authorized to delete an Audience, or the Audience IDs are attached to a Campaign, the request will return an error.
+| Path Parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">string</span> | Lookalike [Audience ID](#audience-details-list) |
+
+| Query Parameter | |
+| --- | --- |
+| `isTargetingInfoRequired` <br /><span class="type-text">boolean</span> | Includes targeting info in response (<var>true</var>) and targeted Campaign details (type of targeting, attached Campaign status), default: (<var>false</var>) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
+</tr>
+<tr>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>Audience status ID</td>
+</tr>
+<tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Creation timestamp (epoch seconds)</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Organization name</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+  <td>Created by User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUser` <br /><span class="type-text">string</span></td>
+  <td>Created by user name</td>
+</tr>
+<tr>
+  <td>`createdByUserEmail` <br /><span class="type-text">string</span></td>
+  <td>Created by user email (may be null)</td>
+</tr>
+<tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Audience reach</td>
+</tr>
+<tr>
+  <td>`cpm` <br /><span class="type-text">number</span></td>
+  <td>Cost per thousand impressions</td>
+</tr>
+<tr>
+  <td>`sourceAudienceIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Source audience IDs</td>
+</tr>
+<tr>
+  <td>`geoLocationDetails` <br /><span class="type-text">object</span></td>
+  <td>Geo location details</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`geoLocationDetails` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`countryIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[Country IDs](/guidelines/master-api#get-country-segment)</td>
+      </tr>
+      <tr>
+        <td>`stateIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[State IDs](/guidelines/master-api#get-state-segment)</td>
+      </tr>
+      <tr>
+        <td>`cityIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[City IDs](/guidelines/master-api#get-city-segment)</td>
+      </tr>
+      <tr>
+        <td>`countyIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[County IDs](/guidelines/master-api#get-county-segment)</td>
+      </tr>
+      <tr>
+        <td>`senateDistrictIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[Senate District IDs](/guidelines/master-api#get-senate-district-segment)</td>
+      </tr>
+      <tr>
+        <td>`houseDistrictIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[House District IDs](/guidelines/master-api#get-house-district-segment)</td>
+      </tr>
+      <tr>
+        <td>`congressionalDistrictIds` <br /><span class="type-text">array of integers</span></td>
+        <td>[Congressional District IDs](/guidelines/master-api#get-congressional-district-segment)</td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`audienceSize` <br /><span class="type-text">integer</span></td>
+  <td>Audience size</td>
+</tr>
+<tr>
+  <td>`targetedCampaignList` <br /><span class="type-text">array of objects</span></td>
+  <td>Targeted campaign list</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`targetedCampaignList` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`campaignName` <br /><span class="type-text">string</span></td>
+        <td>Campaign name</td>
+      </tr>
+      <tr>
+        <td>`campaignId` <br /><span class="type-text">integer</span></td>
+        <td>Campaign ID</td>
+      </tr>
+      <tr>
+        <td>`targetingTypeId` <br /><span class="type-text">integer</span></td>
+        <td>Targeting type ID (1=Whitelist, 2=Blacklist)</td>
+      </tr>
+      <tr>
+        <td>`campaignStatus` <br /><span class="type-text">string</span></td>
+        <td>Campaign status</td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`approvedRejectedByUserName` <br /><span class="type-text">string</span></td>
+  <td>Approved/rejected by user name (may be null)</td>
+</tr>
+<tr>
+  <td>`rejectionReason` <br /><span class="type-text">string</span></td>
+  <td>Rejection reason (may be null)</td>
+</tr>
+<tr>
+  <td>`isApprovalAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if user has approval access</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "audienceId": 1141499,
+    "audienceName": "Test lookalike Audience - 90K",
+    "audienceStatusId": 3,
+    "createdAt": 1753882035,
+    "organizationName": "Political Advertiser - Audience Bidder",
+    "owId": 204472,
+    "createdByUowId": 267663,
+    "createdByUser": "Political Advertiser - Audience Bidder",
+    "createdByUserEmail": null,
+    "reach": 2000,
+    "cpm": 1.5,
+    "sourceAudienceIds": [123456, 123457],
+    "geoLocationDetails": {
+      "countryIds": [30100001],
+      "stateIds": [30200001, 30200002, 30200003, 30200004],
+      "cityIds": [30400001, 30400002],
+      "countyIds": [30300001, 30300003],
+      "senateDistrictIds": [687, 688],
+      "houseDistrictIds": [5098, 5121],
+      "congressionalDistrictIds": [350, 78]
+    },
+    "audienceSize": 10,
+    "targetedCampaignList": [
+      {
+        "campaignName": "Audience - LookAlike Audience with IP Based",
+        "campaignId": 565213,
+        "targetingTypeId": 1,
+        "campaignStatus": "Running"
+      },
+      {
+        "campaignName": "Audience - LookAlike Audience with Device Based - Blacklisted",
+        "campaignId": 565262,
+        "targetingTypeId": 2,
+        "campaignStatus": "Paused"
+      }
+    ],
+    "approvedRejectedByUserName": null,
+    "rejectionReason": null,
+    "isApprovalAccess": true
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Create Lookalike Audience 
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/lookalike" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Lookalike Audience. 
 
 | Request Schema | |
 | --- | --- |
-| `audienceIds` <br /><span class="type-text">string</span> | Comma separated [Audience IDs](#audience-details-list) |
+| `audienceName` <br /><span class="type-text">string</span> | Audience name 
+| `sourceAudienceIds` <br /><span class="type-text">string</span> | Source [Audience IDs](#audience-details-list) 
+| `countryIds`<br /><span class="type-text">string</span> | [Country IDs](/guidelines/master-api#get-country-segment) 
+| `stateIds`<br /><span class="type-text">string</span> | [State IDs](/guidelines/master-api#get-state-segment) 
+| `cityIds`<br /><span class="type-text">string</span> | [City IDs](/guidelines/master-api#get-city-segment)
+| `countyIds`<br /><span class="type-text">string</span> | [County IDs](/guidelines/master-api#get-county-segment) 
+| `senateDistrictIds`<br /><span class="type-text">string</span> | [Senate District IDs](/guidelines/master-api#get-senate-district-segment)
+| `houseDistrictIds`<br /><span class="type-text">string</span> | [House District IDs](/guidelines/master-api#get-house-district-segment) 
+| `congressionalDistrictIds`<br /><span class="type-text">string</span> | [Congressional District IDs](/guidelines/master-api/#get-congressional-district-segment) 
+| `audienceSize`<br /><span class="type-text">integer</span> | Audience size 
 
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`audienceFailedIds` <br /><span class="type-text">array of integers</span></td>
-    <td>Audience IDs not eligible for deletion</td>
+    <td>`audienceId` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
     </tr>
     <tr>
     <td>`message` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
     </tr>
-        <tr>
-    <td>`audienceSuccessfulIds` <br /><span class="type-text">array of integers</span></td>
-    <td>Audience IDs successfully deleted</td>
-    </tr>
-        <tr>
-    <td>`status` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates all Audiences are processed: <var>true</var></td>
-    </tr>
     </table>
     </details>
+
 
 </div>
 <div class="child2">
@@ -3296,42 +1857,47 @@ If the user is not authorized to delete an Audience, or the Audience IDs are att
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+<CodeDropdown>
+<CodeOption label="Minimal Location Fields Sample">
+
 ```json title="Request Sample"
 {
-  "audienceIds": "123456,123457"
+  "audienceName": "Test Lookalike Audience",
+  "sourceAudienceIds": "12345,67890",
+  "audienceSize": 5,
+  "countryIds": "1",
+  "stateIds": "10,20,30"
+}
+
+```
+</CodeOption>
+<CodeOption label="All Location Fields Sample">
+```json title="Request Sample"
+{
+  "audienceName": "Test Lookalike Audience with Full Geo",
+  "sourceAudienceIds": "12345",
+  "audienceSize": 3,
+  "countryIds": "1",
+  "stateIds": "10,20",
+  "cityIds": "100,200,300",
+  "countyIds": "50,60",
+  "senateDistrictIds": "1,2,3",
+  "houseDistrictIds": "10,20",
+  "congressionalDistrictIds": "5,6,7"
 }
 ```
+</CodeOption>
+</CodeDropdown>
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "audienceFailedIds": [],
-    "message": "Selected audience(s) deleted successfully",
-    "audienceSuccessfulIds": [
-      123456,
-      123457
-    ],
-    "status": true
+  "success": true,
+  "data": {
+    "audienceId": 1140586,
+    "message": "Test Lookalike Audience audience created successfully"
   }
 }
 ```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 400"
-{
-  "statusCode": 400,
-  "responseObject": {
-    "errorMsg": "Request body either not provided or not valid.",
-    "errorCode": 400,
-    "description": "uri=/api/v2/audience/delete"
-  }
-}
-```
-
-</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -3349,26 +1915,33 @@ interface Responses {
   200: {
     content: {
       "application/json": {
-        statusCode: number;
-        responseObject: {
-          audienceFailedIds: string[];
+        success: boolean;
+        data: {
+          audienceId: number;
           message: string;
-          audienceSuccessfulIds: number[];
-          status: boolean;
         };
       };
     };
   };
 }
 
-function DeleteAudience(): Promise<Responses> {
+function CreateLookalikeAudience(): Promise<Responses> {
   const options = {
-    method: 'PUT',
-    url: 'https://api.iqm.com/api/v2/audience/delete',
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/lookalike',
     requestBody: {
       content: {
         "application/json": {
-          audienceIds: `string`
+          audienceName: `string`,
+          sourceAudienceIds: `string`,
+          countryIds: `string`,
+          stateIds: `string`,
+          cityIds: `string`,
+          countyIds: `string`,
+          senateDistrictIds: `string`,
+          houseDistrictIds: `string`,
+          congressionalDistrictIds: `string`,
+          audienceSize: `number`,
         }
       }
     }
@@ -3382,56 +1955,83 @@ function DeleteAudience(): Promise<Responses> {
 
 </div></div>
 
-<HealthcareDetails />
 
----
 
-## More Audience Details
+## Campaign Audiences
 
-### Matched Audience fields
+### Campaign Audience Details
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/matched/fields" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/campaign/{audienceId}" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get a list of Matched Audience columns. 
+Get Campaign Audience details by ID. 
+
+| Path Parameter | |
+| --- | --- |
+| `campaign_audience_id` <br /><span class="type-text">string</span> | Campaign [Audience ID](#audience-details-list) |
+
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
  <table className="objectProperties">
 <tr>
-  <td>`mandatoryColumns` <br /><span class="type-text">object array</span></td>
-  <td>Matched Audience required fields</td>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID</td>
 </tr>
 <tr>
-  <td>`voterIdColumns` <br /><span class="type-text">object array</span></td>
-  <td>Voter ID field</td>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name</td>
 </tr>
 <tr>
-  <td>`optionalColumns` <br /><span class="type-text">object array</span></td>
-  <td>Matched Audience optional fields</td>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>Audience status ID</td>
+</tr>
+<tr>
+  <td>`cpm` <br /><span class="type-text">number</span></td>
+  <td>Cost per thousand impressions</td>
+</tr>
+<tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique Audiences reached</td>
+</tr>
+<tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date (milliseconds)</td>
+</tr>
+<tr>
+  <td>`campaignDetails` <br /><span class="type-text">object</span></td>
+  <td>Campaign details</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`columns` object parameters</summary>
+  <summary>`campaignDetails` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Column ID</td>
+  <td>`impressions` <br /><span class="type-text">array of integers</span></td>
+  <td>Impressions array</td>
   </tr>
     <tr>
-    <td>`name` <br /><span class="type-text">string</span></td>
-    <td>Column name</td>
+  <td>`clicks`<br /><span class="type-text">array</span></td>
+  <td>Clicks array</td>
   </tr>
     <tr>
-    <td>`l2Name` <br /><span class="type-text">string</span></td>
-    <td>Column L2 name</td>
+  <td>`conversions`<br /><span class="type-text">array</span></td>
+  <td>Conversions array</td>
   </tr>
   </table></details>
   </td>
   <td></td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start date (milliseconds)</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end date (milliseconds)</td>
 </tr>
 </table>
 </details>
@@ -3444,94 +2044,23 @@ Get a list of Matched Audience columns.
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "mandatoryColumns": [
-      {
-        "id": 2,
-        "name": "First Name",
-        "l2Name": "Voters_FirstName"
-      },
-      {
-        "id": 3,
-        "name": "Last Name",
-        "l2Name": "Voters_LastName"
-      },
-      {
-        "id": 4,
-        "name": "State",
-        "l2Name": "Residence_Addresses_State"
-      },
-      {
-        "id": 6,
-        "name": "Zip",
-        "l2Name": "Residence_Addresses_Zip"
-      }
-    ],
-    "voterIDColumns": [
-      {
-        "id": 1,
-        "name": "Voter ID",
-        "l2Name": "LalVoterID"
-      }
-    ],
-    "optionalColumns": [
-      {
-        "id": 5,
-        "name": "Address",
-        "l2Name": "Residence_Addresses_AddressLine"
-      },
-      {
-        "id": 7,
-        "name": "Full Name",
-        "l2Name": "Voters_FullName"
-      },
-      {
-        "id": 8,
-        "name": "City",
-        "l2Name": "Residence_Addresses_City"
-      },
-      {
-        "id": 9,
-        "name": "ZipPlus4",
-        "l2Name": "Residence_Addresses_ZipPlus4"
-      },
-      {
-        "id": 10,
-        "name": "Age",
-        "l2Name": "Voters_Age"
-      },
-      {
-        "id": 11,
-        "name": "Gender",
-        "l2Name": "Voters_Gender"
-      },
-      {
-        "id": 12,
-        "name": "Ethnicity",
-        "l2Name": "Ethnic_Description"
-      },
-      {
-        "id": 13,
-        "name": "Cellphone",
-        "l2Name": "VoterTelephones_CellphoneUnformatted"
-      },
-      {
-        "id": 14,
-        "name": "Landline",
-        "l2Name": "VoterTelephones_LandlineUnformatted"
-      },
-      {
-        "id": 15,
-        "name": "Latitude",
-        "l2Name": "Residence_Addresses_Latitude"
-      },
-      {
-        "id": 16,
-        "name": "Longitude",
-        "l2Name": "Residence_Addresses_Longitude"
-      }
-    ]
+  "success": true,
+  "data": {
+    "audienceId": 119431,
+    "audienceName": "asdf",
+    "audienceStatusId": 1,
+    "cpm": 2.5,
+    "uniques": 56590,
+    "createdAt": 1740876000000,
+    "campaignDetails": {
+      "clicks": [],
+      "conversions": [],
+      "impressions": [
+        56590
+      ]
+    },
+    "startDate": 1740816000000,
+    "endDate": 1753167600000
   }
 }
 ```
@@ -3551,34 +2080,37 @@ const axios = getInstance();
 interface Responses {
   200: {
     content: {
-      "application/json;charset=UTF-8": {
-        statusCode: number;
-        responseObject: {
-          mandatoryColumns: {
-            id: number;
-            name: string;
-            l2Name: string;
-          }[];
-          voterIDColumns: {
-            id: number;
-            name: string;
-            l2Name: string;
-          }[];
-          optionalColumns: {
-            id: number;
-            name: string;
-            l2Name: string;
-          }[];
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          audienceName: string;
+          audienceStatusId: number;
+          cpm: number;
+          uniques: number;
+          createdAt: number;
+          campaignDetails: {
+            clicks: any[];
+            conversions: any[];
+            impressions: number[];
+          };
+          startDate: number;
+          endDate: number;
         };
       };
     };
   };
 }
 
-function GetMatchedAudienceFields(): Promise<Responses> {
+function GetCampaignAudienceDetails(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/matched/fields',
+    url: 'https://api.iqm.com/api/v3/audience/campaign/{campaign_audience_Id}',
+    params: {
+      path: {
+        campaign_audience_Id: `string`
+      }
+    }
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -3590,6 +2122,282 @@ function GetMatchedAudienceFields(): Promise<Responses> {
 </div></div>
 
 ---
+
+### Create Campaign Audience
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/campaign" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Campaign Audience. 
+
+  <table>
+<th>Request Schema</th>
+<tr>
+<td>`audienceName` <br /><span class="type-text">string</span></td>
+<td>Audience name</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start date, in milliseconds </td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`campaignDetails` <br /><span class="type-text">object</span></td>
+  <td>Campaign details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`campaignDetail` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`impressions` <br /><span class="type-text">array of integers</span></td>
+  <td>Impressions</td>
+  </tr>
+    <tr>
+  <td>`clicks`<br /><span class="type-text">array of integers</span></td>
+  <td>Clicks</td>
+  </tr>
+    <tr>
+  <td>`conversions`<br /><span class="type-text">array of integers</span></td>
+  <td>Conversions</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`audienceId` <br /><span class="type-text">integer</span></td>
+    <td>Audience ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "audienceName": "Sample audience name",
+  "startDate": 1638316800,
+  "endDate": 1640085173,
+  "campaignDetails": {
+    "impressions": [
+      1,
+      2
+    ],
+    "clicks": [
+      3
+    ],
+    "conversions": [
+      4
+    ]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "audienceId": 1140606,
+    "message": "Test campaign audience audience created successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          audienceId: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function CreateCampaignAudience(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/audience/campaign/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          audienceName: `string`,
+          startDate: `number`,
+          endDate: `number`,
+          campaignDetail: {
+            impressions: `number[]`,
+            clicks: `number[]`,
+            conversions: `number[]`,
+          }
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Campaign Audience History
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/campaigns/audience-history" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the Audience history details for specified Campaigns. 
+
+| Request Schema | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">array of integers</span> | [Campaign IDs](/guidelines/campaign-api/#get-list-of-campaigns) |
+| `subTypeIds` <br /><span class="type-text">array of integers</span> | [Audience Subtype IDs](/guidelines/audience-api/#audience-subtype-list) |
+| `historicalData` <br /><span class="type-text">boolean</span> | Fetches historical data (<var>true</var>) or current data (<var>false</var>) |
+| `typeIds` <br /><span class="type-text">array of integers</span> | [Audience Type IDs](/guidelines/audience-api/#audience-type-list) |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total records count</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Filtered records count</td>
+</tr>
+<tr>
+  <td>`audienceDetails` <br /><span class="type-text">array of objects</span></td>
+  <td>Audience details array</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`audienceDetails` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Audience ID</td>
+      </tr>
+      <tr>
+        <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+        <td>Campaign IDs</td>
+      </tr>
+      <tr>
+        <td>`name` <br /><span class="type-text">string</span></td>
+        <td>Audience name</td>
+      </tr>
+      <tr>
+        <td>`audienceSubTypeId` <br /><span class="type-text">integer</span></td>
+        <td>Audience subtype ID (may be null)</td>
+      </tr>
+      <tr>
+        <td>`typeId` <br /><span class="type-text">integer</span></td>
+        <td>Audience type ID</td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "campaignId": [
+    540050
+  ],
+  "subTypeIds": [],
+  "historicalData": false,
+  "typeIds": [],
+  "noOfEntries": 2,
+  "pageNo": 1
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 12,
+    "filteredRecords": 12,
+    "audienceDetails": [
+      {
+        "id": 1023234,
+        "campaignIds": [
+          540050
+        ],
+        "name": "MA-1 voter id",
+        "audienceSubTypeId": null,
+        "typeId": 1
+      },
+      {
+        "id": 1054138,
+        "campaignIds": [
+          540050
+        ],
+        "name": "MA With 90 K Records And 8 Columns NYSD 3 Digital Universe Csv",
+        "audienceSubTypeId": null,
+        "typeId": 1
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+## Pre-bid Audiences 
+
+<PrebidAudiences />
+
+
+## More Audience Details
 
 ### Reach Range List for Audience Segment
 
@@ -3716,7 +2524,7 @@ function getSegmentReachRange(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Get a static list of available CPM range used to filter Audience Segment data. 
+Get a static list of available CPM ranges used to filter Audience Segment data. 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -3827,137 +2635,6 @@ function getSegmentPriceRange(): Promise<Responses> {
 
 ---
 
-### Data Partners List for Matched Audience 
-
-<MatchedDataPartners />
-
----
-
-### Data Formats List for Matched Audience 
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/matched/data-format" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get a static list of Matched Audience hashed data formats. 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response Properties</summary>
- <table className="objectProperties">
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Data format ID</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Data format name</td>
-</tr>
-<tr>
-  <td>`order` <br /><span class="type-text">integer</span></td>
-  <td>Display order</td>
-</tr>
-<tr>
-  <td>`displayName` <br /><span class="type-text">string</span></td>
-  <td>Data format display name</td>
-</tr>
-</table>
-</details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": [
-        {
-            "id": 1,
-            "name": "Raw",
-            "order": 1,
-            "displayName": "Raw"
-        },
-        {
-            "id": 2,
-            "name": "MD5",
-            "order": 2,
-            "displayName": "Hashed (MD5)"
-        },
-        {
-            "id": 3,
-            "name": "SHA1",
-            "order": 3,
-            "displayName": "Hashed (SHA1)"
-        },
-        {
-            "id": 4,
-            "name": "SHA256",
-            "order": 4,
-            "displayName": "Hashed (SHA256)"
-        },
-        {
-            "id": 5,
-            "name": "SHA512",
-            "order": 5,
-            "displayName": "Hashed (SHA512)"
-        },
-        {
-            "id": 6,
-            "name": "Other",
-            "order": 6,
-            "displayName": "Hashed (other)"
-        }
-    ]
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json;charset=UTF-8": {
-        success: boolean;
-        data: {
-          id: number;
-          label: string;
-          keyName: string;
-        }[];
-      };
-    };
-  };
-}
-
-function getMatchedAudienceDataFormats(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/audience/static/matched/data-format',
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-<MatchedAudienceStatic />
 
 ### Audience Type List 
 
@@ -4114,7 +2791,7 @@ Get a static list of Audience subtypes.
 | Query Parameter | |
 | --- | --- |
 | `audienceTypeIds` <br /><span class="type-text">integer</span> | [Audience Type IDs](#audience-type-list) 
-| `verticalId` <br /><span class="type-text">integer</span> | [Vertical ID](/guidelines/master-api/#get-verticals)
+| `verticalId` <br /><span class="type-text">integer</span> | [Vertical ID](/guidelines/workspace-api/#verticals)
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -4183,7 +2860,7 @@ Get a static list of Audience subtypes.
 
 ### Audience Status List 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/audience/status" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/audience-status" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -4202,8 +2879,12 @@ Get a static list of Audience subtypes.
   <td>Audience status ID</td>
 </tr>
 <tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>`name` <br /><span class="type-text">string</span></td>
   <td>Status name</td>
+</tr>
+<tr>
+  <td>`order` <br /><span class="type-text">integer</span></td>
+  <td>Order</td>
 </tr>
 <tr>
   <td>`displayName` <br /><span class="type-text">string</span></td>
@@ -4220,34 +2901,51 @@ Get a static list of Audience subtypes.
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": [
+  "success": true,
+  "data": [
     {
       "id": 6,
-      "status": "Failed",
+      "name": "failed",
+      "order": 1,
       "displayName": "Failed"
     },
     {
       "id": 2,
-      "status": "Pending",
+      "name": "pending",
+      "order": 2,
       "displayName": "Pending"
     },
     {
       "id": 1,
-      "status": "Processing",
+      "name": "processing",
+      "order": 3,
       "displayName": "Processing"
     },
     {
+      "id": 7,
+      "name": "fetching data",
+      "order": 4,
+      "displayName": "Fetching Data"
+    },
+    {
+      "id": 8,
+      "name": "data fetched",
+      "order": 5,
+      "displayName": "Data Fetched"
+    },
+    {
       "id": 4,
-      "status": "Rejected",
+      "name": "rejected",
+      "order": 6,
       "displayName": "Rejected"
     },
     {
-      "id": 10,
-      "status": "Ready",
+      "id": 3,
+      "name": "ready",
+      "order": 7,
       "displayName": "Ready"
     }
-  ]
+]
 }
 ```
 
@@ -4270,7 +2968,8 @@ interface Responses {
         statusCode: number;
         responseObject: {
           id: number;
-          status: string;
+          name: string;
+          order: number;
           displayName: string;
         }[];
       };
@@ -4281,7 +2980,7 @@ interface Responses {
 function GetAudienceStatus(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v2/audience/status',
+    url: 'https://api.iqm.com/api/v3/audience/static/audience-status',
     params: {
       query: {
         audienceTypeIds: `number`
@@ -4306,7 +3005,7 @@ function GetAudienceStatus(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Get a static list of Geo-Farmed Audience frequency types. 
+Get a static list of Geofarmed Audience frequency types. 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -4389,7 +3088,7 @@ interface Responses {
   };
 }
 
-function GetGeo-FarmedFrequencyTypes(): Promise<Responses> {
+function GetGeofarmedFrequencyTypes(): Promise<Responses> {
   const options = {
     method: 'GET',
     url: 'https://api.iqm.com/api/v3/audience/static/frequency-type',
@@ -4404,7 +3103,3 @@ function GetGeo-FarmedFrequencyTypes(): Promise<Responses> {
 </div></div>
 
 ---
-
-### Provider Details List 
-
-<ProviderDetails />
