@@ -64,11 +64,11 @@ Create a Matched Audience by uploading a file with user data. The metadata is se
 </tr>
 <tr>
 <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
-<td>[Data Partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience)</td>
+<td>[Data Partner ID]()</td>
 </tr>
 <tr>
 <td>`columnCombinationId` <br /><span class="type-text">integer</span></td>
-<td>[Column Combination ID](/guidelines/audience-api/#matched-column-combinations)</td>
+<td>Column Combination ID</td>
 </tr>
 </table>
 </details>
@@ -172,7 +172,7 @@ curl -X POST https://api.example.com/api/v3/audience/matched \
 
 ### Update Matched Audience 
 
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/audience/matched/update/{matched_audience_id}" />
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -181,12 +181,13 @@ Update a Matched Audience.
 
 | Path Parameter | |
 | --- | --- |
-| `matched_audience_id` <br /><span class="type-text">integer</span> | Matched [Audience ID](#audience-details-list)
+| `audienceId` <br /><span class="type-text">integer</span> | Matched [Audience ID](#audience-details-list)
 
 | Request Schema | |
 | --- | --- |
-| `audienceName` <br /><span class="type-text">string</span> | Audience Name 
-| `rawS3URL` <br /><span class="type-text">string</span> | Raw S3 URL 
+| `dataCost` <br /><span class="type-text">number</span> | Data cost
+| `audienceStatusId` <br /><span class="type-text">integer</span> | [Audience Status ID](/guidelines/audience-api/#audience-status-list)
+| `rejectionReason` <br /><span class="type-text">string</span> | Reason for rejection if updating status to `Rejected`
 
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
@@ -211,8 +212,9 @@ Update a Matched Audience.
 
 ```json title="Request Sample"
 {
-  "audienceName": "Sample audience name",
-  "rawS3URL": "s3://sample.url.come"
+  "dataCost": 10,
+  "audienceStatusId": 4,
+  "rejectionReason": "Insufficient data quality."
 }
 ```
 
@@ -255,17 +257,18 @@ interface Responses {
 function EditMatchedAudience(): Promise<Responses> {
   const options = {
     method: 'PATCH',
-    url: 'https://api.iqm.com/api/v2/audience/matched/update/{matched_audience_Id}',
+    url: 'https://api.iqm.com/api/v3/audience/matched/{audienceId}',
     params: {
       path: {
-        matched_audience_Id: `string`
+        audienceId: `string`
       }
     },
     requestBody: {
       content: {
         "application/json": {
-          audienceName: `string`,
-          rawS3URL: `string`,
+          dataCost: `number`,
+          audienceStatusId: `number`,
+          rejectionReason: `string`
         }
       }
     }
