@@ -183,6 +183,10 @@ const config = {
                 to: "/guidelines",
               },
               {
+                label: "Partnerships",
+                to: "/partnerships",
+              },
+              {
                 label: "Help Center",
                 to: "https://help.iqm.com/en/"
               },
