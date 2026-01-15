@@ -5886,15 +5886,15 @@ const sidebars = {
               className: 'sidebarItem',
             },
             {
-              type: 'doc',
-              id: 'partnerships/supermetrics',
+              type: 'link',
               label: 'Supermetrics',
+              href: 'https://docs.supermetrics.com/docs/iqm',
               className: 'sidebarItem',
             },
             {
-              type: 'doc',
-              id: 'partnerships/tapclicks',
+              type: 'link',
               label: 'TapClicks',
+              href: 'https://www.tapclicks.com/resources/connectors/iqm-reports/',
               className: 'sidebarItem',
             },
             {
@@ -5934,9 +5934,9 @@ const sidebars = {
               className: 'sidebarItem',
             },
             {
-              type: 'doc',
-              id: 'partnerships/make',
+              type: 'link',
               label: 'Make',
+              href: 'https://www.make.com/en/integrations/iqmreports',
               className: 'sidebarItem',
             },
           ]
