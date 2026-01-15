@@ -5843,6 +5843,106 @@ const sidebars = {
             }          
           ]
     }
+  ],
+  partnershipsSidebar: [
+    {
+      type: 'category',
+      label: 'Partnerships & Integrations',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'partnerships/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Reporting Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/google-looker-studio',
+              label: 'Google Looker Studio',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/google-sheets',
+              label: 'Google Sheets',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/microsoft-power-bi',
+              label: 'Microsoft Power BI',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/tableau',
+              label: 'Tableau',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/supermetrics',
+              label: 'Supermetrics',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/tapclicks',
+              label: 'TapClicks',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/improvado',
+              label: 'Improvado',
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'CRM Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/hubspot',
+              label: 'HubSpot',
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Automation Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/zapier',
+              label: 'Zapier',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/make',
+              label: 'Make',
+              className: 'sidebarItem',
+            },
+          ]
+        },
+      ]
+    }
   ]
 }
 
