@@ -8,6 +8,8 @@ import CardHeader from '@site/src/components/Card/CardHeader';
 import CardImage from '@site/src/components/Card/CardImage';
 import Columns from '@site/src/components/Columns';
 import Column from '@site/src/components/Column';
+import { AskQuestion, FeedbackWidget } from '@site/src/components/Support';
+
 export default {
   // Reusing the default mapping
   ...MDXComponents,
@@ -18,4 +20,6 @@ export default {
   CardImage,
   Columns,
   Column,
+  AskQuestion,
+  FeedbackWidget,
 };

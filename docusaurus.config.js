@@ -163,6 +163,10 @@ const config = {
             className: "navbarLink",
           },
           {
+            type: "custom-aiAssistant",
+            position: "right",
+          },
+          {
             type: "search",
             position: "right",
           },
