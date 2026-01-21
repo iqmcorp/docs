@@ -1,4 +1,5 @@
 import { useReducer, useCallback } from 'react';
+import { useHistory } from '@docusaurus/router';
 
 // Types
 export interface Message {
@@ -145,14 +146,35 @@ function generateId(): string {
 // Hook
 export function useDocNavigator() {
   const [state, dispatch] = useReducer(aiReducer, initialState);
+  const history = useHistory();
 
-  // Navigation - use window.location for SSR safety
+  // Navigation - use Docusaurus router for client-side navigation (keeps chat open)
   const navigateToPage = useCallback((path: string) => {
-    if (typeof window !== 'undefined') {
+    // Extract hash/anchor from path if present
+    const hashIndex = path.indexOf('#');
+    const pathname = hashIndex >= 0 ? path.slice(0, hashIndex) : path;
+    const hash = hashIndex >= 0 ? path.slice(hashIndex + 1) : null;
+
+    if (history) {
+      history.push(path);
+    } else if (typeof window !== 'undefined') {
+      // Fallback for SSR
       window.location.href = path;
     }
-    dispatch({ type: 'SET_PAGE', payload: path });
-  }, []);
+    dispatch({ type: 'SET_PAGE', payload: pathname });
+
+    // If there's a hash, scroll to that section after navigation
+    if (hash) {
+      // Wait for page to render before scrolling to anchor
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          dispatch({ type: 'SET_SECTION', payload: hash });
+        }
+      }, 300);
+    }
+  }, [history]);
 
   const scrollToSection = useCallback((sectionId: string) => {
     if (typeof document === 'undefined') return;
