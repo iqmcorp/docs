@@ -1,9 +1,33 @@
 import React, { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
 import { useDocNavigator, Message } from '../../hooks/useDocNavigator';
+import SearchResults, { SearchResult } from '../../components/AIAssistant/SearchResults';
 import styles from './AIAssistantNavbarItem.module.css';
 
-// API endpoint - configure for your backend
-const AI_API_ENDPOINT = '/api/ai/chat';
+// API endpoint - dev vs production
+const AI_API_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? 'http://localhost:3333/api/ai/chat'
+  : '/api/ai/chat';
+
+const AI_SEARCH_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? 'http://localhost:3333/api/ai/search'
+  : '/api/ai/search';
+
+// Valid documentation paths (prevent navigation to hallucinated URLs)
+// Uses startsWith matching, so '/guidelines/' will match '/guidelines/campaign-api'
+const VALID_DOC_PATHS = [
+  '/getting-started/',
+  '/guidelines/',
+  '/quickstart-guides/',
+  '/tutorials/',
+  '/migration-guides/',
+  '/political-vertical/',
+  '/healthcare-vertical/',
+];
+
+const isValidDocPath = (path: string): boolean => {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return VALID_DOC_PATHS.some(p => normalized.startsWith(p));
+};
 
 export default function AIAssistantNavbarItem() {
   const {
@@ -21,9 +45,48 @@ export default function AIAssistantNavbarItem() {
   } = useDocNavigator();
 
   const [input, setInput] = useState('');
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [pendingHighlights, setPendingHighlights] = useState<string[] | null>(null);
+  const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [aiSummary, setAiSummary] = useState('');
+  const [viewMode, setViewMode] = useState<'chat' | 'search'>('chat');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Detect page scroll to fade the chat panel
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 1500);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Apply pending highlights after navigation completes
+  useEffect(() => {
+    if (pendingHighlights && pendingHighlights.length > 0) {
+      const timer = setTimeout(() => {
+        highlightText(pendingHighlights);
+        setPendingHighlights(null);
+      }, 500); // Wait for page to render
+      return () => clearTimeout(timer);
+    }
+  }, [pendingHighlights, highlightText]);
 
   // Close panel when clicking outside
   useEffect(() => {
@@ -56,11 +119,18 @@ export default function AIAssistantNavbarItem() {
   const handleAgentActions = (actions: Message['actions']) => {
     if (!actions) return;
 
+    let hasNavigation = false;
+    let highlightTerms: string[] = [];
+
+    // First pass: collect actions
     actions.forEach((action) => {
       switch (action.tool) {
         case 'navigate':
-          if (action.params.path) {
+          if (action.params.path && isValidDocPath(action.params.path as string)) {
+            hasNavigation = true;
             navigateToPage(action.params.path as string);
+          } else {
+            console.warn('Invalid navigation path:', action.params.path);
           }
           break;
         case 'scroll':
@@ -70,7 +140,7 @@ export default function AIAssistantNavbarItem() {
           break;
         case 'highlight':
           if (action.params.terms) {
-            highlightText(action.params.terms as string[]);
+            highlightTerms = action.params.terms as string[];
           }
           break;
         case 'clear_highlights':
@@ -78,6 +148,15 @@ export default function AIAssistantNavbarItem() {
           break;
       }
     });
+
+    // If navigating, delay highlights until page loads; otherwise apply immediately
+    if (highlightTerms.length > 0) {
+      if (hasNavigation) {
+        setPendingHighlights(highlightTerms);
+      } else {
+        highlightText(highlightTerms);
+      }
+    }
   };
 
   // Send message to AI backend
@@ -118,7 +197,7 @@ export default function AIAssistantNavbarItem() {
       // Add assistant response
       const assistantMessage = addMessage('assistant', data.response, data.actions);
       
-      // Execute any agent actions
+      // Execute agent actions (navigation validated against whitelist)
       if (data.actions) {
         handleAgentActions(data.actions);
       }
@@ -139,15 +218,45 @@ export default function AIAssistantNavbarItem() {
     }
   };
 
-  // Algolia fallback search
+  // Algolia fallback search - uses the Algolia API directly
   const searchWithAlgolia = async (query: string): Promise<Array<{title: string; url: string; snippet?: string}>> => {
     try {
-      // @ts-ignore - Algolia is loaded globally by Docusaurus
-      if (typeof window !== 'undefined' && window.docsearch) {
-        return [];
+      // Algolia credentials from docusaurus.config.js
+      const appId = '09FZUVDE53';
+      const apiKey = '***REMOVED***';
+      const indexName = 'IQM API Docs';
+
+      const response = await fetch(
+        `https://${appId}-dsn.algolia.net/1/indexes/${encodeURIComponent(indexName)}/query`,
+        {
+          method: 'POST',
+          headers: {
+            'X-Algolia-Application-Id': appId,
+            'X-Algolia-API-Key': apiKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query,
+            hitsPerPage: 5,
+            attributesToRetrieve: ['hierarchy', 'url', 'content'],
+            attributesToSnippet: ['content:50'],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Algolia search failed');
       }
-      return [];
-    } catch {
+
+      const data = await response.json();
+      
+      return data.hits.map((hit: any) => ({
+        title: hit.hierarchy?.lvl1 || hit.hierarchy?.lvl0 || 'Documentation',
+        url: hit.url?.replace('https://developers.iqm.com', '') || '/',
+        snippet: hit._snippetResult?.content?.value?.replace(/<[^>]*>/g, '') || '',
+      }));
+    } catch (error) {
+      console.warn('Algolia search failed:', error);
       return [];
     }
   };
@@ -166,6 +275,95 @@ export default function AIAssistantNavbarItem() {
     return response;
   };
 
+  // Perform enhanced search with taxonomy
+  const performSearch = async (query: string) => {
+    if (!query.trim()) return;
+    
+    setSearchQuery(query);
+    setLoading(true);
+    
+    try {
+      const response = await fetch(AI_SEARCH_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data.results || []);
+        setAiSummary(data.summary || '');
+        setViewMode('search');
+      } else {
+        // Fallback to Algolia
+        const algoliaResults = await searchWithAlgolia(query);
+        const results: SearchResult[] = algoliaResults.map((r, i) => ({
+          id: `algolia-${i}`,
+          title: r.title,
+          url: r.url,
+          snippet: r.snippet || '',
+          category: inferCategory(r.url),
+          topic: inferTopic(r.url, r.title),
+          complexity: 'intermediate' as const,
+          relevance: 100 - (i * 10),
+          isRecommended: i === 0,
+        }));
+        setSearchResults(results);
+        setAiSummary('');
+        setViewMode('search');
+      }
+    } catch {
+      // Fallback to Algolia on error
+      const algoliaResults = await searchWithAlgolia(query);
+      const results: SearchResult[] = algoliaResults.map((r, i) => ({
+        id: `algolia-${i}`,
+        title: r.title,
+        url: r.url,
+        snippet: r.snippet || '',
+        category: inferCategory(r.url),
+        topic: inferTopic(r.url, r.title),
+        complexity: 'intermediate' as const,
+        relevance: 100 - (i * 10),
+        isRecommended: i === 0,
+      }));
+      setSearchResults(results);
+      setAiSummary('');
+      setViewMode('search');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Infer category from URL
+  const inferCategory = (url: string): string => {
+    if (url.includes('quickstart')) return 'quickstart';
+    if (url.includes('guidelines')) return 'guidelines';
+    if (url.includes('tutorials')) return 'tutorials';
+    return 'reference';
+  };
+
+  // Infer topic from URL/title
+  const inferTopic = (url: string, title: string): string => {
+    const text = (url + title).toLowerCase();
+    if (text.includes('campaign')) return 'campaign';
+    if (text.includes('creative')) return 'creative';
+    if (text.includes('audience')) return 'audience';
+    if (text.includes('report')) return 'reports';
+    if (text.includes('auth')) return 'auth';
+    if (text.includes('conversion')) return 'conversion';
+    if (text.includes('inventory')) return 'inventory';
+    if (text.includes('finance') || text.includes('billing')) return 'finance';
+    return 'campaign';
+  };
+
+  // Handle search result click
+  const handleResultClick = (result: SearchResult) => {
+    const targetUrl = result.path || result.url || '/';
+    setViewMode('chat');
+    navigateToPage(targetUrl);
+    addMessage('assistant', `Navigating to **${result.title}**...`);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     sendMessage(input);
@@ -178,24 +376,107 @@ export default function AIAssistantNavbarItem() {
     }
   };
 
+  // Render inline elements (links, code, bold)
+  const renderInlineContent = (text: string, keyPrefix: string = '') => {
+    // Split by markdown patterns: **bold**, `code`, [text](url)
+    const elements: React.ReactNode[] = [];
+    let remaining = text;
+    let partIndex = 0;
+
+    while (remaining.length > 0) {
+      // Check for markdown link: [text](url)
+      const linkMatch = remaining.match(/^\[([^\]]+)\]\(([^)]+)\)/);
+      if (linkMatch) {
+        const [full, linkText, linkUrl] = linkMatch;
+        elements.push(
+          <a 
+            key={`${keyPrefix}-link-${partIndex}`}
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateToPage(linkUrl);
+            }}
+            className={styles.inlineLink}
+          >
+            {linkText}
+          </a>
+        );
+        remaining = remaining.slice(full.length);
+        partIndex++;
+        continue;
+      }
+
+      // Check for bold: **text**
+      const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
+      if (boldMatch) {
+        const [full, boldText] = boldMatch;
+        elements.push(<strong key={`${keyPrefix}-bold-${partIndex}`}>{boldText}</strong>);
+        remaining = remaining.slice(full.length);
+        partIndex++;
+        continue;
+      }
+
+      // Check for inline code: `code`
+      const codeMatch = remaining.match(/^`([^`]+)`/);
+      if (codeMatch) {
+        const [full, codeText] = codeMatch;
+        elements.push(<code key={`${keyPrefix}-code-${partIndex}`}>{codeText}</code>);
+        remaining = remaining.slice(full.length);
+        partIndex++;
+        continue;
+      }
+
+      // Check for bare doc path: /guidelines/... or /quickstart-guides/...
+      const pathMatch = remaining.match(/^(\/(?:getting-started|guidelines|quickstart-guides|tutorials|migration-guides|political-vertical|healthcare-vertical)[a-z0-9\-\/#]*)/i);
+      if (pathMatch) {
+        const [full, path] = pathMatch;
+        elements.push(
+          <a 
+            key={`${keyPrefix}-path-${partIndex}`}
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateToPage(path);
+            }}
+            className={styles.inlineLink}
+          >
+            {path}
+          </a>
+        );
+        remaining = remaining.slice(full.length);
+        partIndex++;
+        continue;
+      }
+
+      // No special pattern - consume one character (or until next special char)
+      const nextSpecial = remaining.slice(1).search(/[\[*`\/]/);
+      const plainEnd = nextSpecial === -1 ? remaining.length : nextSpecial + 1;
+      const plainText = remaining.slice(0, plainEnd);
+      if (plainText) {
+        elements.push(plainText);
+      }
+      remaining = remaining.slice(plainEnd);
+      partIndex++;
+    }
+
+    return elements;
+  };
+
   // Render message content (handle markdown-like formatting)
   const renderMessageContent = (content: string) => {
     const lines = content.split('\n');
     return lines.map((line, i) => {
+      // List items
       if (line.startsWith('• ') || line.startsWith('- ')) {
-        return <li key={i}>{line.slice(2)}</li>;
+        return <li key={i}>{renderInlineContent(line.slice(2), `line-${i}`)}</li>;
       }
-      const parts = line.split(/`([^`]+)`/);
-      if (parts.length > 1) {
-        return (
-          <p key={i}>
-            {parts.map((part, j) =>
-              j % 2 === 1 ? <code key={j}>{part}</code> : part
-            )}
-          </p>
-        );
+      // Numbered list items
+      if (/^\d+\.\s/.test(line)) {
+        const textPart = line.replace(/^\d+\.\s/, '');
+        return <li key={i}>{renderInlineContent(textPart, `line-${i}`)}</li>;
       }
-      return line ? <p key={i}>{line}</p> : null;
+      // Regular paragraph with inline formatting
+      return line ? <p key={i}>{renderInlineContent(line, `line-${i}`)}</p> : null;
     });
   };
 
@@ -214,7 +495,10 @@ export default function AIAssistantNavbarItem() {
       </button>
 
       {state.isOpen && (
-        <div className={styles.panel} ref={panelRef}>
+        <div 
+          className={`${styles.panel} ${isScrolling ? styles.panelFaded : ''}`} 
+          ref={panelRef}
+        >
           <div className={styles.header}>
             <div className={styles.headerTitle}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -224,69 +508,116 @@ export default function AIAssistantNavbarItem() {
               </svg>
               <span>AI Assistant</span>
             </div>
-            <button
-              className={styles.clearButton}
-              onClick={clearConversation}
-              title="Clear conversation"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-            </button>
-          </div>
-
-          <div className={styles.messages}>
-            {state.messages.length === 0 && (
-              <div className={styles.welcome}>
-                <p>Hi! I can help you find information in the documentation. What would you like to know?</p>
+            <div className={styles.headerActions}>
+              <div className={styles.modeToggle}>
+                <button
+                  className={`${styles.modeButton} ${viewMode === 'chat' ? styles.modeActive : ''}`}
+                  onClick={() => setViewMode('chat')}
+                  title="Chat mode"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </button>
+                <button
+                  className={`${styles.modeButton} ${viewMode === 'search' ? styles.modeActive : ''}`}
+                  onClick={() => setViewMode('search')}
+                  title="Search mode"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </button>
               </div>
-            )}
-            
-            {state.messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`${styles.message} ${styles[msg.role]}`}
+              <button
+                className={styles.clearButton}
+                onClick={clearConversation}
+                title="Clear conversation"
               >
-                <div className={styles.messageContent}>
-                  {renderMessageContent(msg.content)}
-                </div>
-              </div>
-            ))}
-            
-            {state.isLoading && (
-              <div className={`${styles.message} ${styles.assistant}`}>
-                <div className={styles.typing}>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <form className={styles.inputArea} onSubmit={handleSubmit}>
+          {viewMode === 'chat' ? (
+            <div className={styles.messages}>
+              {state.messages.length === 0 && (
+                <div className={styles.welcome}>
+                  <p>Hi! I can help you find information in the documentation. What would you like to know?</p>
+                </div>
+              )}
+              
+              {state.messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`${styles.message} ${styles[msg.role]}`}
+                >
+                  <div className={styles.messageContent}>
+                    {renderMessageContent(msg.content)}
+                  </div>
+                </div>
+              ))}
+              
+              {state.isLoading && (
+                <div className={`${styles.message} ${styles.assistant}`}>
+                  <div className={styles.typing}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+          ) : (
+            <SearchResults
+              results={searchResults || []}
+              query={searchQuery}
+              aiSummary={aiSummary}
+              isLoading={state.isLoading}
+              onResultClick={handleResultClick}
+            />
+          )}
+
+          <form className={styles.inputArea} onSubmit={viewMode === 'search' ? (e) => { e.preventDefault(); performSearch(input); } : handleSubmit}>
             <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask a question..."
+              placeholder={viewMode === 'search' ? "Search documentation..." : "Ask a question..."}
               rows={1}
               disabled={state.isLoading}
             />
-            <button
-              type="submit"
-              disabled={!input.trim() || state.isLoading}
-              title="Send message"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
-            </button>
+            {viewMode === 'search' ? (
+              <button
+                type="submit"
+                disabled={!input.trim() || state.isLoading}
+                title="Search documentation"
+                className={styles.searchButton}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={!input.trim() || state.isLoading}
+                title="Send message"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            )}
           </form>
         </div>
       )}
