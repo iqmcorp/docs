@@ -1605,6 +1605,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Update Campaign Status',
+              href: '/guidelines/campaign-api#update-campaign-status',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Assign Conversions to Campaign',
               href: '/guidelines/campaign-api#assign-conversions-to-campaigns',
               customProps: { method: 'POST' },
@@ -1774,7 +1781,7 @@ const sidebars = {
               type: 'link',
               label: 'Delete an Insertion Order',
               href: '/guidelines/campaign-api#delete-an-insertion-order',
-              customProps: { method: 'DEL' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
