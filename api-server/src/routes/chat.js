@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AIService } from '../services/aiService.js';
+import { algoliaService } from '../services/algoliaService.js';
 
 export const chatRouter = Router();
 const aiService = new AIService();
@@ -36,11 +37,11 @@ chatRouter.post('/chat', async (req, res, next) => {
 
 /**
  * POST /api/ai/search
- * Semantic search across documentation
+ * Algolia-powered semantic search across documentation
  */
 chatRouter.post('/search', async (req, res, next) => {
   try {
-    const { query, filters } = req.body;
+    const { query, filters, limit } = req.body;
 
     if (!query || typeof query !== 'string') {
       return res.status(400).json({
@@ -49,14 +50,45 @@ chatRouter.post('/search', async (req, res, next) => {
       });
     }
 
-    const searchResult = await aiService.search(query, filters);
-
-    // Return results, summary, and totalCount directly
-    res.json({
-      results: searchResult.results || [],
-      summary: searchResult.summary || '',
-      totalCount: searchResult.totalCount || 0,
+    // Use Algolia for real search
+    const searchResult = await algoliaService.search(query, { 
+      limit: limit || 10,
+      filters,
     });
+
+    res.json({
+      results: searchResult.hits || [],
+      query: searchResult.query,
+      totalCount: searchResult.nbHits || 0,
+      processingTimeMS: searchResult.processingTimeMS,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /api/ai/search/suggest
+ * Get quick suggestions for autocomplete
+ */
+chatRouter.get('/search/suggest', async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || typeof q !== 'string') {
+      return res.status(400).json({ error: 'Query parameter q is required' });
+    }
+
+    const results = await algoliaService.search(q, { limit: 5 });
+    
+    // Return simplified suggestions
+    const suggestions = results.hits.map(hit => ({
+      title: hit.title,
+      url: hit.url,
+      category: hit.category,
+    }));
+
+    res.json({ suggestions });
   } catch (error) {
     next(error);
   }

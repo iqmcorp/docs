@@ -54,28 +54,31 @@ export default function AIAssistantNavbarItem() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Detect page scroll to fade the chat panel
+  // Detect page scroll to fade the chat panel (stays faded until hover)
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolling(true);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 1500);
+    };
+
+    const handlePanelMouseEnter = () => {
+      setIsScrolling(false);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    const panel = panelRef.current;
+    if (panel) {
+      panel.addEventListener('mouseenter', handlePanelMouseEnter);
+    }
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
+      if (panel) {
+        panel.removeEventListener('mouseenter', handlePanelMouseEnter);
       }
     };
-  }, []);
+  }, [state.isOpen]);
 
   // Apply pending highlights after navigation completes
   useEffect(() => {
