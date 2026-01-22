@@ -495,7 +495,10 @@ Related resources:
       }
 
       const data = await response.json();
-      const assistantMessage = (data.content || 'No response generated.').trim();
+      let assistantMessage = (data.content || 'No response generated.').trim();
+
+      // Correct any hallucinated paths/anchors in the response text
+      assistantMessage = this.correctResponsePaths(assistantMessage);
 
       // Parse any tool calls / actions from the response
       const actions = this.parseActions(assistantMessage);
@@ -508,6 +511,20 @@ Related resources:
     } finally {
       clearTimeout(timeoutId);
     }
+  }
+
+  /**
+   * Correct all markdown links in the response text
+   * Fixes hallucinated paths and anchors in [text](url) patterns
+   */
+  correctResponsePaths(response) {
+    // Match markdown links: [text](/path#anchor) or [text](/path)
+    const linkRegex = /\[([^\]]+)\]\((\/[^)]+)\)/g;
+    
+    return response.replace(linkRegex, (match, text, path) => {
+      const correctedPath = this.correctPath(path);
+      return `[${text}](${correctedPath})`;
+    });
   }
 
   /**
@@ -533,6 +550,193 @@ Related resources:
   };
 
   /**
+   * Anchor corrections for common LLM hallucinations
+   * Maps incorrect anchors to correct ones (without the # prefix)
+   */
+  anchorCorrections = {
+    // Campaign API anchors
+    'get-campaign-details': 'get-campaign-details-by-id',
+    'get-campaign': 'get-campaign-details-by-id',
+    'campaign-details': 'get-campaign-details-by-id',
+    'list-campaigns': 'get-list-of-campaigns',
+    'get-campaigns': 'get-list-of-campaigns',
+    'campaigns-list': 'get-list-of-campaigns',
+    'update-campaign-status': 'update-campaign-status',
+    'campaign-status': 'get-campaign-count-by-status',
+    'create-a-campaign': 'create-campaign',
+    'new-campaign': 'create-campaign',
+    'add-campaign': 'create-campaign',
+    'edit-campaign': 'update-campaign',
+    'modify-campaign': 'update-campaign',
+    'remove-campaign': 'delete-campaign',
+    'insertion-order': 'insertion-order-operations',
+    'create-insertion-order': 'create-insertion-order',
+    'update-insertion-order': 'update-insertion-order',
+    
+    // Creative API anchors
+    'get-creative-details': 'get-creative-details-by-id',
+    'get-creative': 'get-creative-details-by-id',
+    'creative-details': 'get-creative-details-by-id',
+    'list-creatives': 'get-list-of-creatives',
+    'get-creatives': 'get-list-of-creatives',
+    'creatives-list': 'get-list-of-creatives',
+    'create-a-creative': 'create-creative',
+    'new-creative': 'create-creative',
+    'add-creative': 'create-creative',
+    'edit-creative': 'update-creative',
+    'modify-creative': 'update-creative',
+    'remove-creative': 'delete-creative',
+    'creative-group': 'creative-groups',
+    'creative-groups-list': 'get-list-of-creative-groups',
+    'list-creative-groups': 'get-list-of-creative-groups',
+    'add-creative-to-group': 'add-creatives-to-group',
+    'add-creatives-group': 'add-creatives-to-group',
+    
+    // Audience API anchors
+    'get-audience-details': 'audience-details-by-id',
+    'get-audience': 'audience-details-by-id',
+    'audience-details': 'audience-details-by-id',
+    'list-audiences': 'audience-details-list',
+    'get-audiences': 'audience-details-list',
+    'audiences-list': 'audience-details-list',
+    'create-a-audience': 'create-audience',
+    'new-audience': 'create-audience',
+    'add-audience': 'create-audience',
+    
+    // Reports API anchors
+    'get-report-details': 'get-report-by-id',
+    'get-report': 'get-report-by-id',
+    'report-details': 'get-report-by-id',
+    'list-reports': 'get-a-list-of-reports',
+    'get-reports': 'get-a-list-of-reports',
+    'reports-list': 'get-a-list-of-reports',
+    'create-a-report': 'create-report',
+    'new-report': 'create-report',
+    'add-report': 'create-report',
+    'run-report': 'execute-report',
+    'generate-report': 'execute-report',
+    
+    // Inventory API anchors
+    'list-inventories': 'get-list-of-inventories',
+    'get-inventories': 'get-list-of-inventories',
+    'inventories-list': 'get-list-of-inventories',
+    'list-deals': 'list-of-deals',
+    'get-deals': 'list-of-deals',
+    'deals-list': 'list-of-deals',
+    'pmp-deal': 'pmp-deals',
+    'create-deal': 'create-pmp-deal',
+    'new-deal': 'create-pmp-deal',
+    
+    // Conversion API anchors
+    'get-conversion-details': 'get-conversion-details-by-id',
+    'get-conversion': 'get-conversion-details-by-id',
+    'conversion-details': 'get-conversion-details-by-id',
+    'list-conversions': 'get-list-of-conversions',
+    'get-conversions': 'get-list-of-conversions',
+    'conversions-list': 'get-list-of-conversions',
+    'create-a-conversion': 'create-pixel-conversion',
+    'new-conversion': 'create-pixel-conversion',
+    'add-conversion': 'create-pixel-conversion',
+    'pixel': 'create-pixel-conversion',
+    'postback': 'create-postback-conversion',
+    
+    // User API anchors
+    'login-user': 'login',
+    'user-login': 'login',
+    'sign-in': 'login',
+    'logout-user': 'logout',
+    'user-logout': 'logout',
+    'sign-out': 'logout',
+    'list-users': 'get-list-of-users',
+    'get-users': 'get-list-of-users',
+    'users-list': 'get-list-of-users',
+    'user-profile': 'get-user-profile-details',
+    'get-user': 'get-user-profile-details',
+    'user-details': 'get-user-profile-details',
+    
+    // Dashboard API anchors
+    'list-dashboards': 'get-dashboard-list',
+    'get-dashboards': 'get-dashboard-list',
+    'dashboards-list': 'get-dashboard-list',
+    'create-a-dashboard': 'create-dashboard',
+    'new-dashboard': 'create-dashboard',
+    'add-dashboard': 'create-dashboard',
+    
+    // Finance API anchors
+    'get-finance-details': 'get-customer-finance-details',
+    'finance-details': 'get-customer-finance-details',
+    'customer-finance': 'get-customer-finance-details',
+    'get-margin-details': 'get-customer-margin-details',
+    'margin-details': 'get-customer-margin-details',
+    'customer-margin': 'get-customer-margin-details',
+    
+    // Bid Model API anchors
+    'list-bid-models': 'get-list-of-bid-model-bundles',
+    'get-bid-models': 'get-list-of-bid-model-bundles',
+    'bid-models-list': 'get-list-of-bid-model-bundles',
+    'create-a-bid-model': 'add-bid-model-bundles',
+    'new-bid-model': 'add-bid-model-bundles',
+    'add-bid-model': 'add-bid-model-bundles',
+    
+    // Insights API anchors
+    'list-insights': 'get-a-list-of-insights',
+    'get-insights': 'get-a-list-of-insights',
+    'insights-list': 'get-a-list-of-insights',
+    'vld': 'vld-reports',
+    'pld': 'pld-reports',
+    'sls': 'sls-reports',
+    
+    // Planner API anchors
+    'get-proposal-details': 'get-proposal-details-by-id',
+    'get-proposal': 'get-proposal-details-by-id',
+    'proposal-details': 'get-proposal-details-by-id',
+    'list-proposals': 'get-list-of-proposals',
+    'get-proposals': 'get-list-of-proposals',
+    'proposals-list': 'get-list-of-proposals',
+    'create-a-proposal': 'create-proposal',
+    'new-proposal': 'create-proposal',
+    'add-proposal': 'create-proposal',
+    
+    // Workspace API anchors
+    'list-organizations': 'get-list-of-allowed-organizations',
+    'get-organizations': 'get-list-of-allowed-organizations',
+    'organizations-list': 'get-list-of-allowed-organizations',
+    'organization-details': 'get-organization-details',
+    'get-organization': 'get-organization-details',
+    'list-customers': 'get-list-of-customers',
+    'get-customers': 'get-list-of-customers',
+    'customers-list': 'get-list-of-customers',
+    
+    // Asset API anchors
+    'list-assets': 'get-a-list-of-all-assets',
+    'get-assets': 'get-a-list-of-all-assets',
+    'assets-list': 'get-a-list-of-all-assets',
+    'get-asset-details': 'get-asset-details',
+    'asset-details': 'get-asset-details',
+    'upload-asset': 'add-multiple-assets',
+    'add-asset': 'add-multiple-assets',
+    
+    // Master API anchors
+    'zip-codes': 'get-zip-codes-and-state-ids',
+    'zip-code': 'get-zip-codes-and-state-ids',
+    'state-segment': 'get-state-segment',
+    'states': 'get-state-segment',
+    'city-segment': 'get-city-segment',
+    'cities': 'get-city-segment',
+    'county-segment': 'get-county-segment',
+    'counties': 'get-county-segment',
+    'dma-segment': 'get-dma-code-segment',
+    'dma-code': 'get-dma-code-segment',
+    'dma': 'get-dma-code-segment',
+    'age-segment': 'get-age-segment',
+    'gender-segment': 'get-gender-segment',
+    'exchanges': 'get-exchanges',
+    'device-types': 'get-device-type',
+    'traffic-types': 'get-traffic-types',
+    'creative-sizes': 'get-creative-sizes',
+  };
+
+  /**
    * Correct known wrong paths that the LLM might generate
    * Handles paths with or without trailing slashes and anchors
    */
@@ -543,24 +747,34 @@ Related resources:
     if (path.includes('#')) {
       const [base, hash] = path.split('#');
       basePath = base;
-      anchor = '#' + hash;
+      anchor = hash; // Without the # prefix for lookup
     }
+    
+    // Correct anchor if we have one
+    if (anchor && this.anchorCorrections[anchor]) {
+      anchor = this.anchorCorrections[anchor];
+    }
+    
+    // Rebuild anchor with # prefix
+    const anchorStr = anchor ? '#' + anchor : '';
     
     // Check for exact match first
     if (this.pathCorrections[basePath]) {
-      return this.pathCorrections[basePath] + anchor;
+      return this.pathCorrections[basePath] + anchorStr;
     }
     // Check without trailing slash
     const withoutSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
     if (this.pathCorrections[withoutSlash]) {
-      return this.pathCorrections[withoutSlash] + anchor;
+      return this.pathCorrections[withoutSlash] + anchorStr;
     }
     // Check with trailing slash
     const withSlash = basePath.endsWith('/') ? basePath : basePath + '/';
     if (this.pathCorrections[withSlash]) {
-      return this.pathCorrections[withSlash] + anchor;
+      return this.pathCorrections[withSlash] + anchorStr;
     }
-    return path;
+    
+    // Return with corrected anchor even if base path didn't need correction
+    return basePath + anchorStr;
   }
 
   /**
