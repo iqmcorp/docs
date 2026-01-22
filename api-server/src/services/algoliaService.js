@@ -197,68 +197,6 @@ export class AlgoliaService {
     const lastSpace = truncated.lastIndexOf(' ');
     return (lastSpace > 0 ? truncated.substring(0, lastSpace) : truncated) + '...';
   }
-
-  /**
-   * Search and format results as context for LLM
-   * @param {string} query - User's question
-   * @returns {Promise<string>} Formatted context string for LLM prompt
-   */
-  async getContextForQuery(query) {
-    const results = await this.search(query, { limit: 5 });
-    
-    if (results.hits.length === 0) {
-      return null;
-    }
-
-    // Format results as context for the LLM
-    let context = `\n\nRelevant documentation found (${results.nbHits} total matches):\n`;
-    
-    results.hits.forEach((hit, i) => {
-      context += `\n${i + 1}. **${hit.title}**`;
-      if (hit.section) {
-        context += ` (${hit.section})`;
-      }
-      context += `\n   URL: ${hit.url}`;
-      if (hit.content) {
-        context += `\n   Preview: ${hit.content}`;
-      }
-      context += '\n';
-    });
-
-    return context;
-  }
-
-  /**
-   * Get the best matching page for a query
-   * @param {string} query - Search query
-   * @returns {Promise<Object|null>} Best match or null
-   */
-  async getBestMatch(query) {
-    const results = await this.search(query, { limit: 1 });
-    return results.hits[0] || null;
-  }
-
-  /**
-   * Search with taxonomy filters
-   * @param {string} query - Search query
-   * @param {Object} taxonomy - Taxonomy filters
-   * @returns {Promise<Object>} Filtered search results
-   */
-  async searchWithTaxonomy(query, taxonomy = {}) {
-    const filters = [];
-    
-    if (taxonomy.category) {
-      filters.push(`hierarchy.lvl0:"${taxonomy.category}"`);
-    }
-    if (taxonomy.topic) {
-      filters.push(`hierarchy.lvl1:"${taxonomy.topic}"`);
-    }
-
-    return this.search(query, {
-      limit: 10,
-      filters: filters.length > 0 ? filters.join(' AND ') : undefined,
-    });
-  }
 }
 
 // Singleton instance
