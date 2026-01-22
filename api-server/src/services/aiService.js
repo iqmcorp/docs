@@ -19,31 +19,33 @@ export class AIService {
     // Level 4: Knowledge (Details) - Weight 1 - Specific facts
     this.pvltWeights = { pp: 4, wisdom: 3, experience: 2, knowledge: 1 };
     
-    // System prompt for the documentation assistant - search-result driven
+    // System prompt for the documentation assistant - NO LINK GENERATION
+    // Links are provided separately from Algolia results to prevent hallucinations
     this.systemPrompt = `You are a concise AI assistant for IQM's programmatic advertising API documentation.
 
-ABSOLUTE RULES:
-1. ONLY use URLs from SEARCH RESULTS below. Copy them exactly, character-for-character.
-2. NEVER invent URLs. Valid paths start with /guidelines/, /quickstart-guides/, /tutorials/, /getting-started/.
-3. NO DUPLICATES: If you link to a URL in your answer, do NOT list it again in Related resources.
-4. GROUP BY SOURCE: Use the CATEGORY shown in search results. /getting-started/ = "Getting Started", /guidelines/creative-api = "Creative API", /guidelines/campaign-api = "Campaign API", etc.
+CRITICAL RULES:
+1. DO NOT generate any URLs or markdown links. Links will be added automatically from search results.
+2. Write a brief, helpful answer in 2-3 sentences explaining what the user should do.
+3. Reference documentation pages by name (e.g., "the Campaign API page" or "the Authentication quickstart") but DO NOT create links.
+4. DO NOT list out step-by-step sections or table of contents. The user will see the page navigation.
+5. Focus on answering WHY and WHAT, not listing every step.
 
-RESPONSE FORMAT:
-Brief answer (2-3 sentences max) with markdown links to relevant endpoints.
+RESPONSE STYLE:
+- Keep it short: 2-4 sentences max
+- Explain the concept or goal briefly
+- Mention which page covers it, but don't list its sections
+- Let the documentation speak for itself
 
-Related resources: (ONLY additional links not in your answer, grouped by their actual source)
-**Getting Started** (for /getting-started/ URLs)
-• [Link text](url)
+EXAMPLE RESPONSES:
 
-**Creative API** (for /guidelines/creative-api URLs)
-• [Link text](url)
+User: "How do I create a campaign?"
+Good: "To create a campaign, you'll need an authenticated session and an insertion order. The Create a Campaign quickstart walks you through the process including setting up targeting and budgets."
+Bad: "Step 1: Authenticate, Step 2: Create IO, Step 3: Create Campaign..." (DON'T LIST STEPS!)
 
-Example good response:
-"Use the [Update Creative Groups](/guidelines/creative-api/#update-creative-groups) endpoint to add creatives to an existing group.
+User: "What is a conversion?"
+Good: "A conversion tracks when users take desired actions after seeing your ad, like making a purchase. IQM supports pixel and postback tracking methods - see the Conversion API for setup details."
 
-Related resources:
-**Getting Started**
-• [Creatives Overview](/getting-started/platform-overview/#creatives)"`;
+Remember: Brief and helpful. No links, no step lists.`;
 
     // Category priority scores for different query intents
     this.categoryPriority = {
@@ -296,9 +298,29 @@ Related resources:
       
       const response = await this.callLlamaServer(message, enhancedContext);
       
+      // Build structured links from Algolia results (not from LLM)
+      const structuredLinks = this.buildStructuredLinks(algoliaResults?.hits || []);
+      
+      // Strip any markdown links the LLM may have generated anyway
+      response.response = this.stripMarkdownLinks(response.response);
+      
+      // Combine LLM prose with Algolia-sourced links
+      response.response = this.combineResponseWithLinks(response.response, structuredLinks);
+      
+      // Set primary action from top Algolia result
+      if (algoliaResults?.hits?.length > 0) {
+        const topHit = algoliaResults.hits[0];
+        response.actions = [{
+          tool: 'navigate',
+          params: { path: topHit.url },
+          status: 'pending',
+        }];
+      }
+      
       // Add metadata to response
       response.pvlt = pvltAnalysis;
       response.queryIntent = queryIntent;
+      response.links = structuredLinks;
       if (algoliaResults?.hits?.length > 0) {
         response.searchResults = algoliaResults.hits;
       }
@@ -308,6 +330,201 @@ Related resources:
       console.warn('llama.cpp server unavailable, using fallback:', error.message);
       return this.generateFallbackResponse(message, context);
     }
+  }
+
+  /**
+   * Build structured links from Algolia results
+   * Smart filtering: For quickstarts/tutorials, related links come from guidelines
+   * @param {Array} hits - Algolia search hits
+   * @returns {Object} Primary link and related resources
+   */
+  buildStructuredLinks(hits) {
+    if (!hits || hits.length === 0) return { primary: null, related: {} };
+    
+    const primaryHit = hits[0];
+    const primaryCategory = primaryHit.category || this.getCategoryFromUrl(primaryHit.url);
+    const primaryBasePath = primaryHit.url?.split('#')[0]; // Base URL without anchor
+    
+    // Use page-level URL for primary link (no deep anchor)
+    // User lands on the page and can navigate via sidebar
+    const primary = {
+      title: this.getPageTitle(primaryHit),
+      url: primaryBasePath, // Strip anchor - let user navigate via sidebar
+      category: this.getCategoryLabel(primaryCategory),
+    };
+    
+    // For quickstarts/tutorials: only show guidelines as related (skip same-page sections)
+    const isQuickstartOrTutorial = ['quickstart', 'tutorials'].includes(primaryCategory);
+    
+    const related = {};
+    
+    // If primary is a quickstart, auto-add the corresponding guidelines page
+    if (isQuickstartOrTutorial) {
+      const guidelinesUrl = this.getCorrespondingGuidelinesUrl(primaryHit.url);
+      if (guidelinesUrl) {
+        const categoryLabel = this.getCategoryLabel('guidelines');
+        related[categoryLabel] = [{
+          title: this.getGuidelinesTitle(guidelinesUrl),
+          url: guidelinesUrl,
+        }];
+      }
+    }
+    
+    hits.slice(1).forEach(hit => {
+      const hitCategory = hit.category || this.getCategoryFromUrl(hit.url);
+      const hitBasePath = hit.url?.split('#')[0];
+      
+      // Skip links to sections of the same page (redundant with sidebar)
+      if (hitBasePath === primaryBasePath) return;
+      
+      // For quickstarts/tutorials: only include guidelines as related resources
+      if (isQuickstartOrTutorial && hitCategory !== 'guidelines') return;
+      
+      const categoryLabel = this.getCategoryLabel(hitCategory);
+      if (!related[categoryLabel]) {
+        related[categoryLabel] = [];
+      }
+      
+      // Avoid duplicates and limit to 3 per category
+      if (!related[categoryLabel].some(l => l.url === hit.url) && related[categoryLabel].length < 3) {
+        related[categoryLabel].push({
+          title: hit.title,
+          url: hit.url,
+        });
+      }
+    });
+    
+    return { primary, related };
+  }
+  
+  /**
+   * Get clean page title from hit (not section title)
+   * For quickstarts: "Create a Campaign Quickstart"
+   * For guidelines: "Campaign API Guidelines"
+   */
+  getPageTitle(hit) {
+    // Use section (page title) not the subsection title
+    if (hit.section) return hit.section;
+    // hierarchy.lvl1 is usually the page title
+    if (hit.hierarchy?.lvl1) return hit.hierarchy.lvl1;
+    // Fallback to displayCategory or title
+    if (hit.displayCategory) return hit.displayCategory;
+    const title = hit.title || 'Documentation';
+    return title.split(' | ')[0].split(' - ')[0].trim();
+  }
+  
+  /**
+   * Map quickstart URL to corresponding guidelines URL
+   */
+  getCorrespondingGuidelinesUrl(quickstartUrl) {
+    if (!quickstartUrl) return null;
+    
+    const mappings = {
+      'create-a-campaign': '/guidelines/campaign-api/',
+      'campaign': '/guidelines/campaign-api/',
+      'creative': '/guidelines/creative-api/',
+      'upload-a-creative': '/guidelines/creative-api/',
+      'upload-creative-and-create-a-campaign': '/guidelines/campaign-api/',
+      'reporting': '/guidelines/reports-api/',
+      'schedule-report': '/guidelines/reports-api/',
+      'conversion': '/guidelines/conversion-api/',
+      'inventory': '/guidelines/inventory-api/',
+      'bid-model': '/guidelines/bid-model-api/',
+      'insights': '/guidelines/insights-api/',
+      'matched-audience': '/guidelines/audience-api/',
+      'contextual-audience': '/guidelines/audience-api/',
+      'authentication': '/getting-started/before-you-begin/',
+    };
+    
+    for (const [pattern, guidelinesUrl] of Object.entries(mappings)) {
+      if (quickstartUrl.includes(pattern)) {
+        return guidelinesUrl;
+      }
+    }
+    return null;
+  }
+  
+  /**
+   * Get title for guidelines page from URL
+   */
+  getGuidelinesTitle(url) {
+    const titles = {
+      '/guidelines/campaign-api/': 'Campaign API Guidelines',
+      '/guidelines/creative-api/': 'Creative API Guidelines',
+      '/guidelines/reports-api/': 'Reports API Guidelines',
+      '/guidelines/conversion-api/': 'Conversion API Guidelines',
+      '/guidelines/inventory-api/': 'Inventory API Guidelines',
+      '/guidelines/bid-model-api/': 'Bid Model API Guidelines',
+      '/guidelines/insights-api/': 'Insights API Guidelines',
+      '/guidelines/audience-api/': 'Audience API Guidelines',
+      '/getting-started/before-you-begin/': 'Before You Begin',
+    };
+    return titles[url] || 'API Guidelines';
+  }
+  
+  /**
+   * Extract category from URL path
+   */
+  getCategoryFromUrl(url) {
+    if (!url) return null;
+    if (url.includes('/quickstart-guides/')) return 'quickstart';
+    if (url.includes('/guidelines/')) return 'guidelines';
+    if (url.includes('/tutorials/')) return 'tutorials';
+    if (url.includes('/getting-started/')) return 'reference';
+    if (url.includes('/migration-guides/')) return 'migration';
+    if (url.includes('/political-vertical/')) return 'political';
+    if (url.includes('/healthcare-vertical/')) return 'healthcare';
+    return null;
+  }
+
+  /**
+   * Get human-readable category label
+   */
+  getCategoryLabel(category) {
+    const labels = {
+      'quickstart': 'Quickstart Guides',
+      'guidelines': 'API Guidelines',
+      'tutorials': 'Tutorials',
+      'reference': 'Getting Started',
+      'migration': 'Migration Guides',
+      'political': 'Political Vertical',
+      'healthcare': 'Healthcare Vertical',
+    };
+    return labels[category] || category || 'Documentation';
+  }
+
+  /**
+   * Strip markdown links from LLM response
+   * Converts [text](url) to just "text"
+   */
+  stripMarkdownLinks(text) {
+    return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  }
+
+  /**
+   * Combine LLM prose response with structured links
+   */
+  combineResponseWithLinks(prose, links) {
+    let response = prose.trim();
+    
+    // Add primary link reference
+    if (links.primary) {
+      response += `\n\n📍 **Recommended:** [${links.primary.title}](${links.primary.url})`;
+    }
+    
+    // Add related links grouped by category
+    const categories = Object.keys(links.related);
+    if (categories.length > 0) {
+      response += '\n\n**Related resources:**';
+      categories.forEach(category => {
+        response += `\n\n**${category}**`;
+        links.related[category].forEach(link => {
+          response += `\n• [${link.title}](${link.url})`;
+        });
+      });
+    }
+    
+    return response;
   }
 
   /**
@@ -495,17 +712,13 @@ Related resources:
       }
 
       const data = await response.json();
-      let assistantMessage = (data.content || 'No response generated.').trim();
+      const assistantMessage = (data.content || 'No response generated.').trim();
 
-      // Correct any hallucinated paths/anchors in the response text
-      assistantMessage = this.correctResponsePaths(assistantMessage);
-
-      // Parse any tool calls / actions from the response
-      const actions = this.parseActions(assistantMessage);
+      // Note: Link correction and action parsing now happens in chat() method
+      // LLM response is prose-only, links come from Algolia results
 
       return {
         response: assistantMessage,
-        actions,
         model: data.model || 'mistral-7b-local',
       };
     } finally {
@@ -516,6 +729,9 @@ Related resources:
   /**
    * Correct all markdown links in the response text
    * Fixes hallucinated paths and anchors in [text](url) patterns
+   * 
+   * @deprecated Since template-based responses, links come from Algolia.
+   * Kept for fallback compatibility but not actively used.
    */
   correctResponsePaths(response) {
     // Match markdown links: [text](/path#anchor) or [text](/path)
@@ -554,6 +770,17 @@ Related resources:
    * Maps incorrect anchors to correct ones (without the # prefix)
    */
   anchorCorrections = {
+    // Authentication anchors
+    'before-you-begin': '', // Remove - doesn't exist on auth page
+    'creating-an-account': 'sign-up',
+    'create-account': 'sign-up',
+    'sign-up-for-account': 'sign-up',
+    'signup': 'sign-up',
+    'register': 'sign-up',
+    'login': 'log-in',
+    'sign-in': 'log-in',
+    'signin': 'log-in',
+    
     // Campaign API anchors
     'get-campaign-details': 'get-campaign-details-by-id',
     'get-campaign': 'get-campaign-details-by-id',
@@ -563,17 +790,28 @@ Related resources:
     'campaigns-list': 'get-list-of-campaigns',
     'update-campaign-status': 'update-campaign-status',
     'campaign-status': 'get-campaign-count-by-status',
-    'create-a-campaign': 'create-campaign',
-    'new-campaign': 'create-campaign',
-    'add-campaign': 'create-campaign',
+    'create-campaign': 'create-new-campaign',
+    'create-a-campaign': 'create-new-campaign',
+    'creating-a-campaign': 'create-new-campaign',
+    'creating-campaign': 'create-new-campaign',
+    'new-campaign': 'create-new-campaign',
+    'add-campaign': 'create-new-campaign',
+    'updating-a-campaign': 'update-campaign',
+    'updating-campaign': 'update-campaign',
     'edit-campaign': 'update-campaign',
     'modify-campaign': 'update-campaign',
     'remove-campaign': 'delete-campaign',
     'insertion-order': 'insertion-order-operations',
-    'create-insertion-order': 'create-insertion-order',
+    'create-insertion-order': 'create-an-insertion-order',
+    'new-insertion-order': 'create-an-insertion-order',
     'update-insertion-order': 'update-insertion-order',
     
     // Creative API anchors
+    'creating-creatives': 'add-new-creative',
+    'creating-a-creative': 'add-new-creative',
+    'creating-creative': 'add-new-creative',
+    'creating-a-creative-group': 'create-new-creative-group',
+    'creating-creative-group': 'create-new-creative-group',
     'get-creative-details': 'get-creative-details-by-id',
     'get-creative': 'get-creative-details-by-id',
     'creative-details': 'get-creative-details-by-id',
@@ -750,12 +988,12 @@ Related resources:
       anchor = hash; // Without the # prefix for lookup
     }
     
-    // Correct anchor if we have one
-    if (anchor && this.anchorCorrections[anchor]) {
-      anchor = this.anchorCorrections[anchor];
+    // Correct anchor if we have one - check if it exists in corrections
+    if (anchor && anchor in this.anchorCorrections) {
+      anchor = this.anchorCorrections[anchor]; // May be empty string to remove anchor
     }
     
-    // Rebuild anchor with # prefix
+    // Rebuild anchor with # prefix (only if anchor is not empty)
     const anchorStr = anchor ? '#' + anchor : '';
     
     // Check for exact match first

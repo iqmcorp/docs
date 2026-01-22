@@ -21,6 +21,9 @@ const CATEGORIES = [
   { id: 'guidelines', label: 'API Guidelines', icon: '📘' },
   { id: 'tutorials', label: 'Tutorials', icon: '📝' },
   { id: 'reference', label: 'Reference', icon: '📚' },
+  { id: 'migration', label: 'Migration Guides', icon: '🔄' },
+  { id: 'political', label: 'Political', icon: '🏛️' },
+  { id: 'healthcare', label: 'Healthcare', icon: '🏥' },
 ];
 
 const TOPICS = [
@@ -32,6 +35,8 @@ const TOPICS = [
   { id: 'conversion', label: 'Conversion' },
   { id: 'inventory', label: 'Inventory' },
   { id: 'finance', label: 'Finance' },
+  { id: 'bidmodel', label: 'Bid Model' },
+  { id: 'general', label: 'General' },
 ];
 
 const COMPLEXITY = [
