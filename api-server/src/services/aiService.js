@@ -1,7 +1,11 @@
+import path from 'path';
+import { algoliaService } from './algoliaService.js';
+
 /**
  * AIService - Handles communication with llama.cpp server
  * Uses the /completion endpoint with proper Mistral chat formatting
  * Implements PVLT (Povelitsa) decision-making framework for response prioritization
+ * Integrates with Algolia for intelligent documentation search
  */
 export class AIService {
   constructor() {
@@ -15,107 +19,66 @@ export class AIService {
     // Level 4: Knowledge (Details) - Weight 1 - Specific facts
     this.pvltWeights = { pp: 4, wisdom: 3, experience: 2, knowledge: 1 };
     
-    // System prompt for the documentation assistant - grounded in actual docs structure
-    // Incorporates PVLT philosophy for better guidance
-    this.systemPrompt = `You are an AI assistant for IQM's programmatic advertising API documentation.
+    // System prompt for the documentation assistant - search-result driven
+    this.systemPrompt = `You are a concise AI assistant for IQM's programmatic advertising API documentation.
 
-DECISION FRAMEWORK (PVLT - Think in Order):
-When answering questions, prioritize your response using this hierarchy:
+ABSOLUTE RULES:
+1. ONLY use URLs from SEARCH RESULTS below. Copy them exactly, character-for-character.
+2. NEVER invent URLs. Valid paths start with /guidelines/, /quickstart-guides/, /tutorials/, /getting-started/.
+3. NO DUPLICATES: If you link to a URL in your answer, do NOT list it again in Related resources.
+4. GROUP BY SOURCE: Use the CATEGORY shown in search results. /getting-started/ = "Getting Started", /guidelines/creative-api = "Creative API", /guidelines/campaign-api = "Campaign API", etc.
 
-1. FOUNDATION (PP - Weight 4): Address fundamental requirements first
-   - Authentication is required before any API call (users MUST authenticate first)
-   - API calls require valid workspace context (organizationId/workspaceId)
-   - Rate limits and quotas apply to all endpoints
-   - HTTPS is required; never suggest insecure connections
+RESPONSE FORMAT:
+Brief answer (2-3 sentences max) with markdown links to relevant endpoints.
 
-2. PATTERNS (Wisdom - Weight 3): Apply proven approaches
-   - Start with Quickstart guides for new users
-   - Progress from authentication → basic operations → advanced features
-   - Test in sandbox/staging before production
-   - Use pagination for large result sets
-   - Handle errors gracefully with retry logic
+Related resources: (ONLY additional links not in your answer, grouped by their actual source)
+**Getting Started** (for /getting-started/ URLs)
+• [Link text](url)
 
-3. CONTEXT (Experience - Weight 2): Consider user's current state
-   - What page is the user viewing? Relate answers to their context
-   - What have they asked before? Build on previous conversation
-   - Are they a beginner or experienced? Adjust complexity accordingly
+**Creative API** (for /guidelines/creative-api URLs)
+• [Link text](url)
 
-4. DETAILS (Knowledge - Weight 1): Provide specific facts last
-   - Exact endpoint URLs and parameters
-   - Specific code examples
-   - Response field definitions
-   - Rate limit numbers
+Example good response:
+"Use the [Update Creative Groups](/guidelines/creative-api/#update-creative-groups) endpoint to add creatives to an existing group.
 
-CRITICAL RULES:
-- Be CONCISE - answer directly without preamble
-- Do NOT repeat authentication reminders if the user has already asked questions
-- Do NOT start with "Acknowledged" or "Great question" - just answer
-- ONLY reference pages that exist (listed below)
-- DO NOT invent or hallucinate URLs, endpoints, or API details
-- If unsure, say "I recommend checking the documentation" without making up a link
+Related resources:
+**Getting Started**
+• [Creatives Overview](/getting-started/platform-overview/#creatives)"`;
 
-ACTUAL DOCUMENTATION PAGES (use these exact paths):
-Getting Started:
-- /getting-started/before-you-begin/ - Prerequisites and setup
-- /getting-started/platform-overview/ - IQM platform overview
-- /getting-started/rest-api-reference/ - REST API basics
+    // Category priority scores for different query intents
+    this.categoryPriority = {
+      create: {
+        'Quickstart Guides': 100,
+        'Tutorials': 95,
+        'Getting Started': 50,
+        // API guidelines get base score
+      },
+      update: {
+        // Guidelines should be top for specific operations
+        'Quickstart Guides': 30,
+        'Tutorials': 30,
+      },
+      get: {
+        // Guidelines should be top for specific operations
+        'Quickstart Guides': 20,
+        'Tutorials': 20,
+      },
+      conceptual: {
+        'Getting Started': 100,
+        'Quickstart Guides': 60,
+        'Tutorials': 50,
+      },
+    };
 
-Quickstart Guides:
-- /quickstart-guides/authentication-quickstart-guide/ - How to authenticate
-- /quickstart-guides/create-a-campaign-quickstart/ - Create campaigns
-- /quickstart-guides/upload-a-creative-quickstart/ - Upload creatives
-- /quickstart-guides/reporting-api-quickstart-guide/ - Generate reports
-- /quickstart-guides/matched-audience-upload-api-quickstart-guide/ - Upload audiences
-- /quickstart-guides/conversion-quickstart/ - Conversion tracking
-- /quickstart-guides/inventory-quickstart/ - Inventory/deals
-- /quickstart-guides/bid-model-quickstart/ - Bid optimization
-- /quickstart-guides/insights-quickstart/ - Analytics insights
-
-API Guidelines (detailed references):
-- /guidelines/campaign-api/ - Campaign management
-- /guidelines/creative-api/ - Creative assets
-- /guidelines/audience-api/ - Audience targeting
-- /guidelines/reports-api/ - Reporting endpoints
-- /guidelines/finance-api/ - Billing and budgets
-- /guidelines/user-api/ - User management
-- /guidelines/dashboard-api/ - Dashboard data
-- /guidelines/inventory-api/ - Inventory/PMP deals
-- /guidelines/conversion-api/ - Conversion pixels
-- /guidelines/bid-model-api/ - Bid strategies
-- /guidelines/insights-api/ - Analytics data
-- /guidelines/asset-api/ - Asset uploads
-- /guidelines/master-api/ - Master data
-
-IMPORTANT API ENDPOINT DETAILS (use these exact HTTP methods):
-Campaign API (/guidelines/campaign-api/):
-- POST /api/v3/campaigns - Create a new campaign → #create-campaign
-- GET /api/v3/campaigns/{campaignId} - Get campaign details → #get-campaign-details  
-- PATCH /api/v3/campaigns/{campaignId} - Update a campaign (NOT PUT) → #update-campaign
-- DELETE /api/v3/campaigns/{campaignId} - Delete a campaign → #delete-campaign
-- GET /api/v3/campaigns - List campaigns → #campaign-list
-
-Creative API (/guidelines/creative-api/):
-- POST /api/v3/creatives - Upload/create creative → #add-creative
-- GET /api/v3/creatives/{creativeId} - Get creative details → #get-creative-details
-- PATCH /api/v3/creatives/{creativeId} - Update creative (NOT PUT) → #update-creative
-- DELETE /api/v3/creatives/{creativeId} - Delete creative → #delete-creative
-
-Audience API (/guidelines/audience-api/):
-- POST /api/v3/audiences - Create audience segment → #create-audience
-- GET /api/v3/audiences - List audiences → #audience-list
-- PATCH /api/v3/audiences/{audienceId} - Update audience → #update-audience
-
-Reports API (/guidelines/reports-api/):
-- POST /api/v3/reports - Generate a report → #generate-report
-- GET /api/v3/reports/{reportId} - Get report status → #get-report-status
-- GET /api/v3/reports/{reportId}/download - Download report → #download-report
-
-LINK FORMAT RULES:
-- When referencing a specific section, include the anchor: /guidelines/campaign-api/#update-campaign
-- Use markdown link format: [Update Campaign](/guidelines/campaign-api/#update-campaign)
-- ALWAYS use PATCH for update operations, not PUT (IQM APIs use PATCH for partial updates)
-
-IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https://app.iqm.com/api/.`;
+    // Categories to demote unless explicitly mentioned
+    this.lowPriorityCategories = [
+      'Xandr Migration',
+      'DV360 Migration',
+      'The Trade Desk Migration',
+      'Beeswax Migration',
+      'Healthcare',
+      'Political',
+    ];
   }
 
   /**
@@ -175,23 +138,170 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
   }
 
   /**
+   * Extract key search terms from user's question for better Algolia results
+   * Removes common filler words and question patterns
+   */
+  extractSearchTerms(message) {
+    // Remove common question prefixes and filler words
+    const stopWords = [
+      'how', 'do', 'i', 'can', 'you', 'me', 'the', 'a', 'an', 'to', 'find', 
+      'what', 'is', 'are', 'where', 'when', 'which', 'who', 'why', 'show', 'tell',
+      'about', 'for', 'with', 'from', 'in', 'on', 'at', 'of', 'my', 'your', 'their',
+      'please', 'help', 'need', 'want', 'would', 'like', 'should', 'could', 'using',
+    ];
+    
+    // Split into words, filter out stop words, keep meaningful terms
+    const words = message.toLowerCase()
+      .replace(/[?!.,;:'"]/g, '') // Remove punctuation
+      .split(/\s+/)
+      .filter(word => word.length > 1 && !stopWords.includes(word));
+    
+    // If we have at least 1 meaningful word, use those
+    if (words.length > 0) {
+      return words.join(' ');
+    }
+    
+    // Fallback to original message if everything was filtered
+    return message;
+  }
+
+  /**
+   * Detect the user's intent from their query
+   * Returns: 'create' | 'update' | 'get' | 'conceptual' | 'specific'
+   */
+  detectQueryIntent(message) {
+    const lower = message.toLowerCase();
+    
+    // Check for specific vertical/migration keywords first
+    const hasSpecialCategory = /migration|migrate|healthcare|political|pld|vld/i.test(lower);
+    if (hasSpecialCategory) {
+      return { intent: 'specific', specialCategory: true };
+    }
+    
+    // Create intent: user wants to make something new
+    if (/\b(create|make|build|add|new|set up|setup|register|sign up|upload)\b/.test(lower)) {
+      return { intent: 'create', specialCategory: false };
+    }
+    
+    // Update intent: user wants to modify something
+    if (/\b(update|edit|modify|change|patch|put|delete|remove)\b/.test(lower)) {
+      return { intent: 'update', specialCategory: false };
+    }
+    
+    // Get intent: user wants to retrieve/list data
+    if (/\b(get|fetch|retrieve|list|find|search|query|read)\b/.test(lower)) {
+      return { intent: 'get', specialCategory: false };
+    }
+    
+    // Conceptual: user wants to understand something
+    if (/\b(what is|what are|explain|understand|overview|concept|difference|between)\b/.test(lower)) {
+      return { intent: 'conceptual', specialCategory: false };
+    }
+    
+    // Default to 'get' for questions without clear intent
+    return { intent: 'get', specialCategory: false };
+  }
+
+  /**
+   * Rerank Algolia results based on query intent
+   * Boosts tutorials for 'create', demotes migration/verticals for general queries
+   */
+  rerankResults(hits, queryIntent) {
+    if (!hits || hits.length === 0) return hits;
+    
+    const { intent, specialCategory } = queryIntent;
+    
+    return hits.map(hit => {
+      let score = 100; // Base score
+      const category = hit.category || '';
+      const url = hit.url || '';
+      
+      // Apply category priority boosts based on intent
+      const priorityBoosts = this.categoryPriority[intent] || {};
+      if (priorityBoosts[category]) {
+        score += priorityBoosts[category];
+      }
+      
+      // Boost tutorials/quickstarts for create intent
+      if (intent === 'create') {
+        if (url.includes('/quickstart-guides/') || url.includes('/tutorials/')) {
+          score += 80;
+        }
+      }
+      
+      // Demote low-priority categories unless specifically requested
+      if (!specialCategory) {
+        const isLowPriority = this.lowPriorityCategories.some(cat => 
+          category.includes(cat) || url.includes('/migration-guides/') || 
+          url.includes('/healthcare-vertical/') || url.includes('/political-vertical/')
+        );
+        if (isLowPriority) {
+          score -= 50;
+        }
+      }
+      
+      // Boost exact section matches (has anchor)
+      if (hit.anchor && hit.type === 'lvl3') {
+        score += 20;
+      }
+      
+      return { ...hit, _intentScore: score };
+    }).sort((a, b) => b._intentScore - a._intentScore);
+  }
+
+  /**
    * Main chat method - uses llama.cpp server with PVLT-aware processing
+   * Enriches context with Algolia search results for smarter navigation
    */
   async chat(message, context = {}) {
     try {
       // Analyze the query using PVLT framework
       const pvltAnalysis = this.analyzePVLTLevel(message, context);
       
-      // Add PVLT guidance to context
+      // Detect query intent (create, update, get, conceptual)
+      const queryIntent = this.detectQueryIntent(message);
+      
+      // Extract key terms for better Algolia search
+      const searchQuery = this.extractSearchTerms(message);
+      
+      // Search Algolia for relevant documentation
+      let algoliaContext = null;
+      let algoliaResults = null;
+      try {
+        // Get more results so we can rerank effectively
+        algoliaResults = await algoliaService.search(searchQuery, { limit: 10 });
+        
+        if (algoliaResults.hits.length > 0) {
+          // Rerank results based on query intent
+          algoliaResults.hits = this.rerankResults(algoliaResults.hits, queryIntent);
+          
+          // Take top results after reranking
+          algoliaResults.hits = algoliaResults.hits.slice(0, 6);
+          
+          algoliaContext = this.formatAlgoliaContext(algoliaResults, queryIntent);
+          console.log(`📚 Algolia found ${algoliaResults.nbHits} matches for: "${searchQuery}" (intent: ${queryIntent.intent})`);
+        }
+      } catch (searchError) {
+        console.warn('Algolia search failed, continuing without:', searchError.message);
+      }
+      
+      // Add PVLT guidance and Algolia context
       const enhancedContext = {
         ...context,
-        pvlt: pvltAnalysis
+        pvlt: pvltAnalysis,
+        queryIntent,
+        algoliaContext,
+        algoliaResults,
       };
       
       const response = await this.callLlamaServer(message, enhancedContext);
       
-      // Add PVLT metadata to response
+      // Add metadata to response
       response.pvlt = pvltAnalysis;
+      response.queryIntent = queryIntent;
+      if (algoliaResults?.hits?.length > 0) {
+        response.searchResults = algoliaResults.hits;
+      }
       
       return response;
     } catch (error) {
@@ -201,12 +311,122 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
   }
 
   /**
+   * Format Algolia search results as context for the LLM
+   * Groups results by page/category for cleaner "Related resources:" sections
+   * Intent-aware: provides appropriate guidance based on query intent
+   */
+  formatAlgoliaContext(results, queryIntent = {}) {
+    if (!results.hits || results.hits.length === 0) return null;
+    
+    const topHit = results.hits[0];
+    const { intent } = queryIntent;
+    
+    // Use category as the primary label, with section/title as description
+    const topLabel = topHit.category || topHit.section || 'Documentation';
+    const topDesc = this.getHitDescription(topHit);
+    
+    // Add intent-specific guidance
+    let context = '\n\n';
+    if (intent === 'create') {
+      const isTutorial = topHit.url?.includes('/quickstart-guides/') || topHit.url?.includes('/tutorials/');
+      if (isTutorial) {
+        context += `USER WANTS TO CREATE SOMETHING. Lead with this tutorial/quickstart:\n`;
+      } else {
+        context += `USER WANTS TO CREATE SOMETHING. If there's a tutorial in the results, mention it first:\n`;
+      }
+    } else if (intent === 'update') {
+      context += `USER WANTS TO UPDATE/MODIFY. Go straight to the API endpoint:\n`;
+    } else if (intent === 'conceptual') {
+      context += `USER WANTS TO UNDERSTAND A CONCEPT. Explain briefly, then link:\n`;
+    }
+    
+    context += `>>> BEST MATCH: [${topLabel}](${topHit.url})`;
+    if (topDesc) context += ` - ${topDesc}`;
+    if (topHit.content) {
+      const preview = topHit.content.substring(0, 200).replace(/\n/g, ' ');
+      context += `\nContent: ${preview}...`;
+    }
+    
+    // Group all hits by category/page for Related resources section
+    if (results.hits.length > 1) {
+      // Skip the first hit (already used as BEST MATCH) to avoid duplicates
+      const remainingHits = results.hits.slice(1, 6);
+      const grouped = this.groupHitsByCategory(remainingHits);
+      
+      context += `\n\nADDITIONAL RESOURCES (only include if they add value beyond main answer):`;
+      for (const [category, hits] of Object.entries(grouped)) {
+        context += `\n**${category}**`;
+        hits.forEach(hit => {
+          const linkText = this.getHitLinkText(hit);
+          context += `\n• [${linkText}](${hit.url})`;
+        });
+      }
+      context += `\n\nREMINDER: Do NOT include links in Related resources that you already linked in the main answer. Only add genuinely helpful additional resources.`;
+    }
+    
+    return context;
+  }
+
+  /**
+   * Get link text for an Algolia hit (human-readable anchor/title)
+   */
+  getHitLinkText(hit) {
+    // Prefer anchor converted to readable text
+    if (hit.anchor) {
+      return hit.anchor
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()); // Title case
+    }
+    // Fall back to title without zero-width chars
+    if (hit.title) {
+      return hit.title.replace(/​/g, '').trim();
+    }
+    return 'Documentation';
+  }
+
+  /**
+   * Get a human-readable description for an Algolia hit
+   */
+  getHitDescription(hit) {
+    // For section headings (lvl2, lvl3), use the anchor as description
+    if (hit.type && hit.type.startsWith('lvl') && hit.anchor) {
+      return hit.anchor.replace(/-/g, ' ');
+    }
+    // For content hits, use the title if different from category
+    if (hit.title && hit.title !== hit.category) {
+      return hit.title.replace(/​/g, '').trim(); // Remove zero-width chars
+    }
+    return null;
+  }
+
+  /**
+   * Group Algolia hits by their category/page
+   */
+  groupHitsByCategory(hits) {
+    const groups = {};
+    for (const hit of hits) {
+      const category = hit.category || hit.section || 'Other';
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(hit);
+    }
+    return groups;
+  }
+
+  /**
    * Build Mistral-format prompt from messages
    * Format: <s>[INST] {system}\n\n{user message} [/INST] {assistant response}</s>[INST] {next user} [/INST]
-   * Incorporates PVLT framework guidance
+   * Incorporates PVLT framework guidance and Algolia search context
    */
   buildMistralPrompt(systemPrompt, userMessage, context) {
     let prompt = '<s>[INST] ' + systemPrompt;
+    
+    // Add Algolia search results if available - this is the KEY enhancement
+    if (context.algoliaContext) {
+      prompt += context.algoliaContext;
+      prompt += '\n\nIMPORTANT: Answer based on the BEST MATCH above. Link to that URL. Do not make up endpoints.';
+    }
     
     // Add PVLT guidance if available - but keep it concise
     if (context.pvlt) {
@@ -291,6 +511,59 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
   }
 
   /**
+   * Known path corrections for common LLM mistakes
+   */
+  pathCorrections = {
+    '/quickstart-guides/customer-guide': '/tutorials/customer-guide/',
+    '/quickstart-guides/customer-guide/': '/tutorials/customer-guide/',
+    '/quickstart-guides/deal-guide': '/tutorials/deal-guide/',
+    '/quickstart-guides/deal-guide/': '/tutorials/deal-guide/',
+    '/quickstart-guides/create-a-bid-model': '/tutorials/create-a-bid-model/',
+    '/quickstart-guides/create-a-bid-model/': '/tutorials/create-a-bid-model/',
+    '/quickstart-guides/create-a-conversion': '/tutorials/create-a-conversion/',
+    '/quickstart-guides/create-a-conversion/': '/tutorials/create-a-conversion/',
+    '/quickstart-guides/create-an-insights-report': '/tutorials/create-an-insights-report/',
+    '/quickstart-guides/create-an-insights-report/': '/tutorials/create-an-insights-report/',
+    '/quickstart-guides/create-a-pg-campaign': '/tutorials/create-a-pg-campaign/',
+    '/quickstart-guides/create-a-pg-campaign/': '/tutorials/create-a-pg-campaign/',
+    '/quickstart-guides/optimize-your-inventory': '/tutorials/optimize-your-inventory/',
+    '/quickstart-guides/optimize-your-inventory/': '/tutorials/optimize-your-inventory/',
+    '/quickstart-guides/upload-a-matched-audience': '/tutorials/upload-a-matched-audience/',
+    '/quickstart-guides/upload-a-matched-audience/': '/tutorials/upload-a-matched-audience/',
+  };
+
+  /**
+   * Correct known wrong paths that the LLM might generate
+   * Handles paths with or without trailing slashes and anchors
+   */
+  correctPath(path) {
+    // Separate anchor if present
+    let anchor = '';
+    let basePath = path;
+    if (path.includes('#')) {
+      const [base, hash] = path.split('#');
+      basePath = base;
+      anchor = '#' + hash;
+    }
+    
+    // Check for exact match first
+    if (this.pathCorrections[basePath]) {
+      return this.pathCorrections[basePath] + anchor;
+    }
+    // Check without trailing slash
+    const withoutSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+    if (this.pathCorrections[withoutSlash]) {
+      return this.pathCorrections[withoutSlash] + anchor;
+    }
+    // Check with trailing slash
+    const withSlash = basePath.endsWith('/') ? basePath : basePath + '/';
+    if (this.pathCorrections[withSlash]) {
+      return this.pathCorrections[withSlash] + anchor;
+    }
+    return path;
+  }
+
+  /**
    * Parse action hints from the response (e.g., page navigation)
    */
   parseActions(response) {
@@ -300,7 +573,9 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
     const linkRegex = /\[([^\]]+)\]\((\/[^)]+)\)/g;
     let match;
     while ((match = linkRegex.exec(response)) !== null) {
-      const path = match[2];
+      let path = match[2];
+      // Correct known wrong paths
+      path = this.correctPath(path);
       if (actions.length === 0 && !path.includes('http')) {
         actions.push({
           tool: 'navigate',
@@ -314,7 +589,9 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
     if (actions.length === 0) {
       const barePathRegex = /(\/(?:getting-started|guidelines|quickstart-guides|tutorials|migration-guides|political-vertical|healthcare-vertical)[a-z0-9\-\/]*)/gi;
       while ((match = barePathRegex.exec(response)) !== null) {
-        const path = match[1];
+        let path = match[1];
+        // Correct known wrong paths
+        path = this.correctPath(path);
         actions.push({
           tool: 'navigate',
           params: { path },
@@ -402,7 +679,7 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
 
   /**
    * Fallback response when backend is unavailable
-   * Uses PVLT framework to prioritize foundation-level guidance
+   * Provides concise, actionable responses with related page suggestions
    */
   generateFallbackResponse(message, context) {
     const lowerMessage = message.toLowerCase();
@@ -410,73 +687,952 @@ IQM uses OAuth 2.0 authentication with bearer tokens. The base API URL is https:
     // Analyze PVLT level for the query
     const pvltAnalysis = this.analyzePVLTLevel(message, context);
     
-    // PVLT Level 1 (Foundation) routes - Always suggest these first for new users
-    const foundationRoutes = [
-      { keywords: ['auth', 'login', 'token', 'authenticate', 'oauth', 'api key', 'bearer'], url: '/quickstart-guides/authentication-quickstart-guide/', title: 'Authentication', pvltLevel: 'pp' },
-      { keywords: ['getting started', 'begin', 'start', 'introduction', 'overview', 'new', 'first'], url: '/getting-started/before-you-begin/', title: 'Before You Begin', pvltLevel: 'pp' },
-    ];
+    // Only match auth route if user EXPLICITLY asks about auth/login/sign up
+    const isExplicitAuthQuestion = /\b(authenticate|authentication|login|log in|sign up|signup|oauth|bearer token|api key|access token)\b/.test(lowerMessage);
     
-    // PVLT Level 2 (Wisdom/Patterns) routes - Recommended workflows
-    const wisdomRoutes = [
-      { keywords: ['campaign', 'create campaign', 'ad campaign', 'launch campaign'], url: '/quickstart-guides/create-a-campaign-quickstart/', title: 'Create a Campaign', pvltLevel: 'wisdom' },
-      { keywords: ['creative', 'upload creative', 'ad creative', 'banner', 'video ad', 'native ad', 'html5'], url: '/quickstart-guides/upload-a-creative-quickstart/', title: 'Upload a Creative', pvltLevel: 'wisdom' },
-      { keywords: ['report', 'reporting', 'analytics', 'metrics', 'performance', 'stats'], url: '/quickstart-guides/reporting-api-quickstart-guide/', title: 'Reporting API', pvltLevel: 'wisdom' },
-      { keywords: ['conversion', 'tracking', 'pixel', 'attribution', 'postback'], url: '/quickstart-guides/conversion-quickstart/', title: 'Conversion Tracking', pvltLevel: 'wisdom' },
-      { keywords: ['inventory', 'deals', 'pmp', 'private marketplace', 'deal id'], url: '/quickstart-guides/inventory-quickstart/', title: 'Inventory API', pvltLevel: 'wisdom' },
-      { keywords: ['bid', 'bidding', 'bid model', 'cpm', 'cpc', 'optimization'], url: '/quickstart-guides/bid-model-quickstart/', title: 'Bid Model API', pvltLevel: 'wisdom' },
-      { keywords: ['insights', 'analytics', 'data', 'breakdown'], url: '/quickstart-guides/insights-quickstart/', title: 'Insights API', pvltLevel: 'wisdom' },
-      { keywords: ['schedule', 'scheduled report', 'recurring', 'email report'], url: '/quickstart-guides/schedule-report-api-quickstart-guide/', title: 'Scheduled Reports', pvltLevel: 'wisdom' },
-      { keywords: ['audience', 'segment', 'targeting', 'matched audience', 'first party'], url: '/quickstart-guides/matched-audience-upload-api-quickstart-guide/', title: 'Matched Audience Upload', pvltLevel: 'wisdom' },
-    ];
-    
-    // PVLT Level 4 (Details) routes - Specific API references
-    const detailRoutes = [
-      { keywords: ['asset', 'upload asset', 'media', 'file upload', 'image'], url: '/guidelines/asset-api/', title: 'Asset API', pvltLevel: 'knowledge' },
-      { keywords: ['dashboard', 'overview', 'summary', 'home'], url: '/guidelines/dashboard-api/', title: 'Dashboard API', pvltLevel: 'knowledge' },
-      { keywords: ['user', 'account', 'organization', 'workspace', 'permissions'], url: '/guidelines/user-api/', title: 'User API', pvltLevel: 'knowledge' },
-      { keywords: ['finance', 'billing', 'invoice', 'budget', 'payment'], url: '/guidelines/finance-api/', title: 'Finance API', pvltLevel: 'knowledge' },
-      { keywords: ['political', 'political ads', 'election'], url: '/political-vertical/', title: 'Political Advertising', pvltLevel: 'knowledge' },
-      { keywords: ['healthcare', 'health', 'pharma', 'medical'], url: '/healthcare-vertical/', title: 'Healthcare Advertising', pvltLevel: 'knowledge' },
-      { keywords: ['migrate', 'migration', 'switch', 'dv360', 'xandr', 'trade desk', 'beeswax'], url: '/migration-guides/', title: 'Migration Guides', pvltLevel: 'knowledge' },
-    ];
+    // Auth route - ONLY for explicit auth questions
+    const authRoute = { 
+      keywords: ['authenticate', 'authentication', 'login', 'log in', 'sign up', 'signup', 'oauth', 'bearer token', 'api key', 'access token'], 
+      url: '/quickstart-guides/authentication-quickstart-guide/', 
+      title: 'Authentication Quickstart',
+      related: [
+        { title: 'Before You Begin', path: '/getting-started/before-you-begin/' },
+        { title: 'REST API Reference', path: '/getting-started/rest-api-reference/' },
+      ]
+    };
 
-    // Combine routes with foundation first (PVLT ordering)
-    const routes = [...foundationRoutes, ...wisdomRoutes, ...detailRoutes];
-    
-    // Check if user needs foundation reminder
-    const needsFoundationReminder = pvltAnalysis.needsFoundation && !foundationRoutes.some(r => r.keywords.some(kw => lowerMessage.includes(kw)));
-
-    // Find matching route
-    for (const route of routes) {
-      if (route.keywords.some(kw => lowerMessage.includes(kw))) {
-        let response = `Based on your question, I recommend checking the **[${route.title}](${route.url})** guide.`;
+    // Main content routes - prioritized by specificity
+    const contentRoutes = [
+      // Campaign operations - Quickstarts & Tutorials (entry points)
+      { keywords: ['create campaign', 'new campaign', 'launch campaign', 'campaign quickstart'], url: '/quickstart-guides/create-a-campaign-quickstart/', title: 'Create a Campaign Quickstart', related: [
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+        { title: 'Create a PG Campaign', path: '/tutorials/create-a-pg-campaign/' },
+      ]},
+      { keywords: ['pg campaign', 'programmatic guaranteed campaign', 'programmatic guaranteed'], url: '/tutorials/create-a-pg-campaign/', title: 'Create a PG Campaign', related: [
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+      ]},
+      
+      // Campaign Details - GET /api/v2/cmp/campaign/{campaignId} - get details by ID
+      { keywords: ['get campaign', 'campaign details', 'campaign by id', 'find campaign', 'campaign info'], url: '/guidelines/campaign-api/#get-campaign-details-by-id', title: 'Get Campaign Details by ID', related: [
+        { title: 'Get List of Campaigns', path: '/guidelines/campaign-api/#get-list-of-campaigns' },
+        { title: 'Campaign Resource Properties', path: '/guidelines/campaign-api/#campaign-resource-properties' },
+      ]},
+      // Get List of Campaigns - GET /api/v2/cmp/campaigns/data
+      { keywords: ['list campaigns', 'all campaigns', 'campaign list', 'search campaigns', 'filter campaigns'], url: '/guidelines/campaign-api/#get-list-of-campaigns', title: 'Get List of Campaigns', related: [
+        { title: 'Get Campaign Details by ID', path: '/guidelines/campaign-api/#get-campaign-details-by-id' },
+        { title: 'Get Campaign Count by Status', path: '/guidelines/campaign-api/#get-campaign-count-by-status' },
+      ]},
+      // Get Campaign Count by Status
+      { keywords: ['campaign count', 'count campaigns', 'campaign status count', 'running campaigns', 'pending campaigns', 'paused campaigns'], url: '/guidelines/campaign-api/#get-campaign-count-by-status', title: 'Get Campaign Count by Status', related: [
+        { title: 'Get List of Campaigns', path: '/guidelines/campaign-api/#get-list-of-campaigns' },
+      ]},
+      // Get Campaign Count with Campaign Type
+      { keywords: ['campaign type count', 'campaign types', 'type of campaign', 'cpm campaign', 'cpc campaign'], url: '/guidelines/campaign-api/#get-campaign-count-with-campaign-type', title: 'Get Campaign Count with Campaign Type', related: [
+        { title: 'Get List of Campaign Budget Types', path: '/guidelines/campaign-api/#get-list-of-campaign-budget-types' },
+      ]},
+      // Get List of Campaign Budget Types
+      { keywords: ['budget type', 'campaign budget types', 'budget type list'], url: '/guidelines/campaign-api/#get-list-of-campaign-budget-types', title: 'Get List of Campaign Budget Types', related: [
+        { title: 'Campaign Resource Properties', path: '/guidelines/campaign-api/#campaign-resource-properties' },
+      ]},
+      
+      // Campaign Management - Create Campaign POST
+      { keywords: ['add campaign', 'create campaign api', 'new campaign api', 'campaign create endpoint'], url: '/guidelines/campaign-api/#create-campaign', title: 'Create Campaign', related: [
+        { title: 'Create a Campaign Quickstart', path: '/quickstart-guides/create-a-campaign-quickstart/' },
+        { title: 'Campaign Resource Properties', path: '/guidelines/campaign-api/#campaign-resource-properties' },
+      ]},
+      // Update Campaign - PATCH
+      { keywords: ['update campaign', 'modify campaign', 'edit campaign', 'change campaign', 'campaign update'], url: '/guidelines/campaign-api/#update-campaign', title: 'Update Campaign', related: [
+        { title: 'Get Campaign Details by ID', path: '/guidelines/campaign-api/#get-campaign-details-by-id' },
+      ]},
+      // Update Audience Targeting
+      { keywords: ['update audience targeting', 'modify audience targeting', 'edit audience targeting', 'change audience targeting'], url: '/guidelines/campaign-api/#update-audience-targeting-in-campaigns', title: 'Update Audience Targeting', related: [
+        { title: 'Get Campaign Details by ID', path: '/guidelines/campaign-api/#get-campaign-details-by-id' },
+        { title: 'Audience Details List', path: '/guidelines/audience-api/#audience-details-list' }
+      ]},
+      // Update Campaign Status
+      { keywords: ['campaign status', 'pause campaign', 'resume campaign', 'start campaign', 'stop campaign', 'approve campaign', 'reject campaign'], url: '/guidelines/campaign-api/#update-campaign-status', title: 'Update Campaign Status', related: [
+        { title: 'Get Campaign Count by Status', path: '/guidelines/campaign-api/#get-campaign-count-by-status' },
+      ]},
+      // Delete Campaign
+      { keywords: ['delete campaign', 'remove campaign', 'delete campaigns'], url: '/guidelines/campaign-api/#delete-campaign', title: 'Delete Campaign', related: [
+        { title: 'Get List of Campaigns', path: '/guidelines/campaign-api/#get-list-of-campaigns' },
+      ]},
+      // Duplicate Campaign
+      { keywords: ['duplicate campaign', 'copy campaign', 'clone campaign'], url: '/guidelines/campaign-api/#duplicate-campaign', title: 'Duplicate Campaign', related: [
+        { title: 'Create Campaign', path: '/guidelines/campaign-api/#create-campaign' },
+      ]},
+      
+      // Insertion Order Operations
+      { keywords: ['insertion order', 'io', 'create io', 'insertion order list', 'io details'], url: '/guidelines/campaign-api/#insertion-order-operations', title: 'Insertion Order Operations', related: [
+        { title: 'Create Insertion Order', path: '/guidelines/campaign-api/#create-insertion-order' },
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+      ]},
+      { keywords: ['create insertion order', 'new io', 'add io'], url: '/guidelines/campaign-api/#create-insertion-order', title: 'Create Insertion Order', related: [
+        { title: 'Insertion Order Operations', path: '/guidelines/campaign-api/#insertion-order-operations' },
+      ]},
+      { keywords: ['update insertion order', 'edit io', 'modify io'], url: '/guidelines/campaign-api/#update-insertion-order', title: 'Update Insertion Order', related: [
+        { title: 'Insertion Order Operations', path: '/guidelines/campaign-api/#insertion-order-operations' },
+      ]},
+      
+      // General campaign fallback
+      { keywords: ['campaign', 'campaign api', 'advertising campaign'], url: '/guidelines/campaign-api/', title: 'Campaign API', related: [
+        { title: 'Create a Campaign', path: '/quickstart-guides/create-a-campaign-quickstart/' },
+        { title: 'Create a PG Campaign', path: '/tutorials/create-a-pg-campaign/' },
+      ]},
+      
+      // Creative operations - CRUD (ordered by specificity)
+      // Add/Create Creative - POST /api/v3/crt/creatives - adds creatives with metadata and files
+      { keywords: ['add creative', 'add new creative', 'create creative', 'new creative', 'batch creative', 'multipart creative'], url: '/guidelines/creative-api/#add-new-creative', title: 'Add New Creative', related: [
+        { title: 'Upload a Creative Quickstart', path: '/quickstart-guides/upload-a-creative-quickstart/' },
+        { title: 'Get Creative Types List', path: '/guidelines/creative-api/#get-creative-types-list' },
+      ]},
+      // Update Creative Details - PATCH /api/v3/crt/creatives/{creativeId} - update name, external ID, remarks
+      { keywords: ['update creative', 'edit creative', 'modify creative', 'change creative name', 'creative name', 'rename creative', 'external creative id', 'creative remarks'], url: '/guidelines/creative-api/#update-creative-details', title: 'Update Creative Details', related: [
+        { title: 'Update Creative Details', path: '/guidelines/creative-api/#update-creative-details' },
+      ]},
+      // Update Creative Status - PATCH /api/v3/crt/creatives/update-status - approve/reject/change status
+      { keywords: ['creative status', 'update creative status', 'approve creative', 'reject creative', 'creative approval', 'creative rejection', 'rejection reason'], url: '/guidelines/creative-api/#update-creative-status', title: 'Update Creative Status', related: [
+        { title: 'Get Creative Status List', path: '/guidelines/creative-api/#get-creative-status-list' },
+        { title: 'Update Creative Status', path: '/guidelines/creative-api/#update-creative-status' },
+      ]},
+      // Get List of Creatives - POST /api/v3/crt/creatives/list - search and filter creatives
+      { keywords: ['get creative', 'list creatives', 'creative details', 'creative by id', 'find creative', 'search creative', 'filter creative'], url: '/guidelines/creative-api/#get-list-of-creatives-and-details', title: 'Get List of Creatives', related: [
+        { title: 'Get List of Creatives', path: '/guidelines/creative-api/#get-list-of-creatives-and-details' },
+        { title: 'Creative Details by ID', path: '/guidelines/creative-api/#creative-details-by-id' },
+        { title: 'Get Creative Count by Type', path: '/guidelines/creative-api/#get-creative-count-by-type' },
+      ]},
+      // Create Creative Group - POST /api/v3/crt/creatives/groups - create group and add creatives
+      { keywords: ['create creative group', 'new creative group', 'add creative group', 'creative group'], url: '/guidelines/creative-api/#create-new-creative-group', title: 'Create Creative Group', related: [
+        { title: 'Create Creative Group', path: '/guidelines/creative-api/#create-new-creative-group' },
+      ]},
+      // Delete Creative Group - DELETE /api/v3/crt/creatives/groups - delete groups by ID
+      { keywords: ['delete creative group', 'remove creative group'], url: '/guidelines/creative-api/#delete-creative-group', title: 'Delete Creative Group', related: [
+        { title: 'Delete Creative Group', path: '/guidelines/creative-api/#delete-creative-group' },      
+      ]},
+      // Update Creative Groups - POST /api/v3/crt/creatives/groups/modify-creatives - add/remove creatives from groups
+      { keywords: ['add creatives to group', 'remove creatives from group', 'modify creative group', 'manage creative group'], url: '/guidelines/creative-api/#update-creative-groups', title: 'Update Creative Groups', related: [
+        { title: 'Create Creative Group', path: '/guidelines/creative-api/#create-new-creative-group' },
+        { title: 'Get List of Creative Groups', path: '/guidelines/creative-api/#get-list-of-creative-groups' },
+      ]},
+      // Update Creative Group Name - PATCH /api/v3/crt/creatives/groups/{id} - rename group
+      { keywords: ['rename creative group', 'update creative group name', 'change creative group name', 'edit creative group name'], url: '/guidelines/creative-api/#update-creative-group-name', title: 'Update Creative Group Name', related: [
+        { title: 'Update Creative Group Name', path: '/guidelines/creative-api/#update-creative-group-name' },
+      ]},
+      // Duplicate Creatives - POST /api/v3/crt/creatives/duplicate - copy one or more creatives
+      { keywords: ['duplicate creative', 'copy creative', 'clone creative', 'duplicate creatives'], url: '/guidelines/creative-api/#duplicate-creatives', title: 'Duplicate Creatives', related: [
+        { title: 'Duplicate Creatives', path: '/guidelines/creative-api/#duplicate-creatives' }
+      ]},
+      // Duplicate Creative Group - POST /api/v3/crt/creatives/groups/duplicate/{id} - copy group with creatives
+      { keywords: ['duplicate creative group', 'copy creative group', 'clone creative group'], url: '/guidelines/creative-api/#duplicate-creative-group', title: 'Duplicate Creative Group', related: [
+        { title: 'Duplicate Creatives', path: '/guidelines/creative-api/#duplicate-creatives' },
+        { title: 'Create Creative Group', path: '/guidelines/creative-api/#create-new-creative-group' },
+      ]},
+      // Compress Image - POST /api/v3/crt/image/compress - compress uploaded images
+      { keywords: ['compress image', 'compress creative', 'image compression', 'reduce image size', 'optimize image'], url: '/guidelines/creative-api/#compress-uploaded-image-creative', title: 'Compress Image Creative', related: [
+        { title: 'Compress Uploaded Image Creative', path: '/guidelines/creative-api/#compress-uploaded-image-creative' }
+      ]},
+      // Update Pixel URL - PATCH /api/v3/crt/creatives/pixel-url - update impression tracking pixel
+      { keywords: ['pixel url', 'update pixel url', 'impression pixel', 'tracking pixel', 'pixel conversion'], url: '/guidelines/creative-api/#update-pixel-url', title: 'Update Pixel URL', related: [
+        { title: 'Update Pixel URL', path: '/guidelines/creative-api/#update-pixel-url' },
+        { title: 'Conversion API', path: '/guidelines/conversion-api/' },
+      ]},
+      // Update Click URL - PATCH /api/v3/crt/creatives/click-url - update landing page URL
+      { keywords: ['click url', 'update click url', 'landing page url', 'destination url', 'click through url'], url: '/guidelines/creative-api/#update-click-url', title: 'Update Click URL', related: [
+        { title: 'Update Click URL', path: '/guidelines/creative-api/#update-click-url' },
+        { title: 'Conversion API', path: '/guidelines/conversion-api/' },
+      ]},
+      // Get Creative Types - GET /api/v3/crt/master/static/creative-types - list available types
+      { keywords: ['creative types', 'creative type list', 'platform creative type', 'rtb creative type'], url: '/guidelines/creative-api/#get-creative-types-list', title: 'Get Creative Types List', related: [
+        { title: 'Get Creative Types List', path: '/guidelines/creative-api/#get-creative-types-list' },
+        { title: 'Add New Creative', path: '/guidelines/creative-api/#add-new-creative' },
+      ]},
+      // Get Creative Status - static status values
+      { keywords: ['creative status list', 'creative statuses', 'status id'], url: '/guidelines/creative-api/#get-creative-status-list', title: 'Get Creative Status List', related: [
+        { title: 'Get Creative Status List', path: '/guidelines/creative-api/#get-creative-status-list' },
+        { title: 'Update Creative Status', path: '/guidelines/creative-api/#update-creative-status' },
         
-        // Add foundation reminder if needed (PVLT: address foundation before details)
-        if (needsFoundationReminder && route.pvltLevel === 'knowledge') {
-          response = `**Quick note:** Make sure you've completed [authentication setup](/quickstart-guides/authentication-quickstart-guide/) first—it's required for all API calls.\n\n` + response;
+      ]},
+      // General creative fallback - Upload a Creative quickstart
+      { keywords: ['creative', 'upload creative', 'ad creative', 'banner', 'video ad', 'native ad', 'html5', 'vast', 'daast', 'audio ad'], url: '/quickstart-guides/upload-a-creative-quickstart/', title: 'Upload a Creative', related: [
+        { title: 'Creative API', path: '/guidelines/creative-api/' },
+        { title: 'Asset API', path: '/guidelines/asset-api/' },
+      ]},
+      
+      // Inventory - Quickstarts & Tutorials (entry points)
+      { keywords: ['inventory quickstart', 'inventory tutorial', 'inventory start'], url: '/quickstart-guides/inventory-quickstart/', title: 'Inventory Quickstart', related: [
+        { title: 'Inventory API', path: '/guidelines/inventory-api/' },
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+      ]},
+      { keywords: ['deal', 'deals', 'pmp', 'pmp deal', 'private marketplace', 'create deal'], url: '/tutorials/deal-guide/', title: 'Create a Deal', related: [
+        { title: 'Inventory API', path: '/guidelines/inventory-api/' },
+        { title: 'Optimize Your Inventory', path: '/tutorials/optimize-your-inventory/' },
+      ]},
+      { keywords: ['optimize inventory', 'inventory optimization'], url: '/tutorials/optimize-your-inventory/', title: 'Optimize Your Inventory', related: [
+        { title: 'Inventory API', path: '/guidelines/inventory-api/' },
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+      ]},
+      
+      // Inventory Details - GET /api/v3/inv/inventories/list
+      { keywords: ['list inventories', 'inventory list', 'get inventories', 'search inventories', 'filter inventories'], url: '/guidelines/inventory-api/#get-list-of-inventories', title: 'Get List of Inventories', related: [
+        { title: 'Get Inventories Count', path: '/guidelines/inventory-api/#get-inventories-count' },
+        { title: 'Get Inventory Distribution', path: '/guidelines/inventory-api/#get-inventory-distribution' },
+      ]},
+      // Get Inventory Distribution
+      { keywords: ['inventory distribution', 'inventory breakdown', 'inventory by country', 'inventory by device'], url: '/guidelines/inventory-api/#get-inventory-distribution', title: 'Get Inventory Distribution', related: [
+        { title: 'Get List of Inventories', path: '/guidelines/inventory-api/#get-list-of-inventories' },
+      ]},
+      // Get Inventories Count
+      { keywords: ['inventory count', 'count inventories', 'how many inventories', 'total inventories'], url: '/guidelines/inventory-api/#get-inventories-count', title: 'Get Inventories Count', related: [
+        { title: 'Get List of Inventories', path: '/guidelines/inventory-api/#get-list-of-inventories' },
+      ]},
+      // Get Inventory Group Types
+      { keywords: ['inventory group types', 'inventory types', 'open exchange', 'contextual inventory'], url: '/guidelines/inventory-api/#get-inventory-group-types', title: 'Get Inventory Group Types', related: [
+        { title: 'Get List of Inventory Groups', path: '/guidelines/inventory-api/#get-list-of-inventory-groups' },
+      ]},
+      // Get List of Blocked Inventories
+      { keywords: ['blocked inventories', 'blocklist', 'block list', 'blocked inventory list'], url: '/guidelines/inventory-api/#get-list-of-blocked-inventories', title: 'Get List of Blocked Inventories', related: [
+        { title: 'Block Inventories', path: '/guidelines/inventory-api/#block-inventories' },
+      ]},
+      
+      // Inventory Group Management
+      { keywords: ['inventory group', 'inventory groups', 'list inventory groups', 'get inventory groups'], url: '/guidelines/inventory-api/#get-list-of-inventory-groups', title: 'Get List of Inventory Groups', related: [
+        { title: 'Create Inventory Group', path: '/guidelines/inventory-api/#create-inventory-group' },
+      ]},
+      { keywords: ['create inventory group', 'new inventory group', 'add inventory group'], url: '/guidelines/inventory-api/#create-inventory-group', title: 'Create Inventory Group', related: [
+        { title: 'Update Inventory Group', path: '/guidelines/inventory-api/#update-inventory-group' },
+      ]},
+      { keywords: ['update inventory group', 'edit inventory group', 'modify inventory group'], url: '/guidelines/inventory-api/#update-inventory-group', title: 'Update Inventory Group', related: [
+        { title: 'Delete Inventory Group', path: '/guidelines/inventory-api/#delete-inventory-group' },
+      ]},
+      { keywords: ['delete inventory group', 'remove inventory group'], url: '/guidelines/inventory-api/#delete-inventory-group', title: 'Delete Inventory Group', related: [
+        { title: 'Get List of Inventory Groups', path: '/guidelines/inventory-api/#get-list-of-inventory-groups' },
+      ]},
+      
+      // PMP Deals
+      { keywords: ['pg deal', 'programmatic guaranteed deal', 'pmp deals', 'private marketplace deal'], url: '/guidelines/inventory-api/#pmp-deals', title: 'PMP Deals', related: [
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+        { title: 'Get List of PMP Deals', path: '/guidelines/inventory-api/#get-list-of-pmp-deals' },
+      ]},
+      { keywords: ['list pmp deals', 'get pmp deals', 'pmp deal list'], url: '/guidelines/inventory-api/#get-list-of-pmp-deals', title: 'Get List of PMP Deals', related: [
+        { title: 'Create PMP Deal', path: '/guidelines/inventory-api/#create-pmp-deal' },
+      ]},
+      { keywords: ['create pmp deal', 'add pmp deal', 'new pmp deal'], url: '/guidelines/inventory-api/#create-pmp-deal', title: 'Create PMP Deal', related: [
+        { title: 'Update PMP Deal', path: '/guidelines/inventory-api/#update-pmp-deal' },
+      ]},
+      
+      // Block/Unblock Inventories
+      { keywords: ['block inventory', 'block inventories', 'add to blocklist'], url: '/guidelines/inventory-api/#block-inventories', title: 'Block Inventories', related: [
+        { title: 'Unblock Inventories', path: '/guidelines/inventory-api/#unblock-inventories' },
+      ]},
+      { keywords: ['unblock inventory', 'unblock inventories', 'remove from blocklist'], url: '/guidelines/inventory-api/#unblock-inventories', title: 'Unblock Inventories', related: [
+        { title: 'Get List of Blocked Inventories', path: '/guidelines/inventory-api/#get-list-of-blocked-inventories' },
+      ]},
+      
+      // General inventory fallback
+      { keywords: ['inventory', 'inventory targeting', 'inventory api'], url: '/guidelines/inventory-api/', title: 'Inventory API', related: [
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+        { title: 'Optimize Your Inventory', path: '/tutorials/optimize-your-inventory/' },
+      ]},
+      
+      // Reports API - Quickstarts & Tutorials (entry points)
+      { keywords: ['report quickstart', 'reporting quickstart', 'report tutorial'], url: '/quickstart-guides/reporting-api-quickstart-guide/', title: 'Reporting API Quickstart', related: [
+        { title: 'Reports API', path: '/guidelines/reports-api/' },
+        { title: 'Schedule a Report', path: '/quickstart-guides/schedule-report-api-quickstart-guide/' },
+      ]},
+      { keywords: ['schedule report', 'schedule report quickstart', 'scheduled report tutorial'], url: '/quickstart-guides/schedule-report-api-quickstart-guide/', title: 'Schedule Report Quickstart', related: [
+        { title: 'Reports API', path: '/guidelines/reports-api/' },
+        { title: 'Run a Report', path: '/quickstart-guides/reporting-api-quickstart-guide/' },
+      ]},
+      
+      // Report Details - GET operations
+      { keywords: ['list reports', 'get reports', 'report list', 'all reports'], url: '/guidelines/reports-api/#get-a-list-of-reports', title: 'Get a List of Reports', related: [
+        { title: 'Get Report by ID', path: '/guidelines/reports-api/#get-report-by-id' },
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+      ]},
+      { keywords: ['get report by id', 'report by id', 'report details', 'specific report'], url: '/guidelines/reports-api/#get-report-by-id', title: 'Get Report by ID', related: [
+        { title: 'Get a List of Reports', path: '/guidelines/reports-api/#get-a-list-of-reports' },
+      ]},
+      
+      // Report CRUD Operations
+      { keywords: ['create report', 'new report', 'add report', 'generate report'], url: '/guidelines/reports-api/#create-report', title: 'Create Report', related: [
+        { title: 'Execute Report', path: '/guidelines/reports-api/#execute-report' },
+        { title: 'Update Report', path: '/guidelines/reports-api/#update-report' },
+      ]},
+      { keywords: ['update report', 'edit report', 'modify report'], url: '/guidelines/reports-api/#update-report', title: 'Update Report', related: [
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+        { title: 'Delete Report', path: '/guidelines/reports-api/#delete-report' },
+      ]},
+      { keywords: ['delete report', 'remove report'], url: '/guidelines/reports-api/#delete-report', title: 'Delete Report', related: [
+        { title: 'Get a List of Reports', path: '/guidelines/reports-api/#get-a-list-of-reports' },
+      ]},
+      { keywords: ['execute report', 'run report', 'trigger report'], url: '/guidelines/reports-api/#execute-report', title: 'Execute Report', related: [
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+        { title: 'Schedule Report', path: '/guidelines/reports-api/#schedule-report' },
+      ]},
+      
+      // Report Scheduling
+      { keywords: ['schedule report', 'report schedule', 'scheduled report', 'recurring report', 'email report'], url: '/guidelines/reports-api/#schedule-report', title: 'Schedule Report', related: [
+        { title: 'Get Report Delivery Frequency Types', path: '/guidelines/reports-api/#get-report-delivery-frequency-types' },
+        { title: 'Schedule Report Quickstart', path: '/quickstart-guides/schedule-report-api-quickstart-guide/' },
+      ]},
+      
+      // Report Configuration Types
+      { keywords: ['report delivery frequency', 'delivery frequency types', 'report frequency'], url: '/guidelines/reports-api/#get-report-delivery-frequency-types', title: 'Get Report Delivery Frequency Types', related: [
+        { title: 'Schedule Report', path: '/guidelines/reports-api/#schedule-report' },
+      ]},
+      { keywords: ['report file types', 'report format', 'csv', 'xlsx', 'report export format'], url: '/guidelines/reports-api/#get-report-file-types', title: 'Get Report File Types', related: [
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+      ]},
+      { keywords: ['report request types', 'report type'], url: '/guidelines/reports-api/#get-report-request-types', title: 'Get Report Request Types', related: [
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+      ]},
+      
+      // Report Dimensions & Metrics
+      { keywords: ['report dimensions', 'report metrics', 'dimensions and metrics', 'available metrics', 'available dimensions'], url: '/guidelines/reports-api/#get-dimensions-and-metrics-details', title: 'Get Dimensions and Metrics Details', related: [
+        { title: 'Create Report', path: '/guidelines/reports-api/#create-report' },
+        { title: 'Dashboard Dimensions', path: '/guidelines/dashboard-api/#get-dimensions-and-metrics-for-dashboard' },
+      ]},
+      
+      // General Reports fallback
+      { keywords: ['report', 'reporting', 'analytics', 'metrics', 'performance', 'stats', 'reports api'], url: '/quickstart-guides/reporting-api-quickstart-guide/', title: 'Run a Report', related: [
+        { title: 'Reports API', path: '/guidelines/reports-api/' },
+        { title: 'Schedule a Report', path: '/quickstart-guides/schedule-report-api-quickstart-guide/' },
+      ]},
+      
+      // Audience - Quickstarts & Tutorials (entry points)
+      { keywords: ['contextual', 'contextual audience', 'contextual targeting', 'keyword targeting', 'url targeting'], url: '/quickstart-guides/contextual-audience-quickstart/', title: 'Create a Contextual Audience', related: [
+        { title: 'Audience API', path: '/guidelines/audience-api/' },
+        { title: 'Upload a Matched Audience', path: '/tutorials/upload-a-matched-audience/' },
+      ]},
+      { keywords: ['matched audience', 'upload audience', 'first party data', 'first party audience', 'customer list', 'csv audience'], url: '/tutorials/upload-a-matched-audience/', title: 'Upload a Matched Audience', related: [
+        { title: 'Audience API', path: '/guidelines/audience-api/' },
+        { title: 'Contextual Audience', path: '/quickstart-guides/contextual-audience-quickstart/' },
+      ]},
+      
+      // Audience Details - GET /api/v3/audience/list - list Audiences with filtering
+      { keywords: ['audience list', 'list audiences', 'get audiences', 'audience details', 'filter audiences', 'search audiences'], url: '/guidelines/audience-api/#audience-details-list', title: 'Audience Details List', related: [
+        { title: 'Basic Audience Details', path: '/guidelines/audience-api/#basic-audience-details' },
+        { title: 'Audience Type List', path: '/guidelines/audience-api/#audience-type-list' },
+      ]},
+      // Basic Audience Details - POST /api/v3/audience/basic/list - basic list of Audience details
+      { keywords: ['basic audience details', 'audience basic list', 'simple audience list'], url: '/guidelines/audience-api/#basic-audience-details', title: 'Basic Audience Details', related: [
+        { title: 'Audience Details List', path: '/guidelines/audience-api/#audience-details-list' },
+      ]},
+      // Audience Count by Status - POST /api/v3/audience/count-by-status
+      { keywords: ['audience count status', 'count audiences', 'audience status count', 'how many audiences'], url: '/guidelines/audience-api/#audience-count-by-status', title: 'Audience Count by Status', related: [
+        { title: 'Audience Status List', path: '/guidelines/audience-api/#audience-status-list' },
+      ]},
+      // Audience Count by Type - GET /api/v3/audience/count-by-type
+      { keywords: ['audience count type', 'count audience types', 'audience type count'], url: '/guidelines/audience-api/#audience-count-by-type', title: 'Audience Count by Type', related: [
+        { title: 'Audience Type List', path: '/guidelines/audience-api/#audience-type-list' },
+      ]},
+      
+      // Audience Management - PATCH /api/v3/audience/{audienceId}/update-name
+      { keywords: ['update audience name', 'rename audience', 'change audience name', 'edit audience name'], url: '/guidelines/audience-api/#update-audience-name', title: 'Update Audience Name', related: [
+        { title: 'Audience Details List', path: '/guidelines/audience-api/#audience-details-list' },
+      ]},
+      // Regenerate Audience - PATCH /api/v3/audience/{audienceId}/regenerate
+      { keywords: ['regenerate audience', 'failed audience', 'retry audience', 'reprocess audience'], url: '/guidelines/audience-api/#regenerate-audience', title: 'Regenerate Audience', related: [
+        { title: 'Audience Status List', path: '/guidelines/audience-api/#audience-status-list' },
+      ]},
+      // Get Audience Insights - GET /api/v3/audience/{audienceId}/insights
+      { keywords: ['audience insights', 'get audience insights', 'audience analytics', 'audience breakdown'], url: '/guidelines/audience-api/#get-audience-insights', title: 'Get Audience Insights', related: [
+        { title: 'Create Audience Insights', path: '/guidelines/audience-api/#create-audience-insights' },
+        { title: 'Insights API', path: '/guidelines/insights-api/' },
+      ]},
+      // Create Audience Insights - POST /api/v3/audience/insights/add
+      { keywords: ['create audience insights', 'generate audience insights', 'add audience insights'], url: '/guidelines/audience-api/#create-audience-insights', title: 'Create Audience Insights', related: [
+        { title: 'Get Audience Insights', path: '/guidelines/audience-api/#get-audience-insights' },
+        { title: 'Insights API', path: '/guidelines/insights-api/' },
+      ]},
+      // Attach Data Partner - POST /api/v3/audience/attach-data-partner
+      { keywords: ['attach data partner', 'data partner audience', 'add data partner', 'audience data partner'], url: '/guidelines/audience-api/#attach-data-partner', title: 'Attach Data Partner', related: [
+        { title: 'Data Partners List', path: '/guidelines/audience-api/#data-partners-list-for-matched-audience' },
+      ]},
+      // Delete Audience - DELETE /api/v3/audience
+      { keywords: ['delete audience', 'remove audience', 'delete audiences'], url: '/guidelines/audience-api/#delete-audience', title: 'Delete Audience', related: [
+        { title: 'Audience Details List', path: '/guidelines/audience-api/#audience-details-list' },
+      ]},
+      
+      // Matched Audiences - POST /api/v3/audience/matched - upload file with user data
+      { keywords: ['create matched audience', 'new matched audience', 'upload matched audience', 'matched audience file', 'multipart audience'], url: '/guidelines/audience-api/#create-matched-audience', title: 'Create Matched Audience', related: [
+        { title: 'Upload a Matched Audience Tutorial', path: '/tutorials/upload-a-matched-audience/' },
+        { title: 'Data Formats List', path: '/guidelines/audience-api/#data-formats-list-for-matched-audience' },
+      ]},
+      // Update Matched Audience - PATCH /api/v3/audience/matched/{audienceId}
+      { keywords: ['update matched audience', 'edit matched audience', 'matched audience status', 'matched audience data cost', 'reject matched audience'], url: '/guidelines/audience-api/#update-matched-audience', title: 'Update Matched Audience', related: [
+        { title: 'Matched Audience Details', path: '/guidelines/audience-api/#matched-audience-details' },
+      ]},
+      // Data Partners List - GET for matched audience data partners
+      { keywords: ['data partners', 'matched audience partners', 'data provider', 'audience provider'], url: '/guidelines/audience-api/#data-partners-list-for-matched-audience', title: 'Data Partners List', related: [
+        { title: 'Attach Data Partner', path: '/guidelines/audience-api/#attach-data-partner' },
+      ]},
+      // Data Formats List - GET /api/v3/audience/static/data-formats - hashed data formats
+      { keywords: ['data formats', 'hashed data', 'md5 hash', 'sha1 hash', 'sha256', 'audience hash format'], url: '/guidelines/audience-api/#data-formats-list-for-matched-audience', title: 'Data Formats List', related: [
+        { title: 'Create Matched Audience', path: '/guidelines/audience-api/#create-matched-audience' },
+      ]},
+      // Download Matched Audience File - GET /api/v3/audience/matched/{audienceId}/file-url
+      { keywords: ['download matched audience', 'audience file url', 'download audience file', 's3 audience url'], url: '/guidelines/audience-api/#download-matched-audience-file', title: 'Download Matched Audience File', related: [
+        { title: 'Matched Audience Details', path: '/guidelines/audience-api/#matched-audience-details' },
+      ]},
+      
+      // Segmented Audiences - POST /api/v3/audience/segmented - create with equation
+      { keywords: ['create segmented audience', 'segmented audience', 'segment equation', 'audience segments', 'combine segments'], url: '/guidelines/audience-api/#create-segmented-audience', title: 'Create Segmented Audience', related: [
+        { title: 'Master API', path: '/guidelines/master-api/' },
+        { title: 'Update Segmented Audience', path: '/guidelines/audience-api/#update-segmented-audience' },
+      ]},
+      // Update Segmented Audience - PUT /api/v3/audience/segmented/{audienceId}
+      { keywords: ['update segmented audience', 'edit segmented audience', 'modify segment equation', 'change audience segments'], url: '/guidelines/audience-api/#update-segmented-audience', title: 'Update Segmented Audience', related: [
+        { title: 'Create Segmented Audience', path: '/guidelines/audience-api/#create-segmented-audience' },
+      ]},
+      
+      // Retargeted Audiences - POST /api/v3/audience/retargeted - create with tracking tag
+      { keywords: ['create retargeted audience', 'retargeted audience', 'retargeting tag', 'tracking tag', 'pixel tag', 'website retargeting'], url: '/guidelines/audience-api/#create-retargeted-audience', title: 'Create Retargeted Audience', related: [
+        { title: 'Update Retargeted Audience', path: '/guidelines/audience-api/#update-retargeted-audience' },
+        { title: 'Retargeted Audience Email Notification', path: '/guidelines/audience-api/#retargeted-audience-email-notification' },
+      ]},
+      // Update Retargeted Audience - PUT /api/v3/audience/retargeted/{audienceId}
+      { keywords: ['update retargeted audience', 'edit retargeted audience', 'modify retargeting', 'change retarget settings'], url: '/guidelines/audience-api/#update-retargeted-audience', title: 'Update Retargeted Audience', related: [
+        { title: 'Create Retargeted Audience', path: '/guidelines/audience-api/#create-retargeted-audience' },
+      ]},
+      // Retargeted Audience Email Notification - POST send pixel code via email
+      { keywords: ['retarget email', 'pixel code email', 'send pixel code', 'email retarget pixel'], url: '/guidelines/audience-api/#retargeted-audience-email-notification', title: 'Retargeted Audience Email Notification', related: [
+        { title: 'Create Retargeted Audience', path: '/guidelines/audience-api/#create-retargeted-audience' },
+      ]},
+      
+      // Geofarmed Audiences - POST /api/v3/audience/geo-farmed - define by geographical area
+      { keywords: ['geofarmed audience', 'geofarm', 'geo-farmed', 'geographical audience', 'location audience', 'geofence', 'custom area audience', 'radius targeting'], url: '/guidelines/audience-api/#create-geofarmed-audience', title: 'Create Geofarmed Audience', related: [
+        { title: 'Geofarmed Audience Details', path: '/guidelines/audience-api/#geofarmed-audience-details' },
+        { title: 'Frequency Type List', path: '/guidelines/audience-api/#frequency-type-list' },
+      ]},
+      
+      // Contextual Audiences - POST /api/v3/audience/contextual - keywords/URLs targeting
+      { keywords: ['create contextual audience', 'contextual keywords', 'contextual urls', 'content targeting', 'keyword audience'], url: '/guidelines/audience-api/#create-contextual-audience', title: 'Create Contextual Audience', related: [
+        { title: 'Contextual Audience Quickstart', path: '/quickstart-guides/contextual-audience-quickstart/' },
+        { title: 'Validate URL', path: '/guidelines/audience-api/#validate-url-for-contextual-audience' },
+      ]},
+      // Validate URL for Contextual Audience - POST validate URLs for targeting
+      { keywords: ['validate contextual url', 'validate url', 'programmatic url', 'check url targeting'], url: '/guidelines/audience-api/#validate-url-for-contextual-audience', title: 'Validate URL for Contextual Audience', related: [
+        { title: 'Create Contextual Audience', path: '/guidelines/audience-api/#create-contextual-audience' },
+      ]},
+      
+      // Lookalike Audiences - GET/POST /api/v3/audience/lookalike
+      { keywords: ['lookalike audience', 'similar audience', 'audience expansion', 'create lookalike', 'lookalike details', 'audience modeling'], url: '/guidelines/audience-api/#create-lookalike-audience', title: 'Create Lookalike Audience', related: [
+        { title: 'Get Lookalike Audience Details', path: '/guidelines/audience-api/#get-lookalike-audience-details' },
+        { title: 'Audience Details List', path: '/guidelines/audience-api/#audience-details-list' },
+      ]},
+      
+      // Campaign Audiences - POST /api/v3/audience/campaign
+      { keywords: ['campaign audience', 'retarget campaign', 'campaign retargeting', 'create campaign audience'], url: '/guidelines/audience-api/#create-campaign-audience', title: 'Create Campaign Audience', related: [
+        { title: 'Campaign Audience Details', path: '/guidelines/audience-api/#campaign-audience-details' },
+        { title: 'Campaign Audience History', path: '/guidelines/audience-api/#get-campaign-audience-history' },
+      ]},
+      // Campaign Audience History - POST /api/v3/audience/campaigns/audience-history
+      { keywords: ['campaign audience history', 'audience history', 'historical audience', 'past campaign audiences'], url: '/guidelines/audience-api/#get-campaign-audience-history', title: 'Get Campaign Audience History', related: [
+        { title: 'Campaign Audience Details', path: '/guidelines/audience-api/#campaign-audience-details' },
+      ]},
+      
+      // Pre-bid Audiences
+      { keywords: ['pre-bid audience', 'prebid audience', 'pre bid segment', 'prebid segment', 'third party audience'], url: '/guidelines/audience-api/#pre-bid-audiences', title: 'Pre-bid Audiences', related: [
+        { title: 'Audience Type List', path: '/guidelines/audience-api/#audience-type-list' },
+      ]},
+      
+      // Static/Reference - Audience Type List
+      { keywords: ['audience types', 'audience type list', 'audience type id', 'type of audience'], url: '/guidelines/audience-api/#audience-type-list', title: 'Audience Type List', related: [
+        { title: 'Audience Subtype List', path: '/guidelines/audience-api/#audience-subtype-list' },
+      ]},
+      // Audience Subtype List
+      { keywords: ['audience subtypes', 'audience subtype list', 'audience subtype id', 'hcp audience', 'patient audience', 'nurse audience'], url: '/guidelines/audience-api/#audience-subtype-list', title: 'Audience Subtype List', related: [
+        { title: 'Audience Type List', path: '/guidelines/audience-api/#audience-type-list' },
+      ]},
+      // Audience Status List
+      { keywords: ['audience status', 'audience status list', 'ready audience', 'pending audience', 'failed audience status', 'rejected audience'], url: '/guidelines/audience-api/#audience-status-list', title: 'Audience Status List', related: [
+        { title: 'Audience Count by Status', path: '/guidelines/audience-api/#audience-count-by-status' },
+      ]},
+      // Frequency Type List - for Geofarmed
+      { keywords: ['frequency type', 'geofarmed frequency', 'visit frequency', 'weekly frequency', 'monthly frequency'], url: '/guidelines/audience-api/#frequency-type-list', title: 'Frequency Type List', related: [
+        { title: 'Create Geofarmed Audience', path: '/guidelines/audience-api/#create-geofarmed-audience' },
+      ]},
+      // Reach Range List - for Segment filtering
+      { keywords: ['reach range', 'audience reach', 'segment reach', 'filter by reach'], url: '/guidelines/audience-api/#reach-range-list-for-audience-segment', title: 'Reach Range List', related: [
+        { title: 'Price Range List', path: '/guidelines/audience-api/#price-range-list-for-audience-segment' },
+      ]},
+      // Price Range List - for Segment filtering
+      { keywords: ['price range', 'cpm range', 'segment price', 'filter by cpm', 'audience cost'], url: '/guidelines/audience-api/#price-range-list-for-audience-segment', title: 'Price Range List', related: [
+        { title: 'Reach Range List', path: '/guidelines/audience-api/#reach-range-list-for-audience-segment' },
+      ]},
+      // General audience fallback
+      { keywords: ['audience', 'targeting', 'audience api'], url: '/guidelines/audience-api/', title: 'Audience API', related: [
+        { title: 'Upload a Matched Audience', path: '/tutorials/upload-a-matched-audience/' },
+        { title: 'Contextual Audience Quickstart', path: '/quickstart-guides/contextual-audience-quickstart/' },
+      ]},
+      
+      // Bid Model API - Quickstarts & Tutorials (entry points)
+      { keywords: ['bid model quickstart', 'bid model tutorial', 'bid model start'], url: '/quickstart-guides/bid-model-quickstart/', title: 'Bid Model Quickstart', related: [
+        { title: 'Bid Model API', path: '/guidelines/bid-model-api/' },
+        { title: 'Create a Bid Model', path: '/tutorials/create-a-bid-model/' },
+      ]},
+      { keywords: ['create bid model', 'new bid model', 'bid model tutorial', 'make bid model'], url: '/tutorials/create-a-bid-model/', title: 'Create a Bid Model', related: [
+        { title: 'Bid Model API', path: '/guidelines/bid-model-api/' },
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+      ]},
+      
+      // Bid Model API - Bundle Operations
+      { keywords: ['bid model bundles', 'list bid model', 'get bid models', 'bid bundles'], url: '/guidelines/bid-model-api/#get-list-of-bid-model-bundles', title: 'Get List of Bid Model Bundles', related: [
+        { title: 'Add Bid Model Bundles', path: '/guidelines/bid-model-api/#add-bid-model-bundles' },
+      ]},
+      { keywords: ['add bid model', 'create bid model bundle', 'new bid model bundle'], url: '/guidelines/bid-model-api/#add-bid-model-bundles', title: 'Add Bid Model Bundles', related: [
+        { title: 'Update Bid Model', path: '/guidelines/bid-model-api/#manage-bid-modeling' },
+      ]},
+      { keywords: ['update bid model', 'edit bid model', 'modify bid model', 'manage bid model', 'create bid model'], url: '/guidelines/bid-model-api/#manage-bid-modeling', title: 'Update Bid Model', related: [
+        { title: 'Get Modeled Entities', path: '/guidelines/bid-model-api/#get-modeled-entities' },
+      ]},
+      { keywords: ['delete bid model', 'remove bid model'], url: '/guidelines/bid-model-api/#delete-bid-model', title: 'Delete Bid Model', related: [
+        { title: 'Get List of Bid Model Bundles', path: '/guidelines/bid-model-api/#get-list-of-bid-model-bundles' },
+      ]},
+      
+      // Bid Model API - Dimension Statistics
+      { keywords: ['modeled entities', 'bid model entities', 'entity statistics'], url: '/guidelines/bid-model-api/#get-modeled-entities', title: 'Get Modeled Entities', related: [
+        { title: 'Campaign Dimension Statistics', path: '/guidelines/bid-model-api/#get-campaign-dimension-statistics' },
+      ]},
+      { keywords: ['campaign dimension statistics', 'dimension stats', 'bid model statistics'], url: '/guidelines/bid-model-api/#get-campaign-dimension-statistics', title: 'Get Campaign Dimension Statistics', related: [
+        { title: 'Dimension Specific Spending', path: '/guidelines/bid-model-api/#get-dimension-specific-spending' },
+      ]},
+      { keywords: ['dimension spending', 'dimension specific spending', 'bid model spending'], url: '/guidelines/bid-model-api/#get-dimension-specific-spending', title: 'Get Dimension Specific Spending', related: [
+        { title: 'Campaign Dimension Statistics', path: '/guidelines/bid-model-api/#get-campaign-dimension-statistics' },
+      ]},
+      
+      // General Bid Model fallback
+      { keywords: ['bid', 'bidding', 'bid model', 'cpm', 'cpc', 'optimization', 'bid model api'], url: '/guidelines/bid-model-api/', title: 'Bid Model API', related: [
+        { title: 'Create a Bid Model', path: '/tutorials/create-a-bid-model/' },
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+      ]},
+      
+      // Conversion API - Quickstarts & Tutorials (entry points)
+      { keywords: ['conversion quickstart', 'conversion tutorial', 'conversion start'], url: '/quickstart-guides/conversion-quickstart/', title: 'Conversion Quickstart', related: [
+        { title: 'Conversion API', path: '/guidelines/conversion-api/' },
+        { title: 'Create a Conversion', path: '/tutorials/create-a-conversion/' },
+      ]},
+      { keywords: ['create conversion tutorial', 'conversion tutorial', 'make conversion'], url: '/tutorials/create-a-conversion/', title: 'Create a Conversion', related: [
+        { title: 'Conversion API', path: '/guidelines/conversion-api/' },
+      ]},
+      
+      // Conversion API - GET Operations
+      { keywords: ['conversion details', 'get conversion', 'conversion by id'], url: '/guidelines/conversion-api/#get-conversion-details-by-id', title: 'Get Conversion Details by ID', related: [
+        { title: 'Get List of Conversions', path: '/guidelines/conversion-api/#get-list-of-conversions' },
+      ]},
+      { keywords: ['list conversions', 'get conversions', 'all conversions', 'conversion list'], url: '/guidelines/conversion-api/#get-list-of-conversions', title: 'Get List of Conversions', related: [
+        { title: 'Create Pixel Conversion', path: '/guidelines/conversion-api/#create-pixel-conversion' },
+      ]},
+      { keywords: ['conversion types', 'list conversion types', 'available conversion types'], url: '/guidelines/conversion-api/#get-list-of-conversion-types', title: 'Get List of Conversion Types', related: [
+        { title: 'Get List of Conversions', path: '/guidelines/conversion-api/#get-list-of-conversions' },
+      ]},
+      { keywords: ['conversion status', 'conversion status list', 'available conversion status'], url: '/guidelines/conversion-api/#get-list-of-conversion-status', title: 'Get List of Conversion Status', related: [
+        { title: 'Get List of Conversions', path: '/guidelines/conversion-api/#get-list-of-conversions' },
+      ]},
+      
+      // Conversion API - Create Operations
+      { keywords: ['create pixel conversion', 'pixel conversion', 'new pixel', 'add pixel'], url: '/guidelines/conversion-api/#create-pixel-conversion', title: 'Create Pixel Conversion', related: [
+        { title: 'Create Postback Conversion', path: '/guidelines/conversion-api/#create-postback-conversion' },
+        { title: 'Update Conversion', path: '/guidelines/conversion-api/#update-conversion' },
+      ]},
+      { keywords: ['create postback', 'postback conversion', 'new postback', 's2s conversion'], url: '/guidelines/conversion-api/#create-postback-conversion', title: 'Create Postback Conversion', related: [
+        { title: 'Create Pixel Conversion', path: '/guidelines/conversion-api/#create-pixel-conversion' },
+      ]},
+      
+      // Conversion API - Update/Delete
+      { keywords: ['update conversion', 'edit conversion', 'modify conversion'], url: '/guidelines/conversion-api/#update-conversion', title: 'Update Conversion', related: [
+        { title: 'Delete Conversion', path: '/guidelines/conversion-api/#delete-conversion' },
+      ]},
+      { keywords: ['delete conversion', 'remove conversion'], url: '/guidelines/conversion-api/#delete-conversion', title: 'Delete Conversion', related: [
+        { title: 'Get List of Conversions', path: '/guidelines/conversion-api/#get-list-of-conversions' },
+      ]},
+      
+      // General Conversion fallback
+      { keywords: ['conversion', 'tracking', 'pixel', 'attribution', 'postback', 'conversion api'], url: '/guidelines/conversion-api/', title: 'Conversion API', related: [
+        { title: 'Create a Conversion', path: '/tutorials/create-a-conversion/' },
+      ]},
+      
+      // Insights API - Quickstarts & Tutorials (entry points)
+      { keywords: ['insights quickstart', 'insights tutorial', 'insights start'], url: '/quickstart-guides/insights-quickstart/', title: 'Insights Quickstart', related: [
+        { title: 'Insights API', path: '/guidelines/insights-api/' },
+        { title: 'Create an Insights Report', path: '/tutorials/create-an-insights-report/' },
+      ]},
+      { keywords: ['create insights report', 'insights report tutorial', 'make insights report'], url: '/tutorials/create-an-insights-report/', title: 'Create an Insights Report', related: [
+        { title: 'Insights API', path: '/guidelines/insights-api/' },
+      ]},
+      
+      // Insights API - GET Operations
+      { keywords: ['list insights', 'get insights', 'insights list', 'all insights'], url: '/guidelines/insights-api/#get-a-list-of-insights', title: 'Get a List of Insights', related: [
+        { title: 'Get Campaign Bidding Insights', path: '/guidelines/insights-api/#get-campaign-bidding-insights' },
+      ]},
+      { keywords: ['campaign bidding insights', 'bidding insights', 'campaign insights'], url: '/guidelines/insights-api/#get-campaign-bidding-insights', title: 'Get Campaign Bidding Insights', related: [
+        { title: 'Get a List of Insights', path: '/guidelines/insights-api/#get-a-list-of-insights' },
+      ]},
+      { keywords: ['insights types', 'list insights types', 'available insights types'], url: '/guidelines/insights-api/#get-insights-types', title: 'Get Insights Types', related: [
+        { title: 'Get Insights Status', path: '/guidelines/insights-api/#get-insights-status' },
+      ]},
+      { keywords: ['insights status', 'insights status list'], url: '/guidelines/insights-api/#get-insights-status', title: 'Get Insights Status', related: [
+        { title: 'Get Insights Types', path: '/guidelines/insights-api/#get-insights-types' },
+      ]},
+      
+      // Insights API - VLD/PLD Reports
+      { keywords: ['vld report', 'voter level data', 'vld insights'], url: '/guidelines/insights-api/#vld-reports', title: 'VLD Reports', related: [
+        { title: 'Political Vertical', path: '/political-vertical/' },
+        { title: 'PLD Reports', path: '/guidelines/insights-api/#pld-reports' },
+      ]},
+      { keywords: ['pld report', 'provider level data', 'pld insights'], url: '/guidelines/insights-api/#pld-reports', title: 'PLD Reports', related: [
+        { title: 'Healthcare Vertical', path: '/healthcare-vertical/' },
+        { title: 'VLD Reports', path: '/guidelines/insights-api/#vld-reports' },
+      ]},
+      { keywords: ['sls report', 'sls insights', 'sales insights'], url: '/guidelines/insights-api/#sls-reports', title: 'SLS Reports', related: [
+        { title: 'Get a List of Insights', path: '/guidelines/insights-api/#get-a-list-of-insights' },
+      ]},
+      
+      // General Insights fallback
+      { keywords: ['insights', 'audience insights', 'insights api'], url: '/guidelines/insights-api/', title: 'Insights API', related: [
+        { title: 'Create an Insights Report', path: '/tutorials/create-an-insights-report/' },
+      ]},
+      
+      // Planner API - Proposal Operations
+      { keywords: ['proposal details', 'get proposal', 'proposal by id'], url: '/guidelines/planner-api/#get-proposal-details-by-id', title: 'Get Proposal Details by ID', related: [
+        { title: 'Get List of Proposals', path: '/guidelines/planner-api/#get-list-of-proposals' },
+      ]},
+      { keywords: ['list proposals', 'get proposals', 'all proposals', 'proposal list'], url: '/guidelines/planner-api/#get-list-of-proposals', title: 'Get List of Proposals', related: [
+        { title: 'Create Proposal', path: '/guidelines/planner-api/#create-proposal' },
+      ]},
+      { keywords: ['create proposal', 'new proposal', 'add proposal'], url: '/guidelines/planner-api/#create-proposal', title: 'Create Proposal', related: [
+        { title: 'Update Proposal', path: '/guidelines/planner-api/#update-proposal' },
+        { title: 'Validate Proposal', path: '/guidelines/planner-api/#validate-proposal' },
+      ]},
+      { keywords: ['update proposal', 'edit proposal', 'modify proposal'], url: '/guidelines/planner-api/#update-proposal', title: 'Update Proposal', related: [
+        { title: 'Delete Proposal', path: '/guidelines/planner-api/#delete-proposal' },
+      ]},
+      { keywords: ['delete proposal', 'remove proposal'], url: '/guidelines/planner-api/#delete-proposal', title: 'Delete Proposal', related: [
+        { title: 'Get List of Proposals', path: '/guidelines/planner-api/#get-list-of-proposals' },
+      ]},
+      { keywords: ['validate proposal', 'proposal validation', 'check proposal'], url: '/guidelines/planner-api/#validate-proposal', title: 'Validate Proposal', related: [
+        { title: 'Generate IO from Proposal', path: '/guidelines/planner-api/#generate-io-from-proposal' },
+      ]},
+      { keywords: ['generate io', 'io from proposal', 'create io from proposal', 'proposal to io'], url: '/guidelines/planner-api/#generate-io-from-proposal', title: 'Generate IO from Proposal', related: [
+        { title: 'Validate Proposal', path: '/guidelines/planner-api/#validate-proposal' },
+        { title: 'Insertion Order Operations', path: '/guidelines/campaign-api/#insertion-order-operations' },
+      ]},
+      { keywords: ['proposal status', 'proposal status list'], url: '/guidelines/planner-api/#proposal-status-list', title: 'Proposal Status List', related: [
+        { title: 'Get List of Proposals', path: '/guidelines/planner-api/#get-list-of-proposals' },
+      ]},
+      
+      // General Planner fallback
+      { keywords: ['planner', 'proposal', 'plan campaign', 'planner api'], url: '/guidelines/planner-api/', title: 'Planner API', related: [
+        { title: 'Create a Campaign', path: '/quickstart-guides/create-a-campaign-quickstart/' },
+      ]},
+      
+      // Tutorials - Additional entries (not covered above)
+      { keywords: ['pg campaign', 'programmatic guaranteed campaign'], url: '/tutorials/create-a-pg-campaign/', title: 'Create a PG Campaign', related: [
+        { title: 'Campaign API', path: '/guidelines/campaign-api/' },
+        { title: 'Create a Deal', path: '/tutorials/deal-guide/' },
+      ]},
+      { keywords: ['customer', 'invite customer', 'sign up customer', 'add customer', 'new customer', 'approve customer', 'advertiser', 'client onboarding'], url: '/tutorials/customer-guide/', title: 'Sign Up a New Customer', related: [
+        { title: 'User API', path: '/guidelines/user-api/' },
+        { title: 'Workspace API', path: '/guidelines/workspace-api/' },
+      ]},
+      
+      // Master API - Geographic Segments
+      { keywords: ['zip code', 'zip codes', 'zip segment', 'postal code'], url: '/guidelines/master-api/#get-zip-codes-and-state-ids', title: 'Get Zip Codes and State IDs', related: [
+        { title: 'Get State Segment', path: '/guidelines/master-api/#get-state-segment' },
+      ]},
+      { keywords: ['state segment', 'states', 'state ids', 'state targeting'], url: '/guidelines/master-api/#get-state-segment', title: 'Get State Segment', related: [
+        { title: 'Get City Segment', path: '/guidelines/master-api/#get-city-segment' },
+        { title: 'Get County Segment', path: '/guidelines/master-api/#get-county-segment' },
+      ]},
+      { keywords: ['country segment', 'countries', 'country ids', 'country targeting'], url: '/guidelines/master-api/#get-country-segment', title: 'Get Country Segment', related: [
+        { title: 'Get State Segment', path: '/guidelines/master-api/#get-state-segment' },
+      ]},
+      { keywords: ['city segment', 'cities', 'city ids', 'city targeting'], url: '/guidelines/master-api/#get-city-segment', title: 'Get City Segment', related: [
+        { title: 'Get State Segment', path: '/guidelines/master-api/#get-state-segment' },
+      ]},
+      { keywords: ['county segment', 'counties', 'county ids', 'county targeting'], url: '/guidelines/master-api/#get-county-segment', title: 'Get County Segment', related: [
+        { title: 'Get State Segment', path: '/guidelines/master-api/#get-state-segment' },
+      ]},
+      { keywords: ['dma code', 'dma segment', 'dma targeting', 'designated market area'], url: '/guidelines/master-api/#get-dma-code-segment', title: 'Get DMA Code Segment', related: [
+        { title: 'Get State Segment', path: '/guidelines/master-api/#get-state-segment' },
+      ]},
+      { keywords: ['congressional district', 'congress district', 'congressional targeting'], url: '/guidelines/master-api/#get-congressional-district', title: 'Get Congressional District', related: [
+        { title: 'Get Senate District', path: '/guidelines/master-api/#get-senate-district' },
+        { title: 'Political Vertical', path: '/political-vertical/' },
+      ]},
+      { keywords: ['senate district', 'senate targeting'], url: '/guidelines/master-api/#get-senate-district', title: 'Get Senate District', related: [
+        { title: 'Get House District', path: '/guidelines/master-api/#get-house-district' },
+      ]},
+      { keywords: ['house district', 'house targeting'], url: '/guidelines/master-api/#get-house-district', title: 'Get House District', related: [
+        { title: 'Get Senate District', path: '/guidelines/master-api/#get-senate-district' },
+      ]},
+      
+      // Master API - Demographic Segments
+      { keywords: ['age segment', 'age group', 'age targeting', 'age range'], url: '/guidelines/master-api/#get-age-segment', title: 'Get Age Segment', related: [
+        { title: 'Get Gender Segment', path: '/guidelines/master-api/#get-gender-segment' },
+      ]},
+      { keywords: ['gender segment', 'gender targeting', 'male female'], url: '/guidelines/master-api/#get-gender-segment', title: 'Get Gender Segment', related: [
+        { title: 'Get Age Segment', path: '/guidelines/master-api/#get-age-segment' },
+      ]},
+      { keywords: ['language segment', 'language targeting', 'spoken language'], url: '/guidelines/master-api/#get-language-segment', title: 'Get Language Segment', related: [
+        { title: 'Get Ethnicity Segment', path: '/guidelines/master-api/#get-ethnicity-segment' },
+      ]},
+      { keywords: ['income segment', 'income targeting', 'household income'], url: '/guidelines/master-api/#get-income-segment', title: 'Get Income Segment', related: [
+        { title: 'Get Age Segment', path: '/guidelines/master-api/#get-age-segment' },
+      ]},
+      { keywords: ['ethnicity segment', 'ethnicity targeting', 'ethnic group'], url: '/guidelines/master-api/#get-ethnicity-segment', title: 'Get Ethnicity Segment', related: [
+        { title: 'Get Language Segment', path: '/guidelines/master-api/#get-language-segment' },
+      ]},
+      
+      // Master API - Technical Segments
+      { keywords: ['exchange', 'exchanges', 'ssp', 'supply source'], url: '/guidelines/master-api/#get-exchanges', title: 'Get Exchanges', related: [
+        { title: 'Inventory API', path: '/guidelines/inventory-api/' },
+      ]},
+      { keywords: ['traffic type', 'traffic types', 'app traffic', 'web traffic'], url: '/guidelines/master-api/#get-traffic-types', title: 'Get Traffic Types', related: [
+        { title: 'Get Device Type', path: '/guidelines/master-api/#get-device-type' },
+      ]},
+      { keywords: ['device type', 'device types', 'mobile', 'desktop', 'tablet', 'ctv'], url: '/guidelines/master-api/#get-device-type', title: 'Get Device Type', related: [
+        { title: 'Get Traffic Types', path: '/guidelines/master-api/#get-traffic-types' },
+      ]},
+      { keywords: ['creative sizes', 'ad sizes', 'banner size', 'size dimensions', 'iab sizes'], url: '/guidelines/master-api/#get-creative-sizes', title: 'Get Creative Sizes', related: [
+        { title: 'Creative API', path: '/guidelines/creative-api/' },
+      ]},
+      
+      // General Master API fallback
+      { keywords: ['master data', 'segment ids', 'master api', 'targeting segments', 'geography segment', 'demographic segment'], url: '/guidelines/master-api/', title: 'Master API', related: [
+        { title: 'Audience API', path: '/guidelines/audience-api/' },
+        { title: 'Create a Campaign', path: '/quickstart-guides/create-a-campaign-quickstart/' },
+      ]},
+      
+      // User API - Login & Authentication
+      { keywords: ['login', 'user login', 'sign in', 'authenticate user', 'get token'], url: '/guidelines/user-api/#login', title: 'User Login', related: [
+        { title: 'Authentication Quickstart', path: '/quickstart-guides/authentication-quickstart-guide/' },
+        { title: 'Logout', path: '/guidelines/user-api/#logout' },
+      ]},
+      { keywords: ['logout', 'sign out', 'end session', 'invalidate token'], url: '/guidelines/user-api/#logout', title: 'User Logout', related: [
+        { title: 'Login', path: '/guidelines/user-api/#login' },
+      ]},
+      { keywords: ['refresh token', 'token refresh', 'renew token', 'extend session'], url: '/guidelines/user-api/#refresh-token', title: 'Refresh Token', related: [
+        { title: 'Login', path: '/guidelines/user-api/#login' },
+      ]},
+      
+      // User Profile Operations
+      { keywords: ['list users', 'get users', 'user list', 'all users'], url: '/guidelines/user-api/#get-list-of-users', title: 'Get List of Users', related: [
+        { title: 'Get User Profile Details', path: '/guidelines/user-api/#get-user-profile-details' },
+      ]},
+      { keywords: ['user profile', 'get user profile', 'profile details', 'user details'], url: '/guidelines/user-api/#get-user-profile-details', title: 'Get User Profile Details', related: [
+        { title: 'Update User Profile', path: '/guidelines/user-api/#update-user-profile' },
+      ]},
+      { keywords: ['update user profile', 'edit user profile', 'modify user details', 'change user info'], url: '/guidelines/user-api/#update-user-profile', title: 'Update User Profile', related: [
+        { title: 'Get User Profile Details', path: '/guidelines/user-api/#get-user-profile-details' },
+      ]},
+      { keywords: ['user config', 'user configuration', 'user settings', 'config details'], url: '/guidelines/user-api/#user-config-details', title: 'User Config Details', related: [
+        { title: 'Get User Profile Details', path: '/guidelines/user-api/#get-user-profile-details' },
+      ]},
+      
+      // User Invitation & Sign-up
+      { keywords: ['invite user', 'user invitation', 'send invitation', 'invite email'], url: '/guidelines/user-api/#send-user-invitation', title: 'Send User Invitation', related: [
+        { title: 'User Sign-Up', path: '/guidelines/user-api/#user-sign-up' },
+        { title: 'Customer Guide', path: '/tutorials/customer-guide/' },
+      ]},
+      { keywords: ['user sign up', 'signup', 'sign-up', 'register user', 'create account'], url: '/guidelines/user-api/#user-sign-up', title: 'User Sign-Up', related: [
+        { title: 'Send User Invitation', path: '/guidelines/user-api/#send-user-invitation' },
+      ]},
+      
+      // Password Operations
+      { keywords: ['change password', 'update password', 'new password'], url: '/guidelines/user-api/#change-password', title: 'Change Password', related: [
+        { title: 'Forgot Password', path: '/guidelines/user-api/#forgot-password' },
+      ]},
+      { keywords: ['forgot password', 'reset password', 'password reset', 'recover password'], url: '/guidelines/user-api/#forgot-password', title: 'Forgot Password', related: [
+        { title: 'Change Password', path: '/guidelines/user-api/#change-password' },
+      ]},
+      
+      // General User API fallback
+      { keywords: ['user api', 'user account', 'user permissions', 'user role'], url: '/guidelines/user-api/', title: 'User API', related: [
+        { title: 'Sign Up a New Customer', path: '/tutorials/customer-guide/' },
+      ]},
+      
+      // Workspace API - Organization Operations
+      { keywords: ['list organizations', 'allowed organizations', 'get organizations', 'organization list'], url: '/guidelines/workspace-api/#get-list-of-allowed-organizations', title: 'Get List of Allowed Organizations', related: [
+        { title: 'Get Organization Details', path: '/guidelines/workspace-api/#get-organization-details' },
+      ]},
+      { keywords: ['organization details', 'get organization', 'org details'], url: '/guidelines/workspace-api/#get-organization-details', title: 'Get Organization Details', related: [
+        { title: 'Update Organization Profile', path: '/guidelines/workspace-api/#update-organization-profile' },
+      ]},
+      { keywords: ['update organization', 'edit organization', 'modify organization', 'organization profile'], url: '/guidelines/workspace-api/#update-organization-profile', title: 'Update Organization Profile', related: [
+        { title: 'Get Organization Details', path: '/guidelines/workspace-api/#get-organization-details' },
+      ]},
+      { keywords: ['check domain', 'available domain', 'domain availability', 'domain check'], url: '/guidelines/workspace-api/#check-for-available-domain', title: 'Check for Available Domain', related: [
+        { title: 'Update Organization Profile', path: '/guidelines/workspace-api/#update-organization-profile' },
+      ]},
+      
+      // Workspace API - Customer Operations
+      { keywords: ['list customers', 'get customers', 'customer list', 'all customers'], url: '/guidelines/workspace-api/#get-list-of-customers', title: 'Get List of Customers', related: [
+        { title: 'Create Customer', path: '/guidelines/workspace-api/#create-customer' },
+        { title: 'Customer Guide', path: '/tutorials/customer-guide/' },
+      ]},
+      { keywords: ['create customer', 'new customer workspace', 'add customer'], url: '/guidelines/workspace-api/#create-customer', title: 'Create Customer', related: [
+        { title: 'Update Customer', path: '/guidelines/workspace-api/#update-customer' },
+        { title: 'Customer Guide', path: '/tutorials/customer-guide/' },
+      ]},
+      { keywords: ['update customer', 'edit customer', 'modify customer'], url: '/guidelines/workspace-api/#update-customer', title: 'Update Customer', related: [
+        { title: 'Get List of Customers', path: '/guidelines/workspace-api/#get-list-of-customers' },
+      ]},
+      { keywords: ['assign customer', 'customer assignment', 'assign workspace'], url: '/guidelines/workspace-api/#assign-customer', title: 'Assign Customer', related: [
+        { title: 'Get List of Customers', path: '/guidelines/workspace-api/#get-list-of-customers' },
+      ]},
+      
+      // General Workspace API fallback
+      { keywords: ['workspace api', 'organization workspace', 'switch workspace'], url: '/guidelines/workspace-api/', title: 'Workspace API', related: [
+        { title: 'Customer Guide', path: '/tutorials/customer-guide/' },
+      ]},
+      
+      // Finance API - Customer Finance
+      { keywords: ['customer finance', 'finance details', 'get finance', 'customer billing'], url: '/guidelines/finance-api/#get-customer-finance-details', title: 'Get Customer Finance Details', related: [
+        { title: 'Customer Margin Details', path: '/guidelines/finance-api/#get-customer-margin-details' },
+      ]},
+      { keywords: ['customer margin', 'margin details', 'get margin', 'margin percentage'], url: '/guidelines/finance-api/#get-customer-margin-details', title: 'Get Customer Margin Details', related: [
+        { title: 'Update Customer Margin', path: '/guidelines/finance-api/#update-customer-margin-details' },
+      ]},
+      { keywords: ['update margin', 'edit margin', 'change margin', 'set margin'], url: '/guidelines/finance-api/#update-customer-margin-details', title: 'Update Customer Margin Details', related: [
+        { title: 'Get Customer Margin Details', path: '/guidelines/finance-api/#get-customer-margin-details' },
+      ]},
+      { keywords: ['campaign margin', 'campaign finance', 'margin by campaign'], url: '/guidelines/finance-api/#campaign-margin-details', title: 'Campaign Margin Details', related: [
+        { title: 'Get Customer Margin Details', path: '/guidelines/finance-api/#get-customer-margin-details' },
+      ]},
+      
+      // Finance API - Invoice Operations
+      { keywords: ['invoice', 'invoices', 'invoice list', 'get invoices', 'billing invoice'], url: '/guidelines/finance-api/#invoice-operations', title: 'Invoice Operations', related: [
+        { title: 'Get Customer Finance Details', path: '/guidelines/finance-api/#get-customer-finance-details' },
+      ]},
+      { keywords: ['create invoice', 'new invoice', 'generate invoice'], url: '/guidelines/finance-api/#create-invoice', title: 'Create Invoice', related: [
+        { title: 'Invoice Operations', path: '/guidelines/finance-api/#invoice-operations' },
+      ]},
+      
+      // Finance API - Credit & Payment
+      { keywords: ['credit', 'customer credit', 'credit balance', 'add credit'], url: '/guidelines/finance-api/#credit-operations', title: 'Credit Operations', related: [
+        { title: 'Payment Operations', path: '/guidelines/finance-api/#payment-operations' },
+      ]},
+      { keywords: ['payment', 'payments', 'payment history', 'record payment'], url: '/guidelines/finance-api/#payment-operations', title: 'Payment Operations', related: [
+        { title: 'Credit Operations', path: '/guidelines/finance-api/#credit-operations' },
+      ]},
+      
+      // General Finance API fallback
+      { keywords: ['finance', 'billing', 'budget', 'finance api'], url: '/guidelines/finance-api/', title: 'Finance API', related: [
+        { title: 'Get Customer Finance Details', path: '/guidelines/finance-api/#get-customer-finance-details' },
+      ]},
+      
+      // Dashboard API - Dashboard Operations
+      { keywords: ['dashboard list', 'list dashboards', 'get dashboards', 'my dashboards'], url: '/guidelines/dashboard-api/#get-dashboard-list', title: 'Get Dashboard List', related: [
+        { title: 'Create Dashboard', path: '/guidelines/dashboard-api/#create-dashboard' },
+      ]},
+      { keywords: ['create dashboard', 'new dashboard', 'add dashboard'], url: '/guidelines/dashboard-api/#create-dashboard', title: 'Create Dashboard', related: [
+        { title: 'Update Dashboard', path: '/guidelines/dashboard-api/#update-dashboard' },
+      ]},
+      { keywords: ['update dashboard', 'edit dashboard', 'modify dashboard'], url: '/guidelines/dashboard-api/#update-dashboard', title: 'Update Dashboard', related: [
+        { title: 'Delete Dashboard', path: '/guidelines/dashboard-api/#delete-dashboard' },
+      ]},
+      { keywords: ['delete dashboard', 'remove dashboard'], url: '/guidelines/dashboard-api/#delete-dashboard', title: 'Delete Dashboard', related: [
+        { title: 'Get Dashboard List', path: '/guidelines/dashboard-api/#get-dashboard-list' },
+      ]},
+      { keywords: ['dashboard dimensions', 'dashboard metrics', 'available dimensions', 'available metrics'], url: '/guidelines/dashboard-api/#get-dimensions-and-metrics-for-dashboard', title: 'Get Dimensions and Metrics for Dashboard', related: [
+        { title: 'Dashboard Resource Properties', path: '/guidelines/dashboard-api/#dashboard-resource-properties' },
+      ]},
+      { keywords: ['dashboard resource', 'dashboard properties', 'dashboard schema'], url: '/guidelines/dashboard-api/#dashboard-resource-properties', title: 'Dashboard Resource Properties', related: [
+        { title: 'Create Dashboard', path: '/guidelines/dashboard-api/#create-dashboard' },
+      ]},
+      
+      // General Dashboard API fallback
+      { keywords: ['dashboard', 'overview', 'summary', 'dashboard api'], url: '/guidelines/dashboard-api/', title: 'Dashboard API', related: [
+        { title: 'Get Dashboard List', path: '/guidelines/dashboard-api/#get-dashboard-list' },
+      ]},
+      
+      // Asset API - Asset Operations
+      { keywords: ['list assets', 'asset list', 'get assets', 'all assets'], url: '/guidelines/asset-api/#get-a-list-of-all-assets', title: 'Get a List of All Assets', related: [
+        { title: 'Get Asset Details', path: '/guidelines/asset-api/#get-asset-details' },
+      ]},
+      { keywords: ['asset details', 'get asset', 'asset by id', 'specific asset'], url: '/guidelines/asset-api/#get-asset-details', title: 'Get Asset Details', related: [
+        { title: 'Get a List of All Assets', path: '/guidelines/asset-api/#get-a-list-of-all-assets' },
+      ]},
+      { keywords: ['add assets', 'upload assets', 'add multiple assets', 'upload asset'], url: '/guidelines/asset-api/#add-multiple-assets', title: 'Add Multiple Assets', related: [
+        { title: 'Update Asset Details', path: '/guidelines/asset-api/#update-asset-details' },
+      ]},
+      { keywords: ['update asset', 'edit asset', 'modify asset'], url: '/guidelines/asset-api/#update-asset-details', title: 'Update Asset Details', related: [
+        { title: 'Delete Asset', path: '/guidelines/asset-api/#delete-asset' },
+      ]},
+      { keywords: ['delete asset', 'remove asset'], url: '/guidelines/asset-api/#delete-asset', title: 'Delete Asset', related: [
+        { title: 'Get a List of All Assets', path: '/guidelines/asset-api/#get-a-list-of-all-assets' },
+      ]},
+      
+      // General Asset API fallback
+      { keywords: ['asset', 'asset api', 'media', 'file upload', 'image asset'], url: '/guidelines/asset-api/', title: 'Asset API', related: [
+        { title: 'Upload a Creative', path: '/quickstart-guides/upload-a-creative-quickstart/' },
+      ]},
+      { keywords: ['political', 'political ads', 'election', 'voter file'], url: '/political-vertical/', title: 'Political Advertising', related: []},
+      { keywords: ['healthcare', 'health', 'pharma', 'medical', 'hipaa'], url: '/healthcare-vertical/', title: 'Healthcare Advertising', related: []},
+      { keywords: ['migrate', 'migration', 'switch', 'dv360', 'xandr', 'trade desk', 'beeswax'], url: '/migration-guides/', title: 'Migration Guides', related: []},
+      { keywords: ['getting started', 'begin', 'start', 'introduction', 'new', 'first'], url: '/getting-started/before-you-begin/', title: 'Before You Begin', related: [
+        { title: 'Platform Overview', path: '/getting-started/platform-overview/' },
+        { title: 'REST API Reference', path: '/getting-started/rest-api-reference/' },
+      ]},
+    ];
+
+    // Check for explicit auth question first
+    if (isExplicitAuthQuestion) {
+      return this.buildFallbackResponse(authRoute, pvltAnalysis);
+    }
+    
+    // Find best matching content route - prioritize longer (more specific) keyword matches
+    let bestMatch = null;
+    let bestMatchLength = 0;
+    
+    for (const route of contentRoutes) {
+      for (const kw of route.keywords) {
+        if (lowerMessage.includes(kw) && kw.length > bestMatchLength) {
+          bestMatch = route;
+          bestMatchLength = kw.length;
         }
-        
-        response += `\n\nI'm currently operating in limited mode. For more detailed answers, please try the search bar or browse the documentation.`;
-        
-        return {
-          response,
-          actions: [
-            {
-              tool: 'navigate',
-              params: { path: route.url },
-              status: 'pending',
-            },
-          ],
-          fallback: true,
-          pvlt: pvltAnalysis,
-        };
       }
     }
+    
+    if (bestMatch) {
+      return this.buildFallbackResponse(bestMatch, pvltAnalysis);
+    }
 
-    // Generic fallback with PVLT-ordered suggestions (Foundation → Patterns → Details)
+    // Generic fallback
     return {
-      response: `I'm currently operating in limited mode. Here's the recommended learning path:\n\n**1. Foundation (Start Here):**\n• [Before You Begin](/getting-started/before-you-begin/) - Prerequisites\n• [Authentication Guide](/quickstart-guides/authentication-quickstart-guide/) - Required for all API calls\n\n**2. Quickstart Guides:**\n• [Create a Campaign](/quickstart-guides/create-a-campaign-quickstart/)\n• [Upload a Creative](/quickstart-guides/upload-a-creative-quickstart/)\n\n**3. API Reference:**\n• [API Guidelines](/guidelines/) - Detailed endpoints\n\nYou can also use the search bar to find specific topics.`,
+      response: `I couldn't find a specific guide for that. Here are some starting points:\n\n• [Create a Campaign](/quickstart-guides/create-a-campaign-quickstart/)\n• [Upload a Creative](/quickstart-guides/upload-a-creative-quickstart/)\n• [API Guidelines](/guidelines/) - All endpoints\n\nTry the search bar for more specific topics.`,
       actions: [],
+      fallback: true,
+      pvlt: pvltAnalysis,
+    };
+  }
+
+  /**
+   * Build a concise fallback response with related pages
+   */
+  buildFallbackResponse(route, pvltAnalysis) {
+    let response = `Check out the **[${route.title}](${route.url})** guide.`;
+    
+    // Add related pages if available
+    if (route.related && route.related.length > 0) {
+      response += `\n\nRelated:`;
+      for (const rel of route.related) {
+        response += `\n• [${rel.title}](${rel.path})`;
+      }
+    }
+    
+    return {
+      response,
+      actions: [
+        {
+          tool: 'navigate',
+          params: { path: route.url },
+          status: 'pending',
+        },
+      ],
       fallback: true,
       pvlt: pvltAnalysis,
     };
