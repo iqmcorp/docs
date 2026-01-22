@@ -4,7 +4,6 @@ import { algoliaService } from './algoliaService.js';
 /**
  * AIService - Handles communication with llama.cpp server
  * Uses the /completion endpoint with proper Mistral chat formatting
- * Implements PVLT (Povelitsa) decision-making framework for response prioritization
  * Integrates with Algolia for intelligent documentation search
  */
 export class AIService {
@@ -12,40 +11,67 @@ export class AIService {
     this.cppBackendUrl = process.env.CPP_BACKEND_URL || 'http://localhost:8080';
     this.timeout = 60000; // 60 second timeout for LLM responses
     
-    // PVLT Framework - Prioritize responses using weighted hierarchy
-    // Level 1: PP (Universal Patterns) - Weight 4 - Foundation truths
-    // Level 2: Wisdom (Pattern Recognition) - Weight 3 - Proven patterns  
-    // Level 3: Experience (Personal) - Weight 2 - User context
-    // Level 4: Knowledge (Details) - Weight 1 - Specific facts
-    this.pvltWeights = { pp: 4, wisdom: 3, experience: 2, knowledge: 1 };
-    
     // System prompt for the documentation assistant - NO LINK GENERATION
     // Links are provided separately from Algolia results to prevent hallucinations
     this.systemPrompt = `You are a concise AI assistant for IQM's programmatic advertising API documentation.
 
-CRITICAL RULES:
-1. DO NOT generate any URLs or markdown links. Links will be added automatically from search results.
-2. Write a brief, helpful answer in 2-3 sentences explaining what the user should do.
-3. Reference documentation pages by name (e.g., "the Campaign API page" or "the Authentication quickstart") but DO NOT create links.
-4. DO NOT list out step-by-step sections or table of contents. The user will see the page navigation.
-5. Focus on answering WHY and WHAT, not listing every step.
+=== IQM PLATFORM KNOWLEDGE ===
 
-RESPONSE STYLE:
-- Keep it short: 2-4 sentences max
-- Explain the concept or goal briefly
-- Mention which page covers it, but don't list its sections
-- Let the documentation speak for itself
+ADVERTISING HIERARCHY:
+- Insertion Orders (IOs): Parent hierarchy. Contracts specifying campaign details, budget, and time period.
+- Campaigns: Child of IOs. Targeted advertising runs with optimization strategies, audience targeting, and inventory placement.
+- Creatives: The actual ad content (images, videos, audio, HTML) attached to campaigns.
 
-EXAMPLE RESPONSES:
+ORGANIZATION HIERARCHY:
+- Workspaces: Core organizational entity. Manage multiple accounts, permissions, credentials, and financial operations.
+- Organizations/Advertisers: Companies that place ads. When assigned to a Workspace, they become "Customers."
+- Users: Individuals operating within Workspaces with assigned Advertiser access.
 
-User: "How do I create a campaign?"
-Good: "To create a campaign, you'll need an authenticated session and an insertion order. The Create a Campaign quickstart walks you through the process including setting up targeting and budgets."
-Bad: "Step 1: Authenticate, Step 2: Create IO, Step 3: Create Campaign..." (DON'T LIST STEPS!)
+AUDIENCE TYPES:
+- Matched Audiences: First-party data uploaded (emails, device IDs, etc.) matched to IQM's identity graph.
+- Contextual Audiences: Targeting based on content/context where ads appear.
+- Segment Audiences: Pre-built demographic, geographic, interest-based, or behavioral segments.
 
-User: "What is a conversion?"
-Good: "A conversion tracks when users take desired actions after seeing your ad, like making a purchase. IQM supports pixel and postback tracking methods - see the Conversion API for setup details."
+API REFERENCE (which API to use for what):
+- Campaign API: Create/manage Campaigns and Insertion Orders. Primary campaign operations.
+- Audience API: Create/manage audience targeting (matched, contextual, segment audiences).
+- Creative API: Upload and manage ad creatives (images, video, audio, HTML).
+- Conversions API: Track user actions (purchases, signups) for attribution.
+- Bid Model API: Optimize campaigns with bid strategies, priorities, and dimension targeting.
+- Reports API: Generate and schedule custom reports.
+- Insights API: Generate Voter Level Data (VLD) and Patient Level Data (PLD) reports.
+- Inventory API: Manage ad placements, deals, and inventory groups.
+- Planner API: Draft ad strategy proposals with reach/impression estimates.
+- Finance API: Manage invoices, credits, payments between Workspaces and Advertisers.
+- User API: User registration, login, profile management.
+- Workspace API: Manage Organizations, Workspaces, Customers, Advertisers.
+- Master API: Static reference data (geography, demographics, creative types).
+- Assets API: Upload static assets (images, PDFs).
+- Dashboard API: Create/manage dashboard configurations.
 
-Remember: Brief and helpful. No links, no step lists.`;
+=== RESPONSE RULES ===
+
+CRITICAL:
+1. DO NOT generate any URLs, markdown links, or bracketed labels.
+2. DO NOT add trailing references like "(see the guide)" or "refer to X".
+3. Write 2-3 natural sentences explaining the concept and what API/page covers it.
+4. DO NOT list steps or table of contents. User will see page navigation.
+5. Use the platform knowledge above to give accurate, specific answers.
+
+GOOD RESPONSE EXAMPLES:
+
+"To create a campaign, you'll need an authenticated session and an active insertion order with budget. The Campaign API handles both IO creation and campaign setup."
+
+"IQM supports several audience types: matched audiences from your first-party data, contextual targeting based on content, and pre-built demographic/behavioral segments. The Audience API covers all creation and management operations."
+
+"A conversion tracks user actions after ad exposure, like purchases or signups. The Conversions API supports both pixel and postback tracking methods."
+
+BAD (DO NOT DO):
+- "...see the Campaign section for details." ❌
+- "[quickstart]" or "(API Guidelines)" ❌
+- Listing steps: "Step 1, Step 2..." ❌
+
+Answer naturally. Links are added automatically.`;
 
     // Category priority scores for different query intents
     this.categoryPriority = {
@@ -84,62 +110,6 @@ Remember: Brief and helpful. No links, no step lists.`;
   }
 
   /**
-   * Analyze query to determine PVLT level and adjust response strategy
-   * Returns guidance on which level to emphasize
-   */
-  analyzePVLTLevel(message, context = {}) {
-    const lowerMessage = message.toLowerCase();
-    
-    // Detect if user is asking about foundation-level topics
-    const foundationKeywords = ['authenticate', 'auth', 'login', 'token', 'oauth', 'setup', 'start', 'begin', 'prerequisite', 'require'];
-    const patternKeywords = ['best practice', 'recommend', 'should i', 'how to', 'workflow', 'process', 'step'];
-    const contextKeywords = ['my', 'current', 'already', 'next', 'then', 'after'];
-    
-    let level = 'knowledge'; // Default to details
-    let needsFoundation = false;
-    
-    // Check what level the user is asking about
-    if (foundationKeywords.some(kw => lowerMessage.includes(kw))) {
-      level = 'pp';
-    } else if (patternKeywords.some(kw => lowerMessage.includes(kw))) {
-      level = 'wisdom';
-    } else if (contextKeywords.some(kw => lowerMessage.includes(kw))) {
-      level = 'experience';
-    }
-    
-    // Check if this is a follow-up question (has conversation history)
-    const hasConversationHistory = context.conversationHistory?.length > 0;
-    
-    // Check if auth was already mentioned in conversation
-    const authAlreadyMentioned = context.conversationHistory?.some(msg => 
-      msg.role === 'assistant' && (
-        msg.content?.toLowerCase().includes('authenticate') || 
-        msg.content?.toLowerCase().includes('oauth') ||
-        msg.content?.toLowerCase().includes('bearer token')
-      )
-    );
-    
-    // Only need foundation reminder on FIRST question, and only if asking about API specifics
-    // Never repeat auth reminders if already covered or if this is a follow-up
-    const isFirstQuestion = !hasConversationHistory;
-    const isAskingAPISpecifics = lowerMessage.includes('endpoint') || lowerMessage.includes('api');
-    
-    if (isFirstQuestion && isAskingAPISpecifics && level === 'knowledge') {
-      needsFoundation = true;
-    }
-    
-    return {
-      queryLevel: level,
-      needsFoundation,
-      authAlreadyMentioned,
-      weight: this.pvltWeights[level],
-      guidance: needsFoundation 
-        ? 'First question about API details - include a brief note about auth at the end.'
-        : 'Answer directly and concisely.'
-    };
-  }
-
-  /**
    * Extract key search terms from user's question for better Algolia results
    * Removes common filler words and question patterns
    */
@@ -150,6 +120,7 @@ Remember: Brief and helpful. No links, no step lists.`;
       'what', 'is', 'are', 'where', 'when', 'which', 'who', 'why', 'show', 'tell',
       'about', 'for', 'with', 'from', 'in', 'on', 'at', 'of', 'my', 'your', 'their',
       'please', 'help', 'need', 'want', 'would', 'like', 'should', 'could', 'using',
+      'there', 'types', 'kind', 'kinds', 'different',
     ];
     
     // Split into words, filter out stop words, keep meaningful terms
@@ -157,6 +128,78 @@ Remember: Brief and helpful. No links, no step lists.`;
       .replace(/[?!.,;:'"]/g, '') // Remove punctuation
       .split(/\s+/)
       .filter(word => word.length > 1 && !stopWords.includes(word));
+    
+    // Enhance query with API suffix for entity-focused queries
+    // This helps Algolia find the right documentation section
+    const entityKeywords = {
+      // Core advertising entities
+      'audience': 'audience api',
+      'audiences': 'audience api',
+      'targeting': 'audience api campaign',
+      'matched': 'matched audience api',
+      'contextual': 'contextual audience api',
+      'segment': 'audience segment api',
+      'campaign': 'campaign api',
+      'campaigns': 'campaign api',
+      'creative': 'creative api',
+      'creatives': 'creative api',
+      'conversion': 'conversion api',
+      'conversions': 'conversion api',
+      'tracking': 'conversion tracking api',
+      'pixel': 'conversion pixel api',
+      'postback': 'conversion postback api',
+      
+      // Insertion Orders
+      'io': 'insertion order campaign api',
+      'insertion': 'insertion order campaign api',
+      
+      // Reporting & Analytics
+      'report': 'reports api',
+      'reports': 'reports api',
+      'reporting': 'reports api',
+      'insights': 'insights api',
+      'vld': 'voter level data insights api',
+      'pld': 'patient level data insights api',
+      'dashboard': 'dashboard api',
+      
+      // Inventory & Bidding
+      'inventory': 'inventory api',
+      'deal': 'inventory deal api',
+      'deals': 'inventory deal api',
+      'bid': 'bid model api',
+      'bidding': 'bid model api',
+      'priority': 'bid model priority api',
+      
+      // Organization entities
+      'workspace': 'workspace api',
+      'organization': 'workspace organization api',
+      'advertiser': 'workspace advertiser api',
+      'customer': 'workspace customer api',
+      'user': 'user management api',
+      'login': 'user authentication api',
+      'authentication': 'user authentication api',
+      
+      // Finance
+      'invoice': 'finance invoice api',
+      'payment': 'finance payment api',
+      'credit': 'finance credit api',
+      'budget': 'campaign budget api',
+      
+      // Planner
+      'planner': 'planner api',
+      'proposal': 'planner proposal api',
+      'reach': 'planner reach api',
+    };
+    
+    // Check if query is about an entity and add API suffix
+    for (const [keyword, enhanced] of Object.entries(entityKeywords)) {
+      if (words.includes(keyword)) {
+        // Replace the keyword with enhanced version
+        const idx = words.indexOf(keyword);
+        words.splice(idx, 1, enhanced);
+        break;
+      }
+    }
     
     // If we have at least 1 meaningful word, use those
     if (words.length > 0) {
@@ -217,6 +260,7 @@ Remember: Brief and helpful. No links, no step lists.`;
       let score = 100; // Base score
       const category = hit.category || '';
       const url = hit.url || '';
+      const title = (hit.title || '').toLowerCase();
       
       // Apply category priority boosts based on intent
       const priorityBoosts = this.categoryPriority[intent] || {};
@@ -226,9 +270,16 @@ Remember: Brief and helpful. No links, no step lists.`;
       
       // Boost tutorials/quickstarts for create intent
       if (intent === 'create') {
-        if (url.includes('/quickstart-guides/') || url.includes('/tutorials/')) {
-          score += 80;
+        if (url.includes('/quickstart-guides/')) {
+          score += 100; // Strong preference for quickstarts
+        } else if (url.includes('/tutorials/')) {
+          score += 60; // Tutorials are good but secondary
         }
+      }
+      
+      // Demote specialized content (PG, advanced) unless specifically mentioned
+      if (title.includes('pg ') || url.includes('-pg-') || title.includes('programmatic guaranteed')) {
+        score -= 30; // PG is specialized, prefer general content
       }
       
       // Demote low-priority categories unless specifically requested
@@ -252,14 +303,11 @@ Remember: Brief and helpful. No links, no step lists.`;
   }
 
   /**
-   * Main chat method - uses llama.cpp server with PVLT-aware processing
+   * Main chat method - uses llama.cpp server with Algolia search integration
    * Enriches context with Algolia search results for smarter navigation
    */
   async chat(message, context = {}) {
     try {
-      // Analyze the query using PVLT framework
-      const pvltAnalysis = this.analyzePVLTLevel(message, context);
-      
       // Detect query intent (create, update, get, conceptual)
       const queryIntent = this.detectQueryIntent(message);
       
@@ -287,10 +335,9 @@ Remember: Brief and helpful. No links, no step lists.`;
         console.warn('Algolia search failed, continuing without:', searchError.message);
       }
       
-      // Add PVLT guidance and Algolia context
+      // Add Algolia context
       const enhancedContext = {
         ...context,
-        pvlt: pvltAnalysis,
         queryIntent,
         algoliaContext,
         algoliaResults,
@@ -318,7 +365,6 @@ Remember: Brief and helpful. No links, no step lists.`;
       }
       
       // Add metadata to response
-      response.pvlt = pvltAnalysis;
       response.queryIntent = queryIntent;
       response.links = structuredLinks;
       if (algoliaResults?.hits?.length > 0) {
@@ -357,8 +403,9 @@ Remember: Brief and helpful. No links, no step lists.`;
     const isQuickstartOrTutorial = ['quickstart', 'tutorials'].includes(primaryCategory);
     
     const related = {};
+    const seenBaseUrls = new Set([primaryBasePath]); // Track pages we've already linked
     
-    // If primary is a quickstart, auto-add the corresponding guidelines page
+    // If primary is a quickstart/tutorial, auto-add the corresponding guidelines page
     if (isQuickstartOrTutorial) {
       const guidelinesUrl = this.getCorrespondingGuidelinesUrl(primaryHit.url);
       if (guidelinesUrl) {
@@ -367,6 +414,7 @@ Remember: Brief and helpful. No links, no step lists.`;
           title: this.getGuidelinesTitle(guidelinesUrl),
           url: guidelinesUrl,
         }];
+        seenBaseUrls.add(guidelinesUrl);
       }
     }
     
@@ -374,8 +422,8 @@ Remember: Brief and helpful. No links, no step lists.`;
       const hitCategory = hit.category || this.getCategoryFromUrl(hit.url);
       const hitBasePath = hit.url?.split('#')[0];
       
-      // Skip links to sections of the same page (redundant with sidebar)
-      if (hitBasePath === primaryBasePath) return;
+      // Skip if we've already linked to this page (avoid duplicate page links)
+      if (seenBaseUrls.has(hitBasePath)) return;
       
       // For quickstarts/tutorials: only include guidelines as related resources
       if (isQuickstartOrTutorial && hitCategory !== 'guidelines') return;
@@ -385,12 +433,13 @@ Remember: Brief and helpful. No links, no step lists.`;
         related[categoryLabel] = [];
       }
       
-      // Avoid duplicates and limit to 3 per category
-      if (!related[categoryLabel].some(l => l.url === hit.url) && related[categoryLabel].length < 3) {
+      // Limit to 3 per category
+      if (related[categoryLabel].length < 3) {
         related[categoryLabel].push({
-          title: hit.title,
-          url: hit.url,
+          title: this.getPageTitle(hit), // Use page title, not section title
+          url: hitBasePath, // Use page URL, not section anchor
         });
+        seenBaseUrls.add(hitBasePath);
       }
     });
     
@@ -494,11 +543,57 @@ Remember: Brief and helpful. No links, no step lists.`;
   }
 
   /**
-   * Strip markdown links from LLM response
-   * Converts [text](url) to just "text"
+   * Strip markdown links and trailing references from LLM response
+   * - Removes [text](url) markdown links
+   * - Removes trailing references that point users to docs
+   * - Removes orphaned doc titles/labels at the end
    */
   stripMarkdownLinks(text) {
-    return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    let cleaned = text;
+    
+    // Remove markdown links: [text](url) -> text
+    cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    
+    // Remove any [bracketed text] followed by (parenthetical) at the end
+    cleaned = cleaned.replace(/\s*\[[^\]]+\]\s*\([^)]*\)\s*$/g, '');
+    
+    // Remove trailing parenthetical references containing keywords
+    cleaned = cleaned.replace(/\s*\([^)]*(?:refer|see|check|visit|read|more|documentation|api|guide)[^)]*\)\s*$/gi, '');
+    
+    // Remove trailing parentheticals that are just titles/labels like "(Insertion Orders)" or "(Campaign API)"
+    cleaned = cleaned.replace(/\s*\([A-Z][^)]{0,30}\)\s*$/g, '');
+    
+    // Remove trailing bracketed labels
+    cleaned = cleaned.replace(/\s*\[[^\]]+\]\s*$/gi, '');
+    
+    // Remove sentences starting with reference phrases at the end
+    cleaned = cleaned.replace(/\.\s*(?:For more|See the|Refer to|Check out|Visit|Read the|Please refer|Learn more)[^.]*\.?\s*$/gi, '.');
+    
+    // Remove standalone "Learn more" or similar at the end
+    cleaned = cleaned.replace(/\s+(?:Learn more|Read more|See more|Find out more)\.?\s*$/gi, '');
+    
+    // Remove orphaned title-like fragments at the very end
+    // Matches capitalized phrases like "Campaigns Overview", "Quickstart Guide", etc.
+    cleaned = cleaned.replace(/\.\s*[A-Z][A-Za-z\s]+(?:Quickstart|Guide|Tutorial|Documentation|API|Overview|Article|Help|Center)\s*$/gi, '.');
+    
+    // Also remove any orphaned 2-3 word capitalized phrases at the end (likely doc titles)
+    cleaned = cleaned.replace(/\.\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2}\s*$/g, '.');
+    
+    // Clean up multiple periods or trailing whitespace
+    cleaned = cleaned.replace(/\.{2,}/g, '.').trim();
+    
+    // Remove any LLM-generated "Recommended:" or "Related resources:" sections
+    // These will be added programmatically from Algolia results
+    cleaned = cleaned.replace(/\n*📍\s*\*?\*?Recommended:?\*?\*?[^\n]*/gi, '');
+    cleaned = cleaned.replace(/\n*\*?\*?Related resources:?\*?\*?[\s\S]*$/gi, '');
+    
+    // Remove any bullet points that look like resource lists
+    cleaned = cleaned.replace(/\n+[•\-\*]\s+[A-Z][^.\n]*(?:API|Guide|Tutorial|Quickstart)[^\n]*/g, '');
+    
+    // Clean up any trailing whitespace/newlines
+    cleaned = cleaned.trim();
+    
+    return cleaned;
   }
 
   /**
@@ -538,103 +633,41 @@ Remember: Brief and helpful. No links, no step lists.`;
     const topHit = results.hits[0];
     const { intent } = queryIntent;
     
-    // Use category as the primary label, with section/title as description
-    const topLabel = topHit.category || topHit.section || 'Documentation';
-    const topDesc = this.getHitDescription(topHit);
+    // Provide context about what documentation is available WITHOUT URLs
+    // The LLM should write prose only; links are added programmatically
+    let context = '\n\nDOCUMENTATION CONTEXT (for your knowledge, do NOT mention URLs or link labels):';
     
-    // Add intent-specific guidance
-    let context = '\n\n';
-    if (intent === 'create') {
-      const isTutorial = topHit.url?.includes('/quickstart-guides/') || topHit.url?.includes('/tutorials/');
-      if (isTutorial) {
-        context += `USER WANTS TO CREATE SOMETHING. Lead with this tutorial/quickstart:\n`;
-      } else {
-        context += `USER WANTS TO CREATE SOMETHING. If there's a tutorial in the results, mention it first:\n`;
-      }
-    } else if (intent === 'update') {
-      context += `USER WANTS TO UPDATE/MODIFY. Go straight to the API endpoint:\n`;
-    } else if (intent === 'conceptual') {
-      context += `USER WANTS TO UNDERSTAND A CONCEPT. Explain briefly, then link:\n`;
+    // Tell the LLM what type of content is available
+    const topCategory = topHit.category || 'documentation';
+    const isQuickstart = topHit.url?.includes('/quickstart-guides/');
+    const isTutorial = topHit.url?.includes('/tutorials/');
+    const isGuidelines = topHit.url?.includes('/guidelines/');
+    
+    if (isQuickstart || isTutorial) {
+      context += `\n- A step-by-step ${isQuickstart ? 'quickstart' : 'tutorial'} exists for this topic`;
+      context += `\n- It covers: authentication, setup, and implementation`;
+    } else if (isGuidelines) {
+      context += `\n- Detailed API documentation exists for this topic`;
+      context += `\n- It includes: endpoints, parameters, request/response examples`;
     }
     
-    context += `>>> BEST MATCH: [${topLabel}](${topHit.url})`;
-    if (topDesc) context += ` - ${topDesc}`;
+    // Add relevant content preview if available
     if (topHit.content) {
-      const preview = topHit.content.substring(0, 200).replace(/\n/g, ' ');
-      context += `\nContent: ${preview}...`;
+      const preview = topHit.content.substring(0, 300).replace(/\n/g, ' ').trim();
+      if (preview) {
+        context += `\n- Key info: ${preview}`;
+      }
     }
     
-    // Group all hits by category/page for Related resources section
-    if (results.hits.length > 1) {
-      // Skip the first hit (already used as BEST MATCH) to avoid duplicates
-      const remainingHits = results.hits.slice(1, 6);
-      const grouped = this.groupHitsByCategory(remainingHits);
-      
-      context += `\n\nADDITIONAL RESOURCES (only include if they add value beyond main answer):`;
-      for (const [category, hits] of Object.entries(grouped)) {
-        context += `\n**${category}**`;
-        hits.forEach(hit => {
-          const linkText = this.getHitLinkText(hit);
-          context += `\n• [${linkText}](${hit.url})`;
-        });
-      }
-      context += `\n\nREMINDER: Do NOT include links in Related resources that you already linked in the main answer. Only add genuinely helpful additional resources.`;
-    }
+    context += `\n\nWrite a brief 2-3 sentence answer. Links will be added automatically below your response.`;
     
     return context;
   }
 
   /**
-   * Get link text for an Algolia hit (human-readable anchor/title)
-   */
-  getHitLinkText(hit) {
-    // Prefer anchor converted to readable text
-    if (hit.anchor) {
-      return hit.anchor
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase()); // Title case
-    }
-    // Fall back to title without zero-width chars
-    if (hit.title) {
-      return hit.title.replace(/​/g, '').trim();
-    }
-    return 'Documentation';
-  }
-
-  /**
-   * Get a human-readable description for an Algolia hit
-   */
-  getHitDescription(hit) {
-    // For section headings (lvl2, lvl3), use the anchor as description
-    if (hit.type && hit.type.startsWith('lvl') && hit.anchor) {
-      return hit.anchor.replace(/-/g, ' ');
-    }
-    // For content hits, use the title if different from category
-    if (hit.title && hit.title !== hit.category) {
-      return hit.title.replace(/​/g, '').trim(); // Remove zero-width chars
-    }
-    return null;
-  }
-
-  /**
-   * Group Algolia hits by their category/page
-   */
-  groupHitsByCategory(hits) {
-    const groups = {};
-    for (const hit of hits) {
-      const category = hit.category || hit.section || 'Other';
-      if (!groups[category]) {
-        groups[category] = [];
-      }
-      groups[category].push(hit);
-    }
-    return groups;
-  }
-
-  /**
    * Build Mistral-format prompt from messages
    * Format: <s>[INST] {system}\n\n{user message} [/INST] {assistant response}</s>[INST] {next user} [/INST]
-   * Incorporates PVLT framework guidance and Algolia search context
+   * Incorporates Algolia search context for accurate responses
    */
   buildMistralPrompt(systemPrompt, userMessage, context) {
     let prompt = '<s>[INST] ' + systemPrompt;
@@ -643,15 +676,6 @@ Remember: Brief and helpful. No links, no step lists.`;
     if (context.algoliaContext) {
       prompt += context.algoliaContext;
       prompt += '\n\nIMPORTANT: Answer based on the BEST MATCH above. Link to that URL. Do not make up endpoints.';
-    }
-    
-    // Add PVLT guidance if available - but keep it concise
-    if (context.pvlt) {
-      // Only add foundation note for first-time questions, never repeat
-      if (context.pvlt.needsFoundation && !context.pvlt.authAlreadyMentioned) {
-        prompt += '\n\nNote: This appears to be the user\'s first API question. Add a brief note at the END about needing auth (one sentence max).';
-      }
-      // For follow-up questions, just answer directly
     }
     
     // Add context about current page
@@ -726,408 +750,7 @@ Remember: Brief and helpful. No links, no step lists.`;
     }
   }
 
-  /**
-   * Correct all markdown links in the response text
-   * Fixes hallucinated paths and anchors in [text](url) patterns
-   * 
-   * @deprecated Since template-based responses, links come from Algolia.
-   * Kept for fallback compatibility but not actively used.
-   */
-  correctResponsePaths(response) {
-    // Match markdown links: [text](/path#anchor) or [text](/path)
-    const linkRegex = /\[([^\]]+)\]\((\/[^)]+)\)/g;
-    
-    return response.replace(linkRegex, (match, text, path) => {
-      const correctedPath = this.correctPath(path);
-      return `[${text}](${correctedPath})`;
-    });
-  }
 
-  /**
-   * Known path corrections for common LLM mistakes
-   */
-  pathCorrections = {
-    '/quickstart-guides/customer-guide': '/tutorials/customer-guide/',
-    '/quickstart-guides/customer-guide/': '/tutorials/customer-guide/',
-    '/quickstart-guides/deal-guide': '/tutorials/deal-guide/',
-    '/quickstart-guides/deal-guide/': '/tutorials/deal-guide/',
-    '/quickstart-guides/create-a-bid-model': '/tutorials/create-a-bid-model/',
-    '/quickstart-guides/create-a-bid-model/': '/tutorials/create-a-bid-model/',
-    '/quickstart-guides/create-a-conversion': '/tutorials/create-a-conversion/',
-    '/quickstart-guides/create-a-conversion/': '/tutorials/create-a-conversion/',
-    '/quickstart-guides/create-an-insights-report': '/tutorials/create-an-insights-report/',
-    '/quickstart-guides/create-an-insights-report/': '/tutorials/create-an-insights-report/',
-    '/quickstart-guides/create-a-pg-campaign': '/tutorials/create-a-pg-campaign/',
-    '/quickstart-guides/create-a-pg-campaign/': '/tutorials/create-a-pg-campaign/',
-    '/quickstart-guides/optimize-your-inventory': '/tutorials/optimize-your-inventory/',
-    '/quickstart-guides/optimize-your-inventory/': '/tutorials/optimize-your-inventory/',
-    '/quickstart-guides/upload-a-matched-audience': '/tutorials/upload-a-matched-audience/',
-    '/quickstart-guides/upload-a-matched-audience/': '/tutorials/upload-a-matched-audience/',
-  };
-
-  /**
-   * Anchor corrections for common LLM hallucinations
-   * Maps incorrect anchors to correct ones (without the # prefix)
-   */
-  anchorCorrections = {
-    // Authentication anchors
-    'before-you-begin': '', // Remove - doesn't exist on auth page
-    'creating-an-account': 'sign-up',
-    'create-account': 'sign-up',
-    'sign-up-for-account': 'sign-up',
-    'signup': 'sign-up',
-    'register': 'sign-up',
-    'login': 'log-in',
-    'sign-in': 'log-in',
-    'signin': 'log-in',
-    
-    // Campaign API anchors
-    'get-campaign-details': 'get-campaign-details-by-id',
-    'get-campaign': 'get-campaign-details-by-id',
-    'campaign-details': 'get-campaign-details-by-id',
-    'list-campaigns': 'get-list-of-campaigns',
-    'get-campaigns': 'get-list-of-campaigns',
-    'campaigns-list': 'get-list-of-campaigns',
-    'update-campaign-status': 'update-campaign-status',
-    'campaign-status': 'get-campaign-count-by-status',
-    'create-campaign': 'create-new-campaign',
-    'create-a-campaign': 'create-new-campaign',
-    'creating-a-campaign': 'create-new-campaign',
-    'creating-campaign': 'create-new-campaign',
-    'new-campaign': 'create-new-campaign',
-    'add-campaign': 'create-new-campaign',
-    'updating-a-campaign': 'update-campaign',
-    'updating-campaign': 'update-campaign',
-    'edit-campaign': 'update-campaign',
-    'modify-campaign': 'update-campaign',
-    'remove-campaign': 'delete-campaign',
-    'insertion-order': 'insertion-order-operations',
-    'create-insertion-order': 'create-an-insertion-order',
-    'new-insertion-order': 'create-an-insertion-order',
-    'update-insertion-order': 'update-insertion-order',
-    
-    // Creative API anchors
-    'creating-creatives': 'add-new-creative',
-    'creating-a-creative': 'add-new-creative',
-    'creating-creative': 'add-new-creative',
-    'creating-a-creative-group': 'create-new-creative-group',
-    'creating-creative-group': 'create-new-creative-group',
-    'get-creative-details': 'get-creative-details-by-id',
-    'get-creative': 'get-creative-details-by-id',
-    'creative-details': 'get-creative-details-by-id',
-    'list-creatives': 'get-list-of-creatives',
-    'get-creatives': 'get-list-of-creatives',
-    'creatives-list': 'get-list-of-creatives',
-    'create-a-creative': 'create-creative',
-    'new-creative': 'create-creative',
-    'add-creative': 'create-creative',
-    'edit-creative': 'update-creative',
-    'modify-creative': 'update-creative',
-    'remove-creative': 'delete-creative',
-    'creative-group': 'creative-groups',
-    'creative-groups-list': 'get-list-of-creative-groups',
-    'list-creative-groups': 'get-list-of-creative-groups',
-    'add-creative-to-group': 'add-creatives-to-group',
-    'add-creatives-group': 'add-creatives-to-group',
-    
-    // Audience API anchors
-    'get-audience-details': 'audience-details-by-id',
-    'get-audience': 'audience-details-by-id',
-    'audience-details': 'audience-details-by-id',
-    'list-audiences': 'audience-details-list',
-    'get-audiences': 'audience-details-list',
-    'audiences-list': 'audience-details-list',
-    'create-a-audience': 'create-audience',
-    'new-audience': 'create-audience',
-    'add-audience': 'create-audience',
-    
-    // Reports API anchors
-    'get-report-details': 'get-report-by-id',
-    'get-report': 'get-report-by-id',
-    'report-details': 'get-report-by-id',
-    'list-reports': 'get-a-list-of-reports',
-    'get-reports': 'get-a-list-of-reports',
-    'reports-list': 'get-a-list-of-reports',
-    'create-a-report': 'create-report',
-    'new-report': 'create-report',
-    'add-report': 'create-report',
-    'run-report': 'execute-report',
-    'generate-report': 'execute-report',
-    
-    // Inventory API anchors
-    'list-inventories': 'get-list-of-inventories',
-    'get-inventories': 'get-list-of-inventories',
-    'inventories-list': 'get-list-of-inventories',
-    'list-deals': 'list-of-deals',
-    'get-deals': 'list-of-deals',
-    'deals-list': 'list-of-deals',
-    'pmp-deal': 'pmp-deals',
-    'create-deal': 'create-pmp-deal',
-    'new-deal': 'create-pmp-deal',
-    
-    // Conversion API anchors
-    'get-conversion-details': 'get-conversion-details-by-id',
-    'get-conversion': 'get-conversion-details-by-id',
-    'conversion-details': 'get-conversion-details-by-id',
-    'list-conversions': 'get-list-of-conversions',
-    'get-conversions': 'get-list-of-conversions',
-    'conversions-list': 'get-list-of-conversions',
-    'create-a-conversion': 'create-pixel-conversion',
-    'new-conversion': 'create-pixel-conversion',
-    'add-conversion': 'create-pixel-conversion',
-    'pixel': 'create-pixel-conversion',
-    'postback': 'create-postback-conversion',
-    
-    // User API anchors
-    'login-user': 'login',
-    'user-login': 'login',
-    'sign-in': 'login',
-    'logout-user': 'logout',
-    'user-logout': 'logout',
-    'sign-out': 'logout',
-    'list-users': 'get-list-of-users',
-    'get-users': 'get-list-of-users',
-    'users-list': 'get-list-of-users',
-    'user-profile': 'get-user-profile-details',
-    'get-user': 'get-user-profile-details',
-    'user-details': 'get-user-profile-details',
-    
-    // Dashboard API anchors
-    'list-dashboards': 'get-dashboard-list',
-    'get-dashboards': 'get-dashboard-list',
-    'dashboards-list': 'get-dashboard-list',
-    'create-a-dashboard': 'create-dashboard',
-    'new-dashboard': 'create-dashboard',
-    'add-dashboard': 'create-dashboard',
-    
-    // Finance API anchors
-    'get-finance-details': 'get-customer-finance-details',
-    'finance-details': 'get-customer-finance-details',
-    'customer-finance': 'get-customer-finance-details',
-    'get-margin-details': 'get-customer-margin-details',
-    'margin-details': 'get-customer-margin-details',
-    'customer-margin': 'get-customer-margin-details',
-    
-    // Bid Model API anchors
-    'list-bid-models': 'get-list-of-bid-model-bundles',
-    'get-bid-models': 'get-list-of-bid-model-bundles',
-    'bid-models-list': 'get-list-of-bid-model-bundles',
-    'create-a-bid-model': 'add-bid-model-bundles',
-    'new-bid-model': 'add-bid-model-bundles',
-    'add-bid-model': 'add-bid-model-bundles',
-    
-    // Insights API anchors
-    'list-insights': 'get-a-list-of-insights',
-    'get-insights': 'get-a-list-of-insights',
-    'insights-list': 'get-a-list-of-insights',
-    'vld': 'vld-reports',
-    'pld': 'pld-reports',
-    'sls': 'sls-reports',
-    
-    // Planner API anchors
-    'get-proposal-details': 'get-proposal-details-by-id',
-    'get-proposal': 'get-proposal-details-by-id',
-    'proposal-details': 'get-proposal-details-by-id',
-    'list-proposals': 'get-list-of-proposals',
-    'get-proposals': 'get-list-of-proposals',
-    'proposals-list': 'get-list-of-proposals',
-    'create-a-proposal': 'create-proposal',
-    'new-proposal': 'create-proposal',
-    'add-proposal': 'create-proposal',
-    
-    // Workspace API anchors
-    'list-organizations': 'get-list-of-allowed-organizations',
-    'get-organizations': 'get-list-of-allowed-organizations',
-    'organizations-list': 'get-list-of-allowed-organizations',
-    'organization-details': 'get-organization-details',
-    'get-organization': 'get-organization-details',
-    'list-customers': 'get-list-of-customers',
-    'get-customers': 'get-list-of-customers',
-    'customers-list': 'get-list-of-customers',
-    
-    // Asset API anchors
-    'list-assets': 'get-a-list-of-all-assets',
-    'get-assets': 'get-a-list-of-all-assets',
-    'assets-list': 'get-a-list-of-all-assets',
-    'get-asset-details': 'get-asset-details',
-    'asset-details': 'get-asset-details',
-    'upload-asset': 'add-multiple-assets',
-    'add-asset': 'add-multiple-assets',
-    
-    // Master API anchors
-    'zip-codes': 'get-zip-codes-and-state-ids',
-    'zip-code': 'get-zip-codes-and-state-ids',
-    'state-segment': 'get-state-segment',
-    'states': 'get-state-segment',
-    'city-segment': 'get-city-segment',
-    'cities': 'get-city-segment',
-    'county-segment': 'get-county-segment',
-    'counties': 'get-county-segment',
-    'dma-segment': 'get-dma-code-segment',
-    'dma-code': 'get-dma-code-segment',
-    'dma': 'get-dma-code-segment',
-    'age-segment': 'get-age-segment',
-    'gender-segment': 'get-gender-segment',
-    'exchanges': 'get-exchanges',
-    'device-types': 'get-device-type',
-    'traffic-types': 'get-traffic-types',
-    'creative-sizes': 'get-creative-sizes',
-  };
-
-  /**
-   * Correct known wrong paths that the LLM might generate
-   * Handles paths with or without trailing slashes and anchors
-   */
-  correctPath(path) {
-    // Separate anchor if present
-    let anchor = '';
-    let basePath = path;
-    if (path.includes('#')) {
-      const [base, hash] = path.split('#');
-      basePath = base;
-      anchor = hash; // Without the # prefix for lookup
-    }
-    
-    // Correct anchor if we have one - check if it exists in corrections
-    if (anchor && anchor in this.anchorCorrections) {
-      anchor = this.anchorCorrections[anchor]; // May be empty string to remove anchor
-    }
-    
-    // Rebuild anchor with # prefix (only if anchor is not empty)
-    const anchorStr = anchor ? '#' + anchor : '';
-    
-    // Check for exact match first
-    if (this.pathCorrections[basePath]) {
-      return this.pathCorrections[basePath] + anchorStr;
-    }
-    // Check without trailing slash
-    const withoutSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
-    if (this.pathCorrections[withoutSlash]) {
-      return this.pathCorrections[withoutSlash] + anchorStr;
-    }
-    // Check with trailing slash
-    const withSlash = basePath.endsWith('/') ? basePath : basePath + '/';
-    if (this.pathCorrections[withSlash]) {
-      return this.pathCorrections[withSlash] + anchorStr;
-    }
-    
-    // Return with corrected anchor even if base path didn't need correction
-    return basePath + anchorStr;
-  }
-
-  /**
-   * Parse action hints from the response (e.g., page navigation)
-   */
-  parseActions(response) {
-    const actions = [];
-    
-    // Look for markdown links to docs pages: [text](/path)
-    const linkRegex = /\[([^\]]+)\]\((\/[^)]+)\)/g;
-    let match;
-    while ((match = linkRegex.exec(response)) !== null) {
-      let path = match[2];
-      // Correct known wrong paths
-      path = this.correctPath(path);
-      if (actions.length === 0 && !path.includes('http')) {
-        actions.push({
-          tool: 'navigate',
-          params: { path },
-          status: 'pending',
-        });
-      }
-    }
-
-    // Also look for bare doc paths: /quickstart-guides/something/ or /guidelines/something
-    if (actions.length === 0) {
-      const barePathRegex = /(\/(?:getting-started|guidelines|quickstart-guides|tutorials|migration-guides|political-vertical|healthcare-vertical)[a-z0-9\-\/]*)/gi;
-      while ((match = barePathRegex.exec(response)) !== null) {
-        let path = match[1];
-        // Correct known wrong paths
-        path = this.correctPath(path);
-        actions.push({
-          tool: 'navigate',
-          params: { path },
-          status: 'pending',
-        });
-        break; // Only first valid path
-      }
-    }
-
-    // Extract key terms from the user's question for highlighting
-    // Look for quoted terms or important API terms mentioned in the response
-    const highlightTerms = this.extractHighlightTerms(response);
-    if (highlightTerms.length > 0) {
-      actions.push({
-        tool: 'highlight',
-        params: { terms: highlightTerms },
-        status: 'pending',
-      });
-    }
-
-    return actions;
-  }
-
-  /**
-   * Extract terms to highlight from the response
-   */
-  extractHighlightTerms(response) {
-    const terms = new Set();
-    
-    // Look for backtick-wrapped code/terms: `term`
-    const codeTerms = response.match(/`([^`]+)`/g);
-    if (codeTerms) {
-      codeTerms.forEach(term => {
-        const clean = term.replace(/`/g, '').trim();
-        if (clean.length > 2 && clean.length < 50) {
-          terms.add(clean);
-        }
-      });
-    }
-
-    // Look for quoted terms: "term" or 'term'
-    const quotedTerms = response.match(/["']([^"']+)["']/g);
-    if (quotedTerms) {
-      quotedTerms.forEach(term => {
-        const clean = term.replace(/["']/g, '').trim();
-        if (clean.length > 2 && clean.length < 30 && !clean.includes('/')) {
-          terms.add(clean);
-        }
-      });
-    }
-
-    // API-related terms that are commonly important
-    const apiTerms = [
-      'Authorization', 'Bearer', 'access_token', 'refresh_token',
-      'POST', 'GET', 'PUT', 'DELETE', 'PATCH',
-      'campaignId', 'creativeId', 'organizationId', 'workspaceId',
-      'OAuth', 'API key', 'endpoint'
-    ];
-    
-    apiTerms.forEach(term => {
-      if (response.includes(term)) {
-        terms.add(term);
-      }
-    });
-
-    // Limit to 5 most relevant terms
-    return Array.from(terms).slice(0, 5);
-  }
-
-  /**
-   * Validate that a path is a real documentation page
-   */
-  isValidDocPath(path) {
-    const validPrefixes = [
-      '/getting-started',
-      '/guidelines',
-      '/quickstart-guides',
-      '/tutorials',
-      '/migration-guides',
-      '/political-vertical',
-      '/healthcare-vertical',
-    ];
-    return validPrefixes.some(prefix => path.startsWith(prefix));
-  }
 
   /**
    * Fallback response when backend is unavailable
@@ -1135,9 +758,6 @@ Remember: Brief and helpful. No links, no step lists.`;
    */
   generateFallbackResponse(message, context) {
     const lowerMessage = message.toLowerCase();
-    
-    // Analyze PVLT level for the query
-    const pvltAnalysis = this.analyzePVLTLevel(message, context);
     
     // Only match auth route if user EXPLICITLY asks about auth/login/sign up
     const isExplicitAuthQuestion = /\b(authenticate|authentication|login|log in|sign up|signup|oauth|bearer token|api key|access token)\b/.test(lowerMessage);
@@ -2033,7 +1653,7 @@ Remember: Brief and helpful. No links, no step lists.`;
 
     // Check for explicit auth question first
     if (isExplicitAuthQuestion) {
-      return this.buildFallbackResponse(authRoute, pvltAnalysis);
+      return this.buildFallbackResponse(authRoute);
     }
     
     // Find best matching content route - prioritize longer (more specific) keyword matches
@@ -2050,7 +1670,7 @@ Remember: Brief and helpful. No links, no step lists.`;
     }
     
     if (bestMatch) {
-      return this.buildFallbackResponse(bestMatch, pvltAnalysis);
+      return this.buildFallbackResponse(bestMatch);
     }
 
     // Generic fallback
@@ -2058,14 +1678,13 @@ Remember: Brief and helpful. No links, no step lists.`;
       response: `I couldn't find a specific guide for that. Here are some starting points:\n\n• [Create a Campaign](/quickstart-guides/create-a-campaign-quickstart/)\n• [Upload a Creative](/quickstart-guides/upload-a-creative-quickstart/)\n• [API Guidelines](/guidelines/) - All endpoints\n\nTry the search bar for more specific topics.`,
       actions: [],
       fallback: true,
-      pvlt: pvltAnalysis,
     };
   }
 
   /**
    * Build a concise fallback response with related pages
    */
-  buildFallbackResponse(route, pvltAnalysis) {
+  buildFallbackResponse(route) {
     let response = `Check out the **[${route.title}](${route.url})** guide.`;
     
     // Add related pages if available
@@ -2086,7 +1705,6 @@ Remember: Brief and helpful. No links, no step lists.`;
         },
       ],
       fallback: true,
-      pvlt: pvltAnalysis,
     };
   }
 
