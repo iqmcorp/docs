@@ -5850,7 +5850,73 @@ const sidebars = {
             }          
           ]
     }
-  ]
+  ],
+  mcpSidebar: [
+    {
+      type: 'doc',
+      id: 'mcp/index',
+      label: 'IQM MCP',
+      className: 'sidebarCategory'
+    },
+    {
+      type: "category",
+      label: 'Getting Started',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'mcp/mcp-getting-started/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Introduction',
+          id: `mcp/mcp-getting-started/introduction`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Setup Guide',
+          id: `mcp/mcp-getting-started/setup-guide`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Prompts and Examples',
+          id: `mcp/mcp-getting-started/mcp-actions`,
+          className: 'sidebarItem'
+        }
+      ],
+    },
+    {
+      type: "category",
+      label: 'MCP Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'mcp/mcp-tutorials/index'
+      },
+      items: [
+        {
+          type: 'doc',
+          label: 'Creative Tutorial',
+          id: `mcp/mcp-tutorials/mcp-creative-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Bid Model Tutorial',
+          id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Reports Tutorial',
+          id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
+          className: 'sidebarItem'  
+        }
+      ]
+    }
+  ],
 }
 
 export default sidebars;

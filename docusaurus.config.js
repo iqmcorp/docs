@@ -19,8 +19,6 @@ const config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
-  trailingSlash: true,
-
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "IQM", // Usually your GitHub org/user name.
@@ -160,6 +158,12 @@ const config = {
             label: "MIGRATION GUIDES",
             position: "left",
             to: "/migration-guides/",
+            className: "navbarLink",
+          },
+          {
+            label: "MCP",
+            position: "left",
+            to: "/mcp/",
             className: "navbarLink",
           },
           {
