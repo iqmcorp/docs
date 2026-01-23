@@ -190,10 +190,6 @@ const config = {
                 to: "/partnerships",
               },
               {
-                label: "Help Center",
-                to: "https://help.iqm.com/en/"
-              },
-              {
                 label: "Github",
                 to: "https://github.com/iqmcorp/docs"
               },
