@@ -1,38 +1,15 @@
 import React from 'react';
 import styles from './SupportPanel.module.css';
+import FeedbackWidget from './FeedbackWidget';
 
 interface SupportPanelProps {
-  /** URL for GitHub Discussions */
-  discussionsUrl?: string;
   /** Current page path for feedback tracking */
   pagePath?: string;
 }
 
 const DISCUSSIONS_URL = 'https://github.com/iqmcorp/docs/discussions';
 
-export default function SupportPanel({
-  discussionsUrl = `${DISCUSSIONS_URL}/new?category=q-a`,
-  pagePath,
-}: SupportPanelProps) {
-  const [feedbackState, setFeedbackState] = React.useState<'initial' | 'thanks'>('initial');
-  const [isHelpful, setIsHelpful] = React.useState<boolean | null>(null);
-
-  const handleVote = (helpful: boolean) => {
-    setIsHelpful(helpful);
-    setFeedbackState('thanks');
-    
-    // Send feedback to API (fire and forget)
-    fetch('/api/feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        page: pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/'),
-        helpful,
-        timestamp: new Date().toISOString(),
-      }),
-    }).catch(() => {}); // Silently fail
-  };
-
+export default function SupportPanel({ pagePath }: SupportPanelProps) {
   const buildDiscussionUrl = () => {
     const currentPath = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '');
     const title = encodeURIComponent('Question about IQM API');
@@ -63,49 +40,8 @@ export default function SupportPanel({
       {/* Divider */}
       <div className={styles.divider} />
 
-      {/* Feedback Section */}
-      <div className={styles.section}>
-        {feedbackState === 'initial' ? (
-          <>
-            <span className={styles.label}>Was this page helpful?</span>
-            <div className={styles.buttons}>
-              <button
-                onClick={() => handleVote(true)}
-                className={styles.voteButton}
-                aria-label="Yes, this page was helpful"
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-                </svg>
-                Yes
-              </button>
-              <button
-                onClick={() => handleVote(false)}
-                className={styles.voteButton}
-                aria-label="No, this page was not helpful"
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                </svg>
-                No
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className={styles.thanks}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <span>Thanks for your feedback!</span>
-            {isHelpful === false && (
-              <a href={buildDiscussionUrl()} target="_blank" rel="noopener noreferrer" className={styles.helpLink}>
-                Get help →
-              </a>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Feedback Section - uses FeedbackWidget with GA + GitHub Issues */}
+      <FeedbackWidget pagePath={pagePath} inline />
     </div>
   );
 }
