@@ -4,6 +4,8 @@ import styles from './FeedbackWidget.module.css';
 interface FeedbackWidgetProps {
   /** Current page path for tracking */
   pagePath?: string;
+  /** Page title for GitHub Discussion */
+  pageTitle?: string;
   /** API endpoint to send feedback */
   apiEndpoint?: string;
   /** Callback when feedback is submitted */
@@ -12,8 +14,11 @@ interface FeedbackWidgetProps {
 
 type FeedbackState = 'initial' | 'commenting' | 'submitted';
 
+const DISCUSSIONS_URL = 'https://github.com/iqmcorp/docs/discussions';
+
 export default function FeedbackWidget({
   pagePath,
+  pageTitle,
   apiEndpoint = '/api/feedback',
   onFeedback,
 }: FeedbackWidgetProps) {
@@ -74,6 +79,17 @@ export default function FeedbackWidget({
     await submitFeedback(helpful ?? false);
   };
 
+  const buildDiscussionUrl = (feedbackComment?: string) => {
+    const title = encodeURIComponent(`Feedback: ${pageTitle || pagePath || 'Documentation'}`);
+    const currentPath = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '');
+    let body = encodeURIComponent(`**Page:** ${currentPath}\n\n`);
+    if (feedbackComment) {
+      body += encodeURIComponent(`**Feedback:**\n${feedbackComment}\n\n`);
+    }
+    body += encodeURIComponent(`---\n*Please describe what you were looking for or how we can improve this page.*`);
+    return `${DISCUSSIONS_URL}/new?category=q-a&title=${title}&body=${body}`;
+  };
+
   if (state === 'submitted') {
     return (
       <div className={styles.container}>
@@ -84,6 +100,14 @@ export default function FeedbackWidget({
           </svg>
           <span>Thanks for your feedback!</span>
         </div>
+        {helpful === false && (
+          <div className={styles.discussionLink}>
+            <a href={buildDiscussionUrl(comment)} target="_blank" rel="noopener noreferrer">
+              💬 Start a discussion
+            </a>
+            {' '}to get help from the community
+          </div>
+        )}
       </div>
     );
   }
@@ -118,6 +142,12 @@ export default function FeedbackWidget({
             >
               {isSubmitting ? 'Sending...' : 'Send Feedback'}
             </button>
+          </div>
+          <div className={styles.discussionPrompt}>
+            Need more help?{' '}
+            <a href={buildDiscussionUrl(comment)} target="_blank" rel="noopener noreferrer">
+              Ask the community →
+            </a>
           </div>
         </form>
       </div>

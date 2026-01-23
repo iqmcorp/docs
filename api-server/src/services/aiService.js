@@ -2,6 +2,9 @@ import path from 'path';
 import { algoliaService } from './algoliaService.js';
 import { openApiService } from './openApiService.js';
 
+// GitHub Discussions URL for community help
+const DISCUSSIONS_URL = 'https://github.com/iqmcorp/docs/discussions';
+
 /**
  * AIService - Handles communication with llama.cpp server
  * Uses the /completion endpoint with proper Mistral chat formatting
@@ -419,6 +422,12 @@ Answer naturally. Links are added automatically.`;
         response.searchResults = algoliaResults.hits;
       }
       
+      // Add community help link for users who need more assistance
+      response.communityHelp = {
+        message: "Need more help? Ask the community",
+        url: this.buildDiscussionUrl(message),
+      };
+      
       return response;
     } catch (error) {
       console.warn('llama.cpp server unavailable, using fallback:', error.message);
@@ -651,6 +660,17 @@ Answer naturally. Links are added automatically.`;
     cleaned = cleaned.trim();
     
     return cleaned;
+  }
+
+  /**
+   * Build a GitHub Discussions URL pre-filled with the user's query
+   * @param {string} query - The user's question
+   * @returns {string} URL to create a new GitHub Discussion
+   */
+  buildDiscussionUrl(query) {
+    const title = encodeURIComponent(`Question: ${query.slice(0, 100)}${query.length > 100 ? '...' : ''}`);
+    const body = encodeURIComponent(`**Question:**\n${query}\n\n---\n*Please provide any additional context or details about what you're trying to accomplish.*`);
+    return `${DISCUSSIONS_URL}/new?category=q-a&title=${title}&body=${body}`;
   }
 
   /**
