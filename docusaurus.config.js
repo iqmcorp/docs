@@ -186,6 +186,10 @@ const config = {
                 to: "/guidelines",
               },
               {
+                label: "Partnerships",
+                to: "/partnerships",
+              },
+              {
                 label: "Github",
                 to: "https://github.com/iqmcorp/docs"
               },
