@@ -84,10 +84,13 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        gtag: {
-          trackingID: "G-9G69R8P56B",
-          anonymizeIP: true,
-        },
+        // Only enable gtag in production to avoid errors in development
+        ...(process.env.NODE_ENV === 'production' && {
+          gtag: {
+            trackingID: "G-9G69R8P56B",
+            anonymizeIP: true,
+          },
+        }),
       }),
     ],
   ],
@@ -161,10 +164,6 @@ const config = {
             position: "left",
             to: "/migration-guides/",
             className: "navbarLink",
-          },
-          {
-            type: "custom-aiAssistant",
-            position: "right",
           },
           {
             type: "search",
