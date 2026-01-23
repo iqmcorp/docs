@@ -1,10 +1,16 @@
 import path from 'path';
 import { algoliaService } from './algoliaService.js';
+import { openApiService } from './openApiService.js';
 
 /**
  * AIService - Handles communication with llama.cpp server
  * Uses the /completion endpoint with proper Mistral chat formatting
- * Integrates with Algolia for intelligent documentation search
+ * Integrates with Algolia for documentation search and OpenAPI for endpoint details
+ * 
+ * Dynamic approach:
+ * - Algolia provides documentation URLs (trusted, no hallucination)
+ * - OpenAPI specs provide endpoint details (loaded dynamically from /static/openapi/)
+ * - LLM generates natural language explanations
  */
 export class AIService {
   constructor() {
@@ -107,6 +113,27 @@ Answer naturally. Links are added automatically.`;
       'Healthcare',
       'Political',
     ];
+
+    // Dynamic OpenAPI service - no hardcoded schemas!
+    // Endpoints are loaded from /static/openapi/*.json files at runtime
+    this.openApiService = openApiService;
+  }
+
+  /**
+   * Search OpenAPI specs dynamically for relevant endpoint details
+   * Returns formatted context for the LLM
+   */
+  async getOpenApiContext(message) {
+    try {
+      const result = await this.openApiService.getEndpointContext(message, 3);
+      if (result) {
+        console.log(`🔧 OpenAPI matched ${result.endpoints.length} endpoints`);
+        return result;
+      }
+    } catch (err) {
+      console.warn('OpenAPI search failed:', err.message);
+    }
+    return null;
   }
 
   /**
@@ -343,10 +370,19 @@ Answer naturally. Links are added automatically.`;
         algoliaResults,
       };
       
+      // Dynamically search OpenAPI specs for relevant endpoint details
+      // No hardcoded schemas - loaded from /static/openapi/*.json at runtime
+      const openApiResult = await this.getOpenApiContext(message);
+      if (openApiResult) {
+        enhancedContext.openApiContext = openApiResult.context;
+        enhancedContext.matchedEndpoints = openApiResult.endpoints;
+      }
+      
       const response = await this.callLlamaServer(message, enhancedContext);
       
       // Build structured links from Algolia results (not from LLM)
-      const structuredLinks = this.buildStructuredLinks(algoliaResults?.hits || []);
+      // TRUST ALGOLIA URLs - they are indexed from the actual docs site
+      let structuredLinks = this.buildStructuredLinks(algoliaResults?.hits || []);
       
       // Strip any markdown links the LLM may have generated anyway
       response.response = this.stripMarkdownLinks(response.response);
@@ -354,12 +390,21 @@ Answer naturally. Links are added automatically.`;
       // Combine LLM prose with Algolia-sourced links
       response.response = this.combineResponseWithLinks(response.response, structuredLinks);
       
-      // Set primary action from top Algolia result
+      // Set primary action from top Algolia result (TRUSTED source)
+      // For quickstarts/tutorials: link to page top so user sees full context
       if (algoliaResults?.hits?.length > 0) {
         const topHit = algoliaResults.hits[0];
+        const hitCategory = topHit.category || this.getCategoryFromUrl(topHit.url);
+        const isQuickstartOrTutorial = ['quickstart', 'tutorials'].includes(hitCategory);
+        
+        // Strip anchor for quickstarts/tutorials - user should start at top of page
+        const actionPath = isQuickstartOrTutorial 
+          ? topHit.url?.split('#')[0] 
+          : topHit.url;
+        
         response.actions = [{
           tool: 'navigate',
-          params: { path: topHit.url },
+          params: { path: actionPath },
           status: 'pending',
         }];
       }
@@ -367,6 +412,9 @@ Answer naturally. Links are added automatically.`;
       // Add metadata to response
       response.queryIntent = queryIntent;
       response.links = structuredLinks;
+      if (openApiResult?.endpoints?.length > 0) {
+        response.matchedEndpoints = openApiResult.endpoints;
+      }
       if (algoliaResults?.hits?.length > 0) {
         response.searchResults = algoliaResults.hits;
       }
@@ -554,6 +602,15 @@ Answer naturally. Links are added automatically.`;
     // Remove markdown links: [text](url) -> text
     cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
     
+    // Remove angle-bracket URLs: <https://...> or <http://...>
+    cleaned = cleaned.replace(/<https?:\/\/[^>]+>/g, '');
+    
+    // Remove bare URLs: https://... or http://...
+    cleaned = cleaned.replace(/https?:\/\/[^\s\)>\]]+/g, '');
+    
+    // Remove reference-style footnotes like [1], [2] etc. with their text
+    cleaned = cleaned.replace(/\s*\[\d+\][^.\n]*(?:\.|$)/g, '.');
+    
     // Remove any [bracketed text] followed by (parenthetical) at the end
     cleaned = cleaned.replace(/\s*\[[^\]]+\]\s*\([^)]*\)\s*$/g, '');
     
@@ -667,15 +724,22 @@ Answer naturally. Links are added automatically.`;
   /**
    * Build Mistral-format prompt from messages
    * Format: <s>[INST] {system}\n\n{user message} [/INST] {assistant response}</s>[INST] {next user} [/INST]
-   * Incorporates Algolia search context for accurate responses
+   * Incorporates Algolia search context and OpenAPI specs for accurate responses
    */
   buildMistralPrompt(systemPrompt, userMessage, context) {
     let prompt = '<s>[INST] ' + systemPrompt;
     
+    // Add dynamically-loaded OpenAPI context if we found matching endpoints
+    // This provides accurate endpoint and field information from the actual specs
+    if (context.openApiContext) {
+      prompt += context.openApiContext;
+    }
+    
     // Add Algolia search results if available - this is the KEY enhancement
+    // ALGOLIA URLs ARE TRUSTED - they come from the actual indexed docs
     if (context.algoliaContext) {
       prompt += context.algoliaContext;
-      prompt += '\n\nIMPORTANT: Answer based on the BEST MATCH above. Link to that URL. Do not make up endpoints.';
+      prompt += '\n\nIMPORTANT: The URLs above are CORRECT. Do NOT generate your own URLs. Just explain the concept in 2-3 sentences.';
     }
     
     // Add context about current page

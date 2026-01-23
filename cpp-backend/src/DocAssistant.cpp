@@ -6,6 +6,7 @@
  */
 
 #include "DocAssistant.h"
+#include "ApiMetadataRegistry.h"
 #include <iostream>
 #include <sstream>
 #include <regex>
@@ -296,33 +297,8 @@ AssistantResponse DocAssistant::chat(const std::string& message,
 }
 
 json DocAssistant::getApiEndpointInfo(const std::string& endpoint) const {
-    // This would normally load from the OpenAPI spec
-    // For now, return basic info about known endpoints
-    
-    static const std::map<std::string, json> endpoints = {
-        {"/api/v3/campaign", {
-            {"method", "POST"},
-            {"description", "Create a new campaign"},
-            {"auth", "Bearer token required"}
-        }},
-        {"/api/v3/campaigns", {
-            {"method", "GET"},
-            {"description", "List all campaigns"},
-            {"auth", "Bearer token required"}
-        }},
-        {"/api/v3/creative", {
-            {"method", "POST"},
-            {"description", "Upload a creative asset"},
-            {"auth", "Bearer token required"}
-        }}
-    };
-    
-    auto it = endpoints.find(endpoint);
-    if (it != endpoints.end()) {
-        return it->second;
-    }
-    
-    return {{"error", "Endpoint not found"}};
+    // Use the ApiMetadataRegistry for rich endpoint information
+    return ApiMetadataRegistry::instance().getEndpointJson(endpoint);
 }
 
 // Tool implementations
@@ -346,16 +322,55 @@ json DocAssistant::toolSearchDocs(const json& params) {
 
 json DocAssistant::toolGetApiInfo(const json& params) {
     std::string endpoint = params.value("endpoint", "");
+    std::string method = params.value("method", "");
+    
+    // If endpoint looks like a search query, search instead
+    if (endpoint.find("/") == std::string::npos) {
+        auto results = ApiMetadataRegistry::instance().searchEndpoints(endpoint);
+        json response = json::array();
+        for (const auto* meta : results) {
+            response.push_back({
+                {"path", meta->path},
+                {"method", meta->method},
+                {"summary", meta->summary},
+                {"docPage", meta->docPage}
+            });
+        }
+        return response;
+    }
+    
     return getApiEndpointInfo(endpoint);
 }
 
 json DocAssistant::toolListEndpoints(const json& params) {
-    // Return categorized endpoint list
-    return {
-        {"campaigns", {"/api/v3/campaign", "/api/v3/campaigns"}},
-        {"creatives", {"/api/v3/creative", "/api/v3/creatives"}},
-        {"reports", {"/api/v3/report", "/api/v3/report/schedule"}}
-    };
+    std::string category = params.value("category", "");
+    auto& registry = ApiMetadataRegistry::instance();
+    
+    if (!category.empty()) {
+        // Return endpoints for specific category
+        auto endpoints = registry.getByCategory(category);
+        json result = json::array();
+        for (const auto* meta : endpoints) {
+            result.push_back({
+                {"path", meta->path},
+                {"method", meta->method},
+                {"summary", meta->summary}
+            });
+        }
+        return {{category, result}};
+    }
+    
+    // Return all categories with their endpoints
+    json result;
+    for (const auto& cat : registry.getCategories()) {
+        auto endpoints = registry.getByCategory(cat);
+        json catEndpoints = json::array();
+        for (const auto* meta : endpoints) {
+            catEndpoints.push_back(meta->path);
+        }
+        result[cat] = catEndpoints;
+    }
+    return result;
 }
 
 json DocAssistant::toolGetExampleCode(const json& params) {
