@@ -1,37 +1,38 @@
-import React from 'react';
-import Layout from '@theme/Layout';
+import React, { type ReactNode } from 'react';
+import clsx from 'clsx';
 import Link from '@docusaurus/Link';
+import type { Props } from '@theme/NotFound/Content';
 
 const DISCUSSIONS_URL = 'https://github.com/iqmcorp/docs/discussions';
 
-export default function NotFound(): JSX.Element {
+export default function NotFoundContent({ className }: Props): ReactNode {
   return (
-    <Layout title="Page Not Found">
-      <main style={{
+    <main 
+      className={clsx(className)}
+      style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '60vh',
-        padding: '40px 20px',
         textAlign: 'center',
-      }}>
-        <h1 style={{ fontSize: '4rem', marginBottom: '8px' }}>404</h1>
-        <h2 style={{ marginBottom: '16px', fontWeight: 500 }}>Page Not Found</h2>
+        minHeight: '60vh',
+        padding: '2rem',
+      }}
+    >
+      <h1 style={{ fontSize: '5rem', marginBottom: '0.5rem', fontWeight: 700 }}>404</h1>
+        <h2 style={{ marginBottom: '1rem', fontWeight: 500, fontSize: '1.5rem' }}>Page Not Found</h2>
         <p style={{ 
           color: 'var(--ifm-font-color-secondary)', 
-          marginBottom: '32px',
-          maxWidth: '500px',
+          marginBottom: '2rem',
+          maxWidth: '400px',
         }}>
           The page you're looking for doesn't exist or has been moved.
         </p>
         
         <div style={{ 
           display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          marginBottom: '40px',
+          gap: '1rem', 
+          marginBottom: '2.5rem',
         }}>
           <Link
             to="/"
@@ -48,12 +49,12 @@ export default function NotFound(): JSX.Element {
         </div>
 
         <div style={{
-          padding: '20px 32px',
+          padding: '1.25rem 2rem',
           background: 'var(--ifm-color-emphasis-100)',
           borderRadius: '12px',
           border: '1px solid var(--ifm-color-emphasis-200)',
         }}>
-          <p style={{ margin: '0 0 12px 0', fontWeight: 500 }}>
+          <p style={{ margin: '0 0 0.75rem 0', fontWeight: 500 }}>
             Can't find what you're looking for?
           </p>
           <a
@@ -63,7 +64,7 @@ export default function NotFound(): JSX.Element {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '0.5rem',
               color: 'var(--ifm-color-primary)',
               textDecoration: 'none',
               fontWeight: 500,
@@ -75,7 +76,6 @@ export default function NotFound(): JSX.Element {
             Ask the community
           </a>
         </div>
-      </main>
-    </Layout>
+    </main>
   );
 }
