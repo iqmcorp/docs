@@ -29,6 +29,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # DocAssistant library
 add_library(docassistant STATIC
     src/DocAssistant.cpp
+    src/ApiMetadataRegistry.cpp
 )
 target_include_directories(docassistant PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(docassistant PUBLIC 
