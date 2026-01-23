@@ -84,10 +84,13 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        gtag: {
-          trackingID: "G-9G69R8P56B",
-          anonymizeIP: true,
-        },
+        // Only enable gtag in production to avoid errors in development
+        ...(process.env.NODE_ENV === 'production' && {
+          gtag: {
+            trackingID: "G-9G69R8P56B",
+            anonymizeIP: true,
+          },
+        }),
       }),
     ],
   ],
@@ -172,10 +175,10 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "IQM",
+            title: "Resources",
             items: [
               {
-                label: "Website",
+                label: "IQM",
                 to: "https://iqm.com/",
               },
               {
@@ -193,6 +196,19 @@ const config = {
               {
                 label: "Github",
                 to: "https://github.com/iqmcorp/docs"
+              },
+            ],
+          },
+          {
+            title: "Support",
+            items: [
+              {
+                label: "GitHub Discussions",
+                to: "https://github.com/iqmcorp/docs/discussions"
+              },
+              {
+                label: "Help Center",
+                to: "https://help.iqm.com/en/"
               },
             ],
           },
