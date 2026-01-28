@@ -64,6 +64,7 @@ struct ChatMessage {
 struct AssistantResponse {
     std::string text;
     std::vector<json> actions;  // Tool calls to execute
+    json knowledgeContext;      // Structured knowledge from resolver (validated URLs only)
     std::string model;
     bool success = false;
     std::string error;
@@ -123,12 +124,15 @@ private:
     json toolGetApiInfo(const json& params);
     json toolListEndpoints(const json& params);
     json toolGetExampleCode(const json& params);
+    json toolGetEntityInfo(const json& params);
+    json toolGetWorkflow(const json& params);
 
     // Build prompt with context
     std::string buildPrompt(const std::string& message,
                            const std::vector<ChatMessage>& history,
                            const json& pageContext,
-                           const std::string& ragContext = "");
+                           const std::string& ragContext = "",
+                           const std::string& knowledgeContext = "");
 };
 
 } // namespace docs

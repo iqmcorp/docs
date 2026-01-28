@@ -1,0 +1,552 @@
+# Layer 1: SKELETON (Foundation - Weight 4)
+# What entities exist? What are their relationships?
+# Source: api-sdk-pipeline/layers/taxonomy/entity-hierarchy.yaml + docs structure
+# 
+# PVLT: This is the foundation. Higher layers cannot contradict skeleton.
+
+# Entity Hierarchy
+# ================
+# Defines what exists, how things relate, and what IDs/endpoints matter.
+
+entities:
+  # ============================================
+  # ORGANIZATION TIER
+  # ============================================
+  
+  workspace:
+    id_field: owId
+    header: X-IAA-OW-ID
+    level: 0
+    description: "Company providing DSP service. Defines permissions for Customers."
+    children: [workspace_user]
+    docs:
+      primary: /getting-started/platform-overview
+      related:
+        - /guidelines/workspace-api
+        - /guidelines/user-api
+    api: user-api
+    help_center: https://help.iqm.com/en/collections/1387052-manage-your-organization
+    
+  workspace_user:
+    id_field: userId
+    level: 1
+    parent: workspace
+    description: "Individual platform user within a Workspace."
+    children: [customer]
+    docs:
+      primary: /getting-started/before-you-begin
+      related:
+        - /guidelines/user-api
+        - /quickstart-guides/authentication-quickstart-guide
+    api: user-api
+    
+  customer:
+    id_field: owId
+    aliases: [advertiserId, organizationId, customerId]
+    level: 2
+    parent: workspace_user
+    description: "Organization/Advertiser assigned to a Workspace User."
+    children: [insertion_order]
+    docs:
+      primary: /tutorials/customer-guide
+      related:
+        - /guidelines/workspace-api
+        - /guidelines/finance-api
+    api: workspace-api
+    help_center: https://help.iqm.com/en/articles/8365221-how-to-add-a-customer
+
+  # ============================================
+  # ADVERTISING TIER
+  # ============================================
+  
+  insertion_order:
+    id_field: ioId
+    level: 3
+    parent: customer
+    description: "Contract specifying campaign parameters, budget, and timeframe."
+    children: [campaign]
+    docs:
+      primary: /guidelines/campaign-api
+      section: "#insertion-orders"
+      related:
+        - /quickstart-guides/create-a-campaign-quickstart
+    api: campaign-api
+    related_apis: [bid-model-api]
+    endpoints:
+      create: POST /api/v3/cmp/io/add
+      list: POST /api/v3/cmp/io/basic/list
+      get: GET /api/v3/cmp/io/{ioId}
+      update_budget: PATCH /api/v3/cmp/io/update-budget
+      assign_priority: PUT /api/v3/bm/io/{ioId}/bid-models
+    properties:
+      - budget_total
+      - budget_daily
+      - start_date
+      - end_date
+      - status
+    help_center: https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order
+    
+  campaign:
+    id_field: campaignId
+    level: 4
+    parent: insertion_order
+    description: "Targeted advertising run with optimization strategies."
+    children: [creative, audience, conversion, inventory]
+    docs:
+      primary: /quickstart-guides/create-a-campaign-quickstart
+      related:
+        - /guidelines/campaign-api
+        - /quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide
+    api: campaign-api
+    related_apis: [bid-model-api, conversion-api, insights-api, inventory-api, reports-api]
+    endpoints:
+      create: POST /api/v2/cmp/campaigns/add
+      create_pg: POST /api/v3/cmp/pg/campaigns/add
+      get: GET /api/v2/cmp/campaign/{campaignId}
+      list: POST /api/v3/cmp/io/campaigns/list
+      assign_conversions: POST /api/v3/cmp/target/conversion
+      assign_audiences: POST /api/v3/cmp/target/audience
+      bid_modeling: PUT /api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}
+      inventory_targeting: POST /api/v2/inv/inventories/includeExclude
+      run_report: POST /api/v3/ra/report/add
+    campaign_types:
+      - id: 1
+        name: Advanced
+        description: "Standard programmatic campaign"
+      - id: 2
+        name: Programmatic Guaranteed (PG)
+        description: "Direct deal campaign"
+    properties:
+      - budget_total
+      - budget_daily
+      - max_bid
+      - start_date
+      - end_date
+      - status
+      - targeting
+      - optimization_strategy
+    help_center: https://help.iqm.com/en/articles/11497668-campaigns-overview
+
+  # ============================================
+  # CAMPAIGN CHILDREN (Level 5)
+  # ============================================
+  
+  creative:
+    id_field: creativeId
+    level: 5
+    parent: campaign
+    relationship_type: assignment  # assigned to campaign
+    description: "Ad content file (image, video, audio, HTML, native)."
+    docs:
+      primary: /quickstart-guides/upload-a-creative-quickstart
+      related:
+        - /guidelines/creative-api
+    api: creative-api
+    endpoints:
+      create: POST /api/v3/crt/creatives
+      get: GET /api/v3/crt/creatives/{creativeId}
+      create_group: POST /api/v3/crt/creatives/groups
+      modify_group: POST /api/v3/crt/creatives/groups/modify-creatives
+    creative_types:
+      - id: 11
+        name: Image
+        description: "Display banner ad"
+      - id: 13
+        name: HTML
+        description: "Rich media ad"
+      - id: 14
+        name: Video
+        description: "Video ad (pre-roll, mid-roll, etc.)"
+      - id: 15
+        name: Native
+        description: "Native ad format"
+      - id: 17
+        name: Audio
+        description: "Audio ad (podcast, streaming)"
+    help_center: https://help.iqm.com/en/collections/1387054-manage-your-creatives
+    
+  audience:
+    id_field: audienceId
+    level: 5
+    parent: campaign
+    relationship_type: targeting  # targeted by campaign
+    description: "Targeting segments for reaching specific users."
+    docs:
+      primary: /quickstart-guides/matched-audience-upload-api-quickstart-guide
+      related:
+        - /guidelines/audience-api
+        - /quickstart-guides/contextual-audience-quickstart
+    api: audience-api
+    endpoints:
+      create_matched: POST /api/v2/audience/matched/add
+      list: GET /api/v2/audience/list
+    audience_types:
+      - id: 1
+        name: Matched Audience
+        description: "First-party data audience (email, device IDs, etc.)"
+      - id: 2
+        name: Segmented Audience
+        description: "Pre-built audience segments"
+      - id: 10
+        name: Custom Voter Audience
+        description: "Political vertical voter targeting"
+      - id: 3
+        name: Retargeted Audience
+        description: "Users who previously interacted with ads"
+      - id: 4
+        name: Geofarmed Audience
+        description: "Location-based audience from geofencing"
+      - id: 5
+        name: Contextual Audience
+        description: "Content and context-based targeting"
+      - id: 6
+        name: Lookalike Audience
+        description: "Similar users to existing audience"
+      - id: 7
+        name: Campaign Audience
+        description: "Audience derived from campaign performance"
+      - id: 8
+        name: Pre-bid Audience
+        description: "Pre-bid targeting segments"
+    help_center: https://help.iqm.com/en/articles/11748442-create-or-manage-a-matched-audience
+    
+  conversion:
+    id_field: conversionId
+    level: 5
+    parent: campaign
+    relationship_type: assignment  # assigned to campaign
+    description: "Tracking pixels and attribution for campaign measurement."
+    docs:
+      primary: /quickstart-guides/conversion-quickstart
+      related:
+        - /guidelines/conversion-api
+    api: conversion-api
+    related_apis: [campaign-api]
+    endpoints:
+      create: POST /api/v3/conversion/add
+      assign_to_campaign: POST /api/v3/conversion/assign-to/campaign
+      get: GET /api/v3/conversion/{conversionId}
+    conversion_types:
+      - id: 1
+        name: Pixel
+        description: "Client-side tracking with advanced settings for fine-tuned optimization"
+      - id: 2
+        name: Postback
+        description: "Server-side tracking"
+    help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
+    
+  inventory:
+    id_field: inventoryId
+    level: 5
+    parent: campaign
+    relationship_type: targeting  # targeted by campaign
+    description: "Ad placement and exchange targeting."
+    docs:
+      primary: /quickstart-guides/inventory-quickstart
+      related:
+        - /guidelines/inventory-api
+    api: inventory-api
+    endpoints:
+      include_exclude: POST /api/v2/inv/inventories/includeExclude
+      list_deals: GET /api/v2/inv/deals/list
+    inventory_types:
+      - pmp_deals
+      - inventory_groups
+      - exchanges
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+
+  # ============================================
+  # SUPPORTING ENTITIES
+  # ============================================
+  
+  report:
+    id_field: reportId
+    level: 5
+    parent: campaign  # reports on campaigns (not contained)
+    relationship_type: analytics
+    description: "Performance and analytics reports."
+    docs:
+      primary: /quickstart-guides/reporting-api-quickstart-guide
+      related:
+        - /guidelines/reports-api
+        - /quickstart-guides/schedule-report-api-quickstart-guide
+    api: reports-api
+    related_apis: [dashboard-api, insights-api]
+    endpoints:
+      create: POST /api/v3/ra/report/add
+      schedule: POST /api/v3/ra/report/schedule
+      get: GET /api/v3/ra/report/{reportId}
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+    
+  bid_model:
+    id_field: bidModelId
+    level: 5
+    parent: campaign
+    relationship_type: configuration
+    description: "Bid strategies and optimization settings."
+    docs:
+      primary: /quickstart-guides/bid-model-quickstart
+      related:
+        - /guidelines/bid-model-api
+    api: bid-model-api
+    endpoints:
+      manage_campaign_bm: PUT /api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}
+      create_bm_bundle: POST /api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles
+      update_bm_bundle: PATCH /api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles
+      manage_io_bm: PUT /api/v3/bm/io/{ioId}/bid-models
+      assign_io_priority_bm: POST /api/v3/bm/io/{ioId}/bid-models
+      get_bm_dimensions: GET /api/v3/bm/static/dimensions
+    help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
+
+  # ============================================
+  # ADDITIONAL SUPPORTING ENTITIES
+  # ============================================
+  
+  dashboard:
+    id_field: dashboardId
+    level: 5
+    parent: workspace
+    relationship_type: analytics
+    description: "UI dashboard for campaign metrics and visualization."
+    docs:
+      primary: /guidelines/dashboard-api
+    api: dashboard-api
+    endpoints:
+      get_metrics: GET /api/v2/rb/dashboard
+    
+  vld_report:
+    id_field: vldReportId
+    level: 5
+    parent: campaign
+    relationship_type: analytics
+    description: "Voter Level Data report for political advertising insights."
+    docs:
+      primary: /political-vertical/insights-vld
+      related:
+        - /guidelines/insights-api
+    api: insights-api
+    vertical: political
+    
+  pld_report:
+    id_field: pldReportId
+    level: 5
+    parent: campaign
+    relationship_type: analytics
+    description: "Patient Level Data report for healthcare advertising insights."
+    docs:
+      primary: /healthcare-vertical/insights-pld
+      related:
+        - /guidelines/insights-api
+    api: insights-api
+    vertical: healthcare
+    
+  payment:
+    id_field: paymentId
+    level: 3
+    parent: customer
+    relationship_type: configuration
+    description: "Payment methods and transactions for billing."
+    docs:
+      primary: /guidelines/finance-api
+      section: "#payments"
+    api: finance-api
+    
+  invoice:
+    id_field: invoiceId
+    level: 3
+    parent: customer
+    relationship_type: analytics
+    description: "Invoice records for billing and accounting."
+    docs:
+      primary: /guidelines/finance-api
+      section: "#invoices"
+    api: finance-api
+    
+  credit:
+    id_field: creditId
+    level: 3
+    parent: customer
+    relationship_type: configuration
+    description: "Credit balance and adjustments."
+    docs:
+      primary: /guidelines/finance-api
+      section: "#credits"
+    api: finance-api
+    
+  asset:
+    id_field: assetId
+    level: 5
+    relationship_type: assignment
+    description: "Media files (images, videos) uploaded for creatives."
+    docs:
+      primary: /guidelines/asset-api
+    api: asset-api
+    endpoints:
+      upload: POST /api/v3/ast/assets
+      get: GET /api/v3/ast/assets/{assetId}
+      
+  plan:
+    id_field: planId
+    level: 4
+    parent: customer
+    relationship_type: configuration
+    description: "Campaign planning and forecasting."
+    docs:
+      primary: /guidelines/planner-api
+    api: planner-api
+    
+  reference_data:
+    id_field: null
+    level: 0
+    description: "Static lookup data (countries, states, device types, etc.)"
+    docs:
+      primary: /guidelines/master-api
+    api: master-api
+    endpoints:
+      countries: GET /api/v3/master/countries
+      states: GET /api/v3/master/states
+      device_types: GET /api/v3/master/deviceTypes
+
+# Relationship Types
+# ==================
+relationships:
+  parent_child:
+    description: "Hierarchical containment (IO contains Campaigns)"
+    implies: "Child cannot exist without parent"
+    
+  assignment:
+    description: "Entity assigned to another (Conversion assigned to Campaign)"
+    implies: "Entity created independently, then linked"
+    
+  targeting:
+    description: "Entity used for targeting (Audience targeted by Campaign)"
+    implies: "Targeting criteria selection"
+    
+  configuration:
+    description: "Entity configures another (Bid Model configures Campaign)"
+    implies: "Settings/strategy applied to entity"
+    
+  analytics:
+    description: "Entity reports on another (Report analyzes Campaign)"
+    implies: "Read-only relationship for measurement"
+
+# API Registry
+# ============
+apis:
+  user-api:
+    base_path: /api/v3/ua
+    primary_entities: [workspace, workspace_user]
+    doc: /guidelines/user-api
+    description: "Authentication, user management, workspace operations"
+    
+  workspace-api:
+    base_path: /api/v3/ws
+    primary_entities: [workspace, customer]
+    doc: /guidelines/workspace-api
+    description: "Workspace and organization management"
+    
+  campaign-api:
+    base_paths: [/api/v2/cmp, /api/v3/cmp]
+    primary_entities: [insertion_order, campaign]
+    doc: /guidelines/campaign-api
+    description: "Core advertising management - IOs and Campaigns"
+    
+  creative-api:
+    base_path: /api/v3/crt
+    primary_entities: [creative]
+    doc: /guidelines/creative-api
+    description: "Ad content management"
+    
+  audience-api:
+    base_paths: [/api/v2/audience, /api/v3/audience]
+    primary_entities: [audience]
+    doc: /guidelines/audience-api
+    description: "Targeting segments"
+    
+  conversion-api:
+    base_path: /api/v3/conversion
+    primary_entities: [conversion]
+    doc: /guidelines/conversion-api
+    description: "Attribution tracking"
+    
+  bid-model-api:
+    base_path: /api/v3/bm
+    primary_entities: [bid_model]
+    doc: /guidelines/bid-model-api
+    description: "Bid strategies and priority"
+    
+  inventory-api:
+    base_path: /api/v2/inv
+    primary_entities: [inventory]
+    doc: /guidelines/inventory-api
+    description: "Placement targeting"
+    
+  reports-api:
+    base_path: /api/v3/ra
+    primary_entities: [report]
+    doc: /guidelines/reports-api
+    description: "Performance reporting"
+    
+  dashboard-api:
+    base_path: /api/v2/rb
+    primary_entities: [dashboard]
+    doc: /guidelines/dashboard-api
+    description: "UI dashboard data"
+    
+  finance-api:
+    base_path: /api/v3/fa
+    primary_entities: [payment, invoice, credit]
+    doc: /guidelines/finance-api
+    description: "Financial operations"
+    
+  insights-api:
+    base_path: /api/v3/ins
+    primary_entities: [vld_report]
+    doc: /guidelines/insights-api
+    description: "Voter level data and insights"
+    
+  asset-api:
+    base_path: /api/v3/ast
+    primary_entities: [asset]
+    doc: /guidelines/asset-api
+    description: "File and media storage"
+    
+  planner-api:
+    base_path: /api/v3/pl
+    primary_entities: [plan]
+    doc: /guidelines/planner-api
+    description: "Campaign planning"
+    
+  master-api:
+    base_path: /api/v3/master
+    primary_entities: [reference_data]
+    doc: /guidelines/master-api
+    description: "Static/lookup data"
+
+# Vertical Bifurcation
+# ====================
+verticals:
+  political:
+    description: "Political advertising with VLD reports"
+    key_features:
+      - Voter Level Data (VLD) reports
+      - Demographic targeting
+      - Voting history data
+    apis: [insights-api]
+    docs:
+      - /political-vertical/index
+      - /political-vertical/insights-vld
+      - /political-vertical/audience-segments
+      - /political-vertical/finance
+      
+  healthcare:
+    description: "Healthcare advertising with PLD reports"
+    key_features:
+      - Patient Level Data (PLD) reports
+      - HIPAA compliance considerations
+    apis: [insights-api]
+    docs:
+      - /healthcare-vertical/index
+      - /healthcare-vertical/insights-pld
+      - /healthcare-vertical/audience-healthcare
+      - /healthcare-vertical/finance

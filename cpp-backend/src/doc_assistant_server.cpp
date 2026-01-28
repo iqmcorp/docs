@@ -181,10 +181,11 @@ std::string handleRequest(const HttpRequest& req, DocAssistant& assistant) {
                     {"stop", true}
                 };
             } else {
-                // Our API format
+                // Our API format - includes structured knowledge context
                 response = {
                     {"response", result.text},
                     {"actions", result.actions},
+                    {"knowledge", result.knowledgeContext},  // Validated URLs from knowledge layer
                     {"model", result.model},
                     {"success", result.success}
                 };
@@ -205,7 +206,7 @@ std::string handleRequest(const HttpRequest& req, DocAssistant& assistant) {
     }
     
     // Search endpoint
-    if (req.path == "/api/search" || req.path == "/v1/search") {
+    if (req.path == "/api/search" || req.path == "/v1/search" || req.path == "/api/ai/search") {
         if (req.method != "POST") {
             return httpResponse(400, "application/json", R"({"error": "Method not allowed"})");
         }

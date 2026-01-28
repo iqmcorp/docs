@@ -1,0 +1,589 @@
+# Layer 3: NAVIGATION (Experience - Weight 2)
+# How do users navigate? What are common paths?
+# Source: Doc structure, help.iqm.com links, common user patterns
+#
+# PVLT: This layer maps user journeys. Cannot change structure or patterns.
+
+# Intent Mapping
+# ==============
+# Maps natural language intents to resources
+
+intents:
+  # ============================================
+  # AUTHENTICATION & SETUP
+  # ============================================
+  
+  authenticate:
+    patterns:
+      - "how do I log in"
+      - "authenticate"
+      - "authentication"
+      - "set up authentication"
+      - "get access token"
+      - "sign up"
+      - "create account"
+      - "API credentials"
+      - "bearer token"
+      - "how to log in"
+      - "login"
+      - "sign in"
+      - "get started"
+      - "first steps"
+      - "get API access"
+      - "authorization"
+    entity: workspace_user
+    action: login
+    primary_doc: /quickstart-guides/authentication-quickstart-guide
+    endpoint: POST /api/v3/ua/login
+    related_docs:
+      - /getting-started/before-you-begin
+    clarifying_questions:
+      - "Do you already have an IQM account?"
+      - "Are you trying to log in or refresh an expired token?"
+      
+  refresh_token:
+    patterns:
+      - "token expired"
+      - "refresh token"
+      - "401 error"
+      - "unauthorized"
+    entity: workspace_user
+    action: refresh
+    primary_doc: /quickstart-guides/authentication-quickstart-guide
+    section: "#refresh-token"
+    endpoint: POST /api/v3/ua/token/refresh
+    
+  workspace_setup:
+    patterns:
+      - "set up workspace"
+      - "X-IAA-OW-ID"
+      - "organization workspace ID"
+      - "owId"
+    entity: workspace
+    primary_doc: /getting-started/before-you-begin
+    section: "#workspace-id"
+    related_docs:
+      - /getting-started/platform-overview
+      
+  # ============================================
+  # CAMPAIGN OPERATIONS
+  # ============================================
+  
+  create_campaign:
+    patterns:
+      - "create a campaign"
+      - "new campaign"
+      - "set up campaign"
+      - "start advertising"
+      - "launch campaign"
+    entity: campaign
+    action: create
+    primary_doc: /quickstart-guides/create-a-campaign-quickstart
+    endpoint: POST /api/v2/cmp/campaigns/add
+    related_docs:
+      - /guidelines/campaign-api
+      - /quickstart-guides/upload-creative-and-create-a-campaign-api-quickstart-guide
+    prerequisites:
+      - "Must have added a Creative"
+      - "Insertion Order must exist first"
+      - "You need authentication and workspace context"
+    clarifying_questions:
+      - "Have you added a Creative to the platform?"
+      - "Do you have an Insertion Order created?"
+      - "What type of campaign: Advanced or PG?"
+      
+  create_pg_campaign:
+    patterns:
+      - "programmatic guaranteed"
+      - "PG campaign"
+      - "direct deal campaign"
+    entity: campaign
+    action: create_pg
+    primary_doc: /guidelines/campaign-api
+    section: "#programmatic-guaranteed"
+    endpoint: POST /api/v3/cmp/pg/campaigns/add
+    
+  create_insertion_order:
+    patterns:
+      - "create insertion order"
+      - "create IO"
+      - "new IO"
+      - "set up IO"
+    entity: insertion_order
+    action: create
+    primary_doc: /guidelines/campaign-api
+    section: "#insertion-orders"
+    endpoint: POST /api/v3/cmp/io/add
+    help_center: https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order
+    prerequisites:
+      - "Customer context required"
+      
+  list_campaigns:
+    patterns:
+      - "list campaigns"
+      - "get all campaigns"
+      - "get a list of campaigns"
+      - "get list of campaigns"
+      - "show campaigns"
+      - "campaign list"
+      - "check if I have a campaign"
+      - "check campaigns"
+      - "do I have a campaign"
+      - "see my campaigns"
+      - "view campaigns"
+      - "find campaigns"
+      - "campaign details"
+      - "get campaign"
+      - "get campaigns"
+      - "retrieve campaigns"
+      - "fetch campaigns"
+    entity: campaign
+    action: list
+    primary_doc: /guidelines/campaign-api#get-list-of-campaigns
+    endpoint: GET /api/v2/cmp/campaigns/data
+    related_sections:
+      - /guidelines/campaign-api#get-list-of-campaigns
+      - /guidelines/campaign-api#get-list-of-campaigns-with-basic-details
+      - /guidelines/campaign-api#get-list-of-campaigns-with-filters
+    
+  # ============================================
+  # CREATIVE OPERATIONS
+  # ============================================
+  
+  upload_creative:
+    patterns:
+      - "upload creative"
+      - "upload a creative"
+      - "add creative"
+      - "add a creative"
+      - "upload ad"
+      - "upload image"
+      - "upload video"
+      - "upload audio"
+      - "add banner"
+      - "create creative"
+      - "new creative"
+      - "I need to upload a creative"
+      - "upload HTML creative"
+      - "native ad"
+      - "upload native"
+      - "submit creative"
+      - "creative asset"
+    entity: creative
+    action: create
+    primary_doc: /quickstart-guides/upload-a-creative-quickstart
+    endpoint: POST /api/v3/crt/creatives
+    related_docs:
+      - /guidelines/creative-api
+    clarifying_questions:
+      - "What type of creative: image, video, audio, HTML, or native?"
+      - "Do you have the asset file ready?"
+      
+  creative_group:
+    patterns:
+      - "creative group"
+      - "group creatives"
+      - "organize creatives"
+    entity: creative
+    action: create_group
+    primary_doc: /guidelines/creative-api
+    section: "#creative-groups"
+    endpoint: POST /api/v3/crt/creatives/groups
+    
+  # ============================================
+  # AUDIENCE OPERATIONS
+  # ============================================
+  
+  # Informational: Audience types and concepts
+  explain_audience_types:
+    patterns:
+      - "what is a matched audience"
+      - "what is a contextual audience"
+      - "difference between matched and contextual"
+      - "audience types"
+      - "types of audiences"
+      - "what audiences are available"
+      - "explain audience"
+      - "matched vs contextual"
+      - "audience options"
+      - "what are the audience types"
+    entity: audience
+    action: explain  # Informational, not CRUD
+    intent_type: informational
+    primary_doc: /guidelines/audience-api
+    related_sections:
+      - /guidelines/audience-api#matched-audiences
+      - /guidelines/audience-api#contextual-audiences
+      - /guidelines/audience-api#segmented-audiences
+      - /guidelines/audience-api#retargeted-audiences
+      - /guidelines/audience-api#lookalike-audiences
+    related_docs:
+      - /quickstart-guides/matched-audience-upload-api-quickstart-guide
+      - /quickstart-guides/contextual-audience-quickstart
+      
+  upload_audience:
+    patterns:
+      - "upload audience"
+      - "matched audience"
+      - "upload email list"
+      - "first party data"
+      - "customer list"
+    entity: audience
+    action: create_matched
+    primary_doc: /quickstart-guides/matched-audience-upload-api-quickstart-guide
+    endpoint: POST /api/v2/audience/matched/add
+    related_docs:
+      - /guidelines/audience-api
+    help_center: https://help.iqm.com/en/articles/11748442-create-or-manage-a-matched-audience
+    clarifying_questions:
+      - "What format is your audience data in (emails, device IDs, etc.)?"
+      
+  create_contextual_audience:
+    patterns:
+      - "contextual audience"
+      - "contextual targeting"
+      - "content targeting"
+    entity: audience
+    action: create_contextual
+    primary_doc: /quickstart-guides/contextual-audience-quickstart
+    related_docs:
+      - /guidelines/audience-api
+      
+  target_audience:
+    patterns:
+      - "target audience"
+      - "add audience to campaign"
+      - "assign audience"
+      - "audience targeting"
+      - "attach audience"
+    entity: audience
+    action: assign
+    primary_doc: /guidelines/audience-api
+    endpoint: POST /api/v3/cmp/target/audience
+    related_docs:
+      - /guidelines/campaign-api
+      
+  list_audiences:
+    patterns:
+      - "list audiences"
+      - "get audiences"
+      - "show audiences"
+      - "audience list"
+      - "what is the endpoint to list audiences"
+      - "all audiences"
+      - "view audiences"
+      - "my audiences"
+      - "available audiences"
+    entity: audience
+    action: list
+    primary_doc: /guidelines/audience-api
+    endpoint: GET /api/v2/audience/list
+    related_docs:
+      - /quickstart-guides/matched-audience-upload-api-quickstart-guide
+      
+  # ============================================
+  # CONVERSION OPERATIONS
+  # ============================================
+  
+  create_conversion:
+    patterns:
+      - "create conversion"
+      - "conversion pixel"
+      - "tracking pixel"
+      - "set up tracking"
+    entity: conversion
+    action: create
+    primary_doc: /quickstart-guides/conversion-quickstart
+    endpoint: POST /api/v3/conversion/add
+    related_docs:
+      - /guidelines/conversion-api
+    help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
+    
+  assign_conversion:
+    patterns:
+      - "add conversion to campaign"
+      - "add a conversion to my campaign"
+      - "assign conversion"
+      - "link conversion"
+      - "track conversions on campaign"
+      - "conversion to campaign"
+      - "attach conversion"
+      - "connect conversion"
+      - "how do I add a conversion"
+      - "assign pixel to campaign"
+      - "associate conversion"
+    entity: conversion
+    action: assign
+    primary_doc: /quickstart-guides/conversion-quickstart
+    section: "#assign-to-campaign"
+    endpoint: POST /api/v3/conversion/assign-to/campaign
+    related_docs:
+      - /guidelines/conversion-api
+      - /guidelines/campaign-api
+    prerequisites:
+      - "Conversion must be created first"
+      - "Campaign must exist"
+    clarifying_questions:
+      - "Do you have a conversion pixel created?"
+      - "What's your campaign ID?"
+      
+  # ============================================
+  # INVENTORY OPERATIONS
+  # ============================================
+  
+  target_inventory:
+    patterns:
+      - "target inventory"
+      - "include inventory"
+      - "exclude inventory"
+      - "inventory targeting"
+      - "placement targeting"
+    entity: inventory
+    action: include_exclude
+    primary_doc: /quickstart-guides/inventory-quickstart
+    endpoint: POST /api/v2/inv/inventories/includeExclude
+    related_docs:
+      - /guidelines/inventory-api
+      
+  pmp_deals:
+    patterns:
+      - "PMP deal"
+      - "private marketplace"
+      - "direct deals"
+    entity: inventory
+    action: target
+    primary_doc: /guidelines/inventory-api
+    section: "#pmp-deals"
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  # ============================================
+  # BID MODEL OPERATIONS
+  # ============================================
+  
+  configure_bidding:
+    patterns:
+      - "bid model"
+      - "bidding strategy"
+      - "set max bid"
+      - "optimize bidding"
+      - "bid priority"
+    entity: bid_model
+    action: configure
+    primary_doc: /quickstart-guides/bid-model-quickstart
+    endpoint: PUT /api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}
+    related_docs:
+      - /guidelines/bid-model-api
+    help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
+    
+  # ============================================
+  # REPORTING OPERATIONS
+  # ============================================
+  
+  generate_report:
+    patterns:
+      - "generate report"
+      - "generate a report"
+      - "create report"
+      - "run report"
+      - "get analytics"
+      - "campaign performance"
+      - "how do I generate a report"
+      - "reporting"
+      - "get report"
+      - "download report"
+      - "export report"
+      - "performance data"
+      - "campaign metrics"
+      - "view analytics"
+      - "pull report"
+    entity: report
+    action: create
+    primary_doc: /quickstart-guides/reporting-api-quickstart-guide
+    endpoint: POST /api/v3/ra/report/add
+    related_docs:
+      - /guidelines/reports-api
+      - /quickstart-guides/schedule-report-api-quickstart-guide
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+    
+  schedule_report:
+    patterns:
+      - "schedule report"
+      - "recurring report"
+      - "automated report"
+      - "email report"
+    entity: report
+    action: schedule
+    primary_doc: /quickstart-guides/schedule-report-api-quickstart-guide
+    endpoint: POST /api/v3/ra/report/schedule
+    related_docs:
+      - /guidelines/reports-api
+      
+  insights_vld:
+    patterns:
+      - "voter level data"
+      - "VLD report"
+      - "political insights"
+      - "voter data"
+    entity: vld_report
+    action: generate
+    primary_doc: /political-vertical/insights-vld
+    related_docs:
+      - /guidelines/insights-api
+      - /quickstart-guides/insights-quickstart
+      
+  # ============================================
+  # TROUBLESHOOTING
+  # ============================================
+  
+  error_401:
+    patterns:
+      - "401 unauthorized"
+      - "authentication failed"
+      - "invalid token"
+    error_type: authentication
+    likely_cause: "Token expired or invalid"
+    primary_doc: /quickstart-guides/authentication-quickstart-guide
+    section: "#refresh-token"
+    solution: "Refresh your access token"
+    
+  error_403:
+    patterns:
+      - "403 forbidden"
+      - "permission denied"
+      - "access denied"
+    error_type: authorization
+    likely_cause: "Missing X-IAA-OW-ID header or insufficient permissions"
+    primary_doc: /getting-started/before-you-begin
+    section: "#workspace-id"
+    solution: "Verify X-IAA-OW-ID header is set correctly"
+    
+  error_missing_io:
+    patterns:
+      - "insertion order required"
+      - "ioId required"
+      - "campaign needs IO"
+    error_type: prerequisite
+    likely_cause: "Campaign requires Insertion Order"
+    primary_doc: /guidelines/campaign-api
+    section: "#insertion-orders"
+    solution: "Create an Insertion Order first"
+    
+  error_budget:
+    patterns:
+      - "budget exceeded"
+      - "insufficient budget"
+      - "daily budget"
+    error_type: business_logic
+    likely_cause: "Budget constraints"
+    primary_doc: /guidelines/campaign-api
+    section: "#budget"
+
+# Page Connections
+# ================
+# Explicit doc-to-doc relationships
+
+page_graph:
+  /quickstart-guides/authentication-quickstart-guide:
+    next_steps:
+      - path: /quickstart-guides/create-a-campaign-quickstart
+        reason: "After auth, most users create campaigns"
+      - path: /quickstart-guides/upload-a-creative-quickstart
+        reason: "Or start with creative upload"
+    prerequisites: []
+    external_links:
+      - url: https://app.iqm.com/signup
+        label: "Sign Up"
+        
+  /quickstart-guides/create-a-campaign-quickstart:
+    next_steps:
+      - path: /quickstart-guides/upload-a-creative-quickstart
+        reason: "Campaign needs creatives"
+      - path: /quickstart-guides/conversion-quickstart
+        reason: "Add conversion tracking"
+    prerequisites:
+      - path: /quickstart-guides/authentication-quickstart-guide
+        required: true
+      - path: /getting-started/before-you-begin
+        required: true
+    related:
+      - path: /guidelines/campaign-api
+        relationship: "detailed reference"
+        
+  /quickstart-guides/conversion-quickstart:
+    next_steps:
+      - path: /guidelines/conversion-api
+        reason: "Full API reference"
+    prerequisites:
+      - path: /quickstart-guides/create-a-campaign-quickstart
+        required: false
+        note: "Need campaign to assign conversion to"
+    related:
+      - path: /guidelines/campaign-api
+        relationship: "assignment target"
+        
+  /guidelines/campaign-api:
+    related:
+      - path: /quickstart-guides/create-a-campaign-quickstart
+        relationship: "quickstart"
+      - path: /guidelines/creative-api
+        relationship: "campaign needs creatives"
+      - path: /guidelines/audience-api
+        relationship: "targeting"
+      - path: /guidelines/conversion-api
+        relationship: "measurement"
+      - path: /guidelines/bid-model-api
+        relationship: "optimization"
+    external_links:
+      - url: https://help.iqm.com/en/articles/11497668-campaigns-overview
+        label: "Help Center: Campaigns"
+        
+  /guidelines/conversion-api:
+    related:
+      - path: /quickstart-guides/conversion-quickstart
+        relationship: "quickstart"
+      - path: /guidelines/campaign-api
+        relationship: "assignment target"
+    external_links:
+      - url: https://help.iqm.com/en/collections/3219750-choose-your-conversion
+        label: "Help Center: Conversions"
+
+# User Journey Paths
+# ==================
+# Common navigation sequences
+
+journeys:
+  new_user:
+    name: "New User Onboarding"
+    description: "First-time user getting started"
+    path:
+      - /getting-started/platform-overview
+      - /getting-started/before-you-begin
+      - /quickstart-guides/authentication-quickstart-guide
+      - /quickstart-guides/create-a-campaign-quickstart
+      
+  migration_user:
+    name: "DSP Migration"
+    description: "User migrating from another platform"
+    entry_points:
+      - /migration-guides/beeswax/overview
+      - /migration-guides/dv360/overview
+      - /migration-guides/xandr/overview
+      - /migration-guides/the-trade-desk/overview
+      
+  api_developer:
+    name: "API Developer"
+    description: "Developer building integration"
+    path:
+      - /getting-started/rest-api-reference
+      - /getting-started/api-pagination-guide
+      - /quickstart-guides/authentication-quickstart-guide
+      - /guidelines/campaign-api  # or specific API
+      
+  political_advertiser:
+    name: "Political Advertiser"
+    description: "User focused on political advertising"
+    path:
+      - /political-vertical/index
+      - /political-vertical/audience-segments
+      - /political-vertical/insights-vld
+      - /quickstart-guides/insights-quickstart

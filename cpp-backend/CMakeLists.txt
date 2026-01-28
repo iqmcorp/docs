@@ -30,6 +30,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(docassistant STATIC
     src/DocAssistant.cpp
     src/ApiMetadataRegistry.cpp
+    src/KnowledgeResolver.cpp
 )
 target_include_directories(docassistant PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(docassistant PUBLIC 
@@ -46,6 +47,14 @@ target_link_libraries(doc_assistant_server PRIVATE
     docassistant
     Threads::Threads
 )
+
+# Tests
+if(BUILD_TESTS)
+    add_executable(test_knowledge_resolver
+        tests/test_knowledge_resolver.cpp
+    )
+    target_link_libraries(test_knowledge_resolver PRIVATE docassistant)
+endif()
 
 # llama.cpp integration (optional)
 if(USE_LLAMA_CPP)
