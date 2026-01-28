@@ -4,13 +4,9 @@ import { useHistory } from '@docusaurus/router';
 // Types
 export interface KnowledgeContext {
   primaryDoc?: string;
+  primaryDocTitle?: string;  // Human-readable title for the primary doc
   suggestedDocs?: string[];
-  workflow?: {
-    name: string;
-    description: string;
-    steps: Array<{ name: string; entity: string; doc?: string }>;
-    moreActions?: Array<{ name: string; entity: string; description: string; doc?: string }>;
-  };
+  moreActions?: Array<{ title: string; url: string }>;  // Additional actions the user might want
   relatedSections?: Array<{ title: string; url: string; method?: string; endpoint?: string }>;
   detectedIntent?: string;
   intentConfidence?: number;

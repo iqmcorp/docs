@@ -517,8 +517,9 @@ export default function AIAssistantNavbarItem() {
 
     const links: React.ReactNode[] = [];
 
-    // Primary documentation link
+    // Primary documentation link with human-readable title
     if (knowledge.primaryDoc) {
+      const displayTitle = knowledge.primaryDocTitle || knowledge.primaryDoc;
       links.push(
         <div key="primary" className={styles.knowledgeSection}>
           <span className={styles.knowledgeLabel}>📄 Documentation:</span>
@@ -527,76 +528,45 @@ export default function AIAssistantNavbarItem() {
             onClick={(e) => { e.preventDefault(); navigateToPage(knowledge.primaryDoc!); }}
             className={styles.knowledgeLink}
           >
-            {knowledge.primaryDoc}
+            {displayTitle}
           </a>
         </div>
       );
     }
 
-    // Workflow steps (brief)
-    if (knowledge.workflow) {
-      links.push(
-        <div key="workflow" className={styles.knowledgeSection}>
-          <span className={styles.knowledgeLabel}>📋 Workflow: {knowledge.workflow.name}</span>
-          <ol className={styles.workflowSteps}>
-            {knowledge.workflow.steps.map((step, i) => (
-              <li key={i}>
-                {step.name.replace(/_/g, ' ')}
-                {step.doc && i === 0 && (  // Only link first step (auth)
-                  <a
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); navigateToPage(step.doc!); }}
-                    className={styles.stepLink}
-                  >
-                    →
-                  </a>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      );
-
-      // More actions (optional)
-      if (knowledge.workflow.moreActions && knowledge.workflow.moreActions.length > 0) {
-        links.push(
-          <div key="more-actions" className={styles.knowledgeSection}>
-            <span className={styles.knowledgeLabel}>➕ More Actions:</span>
-            <ul className={styles.moreActions}>
-              {knowledge.workflow.moreActions.map((action, i) => (
-                <li key={i}>
-                  {action.description || action.name.replace(/_/g, ' ')}
-                  {action.doc && (
-                    <a
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); navigateToPage(action.doc!); }}
-                      className={styles.stepLink}
-                    >
-                      →
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      }
+    // Consolidated Related Sections - combines moreActions and relatedSections
+    const allRelated: Array<{ title: string; url: string }> = [];
+    
+    // Add moreActions first (these are from intent's related_sections)
+    if (knowledge.moreActions) {
+      knowledge.moreActions.forEach(action => {
+        allRelated.push({ title: action.title, url: action.url });
+      });
     }
-
-    // Related sections (endpoint anchors)
-    if (knowledge.relatedSections && knowledge.relatedSections.length > 0) {
+    
+    // Add relatedSections (endpoint anchors)
+    if (knowledge.relatedSections) {
+      knowledge.relatedSections.forEach(section => {
+        // Avoid duplicates by URL
+        if (!allRelated.some(r => r.url === section.url)) {
+          allRelated.push({ title: section.title, url: section.url });
+        }
+      });
+    }
+    
+    if (allRelated.length > 0) {
       links.push(
         <div key="sections" className={styles.knowledgeSection}>
-          <span className={styles.knowledgeLabel}>🔗 Related Sections:</span>
+          <span className={styles.knowledgeLabel}>🔗 Related:</span>
           <ul className={styles.relatedSections}>
-            {knowledge.relatedSections.slice(0, 3).map((section, i) => (
+            {allRelated.slice(0, 5).map((item, i) => (
               <li key={i}>
                 <a
                   href="#"
-                  onClick={(e) => { e.preventDefault(); navigateToPage(section.url); }}
+                  onClick={(e) => { e.preventDefault(); navigateToPage(item.url); }}
                   className={styles.knowledgeLink}
                 >
-                  {section.title}
+                  {item.title}
                 </a>
               </li>
             ))}

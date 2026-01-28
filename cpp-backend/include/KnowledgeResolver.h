@@ -122,7 +122,8 @@ struct KnowledgeContext {
     std::string toPromptContext() const;
     
     // Export as JSON for structured API response
-    nlohmann::json toJson() const;
+    // Pass resolver to get doc labels for titles
+    nlohmann::json toJson(const class KnowledgeResolver* resolver = nullptr) const;
 };
 
 /**
@@ -234,6 +235,12 @@ public:
      */
     std::string resolveDocUrl(const std::string& docId) const;
     
+    /**
+     * Get human-readable label for a doc path
+     * Falls back to generating a title from the path if not found
+     */
+    std::string getDocLabel(const std::string& docPath) const;
+    
     // =========================================
     // Section/Anchor Resolution (Headings)
     // =========================================
@@ -287,6 +294,7 @@ private:
     std::unordered_map<std::string, std::vector<std::string>> apiIndex_;  // api → [entities]
     std::vector<std::pair<std::string, std::string>> intentPatterns_;  // pattern → intent_id
     std::unordered_map<std::string, std::string> slugMap_;  // docId → URL slug
+    std::unordered_map<std::string, std::string> docLabels_;  // docPath → human-readable label
     
     // Heading/section indexes for anchor-level navigation
     std::vector<json> allSections_;  // All section data

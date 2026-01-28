@@ -310,7 +310,7 @@ AssistantResponse DocAssistant::chat(const std::string& message,
     if (pImpl->knowledgeResolver.isLoaded()) {
         KnowledgeContext kctx = pImpl->knowledgeResolver.resolveQuery(message);
         knowledgeContextStr = kctx.toPromptContext();
-        response.knowledgeContext = kctx.toJson();  // Structured data for frontend
+        response.knowledgeContext = kctx.toJson(&pImpl->knowledgeResolver);  // Structured data for frontend with doc titles
     }
     
     // Search documentation for context (RAG)

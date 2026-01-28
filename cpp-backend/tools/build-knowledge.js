@@ -246,6 +246,34 @@ function buildWorkflowIndex(taxonomy) {
   return index;
 }
 
+function buildDocLabelsIndex(taxonomy) {
+  /**
+   * Build doc path → label lookup for UI display
+   * Maps paths like "/quickstart-guides/create-a-campaign-quickstart" → "Create a Campaign"
+   */
+  const index = {};
+  
+  Object.entries(taxonomy.doc_categories || {}).forEach(([catId, cat]) => {
+    const basePath = cat.path || `/${catId}`;
+    
+    (cat.docs || []).forEach(doc => {
+      const docPath = `${basePath}/${doc.id}`;
+      if (doc.label) {
+        index[docPath] = doc.label;
+      }
+    });
+  });
+  
+  // Also map API guidelines
+  Object.entries(taxonomy.api_groups || {}).forEach(([apiId, api]) => {
+    if (api.primary_doc && api.name) {
+      index[api.primary_doc] = api.name;
+    }
+  });
+  
+  return index;
+}
+
 function main() {
   console.log('🔨 Building knowledge layers...\n');
   
@@ -299,11 +327,13 @@ function main() {
     entities: buildEntityIndex(knowledge.skeleton || {}),
     intents: buildIntentIndex(knowledge.navigation || {}),
     workflows: buildWorkflowIndex(knowledge.taxonomy || {}),
+    docLabels: buildDocLabelsIndex(knowledge.taxonomy || {}),
   };
   
   console.log(`   - Entity index: ${Object.keys(knowledge.indexes.entities.byIdField).length} ID fields`);
   console.log(`   - Intent index: ${knowledge.indexes.intents.patterns.length} patterns`);
   console.log(`   - Workflow index: ${Object.keys(knowledge.indexes.workflows).length} workflows`);
+  console.log(`   - Doc labels: ${Object.keys(knowledge.indexes.docLabels).length} labeled docs`);
   
   console.log('');
   

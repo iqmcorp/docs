@@ -63,7 +63,7 @@ entities:
     id_field: ioId
     level: 3
     parent: customer
-    description: "Contract specifying campaign parameters, budget, and timeframe."
+    description: "Contract specifying Campaign parameters, budget, and timeframe."
     children: [campaign]
     docs:
       primary: /guidelines/campaign-api
@@ -204,7 +204,7 @@ entities:
         description: "Similar users to existing audience"
       - id: 7
         name: Campaign Audience
-        description: "Audience derived from campaign performance"
+        description: "Audience derived from Campaign performance"
       - id: 8
         name: Pre-bid Audience
         description: "Pre-bid targeting segments"
@@ -214,8 +214,8 @@ entities:
     id_field: conversionId
     level: 5
     parent: campaign
-    relationship_type: assignment  # assigned to campaign
-    description: "Tracking pixels and attribution for campaign measurement."
+    relationship_type: assignment  # assigned to Campaign
+    description: "Tracking pixels and attribution for Campaign measurement."
     docs:
       primary: /quickstart-guides/conversion-quickstart
       related:
@@ -235,24 +235,58 @@ entities:
         description: "Server-side tracking"
     help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
     
-  inventory:
-    id_field: inventoryId
+  deal:
+    id_field: dealId
     level: 5
     parent: campaign
-    relationship_type: targeting  # targeted by campaign
-    description: "Ad placement and exchange targeting."
+    relationship_type: targeting  # Deals are targeted by Campaigns
+    description: "Private marketplace or programmatic guaranteed Deals for premium Inventory access."
+    docs:
+      primary: /tutorials/deal-guide
+      related:
+        - /guidelines/inventory-api
+    api: inventory-api
+    endpoints:
+      create_pg: POST /api/v3/inv/pg/deals/add
+      create_pmp: POST /api/v3/inv/pmp/deals/add
+      list_pg: GET /api/v3/inv/pg/deals
+      list_pmp: GET /api/v3/inv/pmp/deals
+      assign_to_campaign: POST /api/v3/inv/deals/assign
+    deal_types:
+      - id: 1
+        name: PMP
+        description: "Private Marketplace - invitation-only auction for premium inventory"
+      - id: 2
+        name: PG
+        description: "Programmatic Guaranteed - fixed price, guaranteed inventory"
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  inventory_group:
+    id_field: groupId
+    level: 5
+    parent: campaign
+    relationship_type: targeting  # targeted by Campaign
+    description: "Collections of Inventory sources grouped by specific criteria."
     docs:
       primary: /quickstart-guides/inventory-quickstart
       related:
         - /guidelines/inventory-api
     api: inventory-api
     endpoints:
+      create: POST /api/v3/inv/groups/add
+      list: GET /api/v3/inv/groups
       include_exclude: POST /api/v2/inv/inventories/includeExclude
-      list_deals: GET /api/v2/inv/deals/list
-    inventory_types:
-      - pmp_deals
-      - inventory_groups
-      - exchanges
+      get_pmp_deals: GET /api/v3/group/{groupId}/pmp-deals
+    group_types:
+      - id: 1
+        name: Open Exchange
+        description: "Public RTB exchange inventory"
+      - id: 2
+        name: PMP
+        description: "Inventory group containing PMP deals"
+      - id: 3
+        name: Contextual
+        description: "Contextual targeting inventory"
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
 
   # ============================================
@@ -262,9 +296,9 @@ entities:
   report:
     id_field: reportId
     level: 5
-    parent: campaign  # reports on campaigns (not contained)
+    parent: campaign  # Reports on Campaigns (not contained)
     relationship_type: analytics
-    description: "Performance and analytics reports."
+    description: "Performance and analytics Reports."
     docs:
       primary: /quickstart-guides/reporting-api-quickstart-guide
       related:
@@ -307,7 +341,7 @@ entities:
     level: 5
     parent: workspace
     relationship_type: analytics
-    description: "UI dashboard for campaign metrics and visualization."
+    description: "UI dashboard for Campaign metrics and visualization."
     docs:
       primary: /guidelines/dashboard-api
     api: dashboard-api
@@ -319,7 +353,7 @@ entities:
     level: 5
     parent: campaign
     relationship_type: analytics
-    description: "Voter Level Data report for political advertising insights."
+    description: "Voter Level Data Report for political advertising Insights."
     docs:
       primary: /political-vertical/insights-vld
       related:
@@ -332,7 +366,7 @@ entities:
     level: 5
     parent: campaign
     relationship_type: analytics
-    description: "Patient Level Data report for healthcare advertising insights."
+    description: "Provider Level Data Report for healthcare advertising Insights."
     docs:
       primary: /healthcare-vertical/insights-pld
       related:
@@ -377,7 +411,7 @@ entities:
     id_field: assetId
     level: 5
     relationship_type: assignment
-    description: "Media files (images, videos) uploaded for creatives."
+    description: "Media files (images, videos) uploaded for Creatives."
     docs:
       primary: /guidelines/asset-api
     api: asset-api
@@ -411,7 +445,7 @@ entities:
 # ==================
 relationships:
   parent_child:
-    description: "Hierarchical containment (IO contains Campaigns)"
+    description: "Hierarchical containment (Insertion Order contains Campaigns)"
     implies: "Child cannot exist without parent"
     
   assignment:
@@ -449,7 +483,7 @@ apis:
     base_paths: [/api/v2/cmp, /api/v3/cmp]
     primary_entities: [insertion_order, campaign]
     doc: /guidelines/campaign-api
-    description: "Core advertising management - IOs and Campaigns"
+    description: "Core advertising management - Insertion Orders and Campaigns"
     
   creative-api:
     base_path: /api/v3/crt
@@ -503,7 +537,7 @@ apis:
     base_path: /api/v3/ins
     primary_entities: [vld_report]
     doc: /guidelines/insights-api
-    description: "Voter level data and insights"
+    description: "Voter Level Data and Insights"
     
   asset-api:
     base_path: /api/v3/ast
