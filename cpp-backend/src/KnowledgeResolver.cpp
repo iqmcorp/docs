@@ -1074,6 +1074,164 @@ KnowledgeContext KnowledgeResolver::resolveQuery(const std::string& query) const
 }
 
 // =========================================
+// LLM-based Entity/Action Resolution
+// =========================================
+
+KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& entity, const std::string& action) const {
+    KnowledgeContext context;
+    
+    if (!loaded_) return context;
+    
+    // 1. Get the entity if it exists
+    if (!entity.empty()) {
+        if (auto entityObj = getEntity(entity)) {
+            context.entities.push_back(*entityObj);
+        }
+    }
+    
+    // 2. Build a synthetic intent from entity+action
+    IntentMatch syntheticIntent;
+    syntheticIntent.entity = entity;
+    syntheticIntent.action = action;
+    syntheticIntent.intent_id = entity + "_" + action;
+    syntheticIntent.confidence = 0.9;  // High confidence since LLM extracted it
+    
+    // 3. Look up primary_doc from entity's docs structure
+    if (!context.entities.empty()) {
+        const auto& e = context.entities[0];
+        syntheticIntent.primary_doc = e.primary_doc;
+        syntheticIntent.related_docs = e.related_docs;
+    }
+    
+    // 4. Try to find an existing intent that matches entity+action (for additional metadata)
+    try {
+        const auto& intents = knowledge_["navigation"]["intents"];
+        for (auto it = intents.begin(); it != intents.end(); ++it) {
+            const auto& intent = it.value();
+            if (intent.value("entity", "") == entity && intent.value("action", "") == action) {
+                syntheticIntent.intent_id = it.key();
+                syntheticIntent.primary_doc = intent.value("primary_doc", syntheticIntent.primary_doc);
+                syntheticIntent.section = intent.value("section", "");
+                syntheticIntent.endpoint = intent.value("endpoint", "");
+                syntheticIntent.intent_type = intent.value("intent_type", "action");
+                
+                if (intent.contains("related_docs")) {
+                    for (const auto& doc : intent["related_docs"]) {
+                        syntheticIntent.related_docs.push_back(doc.get<std::string>());
+                    }
+                }
+                if (intent.contains("related_sections")) {
+                    for (const auto& section : intent["related_sections"]) {
+                        syntheticIntent.related_sections.push_back(section.get<std::string>());
+                    }
+                }
+                break;
+            }
+        }
+    } catch (...) {
+        // Continue with synthetic intent
+    }
+    
+    context.intents.push_back(syntheticIntent);
+    
+    // 5. Collect suggested docs
+    std::vector<std::string> docList;
+    std::set<std::string> docSeen;
+    
+    auto addDoc = [&](const std::string& doc) {
+        if (!doc.empty()) {
+            std::string resolved = resolveDocUrl(doc);
+            if (docSeen.find(resolved) == docSeen.end()) {
+                docSeen.insert(resolved);
+                docList.push_back(resolved);
+            }
+        }
+    };
+    
+    // Primary doc first
+    if (!syntheticIntent.primary_doc.empty()) {
+        addDoc(syntheticIntent.primary_doc + syntheticIntent.section);
+    }
+    
+    // Related docs
+    for (const auto& doc : syntheticIntent.related_docs) {
+        addDoc(doc);
+    }
+    
+    context.suggested_docs = docList;
+    
+    // 6. Find related sections
+    auto sections = findRelatedSections(entity, action, 5);
+    for (const auto& section : sections) {
+        if (section.pageSlug.find("/guidelines/") == 0 && section.relevance >= 0.5) {
+            context.related_sections.push_back(section);
+        }
+    }
+    
+    return context;
+}
+
+std::string KnowledgeResolver::getEntityVocabulary() const {
+    if (!loaded_) return "[]";
+    
+    std::stringstream ss;
+    ss << "ENTITIES (use these exact names):\n";
+    
+    try {
+        const auto& entities = knowledge_["skeleton"]["entities"];
+        for (auto it = entities.begin(); it != entities.end(); ++it) {
+            const auto& entity = it.value();
+            ss << "- " << it.key();
+            
+            // Add aliases if present
+            if (entity.contains("aliases")) {
+                ss << " (also: ";
+                bool first = true;
+                for (const auto& alias : entity["aliases"]) {
+                    if (!first) ss << ", ";
+                    ss << alias.get<std::string>();
+                    first = false;
+                }
+                ss << ")";
+            }
+            
+            // Add brief description
+            if (entity.contains("description")) {
+                std::string desc = entity["description"].get<std::string>();
+                if (desc.length() > 60) desc = desc.substr(0, 60) + "...";
+                ss << ": " << desc;
+            }
+            ss << "\n";
+        }
+    } catch (...) {
+        return "[]";
+    }
+    
+    return ss.str();
+}
+
+std::string KnowledgeResolver::getActionVocabulary() const {
+    // Standard actions that apply to most entities
+    return R"(ACTIONS (use these exact names):
+- create: Create a new resource (POST)
+- list: Get a list of resources (GET)
+- get: Get details of a specific resource (GET)
+- update: Modify an existing resource (PATCH/PUT)
+- delete: Remove a resource (DELETE)
+- upload: Upload a file or data
+- download: Download/export data
+- run: Execute/start something (report, campaign)
+- pause: Pause execution
+- archive: Archive/deactivate
+- duplicate: Copy/clone a resource
+- assign: Assign one resource to another
+- target: Add targeting criteria
+- schedule: Set up scheduled execution
+- query: Ask about/learn about (informational)
+)";
+}
+
+// =========================================
 // Prompt Context Generation
 // =========================================
 
