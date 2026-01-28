@@ -1207,15 +1207,15 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Segment Reach Range',
-              href: '/guidelines/audience-api#reach-range-list-for-audience-segment',
+              label: 'Segmented Reach Range',
+              href: '/guidelines/audience-api#reach-range-list-for-segmented-audiences',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Segment Price Range',
-              href: '/guidelines/audience-api#price-range-list-for-audience-segment',
+              label: 'Segmented Price Range',
+              href: '/guidelines/audience-api#price-range-list-for-segmented-audiences',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -5017,51 +5017,23 @@ const sidebars = {
         },
         {
           type: `category`,
-          label: `Audience Segment Details`,
+          label: `Segmented Audience Details`,
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'Audience Segment Details',
-              href: '/political-vertical/audience-segments#audience-segment-details',
+              label: 'Segmented Audience Details',
+              href: '/political-vertical/audience-segments#segmented-audience-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Search Audience Segment',
-              href: '/political-vertical/audience-segments#search-audience-segment',
+              label: 'Search Segmented Audience',
+              href: '/political-vertical/audience-segments#search-segmented-audiences',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment Partner Provider List',
-              href: '/political-vertical/audience-segments#segment-partner-provider-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Provider/Partner IDs',
-              href: '/political-vertical/audience-segments#segment-list-by-providerpartner-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Audience IDs',
-              href: '/political-vertical/audience-segments#segment-list-by-audience-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Audience Segment Insights',
-              href: '/political-vertical/audience-segments#audience-segment-insights',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
+            }
           ]
         },
         {
@@ -5085,15 +5057,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Audience Segment',
-              href: '/political-vertical/audience-segments#create-audience-segment',
+              label: 'Create Segmented Audience',
+              href: '/political-vertical/audience-segments#create-segmented-audience',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Update Audience Segment',
-              href: '/political-vertical/audience-segments#update-audience-segment',
+              label: 'Update Segmented Audience',
+              href: '/political-vertical/audience-segments#update-segmented-audience',
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
             },
@@ -5125,13 +5097,48 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
+                        {
+              type: 'link',
+              label: 'Segmented Reach Range',
+              href: '/political-vertical/audience-segments#reach-range-list-for-segmented-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
-              label: 'Provider Details List',
-              href: '/political-vertical/audience-segments#provider-details-list',
+              label: 'Segmented Price Range',
+              href: '/political-vertical/audience-segments#price-range-list-for-segmented-audiences',
               customProps: { method: 'GET' },
-              className: 'sidebarItem',
+              className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Audience Type List',
+              href: '/political-vertical/audience-segments#audience-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Subtype List',
+              href: '/political-vertical/audience-segments#audience-subtype-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Status List',
+              href: '/political-vertical/audience-segments#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Frequency Type List',
+              href: '/political-vertical/audience-segments#frequency-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
           ]
         }
       ]
@@ -5412,7 +5419,7 @@ const sidebars = {
       items: [
         {
           type: `category`,
-          label: `Matched Audience`,
+          label: `Matched Audiences`,
           className: 'sidebarItem',
           items: [
             {
@@ -5427,11 +5434,18 @@ const sidebars = {
               href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
               customProps: { method: 'POST' },
             },
+            {
+              type: 'link',
+              label: 'Matched Data Partners',
+              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
           type: `category`,
-          label: `Healthcare Details`,
+          label: `Healthcare Audiences`,
           className: 'sidebarItem',
           items: [
             {
@@ -5502,7 +5516,49 @@ const sidebars = {
           href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
           customProps: { method: 'POST' },
           className: 'sidebarItem',
-        }
+        },
+        {
+          type: `category`,
+          label: `Geofarmed Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Contextual Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Contextual Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#contextual-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Contextual Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
       ]
     },
     {
