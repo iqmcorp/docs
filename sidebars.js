@@ -621,8 +621,8 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 6: Get List of Groups by Campaign',
-              href: `/tutorials/optimize-your-inventory#step-6-get-list-of-groups-by-campaign`,
+              label: 'Step 6: Get List of Campaigns by Group',
+              href: `/tutorials/optimize-your-inventory#step-6-get-list-of-campaigns-by-group`,
               className: 'sidebarItemQS'
             },
           ]
