@@ -3,10 +3,12 @@
  * 
  * Uses HTTP calls to llama-server for inference.
  * Integrates IQM SDK for API context when available.
+ * Uses KnowledgeResolver for PVLT-weighted query understanding.
  */
 
 #include "DocAssistant.h"
 #include "ApiMetadataRegistry.h"
+#include "KnowledgeResolver.h"
 #include <iostream>
 #include <sstream>
 #include <regex>
@@ -43,40 +45,33 @@ public:
     std::string algoliaApiKey;
     std::string algoliaIndexName = "iqm_docs";
     
+    // Knowledge resolver for PVLT-weighted understanding
+    KnowledgeResolver knowledgeResolver;
+    
     // Registered tools
     std::vector<Tool> tools;
     
-    // System prompt - grounded in actual IQM doc structure
-    std::string systemPrompt = R"(You are an AI assistant for IQM's programmatic advertising API documentation.
+    // System prompt - structured by knowledge layers
+    std::string systemPrompt = R"PROMPT(You are a concise AI assistant for IQM's API documentation.
 
-## Available Documentation Pages
+## CRITICAL INSTRUCTIONS
+1. Be ULTRA BRIEF - 2-3 sentences maximum
+2. DO NOT include any links or URLs in your response - the UI adds them separately
+3. DO NOT repeat workflow steps - the UI shows them in a structured format
+4. DO NOT list "More Actions" or related endpoints - the UI shows these
+5. Just give a quick, helpful answer to what the user asked
 
-Getting Started:
-- /getting-started/ - Overview of IQM platform
-- /getting-started/before-you-begin - Prerequisites
-- /getting-started/api-pagination-guide - Pagination patterns
-- /getting-started/typescript-prerequisites - TypeScript setup
+## Good Response Example
+"To create a campaign, first authenticate, upload creatives, create an Insertion Order, then create the campaign. The quickstart guide walks through each step."
 
-API Guidelines:
-- /guidelines/campaign-api - Campaign management
-- /guidelines/creative-api - Creative upload/management  
-- /guidelines/audience-api - Audience targeting
-- /guidelines/reports-api - Reporting endpoints
-- /guidelines/conversion-api - Conversion tracking
-- /guidelines/dashboard-api - Dashboard metrics
-- /guidelines/insights-api - Performance insights
+## Bad Response Example (TOO LONG)
+"To create a campaign, follow these steps: 1. Authenticate... 2. Upload creatives... [link] 3. Create IO... After that you can also assign audiences, set up conversions..." <- NO! The UI shows all this.
 
-Quickstarts:
-- /quickstart-guides/authentication-quickstart-guide - Auth setup
-- /quickstart-guides/create-a-campaign-quickstart - Campaign creation
-- /quickstart-guides/reporting-api-quickstart-guide - Reporting
-- /quickstart-guides/upload-a-creative-quickstart - Creative upload
+## Entity Hierarchy (context only)
+Workspace -> Customer -> Insertion Order -> Campaign
+Campaign relates to: Creatives, Audiences, Conversions, Bid Models)PROMPT";
 
-RULES:
-- Be concise and accurate
-- Only reference pages that exist above
-- Provide code examples when helpful
-- Use markdown formatting)";
+
 
     bool initialized = false;
     
@@ -129,6 +124,20 @@ DocAssistant::DocAssistant() : pImpl(std::make_unique<Impl>()) {
         {{"endpoint", "string"}},
         [this](const json& params) { return toolGetApiInfo(params); }
     });
+    
+    registerTool({
+        "get_entity_info",
+        "Get entity information from knowledge layers (hierarchy, relationships, endpoints)",
+        {{"entity", "string"}},
+        [this](const json& params) { return toolGetEntityInfo(params); }
+    });
+    
+    registerTool({
+        "get_workflow",
+        "Get workflow steps for common operations",
+        {{"workflow", "string"}},
+        [this](const json& params) { return toolGetWorkflow(params); }
+    });
 }
 
 DocAssistant::~DocAssistant() {
@@ -143,6 +152,31 @@ bool DocAssistant::initialize(const std::string& modelPath,
         pImpl->llamaServerUrl = modelPath;
     }
     pImpl->apiBaseUrl = apiBaseUrl;
+    
+    // Load knowledge layers - try multiple paths
+    std::vector<std::string> knowledgePaths = {
+        "../knowledge/build/knowledge.json",
+        "knowledge/build/knowledge.json",
+        "/Users/cteichiqm/IQM/docs/cpp-backend/knowledge/build/knowledge.json"
+    };
+    
+    bool loaded = false;
+    for (const auto& path : knowledgePaths) {
+        std::cout << "Trying knowledge path: " << path << std::endl;
+        if (pImpl->knowledgeResolver.loadFromFile(path)) {
+            std::cout << "✓ Loaded PVLT knowledge layers from " << path << std::endl;
+            loaded = true;
+            break;
+        } else {
+            std::cout << "✗ Failed to load from " << path << std::endl;
+        }
+    }
+    
+    if (!loaded) {
+        std::cerr << "Warning: Could not load knowledge layers" << std::endl;
+        std::cerr << "AI responses will use basic mode without PVLT context." << std::endl;
+    }
+    
     pImpl->initialized = true;
     
     std::cout << "DocAssistant initialized, using llama-server at: " 
@@ -213,15 +247,23 @@ std::vector<DocSearchResult> DocAssistant::searchDocs(const std::string& query,
 std::string DocAssistant::buildPrompt(const std::string& message,
                                      const std::vector<ChatMessage>& history,
                                      const json& pageContext,
-                                     const std::string& ragContext) {
+                                     const std::string& ragContext,
+                                     const std::string& knowledgeContext) {
     std::ostringstream prompt;
     
     // Mistral instruct format
     prompt << "<s>[INST] " << pImpl->systemPrompt << "\n\n";
     
-    // Add RAG context if available
+    // LAYER 1-3: Add PVLT knowledge context
+    if (!knowledgeContext.empty()) {
+        prompt << "## QUERY CONTEXT (from Knowledge Layers)\n" << knowledgeContext << "\n";
+        prompt << "⚠️ IMPORTANT: Do NOT include markdown links [text](url) in your response.\n";
+        prompt << "Just describe the steps naturally. The UI will add proper links.\n\n";
+    }
+    
+    // LAYER 4: Add Algolia RAG context if available
     if (!ragContext.empty()) {
-        prompt << "## Relevant Documentation\n" << ragContext << "\n\n";
+        prompt << "## RELEVANT DOCUMENTATION (from Search)\n" << ragContext << "\n";
     }
     
     // Add page context if available
@@ -244,6 +286,14 @@ std::string DocAssistant::buildPrompt(const std::string& message,
     return prompt.str();
 }
 
+// Strip markdown links from LLM output - we'll provide validated links separately
+static std::string stripMarkdownLinks(const std::string& text) {
+    std::string result = text;
+    std::regex linkPattern(R"(\[([^\]]+)\]\([^)]+\))");
+    result = std::regex_replace(result, linkPattern, "$1");
+    return result;
+}
+
 AssistantResponse DocAssistant::chat(const std::string& message,
                                     const std::vector<ChatMessage>& history,
                                     const json& pageContext) {
@@ -255,6 +305,14 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         return response;
     }
     
+    // LAYER 1-3: Resolve knowledge context
+    std::string knowledgeContextStr;
+    if (pImpl->knowledgeResolver.isLoaded()) {
+        KnowledgeContext kctx = pImpl->knowledgeResolver.resolveQuery(message);
+        knowledgeContextStr = kctx.toPromptContext();
+        response.knowledgeContext = kctx.toJson();  // Structured data for frontend
+    }
+    
     // Search documentation for context (RAG)
     std::string ragContext;
     auto searchResults = searchDocs(message, 3);
@@ -264,7 +322,7 @@ AssistantResponse DocAssistant::chat(const std::string& message,
     }
     
     // Build prompt
-    std::string fullPrompt = buildPrompt(message, history, pageContext, ragContext);
+    std::string fullPrompt = buildPrompt(message, history, pageContext, ragContext, knowledgeContextStr);
     
     // Call llama-server
     json requestBody = {
@@ -282,7 +340,10 @@ AssistantResponse DocAssistant::chat(const std::string& message,
     
     try {
         auto j = json::parse(llamaResponse);
-        response.text = j.value("content", "");
+        std::string rawText = j.value("content", "");
+        
+        // Strip any markdown links the LLM generated - we provide validated links separately
+        response.text = stripMarkdownLinks(rawText);
         response.model = "mistral-7b-local";
         response.success = true;
         
@@ -383,6 +444,107 @@ json DocAssistant::toolGetExampleCode(const json& params) {
     }
     
     return {{"error", "Language not supported"}};
+}
+
+json DocAssistant::toolGetEntityInfo(const json& params) {
+    std::string entityId = params.value("entity", "");
+    
+    if (!pImpl->knowledgeResolver.isLoaded()) {
+        return {{"error", "Knowledge layers not loaded"}};
+    }
+    
+    auto entity = pImpl->knowledgeResolver.getEntity(entityId);
+    if (!entity) {
+        // Try by ID field (e.g., "campaignId" → "campaign")
+        entity = pImpl->knowledgeResolver.getEntityByIdField(entityId);
+    }
+    
+    if (!entity) {
+        return {{"error", "Entity not found: " + entityId}};
+    }
+    
+    json result = {
+        {"id", entity->id},
+        {"id_field", entity->id_field},
+        {"level", entity->level},
+        {"description", entity->description},
+        {"parent", entity->parent},
+        {"children", entity->children},
+        {"api", entity->api},
+        {"primary_doc", entity->primary_doc},
+        {"related_docs", entity->related_docs},
+        {"relationship_type", entity->relationship_type},
+        {"help_center", entity->help_center}
+    };
+    
+    // Add endpoints
+    json endpointsJson;
+    for (const auto& [key, value] : entity->endpoints) {
+        endpointsJson[key] = value;
+    }
+    result["endpoints"] = endpointsJson;
+    
+    // Add hierarchy context
+    auto parent = pImpl->knowledgeResolver.getParentEntity(entityId);
+    if (parent) {
+        result["parent_info"] = {
+            {"id", parent->id},
+            {"id_field", parent->id_field}
+        };
+    }
+    
+    auto children = pImpl->knowledgeResolver.getChildEntities(entityId);
+    json childrenInfo = json::array();
+    for (const auto& child : children) {
+        childrenInfo.push_back({
+            {"id", child.id},
+            {"relationship_type", child.relationship_type}
+        });
+    }
+    result["children_info"] = childrenInfo;
+    
+    return result;
+}
+
+json DocAssistant::toolGetWorkflow(const json& params) {
+    std::string workflowId = params.value("workflow", "");
+    
+    if (!pImpl->knowledgeResolver.isLoaded()) {
+        return {{"error", "Knowledge layers not loaded"}};
+    }
+    
+    auto workflow = pImpl->knowledgeResolver.getWorkflow(workflowId);
+    if (!workflow) {
+        // Try to find workflow by entity
+        auto workflows = pImpl->knowledgeResolver.findWorkflowsForEntity(workflowId);
+        if (!workflows.empty()) {
+            workflow = workflows[0];
+        }
+    }
+    
+    if (!workflow) {
+        return {{"error", "Workflow not found: " + workflowId}};
+    }
+    
+    json stepsJson = json::array();
+    for (const auto& step : workflow->steps) {
+        stepsJson.push_back({
+            {"step", step.step_name},
+            {"entity", step.entity},
+            {"endpoint", step.endpoint},
+            {"doc", step.doc},
+            {"description", step.description},
+            {"optional", step.optional}
+        });
+    }
+    
+    return {
+        {"id", workflow->id},
+        {"name", workflow->name},
+        {"description", workflow->description},
+        {"primary_doc", workflow->primary_doc},
+        {"steps", stepsJson}
+    };
 }
 
 } // namespace docs

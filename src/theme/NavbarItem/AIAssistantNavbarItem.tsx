@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
-import { useDocNavigator, Message } from '../../hooks/useDocNavigator';
+import { useDocNavigator, Message, KnowledgeContext } from '../../hooks/useDocNavigator';
 import SearchResults, { SearchResult } from '../../components/AIAssistant/SearchResults';
 import styles from './AIAssistantNavbarItem.module.css';
 
 // API endpoint - dev vs production
+// doc_assistant_server runs on port 8088 with llama.cpp + KnowledgeResolver
 const AI_API_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'http://localhost:3333/api/ai/chat'
+  ? 'http://localhost:8088/api/ai/chat'
   : '/api/ai/chat';
 
 const AI_SEARCH_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'http://localhost:3333/api/ai/search'
+  ? 'http://localhost:8088/api/ai/search'
   : '/api/ai/search';
 
 // Valid documentation paths (prevent navigation to hallucinated URLs)
@@ -175,6 +176,10 @@ export default function AIAssistantNavbarItem() {
     try {
       const context = getCurrentContext();
       
+      // Use AbortController for timeout (LLM can take 30-60s)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 90000); // 90 second timeout
+      
       const response = await fetch(AI_API_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -189,7 +194,10 @@ export default function AIAssistantNavbarItem() {
             conversationHistory: state.messages.slice(-10),
           },
         }),
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
@@ -197,8 +205,13 @@ export default function AIAssistantNavbarItem() {
 
       const data = await response.json();
       
-      // Add assistant response
-      const assistantMessage = addMessage('assistant', data.response, data.actions);
+      // Add assistant response with knowledge context (validated links)
+      const assistantMessage = addMessage('assistant', data.response, data.actions, data.knowledge);
+      
+      // Auto-navigate to primary doc if available
+      if (data.knowledge?.primaryDoc) {
+        navigateToPage(data.knowledge.primaryDoc);
+      }
       
       // Execute agent actions (navigation validated against whitelist)
       if (data.actions) {
@@ -253,11 +266,16 @@ export default function AIAssistantNavbarItem() {
 
       const data = await response.json();
       
-      return data.hits.map((hit: any) => ({
-        title: hit.hierarchy?.lvl1 || hit.hierarchy?.lvl0 || 'Documentation',
-        url: hit.url?.replace('https://developers.iqm.com', '') || '/',
-        snippet: hit._snippetResult?.content?.value?.replace(/<[^>]*>/g, '') || '',
-      }));
+      return data.hits.map((hit: any) => {
+        // Use the deepest hierarchy level available for the best title
+        const hierarchy = hit.hierarchy || {};
+        const title = hierarchy.lvl4 || hierarchy.lvl3 || hierarchy.lvl2 || hierarchy.lvl1 || hierarchy.lvl0 || 'Documentation';
+        return {
+          title,
+          url: hit.url?.replace('https://developers.iqm.com', '') || '/',
+          snippet: hit._snippetResult?.content?.value?.replace(/<[^>]*>/g, '') || '',
+        };
+      });
     } catch (error) {
       console.warn('Algolia search failed:', error);
       return [];
@@ -265,15 +283,25 @@ export default function AIAssistantNavbarItem() {
   };
 
   const formatAlgoliaResults = (results: Array<{title: string; url: string; snippet?: string}>): string => {
-    if (results.length === 0) return "I couldn't find relevant documentation.";
+    if (results.length === 0) return "I couldn't find relevant documentation for that query.";
     
-    let response = "Here's what I found:\n\n";
-    results.slice(0, 3).forEach((result, i) => {
-      response += `${i + 1}. **[${result.title}](${result.url})**`;
+    let response = "Hmm, I'm not sure how to answer that. Here are some search results based on your query:\n\n";
+    results.slice(0, 3).forEach((result) => {
+      // Extract just the first sentence or a brief description
+      let description = '';
       if (result.snippet) {
-        response += `\n   ${result.snippet}`;
+        // Get first sentence (up to first period, question mark, or 100 chars)
+        const firstSentence = result.snippet.split(/[.!?]/)[0];
+        description = firstSentence.slice(0, 100).trim();
+        if (description && !description.endsWith('.')) {
+          description += '...';
+        }
       }
-      response += '\n\n';
+      response += `• [${result.title}](${result.url})`;
+      if (description) {
+        response += ` - ${description}`;
+      }
+      response += '\n';
     });
     return response;
   };
@@ -483,6 +511,103 @@ export default function AIAssistantNavbarItem() {
     });
   };
 
+  // Render validated knowledge links (from knowledge layer, not LLM)
+  const renderKnowledgeLinks = (knowledge: KnowledgeContext | undefined) => {
+    if (!knowledge) return null;
+
+    const links: React.ReactNode[] = [];
+
+    // Primary documentation link
+    if (knowledge.primaryDoc) {
+      links.push(
+        <div key="primary" className={styles.knowledgeSection}>
+          <span className={styles.knowledgeLabel}>📄 Documentation:</span>
+          <a
+            href="#"
+            onClick={(e) => { e.preventDefault(); navigateToPage(knowledge.primaryDoc!); }}
+            className={styles.knowledgeLink}
+          >
+            {knowledge.primaryDoc}
+          </a>
+        </div>
+      );
+    }
+
+    // Workflow steps (brief)
+    if (knowledge.workflow) {
+      links.push(
+        <div key="workflow" className={styles.knowledgeSection}>
+          <span className={styles.knowledgeLabel}>📋 Workflow: {knowledge.workflow.name}</span>
+          <ol className={styles.workflowSteps}>
+            {knowledge.workflow.steps.map((step, i) => (
+              <li key={i}>
+                {step.name.replace(/_/g, ' ')}
+                {step.doc && i === 0 && (  // Only link first step (auth)
+                  <a
+                    href="#"
+                    onClick={(e) => { e.preventDefault(); navigateToPage(step.doc!); }}
+                    className={styles.stepLink}
+                  >
+                    →
+                  </a>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      );
+
+      // More actions (optional)
+      if (knowledge.workflow.moreActions && knowledge.workflow.moreActions.length > 0) {
+        links.push(
+          <div key="more-actions" className={styles.knowledgeSection}>
+            <span className={styles.knowledgeLabel}>➕ More Actions:</span>
+            <ul className={styles.moreActions}>
+              {knowledge.workflow.moreActions.map((action, i) => (
+                <li key={i}>
+                  {action.description || action.name.replace(/_/g, ' ')}
+                  {action.doc && (
+                    <a
+                      href="#"
+                      onClick={(e) => { e.preventDefault(); navigateToPage(action.doc!); }}
+                      className={styles.stepLink}
+                    >
+                      →
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+    }
+
+    // Related sections (endpoint anchors)
+    if (knowledge.relatedSections && knowledge.relatedSections.length > 0) {
+      links.push(
+        <div key="sections" className={styles.knowledgeSection}>
+          <span className={styles.knowledgeLabel}>🔗 Related Sections:</span>
+          <ul className={styles.relatedSections}>
+            {knowledge.relatedSections.slice(0, 3).map((section, i) => (
+              <li key={i}>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); navigateToPage(section.url); }}
+                  className={styles.knowledgeLink}
+                >
+                  {section.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    return links.length > 0 ? <div className={styles.knowledgeLinks}>{links}</div> : null;
+  };
+
   return (
     <div className={styles.container}>
       <button
@@ -561,6 +686,7 @@ export default function AIAssistantNavbarItem() {
                 >
                   <div className={styles.messageContent}>
                     {renderMessageContent(msg.content)}
+                    {msg.role === 'assistant' && renderKnowledgeLinks(msg.knowledge)}
                   </div>
                 </div>
               ))}

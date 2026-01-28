@@ -2,12 +2,27 @@ import { useReducer, useCallback } from 'react';
 import { useHistory } from '@docusaurus/router';
 
 // Types
+export interface KnowledgeContext {
+  primaryDoc?: string;
+  suggestedDocs?: string[];
+  workflow?: {
+    name: string;
+    description: string;
+    steps: Array<{ name: string; entity: string; doc?: string }>;
+    moreActions?: Array<{ name: string; entity: string; description: string; doc?: string }>;
+  };
+  relatedSections?: Array<{ title: string; url: string; method?: string; endpoint?: string }>;
+  detectedIntent?: string;
+  intentConfidence?: number;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: Date;
   actions?: AgentAction[];
+  knowledge?: KnowledgeContext;  // Validated links from knowledge layer
 }
 
 export interface Highlight {
@@ -282,13 +297,14 @@ export function useDocNavigator() {
   }, []);
 
   // Messages
-  const addMessage = useCallback((role: Message['role'], content: string, actions?: AgentAction[]) => {
+  const addMessage = useCallback((role: Message['role'], content: string, actions?: AgentAction[], knowledge?: KnowledgeContext) => {
     const message: Message = {
       id: generateId(),
       role,
       content,
       timestamp: new Date(),
       actions,
+      knowledge,
     };
     dispatch({ type: 'ADD_MESSAGE', payload: message });
     return message;

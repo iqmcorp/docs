@@ -84,10 +84,13 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        gtag: {
-          trackingID: "G-9G69R8P56B",
-          anonymizeIP: true,
-        },
+        // Only enable gtag in production to avoid dev mode errors
+        ...(process.env.NODE_ENV === 'production' && {
+          gtag: {
+            trackingID: "G-9G69R8P56B",
+            anonymizeIP: true,
+          },
+        }),
       }),
     ],
   ],
