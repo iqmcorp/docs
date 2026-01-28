@@ -94,6 +94,16 @@ void KnowledgeResolver::buildIndexes() {
         std::cout << "  [KR] Loaded " << slugMap_.size() << " slug mappings" << std::endl;
     }
     
+    // Build doc labels index (doc path → human-readable label)
+    if (knowledge_.contains("indexes") && knowledge_["indexes"].contains("docLabels")) {
+        for (auto& [docPath, label] : knowledge_["indexes"]["docLabels"].items()) {
+            if (!label.is_null()) {
+                docLabels_[docPath] = label.get<std::string>();
+            }
+        }
+        std::cout << "  [KR] Loaded " << docLabels_.size() << " doc labels" << std::endl;
+    }
+    
     // Build heading/section indexes for anchor-level navigation
     buildHeadingIndexes();
 }
@@ -411,6 +421,46 @@ std::string KnowledgeResolver::resolveDocUrl(const std::string& docId) const {
     return docId;
 }
 
+std::string KnowledgeResolver::getDocLabel(const std::string& docPath) const {
+    // Remove any section anchor for lookup
+    std::string pathOnly = docPath;
+    size_t hashPos = docPath.find('#');
+    if (hashPos != std::string::npos) {
+        pathOnly = docPath.substr(0, hashPos);
+    }
+    
+    // Check doc labels index first
+    auto it = docLabels_.find(pathOnly);
+    if (it != docLabels_.end()) {
+        return it->second;
+    }
+    
+    // Fallback: generate a readable title from the path
+    // "/quickstart-guides/create-a-campaign-quickstart" → "Create a Campaign Quickstart"
+    std::string fileName = pathOnly;
+    size_t lastSlash = pathOnly.rfind('/');
+    if (lastSlash != std::string::npos && lastSlash < pathOnly.length() - 1) {
+        fileName = pathOnly.substr(lastSlash + 1);
+    }
+    
+    // Convert kebab-case to Title Case
+    std::string result;
+    bool capitalizeNext = true;
+    for (char c : fileName) {
+        if (c == '-') {
+            result += ' ';
+            capitalizeNext = true;
+        } else if (capitalizeNext) {
+            result += std::toupper(c);
+            capitalizeNext = false;
+        } else {
+            result += c;
+        }
+    }
+    
+    return result;
+}
+
 // =========================================
 // Layer 1: Entity Resolution
 // =========================================
@@ -639,26 +689,58 @@ json KnowledgeResolver::getApiGroup(const std::string& apiId) const {
 // =========================================
 
 double KnowledgeResolver::calculatePatternMatch(const std::string& query, const std::string& pattern) const {
-    // Simple substring matching with position weighting
-    auto pos = query.find(pattern);
-    if (pos == std::string::npos) {
-        return 0.0;
-    }
-    
-    // Base score from pattern length relative to query
-    double lengthScore = static_cast<double>(pattern.length()) / query.length();
-    
-    // Bonus for exact match
+    // Exact match
     if (query == pattern) {
         return 1.0;
     }
     
-    // Bonus for match at start
-    if (pos == 0) {
-        lengthScore += 0.1;
+    // Word-based matching: split both into words and compute overlap
+    auto splitWords = [](const std::string& s) {
+        std::vector<std::string> words;
+        std::istringstream iss(s);
+        std::string word;
+        while (iss >> word) {
+            // Simple stemming: remove trailing 's' for plurals
+            if (word.length() > 2 && word.back() == 's') {
+                word.pop_back();
+            }
+            words.push_back(word);
+        }
+        return words;
+    };
+    
+    auto queryWords = splitWords(query);
+    auto patternWords = splitWords(pattern);
+    
+    if (patternWords.empty()) return 0.0;
+    
+    // Count matching words (order-independent)
+    int matchCount = 0;
+    for (const auto& pw : patternWords) {
+        for (const auto& qw : queryWords) {
+            if (qw == pw || 
+                qw.find(pw) != std::string::npos || 
+                pw.find(qw) != std::string::npos) {
+                matchCount++;
+                break;
+            }
+        }
     }
     
-    return std::min(0.95, lengthScore);  // Cap at 0.95 for non-exact matches
+    // Score based on how many pattern words were found
+    double score = static_cast<double>(matchCount) / patternWords.size();
+    
+    // Bonus if all pattern words are present
+    if (matchCount == static_cast<int>(patternWords.size())) {
+        score = std::min(0.95, score + 0.2);
+    }
+    
+    // Penalty for very short queries matching long patterns
+    if (queryWords.size() < patternWords.size() / 2) {
+        score *= 0.7;
+    }
+    
+    return score > 0.4 ? score : 0.0;  // Threshold to avoid weak matches
 }
 
 std::vector<IntentMatch> KnowledgeResolver::matchIntent(const std::string& query) const {
@@ -1096,49 +1178,63 @@ std::string KnowledgeContext::toPromptContext() const {
     return ss.str();
 }
 
-json KnowledgeContext::toJson() const {
+json KnowledgeContext::toJson(const KnowledgeResolver* resolver) const {
     json result;
     
     // Primary documentation link (first one is the main target)
     if (!suggested_docs.empty()) {
         result["primaryDoc"] = suggested_docs[0];
+        
+        // Get human-readable title for the primary doc
+        if (resolver) {
+            result["primaryDocTitle"] = resolver->getDocLabel(suggested_docs[0]);
+        }
+        
         result["suggestedDocs"] = suggested_docs;
     }
     
-    // Workflow information
-    if (workflow) {
-        json wf;
-        wf["name"] = workflow->name;
-        wf["description"] = workflow->description;
-        
-        json steps = json::array();
-        for (const auto& step : workflow->steps) {
-            json s;
-            s["name"] = step.step_name;
-            s["entity"] = step.entity;
-            if (!step.doc.empty()) {
-                s["doc"] = step.doc;
-            }
-            steps.push_back(s);
-        }
-        wf["steps"] = steps;
-        
-        if (!workflow->more_actions.empty()) {
+    // More actions from intent (replaces workflow section)
+    // These are optional related actions a user might want after the primary task
+    if (!intents.empty()) {
+        const auto& intent = intents[0];
+        if (!intent.related_sections.empty()) {
             json actions = json::array();
-            for (const auto& action : workflow->more_actions) {
+            for (const auto& section : intent.related_sections) {
                 json a;
-                a["name"] = action.step_name;
-                a["entity"] = action.entity;
-                a["description"] = action.description;
-                if (!action.doc.empty()) {
-                    a["doc"] = action.doc;
+                // Parse section format: "/guidelines/campaign-api#change-campaign-status"
+                std::string path = section;
+                std::string title = section;
+                
+                // Extract title from section anchor or use the path
+                size_t hashPos = section.find('#');
+                if (hashPos != std::string::npos && hashPos < section.length() - 1) {
+                    // Convert #change-campaign-status → "Change Campaign Status"
+                    std::string anchor = section.substr(hashPos + 1);
+                    title = "";
+                    bool capitalizeNext = true;
+                    for (char c : anchor) {
+                        if (c == '-') {
+                            title += ' ';
+                            capitalizeNext = true;
+                        } else if (capitalizeNext) {
+                            title += std::toupper(c);
+                            capitalizeNext = false;
+                        } else {
+                            title += c;
+                        }
+                    }
+                } else if (resolver) {
+                    title = resolver->getDocLabel(section);
                 }
+                
+                a["title"] = title;
+                a["url"] = section;
                 actions.push_back(a);
             }
-            wf["moreActions"] = actions;
+            if (!actions.empty()) {
+                result["moreActions"] = actions;
+            }
         }
-        
-        result["workflow"] = wf;
     }
     
     // Related sections with validated URLs

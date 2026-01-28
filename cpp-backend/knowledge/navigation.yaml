@@ -90,18 +90,35 @@ intents:
     clarifying_questions:
       - "Have you added a Creative to the platform?"
       - "Do you have an Insertion Order created?"
-      - "What type of campaign: Advanced or PG?"
+      - "What type of Campaign: Advanced or PG?"
       
   create_pg_campaign:
     patterns:
       - "programmatic guaranteed"
       - "PG campaign"
-      - "direct deal campaign"
+      - "create PG campaign"
+      - "programmatic guaranteed campaign"
     entity: campaign
     action: create_pg
-    primary_doc: /guidelines/campaign-api
-    section: "#programmatic-guaranteed"
+    primary_doc: /tutorials/create-a-pg-campaign
     endpoint: POST /api/v3/cmp/pg/campaigns/add
+    related_docs:
+      - /guidelines/campaign-api
+      - /quickstart-guides/upload-a-creative-quickstart
+      - /tutorials/deal-guide
+      - /tutorials/create-a-conversion/
+    prerequisites:
+      - "An Account on the IQM Platform"
+      - "An Approved and Running Creative"
+      - "An Insertion Order"
+      - "A Conversion"
+      - "A PG Deal"
+    clarifying_questions:
+      - "Do you have an approved creative uploaded?"
+      - "Have you created an Insertion Order?"
+      - "Do you have a PG deal set up?"
+      - "Have you created a conversion pixel?"
+    help_center: https://help.iqm.com/en/articles/11497668-campaigns-overview
     
   create_insertion_order:
     patterns:
@@ -112,31 +129,110 @@ intents:
     entity: insertion_order
     action: create
     primary_doc: /guidelines/campaign-api
-    section: "#insertion-orders"
+    section: "#create-an-insertion-order"
     endpoint: POST /api/v3/cmp/io/add
     help_center: https://help.iqm.com/en/articles/8365220-what-is-an-insertion-order
-    prerequisites:
-      - "Customer context required"
+    
+  update_campaign:
+    patterns:
+      - "update campaign"
+      - "update my campaign"
+      - "update a campaign"
+      - "modify campaign"
+      - "modify my campaign"
+      - "edit campaign"
+      - "change campaign"
+      - "campaign update"
+      - "how do I update"
+      - "how to update campaign"
+      - "update campaign settings"
+    entity: campaign
+    action: update
+    primary_doc: /guidelines/campaign-api
+    section: "#update-campaign"
+    endpoint: PATCH /api/v3/cmp/campaigns
+    related_sections:
+      - /guidelines/campaign-api#campaign-management
+      - /guidelines/campaign-api#change-campaign-status
+      - /guidelines/campaign-api#change-campaign-budget
+    help_center: https://help.iqm.com/en/articles/11497668-campaigns-overview
+    
+  delete_campaign:
+    patterns:
+      - "delete campaign"
+      - "delete my campaign"
+      - "remove campaign"
+      - "how to delete a campaign"
+      - "delete a campaign"
+    entity: campaign
+    action: delete
+    primary_doc: /guidelines/campaign-api
+    section: "#change-campaign-status"
+    endpoint: PUT /api/v2/cmp/campaigns/update-status
+    note: "Set status to 'deleted' to delete a Campaign"
+    related_sections:
+      - /guidelines/campaign-api#campaign-management
+    help_center: https://help.iqm.com/en/articles/11497668-campaigns-overview
+    
+  update_insertion_order:
+    patterns:
+      - "update insertion order"
+      - "update IO"
+      - "modify IO"
+      - "edit IO"
+      - "change IO"
+      - "update IO budget"
+    entity: insertion_order
+    action: update
+    primary_doc: /guidelines/campaign-api
+    section: "#update-an-insertion-order"
+    endpoint: PUT /api/v3/cmp/io/{ioId}
+    related_sections:
+      - /guidelines/campaign-api#insertion-orders
+      
+  delete_insertion_order:
+    patterns:
+      - "delete insertion order"
+      - "delete IO"
+      - "remove IO"
+      - "remove insertion order"
+    entity: insertion_order
+    action: delete
+    primary_doc: /guidelines/campaign-api
+    section: "#delete-an-insertion-order"
+    endpoint: DELETE /api/v3/cmp/io/delete
+    note: "Deletes IO and all attached Campaigns"
+    related_sections:
+      - /guidelines/campaign-api#insertion-orders
       
   list_campaigns:
     patterns:
       - "list campaigns"
+      - "list of campaigns"
+      - "see list of campaigns"
+      - "see campaigns"
       - "get all campaigns"
       - "get a list of campaigns"
       - "get list of campaigns"
       - "show campaigns"
+      - "show all campaigns"
+      - "show my campaigns"
       - "campaign list"
+      - "campaigns list"
       - "check if I have a campaign"
       - "check campaigns"
       - "do I have a campaign"
       - "see my campaigns"
       - "view campaigns"
+      - "view all campaigns"
       - "find campaigns"
       - "campaign details"
       - "get campaign"
       - "get campaigns"
       - "retrieve campaigns"
       - "fetch campaigns"
+      - "all campaigns"
+      - "my campaigns"
     entity: campaign
     action: list
     primary_doc: /guidelines/campaign-api#get-list-of-campaigns
@@ -187,8 +283,48 @@ intents:
     entity: creative
     action: create_group
     primary_doc: /guidelines/creative-api
-    section: "#creative-groups"
+    section: "#create-new-creative-group"
     endpoint: POST /api/v3/crt/creatives/groups
+    
+  update_creative:
+    patterns:
+      - "update creative"
+      - "update my creative"
+      - "modify creative"
+      - "edit creative"
+      - "change creative"
+      - "update ad"
+      - "edit ad"
+      - "modify ad"
+      - "update creative details"
+      - "change creative name"
+    entity: creative
+    action: update
+    primary_doc: /guidelines/creative-api
+    section: "#update-creative-details"
+    endpoint: PATCH /api/v3/crt/creatives/{creativeId}
+    related_sections:
+      - /guidelines/creative-api#update-creative-status
+      - /guidelines/creative-api#update-creative-groups
+      - /guidelines/creative-api#update-click-url
+    help_center: https://help.iqm.com/en/articles/11748298-create-or-manage-a-creative
+    
+  delete_creative:
+    patterns:
+      - "delete creative"
+      - "delete my creative"
+      - "remove creative"
+      - "delete ad"
+      - "remove ad"
+    entity: creative
+    action: delete
+    primary_doc: /guidelines/creative-api
+    section: "#update-creative-status"
+    endpoint: PATCH /api/v3/crt/creatives/update-status
+    note: "Set status to delete a Creative"
+    related_sections:
+      - /guidelines/creative-api#creative-management
+    help_center: https://help.iqm.com/en/articles/11748298-create-or-manage-a-creative
     
   # ============================================
   # AUDIENCE OPERATIONS
@@ -266,20 +402,71 @@ intents:
   list_audiences:
     patterns:
       - "list audiences"
+      - "list of audiences"
+      - "see list of audiences"
+      - "see audiences"
       - "get audiences"
+      - "get all audiences"
+      - "get a list of audiences"
+      - "get list of audiences"
       - "show audiences"
+      - "show all audiences"
+      - "show my audiences"
       - "audience list"
+      - "audiences list"
       - "what is the endpoint to list audiences"
       - "all audiences"
       - "view audiences"
+      - "view all audiences"
       - "my audiences"
       - "available audiences"
+      - "find audiences"
+      - "check audiences"
+      - "audience details"
+      - "get audience"
+      - "retrieve audiences"
+      - "fetch audiences"
     entity: audience
     action: list
     primary_doc: /guidelines/audience-api
     endpoint: GET /api/v2/audience/list
     related_docs:
       - /quickstart-guides/matched-audience-upload-api-quickstart-guide
+      
+  update_audience:
+    patterns:
+      - "update audience"
+      - "update my audience"
+      - "modify audience"
+      - "edit audience"
+      - "change audience"
+      - "rename audience"
+      - "update audience name"
+      - "regenerate audience"
+    entity: audience
+    action: update
+    primary_doc: /guidelines/audience-api
+    section: "#update-audience-name"
+    endpoint: PATCH /api/v3/audience/{audienceId}/update-name
+    related_sections:
+      - /guidelines/audience-api#regenerate-audience
+      - /guidelines/audience-api#update-retargeted-audience
+    help_center: https://help.iqm.com/en/articles/11748442-create-or-manage-a-matched-audience
+      
+  delete_audience:
+    patterns:
+      - "delete audience"
+      - "delete my audience"
+      - "remove audience"
+      - "delete matched audience"
+    entity: audience
+    action: delete
+    primary_doc: /guidelines/audience-api
+    section: "#delete-audience"
+    endpoint: DELETE /api/v2/audience/delete
+    related_sections:
+      - /guidelines/audience-api#audience-management
+    help_center: https://help.iqm.com/en/articles/11748442-create-or-manage-a-matched-audience
       
   # ============================================
   # CONVERSION OPERATIONS
@@ -327,6 +514,42 @@ intents:
       - "Do you have a conversion pixel created?"
       - "What's your campaign ID?"
       
+  update_conversion:
+    patterns:
+      - "update conversion"
+      - "update my conversion"
+      - "modify conversion"
+      - "edit conversion"
+      - "change conversion"
+      - "rename conversion"
+      - "update conversion name"
+      - "update pixel"
+      - "modify pixel"
+    entity: conversion
+    action: update
+    primary_doc: /guidelines/conversion-api
+    section: "#update-pixel-conversion"
+    endpoint: PATCH /api/v3/conversion/pixel/update
+    related_sections:
+      - /guidelines/conversion-api#update-postback-conversion
+    help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
+      
+  delete_conversion:
+    patterns:
+      - "delete conversion"
+      - "delete my conversion"
+      - "remove conversion"
+      - "delete pixel"
+      - "remove pixel"
+    entity: conversion
+    action: delete
+    primary_doc: /guidelines/conversion-api
+    section: "#delete-conversion"
+    endpoint: DELETE /api/v3/conversion/delete
+    related_sections:
+      - /guidelines/conversion-api#conversion-management
+    help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
+      
   # ============================================
   # INVENTORY OPERATIONS
   # ============================================
@@ -349,11 +572,134 @@ intents:
     patterns:
       - "PMP deal"
       - "private marketplace"
-      - "direct deals"
-    entity: inventory
-    action: target
+      - "private deal"
+      - "create PMP"
+    entity: deal
+    action: create
+    primary_doc: /tutorials/deal-guide
+    section: "#create-a-pmp-deal"
+    related_docs:
+      - /guidelines/inventory-api
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  pg_deals:
+    patterns:
+      - "PG deal"
+      - "programmatic guaranteed deal"
+      - "guaranteed deal"
+      - "create PG deal"
+    entity: deal
+    action: create
+    primary_doc: /tutorials/deal-guide
+    section: "#create-a-pg-deal"
+    related_docs:
+      - /guidelines/inventory-api
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  inventory_groups:
+    patterns:
+      - "inventory group"
+      - "create inventory group"
+      - "open exchange group"
+      - "contextual inventory"
+    entity: inventory_group
+    action: create
+    primary_doc: /quickstart-guides/inventory-quickstart
+    section: "#create-inventory-group"
+    endpoint: POST /api/v3/inv/groups/add
+    related_docs:
+      - /guidelines/inventory-api
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  update_inventory_group:
+    patterns:
+      - "update inventory group"
+      - "edit inventory group"
+      - "modify inventory group"
+      - "change inventory group"
+      - "update group"
+      - "edit group inventories"
+    entity: inventory_group
+    action: update
     primary_doc: /guidelines/inventory-api
-    section: "#pmp-deals"
+    section: "#edit-inventory-group"
+    endpoint: PATCH /api/v3/inv/groups/{groupId}
+    related_sections:
+      - /guidelines/inventory-api#inventory-groups
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  update_pmp_deal:
+    patterns:
+      - "update PMP deal"
+      - "edit PMP deal"
+      - "modify PMP deal"
+      - "change PMP deal"
+      - "update private deal"
+    entity: deal
+    action: update
+    primary_doc: /guidelines/inventory-api
+    section: "#update-pmp-deal"
+    endpoint: PATCH /api/v3/inv/pmp/deals/{id}
+    related_sections:
+      - /guidelines/inventory-api#pmp-deals
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  update_pg_deal:
+    patterns:
+      - "update PG deal"
+      - "edit PG deal"
+      - "modify PG deal"
+      - "change PG deal"
+      - "update guaranteed deal"
+    entity: deal
+    action: update
+    primary_doc: /guidelines/inventory-api
+    section: "#update-pg-deal-details"
+    endpoint: PATCH /api/v3/inv/pg/deals/{id}
+    related_sections:
+      - /guidelines/inventory-api#pg-deals
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  delete_inventory_group:
+    patterns:
+      - "delete inventory group"
+      - "remove inventory group"
+      - "delete group"
+    entity: inventory_group
+    action: delete
+    primary_doc: /guidelines/inventory-api
+    section: "#delete-inventory-group"
+    endpoint: DELETE /api/v3/inv/group/{groupId}
+    related_sections:
+      - /guidelines/inventory-api#inventory-groups
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  delete_pmp_deal:
+    patterns:
+      - "delete PMP deal"
+      - "remove PMP deal"
+      - "delete private deal"
+    entity: deal
+    action: delete
+    primary_doc: /guidelines/inventory-api
+    section: "#delete-pmp-deal"
+    endpoint: DELETE /api/v3/inv/pmp/deals/{id}
+    related_sections:
+      - /guidelines/inventory-api#pmp-deals
+    help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
+    
+  delete_pg_deal:
+    patterns:
+      - "delete PG deal"
+      - "remove PG deal"
+      - "delete guaranteed deal"
+    entity: deal
+    action: delete
+    primary_doc: /guidelines/inventory-api
+    section: "#delete-pg-deal"
+    endpoint: DELETE /api/v3/inv/pg/deals/{id}
+    related_sections:
+      - /guidelines/inventory-api#pg-deals
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
     
   # ============================================
@@ -373,6 +719,42 @@ intents:
     endpoint: PUT /api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}
     related_docs:
       - /guidelines/bid-model-api
+    help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
+    
+  update_bid_model:
+    patterns:
+      - "update bid model"
+      - "modify bid model"
+      - "edit bid model"
+      - "change bid model"
+      - "update bidding"
+      - "modify bidding"
+      - "adjust bids"
+      - "change bid priority"
+      - "update bid bundle"
+    entity: bid_model
+    action: update
+    primary_doc: /guidelines/bid-model-api
+    section: "#update-bid-model-bundle"
+    endpoint: PATCH /api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles
+    related_sections:
+      - /guidelines/bid-model-api#bid-modeling-management
+      - /guidelines/bid-model-api#add-update-or-delete-bid-modeling
+    help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
+    
+  delete_bid_model:
+    patterns:
+      - "delete bid model"
+      - "remove bid model"
+      - "delete bidding"
+      - "remove bid bundle"
+    entity: bid_model
+    action: delete
+    primary_doc: /guidelines/bid-model-api
+    section: "#delete-bid-model-bundle"
+    endpoint: DELETE /api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles
+    related_sections:
+      - /guidelines/bid-model-api#bid-modeling-management
     help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
     
   # ============================================
@@ -431,6 +813,226 @@ intents:
       - /guidelines/insights-api
       - /quickstart-guides/insights-quickstart
       
+  update_report:
+    patterns:
+      - "update report"
+      - "modify report"
+      - "edit report"
+      - "change report"
+      - "update report name"
+      - "rename report"
+    entity: report
+    action: update
+    primary_doc: /guidelines/reports-api
+    section: "#edit-a-report"
+    endpoint: PATCH /api/v3/ra/report/{reportId}
+    related_sections:
+      - /guidelines/reports-api#update-a-report-schedule
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+      
+  update_report_schedule:
+    patterns:
+      - "update report schedule"
+      - "modify scheduled report"
+      - "edit scheduled report"
+      - "change report schedule"
+      - "update recurring report"
+    entity: report
+    action: update_schedule
+    primary_doc: /guidelines/reports-api
+    section: "#update-a-report-schedule"
+    endpoint: PATCH /api/v3/ra/report/email/schedule/{reportId}
+    related_sections:
+      - /guidelines/reports-api#scheduled-reports
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+      
+  delete_report:
+    patterns:
+      - "delete report"
+      - "delete my report"
+      - "remove report"
+    entity: report
+    action: delete
+    primary_doc: /guidelines/reports-api
+    section: "#delete-a-report"
+    endpoint: DELETE /api/v3/ra/report/{reportId}
+    related_sections:
+      - /guidelines/reports-api#report-management
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+      
+  delete_report_schedule:
+    patterns:
+      - "delete report schedule"
+      - "remove scheduled report"
+      - "cancel scheduled report"
+      - "delete recurring report"
+    entity: report
+    action: delete_schedule
+    primary_doc: /guidelines/reports-api
+    section: "#delete-report-schedule"
+    endpoint: DELETE /api/v3/ra/report/email/schedule/{reportId}
+    related_sections:
+      - /guidelines/reports-api#scheduled-reports
+    help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
+      
+  # ============================================
+  # HEALTHCARE VERTICAL
+  # ============================================
+  
+  healthcare_overview:
+    patterns:
+      - "healthcare advertising"
+      - "healthcare API"
+      - "healthcare vertical"
+      - "medical advertising"
+      - "HCP advertising"
+      - "pharma advertising"
+    entity: vertical
+    action: explain
+    intent_type: informational
+    primary_doc: /healthcare-vertical/index
+    related_docs:
+      - /healthcare-vertical/audience-healthcare
+      - /healthcare-vertical/insights-pld
+      - /healthcare-vertical/planner
+      
+  insights_pld:
+    patterns:
+      - "provider level data"
+      - "PLD report"
+      - "PLD insights"
+      - "healthcare insights"
+      - "HCP report"
+      - "NPI matching"
+      - "provider data"
+    entity: pld_report
+    action: generate
+    primary_doc: /healthcare-vertical/insights-pld
+    section: "#provider-level-data-reports"
+    related_docs:
+      - /guidelines/insights-api
+      - /quickstart-guides/insights-quickstart
+      
+  insights_sls:
+    patterns:
+      - "ScriptLift"
+      - "SLS report"
+      - "script lift study"
+      - "prescription data"
+      - "pharma insights"
+    entity: sls_report
+    action: generate
+    primary_doc: /healthcare-vertical/insights-pld
+    section: "#scriptlift-studies-reports"
+    related_docs:
+      - /guidelines/insights-api
+      
+  healthcare_audience:
+    patterns:
+      - "healthcare audience"
+      - "HCP audience"
+      - "NPI audience"
+      - "ABM audience"
+      - "account based marketing"
+      - "provider audience"
+      - "medical audience"
+    entity: audience
+    action: create
+    primary_doc: /healthcare-vertical/audience-healthcare
+    section: "#create-abm-audience"
+    related_docs:
+      - /guidelines/audience-api
+      
+  healthcare_planner:
+    patterns:
+      - "healthcare planner"
+      - "HCP planner"
+      - "healthcare media plan"
+      - "pharma planning"
+    entity: planner
+    action: create
+    primary_doc: /healthcare-vertical/planner
+    related_docs:
+      - /guidelines/planner-api
+      
+  healthcare_finance:
+    patterns:
+      - "healthcare finance"
+      - "healthcare billing"
+      - "HCP fees"
+      - "healthcare invoicing"
+    entity: finance
+    action: view
+    primary_doc: /healthcare-vertical/finance
+    related_docs:
+      - /guidelines/finance-api
+      
+  # ============================================
+  # POLITICAL VERTICAL
+  # ============================================
+  
+  political_overview:
+    patterns:
+      - "political advertising"
+      - "political API"
+      - "political vertical"
+      - "election advertising"
+      - "voter targeting"
+      - "political campaign"
+    entity: vertical
+    action: explain
+    intent_type: informational
+    primary_doc: /political-vertical/index
+    related_docs:
+      - /political-vertical/audience-segments
+      - /political-vertical/insights-vld
+      - /political-vertical/finance
+      
+  political_audience:
+    patterns:
+      - "political audience"
+      - "voter audience"
+      - "voter segment"
+      - "political segment"
+      - "geofarmed audience"
+      - "geo-fenced political"
+    entity: audience
+    action: create
+    primary_doc: /political-vertical/audience-segments
+    related_docs:
+      - /guidelines/audience-api
+    related_sections:
+      - /political-vertical/audience-segments#matched-audience-details
+      - /political-vertical/audience-segments#geofarmed-audience-details
+      - /political-vertical/audience-segments#contextual-audience-details
+      
+  create_geofarmed_audience:
+    patterns:
+      - "geofarmed audience"
+      - "geofarm audience"
+      - "geo-fenced audience"
+      - "location based audience"
+      - "geotargeted audience"
+    entity: audience
+    action: create_geofarmed
+    primary_doc: /political-vertical/audience-segments
+    section: "#create-geofarmed-audience"
+    related_docs:
+      - /guidelines/audience-api
+      
+  political_finance:
+    patterns:
+      - "political finance"
+      - "political billing"
+      - "VLD fees"
+      - "political invoicing"
+      - "voter data fees"
+    entity: finance
+    action: view
+    primary_doc: /political-vertical/finance
+    related_docs:
+      - /guidelines/finance-api
+      
   # ============================================
   # TROUBLESHOOTING
   # ============================================
@@ -453,8 +1055,7 @@ intents:
       - "access denied"
     error_type: authorization
     likely_cause: "Missing X-IAA-OW-ID header or insufficient permissions"
-    primary_doc: /getting-started/before-you-begin
-    section: "#workspace-id"
+    primary_doc: /quickstart-guides/authentication-quickstart-guide/
     solution: "Verify X-IAA-OW-ID header is set correctly"
     
   error_missing_io:
@@ -465,8 +1066,8 @@ intents:
     error_type: prerequisite
     likely_cause: "Campaign requires Insertion Order"
     primary_doc: /guidelines/campaign-api
-    section: "#insertion-orders"
-    solution: "Create an Insertion Order first"
+    section: "#get-insertion-order-details"
+    solution: "Check for available Insertion Orders"
     
   error_budget:
     patterns:
@@ -476,7 +1077,7 @@ intents:
     error_type: business_logic
     likely_cause: "Budget constraints"
     primary_doc: /guidelines/campaign-api
-    section: "#budget"
+    section: "#change-campaign-budget"
 
 # Page Connections
 # ================
@@ -486,9 +1087,9 @@ page_graph:
   /quickstart-guides/authentication-quickstart-guide:
     next_steps:
       - path: /quickstart-guides/create-a-campaign-quickstart
-        reason: "After auth, most users create campaigns"
+        reason: "After auth, most users create Campaigns"
       - path: /quickstart-guides/upload-a-creative-quickstart
-        reason: "Or start with creative upload"
+        reason: "Or start with Creative upload"
     prerequisites: []
     external_links:
       - url: https://app.iqm.com/signup
@@ -497,9 +1098,9 @@ page_graph:
   /quickstart-guides/create-a-campaign-quickstart:
     next_steps:
       - path: /quickstart-guides/upload-a-creative-quickstart
-        reason: "Campaign needs creatives"
+        reason: "Campaign needs Creatives"
       - path: /quickstart-guides/conversion-quickstart
-        reason: "Add conversion tracking"
+        reason: "Add Conversion tracking"
     prerequisites:
       - path: /quickstart-guides/authentication-quickstart-guide
         required: true
@@ -516,7 +1117,7 @@ page_graph:
     prerequisites:
       - path: /quickstart-guides/create-a-campaign-quickstart
         required: false
-        note: "Need campaign to assign conversion to"
+        note: "Need Campaign to assign Conversion to"
     related:
       - path: /guidelines/campaign-api
         relationship: "assignment target"
@@ -586,4 +1187,14 @@ journeys:
       - /political-vertical/index
       - /political-vertical/audience-segments
       - /political-vertical/insights-vld
+      - /quickstart-guides/insights-quickstart
+      
+  healthcare_advertiser:
+    name: "Healthcare Advertiser"
+    description: "User focused on healthcare/pharma advertising"
+    path:
+      - /healthcare-vertical/index
+      - /healthcare-vertical/audience-healthcare
+      - /healthcare-vertical/planner
+      - /healthcare-vertical/insights-pld
       - /quickstart-guides/insights-quickstart
