@@ -281,6 +281,24 @@ public:
     KnowledgeContext resolveQuery(const std::string& query) const;
     
     /**
+     * Resolve knowledge context by entity and action (LLM-extracted)
+     * Bypasses pattern matching - for use when LLM has already extracted intent
+     */
+    KnowledgeContext resolveByEntityAction(const std::string& entity, const std::string& action) const;
+    
+    /**
+     * Get entity vocabulary for LLM extraction prompt
+     * Returns JSON with entities and their aliases/descriptions
+     */
+    std::string getEntityVocabulary() const;
+    
+    /**
+     * Get action vocabulary for LLM extraction prompt
+     * Returns list of valid actions
+     */
+    std::string getActionVocabulary() const;
+    
+    /**
      * Extract entity mentions from text
      */
     std::vector<std::string> extractEntities(const std::string& text) const;

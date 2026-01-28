@@ -244,6 +244,61 @@ std::vector<DocSearchResult> DocAssistant::searchDocs(const std::string& query,
     return results;
 }
 
+json DocAssistant::extractEntityAction(const std::string& query) {
+    json result = {{"entity", ""}, {"action", ""}, {"confidence", 0.0}};
+    
+    if (!pImpl->initialized || !pImpl->knowledgeResolver.isLoaded()) {
+        return result;
+    }
+    
+    // Build extraction prompt with vocabulary
+    std::ostringstream prompt;
+    prompt << "<s>[INST] You are an API documentation assistant. Extract the entity and action from the user's query.\n\n";
+    prompt << pImpl->knowledgeResolver.getEntityVocabulary() << "\n";
+    prompt << pImpl->knowledgeResolver.getActionVocabulary() << "\n";
+    prompt << "INSTRUCTIONS:\n";
+    prompt << "- Respond ONLY with JSON: {\"entity\": \"...\", \"action\": \"...\"}\n";
+    prompt << "- Use exact entity and action names from the lists above\n";
+    prompt << "- If unsure, use \"query\" as action for informational questions\n";
+    prompt << "- If no entity matches, leave entity empty\n\n";
+    prompt << "User query: \"" << query << "\"\n\n";
+    prompt << "JSON response: [/INST]";
+    
+    // Call LLM with low temperature for deterministic extraction
+    json requestBody = {
+        {"prompt", prompt.str()},
+        {"n_predict", 100},
+        {"temperature", 0.1},  // Low temperature for consistent extraction
+        {"top_p", 0.9},
+        {"stop", {"</s>", "[INST]", "\n\n"}}
+    };
+    
+    std::string llamaResponse = pImpl->httpPost(
+        pImpl->llamaServerUrl + "/completion",
+        requestBody.dump()
+    );
+    
+    try {
+        auto respJson = json::parse(llamaResponse);
+        std::string content = respJson.value("content", "");
+        
+        // Extract JSON from response (LLM might include extra text)
+        size_t jsonStart = content.find('{');
+        size_t jsonEnd = content.rfind('}');
+        if (jsonStart != std::string::npos && jsonEnd != std::string::npos && jsonEnd > jsonStart) {
+            std::string jsonStr = content.substr(jsonStart, jsonEnd - jsonStart + 1);
+            auto extracted = json::parse(jsonStr);
+            result["entity"] = extracted.value("entity", "");
+            result["action"] = extracted.value("action", "");
+            result["confidence"] = 0.8;  // Default confidence for successful extraction
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error extracting entity/action: " << e.what() << std::endl;
+    }
+    
+    return result;
+}
+
 std::string DocAssistant::buildPrompt(const std::string& message,
                                      const std::vector<ChatMessage>& history,
                                      const json& pageContext,
@@ -305,12 +360,31 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         return response;
     }
     
-    // LAYER 1-3: Resolve knowledge context
+    // LAYER 1-3: Resolve knowledge context using LLM extraction
     std::string knowledgeContextStr;
+    KnowledgeContext kctx;
+    std::string extractionMethod = "pattern";
+    
     if (pImpl->knowledgeResolver.isLoaded()) {
-        KnowledgeContext kctx = pImpl->knowledgeResolver.resolveQuery(message);
+        // PRIMARY: Use LLM to extract entity/action
+        json extracted = extractEntityAction(message);
+        std::string entity = extracted.value("entity", "");
+        std::string action = extracted.value("action", "");
+        
+        if (!entity.empty()) {
+            // LLM successfully extracted entity/action
+            kctx = pImpl->knowledgeResolver.resolveByEntityAction(entity, action);
+            extractionMethod = "llm";
+            std::cout << "[DocAssistant] LLM extraction: entity=" << entity 
+                      << ", action=" << action << std::endl;
+        } else {
+            // FALLBACK: Try pattern matching
+            kctx = pImpl->knowledgeResolver.resolveQuery(message);
+            extractionMethod = "pattern-fallback";
+        }
+        
         knowledgeContextStr = kctx.toPromptContext();
-        response.knowledgeContext = kctx.toJson(&pImpl->knowledgeResolver);  // Structured data for frontend with doc titles
+        response.knowledgeContext = kctx.toJson(&pImpl->knowledgeResolver);
     }
     
     // Search documentation for context (RAG)
@@ -324,7 +398,7 @@ AssistantResponse DocAssistant::chat(const std::string& message,
     // Build prompt
     std::string fullPrompt = buildPrompt(message, history, pageContext, ragContext, knowledgeContextStr);
     
-    // Call llama-server
+    // Call llama-server for response generation
     json requestBody = {
         {"prompt", fullPrompt},
         {"n_predict", 512},
@@ -344,7 +418,7 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         
         // Strip any markdown links the LLM generated - we provide validated links separately
         response.text = stripMarkdownLinks(rawText);
-        response.model = "mistral-7b-local";
+        response.model = "mistral-7b-local (" + extractionMethod + ")";
         response.success = true;
         
         // Parse any actions from the response (simplified)

@@ -99,6 +99,12 @@ public:
                                             int maxResults = 5);
 
     /**
+     * Extract entity and action from query using LLM
+     * Returns JSON with {entity, action, confidence}
+     */
+    json extractEntityAction(const std::string& query);
+
+    /**
      * Get API endpoint information from OpenAPI spec
      */
     json getApiEndpointInfo(const std::string& endpoint) const;
