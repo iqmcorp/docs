@@ -283,8 +283,11 @@ public:
     /**
      * Resolve knowledge context by entity and action (LLM-extracted)
      * Bypasses pattern matching - for use when LLM has already extracted intent
+     * @param entity The entity name extracted by LLM
+     * @param action The action extracted by LLM
+     * @param originalQuery Original query for pattern matching disambiguation when multiple intents match
      */
-    KnowledgeContext resolveByEntityAction(const std::string& entity, const std::string& action) const;
+    KnowledgeContext resolveByEntityAction(const std::string& entity, const std::string& action, const std::string& originalQuery = "") const;
     
     /**
      * Get entity vocabulary for LLM extraction prompt

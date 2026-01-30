@@ -191,7 +191,11 @@ export default function AIAssistantNavbarItem() {
             currentPage: context.url,
             pageTitle: context.title,
             headings: context.headings,
-            conversationHistory: state.messages.slice(-10),
+            // Only send role and content to avoid serialization issues with Date and complex objects
+            conversationHistory: state.messages.slice(-10).map(m => ({
+              role: m.role,
+              content: m.content
+            })),
           },
         }),
         signal: controller.signal,
@@ -204,6 +208,11 @@ export default function AIAssistantNavbarItem() {
       }
 
       const data = await response.json();
+      console.log('[AIAssistant] Response received:', { 
+        success: data.success, 
+        intent: data.knowledge?.detectedIntent,
+        responseLength: data.response?.length 
+      });
       
       // Add assistant response with knowledge context (validated links)
       const assistantMessage = addMessage('assistant', data.response, data.actions, data.knowledge);
@@ -218,6 +227,9 @@ export default function AIAssistantNavbarItem() {
         handleAgentActions(data.actions);
       }
     } catch (error) {
+      // Log the error for debugging
+      console.error('[AIAssistant] Chat error:', error);
+      
       // Fallback: Use Algolia search if available
       const algoliaResults = await searchWithAlgolia(content);
       

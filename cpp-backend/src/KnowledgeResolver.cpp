@@ -1077,10 +1077,22 @@ KnowledgeContext KnowledgeResolver::resolveQuery(const std::string& query) const
 // LLM-based Entity/Action Resolution
 // =========================================
 
-KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& entity, const std::string& action) const {
+KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& entity, const std::string& action, const std::string& originalQuery) const {
     KnowledgeContext context;
     
     if (!loaded_) return context;
+    
+    // Normalize action: map similar actions to standard ones
+    std::string normalizedAction = action;
+    if (action == "query" || action == "fetch" || action == "lookup" || action == "retrieve") {
+        normalizedAction = "get";
+    } else if (action == "info" || action == "describe" || action == "about" || action == "definition") {
+        normalizedAction = "explain";
+    }
+    
+    // Convert query to lowercase for pattern matching
+    std::string lowerQuery = originalQuery;
+    std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
     
     // 1. Get the entity if it exists
     if (!entity.empty()) {
@@ -1092,8 +1104,8 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     // 2. Build a synthetic intent from entity+action
     IntentMatch syntheticIntent;
     syntheticIntent.entity = entity;
-    syntheticIntent.action = action;
-    syntheticIntent.intent_id = entity + "_" + action;
+    syntheticIntent.action = normalizedAction;
+    syntheticIntent.intent_id = entity + "_" + normalizedAction;
     syntheticIntent.confidence = 0.9;  // High confidence since LLM extracted it
     
     // 3. Look up primary_doc from entity's docs structure
@@ -1104,28 +1116,127 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     }
     
     // 4. Try to find an existing intent that matches entity+action (for additional metadata)
+    // When multiple intents share entity+action, use pattern matching to disambiguate
     try {
         const auto& intents = knowledge_["navigation"]["intents"];
+        std::string bestIntentKey;
+        nlohmann::json bestIntent;
+        double bestPatternScore = 0.0;
+        
+        // Collect all matching intents
+        std::vector<std::pair<std::string, nlohmann::json>> matchingIntents;
+        
         for (auto it = intents.begin(); it != intents.end(); ++it) {
             const auto& intent = it.value();
-            if (intent.value("entity", "") == entity && intent.value("action", "") == action) {
-                syntheticIntent.intent_id = it.key();
-                syntheticIntent.primary_doc = intent.value("primary_doc", syntheticIntent.primary_doc);
-                syntheticIntent.section = intent.value("section", "");
-                syntheticIntent.endpoint = intent.value("endpoint", "");
-                syntheticIntent.intent_type = intent.value("intent_type", "action");
+            std::string intentEntity = intent.value("entity", "");
+            std::string intentAction = intent.value("action", "");
+            
+            if (intentEntity == entity && intentAction == normalizedAction) {
+                matchingIntents.push_back({it.key(), intent});
+            }
+        }
+        
+        std::cout << "[KR] Found " << matchingIntents.size() << " intents matching entity=" 
+                  << entity << ", action=" << normalizedAction << std::endl;
+        
+        // If multiple intents match and we have a query, use pattern matching to pick best one
+        if (matchingIntents.size() > 1 && !lowerQuery.empty()) {
+            for (const auto& [intentKey, intent] : matchingIntents) {
+                double score = 0.0;
                 
-                if (intent.contains("related_docs")) {
-                    for (const auto& doc : intent["related_docs"]) {
-                        syntheticIntent.related_docs.push_back(doc.get<std::string>());
+                // Skip vertical-specific intents unless query suggests vertical
+                bool isVerticalIntent = (intentKey.rfind("healthcare_", 0) == 0 || 
+                                        intentKey.rfind("political_", 0) == 0);
+                if (isVerticalIntent) {
+                    bool queryMentionsVertical = (lowerQuery.find("healthcare") != std::string::npos ||
+                                                  lowerQuery.find("political") != std::string::npos ||
+                                                  lowerQuery.find("pld") != std::string::npos ||
+                                                  lowerQuery.find("vld") != std::string::npos);
+                    if (!queryMentionsVertical) continue;  // Skip vertical intents
+                }
+                
+                // Check patterns for this intent
+                if (intent.contains("patterns") && intent["patterns"].is_array()) {
+                    for (const auto& patternVal : intent["patterns"]) {
+                        std::string pattern = patternVal.get<std::string>();
+                        std::string lowerPattern = pattern;
+                        std::transform(lowerPattern.begin(), lowerPattern.end(), lowerPattern.begin(), ::tolower);
+                        
+                        // Exact match gets highest score
+                        if (lowerQuery == lowerPattern) {
+                            score = 1.0;
+                            break;
+                        }
+                        
+                        // Check if pattern is found in query
+                        if (lowerQuery.find(lowerPattern) != std::string::npos) {
+                            double patternScore = (double)lowerPattern.length() / lowerQuery.length();
+                            if (patternScore > score) score = patternScore;
+                        }
+                        
+                        // Check if query words appear in pattern
+                        int matchedWords = 0;
+                        int totalWords = 0;
+                        std::istringstream iss(lowerQuery);
+                        std::string word;
+                        while (iss >> word) {
+                            totalWords++;
+                            if (lowerPattern.find(word) != std::string::npos) {
+                                matchedWords++;
+                            }
+                        }
+                        if (totalWords > 0) {
+                            double wordScore = (double)matchedWords / totalWords * 0.8;
+                            if (wordScore > score) score = wordScore;
+                        }
                     }
                 }
-                if (intent.contains("related_sections")) {
-                    for (const auto& section : intent["related_sections"]) {
-                        syntheticIntent.related_sections.push_back(section.get<std::string>());
-                    }
+                
+                if (score > bestPatternScore) {
+                    bestPatternScore = score;
+                    bestIntentKey = intentKey;
+                    bestIntent = intent;
                 }
-                break;
+            }
+        } else if (matchingIntents.size() == 1) {
+            // Single match
+            bestIntentKey = matchingIntents[0].first;
+            bestIntent = matchingIntents[0].second;
+        } else if (matchingIntents.size() > 1) {
+            // Multiple matches but no query - pick first non-vertical
+            for (const auto& [intentKey, intent] : matchingIntents) {
+                bool isVerticalIntent = (intentKey.rfind("healthcare_", 0) == 0 || 
+                                        intentKey.rfind("political_", 0) == 0);
+                if (!isVerticalIntent) {
+                    bestIntentKey = intentKey;
+                    bestIntent = intent;
+                    break;
+                }
+            }
+            // Fallback to first if all are vertical
+            if (bestIntentKey.empty() && !matchingIntents.empty()) {
+                bestIntentKey = matchingIntents[0].first;
+                bestIntent = matchingIntents[0].second;
+            }
+        }
+        
+        if (!bestIntentKey.empty()) {
+            std::cout << "[KR] Matched intent: " << bestIntentKey << " (score: " << bestPatternScore << ")" << std::endl;
+            syntheticIntent.intent_id = bestIntentKey;
+            syntheticIntent.primary_doc = bestIntent.value("primary_doc", syntheticIntent.primary_doc);
+            syntheticIntent.section = bestIntent.value("section", "");
+            syntheticIntent.endpoint = bestIntent.value("endpoint", "");
+            syntheticIntent.intent_type = bestIntent.value("intent_type", "action");
+            
+            if (bestIntent.contains("related_docs")) {
+                for (const auto& doc : bestIntent["related_docs"]) {
+                    syntheticIntent.related_docs.push_back(doc.get<std::string>());
+                }
+            }
+            if (bestIntent.contains("related_sections")) {
+                for (const auto& section : bestIntent["related_sections"]) {
+                    syntheticIntent.related_sections.push_back(section.get<std::string>());
+                }
             }
         }
     } catch (...) {
@@ -1161,7 +1272,7 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     context.suggested_docs = docList;
     
     // 6. Find related sections
-    auto sections = findRelatedSections(entity, action, 5);
+    auto sections = findRelatedSections(entity, normalizedAction, 5);
     for (const auto& section : sections) {
         if (section.pageSlug.find("/guidelines/") == 0 && section.relevance >= 0.5) {
             context.related_sections.push_back(section);
@@ -1215,7 +1326,7 @@ std::string KnowledgeResolver::getActionVocabulary() const {
     return R"(ACTIONS (use these exact names):
 - create: Create a new resource (POST)
 - list: Get a list of resources (GET)
-- get: Get details of a specific resource (GET)
+- get: Get details, fetch data, get IDs, lookup data (GET) - USE THIS for fetching any data
 - update: Modify an existing resource (PATCH/PUT)
 - delete: Remove a resource (DELETE)
 - upload: Upload a file or data
@@ -1227,7 +1338,12 @@ std::string KnowledgeResolver::getActionVocabulary() const {
 - assign: Assign one resource to another
 - target: Add targeting criteria
 - schedule: Set up scheduled execution
-- query: Ask about/learn about (informational)
+- explain: What is something, definition, explain a concept
+- validate: Check if something is valid (email, invite, hash)
+- logout: End session, sign out
+- login: Authenticate, sign in, get access token
+- refresh: Refresh token, renew session
+NOTE: For "how do I get X IDs" or "list X" or "fetch X data", use action="get"
 )";
 }
 

@@ -256,10 +256,24 @@ json DocAssistant::extractEntityAction(const std::string& query) {
     prompt << "<s>[INST] You are an API documentation assistant. Extract the entity and action from the user's query.\n\n";
     prompt << pImpl->knowledgeResolver.getEntityVocabulary() << "\n";
     prompt << pImpl->knowledgeResolver.getActionVocabulary() << "\n";
+    prompt << "IMPORTANT DISTINCTIONS:\n";
+    prompt << "- pld_report = 'PLD' = 'Provider Level Data' = HEALTHCARE vertical only\n";
+    prompt << "- vld_report = 'VLD' = 'Voter Level Data' = POLITICAL vertical only\n";
+    prompt << "- insertion_order = also called 'IO', a contract for campaigns\n";
+    prompt << "- campaign = an advertising campaign that runs under an insertion order\n";
+    prompt << "- reference_data = static lookup IDs (timezones, countries, states, cities, device types, age, gender, etc.)\n\n";
+    prompt << "CRITICAL RULES:\n";
+    prompt << "- 'PLD' or 'Provider Level Data' => entity='pld_report' (NOT vld_report)\n";
+    prompt << "- 'VLD' or 'Voter Level Data' => entity='vld_report' (NOT pld_report)\n";
+    prompt << "- PLD is healthcare, VLD is political - they are DIFFERENT\n";
+    prompt << "- For 'what are timezone IDs', 'get country IDs', 'list states', 'device type IDs', 'age segment', etc. => entity='reference_data'\n";
+    prompt << "- Questions about getting IDs for targeting (geographic, demographic, device, creative) => entity='reference_data'\n\n";
     prompt << "INSTRUCTIONS:\n";
-    prompt << "- Respond ONLY with JSON: {\"entity\": \"...\", \"action\": \"...\"}\n";
+    prompt << "- Respond ONLY with a single JSON object: {\"entity\": \"...\", \"action\": \"...\"}\n";
     prompt << "- Use exact entity and action names from the lists above\n";
-    prompt << "- If unsure, use \"query\" as action for informational questions\n";
+    prompt << "- For 'what is X' or 'X vs Y' questions, use action='explain'\n";
+    prompt << "- For 'insertion order vs campaign' or 'what is an IO', use entity='insertion_order' and action='explain'\n";
+    prompt << "- For 'what is a campaign', use entity='campaign' and action='explain'\n";
     prompt << "- If no entity matches, leave entity empty\n\n";
     prompt << "User query: \"" << query << "\"\n\n";
     prompt << "JSON response: [/INST]";
@@ -282,15 +296,42 @@ json DocAssistant::extractEntityAction(const std::string& query) {
         auto respJson = json::parse(llamaResponse);
         std::string content = respJson.value("content", "");
         
-        // Extract JSON from response (LLM might include extra text)
-        size_t jsonStart = content.find('{');
-        size_t jsonEnd = content.rfind('}');
-        if (jsonStart != std::string::npos && jsonEnd != std::string::npos && jsonEnd > jsonStart) {
-            std::string jsonStr = content.substr(jsonStart, jsonEnd - jsonStart + 1);
-            auto extracted = json::parse(jsonStr);
-            result["entity"] = extracted.value("entity", "");
-            result["action"] = extracted.value("action", "");
-            result["confidence"] = 0.8;  // Default confidence for successful extraction
+        std::cout << "[DocAssistant] LLM extraction raw response: " << content << std::endl;
+        
+        // Remove LaTeX-style backslash escapes that Mistral sometimes adds (e.g., reference\_data -> reference_data)
+        std::string cleanContent;
+        for (size_t i = 0; i < content.size(); i++) {
+            if (content[i] == '\\' && i + 1 < content.size() && content[i + 1] == '_') {
+                // Skip the backslash, keep the underscore
+                continue;
+            }
+            cleanContent += content[i];
+        }
+        content = cleanContent;
+        
+        // Extract JSON from response - handle multiple JSON objects by taking the last one
+        // LLM sometimes outputs multiple options, and the last one is usually the correction
+        size_t lastJsonEnd = content.rfind('}');
+        if (lastJsonEnd != std::string::npos) {
+            // Find the matching opening brace for this closing brace
+            size_t braceCount = 1;
+            size_t jsonStart = lastJsonEnd;
+            while (jsonStart > 0 && braceCount > 0) {
+                jsonStart--;
+                if (content[jsonStart] == '}') braceCount++;
+                else if (content[jsonStart] == '{') braceCount--;
+            }
+            
+            if (braceCount == 0) {
+                std::string jsonStr = content.substr(jsonStart, lastJsonEnd - jsonStart + 1);
+                std::cout << "[DocAssistant] Parsing JSON: " << jsonStr << std::endl;
+                auto extracted = json::parse(jsonStr);
+                result["entity"] = extracted.value("entity", "");
+                result["action"] = extracted.value("action", "");
+                result["confidence"] = 0.8;  // Default confidence for successful extraction
+                std::cout << "[DocAssistant] Extracted entity=" << result["entity"] 
+                          << ", action=" << result["action"] << std::endl;
+            }
         }
     } catch (const std::exception& e) {
         std::cerr << "Error extracting entity/action: " << e.what() << std::endl;
@@ -373,7 +414,7 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         
         if (!entity.empty()) {
             // LLM successfully extracted entity/action
-            kctx = pImpl->knowledgeResolver.resolveByEntityAction(entity, action);
+            kctx = pImpl->knowledgeResolver.resolveByEntityAction(entity, action, message);
             extractionMethod = "llm";
             std::cout << "[DocAssistant] LLM extraction: entity=" << entity 
                       << ", action=" << action << std::endl;
