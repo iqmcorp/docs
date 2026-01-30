@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
 import { useDocNavigator, Message, KnowledgeContext } from '../../hooks/useDocNavigator';
-import SearchResults, { SearchResult } from '../../components/AIAssistant/SearchResults';
 import styles from './AIAssistantNavbarItem.module.css';
 
 // API endpoint - dev vs production
@@ -8,10 +7,6 @@ import styles from './AIAssistantNavbarItem.module.css';
 const AI_API_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
   ? 'http://localhost:8088/api/ai/chat'
   : '/api/ai/chat';
-
-const AI_SEARCH_ENDPOINT = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'http://localhost:8088/api/ai/search'
-  : '/api/ai/search';
 
 // Valid documentation paths (prevent navigation to hallucinated URLs)
 // Uses startsWith matching, so '/guidelines/' will match '/guidelines/campaign-api'
@@ -48,10 +43,6 @@ export default function AIAssistantNavbarItem() {
   const [input, setInput] = useState('');
   const [isScrolling, setIsScrolling] = useState(false);
   const [pendingHighlights, setPendingHighlights] = useState<string[] | null>(null);
-  const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [aiSummary, setAiSummary] = useState('');
-  const [viewMode, setViewMode] = useState<'chat' | 'search'>('chat');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -214,11 +205,36 @@ export default function AIAssistantNavbarItem() {
         responseLength: data.response?.length 
       });
       
-      // Add assistant response with knowledge context (validated links)
-      const assistantMessage = addMessage('assistant', data.response, data.actions, data.knowledge);
+      // Check if backend response seems uncertain or lacks specific documentation
+      const responseUncertain = data.response?.toLowerCase().includes("i'm not sure") || 
+                                data.response?.toLowerCase().includes("not directly") ||
+                                data.response?.toLowerCase().includes("isn't a direct");
+      const noKnowledge = !data.knowledge || !data.knowledge.primaryDoc;
       
-      // Auto-navigate to primary doc if available
-      if (data.knowledge?.primaryDoc) {
+      // If response is uncertain or missing specific docs, enhance with Algolia
+      if (responseUncertain || noKnowledge) {
+        console.log('[AIAssistant] Response uncertain, enhancing with Algolia search');
+        const algoliaResults = await searchWithAlgolia(content);
+        
+        if (algoliaResults.length > 0) {
+          // Combine LLM response with Algolia results
+          const algoliaResponse = formatAlgoliaResults(algoliaResults);
+          const enhancedResponse = algoliaResponse;
+          addMessage('assistant', enhancedResponse, data.actions, {
+            ...data.knowledge,
+            algoliaEnhanced: true,
+            algoliaResults: algoliaResults.slice(0, 3)
+          });
+        } else {
+          addMessage('assistant', data.response, data.actions, data.knowledge);
+        }
+      } else {
+        // Add assistant response with knowledge context (validated links)
+        addMessage('assistant', data.response, data.actions, data.knowledge);
+      }
+      
+      // Auto-navigate to primary doc if available and response is confident
+      if (data.knowledge?.primaryDoc && !responseUncertain) {
         navigateToPage(data.knowledge.primaryDoc);
       }
       
@@ -316,95 +332,6 @@ export default function AIAssistantNavbarItem() {
       response += '\n';
     });
     return response;
-  };
-
-  // Perform enhanced search with taxonomy
-  const performSearch = async (query: string) => {
-    if (!query.trim()) return;
-    
-    setSearchQuery(query);
-    setLoading(true);
-    
-    try {
-      const response = await fetch(AI_SEARCH_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data.results || []);
-        setAiSummary(data.summary || '');
-        setViewMode('search');
-      } else {
-        // Fallback to Algolia
-        const algoliaResults = await searchWithAlgolia(query);
-        const results: SearchResult[] = algoliaResults.map((r, i) => ({
-          id: `algolia-${i}`,
-          title: r.title,
-          url: r.url,
-          snippet: r.snippet || '',
-          category: inferCategory(r.url),
-          topic: inferTopic(r.url, r.title),
-          complexity: 'intermediate' as const,
-          relevance: 100 - (i * 10),
-          isRecommended: i === 0,
-        }));
-        setSearchResults(results);
-        setAiSummary('');
-        setViewMode('search');
-      }
-    } catch {
-      // Fallback to Algolia on error
-      const algoliaResults = await searchWithAlgolia(query);
-      const results: SearchResult[] = algoliaResults.map((r, i) => ({
-        id: `algolia-${i}`,
-        title: r.title,
-        url: r.url,
-        snippet: r.snippet || '',
-        category: inferCategory(r.url),
-        topic: inferTopic(r.url, r.title),
-        complexity: 'intermediate' as const,
-        relevance: 100 - (i * 10),
-        isRecommended: i === 0,
-      }));
-      setSearchResults(results);
-      setAiSummary('');
-      setViewMode('search');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Infer category from URL
-  const inferCategory = (url: string): string => {
-    if (url.includes('quickstart')) return 'quickstart';
-    if (url.includes('guidelines')) return 'guidelines';
-    if (url.includes('tutorials')) return 'tutorials';
-    return 'reference';
-  };
-
-  // Infer topic from URL/title
-  const inferTopic = (url: string, title: string): string => {
-    const text = (url + title).toLowerCase();
-    if (text.includes('campaign')) return 'campaign';
-    if (text.includes('creative')) return 'creative';
-    if (text.includes('audience')) return 'audience';
-    if (text.includes('report')) return 'reports';
-    if (text.includes('auth')) return 'auth';
-    if (text.includes('conversion')) return 'conversion';
-    if (text.includes('inventory')) return 'inventory';
-    if (text.includes('finance') || text.includes('billing')) return 'finance';
-    return 'campaign';
-  };
-
-  // Handle search result click
-  const handleResultClick = (result: SearchResult) => {
-    const targetUrl = result.path || result.url || '/';
-    setViewMode('chat');
-    navigateToPage(targetUrl);
-    addMessage('assistant', `Navigating to **${result.title}**...`);
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -619,27 +546,6 @@ export default function AIAssistantNavbarItem() {
               <span>AI Assistant</span>
             </div>
             <div className={styles.headerActions}>
-              <div className={styles.modeToggle}>
-                <button
-                  className={`${styles.modeButton} ${viewMode === 'chat' ? styles.modeActive : ''}`}
-                  onClick={() => setViewMode('chat')}
-                  title="Chat mode"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </button>
-                <button
-                  className={`${styles.modeButton} ${viewMode === 'search' ? styles.modeActive : ''}`}
-                  onClick={() => setViewMode('search')}
-                  title="Search mode"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                </button>
-              </div>
               <button
                 className={styles.clearButton}
                 onClick={clearConversation}
@@ -653,82 +559,58 @@ export default function AIAssistantNavbarItem() {
             </div>
           </div>
 
-          {viewMode === 'chat' ? (
-            <div className={styles.messages}>
-              {state.messages.length === 0 && (
-                <div className={styles.welcome}>
-                  <p>Hi! I can help you find information in the documentation. What would you like to know?</p>
+          <div className={styles.messages}>
+            {state.messages.length === 0 && (
+              <div className={styles.welcome}>
+                <p>Hi! I can help you find information in the documentation. What would you like to know?</p>
+              </div>
+            )}
+            
+            {state.messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`${styles.message} ${styles[msg.role]}`}
+              >
+                <div className={styles.messageContent}>
+                  {renderMessageContent(msg.content)}
+                  {msg.role === 'assistant' && renderKnowledgeLinks(msg.knowledge)}
                 </div>
-              )}
-              
-              {state.messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`${styles.message} ${styles[msg.role]}`}
-                >
-                  <div className={styles.messageContent}>
-                    {renderMessageContent(msg.content)}
-                    {msg.role === 'assistant' && renderKnowledgeLinks(msg.knowledge)}
-                  </div>
+              </div>
+            ))}
+            
+            {state.isLoading && (
+              <div className={`${styles.message} ${styles.assistant}`}>
+                <div className={styles.typing}>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
-              ))}
-              
-              {state.isLoading && (
-                <div className={`${styles.message} ${styles.assistant}`}>
-                  <div className={styles.typing}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              )}
-              
-              <div ref={messagesEndRef} />
-            </div>
-          ) : (
-            <SearchResults
-              results={searchResults || []}
-              query={searchQuery}
-              aiSummary={aiSummary}
-              isLoading={state.isLoading}
-              onResultClick={handleResultClick}
-            />
-          )}
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
 
-          <form className={styles.inputArea} onSubmit={viewMode === 'search' ? (e) => { e.preventDefault(); performSearch(input); } : handleSubmit}>
+          <form className={styles.inputArea} onSubmit={handleSubmit}>
             <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={viewMode === 'search' ? "Search documentation..." : "Ask a question..."}
+              placeholder="Ask a question..."
               rows={1}
               disabled={state.isLoading}
             />
-            {viewMode === 'search' ? (
-              <button
-                type="submit"
-                disabled={!input.trim() || state.isLoading}
-                title="Search documentation"
-                className={styles.searchButton}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={!input.trim() || state.isLoading}
-                title="Send message"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </button>
-            )}
+            <button
+              type="submit"
+              disabled={!input.trim() || state.isLoading}
+              title="Send message"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
           </form>
         </div>
       )}

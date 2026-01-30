@@ -1094,6 +1094,16 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     std::string lowerQuery = originalQuery;
     std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
     
+    // Context-based action override: if query contains "ID" or "IDs", prefer "get" action
+    // This handles cases like "what is the vertical ID" -> should be get, not explain
+    if (normalizedAction == "explain" && 
+        (lowerQuery.find(" id") != std::string::npos || 
+         lowerQuery.find(" ids") != std::string::npos ||
+         lowerQuery.find("id?") != std::string::npos)) {
+        std::cout << "[KR] Override action to 'get' due to 'ID' in query" << std::endl;
+        normalizedAction = "get";
+    }
+    
     // 1. Get the entity if it exists
     if (!entity.empty()) {
         if (auto entityObj = getEntity(entity)) {
