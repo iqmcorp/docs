@@ -1612,6 +1612,55 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Duplicate Campaigns',
+              href: '/guidelines/campaign-api#duplicate-campaigns',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Cost Details',
+              href: '/guidelines/campaign-api#get-campaign-cost-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Audience Reach Estimation',
+              href: '/guidelines/campaign-api#get-audience-reach-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Bid Landscape Estimation',
+              href: '/guidelines/campaign-api#get-bid-landscape-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email to Set Margin',
+              href: '/guidelines/campaign-api#resend-email-to-set-margin',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email Reminder to Set Invoice Template',
+              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Targeting`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
               label: 'Assign Conversions to Campaign',
               href: '/guidelines/campaign-api#assign-conversions-to-campaigns',
               customProps: { method: 'POST' },
@@ -1619,9 +1668,16 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Update Audience Targeting in Campaign',
+              label: 'Update Audience Targeting',
               href: '/guidelines/campaign-api#update-audience-targeting-in-campaigns',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Creative Targeting',
+              href: '/guidelines/campaign-api#update-creative-targeting-in-campaigns',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
@@ -1643,20 +1699,6 @@ const sidebars = {
               label: 'Assign PG Deals',
               href: '/guidelines/campaign-api#assign-pg-deals',
               customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email to Set Margin',
-              href: '/guidelines/campaign-api#resend-email-to-set-margin',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email Reminder to Set Invoice Template',
-              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -1791,6 +1833,27 @@ const sidebars = {
           label: `Get More Details`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Frequency Cap Types',
+              href: '/guidelines/campaign-api#get-frequency-cap-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Goal-AI Objectives and Goals',
+              href: '/guidelines/campaign-api#get-goal-ai-objectives-and-goals',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Estimator Dimension List',
+              href: '/guidelines/campaign-api#get-estimator-dimension-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'List of IO Status',
