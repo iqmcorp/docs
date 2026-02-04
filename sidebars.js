@@ -3033,6 +3033,75 @@ const sidebars = {
           ]
         },
         {
+          type: 'category',
+          label: 'Audience Quality Score Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'AQS Resource Properties',
+              href: '/guidelines/insights-api#aqs-resource-properties',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-campaigns-eligible-for-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate AQS Report Name',
+              href: '/guidelines/insights-api#validate-aqs-report-name',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Compute AQS Report Cost',
+              href: '/guidelines/insights-api#compute-aqs-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate AQS Report',
+              href: '/guidelines/insights-api#generate-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'AQS Report Types',
+              href: '/guidelines/insights-api#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/guidelines/insights-api#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/guidelines/insights-api#delete-aqs-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
           type: `category`,
           label: `More Insights Details`,
           className: 'sidebarItem',
@@ -5791,6 +5860,74 @@ const sidebars = {
               type: 'link',
               label: 'Delete SLS Report',
               href: '/healthcare-vertical/insights-pld#delete-sls-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Audience Quality Score Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'AQS Resource Properties',
+              href: '/healthcare-vertical/insights-pld#aqs-resource-properties',
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Validate AQS Report Name',
+              href: '/healthcare-vertical/insights-pld#validate-aqs-report-name',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Compute AQS Report Cost',
+              href: '/healthcare-vertical/insights-pld#compute-aqs-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Generate AQS Report',
+              href: '/healthcare-vertical/insights-pld#generate-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'AQS Report Types',
+              href: '/healthcare-vertical/insights-pld#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/healthcare-vertical/insights-pld#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/healthcare-vertical/insights-pld#delete-aqs-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
