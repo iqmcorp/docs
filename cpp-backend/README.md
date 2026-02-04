@@ -85,6 +85,19 @@ See [KNOWLEDGE_LAYERS.md](./KNOWLEDGE_LAYERS.md) for detailed architecture docum
 
 ---
 
+## Port Configuration
+
+| Server | Default Port | Purpose |
+|--------|-------------|----------|
+| **Docusaurus** | 3000 | Frontend documentation site |
+| **llama-server** | 8080 | LLM inference (Mistral model) |
+| **doc_assistant_server** | 8088 | API layer (connects to llama-server) |
+
+> ⚠️ **Important:** Both servers must be running for the AI assistant to work.
+> The doc_assistant_server forwards LLM requests to llama-server.
+
+---
+
 ## Server Architecture
 
 ```
@@ -177,7 +190,42 @@ cd tools && npm install js-yaml
 
 ## Quick Start
 
-### Step 1: Build Knowledge Layers
+### Option 1: Unified Script (Recommended)
+
+The `start-servers.sh` script manages both servers with proper health checks and cleanup:
+
+```bash
+cd cpp-backend
+
+# Build knowledge layers first
+node tools/build-knowledge.js
+
+# Start both servers
+./start-servers.sh start
+
+# Check status anytime
+./start-servers.sh status
+
+# View logs
+./start-servers.sh logs
+
+# Stop both servers
+./start-servers.sh stop
+
+# Restart both servers
+./start-servers.sh restart
+```
+
+The script will:
+- Kill any existing processes on ports 8080 and 8088
+- Start llama-server with the model and wait for it to be healthy
+- Start doc_assistant_server and wait for it to be healthy
+- Report status with URLs and PIDs
+- Store logs in `logs/` directory
+
+### Option 2: Manual Steps
+
+#### Step 1: Build Knowledge Layers
 
 ```bash
 cd cpp-backend
@@ -190,21 +238,21 @@ node tools/build-knowledge.js
 #   knowledge/build/headings.json    - Section anchors
 ```
 
-### Step 2: Start llama-server (Homebrew)
+#### Step 2: Start llama-server (Port 8080)
 
 ```bash
-# Start llama-server in background
-nohup llama-server \
-  --model models/mistral-7b-instruct-v0.2.Q4_K_M.gguf \
-  --port 8080 \
-  --ctx-size 4096 \
-  > /tmp/llama-server.log 2>&1 &
+# Start llama-server on port 8080 (LLM inference)
+llama-server \
+  -m models/mistral-7b-instruct-v0.2.Q4_K_M.gguf \
+  -c 4096 \
+  --port 8080 &
 
 # Verify it's running
 curl http://localhost:8080/health
+# Expected: {"status":"ok"}
 ```
 
-### Step 3: Build and Run doc_assistant_server
+#### Step 3: Build and Run doc_assistant_server (Port 8088)
 
 ```bash
 cd cpp-backend
@@ -212,14 +260,15 @@ mkdir -p build && cd build
 cmake ..
 make -j4
 
-# Run the server (requires llama-server on 8080)
-./doc_assistant_server 8088 &
+# Run the server on port 8088 (connects to llama-server on 8080)
+./doc_assistant_server --port 8088 &
 
 # Verify it's running
 curl http://localhost:8088/health
+# Expected: {"status":"healthy","timestamp":...}
 ```
 
-### Step 4: Start Docusaurus
+#### Step 4: Start Docusaurus
 
 ```bash
 cd /path/to/docs
