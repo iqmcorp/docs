@@ -4434,7 +4434,7 @@ Create a download link for a report.
     <td>Filter results by comma separated [Creative ID](/guidelines/creative-api#get-list-of-creatives-and-details)s</td>
   </tr>
   <tr>
-    <td>`campaign_ids`</td>
+    <td>`campaignIds`</td>
     <td>Filter results by comma separated [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s</td>
   </tr>
   </table></details>
@@ -4790,3 +4790,257 @@ function ExporttoCSV(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+## Goal AI Optimization
+
+Goal AI Optimization endpoints provide performance data and activity logs for Campaigns using Goal-AI optimization features.
+
+### Get Goal-AI Optimization Report
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/goal-ai/optimization-report/campaign/{campaignId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a Campaign's Goal-AI optimization performance data including KPI metrics and graph data.
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`average`<br /><span class="type-text">number</span></td>
+<td>Average KPI value</td>
+</tr>
+<tr>
+<td>`withAI`<br /><span class="type-text">number</span></td>
+<td>KPI value with AI optimization</td>
+</tr>
+<tr>
+<td>`withoutAI`<br /><span class="type-text">number</span></td>
+<td>KPI value without AI optimization</td>
+</tr>
+<tr>
+<td>`lift`<br /><span class="type-text">number</span></td>
+<td>Performance lift percentage</td>
+</tr>
+<tr>
+<td>`graphData`<br /><span class="type-text">array of objects</span></td>
+<td>KPI performance data over time</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`graphData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`date` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp</td>
+  </tr>
+  <tr>
+  <td>`actualKPI` <br /><span class="type-text">number</span></td>
+  <td>Actual KPI value at date</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+<tr>
+<td>`campaignOptimization`<br /><span class="type-text">object</span></td>
+<td>Campaign optimization settings</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`campaignOptimization` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`aiObjectiveId` <br /><span class="type-text">integer</span></td>
+  <td>AI Objective ID</td>
+  </tr>
+  <tr>
+  <td>`aiGoalId` <br /><span class="type-text">integer</span></td>
+  <td>AI Goal ID</td>
+  </tr>
+  <tr>
+  <td>`aiTargetKpi` <br /><span class="type-text">number</span></td>
+  <td>Target KPI value</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "average": 88.0,
+    "withAI": 20.45,
+    "withoutAI": 68.45,
+    "lift": 51.01,
+    "graphData": [
+      {
+        "date": 12399999000,
+        "actualKPI": 45.34
+      },
+      {
+        "date": 12399989000,
+        "actualKPI": 88.34
+      }
+    ],
+    "campaignOptimization": {
+      "aiObjectiveId": 2,
+      "aiGoalId": 10,
+      "aiTargetKpi": 60.0
+    }
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Goal-AI Optimization Activities
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/goal-ai/optimization-activity/campaign/{campaignId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the Goal-AI Optimization Activities for a given Campaign.
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+
+| Query Parameters | |
+| --- | --- |
+| `dayEpoch` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Day epoch for which activities are to be fetched |
+| `searchField` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Search field to filter activities |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination, default: <var>1</var> |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>50</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`activities`<br /><span class="type-text">array of objects</span></td>
+<td>List of optimization activities</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`activities` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`date` <br /><span class="type-text">string</span></td>
+  <td>Activity date (YYYY-MM-DD format)</td>
+  </tr>
+  <tr>
+  <td>`time` <br /><span class="type-text">string</span></td>
+  <td>Activity time (HH:MM:SS format)</td>
+  </tr>
+  <tr>
+  <td>`action` <br /><span class="type-text">string</span></td>
+  <td>Type of optimization action performed</td>
+  </tr>
+  <tr>
+  <td>`dimension` <br /><span class="type-text">string</span></td>
+  <td>Dimension affected by the optimization</td>
+  </tr>
+  <tr>
+  <td>`value` <br /><span class="type-text">string</span></td>
+  <td>New value applied by the optimization</td>
+  </tr>
+  <tr>
+  <td>`timeEpoch` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the activity</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "activities": [
+      {
+        "date": "2025-11-12",
+        "time": "12:20:07",
+        "action": "Spent Ratio Updated",
+        "dimension": "Zip Code: 10796",
+        "value": "54%",
+        "timeEpoch": 1762930207
+      },
+      {
+        "date": "2025-11-12",
+        "time": "12:20:07",
+        "action": "Spent Ratio Updated",
+        "dimension": "City: Brooklyn, NY",
+        "value": "87%",
+        "timeEpoch": 1762930207
+      },
+      {
+        "date": "2025-11-12",
+        "time": "12:20:07",
+        "action": "Spent Ratio Updated",
+        "dimension": "Exchange: Pubmatic",
+        "value": "24%",
+        "timeEpoch": 1762930207
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Download Goal-AI Optimization Activities
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/goal-ai/optimization-activity/campaign/{campaignId}/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download Goal-AI Optimization Activities for a given Campaign as a file.
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
+
+| Query Parameters | |
+| --- | --- |
+| `dayEpoch` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Day epoch for which activities are to be fetched |
+| `searchField` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Search field to filter activities |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type for download, default: <var>csv</var> |
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "url": "https://url.sample.com"
+  }
+}
+```
+
+</div></div>
+
