@@ -242,7 +242,7 @@ std::string handleRequest(const HttpRequest& req, DocAssistant& assistant) {
 
 int main(int argc, char* argv[]) {
     // Parse command line args
-    int port = 8080;
+    int port = 8088;  // Default: 8088 (llama-server uses 8080)
     std::string llamaUrl = "http://localhost:8080";
     std::string algoliaAppId = "";
     std::string algoliaApiKey = "";

@@ -470,13 +470,22 @@ std::optional<Entity> KnowledgeResolver::getEntity(const std::string& entityId) 
     
     try {
         const auto& entities = knowledge_["skeleton"]["entities"];
+        
+        // First try direct entity lookup
+        std::string resolvedId = entityId;
         if (!entities.contains(entityId)) {
-            return std::nullopt;
+            // Try to resolve via alias index
+            auto it = idFieldIndex_.find(entityId);
+            if (it != idFieldIndex_.end()) {
+                resolvedId = it->second;
+            } else {
+                return std::nullopt;
+            }
         }
         
-        const auto& e = entities[entityId];
+        const auto& e = entities[resolvedId];
         Entity entity;
-        entity.id = entityId;
+        entity.id = resolvedId;
         entity.id_field = e.value("id_field", "");
         entity.level = e.value("level", 0);
         entity.parent = e.value("parent", "");
@@ -1088,11 +1097,27 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
         normalizedAction = "get";
     } else if (action == "info" || action == "describe" || action == "about" || action == "definition") {
         normalizedAction = "explain";
+    } else if (action == "generate" || action == "execute" || action == "start") {
+        normalizedAction = "run";
+    } else if (action == "add_user" || action == "send_invite") {
+        normalizedAction = "invite";
+    } else if (action == "management" || action == "handling" || action == "organization") {
+        normalizedAction = "manage";
     }
     
     // Convert query to lowercase for pattern matching
     std::string lowerQuery = originalQuery;
     std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
+    
+    // Context-based action override: if query contains "management", prefer "manage" action
+    // This handles cases like "conversion management" -> should be manage, not explain
+    if (normalizedAction == "explain" && 
+        (lowerQuery.find("management") != std::string::npos ||
+         lowerQuery.find(" manage ") != std::string::npos ||
+         lowerQuery.find("managing ") != std::string::npos)) {
+        std::cout << "[KR] Override action to 'manage' due to 'management' in query" << std::endl;
+        normalizedAction = "manage";
+    }
     
     // Context-based action override: if query contains "ID" or "IDs", prefer "get" action
     // This handles cases like "what is the vertical ID" -> should be get, not explain
@@ -1104,18 +1129,174 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
         normalizedAction = "get";
     }
     
-    // 1. Get the entity if it exists
+    // Normalize entity: resolve aliases to canonical entity name
+    std::string normalizedEntity = entity;
     if (!entity.empty()) {
+        // Try to get entity (getEntity now handles alias resolution)
         if (auto entityObj = getEntity(entity)) {
+            normalizedEntity = entityObj->id;  // Use canonical entity ID
+            if (normalizedEntity != entity) {
+                std::cout << "[KR] Resolved entity alias '" << entity << "' to '" << normalizedEntity << "'" << std::endl;
+            }
+        }
+    }
+    
+    // Context-based entity override: if query mentions "insights", use insights entity
+    // This handles cases where LLM extracts "report" but user asked about "insights"
+    if (lowerQuery.find("insights") != std::string::npos && normalizedEntity != "insights") {
+        std::cout << "[KR] Override entity to 'insights' due to 'insights' in query" << std::endl;
+        normalizedEntity = "insights";
+        // Clear and reload the entity
+        context.entities.clear();
+        if (auto entityObj = getEntity(normalizedEntity)) {
+            context.entities.push_back(*entityObj);
+        }
+    }
+    
+    // Context-based entity override: if query mentions "conversion", use conversion entity
+    if ((lowerQuery.find("conversion") != std::string::npos || 
+         lowerQuery.find("conversions") != std::string::npos) && 
+        normalizedEntity != "conversion" && normalizedEntity != "campaign") {
+        std::cout << "[KR] Override entity to 'conversion' due to 'conversion' in query" << std::endl;
+        normalizedEntity = "conversion";
+    }
+    
+    // Context-based entity override: if query mentions "customer" with invite action
+    if (lowerQuery.find("customer") != std::string::npos && 
+        (normalizedAction == "invite" || normalizedAction == "create") &&
+        normalizedEntity == "workspace_user") {
+        std::cout << "[KR] Override entity to 'customer' due to 'customer invite' in query" << std::endl;
+        normalizedEntity = "customer";
+    }
+    
+    // Context-based entity override: if query mentions "audience" for upload
+    if (lowerQuery.find("audience") != std::string::npos && normalizedEntity == "asset") {
+        std::cout << "[KR] Override entity to 'audience' due to 'audience upload' in query" << std::endl;
+        normalizedEntity = "audience";
+        normalizedAction = "upload";
+    }
+    
+    // Context-based action override: if query contains "assign" or "to campaign", use assign
+    if (lowerQuery.find("assign") != std::string::npos || 
+        lowerQuery.find("to campaign") != std::string::npos ||
+        lowerQuery.find("to my campaign") != std::string::npos) {
+        if (normalizedAction != "assign") {
+            std::cout << "[KR] Override action to 'assign' due to pattern in query" << std::endl;
+            normalizedAction = "assign";
+        }
+    }
+    
+    // Context-based action override: if query contains "target" with inventory
+    if (lowerQuery.find("target") != std::string::npos && normalizedEntity == "inventory") {
+        std::cout << "[KR] Override action to 'target' for inventory targeting" << std::endl;
+        normalizedAction = "target";
+    }
+    
+    // Context-based entity override: if query mentions "programmatic guaranteed" or "PG campaign"
+    if ((lowerQuery.find("programmatic guaranteed") != std::string::npos || 
+         lowerQuery.find("pg campaign") != std::string::npos) && 
+        normalizedEntity != "campaign") {
+        std::cout << "[KR] Override entity to 'campaign' due to 'programmatic guaranteed' in query" << std::endl;
+        normalizedEntity = "campaign";
+        normalizedAction = "create";
+    }
+    
+    // Context-based entity override: if query mentions "creative group"
+    if (lowerQuery.find("creative group") != std::string::npos && normalizedEntity != "creative") {
+        std::cout << "[KR] Override entity to 'creative' due to 'creative group' in query" << std::endl;
+        normalizedEntity = "creative";
+        normalizedAction = "group";
+    }
+    
+    // Context-based entity override: if query mentions "contextual audience"
+    if (lowerQuery.find("contextual audience") != std::string::npos && normalizedEntity == "audience") {
+        std::cout << "[KR] Override action to 'create' for contextual audience" << std::endl;
+        normalizedAction = "create";
+    }
+    
+    // Context-based entity override: if query mentions "geofarmed audience"
+    if (lowerQuery.find("geofarmed") != std::string::npos && normalizedEntity == "audience") {
+        std::cout << "[KR] Override action to 'create' for geofarmed audience" << std::endl;
+        normalizedAction = "create";
+    }
+    
+    // Healthcare vertical override
+    if (lowerQuery.find("healthcare") != std::string::npos && normalizedEntity != "pld_report") {
+        // Map to appropriate healthcare entity based on context
+        if (lowerQuery.find("audience") != std::string::npos) {
+            // Keep audience but note healthcare context
+        } else if (lowerQuery.find("planner") != std::string::npos) {
+            std::cout << "[KR] Override entity to 'pld_report' and action to 'plan' for healthcare planner" << std::endl;
+            normalizedEntity = "pld_report";
+            normalizedAction = "plan";
+        } else if (lowerQuery.find("finance") != std::string::npos) {
+            std::cout << "[KR] Override entity to 'pld_report' and action to 'finance' for healthcare finance" << std::endl;
+            normalizedEntity = "pld_report";
+            normalizedAction = "finance";
+        } else if (lowerQuery.find("pld") != std::string::npos || lowerQuery.find("insights") != std::string::npos) {
+            std::cout << "[KR] Override entity to 'pld_report' due to 'healthcare insights' in query" << std::endl;
+            normalizedEntity = "pld_report";
+        }
+    }
+    
+    // Provider level data (PLD) override - use generate action for insights
+    if ((lowerQuery.find("provider level data") != std::string::npos || 
+         lowerQuery.find("pld report") != std::string::npos ||
+         lowerQuery.find("pld insights") != std::string::npos) && 
+        normalizedEntity != "pld_report") {
+        std::cout << "[KR] Override entity to 'pld_report' and action to 'generate' for PLD insights" << std::endl;
+        normalizedEntity = "pld_report";
+        normalizedAction = "generate";
+    } else if ((lowerQuery.find("provider level data") != std::string::npos || 
+                lowerQuery.find("pld report") != std::string::npos ||
+                lowerQuery.find("pld insights") != std::string::npos) && 
+               normalizedEntity == "pld_report" && normalizedAction == "explain") {
+        std::cout << "[KR] Override action to 'generate' for PLD insights query" << std::endl;
+        normalizedAction = "generate";
+    }
+    
+    // Political vertical override
+    if (lowerQuery.find("political") != std::string::npos && normalizedEntity != "vld_report") {
+        if (lowerQuery.find("audience") != std::string::npos) {
+            // Keep audience but note political context
+        } else if (lowerQuery.find("finance") != std::string::npos) {
+            std::cout << "[KR] Override entity to 'vld_report' and action to 'finance' for political finance" << std::endl;
+            normalizedEntity = "vld_report";
+            normalizedAction = "finance";
+        } else if (lowerQuery.find("vld") != std::string::npos || lowerQuery.find("insights") != std::string::npos) {
+            std::cout << "[KR] Override entity to 'vld_report' due to 'political insights' in query" << std::endl;
+            normalizedEntity = "vld_report";
+        }
+    }
+    
+    // Voter level data (VLD) override - use generate action for insights
+    if ((lowerQuery.find("voter level data") != std::string::npos || 
+         lowerQuery.find("vld report") != std::string::npos ||
+         lowerQuery.find("vld insights") != std::string::npos) && 
+        normalizedEntity != "vld_report") {
+        std::cout << "[KR] Override entity to 'vld_report' and action to 'generate' for VLD insights" << std::endl;
+        normalizedEntity = "vld_report";
+        normalizedAction = "generate";
+    } else if ((lowerQuery.find("voter level data") != std::string::npos || 
+                lowerQuery.find("vld report") != std::string::npos ||
+                lowerQuery.find("vld insights") != std::string::npos) && 
+               normalizedEntity == "vld_report" && normalizedAction == "explain") {
+        std::cout << "[KR] Override action to 'generate' for VLD insights query" << std::endl;
+        normalizedAction = "generate";
+    }
+    
+    // 1. Get the entity if it exists
+    if (!normalizedEntity.empty()) {
+        if (auto entityObj = getEntity(normalizedEntity)) {
             context.entities.push_back(*entityObj);
         }
     }
     
     // 2. Build a synthetic intent from entity+action
     IntentMatch syntheticIntent;
-    syntheticIntent.entity = entity;
+    syntheticIntent.entity = normalizedEntity;
     syntheticIntent.action = normalizedAction;
-    syntheticIntent.intent_id = entity + "_" + normalizedAction;
+    syntheticIntent.intent_id = normalizedEntity + "_" + normalizedAction;
     syntheticIntent.confidence = 0.9;  // High confidence since LLM extracted it
     
     // 3. Look up primary_doc from entity's docs structure
@@ -1141,13 +1322,13 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
             std::string intentEntity = intent.value("entity", "");
             std::string intentAction = intent.value("action", "");
             
-            if (intentEntity == entity && intentAction == normalizedAction) {
+            if (intentEntity == normalizedEntity && intentAction == normalizedAction) {
                 matchingIntents.push_back({it.key(), intent});
             }
         }
         
         std::cout << "[KR] Found " << matchingIntents.size() << " intents matching entity=" 
-                  << entity << ", action=" << normalizedAction << std::endl;
+                  << normalizedEntity << ", action=" << normalizedAction << std::endl;
         
         // If multiple intents match and we have a query, use pattern matching to pick best one
         if (matchingIntents.size() > 1 && !lowerQuery.empty()) {
@@ -1348,12 +1529,15 @@ std::string KnowledgeResolver::getActionVocabulary() const {
 - assign: Assign one resource to another
 - target: Add targeting criteria
 - schedule: Set up scheduled execution
+- manage: Work with, handle, organize, manage resources
+- invite: Invite a user, send invitation
 - explain: What is something, definition, explain a concept
 - validate: Check if something is valid (email, invite, hash)
 - logout: End session, sign out
 - login: Authenticate, sign in, get access token
 - refresh: Refresh token, renew session
 NOTE: For "how do I get X IDs" or "list X" or "fetch X data", use action="get"
+NOTE: For "manage X" or "X management" or "work with X", use action="manage"
 )";
 }
 

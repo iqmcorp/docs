@@ -5,7 +5,11 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL_PATH="${MODEL_PATH:-$SCRIPT_DIR/models/mistral-7b-instruct-v0.2.Q4_K_M.gguf}"
-PORT="${PORT:-8080}"
+
+# Port configuration:
+#   llama-server: 8080 (LLM inference)
+#   doc_assistant_server: 8088 (API layer, connects to llama-server)
+LLAMA_PORT="${LLAMA_PORT:-8080}"
 N_CTX="${N_CTX:-4096}"
 N_THREADS="${N_THREADS:-4}"
 N_GPU_LAYERS="${N_GPU_LAYERS:-0}"
@@ -25,12 +29,15 @@ if [ ! -f "$MODEL_PATH" ]; then
     exit 1
 fi
 
-echo "Starting IQM Docs AI Backend..."
+echo "Starting IQM Docs AI Backend (llama-server)..."
 echo "  Model: $MODEL_PATH"
-echo "  Port: $PORT"
+echo "  Port: $LLAMA_PORT"
 echo "  Context: $N_CTX"
 echo "  Threads: $N_THREADS"
 echo "  GPU Layers: $N_GPU_LAYERS"
+echo ""
+echo "After starting, run doc_assistant_server on port 8088:"
+echo "  ./build/doc_assistant_server --port 8088"
 
 # System prompt for the documentation assistant
 SYSTEM_PROMPT="You are an AI assistant for IQM's API documentation. Help developers understand and use IQM's advertising APIs.
@@ -49,7 +56,7 @@ Documentation sections:
 
 exec "$LLAMA_SERVER" \
     --model "$MODEL_PATH" \
-    --port "$PORT" \
+    --port "$LLAMA_PORT" \
     --ctx-size "$N_CTX" \
     --threads "$N_THREADS" \
     --n-gpu-layers "$N_GPU_LAYERS" \
