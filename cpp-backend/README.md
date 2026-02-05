@@ -36,6 +36,74 @@ See [KNOWLEDGE_LAYERS.md](./KNOWLEDGE_LAYERS.md) for detailed architecture docum
 
 ---
 
+## Query Resolution Flow (LLM + Pattern Hybrid)
+
+> **Checkpoint Tags:**  
+> - `llm-extraction-checkpoint` - LLM-first entity/action extraction  
+> - `pattern-matching-checkpoint` - Pattern-only baseline for comparison
+
+The assistant uses a **2-stage hybrid approach** for intent resolution:
+
+```
+User Query: "how do i get a timezone id?"
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STAGE 1: LLM Entity/Action Extraction                          │
+│  ────────────────────────────────────────────────────────────── │
+│  Prompt: "Extract {entity, action} from query using vocabulary" │
+│  LLM Output: { "entity": "reference_data", "action": "get" }    │
+│                                                                 │
+│  Benefits:                                                      │
+│  - Semantic understanding ("ads" → creative, "timezone" → ref)  │
+│  - No pattern explosion ("list campaigns" = "fetch campaigns")  │
+│  - Handles paraphrasing naturally                               │
+└─────────────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  STAGE 2: Intent Disambiguation (Pattern Matching)              │
+│  ────────────────────────────────────────────────────────────── │
+│  29 intents match entity=reference_data, action=get:            │
+│  - get_timezone_ids, get_age_segments, get_device_types, etc.   │
+│                                                                 │
+│  Pattern matching picks best fit from navigation.yaml patterns: │
+│  - "timezone" in query → get_timezone_ids (score: 0.96)         │
+│                                                                 │
+│  Why patterns still matter:                                     │
+│  - LLM extracts WHAT (entity) and HOW (action)                  │
+│  - Patterns disambiguate WHICH specific intent                  │
+└─────────────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Result: get_timezone_ids                                       │
+│  Primary Doc: /guidelines/master-api#get-timezones              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Key Methods
+
+| Method | File | Purpose |
+|--------|------|---------|
+| `extractEntityAction()` | DocAssistant.cpp | LLM call to extract entity/action from query |
+| `resolveByEntityAction()` | KnowledgeResolver.cpp | Lookup + disambiguate intents by entity/action |
+| `getEntityVocabulary()` | KnowledgeResolver.cpp | Entity list for LLM prompt |
+| `getActionVocabulary()` | KnowledgeResolver.cpp | Action list (create, list, get, update, delete, etc.) |
+
+### When to Add Patterns
+
+You still need patterns in `navigation.yaml` when:
+1. **Multiple intents share the same entity+action** (e.g., 29 "get reference_data" intents)
+2. **Disambiguation keywords** help distinguish similar queries
+3. **The pattern score is too low** (check logs: `[KR] Matched intent: X (score: Y)`)
+
+Example: "how do i get a timezone id?" vs "how do i get an age segment?"
+- Both are `entity=reference_data, action=get`
+- Patterns like `"timezone id"` and `"age segment"` disambiguate
+
+---
+
 ## Component Registry
 
 > ⚠️ **IMPORTANT:** Before adding new components, check this registry to avoid redundancy.  
