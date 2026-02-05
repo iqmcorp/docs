@@ -5124,6 +5124,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Matched Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
               label: 'Matched Audience Details',
@@ -5131,48 +5138,6 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
-            {
-              type: 'link',
-              label: 'Geofarmed Audience Details',
-              href: '/political-vertical/audience-segments#geofarmed-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Contextual Audience Details',
-              href: '/political-vertical/audience-segments#contextual-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Segmented Audience Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Segmented Audience Details',
-              href: '/political-vertical/audience-segments#segmented-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Search Segmented Audience',
-              href: '/political-vertical/audience-segments#search-segmented-audiences',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            }
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Management`,
-          className: 'sidebarItem',
-          items: [
             {
               type: 'link',
               label: 'Create Matched Audience',
@@ -5185,6 +5150,48 @@ const sidebars = {
               label: 'Update Matched Audience',
               href: '/political-vertical/audience-segments#update-matched-audience',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Geofarmed Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/political-vertical/audience-segments#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/political-vertical/audience-segments#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Segmented Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Segmented Audience Details',
+              href: '/political-vertical/audience-segments#segmented-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Search Segmented Audiences',
+              href: '/political-vertical/audience-segments#search-segmented-audiences',
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
@@ -5201,11 +5208,18 @@ const sidebars = {
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
             },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Contextual Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
-              label: 'Create Geofarmed Audience',
-              href: '/political-vertical/audience-segments#create-geofarmed-audience',
-              customProps: { method: 'POST' },
+              label: 'Contextual Audience Details',
+              href: '/political-vertical/audience-segments#contextual-audience-details',
+              customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
@@ -5218,8 +5232,43 @@ const sidebars = {
           ]
         },
         {
-          type: `category`,
-          label: `More Audience Details`,
+          type: 'category',
+          label: 'Custom Voter Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Available States for Custom Voter Audiences',
+              href: '/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Segment Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Custom Voter Audience',
+              href: '/political-vertical/audience-segments#create-custom-voter-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Audience Details',
           className: 'sidebarItem',
           items: [
             {
@@ -5229,7 +5278,7 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
-                        {
+            {
               type: 'link',
               label: 'Segmented Reach Range',
               href: '/political-vertical/audience-segments#reach-range-list-for-segmented-audiences',
