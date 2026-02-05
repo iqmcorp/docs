@@ -2436,6 +2436,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Customer AQS Finance Details',
+              href: '/guidelines/finance-api#get-customer-aqs-finance-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Customer AQS Details',
+              href: '/guidelines/finance-api#update-customer-aqs-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Customer DoubleVerify IVT Flag',
               href: '/guidelines/finance-api#get-customer-doubleverify-details',
               customProps: { method: 'GET' },
@@ -5776,6 +5790,20 @@ const sidebars = {
               type: 'link',
               label: 'Update Customer SLS Details',
               href: '/healthcare-vertical/finance#update-customer-sls-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Customer AQS Finance Details',
+              href: '/healthcare-vertical/finance#get-customer-aqs-finance-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Customer AQS Details',
+              href: '/healthcare-vertical/finance#update-customer-aqs-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             }

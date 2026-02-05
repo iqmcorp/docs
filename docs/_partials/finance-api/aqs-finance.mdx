@@ -1,0 +1,282 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Get Customer AQS Finance Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/aqs-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get finance details for a Customer's Audience Quality Score (AQS).
+
+Read more about AQS in our [Insights API](/guidelines/insights-api) or our Help Center articles: [Audience Quality (AQS) Insights Reports](https://help.iqm.com/en/collections/17249533-audience-quality-insights-reports).
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Customer ID</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`aqsRate` <br /><span class="type-text">number</span></td>
+  <td>AQS rate for workspace Customer</td>
+</tr>
+<tr>
+  <td>`aqsEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Boolean flag to enable and disable AQS feature for Advertiser Customer</td>
+</tr>
+<tr>
+  <td>`aqsMarkupType` <br /><span class="type-text">string</span></td>
+  <td>AQS markup type: "Absolute" or "Percentage"</td>
+</tr>
+<tr>
+  <td>`aqsMarkupValue` <br /><span class="type-text">number</span></td>
+  <td>AQS markup value for Advertiser Customer</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown value="Response Examples" label="Response">
+<CodeOption value="AQS Details (Workspace)" label="AQS Details (Workspace)" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "aqsRate": 3
+    }
+}
+```
+
+</CodeOption>
+<CodeOption value="AQS Flag Enabled" label="AQS Flag Enabled">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "owId": 201427,
+        "aqsRate": 3,
+        "aqsEnabled": true,
+        "aqsMarkupType": "Percentage",
+        "aqsMarkupValue": 10
+    }
+}
+```
+</CodeOption>
+<CodeOption value="AQS Flag Disabled" label="AQS Flag Disabled">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "aqsRate": 3,
+        "aqsEnabled": false
+    }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          aqsRate: number;
+        }
+      }
+    };
+  };
+}
+
+function getAQSFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/customer/{customerOwId}/aqs-fees',
+    params: {
+      path: {
+        customerOwId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Customer AQS Details
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/aqs-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a Customer's AQS details.
+
+| Request Schema |  |
+| ---- | --- |
+| `id`<br /><span class="type-text">integer</span> | ID |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | OW ID of the Customer to update details |
+| `aqsRate` <br /><span class="type-text">number</span> | AQS rate for workspace Customer <br />Min: 0, Max: 10000 |
+| `aqsEnabled` <br /><span class="type-text">boolean</span> | Boolean flag to enable and disable AQS feature for Advertiser Customer |
+| `aqsMarkupTypeId` <br /><span class="type-text">integer</span> | AQS markup type ID to represent markup types: Absolute or Percentage |
+| `aqsMarkupValue` <br /><span class="type-text">number</span> | AQS markup value for Advertiser Customer <br />Min: 0, Max: 10000 |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "id": 0,
+    "owId": 0,
+    "aqsRate": 0,
+    "aqsEnabled": true,
+    "aqsMarkupTypeId": 0,
+    "aqsMarkupValue": 0
+}
+```
+
+<CodeDropdown value="Response Examples" label="Response">
+<CodeOption value="AQS Rate Updated" label="AQS Rate Updated" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "AQS Rate updated successfully. The new rate applies only to newly created AQSs"
+    }
+}
+```
+
+</CodeOption>
+<CodeOption value="AQS Enabled" label="AQS Enabled">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 6,
+        "message": "AQS Insights enabled successfully."
+    }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        }
+      }
+    };
+  };
+}
+
+function editAQSFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/fa/customer/aqs-fees',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          owId: `number`,
+          aqsRate?: `number`,
+          aqsEnabled?: `boolean`,
+          aqsMarkupTypeId?: `number`,
+          aqsMarkupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
