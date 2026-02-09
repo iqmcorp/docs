@@ -2558,7 +2558,7 @@ function getCampaignCountWithCreativeTypeByIoIds(): Promise<Responses> {
 
 ### Get Campaign Conversion List 
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/conversions/list" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/conversions/list" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -3319,7 +3319,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     </tr>
         <tr>
     <td>`genderIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
-    <td>Comma separated [Age Range IDs](/guidelines/master-api#get-age-segment) for targeting </td>
+    <td>Comma separated [Gender IDs](/guidelines/master-api#get-gender-segment) for targeting </td>
     </tr>
         <tr>
     <td>`interestIds` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
@@ -3638,6 +3638,7 @@ function saveCampaign(): Promise<Responses> {
 ### Update Campaign
 
 <CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
+<br /><CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/cmp/campaign/draft/{campaignId}" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -3692,7 +3693,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`maxDayConversions` <br /><span class="type-text">integer</span> |	Maximum daily Conversions
 |`totalConversions` <br /><span class="type-text">integer</span> |	Total Conversions
 |`spentScale`	<br /><span class="type-text">boolean</span> |	Spent scale on/off
-|`creativeIds`	<br /><span class="type-text">string</span> |	Targeted Creative ids
+|`creativeIds`	<br /><span class="type-text">string</span> |	Targeted Creative IDs
 |`targetCPI`	<br /><span class="type-text">integer</span> |	Target CPI for Campaign Serving
 |`conversionType` <br /><span class="type-text">string</span> |	User Conversion type <br/> Allowed values: <var>install</var>, <var>non-install</var> |
 |`conversionTypeId` <br /><span class="type-text">integer</span> |	[Conversion Type ID](/guidelines/conversion-api#get-list-of-conversion-types)
@@ -3714,7 +3715,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`groupDealId` <br /><span class="type-text">string</span> |	Group of selected deals. Value in form of String of comma separated deal IDs
 |`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> |	ID of political Advertiser in case of Campaign is political Campaign
 |`stateIds` <br /><span class="type-text">string</span> |	Comma separated [State IDs](/guidelines/master-api#get-state-segment) for targeting
-|`locationFileIds` <br /><span class="type-text">string</span> |	Target location by uploading file. Value in form of String of comma separated csv file ids.(pre uploaded)
+|`locationFileIds` <br /><span class="type-text">string</span> |	Target location by uploading file. Value in form of String of comma separated csv file IDs.(pre uploaded)
 |`ageRangeIds` <br /><span class="type-text">string</span> |	Comma separated [Age Range IDs](/guidelines/master-api#get-age-segment) for targeting
 |`genderIds` <br /><span class="type-text">string</span> |	Comma separated [Gender IDs](/guidelines/master-api#get-gender-segment) for targeting
 |`interestIds` <br /><span class="type-text">string</span> |	Comma separated [Interest IDs](/guidelines/master-api#get-interest-segment) for targeting
@@ -3725,7 +3726,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target IAB categories. Value in form of a string of comma-separated ID. Only super user can update IAB categories
 |`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
 |`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
-| `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment ids.
+| `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment IDs.
 |`campaignEstimatorMetaData`	<br /><span class="type-text">JSON</span> |	Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta
 
 </details>
@@ -5083,339 +5084,46 @@ Update a Campaign's status. This is the main endpoint for deleting a Campaign by
 
 ---
 
-### Assign Conversions to Campaigns
+### Duplicate Campaigns
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/target/conversion" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/campaigns/duplicate" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Assign Conversions to Campaigns.
+Duplicate Campaigns within an Insertion Order with new start and end dates.
 
 | Request Schema | |
 | --- | --- |
-| `conversionIds` <br /><span class="type-text">string</span> | Comma separated [Conversion ID](/guidelines/conversion-api#get-list-of-conversions)s |
-| `campaignIds` <br /><span class="type-text">string</span> | [Campaign ID](#get-list-of-campaigns)s to target | 
+| `existingCampaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](#get-list-of-campaigns)s to duplicate |
+| `ioId` <br /><span class="type-text">integer</span> | [Insertion Order ID](#get-insertion-order-details) for new Campaigns |
+| `timeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp for new Campaign start date |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp for new Campaign end date (<var>0</var> for no end date) |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>`duplicatedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+    <td>IDs of newly created duplicate Campaigns</td>
+    </tr>
+    <tr>
+    <td>`status` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates duplication was successful: <var>true</var></td>
     </tr>
     </table>
     </details>
 
 </div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Schema"
-{
-  "conversionIds": "123, 321",
-  "campaignIds": "276417, 356234"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "message": "1 Conversions assigned to campaigns successfully."
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "invalid Conversion ids"
-    }
-  ]
-}
-```
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          message: string;
-        }
-      }
-    }
-  };
-  422: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      }
-    }
-  };
-}
-
-function createCampaignConversionTargeting(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/cmp/target/conversion',
-    requestBody: {
-      content: {
-        "application/json": {
-          conversionIds?: `string`,
-          campaignIds?: `string`,
-          conversionTypeId?: `number`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Update Audience Targeting in Campaigns
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/target/audience" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Update the Audience targeting in a given Campaigns list. Supports include, exclude, and remove Audiences.
-
-:::warning
-
-PG Campaigns cannot be used for Audience targeting.
-
-:::
-
-| Request Schema | | 
-| --- | --- |
-| `{campaignId}` <br /><span class="type-text">string</span> | [Campaign ID](#get-list-of-campaigns) for which to pass <var>includedAudienceList</var>, <var>excludedAudienceList</var>, and <var>removeAudience</var> |
-| `includedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to include in targeting |
-| `excludedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to exclude from targeting |
-| `removeAudience` <br /><span class="type-text">array of integers</span> | Audience IDs to remove |
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-        <tr>
-    <td>`failedCampaigns` <br /><span class="type-text">object</span></td>
-    <td>Failed Campaigns list: Name-Value pairs of <var>CampaignId</var> and failure description</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Schema"
-{
-  "477717": {
-    "includedAudienceList": [
-      1064656,
-      1060603
-    ],
-    "excludedAudienceList": [
-      1064000,
-      1060111
-    ],
-    "removeAudienceList": [
-      106422,
-      106033
-    ],
-  }
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "message": "Your changes have been successfully saved."
-  }
-}
-```
-
-```json title="Response 200 (partial success)"
-{
-  "success": false,
-  "data": {
-    "message": "Your changes have been successfully saved.",
-    "failedCampaigns": {
-      "477717": "Can not target more than 20 audiences."
-    }
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "One or more campaigns are PG campaigns and cannot be used for audience targeting: [529192, 506992, 506991]"
-    }
-  ]
-}
-```
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          message: string
-        }
-      }
-    };
-  };
-  422: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-}
-
-function CampaignAudienceTargetingList(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/cmp/target/audience',
-    requestBody: {
-      content: {
-        "application/json": {
-          [key: `string`]: {
-            includedAudienceList?: `array of numbers`,
-            excludedAudienceList ?: `array of numbers`,
-            removedAudienceList ?: `array of numbers`,
-          }
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Inventory Group Targeting
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/inventorygroups/{groupId}/includeExclude" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Target Inventories by including or excluding Inventory groups from your Campaigns advertising strategies.
-
-Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory-api#create-a-new-inventory-group).
-
-| Path Parameter | |
-| --- | --- |
-| `groupId` <br /><span class="type-text">integer</span> | [Inventory Group ID](/guidelines/inventory-api#get-list-of-inventory-groups) |
-
-| Request Schema | |
-| --- | --- |
-| `campaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](#get-list-of-campaigns)s
-| `isExcluded` <br /><span class="type-text">boolean</span> | Include Campaigns in Group: <var>0</var> <br />Exclude Campaigns from Group: <var>1</var>
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
-  "campaignIds": "172813,177146",
-  "isExcluded": 0
+  "existingCampaignIds": "331575",
+  "ioId": 9,
+  "timeZoneId": 9,
+  "startDate": 1693612135,
+  "endDate": 0
 }
 ```
 
@@ -5423,153 +5131,121 @@ Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory
 {
   "statusCode": 200,
   "responseObject": {
-    "message": "Inventory Group excluded successfully."
+    "duplicatedCampaignIds": [
+      334676
+    ],
+    "status": true
   }
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        statusCode: number;
-        responseObject: {
-          message: string;
-        };
-      };
-    };
-  };
-}
-
-function Inventorygrouptargeting(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/cmp/inventorygroup/{groupid}/includeExclude',
-    requestBody: {
-      content: {
-        "application/json": {
-          excludedCampaigns: `string`,
-          includedCampaigns: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+```json title="Response 400"
+{
+  "statusCode": 400,
+  "responseObject": {
+    "errorMsg": "The action cannot be completed as insertion order 1 does not belong to this organization",
+    "errorCode": 400
+  }
 }
 ```
 
-</TabItem></Tabs>
+```json title="Response 400 (Invalid timezone)"
+{
+  "statusCode": 400,
+  "responseObject": {
+    "errorMsg": "Invalid timezone.",
+    "errorCode": 400
+  }
+}
+```
+
+</details>
 
 </div></div>
 
 ---
 
-### Assign PMP Deals
+### Get Campaign Cost Details
 
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pmp/campaigns/mappings" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/campaign/cost" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Assign or remove multiple PMP deals to/from Campaigns.
+Retrieve cost details for a specific Campaign. The request body must include either a `campaignId` or a combination of `audienceIds`, `creativeIds`, and `preBidSegmentIds`.
 
 | Request Schema | |
 | --- | --- |
-| `operations` <br /><span class="type-text">array of objects</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
-| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to assign deals or remove deals from |
-| `pmpDealIds` <br /><span class="type-text">array of integers</span> | [PMP Deal ID](/guidelines/inventory-api#get-pmp-deals-list)s to assign/de-assign to/from Campaigns |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](#get-list-of-campaigns) to get cost details for |
+| `audienceIds` <br /><span class="type-text">array of integers</span> | Audience IDs (required if no `campaignId`) |
+| `creativeIds` <br /><span class="type-text">array of integers</span> | [Creative ID](/guidelines/creative-api#get-list-of-creatives-and-details)s (required if no `campaignId`) |
+| `preBidSegmentIds` <br /><span class="type-text">array of integers</span> | Pre-bid segment IDs (required if no `campaignId`) |
+| `creativeTypeId` <br /><span class="type-text">integer</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list) |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
-        <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    <tr>
+    <td>`maxBidPrice` <br /><span class="type-text">number</span></td>
+    <td>Maximum bid price</td>
     </tr>
     <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>`adServingCost` <br /><span class="type-text">number</span></td>
+    <td>Ad serving cost</td>
+    </tr>
+    <tr>
+    <td>`dataCost` <br /><span class="type-text">number</span></td>
+    <td>Data cost</td>
+    </tr>
+    <tr>
+    <td>`preBidCost` <br /><span class="type-text">number</span></td>
+    <td>Pre-bid cost</td>
+    </tr>
+    <tr>
+    <td>`msaExistsWith` <br /><span class="type-text">string</span></td>
+    <td>MSA partner name</td>
+    </tr>
+    <tr>
+    <td>`logoURL` <br /><span class="type-text">string</span></td>
+    <td>Partner logo URL</td>
     </tr>
     </table>
     </details>
 
-
 </div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
-  "operations": [
-     {
-      "action": "assign",
-      "campaignIds": [
-        201,
-        203
-      ],
-      "pmpDealIds": [
-        101,
-        102
-      ]
-    },
-    {
-      "action": "deassign",
-      "campaignIds": [
-        202
-      ],
-      "pmpDealIds": [
-        102
-      ]
-    }
-  ]
+  "campaignId": 123456
 }
 ```
 
 ```json title="Response 200"
 {
   "success": true,
-  "data": "PMP deal campaign mappings updated successfully"
+  "data": {
+    "maxBidPrice": 5,
+    "adServingCost": 200,
+    "dataCost": 150,
+    "preBidCost": 300,
+    "msaExistsWith": "Partner A",
+    "logoURL": "https://example.com/logo.png"
+  }
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More Responses</summary>
 
-```json title="Response 403"
+```json title="Response 400"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+      "error": "Invalid campaignId or missing required fields."
     }
   ]
 }
@@ -5577,187 +5253,92 @@ Assign or remove multiple PMP deals to/from Campaigns.
 
 </details>
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-  422: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-}
-
-function managePMPDealCampaignMappings(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/cmp/pmp/campaigns/mappings',
-    requestBody: {
-      content: {
-        "application/json": {
-          operations: [
-            {
-              action: `string`,
-              campaignIds: `array of numbers`,
-              pmpDealIds: `array of numbers`,
-            }
-          ]
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
 </div></div>
 
 ---
 
-### Assign PG Deals
+### Get Audience Reach Estimation
 
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pg/campaigns/mappings" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/campaign/estimation/reach" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Assign or remove multiple PG deals to/from Campaigns.
+Get audience reach estimation based on targeting parameters. Request body supports dimensions available with `true` value from [Get Estimator Dimension List](#get-estimator-dimension-list).
 
 | Request Schema | |
 | --- | --- |
-| `operations` <br /><span class="type-text">array of objects</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
-| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to assign deals or remove deals from |
-| `pgDealIds` <br /><span class="type-text">array of integers</span> | [PG Deal ID](/guidelines/inventory-api#get-pg-deals-list)s to assign/remove to/from Campaigns |
+| `stateIds` <br /><span class="type-text">string</span> | Comma separated [State IDs](/guidelines/master-api#get-state-segment) |
+| `whitelistCityIds` <br /><span class="type-text">string</span> | Comma separated [City IDs](/guidelines/master-api/#get-city-segment) to include |
+| `whitelistZipCodes` <br /><span class="type-text">string</span> | Comma separated [Zip Codes](/guidelines/master-api/#get-zip-codes-and-state-ids) to include |
+| `ethnicityIds` <br /><span class="type-text">string</span> | Comma separated [Ethnicity IDs](/guidelines/master-api#get-ethnicity-segment) |
+| `ageIds` <br /><span class="type-text">string</span> | Comma separated [Age Range IDs](/guidelines/master-api#get-age-segment) |
+| `incomeIds` <br /><span class="type-text">string</span> | Comma separated [Income Range IDs](/guidelines/master-api#get-income-range-segment) |
+| `bidPacing` <br /><span class="type-text">boolean</span> | Enable bid pacing |
+| `budgetDay` <br /><span class="type-text">number</span> | Daily budget |
+| `creativesPlacementMapping` <br /><span class="type-text">object</span> | Creative to placement mapping |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
-        <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    <tr>
+    <td>`targetingType` <br /><span class="type-text">string</span></td>
+    <td>Targeting type used for estimation</td>
     </tr>
     <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>`estimatedReachMin` <br /><span class="type-text">integer</span></td>
+    <td>Minimum estimated reach</td>
+    </tr>
+    <tr>
+    <td>`estimatedReachMax` <br /><span class="type-text">integer</span></td>
+    <td>Maximum estimated reach</td>
+    </tr>
+    <tr>
+    <td>`estimatedReachAvg` <br /><span class="type-text">integer</span></td>
+    <td>Average estimated reach</td>
     </tr>
     </table>
     </details>
 
 </div><div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
-  "operations": [
-    {
-      "action": "assign",
-      "campaignIds": [
-        201,
-        203
-      ],
-      "pgDealIds": [
-        101,
-        102
-      ]
-    },
-    {
-      "action": "assign",
-      "campaignIds": [
-        202
-      ],
-      "pgDealIds": [
-        103
-      ]
-    },
-    {
-      "action": "deassign",
-      "campaignIds": [
-        202
-      ],
-      "pgDealIds": [
-        102
-      ]
-    }
-  ]
+  "stateIds": "30200032",
+  "whitelistCityIds": "30434428,30434491,30434474",
+  "whitelistZipCodes": "08016,08048,08036",
+  "ethnicityIds": "10700001",
+  "ageIds": "10100006,10100007",
+  "incomeIds": "10300001,10300002",
+  "bidPacing": true,
+  "budgetDay": 120,
+  "creativesPlacementMapping": {
+    "537448": 0
+  }
 }
 ```
 
 ```json title="Response 200"
 {
   "success": true,
-  "data": "PG deal Campaigns mappings updated successfully"
+  "data": {
+    "targetingType": "Specific",
+    "estimatedReachMin": 4392,
+    "estimatedReachMax": 5369,
+    "estimatedReachAvg": 4881
+  }
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More Responses</summary>
 
-```json title="Response 403"
+```json title="Response 408"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Forbidden!"
-    }
-  ]
-}
-```
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "Campaign ID 506992 exceeds the maximum limit of 25 deals"
+      "error": "Server request timed out!"
     }
   ]
 }
@@ -5765,84 +5346,104 @@ Assign or remove multiple PG deals to/from Campaigns.
 
 </details>
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+---
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+### Get Bid Landscape Estimation
 
-const axios = getInstance();
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/campaign/estimation/bid-landscape" />
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string
-        }
-      }
-    };
-  };
-  422: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      };
-    };
-  };
-}
+<div class="endpoint-container">
+  <div class="child1">
 
-function managePgDealCampaignMappings(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/cmp/pg/campaigns/mappings',
-    requestBody: {
-      content: {
-        "application/json": {
-          operations: [
-            {
-              action: `string`,
-              campaignIds: `array of numbers`,
-              pmpDealIds: `array of numbers`,
-            }
-          ]
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+Get bid landscape estimation based on targeting parameters. Request body supports dimensions available with `true` value from [Get Estimator Dimension List](#get-estimator-dimension-list).
+
+| Request Schema | |
+| --- | --- |
+| `stateIds` <br /><span class="type-text">string</span> | Comma separated [State IDs](/guidelines/master-api#get-state-segment) |
+| `whitelistCityIds` <br /><span class="type-text">string</span> | Comma separated [City IDs](/guidelines/master-api/#get-city-segment) to include |
+| `whitelistZipCodes` <br /><span class="type-text">string</span> | Comma separated [Zip Codes](/guidelines/master-api/#get-zip-codes-and-state-ids) to include |
+| `ethnicityIds` <br /><span class="type-text">string</span> | Comma separated [Ethnicity IDs](/guidelines/master-api/#get-ethnicity-segment) |
+| `ageIds` <br /><span class="type-text">string</span> | Comma separated [Age Range IDs](/guidelines/master-api/#get-age-segment) |
+| `incomeIds` <br /><span class="type-text">string</span> | Comma separated [Income Range IDs](/guidelines/master-api/#get-income-range-segment) |
+| `bidPacing` <br /><span class="type-text">boolean</span> | Enable bid pacing |
+| `budgetDay` <br /><span class="type-text">number</span> | Daily budget |
+| `creativesPlacementMapping` <br /><span class="type-text">object</span> | Creative to placement mapping |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`axis` <br /><span class="type-text">object</span></td>
+    <td>Axis labels for bid landscape chart: <var>x</var> (bidFloor), <var>y</var> (numImp)</td>
+    </tr>
+    <tr>
+    <td>`bidGuidance` <br /><span class="type-text">array of objects</span></td>
+    <td>Bid guidance data points with <var>bidfloorPercentile</var>, <var>bidFloor</var>, and <var>numImp</var></td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "stateIds": "30200032",
+  "whitelistCityIds": "30434428,30434491",
+  "whitelistZipCodes": "08016,08048",
+  "ethnicityIds": "10700001",
+  "ageIds": "10100006,10100007",
+  "incomeIds": "10300001,10300002",
+  "bidPacing": true,
+  "budgetDay": 120
 }
 ```
 
-</TabItem></Tabs>
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "axis": {
+      "x": "bidFloor",
+      "y": "numImp"
+    },
+    "bidGuidance": [
+      {
+        "bidfloorPercentile": 0,
+        "bidFloor": 0.14166666666666666,
+        "numImp": 0
+      },
+      {
+        "bidfloorPercentile": 50,
+        "bidFloor": 1.3108599999999997,
+        "numImp": 74142
+      },
+      {
+        "bidfloorPercentile": 99,
+        "bidFloor": 3.124166666666666,
+        "numImp": 146802
+      }
+    ]
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 408"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Server request timed out!"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -6015,6 +5616,495 @@ function Resendemailremindertosetinvoicetemplate(): Promise<Responses> {
 ```
 
 </TabItem></Tabs>
+
+</div></div>
+
+## Campaign Targeting
+
+Configure targeting parameters for Campaigns including Audiences, Conversions, Creatives, Inventory Groups, and Deals.
+
+### Assign Conversions to Campaigns
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/target/conversion" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Assign Conversions to Campaigns.
+
+| Request Schema | |
+| --- | --- |
+| `conversionIds` <br /><span class="type-text">string</span> | Comma separated [Conversion ID](/guidelines/conversion-api#get-list-of-conversions)s |
+| `campaignIds` <br /><span class="type-text">string</span> | [Campaign ID](#get-list-of-campaigns)s to target | 
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Request Schema"
+{
+  "conversionIds": "123, 321",
+  "campaignIds": "276417, 356234"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "1 Conversions assigned to campaigns successfully."
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "invalid Conversion ids"
+    }
+  ]
+}
+```
+</details>
+
+</div></div>
+
+---
+
+### Update Audience Targeting in Campaigns
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/target/audience" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the Audience targeting in a given Campaigns list. Supports include, exclude, and remove Audiences.
+
+:::warning
+
+PG Campaigns cannot be used for Audience targeting.
+
+:::
+
+| Request Schema | | 
+| --- | --- |
+| `{campaignId}` <br /><span class="type-text">string</span> | [Campaign ID](#get-list-of-campaigns) for which to pass <var>includedAudienceList</var>, <var>excludedAudienceList</var>, and <var>removeAudience</var> |
+| `includedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to include in targeting |
+| `excludedAudienceList` <br /><span class="type-text">array of integers</span> | Audience IDs to exclude from targeting |
+| `removeAudience` <br /><span class="type-text">array of integers</span> | Audience IDs to remove |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+        <tr>
+    <td>`failedCampaigns` <br /><span class="type-text">object</span></td>
+    <td>Failed Campaigns list: Name-Value pairs of <var>CampaignId</var> and failure description</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Request Schema"
+{
+  "477717": {
+    "includedAudienceList": [
+      1064656,
+      1060603
+    ],
+    "excludedAudienceList": [
+      1064000,
+      1060111
+    ],
+    "removeAudienceList": [
+      106422,
+      106033
+    ]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Your changes have been successfully saved."
+  }
+}
+```
+
+```json title="Response 200 (partial success)"
+{
+  "success": false,
+  "data": {
+    "message": "Your changes have been successfully saved.",
+    "failedCampaigns": {
+      "477717": "Can not target more than 20 audiences."
+    }
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "One or more campaigns are PG campaigns and cannot be used for audience targeting: [529192, 506992, 506991]"
+    }
+  ]
+}
+```
+</details>
+
+</div></div>
+
+---
+
+### Update Creative Targeting in Campaigns
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/target/creative" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Assign or unassign Creatives from Campaigns.
+
+| Request Schema | |
+| --- | --- |
+| `creativeIds` <br /><span class="type-text">array of integers</span> | [Creative ID](/guidelines/creative-api#get-list-of-creatives-and-details)s to assign or unassign |
+| `assignedCampaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to assign Creative targeting to |
+| `removedCampaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to unassign/remove Creative targeting from |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates operation was successful: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Request Sample (Assign)"
+{
+  "assignedCampaignIds": [1, 2, 3],
+  "creativeIds": [11, 22]
+}
+```
+
+```json title="Request Sample (Unassign)"
+{
+  "removedCampaignIds": [2],
+  "creativeIds": [11]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Creatives assigned/un-assigned successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid Campaign IDs for assign/un-assign action"
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Inventory Group Targeting
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/inventorygroups/{groupId}/includeExclude" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Target Inventories by including or excluding Inventory groups from your Campaigns advertising strategies.
+
+Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory-api#create-a-new-inventory-group).
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | [Inventory Group ID](/guidelines/inventory-api#get-list-of-inventory-groups) |
+
+| Request Schema | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](#get-list-of-campaigns)s |
+| `isExcluded` <br /><span class="type-text">boolean</span> | Include Campaigns in Group: <var>0</var> <br />Exclude Campaigns from Group: <var>1</var> |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "campaignIds": "172813,177146",
+  "isExcluded": 0
+}
+```
+
+```json title="Response 200"
+{
+  "statusCode": 200,
+  "responseObject": {
+    "message": "Inventory Group excluded successfully."
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Assign PMP Deals
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pmp/campaigns/mappings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Assign or remove multiple PMP deals to/from Campaigns.
+
+| Request Schema | |
+| --- | --- |
+| `operations` <br /><span class="type-text">array of objects</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to assign deals or remove deals from |
+| `pmpDealIds` <br /><span class="type-text">array of integers</span> | [PMP Deal ID](/guidelines/inventory-api#get-pmp-deals-list)s to assign/de-assign to/from Campaigns |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+        <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "operations": [
+     {
+      "action": "assign",
+      "campaignIds": [
+        201,
+        203
+      ],
+      "pmpDealIds": [
+        101,
+        102
+      ]
+    },
+    {
+      "action": "deassign",
+      "campaignIds": [
+        202
+      ],
+      "pmpDealIds": [
+        102
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "PMP deal campaign mappings updated successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Assign PG Deals
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/cmp/pg/campaigns/mappings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Assign or remove multiple PG deals to/from Campaigns.
+
+| Request Schema | |
+| --- | --- |
+| `operations` <br /><span class="type-text">array of objects</span> | Operations specifying the action, Campaign IDs and PMP deal IDs |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](#get-list-of-campaigns)s to assign deals or remove deals from |
+| `pgDealIds` <br /><span class="type-text">array of integers</span> | [PG Deal ID](/guidelines/inventory-api#get-pg-deals-list)s to assign/remove to/from Campaigns |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+        <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Deals were assigned succesfully: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "operations": [
+    {
+      "action": "assign",
+      "campaignIds": [
+        201,
+        203
+      ],
+      "pgDealIds": [
+        101,
+        102
+      ]
+    },
+    {
+      "action": "assign",
+      "campaignIds": [
+        202
+      ],
+      "pgDealIds": [
+        103
+      ]
+    },
+    {
+      "action": "deassign",
+      "campaignIds": [
+        202
+      ],
+      "pgDealIds": [
+        102
+      ]
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "PG deal Campaigns mappings updated successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Forbidden!"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Campaign ID 506992 exceeds the maximum limit of 25 deals"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -9826,6 +9916,275 @@ function updateIOStatusToDelete(): Promise<Responses> {
 </div></div>
 
 ## Get More Details
+
+### Get Frequency Cap Types
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/static/frequency-cap-types" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get list of frequency cap types for Campaign configuration.
+
+| Query Parameter | |
+| --- | --- |
+| `frequencyCapTypeIds` <br /><span class="type-text">integer</span> | Filter by specific frequency cap type IDs (optional) |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`frequencyCapTypes` <br /><span class="type-text">array of objects</span></td>
+    <td>List of frequency cap types</td>
+    </tr>
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Frequency cap type ID</td>
+    </tr>
+    <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Frequency cap type name: <var>days</var>, <var>weeks</var>, <var>months</var>, <var>campaign_duration</var></td>
+    </tr>
+    <tr>
+    <td>`displayName` <br /><span class="type-text">string</span></td>
+    <td>Display name</td>
+    </tr>
+    <tr>
+    <td>`minDuration` <br /><span class="type-text">integer</span></td>
+    <td>Minimum duration value</td>
+    </tr>
+    <tr>
+    <td>`maxDuration` <br /><span class="type-text">integer</span></td>
+    <td>Maximum duration value</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "frequencyCapTypes": [
+      {
+        "id": 1,
+        "name": "days",
+        "order": 1,
+        "displayName": "Day(s)",
+        "minDuration": 1,
+        "maxDuration": 6
+      },
+      {
+        "id": 2,
+        "name": "weeks",
+        "order": 2,
+        "displayName": "Week(s)",
+        "minDuration": 1,
+        "maxDuration": 3
+      },
+      {
+        "id": 3,
+        "name": "months",
+        "order": 3,
+        "displayName": "Month(s)",
+        "minDuration": 1,
+        "maxDuration": 3
+      },
+      {
+        "id": 4,
+        "name": "campaign_duration",
+        "order": 4,
+        "displayName": "Campaign Duration",
+        "minDuration": null,
+        "maxDuration": null
+      }
+    ],
+    "totalRecords": 4,
+    "filteredRecords": 4
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Goal-AI Objectives and Goals
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/static/campaign/goal-ai/objectives-goals" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get static list of Campaign Goal-AI Objectives and their corresponding Goals for Campaign creation and management.
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`objectives` <br /><span class="type-text">array of objects</span></td>
+    <td>List of objectives: <var>awareness</var>, <var>consideration</var>, <var>conversion</var></td>
+    </tr>
+    <tr>
+    <td>`goals` <br /><span class="type-text">array of objects</span></td>
+    <td>List of goals with their compatible creative types and KPI ranges</td>
+    </tr>
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Objective or Goal ID</td>
+    </tr>
+    <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Internal name</td>
+    </tr>
+    <tr>
+    <td>`displayName` <br /><span class="type-text">string</span></td>
+    <td>Display name</td>
+    </tr>
+    <tr>
+    <td>`applicableGoals` <br /><span class="type-text">array of integers</span></td>
+    <td>Goal IDs that apply to this objective</td>
+    </tr>
+    <tr>
+    <td>`compatibleCreativeTypes` <br /><span class="type-text">array of integers</span></td>
+    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list)s compatible with this goal</td>
+    </tr>
+    <tr>
+    <td>`kpi` <br /><span class="type-text">string</span></td>
+    <td>KPI metric name</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "objectives": [
+      {
+        "id": 1,
+        "name": "awareness",
+        "displayName": "Awareness",
+        "applicableGoals": [1, 2, 3, 4, 5, 8],
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "name": "consideration",
+        "displayName": "Consideration",
+        "applicableGoals": [9, 10, 2, 3, 4],
+        "displayOrder": 2
+      },
+      {
+        "id": 3,
+        "name": "conversion",
+        "displayName": "Conversion",
+        "applicableGoals": [11, 6, 7],
+        "displayOrder": 3
+      }
+    ],
+    "goals": [
+      {
+        "id": 1,
+        "name": "increase_reach",
+        "displayName": "Increase Reach",
+        "compatibleCreativeTypes": [11, 13, 14, 15, 17],
+        "kpi": null,
+        "minKpi": 1,
+        "maxKpi": 100,
+        "displayOrder": 1
+      },
+      {
+        "id": 2,
+        "name": "increase_ctr",
+        "displayName": "Increase CTR",
+        "compatibleCreativeTypes": [11, 13, 14, 15, 17],
+        "kpi": "CTR",
+        "minKpi": 1,
+        "maxKpi": 100,
+        "displayOrder": 2
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Estimator Dimension List
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/static/campaign/estimator/dimension/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get list of supported parameters/dimensions for Campaign reach and bid landscape estimation.
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`targetableAudience` <br /><span class="type-text">object</span></td>
+    <td>Supported dimensions for targetable audience estimation with boolean values</td>
+    </tr>
+    <tr>
+    <td>`bidLandscapeEstimation` <br /><span class="type-text">object</span></td>
+    <td>Supported dimensions for bid landscape estimation with boolean values</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "targetableAudience": {
+      "countryIds": true,
+      "stateIds": true,
+      "countyIdsIncluded": true,
+      "cityIdsIncluded": true,
+      "zipCodesIncluded": true,
+      "ethnicityIds": true,
+      "ageIds": true,
+      "genderIds": true,
+      "incomeIds": true,
+      "whitelistLocationJson": true,
+      "deviceTypeIds": true
+    },
+    "bidLandscapeEstimation": {
+      "countryIds": false,
+      "creativeRtbTypes": true,
+      "creativeTypes": true,
+      "maxBid": true,
+      "deviceTypeNames": true,
+      "stateCodes": true,
+      "excludedExchangeNames": true,
+      "dmaCodesIncluded": true,
+      "dealIds": true,
+      "whitelistInventoryGroupIds": true,
+      "blacklistInventoryGroupIds": true,
+      "whitelistSiteDomains": true,
+      "blacklistSiteDomains": true,
+      "whitelistAppIds": true,
+      "blacklistAppIds": true,
+      "zipCodes": true,
+      "locationJson": true,
+      "trafficTypeNames": true
+    }
+  }
+}
+```
+
+</div></div>
+
+---
 
 ### Get IO Status List
 
