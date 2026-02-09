@@ -1612,6 +1612,55 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Duplicate Campaigns',
+              href: '/guidelines/campaign-api#duplicate-campaigns',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Cost Details',
+              href: '/guidelines/campaign-api#get-campaign-cost-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Audience Reach Estimation',
+              href: '/guidelines/campaign-api#get-audience-reach-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Bid Landscape Estimation',
+              href: '/guidelines/campaign-api#get-bid-landscape-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email to Set Margin',
+              href: '/guidelines/campaign-api#resend-email-to-set-margin',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email Reminder to Set Invoice Template',
+              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Targeting`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
               label: 'Assign Conversions to Campaign',
               href: '/guidelines/campaign-api#assign-conversions-to-campaigns',
               customProps: { method: 'POST' },
@@ -1619,9 +1668,16 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Update Audience Targeting in Campaign',
+              label: 'Update Audience Targeting',
               href: '/guidelines/campaign-api#update-audience-targeting-in-campaigns',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Creative Targeting',
+              href: '/guidelines/campaign-api#update-creative-targeting-in-campaigns',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
@@ -1643,20 +1699,6 @@ const sidebars = {
               label: 'Assign PG Deals',
               href: '/guidelines/campaign-api#assign-pg-deals',
               customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email to Set Margin',
-              href: '/guidelines/campaign-api#resend-email-to-set-margin',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email Reminder to Set Invoice Template',
-              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -1791,6 +1833,27 @@ const sidebars = {
           label: `Get More Details`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Frequency Cap Types',
+              href: '/guidelines/campaign-api#get-frequency-cap-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Goal-AI Objectives and Goals',
+              href: '/guidelines/campaign-api#get-goal-ai-objectives-and-goals',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Estimator Dimension List',
+              href: '/guidelines/campaign-api#get-estimator-dimension-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'List of IO Status',
@@ -2368,6 +2431,20 @@ const sidebars = {
               type: 'link',
               label: 'Update Customer SLS Details',
               href: '/guidelines/finance-api#update-customer-sls-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Customer AQS Finance Details',
+              href: '/guidelines/finance-api#get-customer-aqs-finance-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Customer AQS Details',
+              href: '/guidelines/finance-api#update-customer-aqs-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -2964,6 +3041,75 @@ const sidebars = {
               type: 'link',
               label: 'Delete SLS Report',
               href: '/guidelines/insights-api#delete-sls-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Audience Quality Score Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'AQS Resource Properties',
+              href: '/guidelines/insights-api#aqs-resource-properties',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-campaigns-eligible-for-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate AQS Report Name',
+              href: '/guidelines/insights-api#validate-aqs-report-name',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Compute AQS Report Cost',
+              href: '/guidelines/insights-api#compute-aqs-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate AQS Report',
+              href: '/guidelines/insights-api#generate-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'AQS Report Types',
+              href: '/guidelines/insights-api#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/guidelines/insights-api#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/guidelines/insights-api#delete-aqs-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
@@ -4992,6 +5138,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Matched Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
               label: 'Matched Audience Details',
@@ -4999,48 +5152,6 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
-            {
-              type: 'link',
-              label: 'Geofarmed Audience Details',
-              href: '/political-vertical/audience-segments#geofarmed-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Contextual Audience Details',
-              href: '/political-vertical/audience-segments#contextual-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Segmented Audience Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Segmented Audience Details',
-              href: '/political-vertical/audience-segments#segmented-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Search Segmented Audience',
-              href: '/political-vertical/audience-segments#search-segmented-audiences',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            }
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Management`,
-          className: 'sidebarItem',
-          items: [
             {
               type: 'link',
               label: 'Create Matched Audience',
@@ -5053,6 +5164,48 @@ const sidebars = {
               label: 'Update Matched Audience',
               href: '/political-vertical/audience-segments#update-matched-audience',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Geofarmed Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/political-vertical/audience-segments#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/political-vertical/audience-segments#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Segmented Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Segmented Audience Details',
+              href: '/political-vertical/audience-segments#segmented-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Search Segmented Audiences',
+              href: '/political-vertical/audience-segments#search-segmented-audiences',
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
@@ -5069,11 +5222,18 @@ const sidebars = {
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
             },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Contextual Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
-              label: 'Create Geofarmed Audience',
-              href: '/political-vertical/audience-segments#create-geofarmed-audience',
-              customProps: { method: 'POST' },
+              label: 'Contextual Audience Details',
+              href: '/political-vertical/audience-segments#contextual-audience-details',
+              customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
@@ -5086,8 +5246,43 @@ const sidebars = {
           ]
         },
         {
-          type: `category`,
-          label: `More Audience Details`,
+          type: 'category',
+          label: 'Custom Voter Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Available States for Custom Voter Audiences',
+              href: '/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Segment Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Custom Voter Audience',
+              href: '/political-vertical/audience-segments#create-custom-voter-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Audience Details',
           className: 'sidebarItem',
           items: [
             {
@@ -5097,7 +5292,7 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
-                        {
+            {
               type: 'link',
               label: 'Segmented Reach Range',
               href: '/political-vertical/audience-segments#reach-range-list-for-segmented-audiences',
@@ -5597,6 +5792,20 @@ const sidebars = {
               href: '/healthcare-vertical/finance#update-customer-sls-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Customer AQS Finance Details',
+              href: '/healthcare-vertical/finance#get-customer-aqs-finance-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Customer AQS Details',
+              href: '/healthcare-vertical/finance#update-customer-aqs-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
             }
           ]
     },
@@ -5728,6 +5937,74 @@ const sidebars = {
               type: 'link',
               label: 'Delete SLS Report',
               href: '/healthcare-vertical/insights-pld#delete-sls-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Audience Quality Score Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'AQS Resource Properties',
+              href: '/healthcare-vertical/insights-pld#aqs-resource-properties',
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Validate AQS Report Name',
+              href: '/healthcare-vertical/insights-pld#validate-aqs-report-name',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Compute AQS Report Cost',
+              href: '/healthcare-vertical/insights-pld#compute-aqs-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Generate AQS Report',
+              href: '/healthcare-vertical/insights-pld#generate-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'AQS Report Types',
+              href: '/healthcare-vertical/insights-pld#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/healthcare-vertical/insights-pld#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/healthcare-vertical/insights-pld#delete-aqs-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
