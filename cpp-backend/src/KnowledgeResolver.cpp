@@ -1176,6 +1176,18 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
         normalizedAction = "upload";
     }
     
+    // Context-based entity override: if query mentions "audience" with "assign" or "targeting"
+    // This handles cases like "assign audiences to campaign" where LLM extracts campaign
+    if ((lowerQuery.find("audience") != std::string::npos || 
+         lowerQuery.find("audiences") != std::string::npos) &&
+        (lowerQuery.find("assign") != std::string::npos || 
+         lowerQuery.find("target") != std::string::npos ||
+         lowerQuery.find("targeting") != std::string::npos)) {
+        std::cout << "[KR] Override entity to 'audience' and action to 'assign' for audience targeting" << std::endl;
+        normalizedEntity = "audience";
+        normalizedAction = "assign";
+    }
+    
     // Context-based action override: if query contains "assign" or "to campaign", use assign
     if (lowerQuery.find("assign") != std::string::npos || 
         lowerQuery.find("to campaign") != std::string::npos ||
