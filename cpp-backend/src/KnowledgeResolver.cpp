@@ -429,10 +429,21 @@ std::string KnowledgeResolver::getDocLabel(const std::string& docPath) const {
         pathOnly = docPath.substr(0, hashPos);
     }
     
+    // Normalize: remove trailing slash
+    if (!pathOnly.empty() && pathOnly.back() == '/') {
+        pathOnly.pop_back();
+    }
+    
     // Check doc labels index first
     auto it = docLabels_.find(pathOnly);
     if (it != docLabels_.end()) {
         return it->second;
+    }
+    
+    // Try with /index suffix (for vertical landing pages)
+    auto itIndex = docLabels_.find(pathOnly + "/index");
+    if (itIndex != docLabels_.end()) {
+        return itIndex->second;
     }
     
     // Fallback: generate a readable title from the path
@@ -792,6 +803,7 @@ std::vector<IntentMatch> KnowledgeResolver::matchIntent(const std::string& query
             match.primary_doc = i.value("primary_doc", "");
             match.section = i.value("section", "");
             match.endpoint = i.value("endpoint", "");
+            match.help_center = i.value("help_center", "");
             match.confidence = score;
             
             if (i.contains("related_docs")) {
@@ -1441,6 +1453,9 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
                     syntheticIntent.related_sections.push_back(section.get<std::string>());
                 }
             }
+            if (bestIntent.contains("help_center")) {
+                syntheticIntent.help_center = bestIntent.value("help_center", "");
+            }
         }
     } catch (...) {
         // Continue with synthetic intent
@@ -1739,6 +1754,11 @@ json KnowledgeContext::toJson(const KnowledgeResolver* resolver) const {
     if (!intents.empty() && intents[0].confidence > 0.3) {
         result["detectedIntent"] = intents[0].intent_id;
         result["intentConfidence"] = intents[0].confidence;
+        
+        // Include Help Center link if available
+        if (!intents[0].help_center.empty()) {
+            result["helpCenter"] = intents[0].help_center;
+        }
     }
     
     return result;

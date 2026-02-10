@@ -40,6 +40,7 @@ struct IntentMatch {
     std::string primary_doc;
     std::string section;
     std::string endpoint;
+    std::string help_center;  // Link to IQM Help Center article
     std::vector<std::string> related_docs;
     std::vector<std::string> related_sections;  // Pre-defined sections for informational queries
     std::vector<std::string> prerequisites;
