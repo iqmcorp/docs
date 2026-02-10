@@ -40,12 +40,14 @@ entities:
         - /quickstart-guides/authentication-quickstart-guide
     api: user-api
     
+  # Customer/Advertiser/Organization are synonymous in IQM
+  # All three terms refer to the entity that places advertisements
   customer:
     id_field: owId
-    aliases: [advertiserId, organizationId, customerId, advertiser, organization]
+    aliases: [advertiserId, organizationId, customerId, advertiser, organization, advertiser account, org]
     level: 2
     parent: workspace_user
-    description: "Organization/Advertiser assigned to a Workspace User. Places advertisements with the DSP service."
+    description: "Organization/Advertiser assigned to a Workspace User. Places advertisements with the DSP service. Also known as Advertiser or Organization."
     children: [insertion_order]
     docs:
       primary: /tutorials/customer-guide
@@ -55,33 +57,9 @@ entities:
         - /getting-started/platform-overview
     api: workspace-api
     help_center: https://help.iqm.com/en/articles/8365221-how-to-add-a-customer
-
-  # Aliases for customer entity (for LLM extraction)
-  advertiser:
-    id_field: advertiserId
-    aliases: [customer, organization, advertiser account]
-    level: 2
-    parent: workspace_user
-    description: "A user or Customer on the IQM platform that places advertisements with a media partner."
-    docs:
-      primary: /getting-started/platform-overview
-      section: "#advertising-hierarchy"
-      related:
-        - /guidelines/workspace-api
-    api: workspace-api
     
-  organization:
-    id_field: organizationId
-    aliases: [customer, advertiser, org]
-    level: 2
-    parent: workspace_user
-    description: "A company that places advertisements and is assigned to a Workspace User."
-    docs:
-      primary: /getting-started/platform-overview
-      section: "#organization-hierarchy"
-      related:
-        - /guidelines/workspace-api
-    api: workspace-api
+  # NOTE: 'advertiser' and 'organization' are aliases for 'customer'
+  # The KnowledgeResolver will resolve these to the 'customer' entity
 
   # ============================================
   # ADVERTISING TIER
@@ -446,37 +424,52 @@ entities:
     api: insights-api
     vertical: healthcare
     
-  payment:
-    id_field: paymentId
+  finance:
+    id_field: null
     level: 3
     parent: customer
     relationship_type: configuration
-    description: "Payment methods and transactions for billing."
+    description: "Finance management including invoices, payments, and credits."
+    aliases: [finance, finance api, billing, financial, accounting]
+    children: [payment, invoice, credit]
     docs:
       primary: /guidelines/finance-api
-      section: "#payments"
+    api: finance-api
+    
+  payment:
+    id_field: paymentId
+    level: 4
+    parent: finance
+    relationship_type: configuration
+    description: "Payment methods and transactions for billing."
+    aliases: [payment, payments, payment management, pay]
+    docs:
+      primary: /guidelines/finance-api
+      section: "#payment-management"
     api: finance-api
     
   invoice:
     id_field: invoiceId
-    level: 3
-    parent: customer
+    level: 4
+    parent: finance
     relationship_type: analytics
     description: "Invoice records for billing and accounting."
+    aliases: [invoice, invoices, invoice management, billing]
     docs:
       primary: /guidelines/finance-api
-      section: "#invoices"
+      section: "#invoice-management"
     api: finance-api
     
   credit:
     id_field: creditId
-    level: 3
-    parent: customer
+    level: 4
+    parent: finance
     relationship_type: configuration
     description: "Credit balance and adjustments."
+    aliases: [credit, credits, credit management, credit balance]
     docs:
       primary: /guidelines/finance-api
-      section: "#credits"
+      section: "#credit-management"
     api: finance-api
     
   asset:

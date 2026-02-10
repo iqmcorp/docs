@@ -61,9 +61,9 @@ intents:
       - "owId"
     entity: workspace
     primary_doc: /getting-started/before-you-begin
-    section: "#workspace-id"
     related_docs:
       - /getting-started/platform-overview
+      - /guidelines/workspace-api
       
   # Informational: Explain platform entities
   explain_workspace:
@@ -99,7 +99,7 @@ intents:
       - "organization hierarchy"
       - "organization vs workspace"
       - "organization vs advertiser"
-    entity: organization
+    entity: customer  # organization is an alias for customer
     action: explain
     intent_type: informational
     primary_doc: /getting-started/platform-overview
@@ -120,7 +120,7 @@ intents:
       - "describe advertiser"
       - "advertiser vs customer"
       - "advertiser vs organization"
-    entity: advertiser
+    entity: customer  # advertiser is an alias for customer
     action: explain
     intent_type: informational
     primary_doc: /getting-started/platform-overview
@@ -687,7 +687,7 @@ intents:
     entity: workspace
     action: validate
     intent_type: operational
-    primary_doc: /guidelines/user-api
+    primary_doc: /guidelines/workspace-api
     section: "#validate-workspace-domain"
     endpoint: POST /api/v3/ua/user/workspace/validate
 
@@ -703,7 +703,7 @@ intents:
       - "show organizations"
       - "allowed organizations"
       - "get organization list"
-    entity: organization
+    entity: customer  # organization is an alias for customer
     action: list
     intent_type: operational
     primary_doc: /guidelines/workspace-api
@@ -717,7 +717,7 @@ intents:
       - "view organization"
       - "organization info"
       - "my organization details"
-    entity: organization
+    entity: customer  # organization is an alias for customer
     action: get
     intent_type: operational
     primary_doc: /guidelines/workspace-api
@@ -731,7 +731,7 @@ intents:
       - "change organization details"
       - "modify organization"
       - "update org profile"
-    entity: organization
+    entity: customer  # organization is an alias for customer
     action: update
     intent_type: operational
     primary_doc: /guidelines/workspace-api
@@ -876,7 +876,7 @@ intents:
       - "advertiser list"
       - "all advertisers"
       - "advertisers for customer"
-    entity: advertiser
+    entity: customer  # advertiser is an alias for customer
     action: list
     intent_type: operational
     primary_doc: /guidelines/workspace-api
@@ -890,7 +890,7 @@ intents:
       - "new advertiser"
       - "add advertiser"
       - "create advertiser profile"
-    entity: advertiser
+    entity: customer  # advertiser is an alias for customer
     action: create
     intent_type: operational
     primary_doc: /guidelines/workspace-api
@@ -1509,11 +1509,11 @@ intents:
     action: explain
     intent_type: informational
     primary_doc: /guidelines/conversion-api
-    related_docs:
-      - /quickstart-guides/conversion-quickstart
     related_sections:
-      - /guidelines/conversion-api#add-conversion
-      - /guidelines/conversion-api#assign-to-campaign
+      - /quickstart-guides/conversion-quickstart
+      - /guidelines/conversion-api/#create-postback-conversion
+      - /guidelines/conversion-api/#create-pixel-conversion
+      - /guidelines/conversion-api/#assign-conversion-to-a-campaign
 
   manage_conversion:
     patterns:
@@ -1542,7 +1542,7 @@ intents:
     entity: conversion
     action: list
     primary_doc: /guidelines/conversion-api
-    section: "#get-conversions-list"
+    section: "#get-list-of-conversions"
     endpoint: POST /api/v3/conversion/list
     related_docs:
       - /quickstart-guides/conversion-quickstart
@@ -1559,6 +1559,8 @@ intents:
     endpoint: POST /api/v3/conversion/add
     related_docs:
       - /guidelines/conversion-api
+      - /guidelines/conversion-api/#create-postback-conversion
+      - /guidelines/conversion-api/#create-pixel-conversion
     help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
     
   assign_conversion:
@@ -1577,7 +1579,7 @@ intents:
     entity: conversion
     action: assign
     primary_doc: /quickstart-guides/conversion-quickstart
-    section: "#assign-to-campaign"
+    section: "#step-3-assign-a-conversion-to-a-campaign"
     endpoint: POST /api/v3/conversion/assign-to/campaign
     related_docs:
       - /guidelines/conversion-api
@@ -1622,7 +1624,7 @@ intents:
     section: "#delete-conversion"
     endpoint: DELETE /api/v3/conversion/delete
     related_sections:
-      - /guidelines/conversion-api#conversion-management
+      - /guidelines/conversion-api#conversions-management
     help_center: https://help.iqm.com/en/collections/3219750-choose-your-conversion
       
   # ============================================
@@ -1726,7 +1728,7 @@ intents:
     entity: inventory_group
     action: explain
     primary_doc: /quickstart-guides/inventory-quickstart
-    section: "#create-inventory-group"
+    section: "#step-3-create-an-inventory-group"
     endpoint: POST /api/v3/inv/groups/add
     related_docs:
       - /guidelines/inventory-api
@@ -1743,7 +1745,7 @@ intents:
     entity: inventory_group
     action: update
     primary_doc: /guidelines/inventory-api
-    section: "#edit-inventory-group"
+    section: "#inventory-group-management"
     endpoint: PATCH /api/v3/inv/groups/{groupId}
     related_sections:
       - /guidelines/inventory-api#inventory-groups
@@ -1759,10 +1761,10 @@ intents:
     entity: deal
     action: update
     primary_doc: /guidelines/inventory-api
-    section: "#update-pmp-deal"
+    section: "#pmp-management"
     endpoint: PATCH /api/v3/inv/pmp/deals/{id}
     related_sections:
-      - /guidelines/inventory-api#pmp-deals
+      - /guidelines/inventory-api#private-marketplace-pmp-deals-details
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
     
   update_pg_deal:
@@ -1775,10 +1777,10 @@ intents:
     entity: deal
     action: update
     primary_doc: /guidelines/inventory-api
-    section: "#update-pg-deal-details"
+    section: "#pg-management"
     endpoint: PATCH /api/v3/inv/pg/deals/{id}
     related_sections:
-      - /guidelines/inventory-api#pg-deals
+      - /guidelines/inventory-api#programmatic-guaranteed-pg-deals-details
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
     
   delete_inventory_group:
@@ -1789,7 +1791,7 @@ intents:
     entity: inventory_group
     action: delete
     primary_doc: /guidelines/inventory-api
-    section: "#delete-inventory-group"
+    section: "#inventory-group-management"
     endpoint: DELETE /api/v3/inv/group/{groupId}
     related_sections:
       - /guidelines/inventory-api#inventory-groups
@@ -1803,10 +1805,10 @@ intents:
     entity: deal
     action: delete
     primary_doc: /guidelines/inventory-api
-    section: "#delete-pmp-deal"
+    section: "#pmp-management"
     endpoint: DELETE /api/v3/inv/pmp/deals/{id}
     related_sections:
-      - /guidelines/inventory-api#pmp-deals
+      - /guidelines/inventory-api#private-marketplace-pmp-deals-details
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
     
   delete_pg_deal:
@@ -1817,10 +1819,10 @@ intents:
     entity: deal
     action: delete
     primary_doc: /guidelines/inventory-api
-    section: "#delete-pg-deal"
+    section: "#pg-management"
     endpoint: DELETE /api/v3/inv/pg/deals/{id}
     related_sections:
-      - /guidelines/inventory-api#pg-deals
+      - /guidelines/inventory-api#programmatic-guaranteed-pg-deals-details
     help_center: https://help.iqm.com/en/articles/9615727-assign-private-marketplace-pmp-deals-or-inventory-groups-to-a-campaign
     
   # ============================================
@@ -1862,7 +1864,7 @@ intents:
     endpoint: PATCH /api/v3/bm/campaigns/{campaignId}/dimensions/{dimensionId}/bundles
     related_sections:
       - /guidelines/bid-model-api#bid-modeling-management
-      - /guidelines/bid-model-api#add-update-or-delete-bid-modeling
+      - /guidelines/bid-model-api#manage-bid-modeling
     help_center: https://help.iqm.com/en/articles/8369028-bid-model-overview
     
   delete_bid_model:
@@ -2416,6 +2418,287 @@ intents:
       - /guidelines/reports-api
 
   # ============================================
+  # DASHBOARD
+  # ============================================
+  
+  explain_dashboard:
+    patterns:
+      - "what is a dashboard"
+      - "what is dashboard"
+      - "explain dashboard"
+      - "dashboard overview"
+      - "tell me about dashboard"
+      - "describe dashboard"
+      - "dashboard definition"
+    entity: dashboard
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/dashboard-api
+      
+  dashboard_api:
+    patterns:
+      - "dashboard api"
+      - "dashboard documentation"
+      - "dashboard guide"
+      - "dashboard endpoints"
+    entity: dashboard
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/dashboard-api
+    
+  get_dashboard_data:
+    patterns:
+      - "get dashboard data"
+      - "dashboard metrics"
+      - "dashboard performance"
+      - "view dashboard"
+      - "access dashboard"
+      - "campaign dashboard"
+      - "dashboard report"
+      - "performance dashboard"
+      - "get dashboard"
+    entity: dashboard
+    action: get
+    primary_doc: /guidelines/dashboard-api
+    section: "dashboard-api/#dashboard-list"
+    endpoint: GET /api/v2/das/dashboard
+
+  # ============================================
+  # FINANCE
+  # ============================================
+  
+  finance_api:
+    patterns:
+      - "finance api"
+      - "finance"
+      - "finance documentation"
+      - "finance guide"
+      - "finance endpoints"
+      - "financial api"
+      - "billing api"
+    entity: finance
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/finance-api
+    related_docs:
+      - /healthcare-vertical/finance
+      - /political-vertical/finance
+
+  explain_finance:
+    patterns:
+      - "what is finance"
+      - "what is the finance api"
+      - "explain finance api"
+      - "finance overview"
+      - "tell me about finance"
+      - "how does billing work"
+      - "how does finance work"
+      - "financial management"
+    entity: finance
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/finance-api
+    
+  # Invoice Management
+  invoice_management:
+    patterns:
+      - "invoice"
+      - "invoices"
+      - "invoice api"
+      - "invoice management"
+      - "manage invoices"
+      - "invoice documentation"
+      - "billing invoices"
+      - "invoice guide"
+    entity: invoice
+    action: manage
+    primary_doc: /guidelines/finance-api
+    section: "#invoice-management"
+    related_docs:
+      - /healthcare-vertical/finance
+      - /political-vertical/finance
+
+  explain_invoice:
+    patterns:
+      - "what is an invoice"
+      - "what are invoices"
+      - "explain invoices"
+      - "how do invoices work"
+      - "tell me about invoices"
+      - "invoice overview"
+    entity: invoice
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/finance-api
+    section: "#invoice-management"
+
+  get_invoice:
+    patterns:
+      - "get invoice"
+      - "get invoices"
+      - "view invoice"
+      - "list invoices"
+      - "download invoice"
+      - "invoice list"
+      - "retrieve invoice"
+    entity: invoice
+    action: get
+    primary_doc: /guidelines/finance-api
+    section: "#get-invoice-for-organization"
+    endpoint: GET /api/v3/fa/invoice-settings
+
+  create_invoice:
+    patterns:
+      - "create invoice"
+      - "generate invoice"
+      - "new invoice"
+      - "add invoice"
+      - "issue invoice"
+    entity: invoice
+    action: create
+    primary_doc: /guidelines/finance-api
+    section: "#invoice-management"
+
+  update_invoice:
+    patterns:
+      - "update invoice"
+      - "edit invoice"
+      - "modify invoice"
+      - "change invoice"
+      - "update invoice settings"
+    entity: invoice
+    action: update
+    primary_doc: /guidelines/finance-api
+    section: "#update-invoice-settings"
+    endpoint: PATCH /api/v3/fa/invoice-settings/{invoiceId}
+
+  # Payment Management
+  payment_management:
+    patterns:
+      - "payment"
+      - "payments"
+      - "payment api"
+      - "payment management"
+      - "manage payments"
+      - "payment documentation"
+      - "payment guide"
+    entity: payment
+    action: manage
+    primary_doc: /guidelines/finance-api
+    section: "#payment-management"
+    related_docs:
+      - /healthcare-vertical/finance
+      - /political-vertical/finance
+
+  explain_payment:
+    patterns:
+      - "what is a payment"
+      - "what are payments"
+      - "explain payments"
+      - "how do payments work"
+      - "tell me about payments"
+      - "payment overview"
+      - "payment types"
+      - "payment methods"
+    entity: payment
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/finance-api
+    section: "#payment-management"
+
+  get_payment:
+    patterns:
+      - "get payment"
+      - "get payments"
+      - "view payment"
+      - "list payments"
+      - "payment list"
+      - "retrieve payment"
+      - "payment history"
+    entity: payment
+    action: get
+    primary_doc: /guidelines/finance-api
+    section: "#payment-management"
+
+  add_payment:
+    patterns:
+      - "add payment"
+      - "create payment"
+      - "new payment"
+      - "make payment"
+      - "record payment"
+      - "pay invoice"
+      - "mark invoice paid"
+    entity: payment
+    action: create
+    primary_doc: /guidelines/finance-api
+    section: "#mark-invoice-as-paid"
+    endpoint: POST /api/v3/fa/pay-invoice
+
+  # Credit Management
+  credit_management:
+    patterns:
+      - "credit"
+      - "credits"
+      - "credit api"
+      - "credit management"
+      - "manage credits"
+      - "credit documentation"
+      - "credit guide"
+      - "credit balance"
+    entity: credit
+    action: manage
+    primary_doc: /guidelines/finance-api
+    section: "#credit-management"
+    related_docs:
+      - /healthcare-vertical/finance
+      - /political-vertical/finance
+
+  explain_credit:
+    patterns:
+      - "what is credit"
+      - "what are credits"
+      - "explain credits"
+      - "how do credits work"
+      - "tell me about credits"
+      - "credit overview"
+      - "how does credit work"
+    entity: credit
+    action: explain
+    intent_type: informational
+    primary_doc: /guidelines/finance-api
+    section: "#credit-management"
+
+  get_credit:
+    patterns:
+      - "get credit"
+      - "get credits"
+      - "view credit"
+      - "check credit"
+      - "credit balance"
+      - "available credit"
+      - "available balance"
+      - "credit history"
+    entity: credit
+    action: get
+    primary_doc: /guidelines/finance-api
+    section: "#credit-management"
+
+  add_credit:
+    patterns:
+      - "add credit"
+      - "create credit"
+      - "new credit"
+      - "add funds"
+      - "top up"
+      - "add balance"
+      - "increase credit"
+    entity: credit
+    action: create
+    primary_doc: /guidelines/finance-api
+    section: "#add-credit"
+
+  # ============================================
   # INSIGHTS
   # ============================================
   
@@ -2537,7 +2820,7 @@ intents:
     section: "#update-a-report-schedule"
     endpoint: PATCH /api/v3/ra/report/email/schedule/{reportId}
     related_sections:
-      - /guidelines/reports-api#scheduled-reports
+      - /guidelines/reports-api#scheduling-management
     help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
       
   delete_report:
@@ -2551,7 +2834,7 @@ intents:
     section: "#delete-a-report"
     endpoint: DELETE /api/v3/ra/report/{reportId}
     related_sections:
-      - /guidelines/reports-api#report-management
+      - /guidelines/reports-api#reports-management
     help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
       
   delete_report_schedule:
@@ -2566,7 +2849,7 @@ intents:
     section: "#delete-report-schedule"
     endpoint: DELETE /api/v3/ra/report/email/schedule/{reportId}
     related_sections:
-      - /guidelines/reports-api#scheduled-reports
+      - /guidelines/reports-api#scheduling-management
     help_center: https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report
       
   # ============================================
@@ -2624,7 +2907,7 @@ intents:
       - "script lift study"
       - "prescription data"
       - "pharma insights"
-    entity: sls_report
+    entity: insights
     action: generate
     primary_doc: /healthcare-vertical/insights-pld
     section: "#scriptlift-studies-reports"
@@ -2787,123 +3070,3 @@ intents:
     likely_cause: "Budget constraints"
     primary_doc: /guidelines/campaign-api
     section: "#change-campaign-budget"
-
-# Page Connections
-# ================
-# Explicit doc-to-doc relationships
-
-page_graph:
-  /quickstart-guides/authentication-quickstart-guide:
-    next_steps:
-      - path: /quickstart-guides/create-a-campaign-quickstart
-        reason: "After auth, most users create Campaigns"
-      - path: /quickstart-guides/upload-a-creative-quickstart
-        reason: "Or start with Creative upload"
-    prerequisites: []
-    external_links:
-      - url: https://app.iqm.com/signup
-        label: "Sign Up"
-        
-  /quickstart-guides/create-a-campaign-quickstart:
-    next_steps:
-      - path: /quickstart-guides/upload-a-creative-quickstart
-        reason: "Campaign needs Creatives"
-      - path: /quickstart-guides/conversion-quickstart
-        reason: "Add Conversion tracking"
-    prerequisites:
-      - path: /quickstart-guides/authentication-quickstart-guide
-        required: true
-      - path: /getting-started/before-you-begin
-        required: true
-    related:
-      - path: /guidelines/campaign-api
-        relationship: "detailed reference"
-        
-  /quickstart-guides/conversion-quickstart:
-    next_steps:
-      - path: /guidelines/conversion-api
-        reason: "Full API reference"
-    prerequisites:
-      - path: /quickstart-guides/create-a-campaign-quickstart
-        required: false
-        note: "Need Campaign to assign Conversion to"
-    related:
-      - path: /guidelines/campaign-api
-        relationship: "assignment target"
-        
-  /guidelines/campaign-api:
-    related:
-      - path: /quickstart-guides/create-a-campaign-quickstart
-        relationship: "quickstart"
-      - path: /guidelines/creative-api
-        relationship: "campaign needs creatives"
-      - path: /guidelines/audience-api
-        relationship: "targeting"
-      - path: /guidelines/conversion-api
-        relationship: "measurement"
-      - path: /guidelines/bid-model-api
-        relationship: "optimization"
-    external_links:
-      - url: https://help.iqm.com/en/articles/11497668-campaigns-overview
-        label: "Help Center: Campaigns"
-        
-  /guidelines/conversion-api:
-    related:
-      - path: /quickstart-guides/conversion-quickstart
-        relationship: "quickstart"
-      - path: /guidelines/campaign-api
-        relationship: "assignment target"
-    external_links:
-      - url: https://help.iqm.com/en/collections/3219750-choose-your-conversion
-        label: "Help Center: Conversions"
-
-# User Journey Paths
-# ==================
-# Common navigation sequences
-
-journeys:
-  new_user:
-    name: "New User Onboarding"
-    description: "First-time user getting started"
-    path:
-      - /getting-started/platform-overview
-      - /getting-started/before-you-begin
-      - /quickstart-guides/authentication-quickstart-guide
-      - /quickstart-guides/create-a-campaign-quickstart
-      
-  migration_user:
-    name: "DSP Migration"
-    description: "User migrating from another platform"
-    entry_points:
-      - /migration-guides/beeswax/overview
-      - /migration-guides/dv360/overview
-      - /migration-guides/xandr/overview
-      - /migration-guides/the-trade-desk/overview
-      
-  api_developer:
-    name: "API Developer"
-    description: "Developer building integration"
-    path:
-      - /getting-started/rest-api-reference
-      - /getting-started/api-pagination-guide
-      - /quickstart-guides/authentication-quickstart-guide
-      - /guidelines/campaign-api  # or specific API
-      
-  political_advertiser:
-    name: "Political Advertiser"
-    description: "User focused on political advertising"
-    path:
-      - /political-vertical/index
-      - /political-vertical/audience-segments
-      - /political-vertical/insights-vld
-      - /quickstart-guides/insights-quickstart
-      
-  healthcare_advertiser:
-    name: "Healthcare Advertiser"
-    description: "User focused on healthcare/pharma advertising"
-    path:
-      - /healthcare-vertical/index
-      - /healthcare-vertical/audience-healthcare
-      - /healthcare-vertical/planner
-      - /healthcare-vertical/insights-pld
-      - /quickstart-guides/insights-quickstart
