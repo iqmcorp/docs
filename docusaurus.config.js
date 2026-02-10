@@ -84,7 +84,7 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        // Only enable gtag in production to avoid dev mode errors
+        // Only enable gtag in production to avoid errors in development
         ...(process.env.NODE_ENV === 'production' && {
           gtag: {
             trackingID: "G-9G69R8P56B",
@@ -188,6 +188,10 @@ const config = {
               {
                 label: "API Guidelines",
                 to: "/guidelines",
+              },
+              {
+                label: "Partnerships",
+                to: "/partnerships",
               },
               {
                 label: "Github",
