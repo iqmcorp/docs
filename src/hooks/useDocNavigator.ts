@@ -10,6 +10,7 @@ export interface KnowledgeContext {
   relatedSections?: Array<{ title: string; url: string; method?: string; endpoint?: string }>;
   detectedIntent?: string;
   intentConfidence?: number;
+  helpCenter?: string;  // Help center article URL
 }
 
 export interface Message {

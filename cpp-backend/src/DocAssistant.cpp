@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <regex>
+#include <algorithm>
 #include <curl/curl.h>
 
 #ifdef USE_IQM_SDK
@@ -60,9 +61,10 @@ public:
 3. DO NOT repeat workflow steps - the UI shows them in a structured format
 4. DO NOT list "More Actions" or related endpoints - the UI shows these
 5. Just give a quick, helpful answer to what the user asked
+6. ALWAYS capitalize IQM entity names: Campaign, Insertion Order, Creative, Audience, Conversion, Bid Model, Report, Workspace, Customer, Advertiser, Inventory, Deal
 
 ## Good Response Example
-"To create a campaign, first authenticate, upload creatives, create an Insertion Order, then create the campaign. The quickstart guide walks through each step."
+"To create a Campaign, first authenticate, upload Creatives, create an Insertion Order, then create the Campaign. The quickstart guide walks through each step."
 
 ## Bad Response Example (TOO LONG)
 "To create a campaign, follow these steps: 1. Authenticate... 2. Upload creatives... [link] 3. Create IO... After that you can also assign audiences, set up conversions..." <- NO! The UI shows all this.
@@ -261,6 +263,7 @@ json DocAssistant::extractEntityAction(const std::string& query) {
     prompt << "- vld_report = 'VLD' = 'Voter Level Data' = POLITICAL vertical only\n";
     prompt << "- insertion_order = also called 'IO', a contract for campaigns\n";
     prompt << "- campaign = an advertising campaign that runs under an insertion order\n";
+    prompt << "- conversion = tracking pixel or postback for measuring conversions/actions\n";
     prompt << "- reference_data = static lookup IDs (timezones, countries, states, cities, device types, age, gender, etc.)\n\n";
     prompt << "CRITICAL RULES:\n";
     prompt << "- 'PLD' or 'Provider Level Data' => entity='pld_report' (NOT vld_report)\n";
@@ -271,10 +274,13 @@ json DocAssistant::extractEntityAction(const std::string& query) {
     prompt << "INSTRUCTIONS:\n";
     prompt << "- Respond ONLY with a single JSON object: {\"entity\": \"...\", \"action\": \"...\"}\n";
     prompt << "- Use exact entity and action names from the lists above\n";
-    prompt << "- For 'what is X' or 'X vs Y' questions, use action='explain'\n";
-    prompt << "- For 'insertion order vs campaign' or 'what is an IO', use entity='insertion_order' and action='explain'\n";
+    prompt << "- For 'what is X' questions, use action='explain' and set entity to X\n";
+    prompt << "- For 'what is a conversion', use entity='conversion' and action='explain'\n";
+    prompt << "- For 'what is an insertion order' or 'what is an IO', use entity='insertion_order' and action='explain'\n";
     prompt << "- For 'what is a campaign', use entity='campaign' and action='explain'\n";
-    prompt << "- If no entity matches, leave entity empty\n\n";
+    prompt << "- For 'what is an audience', use entity='audience' and action='explain'\n";
+    prompt << "- If query mentions a specific entity (conversion, campaign, audience, etc.), ALWAYS set entity to that value\n";
+    prompt << "- Only leave entity empty if truly no entity is mentioned\n\n";
     prompt << "User query: \"" << query << "\"\n\n";
     prompt << "JSON response: [/INST]";
     
@@ -390,6 +396,51 @@ static std::string stripMarkdownLinks(const std::string& text) {
     return result;
 }
 
+// Capitalize IQM entity names for consistency
+static std::string capitalizeEntities(const std::string& text) {
+    std::string result = text;
+    
+    // Entity patterns: lowercase -> Capitalized (with word boundaries)
+    // Order matters - longer phrases first to avoid partial replacements
+    std::vector<std::pair<std::regex, std::string>> patterns = {
+        // Multi-word entities first
+        {std::regex(R"(\binsertion orders?\b)", std::regex::icase), "Insertion Order"},
+        {std::regex(R"(\bbid models?\b)", std::regex::icase), "Bid Model"},
+        // Single-word entities
+        {std::regex(R"(\bcampaigns?\b)", std::regex::icase), "Campaign"},
+        {std::regex(R"(\bcreatives?\b)", std::regex::icase), "Creative"},
+        {std::regex(R"(\baudiences?\b)", std::regex::icase), "Audience"},
+        {std::regex(R"(\bconversions?\b)", std::regex::icase), "Conversion"},
+        {std::regex(R"(\breports?\b)", std::regex::icase), "Report"},
+        {std::regex(R"(\bworkspaces?\b)", std::regex::icase), "Workspace"},
+        {std::regex(R"(\bcustomers?\b)", std::regex::icase), "Customer"},
+        {std::regex(R"(\badvertisers?\b)", std::regex::icase), "Advertiser"},
+        {std::regex(R"(\binventory\b)", std::regex::icase), "Inventory"},
+        {std::regex(R"(\bdeals?\b)", std::regex::icase), "Deal"},
+    };
+    
+    for (const auto& [pattern, replacement] : patterns) {
+        // Check if plural form and preserve it
+        std::smatch match;
+        std::string temp = result;
+        result = "";
+        while (std::regex_search(temp, match, pattern)) {
+            result += match.prefix();
+            std::string matched = match[0];
+            // If original ended with 's', make replacement plural
+            if (!matched.empty() && (matched.back() == 's' || matched.back() == 'S')) {
+                result += replacement + "s";
+            } else {
+                result += replacement;
+            }
+            temp = match.suffix();
+        }
+        result += temp;
+    }
+    
+    return result;
+}
+
 AssistantResponse DocAssistant::chat(const std::string& message,
                                     const std::vector<ChatMessage>& history,
                                     const json& pageContext) {
@@ -428,9 +479,32 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         response.knowledgeContext = kctx.toJson(&pImpl->knowledgeResolver);
     }
     
-    // Search documentation for context (RAG)
+    // LAYER 4: Search documentation for context (RAG)
+    // Use extracted entity for Algolia search - works better than full query
     std::string ragContext;
-    auto searchResults = searchDocs(message, 3);
+    std::string searchQuery = message;  // Default to full message
+    
+    // Build better search query from extracted knowledge
+    if (response.knowledgeContext.contains("entity") && 
+        !response.knowledgeContext["entity"].get<std::string>().empty()) {
+        // Use entity name for search - Algolia works best with simple terms
+        searchQuery = response.knowledgeContext["entity"].get<std::string>();
+        // Replace underscores with spaces for better Algolia matching
+        std::replace(searchQuery.begin(), searchQuery.end(), '_', ' ');
+        std::cout << "[DocAssistant] Using entity for Algolia search: " << searchQuery << std::endl;
+    } else if (!kctx.entities.empty()) {
+        // Use first detected entity's ID
+        searchQuery = kctx.entities[0].id;
+        std::replace(searchQuery.begin(), searchQuery.end(), '_', ' ');
+        std::cout << "[DocAssistant] Using pattern entity for Algolia search: " << searchQuery << std::endl;
+    } else if (!kctx.intents.empty() && !kctx.intents[0].entity.empty()) {
+        // Use intent's entity
+        searchQuery = kctx.intents[0].entity;
+        std::replace(searchQuery.begin(), searchQuery.end(), '_', ' ');
+        std::cout << "[DocAssistant] Using intent entity for Algolia search: " << searchQuery << std::endl;
+    }
+    
+    auto searchResults = searchDocs(searchQuery, 3);
     for (const auto& result : searchResults) {
         ragContext += "### " + result.title + "\n";
         ragContext += result.content.substr(0, 500) + "...\n\n";
@@ -457,8 +531,9 @@ AssistantResponse DocAssistant::chat(const std::string& message,
         auto j = json::parse(llamaResponse);
         std::string rawText = j.value("content", "");
         
-        // Strip any markdown links the LLM generated - we provide validated links separately
-        response.text = stripMarkdownLinks(rawText);
+        // Post-process: strip markdown links and capitalize entity names
+        std::string processedText = stripMarkdownLinks(rawText);
+        response.text = capitalizeEntities(processedText);
         response.model = "mistral-7b-local (" + extractionMethod + ")";
         response.success = true;
         

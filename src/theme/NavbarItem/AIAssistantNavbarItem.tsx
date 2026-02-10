@@ -497,7 +497,7 @@ export default function AIAssistantNavbarItem() {
       links.push(
         <div key="sections" className={styles.knowledgeSection}>
           <span className={styles.knowledgeLabel}>🔗 Related:</span>
-          <ul className={styles.relatedSections}>
+          <ul className={styles.relatedList}>
             {allRelated.slice(0, 5).map((item, i) => (
               <li key={i}>
                 <a
@@ -510,6 +510,23 @@ export default function AIAssistantNavbarItem() {
               </li>
             ))}
           </ul>
+        </div>
+      );
+    }
+
+    // Help Center article link
+    if (knowledge.helpCenter) {
+      links.push(
+        <div key="helpCenter" className={styles.knowledgeSection}>
+          <span className={styles.knowledgeLabel}>📚 Help Center:</span>
+          <a
+            href={knowledge.helpCenter}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.knowledgeLink}
+          >
+            View Help Article
+          </a>
         </div>
       );
     }
