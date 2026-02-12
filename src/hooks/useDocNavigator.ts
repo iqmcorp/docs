@@ -11,6 +11,7 @@ export interface KnowledgeContext {
   detectedIntent?: string;
   intentConfidence?: number;
   helpCenter?: string;  // Help center article URL
+  searchTerms?: string;  // Extracted search terms for Algolia fallback
 }
 
 export interface Message {

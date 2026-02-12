@@ -202,6 +202,7 @@ export default function AIAssistantNavbarItem() {
       console.log('[AIAssistant] Response received:', { 
         success: data.success, 
         intent: data.knowledge?.detectedIntent,
+        searchTerms: data.knowledge?.searchTerms,
         responseLength: data.response?.length 
       });
       
@@ -211,16 +212,16 @@ export default function AIAssistantNavbarItem() {
                                 data.response?.toLowerCase().includes("isn't a direct");
       const noKnowledge = !data.knowledge || !data.knowledge.primaryDoc;
       
-      // If response is uncertain or missing specific docs, enhance with Algolia
+      // If response is uncertain or missing docs, use Algolia fallback
       if (responseUncertain || noKnowledge) {
-        console.log('[AIAssistant] Response uncertain, enhancing with Algolia search');
-        const algoliaResults = await searchWithAlgolia(content);
+        // Use extracted search terms from backend, or fall back to original content
+        const searchQuery = data.knowledge?.searchTerms || content;
+        console.log('[AIAssistant] Response uncertain, enhancing with Algolia search:', searchQuery);
+        const algoliaResults = await searchWithAlgolia(searchQuery);
         
         if (algoliaResults.length > 0) {
-          // Combine LLM response with Algolia results
           const algoliaResponse = formatAlgoliaResults(algoliaResults);
-          const enhancedResponse = algoliaResponse;
-          addMessage('assistant', enhancedResponse, data.actions, {
+          addMessage('assistant', algoliaResponse, data.actions, {
             ...data.knowledge,
             algoliaEnhanced: true,
             algoliaResults: algoliaResults.slice(0, 3)
@@ -311,25 +312,11 @@ export default function AIAssistantNavbarItem() {
   };
 
   const formatAlgoliaResults = (results: Array<{title: string; url: string; snippet?: string}>): string => {
-    if (results.length === 0) return "I couldn't find relevant documentation for that query.";
+    if (results.length === 0) return "I couldn't find relevant documentation for that query. Try rephrasing your question or use the search bar for additional resources.";
     
-    let response = "Hmm, I'm not sure how to answer that. Here are some search results based on your query:\n\n";
+    let response = "Hmm, I'm not sure how to answer that. Try rephrasing your question or use the search bar for additional resources.\n\nIn the meantime, here's what I found:\n\n";
     results.slice(0, 3).forEach((result) => {
-      // Extract just the first sentence or a brief description
-      let description = '';
-      if (result.snippet) {
-        // Get first sentence (up to first period, question mark, or 100 chars)
-        const firstSentence = result.snippet.split(/[.!?]/)[0];
-        description = firstSentence.slice(0, 100).trim();
-        if (description && !description.endsWith('.')) {
-          description += '...';
-        }
-      }
-      response += `• [${result.title}](${result.url})`;
-      if (description) {
-        response += ` - ${description}`;
-      }
-      response += '\n';
+      response += `• [${result.title}](${result.url})\n`;
     });
     return response;
   };
