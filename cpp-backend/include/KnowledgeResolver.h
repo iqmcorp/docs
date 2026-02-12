@@ -119,6 +119,9 @@ struct KnowledgeContext {
     // Relevant endpoints
     std::vector<std::string> endpoints;
     
+    // Extracted search terms for fallback Algolia search (query with question words stripped)
+    std::string searchTerms;
+    
     // Format as context string for LLM
     std::string toPromptContext() const;
     
@@ -306,6 +309,12 @@ public:
      * Extract entity mentions from text
      */
     std::vector<std::string> extractEntities(const std::string& text) const;
+    
+    /**
+     * Extract search terms from a query by stripping common question words
+     * Used for Algolia fallback search
+     */
+    static std::string extractSearchTerms(const std::string& query);
     
 private:
     json knowledge_;

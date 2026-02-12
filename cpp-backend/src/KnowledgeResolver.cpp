@@ -889,6 +889,9 @@ KnowledgeContext KnowledgeResolver::resolveQuery(const std::string& query) const
     
     if (!loaded_) return context;
     
+    // Extract search terms from query for Algolia fallback
+    context.searchTerms = extractSearchTerms(query);
+    
     // 1. Extract entity mentions
     auto entityIds = extractEntities(query);
     for (const auto& entityId : entityIds) {
@@ -1102,6 +1105,9 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     KnowledgeContext context;
     
     if (!loaded_) return context;
+    
+    // Extract search terms from the original query for Algolia fallback
+    context.searchTerms = extractSearchTerms(originalQuery);
     
     // Normalize action: map similar actions to standard ones
     std::string normalizedAction = action;
@@ -1673,6 +1679,71 @@ std::string KnowledgeContext::toPromptContext() const {
     return ss.str();
 }
 
+std::string KnowledgeResolver::extractSearchTerms(const std::string& query) {
+    // Convert to lowercase for pattern matching
+    std::string lower = query;
+    std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+    
+    // List of question prefixes to strip (in order of specificity)
+    static const std::vector<std::string> prefixes = {
+        "what are the ",
+        "what is the ",
+        "what are ",
+        "what is ",
+        "how do i ",
+        "how can i ",
+        "how to ",
+        "can you explain ",
+        "can you tell me about ",
+        "can you show me ",
+        "please explain ",
+        "please show me ",
+        "tell me about ",
+        "show me ",
+        "explain ",
+        "describe ",
+        "i want to ",
+        "i need to ",
+        "i'd like to "
+    };
+    
+    // List of question suffixes to strip
+    static const std::vector<std::string> suffixes = {
+        "?",
+        " please",
+        " for me"
+    };
+    
+    std::string result = lower;
+    
+    // Strip prefixes
+    for (const auto& prefix : prefixes) {
+        if (result.find(prefix) == 0) {
+            result = result.substr(prefix.length());
+            break;  // Only strip one prefix
+        }
+    }
+    
+    // Strip suffixes
+    for (const auto& suffix : suffixes) {
+        if (result.length() > suffix.length()) {
+            size_t pos = result.rfind(suffix);
+            if (pos == result.length() - suffix.length()) {
+                result = result.substr(0, pos);
+            }
+        }
+    }
+    
+    // Trim whitespace
+    size_t start = result.find_first_not_of(" \t\n\r");
+    size_t end = result.find_last_not_of(" \t\n\r");
+    if (start != std::string::npos && end != std::string::npos) {
+        result = result.substr(start, end - start + 1);
+    }
+    
+    return result;
+}
+
 json KnowledgeContext::toJson(const KnowledgeResolver* resolver) const {
     json result;
     
@@ -1688,47 +1759,65 @@ json KnowledgeContext::toJson(const KnowledgeResolver* resolver) const {
         result["suggestedDocs"] = suggested_docs;
     }
     
-    // More actions from intent (replaces workflow section)
-    // These are optional related actions a user might want after the primary task
+    // More actions from intent (combines related_sections and related_docs)
+    // These are optional related content a user might want after the primary task
     if (!intents.empty()) {
         const auto& intent = intents[0];
-        if (!intent.related_sections.empty()) {
-            json actions = json::array();
-            for (const auto& section : intent.related_sections) {
-                json a;
-                // Parse section format: "/guidelines/campaign-api#change-campaign-status"
-                std::string path = section;
-                std::string title = section;
-                
-                // Extract title from section anchor or use the path
-                size_t hashPos = section.find('#');
-                if (hashPos != std::string::npos && hashPos < section.length() - 1) {
-                    // Convert #change-campaign-status → "Change Campaign Status"
-                    std::string anchor = section.substr(hashPos + 1);
-                    title = "";
-                    bool capitalizeNext = true;
-                    for (char c : anchor) {
-                        if (c == '-') {
-                            title += ' ';
-                            capitalizeNext = true;
-                        } else if (capitalizeNext) {
-                            title += std::toupper(c);
-                            capitalizeNext = false;
-                        } else {
-                            title += c;
-                        }
+        json actions = json::array();
+        std::set<std::string> addedUrls;  // Track to avoid duplicates
+        
+        // First add related_sections (these are specific anchors)
+        for (const auto& section : intent.related_sections) {
+            if (addedUrls.count(section)) continue;
+            addedUrls.insert(section);
+            
+            json a;
+            std::string title = section;
+            
+            // Extract title from section anchor or use the path
+            size_t hashPos = section.find('#');
+            if (hashPos != std::string::npos && hashPos < section.length() - 1) {
+                // Convert #change-campaign-status → "Change Campaign Status"
+                std::string anchor = section.substr(hashPos + 1);
+                title = "";
+                bool capitalizeNext = true;
+                for (char c : anchor) {
+                    if (c == '-') {
+                        title += ' ';
+                        capitalizeNext = true;
+                    } else if (capitalizeNext) {
+                        title += std::toupper(c);
+                        capitalizeNext = false;
+                    } else {
+                        title += c;
                     }
-                } else if (resolver) {
-                    title = resolver->getDocLabel(section);
                 }
-                
-                a["title"] = title;
-                a["url"] = section;
-                actions.push_back(a);
+            } else if (resolver) {
+                title = resolver->getDocLabel(section);
             }
-            if (!actions.empty()) {
-                result["moreActions"] = actions;
+            
+            a["title"] = title;
+            a["url"] = section;
+            actions.push_back(a);
+        }
+        
+        // Then add related_docs (these are full page links)
+        for (const auto& doc : intent.related_docs) {
+            if (addedUrls.count(doc)) continue;
+            addedUrls.insert(doc);
+            
+            json a;
+            std::string title = doc;
+            if (resolver) {
+                title = resolver->getDocLabel(doc);
             }
+            a["title"] = title;
+            a["url"] = doc;
+            actions.push_back(a);
+        }
+        
+        if (!actions.empty()) {
+            result["moreActions"] = actions;
         }
     }
     
@@ -1759,6 +1848,11 @@ json KnowledgeContext::toJson(const KnowledgeResolver* resolver) const {
         if (!intents[0].help_center.empty()) {
             result["helpCenter"] = intents[0].help_center;
         }
+    }
+    
+    // Include extracted search terms for frontend Algolia fallback
+    if (!searchTerms.empty()) {
+        result["searchTerms"] = searchTerms;
     }
     
     return result;
