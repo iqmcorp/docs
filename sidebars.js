@@ -5614,47 +5614,9 @@ const sidebars = {
       items: [
         {
           type: `category`,
-          label: `Matched Audiences`,
+          label: `Healthcare Data Details`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'link',
-              label: 'Matched Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'Create Matched Audience',
-              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
-              customProps: { method: 'POST' },
-            },
-            {
-              type: 'link',
-              label: 'Matched Data Partners',
-              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Healthcare Audiences`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'ABM Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'ABM Audience Statistics',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
-              customProps: { method: 'GET' },
-            },
             {
               type: 'link',
               label: 'Healthcare Titles List',
@@ -5706,11 +5668,55 @@ const sidebars = {
           ]
         },
         {
-          type: 'link',
-          label: 'Create ABM Audience',
-          href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
-          customProps: { method: 'POST' },
+          type: `category`,
+          label: `Matched Audiences`,
           className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Matched Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Matched Data Partners',
+              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `ABM Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'ABM Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ABM Audience Statistics',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ABM Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
+              customProps: { method: 'POST' },
+            }
+          ]
         },
         {
           type: `category`,
