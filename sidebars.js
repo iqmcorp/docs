@@ -2296,6 +2296,7 @@ const sidebars = {
               href: '/guidelines/dashboard-api#get-campaign-goal-ai-optimization-activity',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
+            },
           ]
         },
         {
