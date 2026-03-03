@@ -934,6 +934,12 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
+            {
+              type: 'link',
               label: 'Matched Data Partners',
               href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
@@ -5166,6 +5172,12 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
           ]
         },
         {
@@ -5683,6 +5695,18 @@ const sidebars = {
               label: 'Create Matched Audience',
               href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
               customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Update Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#update-matched-audience',
+              customProps: { method: 'PATCH' },
+            },
+            {
+              type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
             },
             {
               type: 'link',
