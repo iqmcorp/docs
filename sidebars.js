@@ -2283,6 +2283,19 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Graph Data',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-graph-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Optimization Activity',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-optimization-activity',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
           ]
         },
         {
