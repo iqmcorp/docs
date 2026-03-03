@@ -5720,6 +5720,37 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `ICT Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get ICT Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#get-ict-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ICT Audience Subtypes and Extensions',
+              href: '/healthcare-vertical/audience-healthcare#ict-audience-subtypes-and-extensions',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ICT Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-ict-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'ICT Audience Count by Data Partner',
+              href: '/healthcare-vertical/audience-healthcare#ict-audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+            }
+          ]
+        },
+        {
+          type: `category`,
           label: `Geofarmed Audiences`,
           className: 'sidebarItem',
           items: [
