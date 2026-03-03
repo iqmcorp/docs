@@ -1662,6 +1662,34 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Campaign Templates`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get List of Campaign Templates',
+              href: '/guidelines/campaign-api#get-list-of-campaign-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Template Details',
+              href: '/guidelines/campaign-api#get-campaign-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Template',
+              href: '/guidelines/campaign-api#create-campaign-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
           label: `Campaign Targeting`,
           className: 'sidebarItem',
           items: [
