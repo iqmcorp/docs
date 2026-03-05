@@ -934,6 +934,12 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
+            {
+              type: 'link',
               label: 'Matched Data Partners',
               href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
@@ -1656,6 +1662,34 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Campaign Templates`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get List of Campaign Templates',
+              href: '/guidelines/campaign-api#get-list-of-campaign-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Template Details',
+              href: '/guidelines/campaign-api#get-campaign-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Template',
+              href: '/guidelines/campaign-api#create-campaign-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
           label: `Campaign Targeting`,
           className: 'sidebarItem',
           items: [
@@ -2246,6 +2280,20 @@ const sidebars = {
               type: 'link',
               label: 'Dashboard List',
               href: '/guidelines/dashboard-api#dashboard-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Graph Data',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-graph-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Optimization Activity',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-optimization-activity',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -5166,6 +5214,12 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
           ]
         },
         {
@@ -5614,47 +5668,9 @@ const sidebars = {
       items: [
         {
           type: `category`,
-          label: `Matched Audiences`,
+          label: `Healthcare Data Details`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'link',
-              label: 'Matched Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'Create Matched Audience',
-              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
-              customProps: { method: 'POST' },
-            },
-            {
-              type: 'link',
-              label: 'Matched Data Partners',
-              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Healthcare Audiences`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'ABM Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'ABM Audience Statistics',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
-              customProps: { method: 'GET' },
-            },
             {
               type: 'link',
               label: 'Healthcare Titles List',
@@ -5706,11 +5722,98 @@ const sidebars = {
           ]
         },
         {
-          type: 'link',
-          label: 'Create ABM Audience',
-          href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
-          customProps: { method: 'POST' },
+          type: `category`,
+          label: `Matched Audiences`,
           className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Matched Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Update Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#update-matched-audience',
+              customProps: { method: 'PATCH' },
+            },
+            {
+              type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
+            {
+              type: 'link',
+              label: 'Matched Data Partners',
+              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `ABM Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'ABM Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ABM Audience Statistics',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ABM Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
+              customProps: { method: 'POST' },
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `ICT Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get ICT Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#get-ict-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ICT Audience Subtypes and Extensions',
+              href: '/healthcare-vertical/audience-healthcare#ict-audience-subtypes-and-extensions',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ICT Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-ict-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'ICT Audience Count by Data Partner',
+              href: '/healthcare-vertical/audience-healthcare#ict-audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+            }
+          ]
         },
         {
           type: `category`,
