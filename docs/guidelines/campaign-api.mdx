@@ -3361,6 +3361,35 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>`campaignEstimatorMetaData` <br /><span class="type-text">JSON</span> <span class="required-text">optional</span></td>
     <td>Campaign Estimator data with <var>reachMeta</var>, <var>landScapeMeta</var> and <var>sliderMeta</var> </td>
     </tr>
+    <tr>
+    <td>`campaignOptimization` <br /><span class="type-text">object</span> <span class="required-text">optional</span></td>
+    <td>Campaign optimization settings for Goal-AI</td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`campaignOptimization` object properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`aiObjective` <br /><span class="type-text">integer</span></td>
+        <td>AI optimization [Objective ID](#get-goal-ai-objectives-and-goals)</td>
+        </tr>
+        <tr>
+        <td>`aiGoal` <br /><span class="type-text">integer</span></td>
+        <td>AI optimization [Goal ID](#get-goal-ai-objectives-and-goals)</td>
+        </tr>
+        <tr>
+        <td>`aiTargetKpi` <br /><span class="type-text">number</span></td>
+        <td>AI target KPI value</td>
+        </tr>
+        <tr>
+        <td>`aiConversionId` <br /><span class="type-text">integer</span></td>
+        <td>Conversion ID for AI optimization</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
     </table>
     </details>
 
@@ -3433,6 +3462,11 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     "reachMeta": {},
     "landScapeMeta": {},
     "sliderMeta": {}
+  },
+  "campaignOptimization": {
+    "aiObjective": 1,
+    "aiGoal": 8,
+    "aiTargetKpi": 10
   },
   "isAdvanceAudioVideoTargeted": true,
   "creativeAdvanceTargeting": {
@@ -3638,7 +3672,7 @@ function saveCampaign(): Promise<Responses> {
 ### Update Campaign
 
 <CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
-<br /><CopyUrl method="PATCH" url="https://api.iqm.com/api/v2/cmp/campaign/draft/{campaignId}" />
+<br /><CopyUrl method="PUT" url="https://api.iqm.com/api/v2/cmp/campaign/draft/{campaignId}" />
 
 <div class="endpoint-container">
   <div class="child1">
@@ -3728,6 +3762,11 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
 | `creativeAdvanceTargeting`	<br /><span class="type-text">JSON</span> | String to Integer	Map of Creative advanced targeting group to list of Creative advance targeting segment IDs.
 |`campaignEstimatorMetaData`	<br /><span class="type-text">JSON</span> |	Campaign Estimator data with reachMeta, landScapeMeta and sliderMeta
+|`campaignOptimization` <br /><span class="type-text">object</span> | Campaign optimization settings for Goal-AI with properties: `aiObjective`, `aiGoal`, `aiTargetKpi`, `aiConversionId`
+| `aiObjective` <br /><span class="type-text">integer</span> | AI optimization Objective ID. See [Goal-AI Objectives and Goals](#get-goal-ai-objectives-and-goals)
+| `aiGoal` <br /><span class="type-text">integer</span> | AI optimization Goal ID. See [Goal-AI Objectives and Goals](#get-goal-ai-objectives-and-goals)
+| `aiTargetKpi` <br /><span class="type-text">number</span> | AI target KPI value
+| `aiConversionId` <br /><span class="type-text">integer</span> | Conversion ID for AI optimization
 
 </details>
 
@@ -3798,6 +3837,11 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
     "sliderMeta": {}
   },
   "stateIds": "30200031,30200032",
+  "campaignOptimization": {
+    "aiObjective": 1,
+    "aiGoal": 8,
+    "aiTargetKpi": 10
+  },
   "isAdvanceAudioVideoTargeted": true,
   "creativeAdvanceTargeting": {
     "placementType": [
@@ -5619,7 +5663,424 @@ function Resendemailremindertosetinvoicetemplate(): Promise<Responses> {
 
 </div></div>
 
-## Campaign Targeting
+## Campaign Templates
+
+Manage reusable Campaign Templates for creating Campaigns with pre-configured targeting, creative, and inventory settings.
+
+### Get List of Campaign Templates
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/template/basic/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of Campaign Templates with basic details such as ID, name, creation date, and Creative type.
+
+| Query Parameters | |
+| --- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search Campaign Templates by name or ID |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Maximum number of returned results per page (default: <var>20</var>) |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for the required data (default: <var>1</var>) |
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use <var>+</var>, for descending use <var>-</var>. Allowed values: <var>id</var>, <var>name</var>. (Default: <var>-createdAt</var>) |
+| `cmpType` <br /><span class="type-text">integer</span> | Type of Template to filter. <var>1</var>: Advanced, <var>2</var>: PG. If not provided, all types are returned. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the filter</td>
+</tr>
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of Templates</td>
+</tr>
+<tr>
+  <td>`templateList` <br /><span class="type-text">array of objects</span></td>
+  <td>List of Template objects</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`templateList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+  </tr>
+  <tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+  </tr>
+  <tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Template creation</td>
+  </tr>
+  <tr>
+  <td>`type` <br /><span class="type-text">integer</span></td>
+  <td>Template type: <var>1</var> (Advanced), <var>2</var> (PG)</td>
+  </tr>
+  <tr>
+  <td>`creativeType` <br /><span class="type-text">integer</span></td>
+  <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) (not present if Creative is not attached)</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "filteredRecords": 2,
+    "totalRecords": 10,
+    "templateList": [
+      {
+        "id": 1234,
+        "name": "Sample Template 1",
+        "createdAt": 1627890123456,
+        "type": 1,
+        "creativeType": 14
+      },
+      {
+        "id": 5678,
+        "name": "Sample Template 2",
+        "createdAt": 1627891123456,
+        "type": 2
+      }
+    ]
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid template type id"
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Get Campaign Template Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/template/{cmpTemplateId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get Campaign Template details by Template ID.
+
+| Path Parameters | |
+| --- | --- |
+| `cmpTemplateId` <br /><span class="type-text">integer</span> | Campaign Template ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+</tr>
+<tr>
+  <td>`templateName` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+</tr>
+<tr>
+  <td>`templateTypeId` <br /><span class="type-text">integer</span></td>
+  <td>Template type: <var>1</var> (Advanced), <var>2</var> (PG)</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
+  <td>Advertiser domain URL</td>
+</tr>
+<tr>
+  <td>`creativeType` <br /><span class="type-text">integer</span></td>
+  <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list)</td>
+</tr>
+<tr>
+  <td>`creativeIds` <br /><span class="type-text">string</span></td>
+  <td>Comma separated [Creative ID](/guidelines/creative-api#get-list-of-creatives-and-details)s</td>
+</tr>
+<tr>
+  <td>`bidPacing` <br /><span class="type-text">boolean</span></td>
+  <td>Bid pacing enabled</td>
+</tr>
+<tr>
+  <td>`isBidShading` <br /><span class="type-text">boolean</span></td>
+  <td>Bid shading enabled</td>
+</tr>
+<tr>
+  <td>`frequencyCapEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Frequency capping enabled</td>
+</tr>
+<tr>
+  <td>`frequencyCapping` <br /><span class="type-text">object</span></td>
+  <td>Frequency capping configuration</td>
+</tr>
+<tr>
+  <td>`totalImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Total impressions cap</td>
+</tr>
+<tr>
+  <td>`totalClicks` <br /><span class="type-text">integer</span></td>
+  <td>Total clicks cap</td>
+</tr>
+<tr>
+  <td>`totalConversions` <br /><span class="type-text">integer</span></td>
+  <td>Total conversions cap</td>
+</tr>
+<tr>
+  <td>`maxDayImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Max daily impressions cap</td>
+</tr>
+<tr>
+  <td>`maxDayClicks` <br /><span class="type-text">integer</span></td>
+  <td>Max daily clicks cap</td>
+</tr>
+<tr>
+  <td>`maxDayConversions` <br /><span class="type-text">integer</span></td>
+  <td>Max daily conversions cap</td>
+</tr>
+<tr>
+  <td>`countryId` <br /><span class="type-text">string</span></td>
+  <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+</tr>
+<tr>
+  <td>`scheduling` <br /><span class="type-text">object</span></td>
+  <td>Day-parting schedule configuration</td>
+</tr>
+<tr>
+  <td>`politicalAdvertiserClientId` <br /><span class="type-text">integer</span></td>
+  <td>Advertiser client ID if user is political Advertiser</td>
+</tr>
+</table>
+</details>
+
+<p />
+:::info
+
+The response contains the full set of Campaign targeting properties configured on the Template. See the [Create Campaign](#create-new-campaign) and [Create PG Campaign](#create-new-pg-campaign) sections for descriptions of individual targeting fields.
+
+:::
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "owId": 204732,
+    "advertiserDomain": "https://www.example.com",
+    "creativeType": 14,
+    "isTvAd": false,
+    "creativeIds": "100027,100028",
+    "campaignOptimization": {
+      "aiObjective": 1,
+      "aiGoal": 8,
+      "aiTargetKpi": 10.0,
+      "aiConversionId": null
+    },
+    "bidPacing": true,
+    "isBidShading": true,
+    "frequencyCapEnabled": true,
+    "frequencyCapping": {
+      "1": { "frequencyCapDuration": 6, "frequencyCapValue": 5 },
+      "2": { "frequencyCapDuration": 3, "frequencyCapValue": 20 },
+      "3": { "frequencyCapDuration": 3, "frequencyCapValue": 60 },
+      "4": { "frequencyCapDuration": 0, "frequencyCapValue": 100 }
+    },
+    "totalImpressions": 2345,
+    "totalClicks": 2354654,
+    "totalConversions": 2463570,
+    "maxDayImpressions": 2,
+    "maxDayClicks": 324,
+    "maxDayConversions": 534675,
+    "exchanges": "27,21",
+    "countryId": "246",
+    "whiteListedStateIds": "30200031,30200032",
+    "blackListedStateIds": "30200033,30200035",
+    "whiteListedAudienceIds": "900254,900271",
+    "blackListedAudienceIds": "889185,888981",
+    "scheduling": {
+      "0": [["00:00:00","05:00:00"],["11:00:00","16:00:00"]],
+      "1": [["00:00:00","04:00:00"],["19:00:00","21:00:00"]]
+    },
+    "politicalAdvertiserClientId": 17,
+    "templateId": 9,
+    "templateName": "Test-1",
+    "templateTypeId": 1
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Template not found for id: 789."
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Create Campaign Template
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/template" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a new Campaign Template (Advanced or PG). The Template stores Campaign configuration settings that can be reused when creating new Campaigns.
+
+| Request Schema | |
+| --- | --- |
+| `templateName` <br /><span class="type-text">string</span> | Template name |
+| `templateTypeId` <br /><span class="type-text">integer</span> | Template type: <var>1</var> (Advanced), <var>2</var> (PG) |
+
+<p />
+:::info
+
+The request body accepts the full set of Campaign properties for targeting, creative, inventory, and other configurations. See the [Create Campaign](#create-new-campaign) and [Create PG Campaign](#create-new-pg-campaign) sections for the complete list of supported properties.
+
+:::
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<CodeDropdown>
+<CodeOption label="Advanced Template">
+```json title="Request Sample"
+{
+  "templateName": "Sample campaign name",
+  "templateTypeId": 1,
+  "isAgreementChecked": true,
+  "advertiserDomain": "https://www.example.com",
+  "creativeType": 14,
+  "timezone": 105,
+  "creativeIds": "100027,100028",
+  "bidOptimization": false,
+  "bidPacing": true,
+  "isBidShading": true,
+  "frequencyCapEnabled": true,
+  "totalImpressions": 2345,
+  "maxDayImpressions": 2,
+  "campaignOptimization": {
+    "aiObjective": 1,
+    "aiGoal": 8,
+    "aiTargetKpi": 10
+  },
+  "frequencyCapping": {
+    "1": { "frequencyCapDuration": 6, "frequencyCapValue": 5 },
+    "2": { "frequencyCapDuration": 3, "frequencyCapValue": 20 }
+  },
+  "exchanges": "27,21",
+  "countryId": 246,
+  "whiteListedStateIds": "30200031,30200032",
+  "whiteListedAudienceIds": "900254,900271",
+  "scheduling": {
+    "0": [["00:00:00","05:00:00"],["11:00:00","16:00:00"]],
+    "1": [["00:00:00","04:00:00"],["19:00:00","21:00:00"]]
+  }
+}
+```
+</CodeOption>
+<CodeOption label="PG Template">
+```json title="Request Sample"
+{
+  "templateName": "Sample template name",
+  "templateTypeId": 2,
+  "advertiserDomain": "https://www.xyz.com",
+  "creativeTargeting": {
+    "creativeTypeId": 11,
+    "creativeIds": [644506]
+  },
+  "inventoryTargeting": {
+    "pgDealIds": [30, 12]
+  },
+  "conversionTargeting": {
+    "conversionTypeId": 1,
+    "conversionIds": [465, 687, 987]
+  },
+  "politicalAdvertiserClientId": 989898,
+  "countryId": 23
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Template created successfully"
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Template ABC-template could not be saved."
+    }
+  ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+
+
+## Campaign Targeting 
 
 Configure targeting parameters for Campaigns including Audiences, Conversions, Creatives, Inventory Groups, and Deals.
 
