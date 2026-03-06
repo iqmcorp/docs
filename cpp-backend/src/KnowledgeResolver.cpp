@@ -1232,10 +1232,15 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
     }
     
     // Context-based entity override: if query mentions "creative group"
-    if (lowerQuery.find("creative group") != std::string::npos && normalizedEntity != "creative") {
-        std::cout << "[KR] Override entity to 'creative' due to 'creative group' in query" << std::endl;
+    // Creative Groups are a real IQM feature - ensure entity=creative and let pattern disambiguation pick the right intent
+    if (lowerQuery.find("creative group") != std::string::npos || 
+        lowerQuery.find("group creative") != std::string::npos ||
+        lowerQuery.find("group my creative") != std::string::npos) {
+        std::cout << "[KR] Override for creative group query" << std::endl;
         normalizedEntity = "creative";
-        normalizedAction = "group";
+        // Don't override action - let the LLM's extracted action (create/list/update/delete/duplicate)
+        // pass through to pattern disambiguation, which will pick the right creative_group intent
+        // based on keywords like "group" in the query
     }
     
     // Context-based entity override: if query mentions "contextual audience"
@@ -1357,6 +1362,32 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
             }
         }
         
+        // If no exact entity+action match, try synonym actions
+        // Users say "get conversions" and "list conversions" interchangeably
+        if (matchingIntents.empty()) {
+            std::string synonymAction;
+            if (normalizedAction == "get") synonymAction = "list";
+            else if (normalizedAction == "list") synonymAction = "get";
+            
+            if (!synonymAction.empty()) {
+                std::cout << "[KR] No matches for action='" << normalizedAction 
+                          << "', trying synonym action='" << synonymAction << "'" << std::endl;
+                for (auto it = intents.begin(); it != intents.end(); ++it) {
+                    const auto& intent = it.value();
+                    std::string intentEntity = intent.value("entity", "");
+                    std::string intentAction = intent.value("action", "");
+                    
+                    if (intentEntity == normalizedEntity && intentAction == synonymAction) {
+                        matchingIntents.push_back({it.key(), intent});
+                    }
+                }
+                if (!matchingIntents.empty()) {
+                    std::cout << "[KR] Found " << matchingIntents.size() 
+                              << " intents via synonym action='" << synonymAction << "'" << std::endl;
+                }
+            }
+        }
+        
         std::cout << "[KR] Found " << matchingIntents.size() << " intents matching entity=" 
                   << normalizedEntity << ", action=" << normalizedAction << std::endl;
         
@@ -1461,6 +1492,9 @@ KnowledgeContext KnowledgeResolver::resolveByEntityAction(const std::string& ent
             }
             if (bestIntent.contains("help_center")) {
                 syntheticIntent.help_center = bestIntent.value("help_center", "");
+            }
+            if (bestIntent.contains("note")) {
+                syntheticIntent.note = bestIntent.value("note", "");
             }
         }
     } catch (...) {
@@ -1608,8 +1642,9 @@ std::string KnowledgeContext::toPromptContext() const {
             if (intent.confidence > 0.3) {  // Only high-confidence intents
                 ss << "- " << intent.intent_id << " (confidence: " 
                    << static_cast<int>(intent.confidence * 100) << "%)\n";
-                if (!intent.endpoint.empty()) {
-                    ss << "  Endpoint: " << intent.endpoint << "\n";
+                // Endpoint is shown by the UI, not passed to LLM to avoid parroting
+                if (!intent.note.empty()) {
+                    ss << "  IMPORTANT: " << intent.note << "\n";
                 }
             }
         }
