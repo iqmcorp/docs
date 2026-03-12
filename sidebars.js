@@ -831,7 +831,7 @@ const sidebars = {
               type: 'link',
               label: 'Audience Details List',
               href: '/guidelines/audience-api#audience-details-list',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -1040,7 +1040,7 @@ const sidebars = {
               type: 'link',
               label: 'Update Retargeted Audience',
               href: '/guidelines/audience-api#update-retargeted-audience',
-              customProps: { method: 'PUT' },
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
@@ -5183,7 +5183,7 @@ const sidebars = {
               type: 'link',
               label: 'Audience Details List',
               href: '/political-vertical/audience-segments#audience-details-list',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
           ]
@@ -6160,7 +6160,7 @@ const sidebars = {
                     type: 'link',
                     label: 'Download HCP Planner',
                     href: '/healthcare-vertical/planner/#download-hcp-planner',
-                    customProps: { method: 'GET' },
+                    customProps: { method: 'POST' },
                     className: 'sidebarItem',
                   }
                ]
