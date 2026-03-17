@@ -2421,6 +2421,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Organization Margin Settings',
+              href: '/guidelines/finance-api#get-organization-margin-settings',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Organization Margin Settings',
+              href: '/guidelines/finance-api#update-organization-margin-settings',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Campaign Margin Details',
               href: '/guidelines/finance-api#campaign-margin-details',
               customProps: { method: 'GET' },
@@ -2591,6 +2605,13 @@ const sidebars = {
               type: 'link',
               label: 'Download Invoice',
               href: '/guidelines/finance-api#download-invoice',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Invoice Template Margin Pre-Requisite',
+              href: '/guidelines/finance-api#get-invoice-template-margin-pre-requisite',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
