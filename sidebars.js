@@ -2482,6 +2482,41 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Add Ad Serving Cost',
+              href: '/guidelines/finance-api#add-ad-serving-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Ad Serving Cost',
+              href: '/guidelines/finance-api#get-ad-serving-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add or Update Third Party Cost',
+              href: '/guidelines/finance-api#add-or-update-third-party-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Third Party Cost',
+              href: '/guidelines/finance-api#get-third-party-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Disable Third Party Cost',
+              href: '/guidelines/finance-api#disable-third-party-cost',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
