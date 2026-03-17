@@ -2442,48 +2442,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Customer VLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-vld-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer VLD Details',
-              href: '/guidelines/finance-api#update-customer-vld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer PLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-pld-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer PLD Details',
-              href: '/guidelines/finance-api#update-customer-pld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer SLS Finance Details',
-              href: '/guidelines/finance-api#get-customer-sls-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer SLS Details',
-              href: '/guidelines/finance-api#update-customer-sls-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Customer AQS Finance Details',
               href: '/guidelines/finance-api#get-customer-aqs-finance-details',
               customProps: { method: 'GET' },
