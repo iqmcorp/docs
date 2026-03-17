@@ -2421,6 +2421,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Organization Margin Settings',
+              href: '/guidelines/finance-api#get-organization-margin-settings',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Organization Margin Settings',
+              href: '/guidelines/finance-api#update-organization-margin-settings',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Campaign Margin Details',
               href: '/guidelines/finance-api#campaign-margin-details',
               customProps: { method: 'GET' },
@@ -2437,48 +2451,6 @@ const sidebars = {
               type: 'link',
               label: 'Edit Customer PG Fees',
               href: '#edit-customer-pg-fees',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer VLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-vld-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer VLD Details',
-              href: '/guidelines/finance-api#update-customer-vld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer PLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-pld-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer PLD Details',
-              href: '/guidelines/finance-api#update-customer-pld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer SLS Finance Details',
-              href: '/guidelines/finance-api#get-customer-sls-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer SLS Details',
-              href: '/guidelines/finance-api#update-customer-sls-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -2522,6 +2494,41 @@ const sidebars = {
               label: 'Available Balance',
               href: '/guidelines/finance-api#available-balance',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Ad Serving Cost',
+              href: '/guidelines/finance-api#add-ad-serving-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Ad Serving Cost',
+              href: '/guidelines/finance-api#get-ad-serving-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add or Update Third Party Cost',
+              href: '/guidelines/finance-api#add-or-update-third-party-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Third Party Cost',
+              href: '/guidelines/finance-api#get-third-party-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Disable Third Party Cost',
+              href: '/guidelines/finance-api#disable-third-party-cost',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
           ]
@@ -2598,6 +2605,13 @@ const sidebars = {
               type: 'link',
               label: 'Download Invoice',
               href: '/guidelines/finance-api#download-invoice',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Invoice Template Margin Pre-Requisite',
+              href: '/guidelines/finance-api#get-invoice-template-margin-pre-requisite',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },

@@ -10,12 +10,22 @@ import PldFinance from '@site/docs/_partials/finance-api/pld-finance.mdx';
 import SlsFinance from '@site/docs/_partials/finance-api/sls-finance.mdx';
 import AqsFinance from '@site/docs/_partials/finance-api/aqs-finance.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
+import ExternalLink from '@site/static/img/external-link2.svg';
 
 # Finance API
 
 The Finance API allows you to access finance details and lists, and manage invoices, credit, and payment.
 
 This page covers the methods and endpoints associated with finance operations.
+
+For details on how to access and manage fees associated with Provider Level Data (PLD), ScriptLift Studies (SLS), and Voter Level Data (VLD) reports, see the [Healthcare Finance API](/healthcare-vertical/finance) and [Political Finance API](/political-vertical/finance/) Guidelines.
+
+For more information on financial operations see the following Help Center articles:
+
+  * [Spending Reporting Metrics Overview<ExternalLink />](https://help.iqm.com/en/articles/10343795-spending-reporting-metrics-overview)
+  * [Cost Reporting Metrics Overview<ExternalLink />](https://help.iqm.com/en/articles/10343783-cost-reporting-metrics-overview)
+  * [Add or Manage a Margin<ExternalLink />](https://help.iqm.com/en/articles/13902110-add-or-manage-a-margin)
+  * [Add and Manage Funds<ExternalLink />](https://help.iqm.com/en/articles/5734663-add-and-manage-funds)
 
 ### Authentication
 
@@ -307,6 +317,11 @@ Update a Customer's margin settings.
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `marginTypeId` <br /><span class="type-text">integer</span> | Margin type ID<br /><var>1</var>: Gross margin |
 | `marginValue` <br /><span class="type-text">integer</span> | The value set for the requested margin type for the Customer |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `email` <br /><span class="type-text">string</span> | Email address |
+| `username` <br /><span class="type-text">string</span> | Username |
+| `workspaceMargin` <br /><span class="type-text">integer</span> | Workspace margin value |
+| `organizationMargin` <br /><span class="type-text">integer</span> | Organization margin value |
 
 </div><div class="child2">
 
@@ -357,6 +372,281 @@ function editCustomerMargin(): Promise<Responses> {
           workspaceMargin?: `number`,
           organizationMargin?: `number`,
           marginTypeId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Organization Margin Settings
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/organization/margin-settings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get margin settings for the Organization workspace, including the default margin applied to newly onboarded Customers.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`totalRecords` <br /><span class="type-text">integer</span></td>
+<td>Total number of margin settings records</td>
+</tr>
+<tr>
+<td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+<td>Number of filtered records</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">array</span></td>
+<td>List of margin settings</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`marginTypeId` <br /><span class="type-text">integer</span></td>
+  <td>Margin type ID <br /><var>1</var>: Gross Margin</td>
+  </tr>
+  <tr>
+  <td>`marginType` <br /><span class="type-text">string</span></td>
+  <td>Margin type name</td>
+  </tr>
+  <tr>
+  <td>`marginValue` <br /><span class="type-text">integer</span></td>
+  <td>Margin value</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "totalRecords": 2,
+        "data": [
+            {
+                "marginTypeId": 1,
+                "marginType": "Gross Margin",
+                "marginValue": 20
+            }
+        ],
+        "filteredRecords": 1
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access this api"
+        }
+    ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          data: {
+            marginTypeId: number;
+            marginType: string;
+            marginValue: number;
+          }[];
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+}
+
+function GetOrganizationMarginSettings(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/organization/margin-settings',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Organization Margin Settings
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/organization/margin-settings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update margin settings for the Organization workspace. For example, set a default margin to be applied to newly onboarded Customers.
+
+| Request Schema |  |
+| ---- | --- |
+| `marginTypeId` <br /><span class="type-text">integer</span> | Margin type ID <br /><var>1</var>: Gross margin |
+| `marginValue` <br /><span class="type-text">integer</span> | Margin value (between 1 and 99) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates successful update: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "marginTypeId": 1,
+    "marginValue": 10
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Margin settings updated successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access this api"
+        }
+    ]
+}
+```
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Invalid marginTypeId : 2"
+        }
+    ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  422: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function UpdateOrganizationMarginSettings(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/fa/organization/margin-settings',
+    requestBody: {
+      content: {
+        "application/json": {
+          marginTypeId: `number`,
+          marginValue: `number`,
         }
       }
     }
@@ -683,19 +973,9 @@ function editPgFeesDetails(): Promise<Responses> {
 
 ---
 
-<VldFinance />
-
----
-
-<PldFinance />
-
----
-
-<SlsFinance />
-
----
-
 <AqsFinance />
+
+---
 
 ### Get Customer DoubleVerify Details
 
@@ -1114,6 +1394,343 @@ function getBasicDetails(): Promise<Responses> {
 ```
 
 </TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Ad Serving Cost
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/customer/ad-serving-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add ad serving costs for a specific Customer. This API is accessible only by Super Organization users.
+
+| Request Schema |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID for whom the cost is being added |
+| `imageCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted image creatives |
+| `videoCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted video creatives |
+| `audioCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted audio creatives |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+    "owId": 123456,
+    "imageCreativeCost": 50.0,
+    "videoCreativeCost": 100.0,
+    "audioCreativeCost": 75.0
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "Ad serving cost added successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Get Ad Serving Cost
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/ad-serving-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the ad serving cost details for a specific Customer.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Customer Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`adServingCostDetail` <br /><span class="type-text">object</span></td>
+  <td>Ad serving cost details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`adServingCostDetail` object properties</summary>
+  <table className="objectProperties">
+<tr>
+  <td>`imageCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted image creatives</td>
+</tr>
+<tr>
+  <td>`videoCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted video creatives</td>
+</tr>
+<tr>
+  <td>`audioCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted audio creatives</td>
+</tr>
+<tr>
+  <td>`costConfigurationLevel` <br /><span class="type-text">string</span></td>
+  <td>Level at which cost is configured (e.g., <var>WORKSPACE</var>)</td>
+</tr>
+<tr>
+  <td>`msaConfigurationDetail` <br /><span class="type-text">object</span></td>
+  <td>MSA configuration details</td>
+</tr>
+</table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "owId": 201765,
+        "adServingCostDetail": {
+            "imageCreativeCost": 5,
+            "videoCreativeCost": 5,
+            "audioCreativeCost": 5,
+            "costConfigurationLevel": "WORKSPACE",
+            "msaConfigurationDetail": {
+                "msaConfiguredWith": "MWS1",
+                "logoURL": "https://iqm-host.com/avatar/MS.png"
+            }
+        }
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Add or Update Third Party Cost
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/customer/third-party-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add or update third-party cost details. This API is accessible only by Workspace Organization users.
+
+If the Workspace user is setting or updating the cost for their own workspace, the <var>owId</var> can be passed as <var>null</var> (it will be derived from the logged-in user context). For advertiser-level cost configuration, <var>owId</var> must be provided explicitly.
+
+| Request Schema |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID of the workspace or advertiser (optional for workspace self, required for advertiser) |
+| `cost` <br /><span class="type-text">number</span> | Third-party cost value (range: greater than 0, up to 999) |
+
+</div><div class="child2">
+
+```json title="Request Sample (Advertiser)"
+{
+    "owId": 123456,
+    "cost": 150.0
+}
+```
+
+```json title="Request Sample (Workspace)"
+{
+    "owId": null,
+    "cost": 150.0
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "3rd party cost added successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Get Third Party Cost
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/third-party-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the third-party cost details for a specific Customer. This API is accessible only by Workspace and Super Organization types.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Customer Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`thirdPartyCostDetails` <br /><span class="type-text">object</span></td>
+  <td>Third-party cost details (<var>null</var> if not configured)</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`thirdPartyCostDetails` object properties</summary>
+  <table className="objectProperties">
+<tr>
+  <td>`cost` <br /><span class="type-text">number</span></td>
+  <td>Third-party cost value</td>
+</tr>
+<tr>
+  <td>`active` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the third-party cost is currently active</td>
+</tr>
+</table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200 (Cost Configured)"
+{
+    "success": true,
+    "data": {
+        "owId": 123456,
+        "thirdPartyCostDetails": {
+            "cost": 4.2,
+            "active": true
+        }
+    }
+}
+```
+
+```json title="Response 200 (Cost Not Configured)"
+{
+    "success": true,
+    "data": {
+        "owId": 123456,
+        "thirdPartyCostDetails": null
+    }
+}
+```
+
+</div></div>
+
+---
+
+### Disable Third Party Cost
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/third-party-cost/disable" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Disable an existing third-party cost configuration. This API is accessible only by Workspace Organization users.
+
+The third-party cost will be marked as inactive and the cost value set to null.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Organization Workspace ID of the workspace or advertiser for which the third-party cost is being disabled |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "3rd party cost disabled successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -1690,7 +2307,7 @@ Update invoice settings details for an Organization.
 | `termsAndConditions` <br /><span class="type-text">string</span> | Terms and conditions of invoice |
 | `paymentTerm` <br /><span class="type-text">string</span> | [Payment Term ID](#invoice-payment-term) |
 | `invoiceFooter` <br /><span class="type-text">string</span> | Invoice footer details |
-| `paypalAcountId` <br /><span class="type-text">string</span> | PayPal account ID |
+| `paypalAccountId` <br /><span class="type-text">string</span> | PayPal account ID |
 | `chequeCompanyName` <br /><span class="type-text">string</span> | Company name on check (when [Payment Mode Type](#invoice-payment-mode-types) is check)
 | `chequeCompanyAddress` <br /><span class="type-text">string</span> | Company address on check (when [Payment Mode Type](#invoice-payment-mode-types) is check)
 | `wireTransferCompanyName` <br /><span class="type-text">string</span> | Company name for wire transfer (when [Payment Mode Type](#invoice-payment-mode-types) is wire transfer)
@@ -2441,6 +3058,138 @@ function DownloadInvoice(): Promise<Responses> {
         invoiceId: `number`,
       }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Invoice Template Margin Pre-Requisite
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/invoice-template-margin-details/pre-requisite" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get pre-requisite details for invoice template margin settings, including whether a parent invoice template is set, and a list of Customers whose margins have not been configured.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`isParentInvoiceTemplateSet` <br /><span class="type-text">boolean</span></td>
+<td>Whether the parent invoice template is set</td>
+</tr>
+<tr>
+<td>`invoiceTemplateRequired` <br /><span class="type-text">boolean</span></td>
+<td>Whether an invoice template is required</td>
+</tr>
+<tr>
+<td>`organizationAppAccessible` <br /><span class="type-text">boolean</span></td>
+<td>Whether the Organization app is accessible</td>
+</tr>
+<tr>
+<td>`customerAppAccessible` <br /><span class="type-text">boolean</span></td>
+<td>Whether the Customer app is accessible</td>
+</tr>
+<tr>
+<td>`customerMarginList` <br /><span class="type-text">array</span></td>
+<td>List of Customers without margin settings configured</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`customerMarginList` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
+  <td>`customerName` <br /><span class="type-text">string</span></td>
+  <td>Customer name</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "isParentInvoiceTemplateSet": true,
+        "invoiceTemplateRequired": true,
+        "organizationAppAccessible": true,
+        "customerAppAccessible": true,
+        "customerMarginList": [
+            {
+                "owId": 100002,
+                "customerName": "Darshan Khatri"
+            },
+            {
+                "owId": 100001,
+                "customerName": "Bhaumik Shukla"
+            }
+        ]
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          isParentInvoiceTemplateSet: boolean;
+          invoiceTemplateRequired: boolean;
+          organizationAppAccessible: boolean;
+          customerAppAccessible: boolean;
+          customerMarginList: {
+            owId: number;
+            customerName: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function GetInvoiceTemplateMarginPreRequisite(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/invoice-template-margin-details/pre-requisite',
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -4135,6 +4884,11 @@ Cancel a payment for a Customer.
 | ---- | --- |
 | `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
 
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `actionNote` <br /><span class="type-text">string</span> | Action note |
+
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
@@ -4241,6 +4995,11 @@ Reject a payment for a Customer.
 | Path Parameter |  |
 | ---- | --- |
 | `paymentId` <br /><span class="type-text">integer</span>  | Payment ID |
+
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
+| `actionNote` <br /><span class="type-text">string</span> | Action note |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
@@ -4389,7 +5148,7 @@ curl -X POST "https://api.example.com/api/v3/fa/payment/add-fund" \
 ```json title="Response 200"
 {
     "success": true,
-    "data": "Payment added Successfully."
+    "data": "Payment Successful."
 }
 ```
 
@@ -4422,7 +5181,7 @@ interface Responses {
 function AddPaymentfromOrganizationApp(): Promise<Responses> {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/fa/customer/payment/add-fund',
+    url: 'https://api.iqm.com/api/v3/fa/payment/add-fund',
     requestBody?: {
       content: {
         "application/x-www-form-urlencoded": {
