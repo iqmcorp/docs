@@ -1109,6 +1109,343 @@ function getBasicDetails(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Add Ad Serving Cost
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/customer/ad-serving-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add ad serving costs for a specific Customer. This API is accessible only by Super Organization users.
+
+| Request Schema |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID for whom the cost is being added |
+| `imageCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted image creatives |
+| `videoCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted video creatives |
+| `audioCreativeCost` <br /><span class="type-text">number</span> | Ad serving cost for IQM hosted audio creatives |
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+    "owId": 123456,
+    "imageCreativeCost": 50.0,
+    "videoCreativeCost": 100.0,
+    "audioCreativeCost": 75.0
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "Ad serving cost added successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Get Ad Serving Cost
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/ad-serving-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the ad serving cost details for a specific Customer.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Customer Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`adServingCostDetail` <br /><span class="type-text">object</span></td>
+  <td>Ad serving cost details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`adServingCostDetail` object properties</summary>
+  <table className="objectProperties">
+<tr>
+  <td>`imageCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted image creatives</td>
+</tr>
+<tr>
+  <td>`videoCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted video creatives</td>
+</tr>
+<tr>
+  <td>`audioCreativeCost` <br /><span class="type-text">number</span></td>
+  <td>Ad serving cost for IQM hosted audio creatives</td>
+</tr>
+<tr>
+  <td>`costConfigurationLevel` <br /><span class="type-text">string</span></td>
+  <td>Level at which cost is configured (e.g., <var>WORKSPACE</var>)</td>
+</tr>
+<tr>
+  <td>`msaConfigurationDetail` <br /><span class="type-text">object</span></td>
+  <td>MSA configuration details</td>
+</tr>
+</table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "owId": 201765,
+        "adServingCostDetail": {
+            "imageCreativeCost": 5,
+            "videoCreativeCost": 5,
+            "audioCreativeCost": 5,
+            "costConfigurationLevel": "WORKSPACE",
+            "msaConfigurationDetail": {
+                "msaConfiguredWith": "MWS1",
+                "logoURL": "https://iqm-host.com/avatar/MS.png"
+            }
+        }
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Add or Update Third Party Cost
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/customer/third-party-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add or update third-party cost details. This API is accessible only by Workspace Organization users.
+
+If the Workspace user is setting or updating the cost for their own workspace, the `owId` can be passed as `null` (it will be derived from the logged-in user context). For advertiser-level cost configuration, `owId` must be provided explicitly.
+
+| Request Schema |  |
+| ----  | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID of the workspace or advertiser (optional for workspace self, required for advertiser) |
+| `cost` <br /><span class="type-text">number</span> | Third-party cost value (range: greater than 0, up to 999) |
+
+</div><div class="child2">
+
+```json title="Request Sample (Advertiser)"
+{
+    "owId": 123456,
+    "cost": 150.0
+}
+```
+
+```json title="Request Sample (Workspace)"
+{
+    "owId": null,
+    "cost": 150.0
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "3rd party cost added successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
+---
+
+### Get Third Party Cost
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/third-party-cost" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the third-party cost details for a specific Customer. This API is accessible only by Workspace and Super Organization types.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Customer Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`thirdPartyCostDetails` <br /><span class="type-text">object</span></td>
+  <td>Third-party cost details (<var>null</var> if not configured)</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`thirdPartyCostDetails` object properties</summary>
+  <table className="objectProperties">
+<tr>
+  <td>`cost` <br /><span class="type-text">number</span></td>
+  <td>Third-party cost value</td>
+</tr>
+<tr>
+  <td>`active` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the third-party cost is currently active</td>
+</tr>
+</table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Response 200 (Cost Configured)"
+{
+    "success": true,
+    "data": {
+        "owId": 123456,
+        "thirdPartyCostDetails": {
+            "cost": 4.2,
+            "active": true
+        }
+    }
+}
+```
+
+```json title="Response 200 (Cost Not Configured)"
+{
+    "success": true,
+    "data": {
+        "owId": 123456,
+        "thirdPartyCostDetails": null
+    }
+}
+```
+
+</div></div>
+
+---
+
+### Disable Third Party Cost
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/third-party-cost/disable" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Disable an existing third-party cost configuration. This API is accessible only by Workspace Organization users.
+
+The third-party cost will be marked as inactive and the cost value set to null.
+
+| Path Parameters |  |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Organization Workspace ID of the workspace or advertiser for which the third-party cost is being disabled |
+
+</div><div class="child2">
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "message": "3rd party cost disabled successfully."
+    }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "User is not allowed to access provided customer details."
+        }
+    ]
+}
+```
+
+</details>
+
+</div></div>
+
 ## Invoice Management
 
 ### Get Invoice for Organization
