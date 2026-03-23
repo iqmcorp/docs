@@ -5,10 +5,11 @@ hide_table_of_contents: true
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CopyUrl from '@site/src/components/CopyUrl';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 
 # Assets API
 
-The Assets API allows you to add Assets to the system such as images and PDF files. 
+The Assets API allows you to add Assets to the system such as images, PDF files, and HTML5 creative Assets (ZIP files). 
 
 This page covers the common endpoints and methods associated with the Assets API.
 
@@ -34,18 +35,57 @@ Use the following header parameters for all requests:
 <div class="endpoint-container">
 <div class="child1">
 
-Get a list of all Assets in the system. 
+Get a list of all Assets in the system. Includes both regular Assets and HTML5 creative assets.
 
 An Asset <var>id</var> can be used to [Get Asset Details](#get-asset-details) or to perform various actions in [Assets Management](#assets-management) endpoints. 
 
-| Properties | |
-| --- | --- |
-| `id` <br /><span class="type-text">integer</span> | Asset ID |
-| `storagePath` <br /><span class="type-text">string</span> | File path of Asset  |
-| `cdnUrl` <br /><span class="type-text">string</span> | URL of Asset  |
-| `created` <br /><span class="type-text">integer</span> | Unix epoch timestamp of Asset  creation, in milliseconds |
-| `modifiedDate` <br /><span class="type-text">string</span> | Date Asset  modified |
-| `disposable` <br /><span class="type-text">boolean</span> | Indicates whether Asset  is temporary and can be purged (<var>true</var>), default: <var>true</var> |
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Asset ID</td>
+</tr>
+<tr>
+  <td>`storagePath` <br /><span class="type-text">string</span></td>
+  <td>File path of Asset</td>
+</tr>
+<tr>
+  <td>`cdnUrl` <br /><span class="type-text">string</span></td>
+  <td>URL of Asset</td>
+</tr>
+<tr>
+  <td>`created` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Asset creation, in milliseconds</td>
+</tr>
+<tr>
+  <td>`modifiedDate` <br /><span class="type-text">string</span></td>
+  <td>Date Asset modified</td>
+</tr>
+<tr>
+  <td>`isDisposable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether Asset is temporary and can be purged</td>
+</tr>
+<tr>
+  <td>`isZipFile` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Asset is a ZIP file</td>
+</tr>
+<tr>
+  <td>`isHtml5Creative` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Asset is an HTML5 creative</td>
+</tr>
+<tr>
+  <td>`assetDimensions` <br /><span class="type-text">object</span></td>
+  <td>Dimensions of the creative (HTML5 Assets only). Contains <var>width</var> and <var>height</var></td>
+</tr>
+<tr>
+  <td>`iframeHtml` <br /><span class="type-text">string</span></td>
+  <td>Ready-to-use iframe HTML code (HTML5 Assets only)</td>
+</tr>
+</table>
+
+</details>
 
 
 </div>
@@ -64,15 +104,26 @@ An Asset <var>id</var> can be used to [Get Asset Details](#get-asset-details) or
       "cdnUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/tfteBYO_1704204958735.jpg",
       "created": 1704204961147,
       "modifiedDate": "2024-01-02T14:16:08.726+0000",
-      "disposable": false
+      "isDisposable": false,
+      "isZipFile": false,
+      "isHtml5Creative": false,
+      "assetDimensions": null,
+      "iframeHtml": null
     },
     {
       "id": 2,
-      "storagePath": "assets/201427/b7c0tTw_1704204968864.jpg",
-      "cdnUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/b7c0tTw_1704204968864.jpg",
+      "storagePath": "assets/201427/randomPath/index.html",
+      "cdnUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/randomPath/index.html",
       "created": 1704204971010,
       "modifiedDate": "2024-01-02T14:16:11.375+0000",
-      "disposable": false
+      "isDisposable": true,
+      "isZipFile": true,
+      "isHtml5Creative": true,
+      "assetDimensions": {
+        "width": 300,
+        "height": 250
+      },
+      "iframeHtml": "<iframe src=\"https://d3jme5si7t6llb.cloudfront.net/assets/201427/randomPath/index.html\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"></iframe>"
     },
     {
       "id": 3,
@@ -80,7 +131,11 @@ An Asset <var>id</var> can be used to [Get Asset Details](#get-asset-details) or
       "cdnUrl": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/2mBGamD_1704205759807.jpg",
       "created": 1704205761106,
       "modifiedDate": "2024-01-02T08:59:21.508+0000",
-      "disposable": false
+      "isDisposable": false,
+      "isZipFile": false,
+      "isHtml5Creative": false,
+      "assetDimensions": null,
+      "iframeHtml": null
     }
   ]
 }
@@ -98,19 +153,30 @@ import {
 
 const axios = getInstance();
 
+interface AssetDimensions {
+  width: number;
+  height: number;
+}
+
+interface AssetDetail {
+  id: number;
+  storagePath: string;
+  cdnUrl: string;
+  created: number;
+  modifiedDate: string;
+  isDisposable: boolean;
+  isZipFile: boolean;
+  isHtml5Creative: boolean;
+  assetDimensions: AssetDimensions | null;
+  iframeHtml: string | null;
+}
+
 interface Responses {
   200: {
     content: {
       "application/json": {
         success: boolean;
-        data: {
-          id: number;
-          storagePath: string;
-          cdnUrl: string;
-          created: number;
-          modifiedDate: string;
-          disposable: boolean
-        }[]
+        data: AssetDetail[];
       }
     }
   }
@@ -139,11 +205,59 @@ function getAllAssets(): Promise<Responses> {
 <div class="endpoint-container">
 <div class="child1">
 
-Get properties of a single Asset  by ID.
+Get properties of a single Asset by ID. For HTML5 creative assets, the response includes additional fields for dimensions and iframe HTML code.
 
 | Path Parameters | |
 | --- | --- |
 | `assetId` <br /><span class="type-text">integer</span> | [Asset ID](#get-a-list-of-all-assets) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Asset ID</td>
+</tr>
+<tr>
+  <td>`storagePath` <br /><span class="type-text">string</span></td>
+  <td>File path of Asset</td>
+</tr>
+<tr>
+  <td>`cdnUrl` <br /><span class="type-text">string</span></td>
+  <td>URL of Asset</td>
+</tr>
+<tr>
+  <td>`created` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of Asset creation, in milliseconds</td>
+</tr>
+<tr>
+  <td>`modifiedDate` <br /><span class="type-text">string</span></td>
+  <td>Date Asset modified</td>
+</tr>
+<tr>
+  <td>`isDisposable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether Asset is temporary and can be purged</td>
+</tr>
+<tr>
+  <td>`isZipFile` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Asset is a ZIP file</td>
+</tr>
+<tr>
+  <td>`isHtml5Creative` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the Asset is an HTML5 creative</td>
+</tr>
+<tr>
+  <td>`assetDimensions` <br /><span class="type-text">object</span></td>
+  <td>Dimensions of the creative (HTML5 Assets only). Contains <var>width</var> and <var>height</var></td>
+</tr>
+<tr>
+  <td>`iframeHtml` <br /><span class="type-text">string</span></td>
+  <td>Ready-to-use iframe HTML code (HTML5 Assets only)</td>
+</tr>
+</table>
+
+</details>
 
 </div>
 
@@ -152,17 +266,61 @@ Get properties of a single Asset  by ID.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+<CodeDropdown>
+<CodeOption label="Regular Asset" value="Regular Asset">
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
     "id": 1,
-    "storagePath": "new/path/to/asset.jpg",
-    "cdnUrl": "https://cdn.example.com/new_asset.jpg",
+    "storagePath": "assets/201427/tfteBYO_1704204958735.jpg",
+    "cdnUrl": "https://cdn.example.com/assets/201427/tfteBYO_1704204958735.jpg",
     "created": 1704204961147,
     "modifiedDate": "2024-01-18T06:03:23.823+0000",
-    "disposable": true
+    "isDisposable": true,
+    "isZipFile": false,
+    "isHtml5Creative": false,
+    "assetDimensions": null,
+    "iframeHtml": null
   }
+}
+```
+</CodeOption>
+<CodeOption label="HTML5 Creative Asset" value="HTML5 Creative Asset">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 2,
+    "storagePath": "assets/201427/randomPath/index.html",
+    "cdnUrl": "https://cdn.example.com/assets/201427/randomPath/index.html",
+    "created": 1704204971010,
+    "modifiedDate": "2024-01-18T06:03:23.823+0000",
+    "isDisposable": false,
+    "isZipFile": true,
+    "isHtml5Creative": true,
+    "assetDimensions": {
+      "width": 300,
+      "height": 250
+    },
+    "iframeHtml": "<iframe src=\"https://cdn.example.com/assets/201427/randomPath/index.html\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"></iframe>"
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "No Asset found with the Asset ID provided. Please provide a valid ID."
+    }
+  ]
 }
 ```
 
@@ -178,33 +336,39 @@ import {
 
 const axios = getInstance();
 
+interface AssetDimensions {
+  width: number;
+  height: number;
+}
+
+interface AssetDetail {
+  id: number;
+  storagePath: string;
+  cdnUrl: string;
+  created: number;
+  modifiedDate: string;
+  isDisposable: boolean;
+  isZipFile: boolean;
+  isHtml5Creative: boolean;
+  assetDimensions: AssetDimensions | null;
+  iframeHtml: string | null;
+}
+
 interface Responses {
   200: {
     content: {
       "application/json": {
         success: boolean;
-        data: {
-          id: number;
-          storagePath: string;
-          cdnUrl: string;
-          created: number;
-          modifiedDate: string;
-          disposable: boolean
-        }
+        data: AssetDetail;
       }
     }
   }
 }
 
-function getAssetDetails(): Promise<Responses> {
+function getAssetDetails(assetId: number): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v3/asset/{assetId}',
-    params: {
-      path: {
-        assetId: `number`
-      }
-    }
+    url: `https://api.iqm.com/api/v3/asset/${assetId}`,
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -224,7 +388,7 @@ function getAssetDetails(): Promise<Responses> {
 <div class="endpoint-container">
 <div class="child1">
 
-Add multiple Assets to the system. Request accepts an array of multipart file objects and their corresponding metadata.
+Add multiple Assets to the system. Request accepts an array of multipart file objects and their corresponding metadata. Supports both regular Assets (images, PDFs) and HTML5 creative Assets (ZIP files).
 
 
 <table>
@@ -242,9 +406,21 @@ Add multiple Assets to the system. Request accepts an array of multipart file ob
   <td>`attachedFileName` <br /><span class="type-text">string</span></td>
   <td>Name of asset</td>
   </tr>
-    <tr>
+  <tr>
   <td>`originalFileName` <br /><span class="type-text">string</span></td>
   <td>Name of uploaded multipart file</td>
+  </tr>
+  <tr>
+  <td>`disposable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether Asset is temporary and can be purged, default: <var>false</var></td>
+  </tr>
+  <tr>
+  <td>`zipFile` <br /><span class="type-text">boolean</span></td>
+  <td>Set to <var>true</var> when uploading a ZIP file for HTML5 creatives, default: <var>false</var></td>
+  </tr>
+  <tr>
+  <td>`html5Creative` <br /><span class="type-text">boolean</span></td>
+  <td>Set to <var>true</var> when uploading an HTML5 creative asset, default: <var>false</var></td>
   </tr>
   </table></details>
   </td>
@@ -252,15 +428,42 @@ Add multiple Assets to the system. Request accepts an array of multipart file ob
 </tr>
 <tr>
   <td>`files` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">required</span></td>
-  <td>Array of asset files to upload</td>
+  <td>Array of Asset files to upload</td>
 </tr>
 </table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`assetID` <br /><span class="type-text">integer</span></td>
+<td>Unique identifier of the uploaded asset</td>
+</tr>
+<tr>
+  <td>`assetCDNURL` <br /><span class="type-text">string</span></td>
+  <td>CDN URL of the uploaded asset</td>
+</tr>
+<tr>
+  <td>`dimensions` <br /><span class="type-text">object</span></td>
+  <td>Dimensions of the creative (HTML5 Assets only). Contains <var>width</var> and <var>height</var></td>
+</tr>
+<tr>
+  <td>`iframeHtml` <br /><span class="type-text">string</span></td>
+  <td>Ready-to-use iframe HTML code (HTML5 Assets only)</td>
+</tr>
+</table>
+
+</details>
 
 </div>
 <div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown>
+<CodeOption label="Regular Asset" value="Regular Asset">
 
 ```json title="Formdata Sample"
 ------WebKitFormBoundaryAofpaWXja6BTaYQ9
@@ -270,10 +473,11 @@ Content-Type: image/jpeg
 ------WebKitFormBoundaryAofpaWXja6BTaYQ9
 Content-Disposition: form-data; name="filesMetadata"
 
-[{"attachedFileName":"example.jpg","originalFileName":"example.jpg"}]
+[{"attachedFileName":"example.jpg","originalFileName":"example.jpg","disposable":false}]
 ------WebKitFormBoundaryAofpaWXja6BTaYQ9--
 ```
 
+<p />
 ```json title="Response 200"
 {
   "success": true,
@@ -286,6 +490,53 @@ Content-Disposition: form-data; name="filesMetadata"
 }
 ```
 
+</CodeOption>
+<CodeOption label="HTML5 Creative Asset" value="HTML5 Creative Asset">
+
+```json title="Formdata Sample"
+------WebKitFormBoundaryAofpaWXja6BTaYQ9
+Content-Disposition: form-data; name="files"; filename="300x250_creative.zip"
+Content-Type: application/zip
+
+------WebKitFormBoundaryAofpaWXja6BTaYQ9
+Content-Disposition: form-data; name="filesMetadata"
+
+[{"attachedFileName":"300x250_creative.zip","originalFileName":"300x250.zip","disposable":false,"zipFile":true,"html5Creative":true}]
+------WebKitFormBoundaryAofpaWXja6BTaYQ9--
+```
+
+<p />
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "300x250_creative.zip": {
+      "assetID": 19234,
+      "assetCDNURL": "https://d3jme5si7t6llb.cloudfront.net/assets/204876/OQ6NQ8B_1772197041498/index.html?cb=1",
+      "dimensions": {
+        "width": 300,
+        "height": 250
+      },
+      "iframeHtml": "<iframe src=\"https://d3jme5si7t6llb.cloudfront.net/assets/204876/OQ6NQ8B_1772197041498/index.html?cb=1\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"></iframe>"
+    }
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please pass File(s) metaData"
+    }
+  ]
+}
+```
+
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
@@ -295,50 +546,88 @@ import * as fs from "fs";
 import * as path from "path";
 import FormData from "form-data";
 
-
-async function addAssets(filesMetadata: String, filePaths: string[]): Promise<any> {
- const form = new FormData();
- form.append("filesMetadata", filesMetadata);
-
-
- for (const filePath of filePaths) {
-   const stream = fs.createReadStream(filePath);
-   form.append("files", stream, path.basename(filePath));
- }
-
- const headers = {
-   ...form.getHeaders(),
-   Authorization: `Bearer [TOKEN]`, // replace this with actual bearer token
-   "x-iaa-ow-id": '[OWID]', // replace with your actual ow id
- };
-
- const response = await axios.post(
-   "https://api.iqm.com/api/v3/asset",
-   form,
-   {
-     headers,
-     timeout: 10000,
-     timeoutErrorMessage: 'Request timed out after 10 seconds'
-   }
- );
- console.log(JSON.stringify(response.data));
- return response.data;
+interface FileMetadata {
+  attachedFileName: string;
+  originalFileName: string;
+  disposable?: boolean;
+  zipFile?: boolean;
+  html5Creative?: boolean;
 }
 
-(async () => {
- const metadata: { attachedFileName: string; originalFileName: string; }[] = [
-   {
-     attachedFileName: "example.png",
-     originalFileName: "example.png"
-   }
- ]
+interface AssetResponse {
+  assetID: number;
+  assetCDNURL: string;
+  dimensions?: {
+    width: number;
+    height: number;
+  };
+  iframeHtml?: string;
+}
 
- try {
-   const result = await addAssets(JSON.stringify(metadata), ["example.png"]); // you should have this file in the folder
-   console.log("Upload successful:", result);
- } catch (error) {
-   console.error("Upload failed:", error);
- }
+async function addAssets(filesMetadata: FileMetadata[], filePaths: string[]): Promise<any> {
+  const form = new FormData();
+  form.append("filesMetadata", JSON.stringify(filesMetadata));
+
+  for (const filePath of filePaths) {
+    const stream = fs.createReadStream(filePath);
+    form.append("files", stream, path.basename(filePath));
+  }
+
+  const headers = {
+    ...form.getHeaders(),
+    Authorization: `Bearer [TOKEN]`, // replace with actual bearer token
+    "x-iaa-ow-id": '[OWID]', // replace with your actual ow id
+  };
+
+  const response = await axios.post(
+    "https://api.iqm.com/api/v3/asset",
+    form,
+    {
+      headers,
+      timeout: 10000,
+      timeoutErrorMessage: 'Request timed out after 10 seconds'
+    }
+  );
+  console.log(JSON.stringify(response.data));
+  return response.data;
+}
+
+// Example: Upload a regular image asset
+(async () => {
+  const metadata: FileMetadata[] = [
+    {
+      attachedFileName: "example.png",
+      originalFileName: "example.png",
+      disposable: false
+    }
+  ];
+
+  try {
+    const result = await addAssets(metadata, ["example.png"]);
+    console.log("Upload successful:", result);
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
+})();
+
+// Example: Upload an HTML5 creative asset
+(async () => {
+  const metadata: FileMetadata[] = [
+    {
+      attachedFileName: "300x250_creative.zip",
+      originalFileName: "300x250.zip",
+      disposable: false,
+      zipFile: true,
+      html5Creative: true
+    }
+  ];
+
+  try {
+    const result = await addAssets(metadata, ["300x250_creative.zip"]);
+    console.log("HTML5 Creative upload successful:", result);
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
 })();
 ```
 
