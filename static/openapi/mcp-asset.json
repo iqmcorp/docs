@@ -1,0 +1,1049 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0",
+    "description": "MCP Asset API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
+    }
+  ],
+  "paths": {
+    "/api/v3/asset": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Add Multiple Assets to the System",
+        "description": "This API is used for adding multiple assets to the system. It accepts an array of multipart files along with their associated metadata in JSON format.\n1. The 'files' parameter should contain the files to be uploaded.\n2. The 'filesMetadata' parameter should be a JSON string that provides metadata for each file. This metadata includes the attached file name,\noriginal file name and an optional key (default set to false) for whether the file is disposable.\n3. The API returns a map where each key is the original file name and the value is an AddAssetResponseVO containing details about the uploaded asset.\n4. Appropriate error responses are provided for invalid inputs or unauthorized access.\n",
+        "operationId": "addAssets",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Multipart form data containing files and their metadata as JSON string",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAssetRequestSchema"
+              },
+              "encoding": {
+                "filesMetadata": {
+                  "contentType": "application/json"
+                },
+                "files": {
+                  "contentType": "application/octet-stream"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddAssetsResponseSchema"
+                },
+                "examples": {
+                  "Assets added successfully": {
+                    "description": "Assets added successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "9d41a99a-9761-44cf-a3db-307a57b65795.jpg": {
+                          "assetID": 697,
+                          "assetCDNURL": "https://cdn.example.com/assets/123456/IHp2jMI_1704987233847.jpg"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "File metadata not provided": {
+                    "description": "File metadata not provided",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please pass File(s) metaData"
+                        }
+                      ]
+                    }
+                  },
+                  "Multipart files not provided": {
+                    "description": "Multipart files not provided",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please attach file(s)"
+                        }
+                      ]
+                    }
+                  },
+                  "File metadata is not a valid JSON": {
+                    "description": "File metadata is not a valid JSON",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please pass correct File(s) MetaData"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/asset/{assetId}": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Fetch Asset Details by Asset ID",
+        "description": "This API is used for fetching the details of a single asset identified by its AssetID.\n1. The 'assetId' parameter should contain the ID of the asset to be fetched.\n2. The API returns the details of the asset including its storage path, CDN URL, creation timestamp, modification timestamp, and whether it is disposable.\n3. For HTML5 creative assets, the response includes assetDimensions (stored in JSONB format) and iframeHtml (ready-to-use iframe code).\n4. Appropriate error responses are provided for invalid inputs or unauthorized access.\n",
+        "operationId": "getAssetDetails",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "description": "The ID of the asset to fetch.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetDetailResponseSchema"
+                },
+                "examples": {
+                  "Regular asset details fetched successfully": {
+                    "description": "Regular asset details fetched successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "storagePath": "assets/201427/tfteBYO_1704204958735.jpg",
+                        "cdnUrl": "https://cdn.example.com/assets/201427/tfteBYO_1704204958735.jpg",
+                        "created": 1704204961147,
+                        "modifiedDate": "2024-01-18T06:03:23.823+00:00",
+                        "owId": 201427,
+                        "createdByUowId": 2002,
+                        "modifiedByUowId": 2003,
+                        "assetDimensions": null,
+                        "iframeHtml": null,
+                        "zipFile": false,
+                        "disposable": true,
+                        "html5Creative": false
+                      }
+                    }
+                  },
+                  "HTML5 creative asset details fetched successfully": {
+                    "description": "HTML5 creative asset details fetched successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                         "id": 2,
+                        "storagePath": "assets/201427/randomPath/index.html",
+                        "cdnUrl": "https://cdn.example.com/assets/201427/randomPath/index.html",
+                        "created": 1704204971010,
+                        "modifiedDate": "2024-01-18T06:03:23.823+00:00",
+                        "owId": 201427,
+                        "createdByUowId": 2002,
+                        "modifiedByUowId": 2003,
+                        "assetDimensions": {
+                          "width": 300,
+                          "height": 250
+                        },
+                        "iframeHtml": "\u003Ciframe src=\"https://cdn.example.com/assets/201427/randomPath/index.html\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"\u003E\u003C/iframe\u003E",
+                        "zipFile": true,
+                        "disposable": false,
+                        "html5Creative": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Asset not found": {
+                    "description": "Asset not found",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No Asset found with the Asset ID provided. Please provide a valid ID."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Delete Asset by Asset ID",
+        "description": "This API is used for deleting a single asset identified by its AssetID.\n1. The 'assetId' parameter should contain the ID of the asset to be deleted.\n2. The API returns a confirmation message upon successful deletion of the asset.\n3. Appropriate error responses are provided for invalid inputs or unauthorized access.\n4. It is a soft delete; the asset is marked as deleted in the system but not permanently removed from storage.\n",
+        "operationId": "deleteAsset",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "description": "The ID of the asset to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAssetResponseSchema"
+                },
+                "examples": {
+                  "Asset deleted successfully": {
+                    "description": "Asset deleted successfully",
+                    "value": {
+                      "success": true,
+                      "data": "Asset deleted successfully."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Asset Not Found Response": {
+                    "description": "Asset Not Found Response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No Asset found with the Asset ID provided. Please provide a valid ID."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update Asset Details by Asset ID",
+        "description": "This API is used for updating the details of a single asset identified by its AssetID.\n1. The 'assetId' parameter should contain the ID of the asset to be updated.\n2. The request body should contain the new details for the asset, including storage path, CDN URL,\nand optional disposable status.\n3. The API returns a confirmation message upon successful update of the asset details.\n4. Appropriate error responses are provided for invalid inputs or unauthorized access.\n",
+        "operationId": "updateAssetDetails",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "description": "The ID of the asset to update.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new details for the asset.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssetUpdateVO"
+              },
+              "examples": {
+                "Asset Update Request Example": {
+                  "description": "Asset Update Request Example",
+                  "value": {
+                    "storagePath": "updated/path/to/asset.jpg",
+                    "cdnUrl": "https://cdn.example.com/updated/assets/12345",
+                    "disposable": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Update Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAssetResponseSchema"
+                },
+                "examples": {
+                  "Asset updated successfully": {
+                    "description": "Asset updated successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Asset updated successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Asset not found": {
+                    "description": "Asset not found",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No Asset found with the Asset ID provided. Please provide a valid ID."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Storage path not provided": {
+                    "description": "Storage path not provided",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Storage path is required and can not be empty.",
+                          "field": "storagePath"
+                        }
+                      ]
+                    }
+                  },
+                  "CDN URL not provided": {
+                    "description": "CDN URL not provided",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "CDN URL is required and can not be empty.",
+                          "field": "cdnUrl"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/asset/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "List All Assets by Organization Workspace ID",
+        "description": "This API is used for fetching the list of all assets associated with a specific Organization Workspace ID.\n1. The API retrieves all assets linked to the Organization Workspace ID of the logged-in user.\n2. The response includes a list of assets, each containing details such as id, storage path, CDN URL,\ncreation timestamp, modification timestamp, and whether it is disposable.\n3. For HTML5 creative assets, the response includes assetDimensions (stored in JSONB format) and iframeHtml (ready-to-use iframe code).\n4. Appropriate error responses are provided for unauthorized access.\n",
+        "operationId": "getAllAssets",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetListResponseSchema"
+                },
+                "examples": {
+                  "List of all assets fetched successfully (mixed types)": {
+                    "description": "List of all assets fetched successfully (mixed types)",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "storagePath": "assets/201427/tfteBYO_1704204958735.jpg",
+                          "cdnUrl": "https://cdn.example.com/assets/201427/tfteBYO_1704204958735.jpg",
+                          "created": 1704204961147,
+                          "modifiedDate": "2024-01-02T14:16:08.7260000",
+                          "isDisposable": false,
+                          "isZipFile": false,
+                          "isHtml5Creative": false,
+                          "assetDimensions": null,
+                          "iframeHtml": null
+                        },
+                        {
+                          "id": 2,
+                          "storagePath": "assets/201427/randomPath/index.html",
+                          "cdnUrl": "https://cdn.example.com/assets/201427/randomPath/index.html",
+                          "created": 1704204971010,
+                          "modifiedDate": "2024-01-02T14:16:11.375+00:00",
+                          "owId": 201427,
+                          "createdByUowId": 2002,
+                          "modifiedByUowId": 2003,
+                          "assetDimensions": {
+                            "width": 300,
+                            "height": 250
+                          },
+                          "iframeHtml": "\u003Ciframe src=\"https://cdn.example.com/assets/201427/randomPath/index.html\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"\u003E\u003C/iframe\u003E",
+                          "zipFile": true,
+                          "disposable": true,
+                          "html5Creative": true
+                        },
+                        {
+                          "id": 3,
+                          "storagePath": "assets/201427/2mBGamD_1704205759807.jpg",
+                          "cdnUrl": "https://cdn.example.com/assets/201427/2mBGamD_1704205759807.jpg",
+                          "created": 1704205761106,
+                          "modifiedDate": "2024-01-02T08:59:21.5080000",
+                          "isDisposable": false,
+                          "isZipFile": false,
+                          "isHtml5Creative": false,
+                          "assetDimensions": null,
+                          "iframeHtml": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddAssetRequestSchema": {
+        "required": [
+          "files",
+          "filesMetadata"
+        ],
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "description": "An array of multipart files to be uploaded as assets.",
+            "format": "binary",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "filesMetadata": {
+            "type": "string",
+            "description": "A JSON string representing the metadata associated with the files. Each object in the array should contain: attachedFileName, originalFileName, and optional fields: disposable (default: false), zipFile (default: false), html5Creative (default: false).",
+            "example": "[{\"attachedFileName\":\"image.png\",\"originalFileName\":\"image.png\",\"disposable\":false,\"zipFile\":false,\"html5Creative\":false}]"
+          }
+        },
+        "description": "Request schema for adding multiple assets via multipart form data"
+      },
+      "AddAssetResponseVO": {
+        "type": "object",
+        "properties": {
+          "assetID": {
+            "type": "integer",
+            "description": "The unique identifier assigned to the newly added asset.",
+            "format": "int32",
+            "example": 12345
+          },
+          "assetCDNURL": {
+            "type": "string",
+            "description": "The public URL of the CDN where the asset is stored.",
+            "example": "https://cdn.example.com/assets/12345"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/CreativeDimensionsVO"
+          },
+          "iframeHtml": {
+            "type": "string",
+            "description": "Ready-to-use iframe HTML code for HTML5 creatives. Only present for HTML5 creatives.",
+            "example": "\u003Ciframe src=\"https://cdn.example.com/creative/index.html\" width=\"160\" height=\"600\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"\u003E\u003C/iframe\u003E"
+          }
+        },
+        "description": "Response object for adding a new asset to the system."
+      },
+      "AddAssetsResponseSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/AddAssetResponseVO"
+            },
+            "description": "Map of file names to their asset response details. Each key is the original file name and the value contains the asset ID and CDN URL."
+          }
+        },
+        "description": "Response wrapper for add assets operation"
+      },
+      "CreativeDimensionsVO": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Dimensions of the asset (for HTML5 creatives). Contains width and height.",
+        "nullable": true
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "AssetUpdateVO": {
+        "required": [
+          "cdnUrl",
+          "storagePath"
+        ],
+        "type": "object",
+        "properties": {
+          "storagePath": {
+            "type": "string",
+            "description": "The storage path of the asset file.",
+            "example": "updated/path/to/asset.jpg"
+          },
+          "cdnUrl": {
+            "type": "string",
+            "description": "The CDN URL of the asset file.",
+            "example": "https://cdn.example.com/updated/assets/12345"
+          },
+          "disposable": {
+            "type": "boolean",
+            "description": "Indicates whether the asset is disposable.",
+            "example": true
+          }
+        },
+        "description": "Request object for updating asset details."
+      },
+      "UpdateAssetResponseSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Response data containing the update result message"
+            },
+            "description": "Response data containing the update result message"
+          }
+        },
+        "description": "Response wrapper for update asset operation"
+      },
+      "AssetDetailResponseSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/AssetDetailVO"
+          }
+        },
+        "description": "Response wrapper for get asset details operation"
+      },
+      "AssetDetailVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier of the asset.",
+            "format": "int32",
+            "example": 12345
+          },
+          "storagePath": {
+            "type": "string",
+            "description": "The storage path of the asset file.",
+            "example": "new/path/to/asset.jpg"
+          },
+          "cdnUrl": {
+            "type": "string",
+            "description": "The CDN URL of the asset file.",
+            "example": "https://cdn.example.com/assets/12345"
+          },
+          "created": {
+            "type": "integer",
+            "description": "The timestamp epoch in milliseconds when the asset was created.",
+            "format": "int64",
+            "example": 1627847261000
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "The timestamp when the asset was last modified.",
+            "format": "date-time"
+          },
+          "owId": {
+            "type": "integer",
+            "description": "The Organization Workspace ID associated with the asset.",
+            "format": "int32",
+            "example": 1001
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "The User Organization Workspace ID of the user who created the asset.",
+            "format": "int32",
+            "example": 2002
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "The User Organization Workspace ID of the user who last modified the asset.",
+            "format": "int32",
+            "example": 2003
+          },
+          "assetDimensions": {
+            "$ref": "#/components/schemas/CreativeDimensionsVO"
+          },
+          "iframeHtml": {
+            "type": "string",
+            "description": "Ready-to-use iframe HTML code for HTML5 creatives. Only present for HTML5 creatives.",
+            "nullable": true,
+            "example": "\u003Ciframe src=\"https://cdn.example.com/creative/index.html\" width=\"300\" height=\"250\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\"\u003E\u003C/iframe\u003E"
+          },
+          "html5Creative": {
+            "type": "boolean"
+          },
+          "disposable": {
+            "type": "boolean"
+          },
+          "zipFile": {
+            "type": "boolean"
+          }
+        },
+        "description": "Response object representing the details of an asset."
+      },
+      "AssetListResponseSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "type": "array",
+            "description": "List of all assets",
+            "items": {
+              "$ref": "#/components/schemas/AssetDetailVO"
+            }
+          }
+        },
+        "description": "Response wrapper for list all assets operation"
+      },
+      "DeleteAssetResponseSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the operation was successful",
+            "example": true
+          },
+          "data": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Asset deleted successfully."
+          }
+        },
+        "description": "Response wrapper for delete asset operation"
+      }
+    }
+  }
+}
