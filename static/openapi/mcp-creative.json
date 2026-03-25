@@ -29,7 +29,7 @@
           "MCP"
         ],
         "summary": "Add creative",
-        "description": "This API allows you to create creatives of various types by providing the creative metadata and creative files using multipart/form-data. The metadata is sent as a JSON string in the 'creativeRequest' form field, and files (when creativeSourceType is 'FILE') are uploaded in the 'creativeFiles' form field. The API supports batch creation of multiple creatives in a single request, with partial success/failure handling.",
+        "description": "This API creates creatives of various types via multipart/form-data. The metadata is sent as a JSON string in the 'creativeRequest' form field, and files (when creativeSourceType is 'FILE') are uploaded in the 'creativeFiles' form field. Supports batch creation of multiple creatives in a single request, with partial success/failure handling.\n\nThe 'creativeRequest' JSON is a map where each key is a unique reference ID (e.g. 'I001') and each value is an object with these fields:\n\nCommon fields: creativeName (String, required), platformCreativeTypeId (Integer, required: 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio), creativeSourceType (String enum, required: FILE | URL | HTML | HTML5 | VAST_URL | VAST_XML | DAAST_URL | DAAST_XML), creativeSource (String, required), clickUrl (String, required for non-VAST/DAAST types), externalCreativeId (String, optional), subMediaType (String, required for Native: 'image' or 'video').\n\nType-specific nested objects:\n- imageDetails: {creativeWidth, creativeHeight, pixelUrl} — for platformCreativeTypeId=11\n- htmlDetails: {creativeWidth, creativeHeight} — for platformCreativeTypeId=13\n- videoDetails: {creativeWidth, creativeHeight, duration, customTracking:{startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL}} — for platformCreativeTypeId=14\n- audioDetails: {duration, logoSource, logoHeight, logoWidth, customTracking:{...}} — for platformCreativeTypeId=17\n- nativeDetails: {title, description, cta:{id, ctaText, defaultCta}, brandName, brandIconSourceUrl, brandIconHeight, brandIconWidth, thumbnailSourceUrl, thumbnailHeight, thumbnailWidth} — for platformCreativeTypeId=15, combined with imageDetails (subMediaType='image') or videoDetails (subMediaType='video').",
         "operationId": "createCreatives",
         "parameters": [
           {
@@ -1046,7 +1046,7 @@
           "MCP"
         ],
         "summary": "Update creative details",
-        "description": " This API endpoint allows authorized users to update the details of an existing creative. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n The creative can be updated with a name, external creative ID, rejection reason, and remarks.  \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeName | String | Represents name of the creative |\n| externalCreativeId | String | Represents 3rd party id |\n| creativeRejectionReason | String | Represents reason for rejecting the creative if applicable |\n| creativeRemarks | String | Represents remarks to be added for this creative |\n",
+        "description": " This API endpoint allows authorized users to update the details of an existing creative. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n The creative can be updated with a name, external creative ID, rejection reason, and remarks.  \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeName | String | Represents name of the creative |\n| externalCreativeId | String | Represents 3rd party id |\n| creativeRejectionReason | String | Represents reason for rejecting the creative if applicable |\n| creativeRemarks | String | Represents remarks to be added for this creative |\n| trackingData | Object | Represents the tracking URLs for video, audio and native video creatives. This can only be updated for video, audio and native video creative types. <br> Please pass the url key with empty string explicitly in order to remove the value of that url. It is an object having below mentioned fields - <br> startUrl: String - Represents the start URL for the video <br> firstQuartileURL: String - Represents the tracking URL for first quartile <br> midPointURL: String - Represents the tracking URL for mid point <br> thirdQuartileURL: String - Represents the tracking URL for third quartile <br> completeURL: String - Represents the tracking URL for complete <br> impressionURL: String - Represents the tracking URL for impression |\n",
         "operationId": "updateCreative",
         "parameters": [
           {
@@ -1096,7 +1096,11 @@
                   "description": "Edit existing creative by Advertiser",
                   "value": {
                     "creativeName": "New creative name",
-                    "externalCreativeId": "3rd party id"
+                    "externalCreativeId": "3rd party id",
+                    "trackingData": {
+                      "startUrl": "",
+                      "firstQuartileURL": "http://firstquartileurl.com"
+                    }
                   }
                 },
                 "Edit existing creative by workspace/super user ": {
@@ -1831,7 +1835,7 @@
         "properties": {
           "creativeRequest": {
             "type": "string",
-            "description": "JSON string containing a map of unique identifiers to creative metadata. Each key is a temporary reference ID used to track the creative through the creation process and correlate it with uploaded files. Common key patterns include: H001-H999 (HTML creatives), I001-I999 (Image creatives), V001-V999 (Video creatives), A001-A999 (Audio creatives), NI001-NI999 (Native Image creatives), NV001-NV999 (Native Video creatives). The key can be any unique string identifier. The value is a CreateCreativeRequest object containing all creative metadata including creativeName, platformCreativeTypeId, creativeSourceType, clickUrl, and type-specific details. When creativeSourceType is 'FILE', the creativeSource field should contain the filename that matches one of the files in the creativeFiles array.",
+            "description": "JSON string containing a map of unique identifiers to creative metadata objects. Each key is a temporary reference ID (any unique string, e.g. 'I001', 'H001', 'V001'). Each value is a CreateCreativeRequest object with these fields:\n\n--- Common Fields (all creative types) ---\n- creativeName (String, required): Name of the creative.\n- platformCreativeTypeId (Integer, required): 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio.\n- creativeSourceType (String enum, required): Must be one of: FILE, URL, HTML, HTML5, VAST_URL, VAST_XML, DAAST_URL, DAAST_XML. FILE means upload via creativeFiles; URL means external URL; HTML means raw HTML markup; VAST_URL/VAST_XML and DAAST_URL/DAAST_XML are for video/audio ad-serving tags.\n- creativeSource (String, required): The content source. For FILE: must match a filename in creativeFiles. For URL: the full URL. For HTML: the HTML markup string. For VAST_XML/DAAST_XML: the XML string. For VAST_URL/DAAST_URL: the URL to the XML document.\n- clickUrl (String, required for IMAGE/HTML/VIDEO/AUDIO/NATIVE with FILE or URL source): Click-through URL.\n- externalCreativeId (String, optional): Third-party creative ID.\n- subMediaType (String, optional): Required for Native creatives only. Must be 'image' or 'video'.\n\n--- Type-Specific Detail Objects (nested inside each creative) ---\n\nFor Image creatives (platformCreativeTypeId=11), include 'imageDetails' object:\n  - creativeWidth (Integer): Image width in pixels.\n  - creativeHeight (Integer): Image height in pixels.\n  - pixelUrl (String, optional): Tracking pixel URL.\n\nFor HTML creatives (platformCreativeTypeId=13), include 'htmlDetails' object:\n  - creativeWidth (Integer, required): HTML creative width in pixels.\n  - creativeHeight (Integer, required): HTML creative height in pixels.\n\nFor Video creatives (platformCreativeTypeId=14), include 'videoDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML):\n  - creativeWidth (Integer): Video width in pixels.\n  - creativeHeight (Integer): Video height in pixels.\n  - duration (Long): Duration in seconds.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} — all Strings.\n\nFor Audio creatives (platformCreativeTypeId=17), include 'audioDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML/DAAST_URL/DAAST_XML):\n  - duration (Long): Duration in seconds.\n  - logoSource (String, optional): Logo image URL.\n  - logoHeight (Integer, optional): Logo height in pixels.\n  - logoWidth (Integer, optional): Logo width in pixels.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} — all Strings.\n\nFor Native creatives (platformCreativeTypeId=15), include 'nativeDetails' object AND the media detail object:\n  nativeDetails:\n  - title (String): Creative title.\n  - description (String): Creative description.\n  - cta (Object, optional): {id (Integer), ctaText (String), defaultCta (Boolean)}.\n  - brandName (String): Brand name.\n  - brandIconSourceUrl (String): Brand icon URL.\n  - brandIconHeight (Integer): Brand icon height.\n  - brandIconWidth (Integer): Brand icon width.\n  - thumbnailSourceUrl (String, optional): Thumbnail URL (for native video).\n  - thumbnailHeight (Integer, optional): Thumbnail height.\n  - thumbnailWidth (Integer, optional): Thumbnail width.\n  Also include 'imageDetails' (when subMediaType='image') or 'videoDetails' (when subMediaType='video') as described above.\n  Native video creatives also support VAST_URL and VAST_XML as creativeSourceType.\n\n--- Key Patterns (convention, not enforced) ---\nH001-H999 (HTML), I001-I999 (Image), V001-V999 (Video), A001-A999 (Audio), NI001-NI999 (Native Image), NV001-NV999 (Native Video). Any unique string works as a key.",
             "example": "{\"H001\":{\"creativeName\":\"Summer Campaign Banner\",\"externalCreativeId\":\"ext-12345\",\"platformCreativeTypeId\":13,\"creativeSourceType\":\"HTML\",\"creativeSource\":\"\u003Ca href='https://example.com'\u003E\u003Cimg src='banner.jpg'\u003E\u003C/a\u003E\",\"clickUrl\":\"https://example.com\",\"htmlDetails\":{\"creativeWidth\":728,\"creativeHeight\":90}},\"I001\":{\"creativeName\":\"Product Image\",\"platformCreativeTypeId\":11,\"creativeSourceType\":\"FILE\",\"creativeSource\":\"product.jpg\",\"clickUrl\":\"https://example.com/product\",\"imageDetails\":{\"creativeWidth\":1200,\"creativeHeight\":628}}}"
           },
           "creativeFiles": {
@@ -2032,6 +2036,9 @@
           "htmlDetails": {
             "$ref": "#/components/schemas/HtmlCreativeResponse"
           },
+          "html5Details": {
+            "$ref": "#/components/schemas/Html5CreativeResponse"
+          },
           "nativeDetails": {
             "$ref": "#/components/schemas/NativeCreativeResponse"
           },
@@ -2076,6 +2083,23 @@
           }
         },
         "description": "Base Creative response containing common fields"
+      },
+      "Html5CreativeResponse": {
+        "type": "object",
+        "properties": {
+          "creativeWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "creativeHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "html5Creative": {
+            "type": "boolean"
+          }
+        },
+        "description": "HTML5-specific metadata details"
       },
       "HtmlCreativeResponse": {
         "type": "object",
@@ -2306,9 +2330,64 @@
           "thumbnailHeight": {
             "type": "integer",
             "format": "int32"
+          },
+          "htmlDetails": {
+            "$ref": "#/components/schemas/CreativeSizeRequest"
+          },
+          "trackingData": {
+            "$ref": "#/components/schemas/CustomTracking"
           }
         },
         "description": "Update a Creative"
+      },
+      "CreativeSizeRequest": {
+        "type": "object",
+        "properties": {
+          "creativeWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "creativeHeight": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CustomTracking": {
+        "type": "object",
+        "properties": {
+          "startUrl": {
+            "type": "string",
+            "description": "Start event tracking URL",
+            "example": "https://tracker.example.com/start"
+          },
+          "firstQuartileURL": {
+            "type": "string",
+            "description": "First quartile tracking URL",
+            "example": "https://tracker.example.com/25"
+          },
+          "midPointURL": {
+            "type": "string",
+            "description": "Midpoint tracking URL",
+            "example": "https://tracker.example.com/50"
+          },
+          "thirdQuartileURL": {
+            "type": "string",
+            "description": "Third quartile tracking URL",
+            "example": "https://tracker.example.com/75"
+          },
+          "completeURL": {
+            "type": "string",
+            "description": "Complete event tracking URL",
+            "example": "https://tracker.example.com/complete"
+          },
+          "impressionURL": {
+            "type": "string",
+            "description": "Impression tracking URL",
+            "example": "https://tracker.example.com/impression"
+          }
+        },
+        "description": "Custom tracking URLs for playback milestones"
       },
       "UpdateCreativeResponseWrapper": {
         "type": "object",
@@ -2413,6 +2492,9 @@
           },
           "htmlDetails": {
             "$ref": "#/components/schemas/HtmlCreativeResponse"
+          },
+          "html5Details": {
+            "$ref": "#/components/schemas/Html5CreativeResponse"
           },
           "nativeDetails": {
             "$ref": "#/components/schemas/NativeCreativeResponse"
