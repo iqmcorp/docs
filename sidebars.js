@@ -5336,7 +5336,7 @@ const sidebars = {
               type: 'link',
               label: 'Custom Voter Audience Segment Details',
               href: '/political-vertical/audience-segments#get-custom-voter-audience-segment-details',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
