@@ -5747,6 +5747,12 @@ const sidebars = {
         },
         {
           type: 'doc',
+          label: 'Audience Tutorial',
+          id: `mcp/mcp-tutorials/mcp-audience-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
           label: 'Creative Tutorial',
           id: `mcp/mcp-tutorials/mcp-creative-tutorial`,
           className: 'sidebarItem'
