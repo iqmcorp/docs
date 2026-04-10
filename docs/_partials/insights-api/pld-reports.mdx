@@ -1,3 +1,4 @@
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Caret from '@site/static/img/caret.svg';
@@ -100,25 +101,86 @@ import CopyUrl from '@site/src/components/CopyUrl';
 
 ---
 
-### Get List of PLD Reports
+### Get List of PLD Templates
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/pld-reports" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/pld-templates" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get a list of PLD Reports. 
-
-A <var>pldId</var> can be used in the [Generate PLD Report](#generate-pld-report), [Download PLD Insight Report](#download-pld-report), and [Delete PLD Report](#delete-pld-report) endpoints. 
+Get a list of all PLD templates with optional filtering and pagination.
 
 | Query Parameters |  |
 | ---- | --- |
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field |
-| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>200</var> |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var> |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-pldId</var> |
+| `searchField` <br /><span class="type-text">string</span> | Filter templates by name |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>50</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination, default: <var>1</var> |
+| `frequencyIds` <br /><span class="type-text">integer</span> | Filter by [Scheduling Frequency IDs](/guidelines/insights-api#get-scheduling-frequencies) |
+| `statusIds` <br /><span class="type-text">integer</span> | Filter by [Template Status IDs](/guidelines/insights-api#get-list-of-template-statuses) |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-templateId</var> |
 
-<a href="#pld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Template Status ID](/guidelines/insights-api#get-list-of-template-statuses)</td>
+</tr>
+<tr>
+  <td>`nextRunPreviewUtc` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run (UTC), in milliseconds</td>
+</tr>
+<tr>
+  <td>`reportIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated report IDs</td>
+</tr>
+<tr>
+  <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns)</td>
+</tr>
+<tr>
+  <td>`reportStatusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by status ID</td>
+</tr>
+<tr>
+  <td>`statusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of template counts by status ID (top-level)</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the applied filters</td>
+</tr>
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
@@ -130,42 +192,42 @@ A <var>pldId</var> can be used in the [Generate PLD Report](#generate-pld-report
 {
   "success": true,
   "data": {
-    "totalRecords": 10,
-    "pldReportDataList": [
+    "data": [
       {
-        "pldId": 10,
-        "pldName": "530667_PLD_Insights_7",
-        "campaignName": "prod-campaign-21145",
-        "campaignId": 21145,
-        "pldStatusId": 3,
-        "startDate": 1732165200000,
-        "endDate": 1732424399000,
-        "ioId": 5,
-        "ioName": "Corporate, Inc.",
-        "isCampaignEligible": false,
-        "pldCreatedOn": 1721253632,
-        "creativeTypeId": 11,
-        "campaignPldTimezoneId": 29,
-        "ioTypeId": 1
-      },
-      {
-        "pldId": 9,
-        "pldName": "530667_PLD_Insights_6",
-        "campaignName": "Campaign-4949",
-        "campaignId": 4949,
-        "pldStatusId": 3,
-        "startDate": 1732165200000,
-        "endDate": 1732424399000,
-        "ioId": 15,
-        "ioName": "Quinton for Mayor",
-        "isCampaignEligible": false,
-        "pldCreatedOn": 1720325578,
-        "creativeTypeId": 14,
-        "campaignPldTimezoneId": 29,
-        "ioTypeId": 1
+        "templateId": 1,
+        "name": "Monthly PLD Report",
+        "frequencyId": 2,
+        "startDate": 1764843796510,
+        "endDate": 1764843796510,
+        "timezoneId": 29,
+        "statusId": 1,
+        "nextRunPreviewUtc": 1764843796510,
+        "reportIds": [10001, 10002, 10004],
+        "campaignIds": [10001, 10003],
+        "reportStatusSummary": [
+          {
+            "id": 1,
+            "count": 5
+          },
+          {
+            "id": 2,
+            "count": 2
+          }
+        ]
       }
     ],
-    "filteredRecords": 10
+    "statusSummary": [
+      {
+        "id": 1,
+        "count": 5
+      },
+      {
+        "id": 2,
+        "count": 5
+      }
+    ],
+    "filteredRecords": 1,
+    "totalRecords": 10
   }
 }
 ```
@@ -173,7 +235,7 @@ A <var>pldId</var> can be used in the [Generate PLD Report](#generate-pld-report
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
 
 ```ts
 import {
@@ -191,23 +253,236 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          totalRecords: number;
-          filteredRecords: number;
-          pldReportDataList: {
-            pldId: number;
-            pldName: string;
-            campaignName: string;
-            campaignId: number;
-            pldStatusId: number;
+          data: {
+            templateId: number;
+            name: string;
+            frequencyId: number;
             startDate: number;
             endDate: number;
-            ioId: number;
-            ioName: string;
-            isCampaignEligible: boolean;
-            pldCreatedOn: number;
-            creativeTypeId: number;
-            campaignPldTimezoneId: number;
-            ioTypeId: number;
+            timezoneId: number;
+            statusId: number;
+            nextRunPreviewUtc: number;
+            reportIds: number[];
+            campaignIds: number[];
+            reportStatusSummary: {
+              id: number;
+              count: number;
+            }[];
+          }[];
+          statusSummary: {
+            id: number;
+            count: number;
+          }[];
+          filteredRecords: number;
+          totalRecords: number;
+        }
+      }
+    }
+  };
+}
+
+function getAllPLDTemplates(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/pld-templates',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        frequencyIds?: `number`,
+        statusIds?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get PLD Template Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/pld-templates/{templateId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the details of a PLD template by its template ID.
+
+| Path Parameters |  |
+| ---- | --- |
+| `templateId` <br /><span class="type-text">integer</span> | The ID of the PLD template to retrieve |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+</tr>
+<tr>
+  <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns)</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`frequencyDetails` <br /><span class="type-text">object</span></td>
+  <td>Scheduling details based on frequency type</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+</tr>
+<tr>
+  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`aggregationEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether report data is aggregated</td>
+</tr>
+<tr>
+  <td>`recipientEmails` <br /><span class="type-text">array of strings</span></td>
+  <td>Recipient email addresses</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Template Status ID](/guidelines/insights-api#get-list-of-template-statuses)</td>
+</tr>
+<tr>
+  <td>`nextRunPreviewUtc` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run (UTC), in milliseconds</td>
+</tr>
+<tr>
+  <td>`firstRunLocked` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the first run is locked</td>
+</tr>
+<tr>
+  <td>`reportIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated report IDs</td>
+</tr>
+<tr>
+  <td>`ioId` <br /><span class="type-text">integer</span></td>
+  <td>[Insertion Order ID](/guidelines/campaign-api#get-insertion-order-details)</td>
+</tr>
+<tr>
+  <td>`ioName` <br /><span class="type-text">string</span></td>
+  <td>Insertion Order name</td>
+</tr>
+<tr>
+  <td>`ioTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Insertion Order Budget Type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types)</td>
+</tr>
+<tr>
+  <td>`reportStatusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by status ID</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "templateId": 1,
+    "name": "Monthly PLD Report",
+    "campaignIds": [101, 102, 103],
+    "frequency": 2,
+    "frequencyDetails": {
+      "dayOfMonthTypeId": 2,
+      "dayOfMonth": 15
+    },
+    "startDate": 1704067200000,
+    "endDate": 1735689599000,
+    "timezone": -5,
+    "aggregationEnabled": true,
+    "recipientEmails": [
+      "xyz@gmail.com"
+    ],
+    "status": "Active",
+    "nextRunPreviewUtc": 1706745600000,
+    "firstRunLocked": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          templateId: number;
+          name: string;
+          campaignIds: number[];
+          frequencyId: number;
+          frequencyDetails: {
+            dayOfWeekId?: number;
+            dayOfMonthTypeId?: number;
+            dayOfMonth?: number;
+            intervalModeId?: number;
+            intervalValue?: number;
+          };
+          startDate: number;
+          endDate: number;
+          timezoneId: number;
+          createdOn: number;
+          aggregationEnabled: boolean;
+          recipientEmails: string[];
+          statusId: number;
+          nextRunPreviewUtc: number;
+          firstRunLocked: boolean;
+          reportIds: number[];
+          ioId: number;
+          ioName: string;
+          ioTypeId: number;
+          reportStatusSummary: {
+            id: number;
+            count: number;
           }[];
         }
       }
@@ -215,18 +490,10 @@ interface Responses {
   };
 }
 
-function getPLDReportList(): Promise<Responses> {
+function getPLDTemplateById(): Promise<Responses> {
   const options = {
     method: 'GET',
-    url: 'https://api.iqm.com/api/v3/ins/pld-reports',
-    params: {
-      query?: {
-        searchField?: `string`,
-        pageNo?: `number`,
-        noOfEntries?: `number`,
-        sortBy?: `string`,
-      }
-    }
+    url: 'https://api.iqm.com/api/v3/ins/pld-templates/{templateId}',
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -352,33 +619,29 @@ function getStatusWiseCampaignsForPLDReports(): Promise<Responses> {
 
 ---
 
-### Generate PLD Report
+### Validate PLD Template Name
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld/templates/validate-name" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-This API calculates the cost for the impressions for the Provider Level Data Reports based on the impressions and mark up charged on the Organization and then creates the PLD Reports.
-
-:::info 
-
-A Campaign must meet the following eligibility criteria to generate PLD Report: 
-  * Must be healthcare Campaign 
-  * "running", "expired" (within last 90 days), "paused" (within last 90 days) status
-  * Must have duration of 3 or more days
-  * Audience type: **Matched Audience** from NPI IDs
-
-:::
+Checks if the given PLD template name is available (not already in use) within the caller's organization.
 
 | Request Schema |  |
 | ---- | --- |
-| `pldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
-| `pldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) |
-| `pldId` <br /><span class="type-text">integer</span> | [PLD ID](#get-list-of-pld-reports) to regenerate |
+| `name` <br /><span class="type-text">string</span> | PLD template name to validate (3–100 characters) |
 
-<a href="#pld-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`available` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the template name is available: <var>true</var> or <var>false</var></td>
+</tr>
+</table>
+</details>
 
 </div><div class="child2">
 
@@ -387,37 +650,24 @@ A Campaign must meet the following eligibility criteria to generate PLD Report:
 
 ```json title="Request Sample"
 {
-  "campaignId": 12345,
-  "pldStartDate": 1722311000,
-  "pldEndDate": 1722315000
+  "name": "Monthly PLD Report"
 }
 ```
 
-```json title="Response 200"
+```json title="Response 200 (name available)"
 {
   "success": true,
   "data": {
-    "pldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "pldStartDate": 1722311000,
-    "pldEndDate": 1722315000,
-    "pldChargeableImps": 1000,
-    "pldChargedImps": 100,
-    "pldChargeableCost": 1000,
-    "pldChargedCost": 100,
-    "fundsAvailable": true
+    "available": true
   }
 }
 ```
 
-```json title="Response 200 (failure)"
+```json title="Response 200 (name not available)"
 {
   "success": true,
   "data": {
-    "pldReportCreated": false,
-    "message": "PLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
+    "available": false
   }
 }
 ```
@@ -440,38 +690,586 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          pldReportCreated: boolean;
-          campaignId: number;
-          campaignName: string;
-          campaignStatus: string;
-          pldStartDate: number;
-          pldEndDate: number;
-          pldChargeableImps: number;
-          pldChargedImps: number;
-          pldChargeableCost: number;
-          pldChargedCost: number;
-          fundsAvailable: boolean
+          available: boolean;
         }
       }
     };
   };
 }
 
-function generatePLDReports(): Promise<Responses> {
+function validatePldTemplateName(): Promise<Responses> {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ins/pld-report',
+    url: 'https://api.iqm.com/api/v3/ins/pld/templates/validate-name',
     requestBody: {
       content: {
         "application/json": {
-          campaignId?: `number`,
-          pldId?: `number`,
-          pldStartDate?: `number`,
-          pldEndDate?: `number`,
-          endDate?: `number`,
-          startDate?: `number`,
-          id?: `number`,
+          name: `string`,
         }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create PLD Report Template
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report-templates" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Creates a PLD report template for the given Campaigns and scheduling configuration.
+
+The request defines a template name, associated Campaign IDs, frequency and frequency details (daily, weekly, monthly, or custom), template start/end dates, aggregation flag, recipient emails, and template status.
+
+When the template is <var>ACTIVE</var>, the platform will use the configured schedule to trigger periodic report generation.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`name` <br /><span class="type-text">string</span></td>
+<td>Template name (3–100 characters)</td>
+</tr>
+<tr>
+<td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+<td>[Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns) (max 50)</td>
+</tr>
+<tr>
+<td>`frequencyId` <br /><span class="type-text">integer</span></td>
+<td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies): one-time (<var>1</var>), daily (<var>2</var>), weekly (<var>3</var>), monthly (<var>4</var>), custom (<var>5</var>)</td>
+</tr>
+<tr>
+<td>`frequencyDetails` <br /><span class="type-text">object</span></td>
+<td>Scheduling details based on frequency type (see examples)</td>
+</tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`frequencyDetails` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`dayOfWeekId` <br /><span class="type-text">integer</span></td>
+      <td>Day of week (for weekly/custom-weekly)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonthTypeId` <br /><span class="type-text">integer</span></td>
+      <td>Day of month type: first day (<var>1</var>), specific day (<var>2</var>), last day (<var>3</var>)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonth` <br /><span class="type-text">integer</span></td>
+      <td>Specific day of month (2–28, when <var>dayOfMonthTypeId</var> = <var>2</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalModeId` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval mode: days (<var>501</var>), weeks (<var>502</var>), months (<var>503</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalValue` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval value (e.g., every X days/weeks/months)</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`aggregationEnabled` <br /><span class="type-text">boolean</span></td>
+<td>Indicates whether to aggregate report data</td>
+</tr>
+<tr>
+<td>`recipientEmails` <br /><span class="type-text">array of strings</span></td>
+<td>Recipient email addresses (max 15)</td>
+</tr>
+<tr>
+<td>`status` <br /><span class="type-text">string</span></td>
+<td>Template status: <var>ACTIVE</var> or <var>INACTIVE</var></td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Created template ID</td>
+</tr>
+<tr>
+  <td>`nextRunDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run, in milliseconds</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="One-Time Run">
+```json
+{
+  "name": "One-Time PLD",
+  "campaignIds": [111, 222, 333],
+  "frequencyId": 1,
+  "frequencyDetails": {},
+  "startDate": 1763145600000,
+  "endDate": 1765737600000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "a@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Daily Run">
+```json
+{
+  "name": "Daily PLD",
+  "campaignIds": [111, 222],
+  "frequencyId": 2,
+  "frequencyDetails": {},
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "daily@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Weekly Run">
+```json
+{
+  "name": "Weekly PLD",
+  "campaignIds": [111, 222, 333],
+  "frequencyId": 3,
+  "frequencyDetails": {
+    "dayOfWeekId": 3
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "weekly@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (First Day)">
+```json
+{
+  "name": "Monthly PLD (1st day)",
+  "campaignIds": [111],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 1
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "m1@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (Specific Day)">
+```json
+{
+  "name": "Monthly PLD (15th)",
+  "campaignIds": [111, 222],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 2,
+    "dayOfMonth": 15
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "m2@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (Last Day)">
+```json
+{
+  "name": "Monthly PLD (last day)",
+  "campaignIds": [111, 222],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 3
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "m3@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Days Interval)">
+```json
+{
+  "name": "Custom Every 10 Days",
+  "campaignIds": [111],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 501,
+    "intervalValue": 10
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "cdays@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Weekly Interval)">
+```json
+{
+  "name": "Custom Every 3 Weeks",
+  "campaignIds": [111, 222],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 502,
+    "intervalValue": 3,
+    "dayOfWeekId": 4
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "cweeks@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Monthly Interval)">
+```json
+{
+  "name": "Custom Every 2 Months – 10th",
+  "campaignIds": [111],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 503,
+    "intervalValue": 2,
+    "dayOfMonthTypeId": 2,
+    "dayOfMonth": 10
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "cm2@ws.com"
+  ],
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "templateId": 101,
+    "nextRunDate": 1764460800000
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          templateId: number;
+          nextRunDate: number;
+        }
+      }
+    };
+  };
+}
+
+function createPldTemplate(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/pld-report-templates',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          campaignIds: `number[]`,
+          frequencyId: `number`,
+          frequencyDetails: {
+            dayOfWeekId?: `number`,
+            dayOfMonthTypeId?: `number`,
+            dayOfMonth?: `number`,
+            intervalModeId?: `number`,
+            intervalValue?: `number`,
+          },
+          startDate: `number`,
+          endDate?: `number`,
+          aggregationEnabled: `boolean`,
+          recipientEmails?: `string[]`,
+          status: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get PLD Template Reports
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/pld-templates/{templateId}/reports" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the latest PLD reports for a specific template with optional filtering and pagination.
+
+| Path Parameters |  |
+| ---- | --- |
+| `templateId` <br /><span class="type-text">integer</span> | The ID of the PLD template for which to retrieve reports |
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Filter reports by search string |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>50</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination, default: <var>1</var> |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-reportId</var> |
+| `statusIds` <br /><span class="type-text">array of integers</span> | Filter by status IDs |
+| `frequencyIds` <br /><span class="type-text">array of integers</span> | Filter by [Scheduling Frequency IDs](/guidelines/insights-api#get-scheduling-frequencies) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`reportId` <br /><span class="type-text">integer</span></td>
+  <td>Report ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Report name</td>
+</tr>
+<tr>
+  <td>`requestedStartDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report's requested start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`requestedEndDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report's requested end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>Report status ID</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`generatedAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of when the report was generated, in milliseconds</td>
+</tr>
+<tr>
+  <td>`filePaths` <br /><span class="type-text">object</span></td>
+  <td>Presigned download URLs for the report files</td>
+</tr>
+<tr>
+  <td>`fileSizes` <br /><span class="type-text">object</span></td>
+  <td>File sizes in bytes for each format</td>
+</tr>
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the applied filters</td>
+</tr>
+<tr>
+  <td>`statusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by status ID</td>
+</tr>
+<tr>
+  <td>`frequencySummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by frequency ID</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "reportId": 180,
+        "name": "23897_PLD_Insights_7",
+        "requestedEndDate": 1762885799000,
+        "requestedStartDate": 1762799400000,
+        "statusId": 3,
+        "frequencyId": 3,
+        "generatedAt": 1764671972077,
+        "filePaths": {
+          "csvUrl": "https://.../9876.csv",
+          "xlsxUrl": "https://.../9876.xlxs"
+        },
+        "fileSizes": {
+          "csvBytes": 27223,
+          "xlsxBytes": 98604
+        }
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 1,
+    "statusSummary": [
+      {
+        "id": 3,
+        "count": 1
+      },
+      {
+        "id": 4,
+        "count": 1
+      }
+    ],
+    "frequencySummary": [
+      {
+        "id": 3,
+        "count": 1
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            reportId: number;
+            name: string;
+            requestedStartDate: number;
+            requestedEndDate: number;
+            statusId: number;
+            frequencyId: number;
+            generatedAt: number;
+            filePaths: {
+              csvUrl: string;
+              xlsxUrl: string;
+            };
+            fileSizes: {
+              csvBytes: number;
+              xlsxBytes: number;
+            };
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+          statusSummary: {
+            id: number;
+            count: number;
+          }[];
+          frequencySummary: {
+            id: number;
+            count: number;
+          }[];
+        }
+      }
+    }
+  };
+}
+
+function getLatestPLDReportForTemplate(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/pld-templates/{templateId}/reports',
+    params: {
+      query?: {
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        statusIds?: `number[]`,
+        frequencyIds?: `number[]`,
       }
     }
   };

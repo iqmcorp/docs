@@ -2997,8 +2997,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of PLD Reports',
-              href: '/guidelines/insights-api#get-list-of-pld-reports',
+              label: 'List of PLD Templates',
+              href: '/guidelines/insights-api#get-list-of-pld-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Details',
+              href: '/guidelines/insights-api#get-pld-template-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3011,9 +3018,23 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Generate PLD Report',
-              href: '/guidelines/insights-api#generate-pld-report',
+              label: 'Validate PLD Template Name',
+              href: '/guidelines/insights-api#validate-pld-template-name',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create PLD Report Template',
+              href: '/guidelines/insights-api#create-pld-report-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Reports',
+              href: '/guidelines/insights-api#get-pld-template-reports',
+              customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
@@ -3193,6 +3214,27 @@ const sidebars = {
               type: 'link',
               label: 'List of Insights Status',
               href: '/guidelines/insights-api#get-list-of-insights-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Statuses',
+              href: '/guidelines/insights-api#get-list-of-template-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Scheduling Frequencies',
+              href: '/guidelines/insights-api#get-scheduling-frequencies',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Reports Interval',
+              href: '/guidelines/insights-api#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -5947,8 +5989,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of PLD Reports',
-              href: '/healthcare-vertical/insights-pld#get-list-of-pld-reports',
+              label: 'List of PLD Templates',
+              href: '/healthcare-vertical/insights-pld#get-list-of-pld-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Details',
+              href: '/healthcare-vertical/insights-pld#get-pld-template-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -5961,9 +6010,23 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Generate PLD Report',
-              href: '/healthcare-vertical/insights-pld#generate-pld-report',
+              label: 'Validate PLD Template Name',
+              href: '/healthcare-vertical/insights-pld#validate-pld-template-name',
               customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create PLD Report Template',
+              href: '/healthcare-vertical/insights-pld#create-pld-report-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Reports',
+              href: '/healthcare-vertical/insights-pld#get-pld-template-reports',
+              customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
@@ -6124,6 +6187,48 @@ const sidebars = {
               href: '/healthcare-vertical/insights-pld#delete-aqs-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Insights Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'List of Insights Types',
+              href: '/healthcare-vertical/insights-pld#get-list-of-insights-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Insights Status',
+              href: '/healthcare-vertical/insights-pld#get-list-of-insights-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Statuses',
+              href: '/healthcare-vertical/insights-pld#get-list-of-template-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Scheduling Frequencies',
+              href: '/healthcare-vertical/insights-pld#get-scheduling-frequencies',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Reports Interval',
+              href: '/healthcare-vertical/insights-pld#get-pld-reports-interval',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
             },
           ]
         },
