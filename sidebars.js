@@ -2991,12 +2991,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'PLD Resource Properties',
-              href: '/guidelines/insights-api/#pld-resource-properties',
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'List of PLD Templates',
               href: '/guidelines/insights-api#get-list-of-pld-templates',
               customProps: { method: 'GET' },
@@ -3006,6 +3000,13 @@ const sidebars = {
               type: 'link',
               label: 'PLD Template Details',
               href: '/guidelines/insights-api#get-pld-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Reports',
+              href: '/guidelines/insights-api#get-pld-template-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3032,8 +3033,50 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'PLD Template Reports',
-              href: '/guidelines/insights-api#get-pld-template-reports',
+              label: 'Update PLD Report Template',
+              href: '/guidelines/insights-api#update-pld-report-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Regenerate PLD Report',
+              href: '/guidelines/insights-api#regenerate-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Compute PLD Report Cost',
+              href: '/guidelines/insights-api#compute-pld-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download PLD Insight Report',
+              href: '/guidelines/insights-api#download-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email PLD Report',
+              href: '/guidelines/insights-api#email-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete PLD Report',
+              href: '/guidelines/insights-api#delete-pld-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PLD Reports Interval',
+              href: '/guidelines/insights-api#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3049,20 +3092,6 @@ const sidebars = {
               label: 'Update PLD Reports Columns',
               href: '/guidelines/insights-api#update-pld-reports-columns',
               customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download PLD Insight Report',
-              href: '/guidelines/insights-api#download-pld-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Delete PLD Report',
-              href: '/guidelines/insights-api#delete-pld-report',
-              customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
           ]
@@ -3228,13 +3257,6 @@ const sidebars = {
               type: 'link',
               label: 'Scheduling Frequencies',
               href: '/guidelines/insights-api#get-scheduling-frequencies',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'PLD Reports Interval',
-              href: '/guidelines/insights-api#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -5984,11 +6006,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'PLD Resource Properties',
-              href: '/healthcare-vertical/insights-pld#pld-resource-properties'
-            },
-            {
-              type: 'link',
               label: 'List of PLD Templates',
               href: '/healthcare-vertical/insights-pld#get-list-of-pld-templates',
               customProps: { method: 'GET' },
@@ -5998,6 +6015,13 @@ const sidebars = {
               type: 'link',
               label: 'PLD Template Details',
               href: '/healthcare-vertical/insights-pld#get-pld-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'PLD Template Reports',
+              href: '/healthcare-vertical/insights-pld#get-pld-template-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -6024,8 +6048,50 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'PLD Template Reports',
-              href: '/healthcare-vertical/insights-pld#get-pld-template-reports',
+              label: 'Update PLD Report Template',
+              href: '/healthcare-vertical/insights-pld#update-pld-report-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Regenerate PLD Report',
+              href: '/healthcare-vertical/insights-pld#regenerate-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Compute PLD Report Cost',
+              href: '/healthcare-vertical/insights-pld#compute-pld-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Download PLD Insight Report',
+              href: '/healthcare-vertical/insights-pld#download-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email PLD Report',
+              href: '/healthcare-vertical/insights-pld#email-pld-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete PLD Report',
+              href: '/healthcare-vertical/insights-pld#delete-pld-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'PLD Reports Interval',
+              href: '/healthcare-vertical/insights-pld#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
@@ -6041,20 +6107,6 @@ const sidebars = {
               label: 'Update PLD Reports Columns',
               href: '/healthcare-vertical/insights-pld#update-pld-reports-columns',
               customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Download PLD Insight Report',
-              href: '/healthcare-vertical/insights-pld#download-pld-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Delete PLD Report',
-              href: '/healthcare-vertical/insights-pld#delete-pld-report',
-              customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
           ]
@@ -6220,13 +6272,6 @@ const sidebars = {
               type: 'link',
               label: 'Scheduling Frequencies',
               href: '/healthcare-vertical/insights-pld#get-scheduling-frequencies',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'PLD Reports Interval',
-              href: '/healthcare-vertical/insights-pld#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
