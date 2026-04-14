@@ -5795,6 +5795,12 @@ const sidebars = {
               label: 'Create ABM Audience',
               href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
               customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Upload ABM Filter File',
+              href: '/healthcare-vertical/audience-healthcare#upload-abm-filter-file',
+              customProps: { method: 'POST' },
             }
           ]
         },
