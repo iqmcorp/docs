@@ -5400,7 +5400,7 @@ const sidebars = {
               type: 'link',
               label: 'Custom Voter Audience Segment Details',
               href: '/political-vertical/audience-segments#get-custom-voter-audience-segment-details',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
@@ -5858,6 +5858,12 @@ const sidebars = {
               type: 'link',
               label: 'Create ABM Audience',
               href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Upload ABM Filter File',
+              href: '/healthcare-vertical/audience-healthcare#upload-abm-filter-file',
               customProps: { method: 'POST' },
             }
           ]
