@@ -1,6 +1,9 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CopyUrl from '@site/src/components/CopyUrl';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+
+### Create ABM Audience 
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/abm" />
 
@@ -238,3 +241,200 @@ function saveAbmAudience(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+---
+
+### Upload ABM Filter File
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/abm/healthcare-data/filter-file" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Extract ABM Healthcare Data filters from an uploaded file. The file is uploaded as multipart/form-data in the <var>abmFilterFile</var> form data field, and filter column mappings and file type are sent as query parameters.
+
+| Request Schema | |
+| --- | --- |
+| `fileType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Type of the file being uploaded: CSV (<var>1</var>), Excel (<var>2</var>) |
+| `columns` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Serialized JSON mapping of file column headers to filter field names
+| `abmFilterFile` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">required</span> | File containing the ABM audience data to be filtered
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+<summary><var>columns</var> sample object</summary>
+```json
+{
+  "Title-name": "Title",
+  "Account-type-name": "Account Type",
+  "Account-Sub-Type-Name": "Account Sub-Type",
+  "Health-System-Name": "Health System Name",
+  "Account-Name": "Account Name",
+  "Speciality-Name": "Speciality",
+  "City-Name": "City",
+  "State-Name": "State"
+}
+```
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthCareFilterData` <br /><span class="type-text">object</span></td>
+    <td>Object containing matched filter IDs</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`healthCareFilterData` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthcareSystemIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of healthcare system IDs</td>
+    </tr>
+    <tr>
+    <td>`healthcareAccountIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of healthcare account IDs</td>
+    </tr>
+    <tr>
+    <td>`accountTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [account type IDs](#healthcare-account-types)</td>
+    </tr>
+    <tr>
+    <td>`accountSubTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [account subtype IDs](#healthcare-account-subtypes)</td>
+    </tr>
+    <tr>
+    <td>`titleIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of title IDs</td>
+    </tr>
+    <tr>
+    <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [specialty IDs](#healthcare-specialties-list)</td>
+    </tr>
+    <tr>
+    <td>`countryIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [country IDs](/guidelines/master-api#get-country-segment)</td>
+    </tr>
+    <tr>
+    <td>`stateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [state IDs](/guidelines/master-api#get-state-segment)</td>
+    </tr>
+    <tr>
+    <td>`cityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Set of [city IDs](/guidelines/master-api#get-city-segment)</td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>`matchingRate` <br /><span class="type-text">integer</span></td>
+    <td>Matching rate indicating the percentage of records that matched the filters</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2a">
+
+<CodeDropdown>
+<CodeOption label="Form Data Sample" default>
+```http
+POST /api/v3/audience/abm/healthcare-data/filter-file HTTP/1.1
+Host: api.iqm.com
+Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24
+X-IAA-OW-ID: 1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fileType"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="columns"
+
+{"Title-name":"Title","Account-type-name":"Account Type","Account-Sub-Type-Name":"Account Sub-Type","Health-System-Name":"Health System Name","Account-Name":"Account Name","Speciality-Name":"Speciality","City-Name":"City","State-Name":"State"}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="abmFilterFile"; filename="abm-data.csv"
+Content-Type: text/csv
+
+[Binary CSV file data]
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
+</CodeOption>
+<CodeOption label="cURL Sample">
+```bash
+curl -X POST 'https://api.iqm.com/api/v3/audience/abm/healthcare-data/filter-file' \
+  -H "Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24" \
+  -H "X-IAA-OW-ID: 1" \
+  -F 'abmFilterFile=@/path/to/abm-data.csv;type=text/csv' \
+  -F 'fileType=1' \
+  -F 'columns={"Title-name":"Title","Account-type-name":"Account Type","Account-Sub-Type-Name":"Account Sub-Type","Health-System-Name":"Health System Name","Account-Name":"Account Name","Speciality-Name":"Speciality","City-Name":"City","State-Name":"State"}'
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "healthCareFilterData": {
+      "healthcareSystemIds": [
+        1,
+        2,
+        3
+      ],
+      "healthcareAccountIds": [
+        1,
+        2,
+        3
+      ],
+      "accountTypeIds": [
+        1,
+        2,
+        3
+      ],
+      "accountSubTypeIds": [
+        1,
+        2,
+        3
+      ],
+      "titleIds": [
+        1,
+        2,
+        3
+      ],
+      "specialityIds": [
+        1,
+        2,
+        3
+      ],
+      "stateIds": [
+        1,
+        2,
+        3
+      ],
+      "cityIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    "matchingRate": 95
+  }
+}
+```
+
+```json title="Error 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid System column provided."
+    }
+  ]
+}
+```
+
+</div></div>
+
