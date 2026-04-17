@@ -855,6 +855,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Audience Count by Data Partner',
+              href: '/guidelines/audience-api#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -5264,6 +5271,34 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Basic Audience Details',
+              href: '/political-vertical/audience-segments#basic-audience-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Status',
+              href: '/political-vertical/audience-segments#audience-count-by-status',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Type',
+              href: '/political-vertical/audience-segments#audience-count-by-type',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Data Partner',
+              href: '/political-vertical/audience-segments#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
           ]
         },
         {
@@ -5746,6 +5781,48 @@ const sidebars = {
       items: [
         {
           type: `category`,
+          label: `Audience Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Audience Details List',
+              href: '/healthcare-vertical/audience-healthcare#audience-details-list',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Basic Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#basic-audience-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Status',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-status',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Type',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-type',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Data Partner',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: `category`,
           label: `Healthcare Data Details`,
           className: 'sidebarItem',
           items: [
@@ -5889,12 +5966,6 @@ const sidebars = {
               type: 'link',
               label: 'Create ICT Audience',
               href: '/healthcare-vertical/audience-healthcare#create-ict-audience',
-              customProps: { method: 'POST' },
-            },
-            {
-              type: 'link',
-              label: 'ICT Audience Count by Data Partner',
-              href: '/healthcare-vertical/audience-healthcare#ict-audience-count-by-data-partner',
               customProps: { method: 'POST' },
             }
           ]
