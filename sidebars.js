@@ -5679,13 +5679,6 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
-            {
-              type: 'link',
-              label: 'Supported Parameters',
-              href: '/political-vertical/planner#get-supported-parameters',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
           ]
         },
         {
@@ -5784,6 +5777,13 @@ const sidebars = {
           label: 'More Political Planner Details',
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Supported Parameters',
+              href: '/political-vertical/planner#get-supported-parameters',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'Targeting Types',
