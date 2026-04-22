@@ -5598,6 +5598,233 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Planner API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'political-vertical/planner'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Political Planner Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Resource Properties',
+              href: '/political-vertical/planner#political-planner-resource-properties',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Details by ID',
+              href: '/political-vertical/planner#get-plan-details-by-id',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Plans',
+              href: '/political-vertical/planner#get-list-of-political-plans',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Proposals',
+              href: '/political-vertical/planner#get-list-of-proposals',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Proposal Details',
+              href: '/political-vertical/planner#get-proposal-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Proposal',
+              href: '/political-vertical/planner#download-proposal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Proposal Summary',
+              href: '/political-vertical/planner#get-proposal-summary',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Strategies',
+              href: '/political-vertical/planner#get-list-of-strategies',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Strategy Details',
+              href: '/political-vertical/planner#get-strategy-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Estimate Plan Reach',
+              href: '/political-vertical/planner#estimate-plan-reach',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Supported Parameters',
+              href: '/political-vertical/planner#get-supported-parameters',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Political Planner Management',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Create Plan',
+              href: '/political-vertical/planner#create-plan',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Edit Plan',
+              href: '/political-vertical/planner#edit-plan',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Plans',
+              href: '/political-vertical/planner#delete-plans',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Activate Proposal',
+              href: '/political-vertical/planner#activate-proposal',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Edit Proposal',
+              href: '/political-vertical/planner#edit-proposal',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate IO and Campaigns',
+              href: '/political-vertical/planner#generate-io-and-campaigns',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Proposals',
+              href: '/political-vertical/planner#delete-proposals',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Restore Proposals',
+              href: '/political-vertical/planner#restore-proposals',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create CVA Details',
+              href: '/political-vertical/planner#create-cva-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update CVA Details',
+              href: '/political-vertical/planner#update-cva-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate Custom Strategies',
+              href: '/political-vertical/planner#generate-custom-strategies',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Strategy',
+              href: '/political-vertical/planner#delete-strategy',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Political Planner Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Targeting Types',
+              href: '/political-vertical/planner#get-targeting-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Strategy Types',
+              href: '/political-vertical/planner#get-strategy-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Split Types',
+              href: '/political-vertical/planner#get-split-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Statuses',
+              href: '/political-vertical/planner#get-plan-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Objectives',
+              href: '/political-vertical/planner#get-plan-objectives',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: 'Master API',
       className: 'sidebarCategory',
       items: [
