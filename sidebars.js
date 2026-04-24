@@ -2943,6 +2943,12 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'VLD Eligibility Requirements',
+              href: '/guidelines/insights-api#vld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'VLD Resource Properties',
               href: '/guidelines/insights-api#voter-level-data-reports',
               className: 'sidebarItem'
@@ -2996,6 +3002,12 @@ const sidebars = {
           label: `Provider Level Data Reports`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'PLD Eligibility Requirements',
+              href: '/guidelines/insights-api#pld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'List of PLD Templates',
@@ -3110,6 +3122,12 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'SLS Eligibility Requirements',
+              href: '/guidelines/insights-api#sls-eligiblity-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'SLS Resource Properties',
               href: '/guidelines/insights-api#sls-resource-properties',
               className: 'sidebarItem'
@@ -3170,6 +3188,12 @@ const sidebars = {
           label: 'Audience Quality Score Reports',
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'AQS Eligibility Requirements',
+              href: '/guidelines/insights-api#aqs-eligibility-requirements',
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'AQS Resource Properties',
@@ -5546,6 +5570,12 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'VLD Eligibility Requirements',
+              href: '/political-vertical/insights-vld/#vld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'VLD Resource Properties',
               href: '/political-vertical/insights-vld/#vld-resource-properties',
               className: 'sidebarItem'
@@ -6310,6 +6340,12 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'PLD Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#pld-eligibility-requirements',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
               label: 'List of PLD Templates',
               href: '/healthcare-vertical/insights-pld#get-list-of-pld-templates',
               customProps: { method: 'GET' },
@@ -6422,6 +6458,12 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'SLS Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#sls-eligiblity-requirements',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
               label: 'SLS Resource Properties',
               href: '/healthcare-vertical/insights-pld#sls-resource-properties',
               customProps: { method: 'GET' },
@@ -6483,6 +6525,12 @@ const sidebars = {
           label: 'Audience Quality Score Reports',
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'AQS Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#aqs-eligibility-requirements',
+              className: 'sidebarItem',
+            },
             {
               type: 'link',
               label: 'AQS Resource Properties',
