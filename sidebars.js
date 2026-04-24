@@ -2380,41 +2380,6 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
-            {
-              type: 'link',
-              label: 'Download Report',
-              href: '/guidelines/dashboard-api#download-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Goal AI Optimization`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Get Goal-AI Optimization Report',
-              href: '/guidelines/dashboard-api#get-goal-ai-optimization-report',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Goal-AI Optimization Activities',
-              href: '/guidelines/dashboard-api#get-goal-ai-optimization-activities',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download Goal-AI Optimization Activities',
-              href: '/guidelines/dashboard-api#download-goal-ai-optimization-activities',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
           ]
         },
       ],
