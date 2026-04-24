@@ -1376,6 +1376,154 @@ Create custom Reports or generate tailored Insights Reports from the Dashboard.
 
 ### Workspace Report
 
+<CodeDropdown label="API Version" defaultValue="v4-(latest)">
+<CodeOption label="v4 (Latest)">
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-workspace" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get aggregated Campaign performance metrics grouped by Workspace. Supports `AGGREGATED`, `AGGREGATED_LIST`, and `AGGREGATED_TOTAL` request types.
+
+| Request Schema | |
+| --- | --- |
+| `pagination` <br /><span class="type-text">object</span> | Pagination settings |
+| `pagination.pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var> |
+| `pagination.noOfEntries` <br /><span class="type-text">integer</span> | Entries per page, default: <var>200</var> |
+| `sort` <br /><span class="type-text">object</span> | Sorting settings |
+| `sort.field` <br /><span class="type-text">string</span> | Sort by field, default: <var>impressions</var> |
+| `sort.order` <br /><span class="type-text">string</span> | Sort order: <var>ASC</var> or <var>DESC</var> |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.campaignTypeIds` <br /><span class="type-text">array of integers</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>, <var>paused</var>) |
+| `requestType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>AGGREGATED</var>, <var>AGGREGATED_LIST</var>, or <var>AGGREGATED_TOTAL</var> |
+
+<a href="#dashboard-reports-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pagination": {
+    "pageNo": 1,
+    "noOfEntries": 200
+  },
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "owIds": [200058, 200062, 200153, 200178],
+    "startTimeEpochMillis": 1773633600000,
+    "endTimeEpochMillis": 1773719999000,
+    "searchField": "",
+    "creativeTypeIds": [11, 13, 14, 17],
+    "campaignTypeIds": [1],
+    "verticalIds": [],
+    "campaignStatusList": ["running"]
+  },
+  "requestType": "AGGREGATED"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 4,
+    "filteredRecords": 4,
+    "recordsTotal": {
+      "filteredRecordsTotal": 4,
+      "impressions": 105709,
+      "clicks": 99,
+      "mediaSpent": 1534.25,
+      "CTR": 0.094,
+      "winRate": 13.52,
+      "spent": 1837.82,
+      "VCR": 0,
+      "dataCost": 18.44,
+      "thirdPartyCost": 2.75,
+      "workspaceSpent": 623.6,
+      "platformSpent": 541.08,
+      "workspaceMediaEarning": 512.3,
+      "platformMediaEarning": 425.1,
+      "organizationBidShadingSaving": 0,
+      "totalAttributedConversion": 5,
+      "totalAttributedViewThroughConversion": 2,
+      "totalAttributedClickThroughConversion": 3,
+      "costPerAttributedConversion": 367.56,
+      "totalAttributedConversionRate": 0.0047,
+      "prebidCost": 0,
+      "pldInsightsCost": 12.33,
+      "slsInsightsCost": 5.1,
+      "vldInsightsCost": 8.75,
+      "aqInsightsCost": 3.2,
+      "adServingCost": 2.75,
+      "platformTotalEarning": 425.1,
+      "platformPLDInsightsEarnings": 10,
+      "platformSLSInsightsEarnings": 4.2,
+      "platformVLDInsightsEarnings": 7.5,
+      "platformBidShadingEarning": 0,
+      "platformAQInsightsEarnings": 2.8,
+      "workspaceTotalEarning": 512.3,
+      "workspacePLDInsightsEarnings": 2.33,
+      "workspaceSLSInsightsEarnings": 0.9,
+      "workspaceVLDInsightsEarnings": 1.25,
+      "workspaceBidShadingEarning": 0,
+      "workspaceAQInsightsEarnings": 0.4
+    },
+    "recordsList": [
+      {
+        "owId": 200058,
+        "workspaceId": 1053,
+        "workspaceName": "stageadv1",
+        "organizationName": "Test Organisation - Alpha",
+        "budgetDay": 65.69,
+        "budgetTotal": 1000,
+        "impressions": 47326,
+        "clicks": 42,
+        "mediaSpent": 638.47,
+        "CTR": 0.0886,
+        "winRate": 20.01,
+        "spent": 765.72,
+        "VCR": 0,
+        "dataCost": 8.2,
+        "workspaceSpent": 253.4,
+        "platformSpent": 210.05,
+        "workspaceMediaEarning": 210.3,
+        "platformMediaEarning": 175.22,
+        "organizationBidShadingSaving": 0,
+        "totalAttributedConversion": 3,
+        "costPerAttributedConversion": 255.24,
+        "totalAttributedConversionRate": 0.0063
+      }
+    ]
+  }
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+</CodeOption>
+<CodeOption label="v3 (Deprecated)">
+
+:::warning
+This version of the API is deprecated. Use the v4 endpoint above.
+:::
+
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/by-workspace" />
 
 <div class="endpoint-container">
@@ -1402,9 +1550,6 @@ Get a Report on a Campaign's performance by Workspace and supported filters.
 
 </div>
 <div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
 
 ```json title="Request Sample"
 {
@@ -1433,85 +1578,16 @@ Get a Report on a Campaign's performance by Workspace and supported filters.
       "clicks": 0,
       "totalCount": 57,
       "winRate": 0,
-      "logoURL": null,
-      "avatarURL": null,
-      "budgetDay": 1.8985625880766135e+307,
-      "budgetSpent": 60000,
-      "budgetTotal": 5.9e+307,
-      "dataCost": 0,
-      "mediaBudget": 7,
-      "owId": 0,
-      "orgId": 0,
+      "budgetDay": 0,
+      "budgetTotal": 0,
       "impressions": 0,
-      "industry": 0,
       "mediaSpent": 0,
       "spent": 0,
       "workspaceSpent": 0,
       "platformSpent": 0,
-      "customerSpent": 0,
       "platformMediaEarning": 0,
-      "platformBidShadingEarning": 0,
-      "platformTotalEarning": 0,
       "workspaceMediaEarning": 0,
-      "workspaceBidShadingEarning": 0,
-      "workspaceTotalEarning": 0,
       "organizationBidShadingSaving": 0,
-      "organizationName": null,
-      "companySize": 0,
-      "workspaceName": null,
-      "workspaceId": 0,
-      "workspaceDomain": null,
-      "workspaceOrganizationName": null,
-      "bidImpressions": 0,
-      "startCount": 0,
-      "firstCount": 0,
-      "midCount": 0,
-      "thirdCount": 0,
-      "completeCount": 0,
-      "audioVideoActualBids": 0,
-      "audioVideoActualImpressions": 0,
-      "eCPC": 0,
-      "eCPM": 0,
-      "eCPI": 0,
-      "eCPCV": 0,
-      "eCPV": 0,
-      "totalAttributedConversion": 0,
-      "totalAttributedViewThroughConversion": 0,
-      "totalAttributedClickThroughConversion": 0,
-      "costPerAttributedConversion": 0,
-      "totalAttributedConversionRate": 0,
-      "reach": 0,
-      "frequency": 0,
-      "date": null,
-      "campaignId": 0,
-      "campaignName": null,
-      "maxBid": 0,
-      "startTime": 0,
-      "endTime": 0,
-      "campaignType": null,
-      "status": null,
-      "mappingDataCost": 0,
-      "mappingSpent": 0,
-      "campaignTimezone": null,
-      "creativeType": null,
-      "budgetPacing": false,
-      "isCampaignFromNewPlatform": false,
-      "percentageOfTotalSpent": 0,
-      "vldInsightsCost": null,
-      "workspaceVLDInsightsEarnings": null,
-      "platformVLDInsightsEarnings": null,
-      "pldInsightsCost": null,
-      "workspacePLDInsightsEarnings": null,
-      "platformPLDInsightsEarnings": null,
-      "uowId": 0,
-      "audioVideoViewed": 0,
-      "ioId": 0,
-      "ioName": null,
-      "ioTimezone": 0,
-      "ioBudgetDistributionMethod": 0,
-      "exchangeId": 0,
-      "exchangeName": null,
-      "autoSumIoTotalBudget": false,
       "CTR": 0,
       "VCR": 0,
       "CVR": 0
@@ -1520,179 +1596,129 @@ Get a Report on a Campaign's performance by Workspace and supported filters.
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+</CodeOption>
+</CodeDropdown>
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+---
 
-const axios = getInstance();
+### IO Report
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          recordsTotal: {
-            click: number;
-            totalCount: number;
-            winRate: number;
-            logoUrl: string;
-            avatarUrl: string;
-            budgetDay: number;
-            budgetSpent: number;
-            budgetTotal: number;
-            dataCost: number;
-            mediaBudget: number;
-            owId: number;
-            orgId: number;
-            impressions: number;
-            industry: number;
-            mediaSpent: number;
-            spent: number;
-            workspaceSpent: number;
-            platformSpent: number;
-            customerSpent: number;
-            platformMediaEarning: number;
-            platformBidShadingEarning: number;
-            platformTotalEarning: number;
-            workspaceMediaEarning: number;
-            workspaceBidShadingEarning: number;
-            workspaceTotalEarning: number;
-            organizationBidShadingSaving: number;
-            organizationName: string;
-            companySize: number;
-            workspaceName: string;
-            workspaceId: number;
-            workspaceDomain: string;
-            workspaceOrganizationName: string;
-            bidImpressions: number;
-            startCount: number;
-            firstCount: number;
-            midCount: number;
-            thirdCount: number;
-            completeCount: number;
-            audioVideoActualBids: number;
-            audioVideoActualImpressions: number;
-            eCPC: number;
-            eCPM: number;
-            eCPI: number;
-            eCPCV: number;
-            eCPv: number;
-            totalAttributedConversion: number;
-            totalAttributedViewThroughConversion: number;
-            totalAttributedClickThroughConversion: number;
-            costPerAttributedConversion: number;
-            totalAttributedConversionRate: number;
-            reach: number;
-            frequency: number;
-            date: number;
-            campaignId: number;
-            campaignName: string;
-            maxBid: number;
-            startTime: number;
-            endTime: number;
-            campaignType: string;
-            status: number;
-            mappingDataCost: number;
-            mappingSpent: number;
-            campaignTimezone: string;
-            creativeType: string;
-            budgetPacing: boolean;
-            isCampaignFromNewPlatform: boolean;
-            percentageOfTotalSpent: number;
-            vldInsightsCost: number;
-            workspaceVLDInsightsEarnings: number;
-            platformVLDInsightsEarnings: number;
-            pldInsightsCost: number;
-            workspacePLDInsightsEarnings: number;
-            platformPLDInsightsEarnings: number;
-            uowId: number;
-            audioVideoViewed: number;
-            ioId: number;
-            ioName: string;
-            ioTimezone: number;
-            ioBudgetDistributionMethod: number;
-            exchangeId: number;
-            exchangeName: string;
-            autoSumTotalBudget: boolean;
-            CTR: number;
-            VCR: number;
-            CVR: number;
-          }
-        }
-      }
-    };
-  };
+<CodeDropdown label="API Version" defaultValue="v4-(latest)">
+<CodeOption label="v4 (Latest)">
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-io" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get IO (Insertion Order) level aggregated performance report data including core metrics, pacing, reach/frequency, insights earnings, and conversions. Supports `AGGREGATED`, `AGGREGATED_LIST`, and `AGGREGATED_TOTAL` request types.
+
+| Request Schema | |
+| --- | --- |
+| `pagination` <br /><span class="type-text">object</span> | Pagination settings |
+| `pagination.pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var> |
+| `pagination.noOfEntries` <br /><span class="type-text">integer</span> | Entries per page, default: <var>50</var> |
+| `sort` <br /><span class="type-text">object</span> | Sorting settings |
+| `sort.field` <br /><span class="type-text">string</span> | Sort by field, default: <var>impressions</var> |
+| `sort.order` <br /><span class="type-text">string</span> | Sort order: <var>ASC</var> or <var>DESC</var> |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.ioIds` <br /><span class="type-text">array of integers</span> | [Insertion Order ID](/guidelines/campaign-api#get-insertion-order-details)s |
+| `filters.campaignBudgetTypeIds` <br /><span class="type-text">array of integers</span> | [Budget Type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types)s |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>, <var>paused</var>, <var>pending</var>) |
+| `requestType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>AGGREGATED</var>, <var>AGGREGATED_LIST</var>, or <var>AGGREGATED_TOTAL</var> |
+
+<a href="#dashboard-reports-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pagination": {
+    "pageNo": 1,
+    "noOfEntries": 50
+  },
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "owIds": [200058, 200062, 200153, 200178],
+    "startTimeEpochMillis": 1773633600000,
+    "endTimeEpochMillis": 1773719999000,
+    "searchField": "",
+    "ioIds": [1001, 1002],
+    "campaignBudgetTypeIds": [1, 2],
+    "campaignStatusList": ["running", "paused", "pending"]
+  },
+  "requestType": "AGGREGATED"
 }
+```
 
-function dashboard-report-by-workspace(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/das/report/by-workspace',
-    requestBody: {
-      content: {
-        "application/json": {
-          searchBy?: string[],
-          columns?: {
-            [key: string]: Record<string, never>,
-          }[],
-          startDate?: `number`,
-          endDate?: `number`,
-          timezoneId?: `number`,
-          timezoneName?: `string`,
-          resultType?: `string`,
-          campaignStatus?: `string`,
-          campaignStatusList?: `string[]`,
-          creativeTypeIds?: `number[]`,
-          owIds?: `string`,
-          owIdsList?: `number[]`,
-          workspaceOwIdsList?: `number[]`,
-          customerOwIdsList?: `number[]`,
-          tab?: `string`,
-          isGraph?: `boolean`,
-          dayDiff?: `number`,
-          download?: `boolean`,
-          fileType?: `string`,
-          fileName?: `string`,
-          campaignIds?: `number[]`,
-          campaignGroupIds?: `number[]`,
-          isBetaUser?: `boolean`,
-          isAudienceFlagsRequired?: `boolean`,
-          loggedInUowId?: `number`,
-          graphType?: `string`,
-          ioIdsList?: `number[]`,
-          ioStatusIdsList?: `number[]`,
-          ids?: `number[]`,
-          budgetTypeIdList?: `number[]`,
-          campaignTypeIds?: `number[]`,
-          organizationType?: `string`,
-          campaignRequest?: `boolean`,
-          dataQueryEligible?: `boolean`,
-          totalQueryEligible?: `boolean`,
-          pagination?: `string`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: `ASC` | `DESC`,
-          offset?: `number`,
-        }
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 2,
+    "filteredRecords": 2,
+    "recordsTotal": {
+      "filteredRecordsTotal": 2,
+      "impressions": 248500,
+      "clicks": 7455,
+      "spent": 4312.75,
+      "mediaSpent": 3881.48,
+      "dataCost": 216.4,
+      "prebidCost": 0,
+      "winRate": 26.3,
+      "CTR": 3,
+      "VCR": 0,
+      "workspaceSpent": 3881.48,
+      "platformSpent": 431.27,
+      "workspaceMediaEarning": 194.07,
+      "platformMediaEarning": 388.15,
+      "organizationBidShadingSaving": 0,
+      "reach": 210000,
+      "frequency": 1.18,
+      "totalAttributedConversion": 0,
+      "ioTotalBudget": 13000
+    },
+    "recordsList": [
+      {
+        "ioId": 1001,
+        "ioName": "Summer Campaign IO",
+        "owId": 200058,
+        "organizationName": "Acme Corp",
+        "ioBudgetTypeId": 1,
+        "ioStatusId": 1,
+        "ioStartTime": 1773633600000,
+        "ioEndTime": 1775398399000,
+        "ioTimezone": 29,
+        "isAutoSumIoTotalBudget": true,
+        "campaignsCount": 4,
+        "ioTotalBudget": 8000,
+        "impressions": 148500,
+        "clicks": 4455,
+        "spent": 2643.8,
+        "mediaSpent": 2379.42,
+        "winRate": 27.1,
+        "CTR": 3,
+        "VCR": 0,
+        "workspaceSpent": 2379.42,
+        "platformSpent": 264.38,
+        "totalAttributedConversion": 12,
+        "ioPacingPercentage": 33.05
       }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+    ]
+  }
 }
 ```
 
@@ -1700,9 +1726,12 @@ function dashboard-report-by-workspace(): Promise<Responses> {
 
 </div></div>
 
----
+</CodeOption>
+<CodeOption label="v3 (Deprecated)">
 
-### IO Report
+:::warning
+This version of the API is deprecated. Use the v4 endpoint above.
+:::
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/by-io" />
 
@@ -1734,9 +1763,6 @@ Get a Report on a Campaign's performance by Insertion Order and supported filter
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
   "startDate": "1660834800000",
@@ -1751,19 +1777,9 @@ Get a Report on a Campaign's performance by Insertion Order and supported filter
   "pageNo": 1,
   "noOfEntries": 50,
   "resultType": "total",
-  "ioIdsList": [
-    1,
-    2,
-    3
-  ],
-  "budgetTypeIdList": [
-    1,
-    2
-  ],
-  "ioStatusIdsList": [
-    1,
-    2
-  ]
+  "ioIdsList": [1, 2, 3],
+  "budgetTypeIdList": [1, 2],
+  "ioStatusIdsList": [1, 2]
 }
 ```
 
@@ -1774,282 +1790,129 @@ Get a Report on a Campaign's performance by Insertion Order and supported filter
     "recordsTotal": {            
       "clicks": 0,            
       "totalCount": 26,            
-      "winRate": 0.0,            
-      "logoURL": null,            
-      "avatarURL": null,            
-      "budgetDay": 0.0,            
-      "budgetSpent": 0.0,            
+      "winRate": 0,            
       "ioTotalBudget": 98461.95,            
-      "dataCost": 0.0,            
-      "mediaBudget": 0.0,            
-      "owId": 0,            
-      "orgId": 0,            
       "impressions": 0,            
-      "industry": 0,            
-      "mediaSpent": 0.0,            
-      "spent": 0.0,            
-      "workspaceSpent": 0.0,            
-      "platformSpent": 0.0,            
-      "customerSpent": 0.0,            
-      "platformEarning": 0.0,            
-      "workspaceEarning": 0.0,            
-      "organizationName": null,            
-      "companySize": 0,            
-      "workspaceName": null,            
-      "workspaceId": 0,            
-      "workspaceDomain": null,            
-      "workspaceOrganizationName": null,            
-      "bidImpressions": 0,            
-      "startCount": 0,            
-      "firstCount": 0,            
-      "midCount": 0,            
-      "thirdCount": 0,            
-      "completeCount": 0,            
-      "audioVideoActualBids": 0,            
-      "audioVideoActualImpressions": 0,            
-      "eCPC": 0.0,            
-      "eCPM": 0.0,            
-      "eCPI": 0.0,            
-      "eCPCV": 0.0,            
-      "eCPV": 0.0,            
-      "reach": 0,            
-      "frequency": 0.0,            
-      "totalAttributedConversion": 0,            
-      "totalAttributedViewThroughConversion": 0,            
-      "totalAttributedClickThroughConversion": 0,            
-      "costPerAttributedConversion": 0.0,            
-      "totalAttributedConversionRate": 0.0,            
-      "reach": null,            
-      "frequency": null,            
-      "date": null,            
-      "campaignId": 0,            
-      "campaignName": null,            
-      "maxBid": 0.0,            
-      "ioStartTime": 0,            
-      "ioEndTime": 0,            
-      "campaignType": null,            
-      "status": null,            
-      "mappingDataCost": 0.0,            
-      "mappingSpent": 0.0,            
-      "campaignTimezone": null,            
-      "creativeType": null,            
-      "budgetPacing": false,            
-      "isCampaignFromNewPlatform": false,            
-      "percentageOfTotalSpent": 0.0,            
-      "uowId": 0,            
-      "audioVideoViewed": 0.0,            
-      "ioId": 0,            
-      "ioName": null,            
-      "ioTimezone": 0,            
-      "ioBudgetTypeId": 1,            
-      "ioStatusId": 1,            
-      "campaignsCount": 0,            
-      "ioTotalImpressions": 2934,            
-      "ioPacingPercentage": null,            
-      "ioActualSpent": 0,            
-      "ioExpectedSpent": 0,            
-      "ioDuration": 0,            
-      "ioRemainingDuration": 0,            
-      "ioBudgetDistributionMethod": 0,            
-      "exchangeId": 0,            
-      "exchangeName": null,            
-      "isAutoSumIoTotalBudget": false,            
-      "vldInsightsCost": 12.33,
-      "budgetTotalCombined": 0.0,            
-      "budgetDayCombined": 0.0,            
-      "ioTotalBudgetCombined": 1000.0,       
-      "CTR": 0.0,            
-      "VCR": 0.0,            
-      "CVR": 0.0        
+      "mediaSpent": 0,            
+      "spent": 0,            
+      "workspaceSpent": 0,            
+      "platformSpent": 0,            
+      "CTR": 0,            
+      "VCR": 0,            
+      "CVR": 0        
     }    
   }
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+</CodeOption>
+</CodeDropdown>
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+---
 
-const axios = getInstance();
+### Exchange Report 
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          recordsTotal: {
-            click: number;
-            totalCount: number;
-            winRate: number;
-            logoUrl: string;
-            avatarUrl: string;
-            budgetDay: number;
-            budgetSpent: number;
-            budgetTotal: number;
-            dataCost: number;
-            mediaBudget: number;
-            owId: number;
-            orgId: number;
-            impressions: number;
-            industry: number;
-            mediaSpent: number;
-            spent: number;
-            workspaceSpent: number;
-            platformSpent: number;
-            customerSpent: number;
-            platformMediaEarning: number;
-            platformBidShadingEarning: number;
-            platformTotalEarning: number;
-            workspaceMediaEarning: number;
-            workspaceBidShadingEarning: number;
-            workspaceTotalEarning: number;
-            organizationBidShadingSaving: number;
-            organizationName: string;
-            companySize: number;
-            workspaceName: string;
-            workspaceId: number;
-            workspaceDomain: string;
-            workspaceOrganizationName: string;
-            bidImpressions: number;
-            startCount: number;
-            firstCount: number;
-            midCount: number;
-            thirdCount: number;
-            completeCount: number;
-            audioVideoActualBids: number;
-            audioVideoActualImpressions: number;
-            eCPC: number;
-            eCPM: number;
-            eCPI: number;
-            eCPCV: number;
-            eCPv: number;
-            totalAttributedConversion: number;
-            totalAttributedViewThroughConversion: number;
-            totalAttributedClickThroughConversion: number;
-            costPerAttributedConversion: number;
-            totalAttributedConversionRate: number;
-            reach: number;
-            frequency: number;
-            date: number;
-            campaignId: number;
-            campaignName: string;
-            maxBid: number;
-            startTime: number;
-            endTime: number;
-            campaignType: string;
-            status: number;
-            mappingDataCost: number;
-            mappingSpent: number;
-            campaignTimezone: string;
-            creativeType: string;
-            budgetPacing: boolean;
-            isCampaignFromNewPlatform: boolean;
-            percentageOfTotalSpent: number;
-            vldInsightsCost: number;
-            workspaceVLDInsightsEarnings: number;
-            platformVLDInsightsEarnings: number;
-            pldInsightsCost: number;
-            workspacePLDInsightsEarnings: number;
-            platformPLDInsightsEarnings: number;
-            uowId: number;
-            audioVideoViewed: number;
-            ioId: number;
-            ioName: string;
-            ioTimezone: number;
-            ioBudgetDistributionMethod: number;
-            ioStatusId: number;
-            campaignsCount: number;
-            ioTotalImpressions: number;
-            ioPacingPercentage: number;
-            ioActualSpent: number;
-            ioExpectedSpent: number;
-            ioDuration: number;
-            ioRemainingDuraiton: number;
-            exchangeId: number;
-            exchangeName: string;
-            isAutoSumIoTotalBudget: boolean;
-            budgetTotalCombined: number;
-            budgetDayCombined: number;
-            ioTotalBudgetCombined: number; 
-            CTR: number;
-            VCR: number;
-            CVR: number;
-          }
-        }
-      }
-    };
-  };
+<CodeDropdown label="API Version" defaultValue="v4-(latest)">
+<CodeOption label="v4 (Latest)">
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-exchange" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get exchange-level aggregated performance report data including impressions, clicks, spend, win rate, and IVT metrics. Supports `AGGREGATED`, `AGGREGATED_LIST`, and `AGGREGATED_TOTAL` request types.
+
+| Request Schema | |
+| --- | --- |
+| `pagination` <br /><span class="type-text">object</span> | Pagination settings |
+| `pagination.pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var> |
+| `pagination.noOfEntries` <br /><span class="type-text">integer</span> | Entries per page, default: <var>200</var> |
+| `sort` <br /><span class="type-text">object</span> | Sorting settings |
+| `sort.field` <br /><span class="type-text">string</span> | Sort by field, default: <var>impressions</var> |
+| `sort.order` <br /><span class="type-text">string</span> | Sort order: <var>ASC</var> or <var>DESC</var> |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>, <var>paused</var>) |
+| `requestType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>AGGREGATED</var>, <var>AGGREGATED_LIST</var>, or <var>AGGREGATED_TOTAL</var> |
+
+<a href="#dashboard-reports-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pagination": {
+    "pageNo": 1,
+    "noOfEntries": 200
+  },
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "owIds": [1, 2, 3],
+    "startTimeEpochMillis": 1773979200000,
+    "endTimeEpochMillis": 1774065599000,
+    "searchField": "",
+    "creativeTypeIds": [],
+    "campaignIds": [],
+    "verticalIds": [],
+    "campaignStatusList": []
+  },
+  "requestType": "AGGREGATED"
 }
+```
 
-function dashboard-report-by-io(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/das/report/by-io',
-    requestBody: {
-      content: {
-        "application/json": {
-          searchBy?: string[],
-          columns?: {
-            [key: string]: Record<string, never>,
-          }[],
-          startDate?: `number`,
-          endDate?: `number`,
-          timezoneId?: `number`,
-          timezoneName?: `string`,
-          resultType?: `string`,
-          campaignStatus?: `string`,
-          campaignStatusList?: `string[]`,
-          creativeTypeIds?: `number[]`,
-          owIds?: `string`,
-          owIdsList?: `number[]`,
-          workspaceOwIdsList?: `number[]`,
-          customerOwIdsList?: `number[]`,
-          tab?: `string`,
-          isGraph?: `boolean`,
-          dayDiff?: `number`,
-          download?: `boolean`,
-          fileType?: `string`,
-          fileName?: `string`,
-          campaignIds?: `number[]`,
-          campaignGroupIds?: `number[]`,
-          isBetaUser?: `boolean`,
-          isAudienceFlagsRequired?: `boolean`,
-          loggedInUowId?: `number`,
-          graphType?: `string`,
-          ioIdsList?: `number[]`,
-          ioStatusIdsList?: `number[]`,
-          ids?: `number[]`,
-          budgetTypeIdList?: `number[]`,
-          campaignTypeIds?: `number[]`,
-          organizationType?: `string`,
-          campaignRequest?: `boolean`,
-          dataQueryEligible?: `boolean`,
-          totalQueryEligible?: `boolean`,
-          pagination?: `string`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: `ASC` | `DESC`,
-          offset?: `number`,
-        }
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 6,
+    "filteredRecords": 6,
+    "recordsTotal": {
+      "filteredRecordsTotal": 6,
+      "impressions": 59960,
+      "clicks": 1487,
+      "prebidCost": 0,
+      "spent": 4514.22,
+      "winRate": 251.02,
+      "ivtImpressions": 0,
+      "ivtClicks": 0,
+      "platformSpent": 312.58,
+      "workspaceSpent": 3629.59,
+      "CTR": 15.35,
+      "VCR": 0
+    },
+    "recordsList": [
+      {
+        "impressions": 17130,
+        "clicks": 392,
+        "prebidCost": 0,
+        "spent": 1240.22,
+        "winRate": 44.53,
+        "ivtImpressions": 0,
+        "ivtClicks": 0,
+        "platformSpent": 79.51,
+        "workspaceSpent": 965.18,
+        "exchangeId": 16,
+        "exchangeName": "Pubmatic",
+        "CTR": 2.29,
+        "VCR": 0
       }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+    ]
+  }
 }
 ```
 
@@ -2057,9 +1920,12 @@ function dashboard-report-by-io(): Promise<Responses> {
 
 </div></div>
 
----
+</CodeOption>
+<CodeOption label="v3 (Deprecated)">
 
-### Exchange Report 
+:::warning
+This version of the API is deprecated. Use the v4 endpoint above.
+:::
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/by-exchange" />
 
@@ -2088,9 +1954,6 @@ Get a Report on a Campaign's performance by Exchange and supported filters.
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
   "startDate": "1660834800000",
@@ -2118,75 +1981,11 @@ Get a Report on a Campaign's performance by Exchange and supported filters.
       "clicks": 0,
       "totalCount": 0,
       "winRate": 0,
-      "logoURL": null,
-      "avatarURL": null,
-      "budgetDay": 0,
-      "budgetSpent": 0,
-      "budgetTotal": 0,
-      "dataCost": 0,
-      "mediaBudget": 0,
-      "owId": 0,
-      "orgId": 0,
       "impressions": 0,
-      "industry": 0,
       "mediaSpent": 0,
       "spent": 0,
       "workspaceSpent": 0,
       "platformSpent": 0,
-      "customerSpent": 0,
-      "platformMediaEarning": 0,
-      "platformBidShadingEarning": 0,
-      "platformTotalEarning": 0,
-      "workspaceMediaEarning": 0,
-      "workspaceBidShadingEarning": 0,
-      "workspaceTotalEarning": 0,
-      "organizationBidShadingSaving": 0,
-      "organizationName": null,
-      "companySize": 0,
-      "workspaceName": null,
-      "workspaceId": 0,
-      "workspaceDomain": null,
-      "workspaceOrganizationName": null,
-      "bidImpressions": 0,
-      "startCount": 0,
-      "firstCount": 0,
-      "midCount": 0,
-      "thirdCount": 0,
-      "completeCount": 0,
-      "audioVideoActualBids": 0,
-      "audioVideoActualImpressions": 0,
-      "eCPC": 0,
-      "eCPM": 0,
-      "eCPI": 0,
-      "eCPCV": 0,
-      "eCPV": 0,
-      "conversionCount": 0,
-      "conversionValue": 0,
-      "conversionCPA": 0,
-      "conversionRate": 0,
-      "reach": 0,
-      "frequency": 0,
-      "date": null,
-      "campaignId": 0,
-      "campaignName": null,
-      "maxBid": 0,
-      "startTime": 0,
-      "endTime": 0,
-      "campaignType": null,
-      "status": null,
-      "mappingDataCost": 0,
-      "mappingSpent": 0,
-      "campaignTimezone": null,
-      "creativeType": null,
-      "budgetPacing": false,
-      "isCampaignFromNewPlatform": false,
-      "percentageOfTotalSpent": 0,
-      "uowId": 0,
-      "audioVideoViewed": 0,
-      "campaignGroupId": 0,
-      "campaignGroupName": null,
-      "exchangeId": 0,
-      "exchangeName": null,
       "CTR": 0,
       "VCR": 0,
       "CVR": 0
@@ -2195,169 +1994,144 @@ Get a Report on a Campaign's performance by Exchange and supported filters.
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+</CodeOption>
+</CodeDropdown>
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+---
 
-const axios = getInstance();
+### Customer Report
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          recordsTotal: {
-            click: number;
-            totalCount: number;
-            winRate: number;
-            logoUrl: string;
-            avatarUrl: string;
-            budgetDay: number;
-            budgetSpent: number;
-            budgetTotal: number;
-            dataCost: number;
-            mediaBudget: number;
-            owId: number;
-            orgId: number;
-            impressions: number;
-            industry: number;
-            mediaSpent: number;
-            spent: number;
-            workspaceSpent: number;
-            platformSpent: number;
-            customerSpent: number;
-            platformMediaEarning: number;
-            platformBidShadingEarning: number;
-            platformTotalEarning: number;
-            workspaceMediaEarning: number;
-            workspaceBidShadingEarning: number;
-            workspaceTotalEarning: number;
-            organizationBidShadingSaving: number;
-            organizationName: string;
-            companySize: number;
-            workspaceName: string;
-            workspaceId: number;
-            workspaceDomain: string;
-            workspaceOrganizationName: string;
-            bidImpressions: number;
-            startCount: number;
-            firstCount: number;
-            midCount: number;
-            thirdCount: number;
-            completeCount: number;
-            audioVideoActualBids: number;
-            audioVideoActualImpressions: number;
-            eCPC: number;
-            eCPM: number;
-            eCPI: number;
-            eCPCV: number;
-            eCPv: number;
-            conversionCount: number;
-            conversionValue: number;
-            conversionCPA: number;
-            conversionRate: number;
-            reach: number;
-            frequency: number;
-            date: number;
-            campaignId: number;
-            campaignName: string;
-            maxBid: number;
-            startTime: number;
-            endTime: number;
-            campaignType: string;
-            status: number;
-            mappingDataCost: number;
-            mappingSpent: number;
-            campaignTimezone: string;
-            creativeType: string;
-            budgetPacing: boolean;
-            isCampaignFromNewPlatform: boolean;
-            percentageOfTotalSpent: number;
-            uowId: number;
-            audioVideoViewed: number;
-            campaignGroupId: number;
-            campaignGroupName: string;
-            exchangeId: number;
-            exchangeName: string;
-            CTR: number;
-            VCR: number;
-            CVR: number;
-          }
-        }
-      }
-    };
-  };
+<CodeDropdown label="API Version" defaultValue="v4-(latest)">
+<CodeOption label="v4 (Latest)">
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-customer" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get customer (advertiser) level aggregated performance report data including core metrics, spend breakdown, earnings, insights costs, and conversions. Supports `AGGREGATED`, `AGGREGATED_LIST`, and `AGGREGATED_TOTAL` request types.
+
+| Request Schema | |
+| --- | --- |
+| `pagination` <br /><span class="type-text">object</span> | Pagination settings |
+| `pagination.pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var> |
+| `pagination.noOfEntries` <br /><span class="type-text">integer</span> | Entries per page, default: <var>200</var> |
+| `sort` <br /><span class="type-text">object</span> | Sorting settings |
+| `sort.field` <br /><span class="type-text">string</span> | Sort by field, default: <var>impressions</var> |
+| `sort.order` <br /><span class="type-text">string</span> | Sort order: <var>ASC</var> or <var>DESC</var> |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.campaignTypeIds` <br /><span class="type-text">array of integers</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>, <var>paused</var>, <var>expired</var>) |
+| `requestType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>AGGREGATED</var>, <var>AGGREGATED_LIST</var>, or <var>AGGREGATED_TOTAL</var> |
+
+<a href="#dashboard-reports-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pagination": {
+    "pageNo": 1,
+    "noOfEntries": 200
+  },
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "owIds": [200058, 200062, 200153, 200178],
+    "startTimeEpochMillis": 1773633600000,
+    "endTimeEpochMillis": 1773719999000,
+    "searchField": "",
+    "creativeTypeIds": [11, 13, 14, 17],
+    "campaignTypeIds": [1],
+    "verticalIds": [],
+    "campaignStatusList": ["running", "paused", "expired"]
+  },
+  "requestType": "AGGREGATED"
 }
+```
 
-function dashboard-report-by-exchange(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/das/report/by-exchange',
-    requestBody: {
-      content: {
-        "application/json": {
-          searchBy?: string[],
-          columns?: {
-            [key: string]: Record<string, never>,
-          }[],
-          startDate?: `number`,
-          endDate?: `number`,
-          timezoneId?: `number`,
-          timezoneName?: `string`,
-          resultType?: `string`,
-          campaignStatus?: `string`,
-          campaignStatusList?: `string[]`,
-          creativeTypeIds?: `number[]`,
-          owIds?: `string`,
-          owIdsList?: `number[]`,
-          workspaceOwIdsList?: `number[]`,
-          customerOwIdsList?: `number[]`,
-          tab?: `string`,
-          isGraph?: `boolean`,
-          dayDiff?: `number`,
-          download?: `boolean`,
-          fileType?: `string`,
-          fileName?: `string`,
-          campaignIds?: `number[]`,
-          campaignGroupIds?: `number[]`,
-          isBetaUser?: `boolean`,
-          isAudienceFlagsRequired?: `boolean`,
-          loggedInUowId?: `number`,
-          graphType?: `string`,
-          ioIdsList?: `number[]`,
-          ioStatusIdsList?: `number[]`,
-          ids?: `number[]`,
-          budgetTypeIdList?: `number[]`,
-          campaignTypeIds?: `number[]`,
-          organizationType?: `string`,
-          campaignRequest?: `boolean`,
-          dataQueryEligible?: `boolean`,
-          totalQueryEligible?: `boolean`,
-          pagination?: `string`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: `ASC` | `DESC`,
-          offset?: `number`,
-        }
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 4,
+    "filteredRecords": 4,
+    "recordsTotal": {
+      "filteredRecordsTotal": 4,
+      "impressions": 105709,
+      "clicks": 99,
+      "mediaSpent": 1534.25,
+      "CTR": 0.094,
+      "winRate": 13.52,
+      "spent": 1837.82,
+      "VCR": 0,
+      "dataCost": 18.44,
+      "thirdPartyCost": 2.75,
+      "workspaceSpent": 623.6,
+      "platformSpent": 541.08,
+      "workspaceMediaEarning": 512.3,
+      "platformMediaEarning": 425.1,
+      "organizationBidShadingSaving": 0,
+      "totalAttributedConversion": 5,
+      "totalAttributedViewThroughConversion": 2,
+      "totalAttributedClickThroughConversion": 3,
+      "costPerAttributedConversion": 367.56,
+      "totalAttributedConversionRate": 0.0047,
+      "prebidCost": 0,
+      "pldInsightsCost": 12.33,
+      "slsInsightsCost": 5.1,
+      "vldInsightsCost": 8.75,
+      "aqInsightsCost": 3.2,
+      "adServingCost": 2.75
+    },
+    "recordsList": [
+      {
+        "owId": 200058,
+        "organizationName": "Test Organisation - Alpha",
+        "budgetDay": 65.69,
+        "budgetTotal": 1000,
+        "budgetDayCombined": 130.5,
+        "budgetTotalCombined": 2000,
+        "impressions": 47326,
+        "clicks": 42,
+        "mediaSpent": 638.47,
+        "CTR": 0.0886,
+        "winRate": 20.01,
+        "spent": 765.72,
+        "VCR": 0,
+        "dataCost": 8.2,
+        "thirdPartyCost": 2.75,
+        "workspaceSpent": 253.4,
+        "platformSpent": 210.05,
+        "workspaceMediaEarning": 210.3,
+        "platformMediaEarning": 175.22,
+        "organizationBidShadingSaving": 0,
+        "totalAttributedConversion": 3,
+        "costPerAttributedConversion": 255.24,
+        "totalAttributedConversionRate": 0.0063,
+        "prebidCost": 0,
+        "pldInsightsCost": 6.5,
+        "slsInsightsCost": 2.1,
+        "vldInsightsCost": 4.25,
+        "aqInsightsCost": 1.6,
+        "adServingCost": 1.2
       }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+    ]
+  }
 }
 ```
 
@@ -2365,9 +2139,12 @@ function dashboard-report-by-exchange(): Promise<Responses> {
 
 </div></div>
 
----
+</CodeOption>
+<CodeOption label="v3 (Deprecated)">
 
-### Customer Report
+:::warning
+This version of the API is deprecated. Use the v4 endpoint above.
+:::
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/by-customer" />
 
@@ -2398,9 +2175,6 @@ Get a Report on a Campaign's performance by Customer(Advertiser) and supported f
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
   "startDate": "1660834800000",
@@ -2408,12 +2182,8 @@ Get a Report on a Campaign's performance by Customer(Advertiser) and supported f
   "timezoneId": 1,
   "campaignStatus": "all",
   "creativeTypeIds": "",
-  "campaignTypeIds": [
-    1
-  ],
-  "budgetTypeIdList": [
-    1
-  ],
+  "campaignTypeIds": [1],
+  "budgetTypeIdList": [1],
   "searchField": "",
   "sortBy": "impressions",
   "order": "DESC",
@@ -2434,85 +2204,11 @@ Get a Report on a Campaign's performance by Customer(Advertiser) and supported f
       "clicks": 0,
       "totalCount": 322,
       "winRate": 0,
-      "logoURL": null,
-      "avatarURL": null,
-      "budgetDay": 1.8985625880766135e+307,
-      "budgetSpent": 3000,
-      "budgetTotal": 5.9e+307,
-      "dataCost": 0,
-      "mediaBudget": 4,
-      "owId": 0,
-      "orgId": 0,
       "impressions": 0,
-      "industry": 0,
       "mediaSpent": 0,
       "spent": 0,
       "workspaceSpent": 0,
       "platformSpent": 0,
-      "customerSpent": 0,
-      "platformMediaEarning": 0,
-      "platformBidShadingEarning": 0,
-      "platformTotalEarning": 0,
-      "workspaceMediaEarning": 0,
-      "workspaceBidShadingEarning": 0,
-      "workspaceTotalEarning": 0,
-      "organizationBidShadingSaving": 0,
-      "organizationName": null,
-      "companySize": 0,
-      "workspaceName": null,
-      "workspaceId": 0,
-      "workspaceDomain": null,
-      "workspaceOrganizationName": null,
-      "bidImpressions": 0,
-      "startCount": 0,
-      "firstCount": 0,
-      "midCount": 0,
-      "thirdCount": 0,
-      "completeCount": 0,
-      "audioVideoActualBids": 0,
-      "audioVideoActualImpressions": 0,
-      "eCPC": 0,
-      "eCPM": 0,
-      "eCPI": 0,
-      "eCPCV": 0,
-      "eCPV": 0,
-      "totalAttributedConversion": 0,
-      "totalAttributedViewThroughConversion": 0,
-      "totalAttributedClickThroughConversion": 0,
-      "costPerAttributedConversion": 0,
-      "totalAttributedConversionRate": 0,
-      "reach": 0,
-      "frequency": 0,
-      "date": null,
-      "campaignId": 0,
-      "campaignName": null,
-      "maxBid": 0,
-      "startTime": 0,
-      "endTime": 0,
-      "campaignType": null,
-      "status": null,
-      "mappingDataCost": 0,
-      "mappingSpent": 0,
-      "campaignTimezone": null,
-      "creativeType": null,
-      "budgetPacing": false,
-      "isCampaignFromNewPlatform": false,
-      "percentageOfTotalSpent": 0,
-      "vldInsightsCost": null,
-      "workspaceVLDInsightsEarnings": null,
-      "platformVLDInsightsEarnings": null,
-      "pldInsightsCost": null,
-      "workspacePLDInsightsEarnings": null,
-      "platformPLDInsightsEarnings": null,
-      "uowId": 0,
-      "audioVideoViewed": 0,
-      "ioId": 0,
-      "ioName": null,
-      "ioTimezone": 0,
-      "ioBudgetDistributionMethod": 0,
-      "exchangeId": 0,
-      "exchangeName": null,
-      "autoSumIoTotalBudget": false,
       "CTR": 0,
       "VCR": 0,
       "CVR": 0
@@ -2521,178 +2217,188 @@ Get a Report on a Campaign's performance by Customer(Advertiser) and supported f
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+</CodeOption>
+</CodeDropdown>
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+---
 
-const axios = getInstance();
+### Campaign Report
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          recordsTotal: {
-            click: number;
-            totalCount: number;
-            winRate: number;
-            logoUrl: string;
-            avatarUrl: string;
-            budgetDay: number;
-            budgetSpent: number;
-            budgetTotal: number;
-            dataCost: number;
-            mediaBudget: number;
-            owId: number;
-            orgId: number;
-            impressions: number;
-            industry: number;
-            mediaSpent: number;
-            spent: number;
-            workspaceSpent: number;
-            platformSpent: number;
-            customerSpent: number;
-            platformMediaEarning: number;
-            platformBidShadingEarning: number;
-            platformTotalEarning: number;
-            workspaceMediaEarning: number;
-            workspaceBidShadingEarning: number;
-            workspaceTotalEarning: number;
-            organizationBidShadingSaving: number;
-            organizationName: string;
-            companySize: number;
-            workspaceName: string;
-            workspaceId: number;
-            workspaceDomain: string;
-            workspaceOrganizationName: string;
-            bidImpressions: number;
-            startCount: number;
-            firstCount: number;
-            midCount: number;
-            thirdCount: number;
-            completeCount: number;
-            audioVideoActualBids: number;
-            audioVideoActualImpressions: number;
-            eCPC: number;
-            eCPM: number;
-            eCPI: number;
-            eCPCV: number;
-            eCPv: number;
-            totalAttributedConversion: number;
-            totalAttributedViewThroughConversion: number;
-            totalAttributedClickThroughConversion: number;
-            costPerAttributedConversion: number;
-            totalAttributedConversionRate: number;
-            reach: number;
-            frequency: number;
-            date: number;
-            campaignId: number;
-            campaignName: string;
-            maxBid: number;
-            startTime: number;
-            endTime: number;
-            campaignType: string;
-            status: number;
-            mappingDataCost: number;
-            mappingSpent: number;
-            campaignTimezone: string;
-            creativeType: string;
-            budgetPacing: boolean;
-            isCampaignFromNewPlatform: boolean;
-            percentageOfTotalSpent: number;
-            vldInsightsCost: number;
-            workspaceVLDInsightsEarnings: number;
-            platformVLDInsightsEarnings: number;
-            pldInsightsCost: number;
-            workspacePLDInsightsEarnings: number;
-            platformPLDInsightsEarnings: number;
-            uowId: number;
-            audioVideoViewed: number;
-            ioId: number;
-            ioName: string;
-            ioTimezone: number;
-            ioBudgetDistributionMethod: number;
-            exchangeId: number;
-            exchangeName: string;
-            CTR: number;
-            VCR: number;
-            CVR: number;
-          }
-        }
-      }
-    };
-  };
+<CodeDropdown label="API Version" defaultValue="v4-(latest)">
+<CodeOption label="v4 (Latest)">
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-campaign" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get campaign-level aggregated performance report data including core metrics, pacing, budget, reach/frequency, insights costs, earnings, and conversions. Supports `AGGREGATED`, `AGGREGATED_LIST`, and `AGGREGATED_TOTAL` request types.
+
+| Request Schema | |
+| --- | --- |
+| `pagination` <br /><span class="type-text">object</span> | Pagination settings |
+| `pagination.pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var> |
+| `pagination.noOfEntries` <br /><span class="type-text">integer</span> | Entries per page, default: <var>50</var> |
+| `sort` <br /><span class="type-text">object</span> | Sorting settings |
+| `sort.field` <br /><span class="type-text">string</span> | Sort by field, default: <var>impressions</var> |
+| `sort.order` <br /><span class="type-text">string</span> | Sort order: <var>ASC</var> or <var>DESC</var> |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.campaignTypeIds` <br /><span class="type-text">array of integers</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)s |
+| `filters.campaignBudgetTypeIds` <br /><span class="type-text">array of integers</span> | [Budget Type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types)s |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.ioIds` <br /><span class="type-text">array of integers</span> | [Insertion Order ID](/guidelines/campaign-api#get-insertion-order-details)s |
+| `filters.campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>pending</var>, <var>running</var>) |
+| `requestType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>AGGREGATED</var>, <var>AGGREGATED_LIST</var>, or <var>AGGREGATED_TOTAL</var> |
+
+<a href="#dashboard-reports-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "pagination": {
+    "pageNo": 1,
+    "noOfEntries": 50
+  },
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "owIds": [1, 2, 3, 4],
+    "startTimeEpochMillis": 1660834800000,
+    "endTimeEpochMillis": 1660834800001,
+    "searchField": "",
+    "campaignTypeIds": [1],
+    "campaignBudgetTypeIds": [1, 2],
+    "campaignStatusList": ["pending", "running"],
+    "creativeTypeIds": [1, 2],
+    "ioIds": [1, 2, 3],
+    "campaignIds": [1, 2, 3],
+    "verticalIds": [1, 2]
+  },
+  "requestType": "AGGREGATED"
 }
+```
 
-function dashboard-report-by-customer(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/das/report/by-customer',
-    requestBody: {
-      content: {
-        "application/json": {
-          searchBy?: string[],
-          columns?: {
-            [key: string]: Record<string, never>,
-          }[],
-          startDate?: `number`,
-          endDate?: `number`,
-          timezoneId?: `number`,
-          timezoneName?: `string`,
-          resultType?: `string`,
-          campaignStatus?: `string`,
-          campaignStatusList?: `string[]`,
-          creativeTypeIds?: `number[]`,
-          owIds?: `string`,
-          owIdsList?: `number[]`,
-          workspaceOwIdsList?: `number[]`,
-          customerOwIdsList?: `number[]`,
-          tab?: `string`,
-          isGraph?: `boolean`,
-          dayDiff?: `number`,
-          download?: `boolean`,
-          fileType?: `string`,
-          fileName?: `string`,
-          campaignIds?: `number[]`,
-          campaignGroupIds?: `number[]`,
-          isBetaUser?: `boolean`,
-          isAudienceFlagsRequired?: `boolean`,
-          loggedInUowId?: `number`,
-          graphType?: `string`,
-          ioIdsList?: `number[]`,
-          ioStatusIdsList?: `number[]`,
-          ids?: `number[]`,
-          budgetTypeIdList?: `number[]`,
-          campaignTypeIds?: `number[]`,
-          organizationType?: `string`,
-          campaignRequest?: `boolean`,
-          dataQueryEligible?: `boolean`,
-          totalQueryEligible?: `boolean`,
-          pagination?: `string`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: `ASC` | `DESC`,
-          offset?: `number`,
-        }
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 200,
+    "filteredRecords": 200,
+    "recordsTotal": {
+      "impressions": 0,
+      "bidImpressions": 285,
+      "clicks": 0,
+      "reach": null,
+      "dataCost": 0,
+      "prebidCost": 0,
+      "spent": 0,
+      "mediaSpent": 0,
+      "budgetDay": 2185975387.14,
+      "budgetTotal": 125574558558992,
+      "winRate": 0,
+      "totalECPC": 0,
+      "frequency": null,
+      "totalECPM": 0,
+      "ivtImpressions": 0,
+      "ivtClicks": 0,
+      "adServingCost": 0,
+      "vldInsightsCost": 583.164,
+      "pldInsightsCost": 0,
+      "slsInsightsCost": 0,
+      "aqInsightsCost": 0,
+      "totalAttributedConversion": 0,
+      "organizationBidShadingSaving": 0,
+      "platformSpent": 0,
+      "platformMediaEarning": 0,
+      "workspaceSpent": 0,
+      "workspaceMediaEarning": 0,
+      "CTR": 0,
+      "VCR": 0
+    },
+    "recordsList": [
+      {
+        "impressions": 0,
+        "bidImpressions": 0,
+        "clicks": 0,
+        "reach": 0,
+        "dataCost": 0,
+        "prebidCost": 0,
+        "spent": 0,
+        "mediaSpent": 0,
+        "budgetDay": 0,
+        "budgetTotal": 1020,
+        "winRate": 0,
+        "totalECPC": 0,
+        "frequency": 0,
+        "totalECPM": 0,
+        "ivtImpressions": 0,
+        "ivtClicks": 0,
+        "adServingCost": 0,
+        "vldInsightsCost": 0,
+        "pldInsightsCost": 0,
+        "slsInsightsCost": 0,
+        "aqInsightsCost": 0,
+        "totalAttributedConversion": 0,
+        "organizationBidShadingSaving": 0,
+        "platformSpent": null,
+        "platformMediaEarning": null,
+        "workspaceSpent": null,
+        "workspaceMediaEarning": null,
+        "campaignId": 582315,
+        "campaignName": "P n",
+        "startTime": 1773214800,
+        "endTime": 0,
+        "campaignType": "cpm",
+        "status": "pending",
+        "dailyImpression": 0,
+        "campaignTimezone": "US/Eastern",
+        "creativeType": "13",
+        "budgetPacing": false,
+        "owId": 201427,
+        "bidShading": false,
+        "ioId": 10374,
+        "ioName": "DD",
+        "ioStartTime": 1715054400000,
+        "ioEndTime": 0,
+        "ioTotalBudget": 386836.845,
+        "ioTimezone": 29,
+        "ioStatusId": 1,
+        "organizationName": "Stage Shared Advertiser",
+        "percentageOfTotalSpent": 0,
+        "maxBid": 55,
+        "baseBid": 0,
+        "budgetTypeId": 1,
+        "campaignTypeId": 2,
+        "targetImpression": 0,
+        "budgetDayCombined": 0,
+        "budgetTotalCombined": 1020,
+        "expectedSpent": 0,
+        "actualSpent": 0,
+        "pacingPercentage": 0,
+        "remainingDuration": 0,
+        "campaignDuration": 0,
+        "creativesCount": 2,
+        "aiGoalId": 0,
+        "CTR": 0,
+        "VCR": 0
       }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+    ]
+  }
 }
 ```
 
@@ -2700,9 +2406,12 @@ function dashboard-report-by-customer(): Promise<Responses> {
 
 </div></div>
 
----
+</CodeOption>
+<CodeOption label="v3 (Deprecated)">
 
-### Campaign Report
+:::warning
+This version of the API is deprecated. Use the v4 endpoint above.
+:::
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/by-campaign" />
 
@@ -2734,9 +2443,6 @@ Get a Report on a Campaign's performance by supported filters.
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
 ```json title="Request Sample"
 {
   "startDate": "1660834800000",
@@ -2751,14 +2457,8 @@ Get a Report on a Campaign's performance by supported filters.
   "pageNo": 1,
   "noOfEntries": 50,
   "resultType": "total",
-  "ioIdsList": [
-    1,
-    2,
-    3
-  ],
-  "campaignTypeIds": [
-    1
-  ],
+  "ioIdsList": [1, 2, 3],
+  "campaignTypeIds": [1],
   "campaignIds": "1,2,3"
 }
 ```
@@ -2773,315 +2473,125 @@ Get a Report on a Campaign's performance by supported filters.
       "clicks": 0,
       "totalCount": 1,
       "winRate": 0,
-      "logoURL": null,
-      "avatarURL": null,
-      "budgetDay": 4.55,
-      "budgetSpent": 0,
-      "budgetTotal": 100,
-      "dataCost": 0,
-      "mediaBudget": 0,
-      "owId": 0,
-      "orgId": 0,
       "impressions": 0,
-      "industry": 0,
       "mediaSpent": 0,
       "spent": 0,
       "workspaceSpent": 0,
       "platformSpent": 0,
-      "customerSpent": 0,
-      "organizationBidShadingSaving": 0,
-      "platformMediaEarning": 0,
-      "platformBidShadingEarning": 0,
-      "platformTotalEarning": 0,
-      "workspaceMediaEarning": 0,
-      "workspaceBidShadingEarning": 0,
-      "workspaceTotalEarning": 0,
-      "organizationName": null,
-      "companySize": 0,
-      "workspaceName": null,
-      "workspaceId": 0,
-      "workspaceDomain": null,
-      "workspaceOrganizationName": null,
-      "bidImpressions": 0,
-      "startCount": 0,
-      "firstCount": 0,
-      "midCount": 0,
-      "thirdCount": 0,
-      "completeCount": 0,
-      "audioVideoActualBids": 0,
-      "audioVideoActualImpressions": 0,
-      "eCPC": 0,
-      "eCPM": 0,
-      "eCPI": 0,
-      "eCPCV": 0,
-      "eCPV": 0,
-      "dailyImpression": 202,
-      "totalAttributedConversion": 0,
-      "totalAttributedViewThroughConversion": 0,
-      "totalAttributedClickThroughConversion": 0,
-      "costPerAttributedConversion": 0,
-      "totalAttributedConversionRate": 0,
-      "reach": null,
-      "frequency": null,
-      "date": null,
-      "campaignId": 0,
-      "campaignName": null,
-      "maxBid": 0,
-      "baseBid": 0,
-      "startTime": 0,
-      "endTime": 0,
-      "campaignType": null,
-      "status": null,
-      "mappingDataCost": 0,
-      "mappingSpent": 0,
-      "campaignTimezone": null,
-      "creativeType": null,
-      "budgetPacing": false,
-      "isCampaignFromNewPlatform": false,
-      "percentageOfTotalSpent": 0,
-      "uowId": 0,
-      "audioVideoViewed": 0,
-      "ioId": 0,
-      "ioName": null,
-      "ioTimezone": 0,
-      "ioBudgetDistributionMethod": 0,
-      "ioStartTime": 0,
-      "ioStatusId": 0,
-      "ioEndTime": 0,
-      "ioTotalBudget": 0,
-      "pacingPercentage": null,
-      "actualSpent": 0,
-      "expectedSpent": 0,
-      "campaignDuration": null,
-      "remainingDuration": 0,
-      "dailyPacingPercentage": null,
-      "expectedDailySpent": 0,
-      "actualDailySpent": 0,
-      "isAutoSumIoTotalBudget": false,
-      "exchangeId": 0,
-      "budgetTypeId": 0,
-      "campaignTypeId": 0,
-      "isEligibleForVLDInsightsReport": false,
-      "vldInsightsCost": null,
-      "workspaceVLDInsightsEarnings": null,
-      "platformVLDInsightsEarnings": null,
-      "pldInsightsCost": 12.33,
-      "workspacePLDInsightsEarnings": 2.33,
-      "platformPLDInsightsEarnings": 10,
-      "isEligibleForPLDInsightsReport": true,
-      "targetImpression": 132629714,
-      "creativesCount": 0,
-      "budgetTotalCombined": 100,
-      "budgetDayCombined": 10,
-      "ioTotalBudgetCombined": 0,
-      "campaignPriority": null,
-      "bidModelDataId": 0,
-      "exchangeName": null,
       "CTR": 0,
       "VCR": 0,
       "CVR": 0
     }
   }
 }
-
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
+</div></div>
 
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+</CodeOption>
+</CodeDropdown>
 
-```ts
-import {
-  getInstance
-} from "prerequisites"
+---
 
-const axios = getInstance();
+### Metrics Timeline
 
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          recordsTotal: {
-            click: number;
-            totalCount: number;
-            winRate: number;
-            logoUrl: string;
-            avatarUrl: string;
-            budgetDay: number;
-            budgetSpent: number;
-            budgetTotal: number;
-            dataCost: number;
-            mediaBudget: number;
-            owId: number;
-            orgId: number;
-            impressions: number;
-            industry: number;
-            mediaSpent: number;
-            spent: number;
-            workspaceSpent: number;
-            platformSpent: number;
-            customerSpent: number;
-            platformMediaEarning: number;
-            platformBidShadingEarning: number;
-            platformTotalEarning: number;
-            workspaceMediaEarning: number;
-            workspaceBidShadingEarning: number;
-            workspaceTotalEarning: number;
-            organizationBidShadingSaving: number;
-            organizationName: string;
-            companySize: number;
-            workspaceName: string;
-            workspaceId: number;
-            workspaceDomain: string;
-            workspaceOrganizationName: string;
-            bidImpressions: number;
-            startCount: number;
-            firstCount: number;
-            midCount: number;
-            thirdCount: number;
-            completeCount: number;
-            audioVideoActualBids: number;
-            audioVideoActualImpressions: number;
-            eCPC: number;
-            eCPM: number;
-            eCPI: number;
-            eCPCV: number;
-            eCPv: number;
-            totalAttributedConversion: number;
-            totalAttributedViewThroughConversion: number;
-            totalAttributedClickThroughConversion: number;
-            costPerAttributedConversion: number;
-            totalAttributedConversionRate: number;
-            reach: number;
-            frequency: number;
-            date: number;
-            campaignId: number;
-            campaignName: string;
-            maxBid: number;
-            startTime: number;
-            endTime: number;
-            campaignType: string;
-            status: number;
-            mappingDataCost: number;
-            mappingSpent: number;
-            campaignTimezone: string;
-            creativeType: string;
-            budgetPacing: boolean;
-            isCampaignFromNewPlatform: boolean;
-            percentageOfTotalSpent: number;
-            uowId: number;
-            audioVideoViewed: number;
-            ioId: number;
-            ioName: string;
-            ioTimezone: number;
-            ioBudgetDistributionMethod: number;
-            ioStartTime: number;
-            ioStatusId: number;
-            ioEndTime: number;
-            ioTotalBudget: number;
-            pacingPercentage: number;
-            actualSpent: number;
-            expectedSpent: number;
-            campaignDuration: number;
-            remainingDuraion: number;
-            dailyPacingPercentage: number;
-            expectedDailySpent: number;
-            actualDailySpent: number;
-            isAutoSumIoTotalbudget: number;
-            exchangeId: number;
-            budgetTypeId: number;
-            campaignTypeId: number;
-            isEligibleForVLDInsightsReport: boolean;
-            vldInsightsCost: number;
-            workspaceVLDInsightsEarnings: number;
-            platformVLDInsightsEarnings: number;
-            pldInsightsCost: number;
-            workspacePLDInsightsEarnings: number;
-            platformPLDInsightsEarnings: number;
-            isEligibleForPLDInsightsReport: boolean;
-            targetImpression: number;
-            creativesCount: number;
-            budgetTotalCombined: number;
-            budgetDayCombined: number;
-            ioTotalBudgetCombined: number;
-            campaignPriority: number;
-            bidModelDataId: number;
-            exchangeName: string;
-            CTR: number;
-            VCR: number;
-            CVR: number;
-          }
-        }
-      }
-    };
-  };
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/metrics-timeline" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get time-bucketed performance data points for graphing metrics over a date range. Returns an array of data points, each representing a time interval with aggregated metrics such as impressions, clicks, spend, win rate, and video completion rates.
+
+| Request Schema | |
+| --- | --- |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.campaignTypeIds` <br /><span class="type-text">array of integers</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)s |
+| `filters.campaignBudgetTypeIds` <br /><span class="type-text">array of integers</span> | [Budget Type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types)s |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.ioIds` <br /><span class="type-text">array of integers</span> | [Insertion Order ID](/guidelines/campaign-api#get-insertion-order-details)s |
+| `filters.campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>, <var>paused</var>) |
+| `dimension` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Grouping dimension, e.g., <var>CAMPAIGN</var> |
+| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) |
+
+| Response Properties | |
+| --- | --- |
+| `totalRecords` <br /><span class="type-text">integer</span> | Total number of time-bucket records |
+| `recordsList[].startDate` <br /><span class="type-text">integer</span> | Bucket start time, unix epoch in milliseconds |
+| `recordsList[].endDate` <br /><span class="type-text">integer</span> | Bucket end time, unix epoch in milliseconds |
+| `recordsList[].impressions` <br /><span class="type-text">integer</span> | Number of impressions |
+| `recordsList[].clicks` <br /><span class="type-text">integer</span> | Number of clicks |
+| `recordsList[].spent` <br /><span class="type-text">number</span> | Total spend |
+| `recordsList[].mediaSpent` <br /><span class="type-text">number</span> | Media spend |
+| `recordsList[].winRate` <br /><span class="type-text">number</span> | Win rate percentage |
+| `recordsList[].CTR` <br /><span class="type-text">number</span> | Click-through rate |
+| `recordsList[].eCPM` <br /><span class="type-text">number</span> | Effective cost per mille |
+| `recordsList[].totalECPM` <br /><span class="type-text">number</span> | Total effective cost per mille |
+| `recordsList[].eCPC` <br /><span class="type-text">number</span> | Effective cost per click |
+| `recordsList[].totalECPC` <br /><span class="type-text">number</span> | Total effective cost per click |
+| `recordsList[].eCPCV` <br /><span class="type-text">number</span> | Effective cost per completed view |
+| `recordsList[].VCR` <br /><span class="type-text">number</span> | Video completion rate |
+| `recordsList[].totalAttributedConversion` <br /><span class="type-text">integer</span> | Total attributed conversions |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "filters": {
+    "startTimeEpochMillis": 1773633600000,
+    "endTimeEpochMillis": 1773719999000,
+    "campaignStatusList": ["running", "paused"],
+    "owIds": [200058, 200062],
+    "campaignIds": [582510, 582511]
+  },
+  "dimension": "CAMPAIGN",
+  "timezoneId": 29
 }
+```
 
-function dashboard-report-by-campaign(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/das/report/by-campaign',
-    requestBody: {
-      content: {
-        "application/json": {
-          searchBy?: string[],
-          columns?: {
-            [key: string]: Record<string, never>,
-          }[],
-          startDate?: `number`,
-          endDate?: `number`,
-          timezoneId?: `number`,
-          timezoneName?: `string`,
-          resultType?: `string`,
-          campaignStatus?: `string`,
-          campaignStatusList?: `string[]`,
-          creativeTypeIds?: `number[]`,
-          owIds?: `string`,
-          owIdsList?: `number[]`,
-          workspaceOwIdsList?: `number[]`,
-          customerOwIdsList?: `number[]`,
-          tab?: `string`,
-          isGraph?: `boolean`,
-          dayDiff?: `number`,
-          download?: `boolean`,
-          fileType?: `string`,
-          fileName?: `string`,
-          campaignIds?: `number[]`,
-          campaignGroupIds?: `number[]`,
-          isBetaUser?: `boolean`,
-          isAudienceFlagsRequired?: `boolean`,
-          loggedInUowId?: `number`,
-          graphType?: `string`,
-          ioIdsList?: `number[]`,
-          ioStatusIdsList?: `number[]`,
-          ids?: `number[]`,
-          budgetTypeIdList?: `number[]`,
-          campaignTypeIds?: `number[]`,
-          organizationType?: `string`,
-          campaignRequest?: `boolean`,
-          dataQueryEligible?: `boolean`,
-          totalQueryEligible?: `boolean`,
-          pagination?: `string`,
-          pageNo?: `number`,
-          noOfEntries?: `number`,
-          sortBy?: `string`,
-          searchField?: `string`,
-          order?: `ASC` | `DESC`,
-          offset?: `number`,
-        }
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 24,
+    "recordsList": [
+      {
+        "startDate": 1773633600000,
+        "endDate": 1773636599000,
+        "impressions": 21000,
+        "clicks": 630,
+        "spent": 2100,
+        "mediaSpent": 1890,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "winRate": 28.5,
+        "CTR": 3,
+        "eCPM": 90,
+        "totalECPM": 100,
+        "eCPC": 3,
+        "totalECPC": 3.5,
+        "eCPCV": 0,
+        "VCR": 0,
+        "totalAttributedConversion": 0,
+        "workspaceSpent": 1750,
+        "platformSpent": 210,
+        "platformMediaEarning": 189,
+        "workspaceMediaEarning": 945
       }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
+    ]
+  }
 }
 ```
 
@@ -3089,3 +2599,98 @@ function dashboard-report-by-campaign(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Metrics Comparison
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/metrics-comparison" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Compare aggregated performance metrics between the current and previous time periods. Returns side-by-side `current` and `previous` period objects with key metrics for evaluating performance trends.
+
+| Request Schema | |
+| --- | --- |
+| `filters` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Filter criteria |
+| `filters.owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs |
+| `filters.startTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, unix epoch in milliseconds |
+| `filters.endTimeEpochMillis` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, unix epoch in milliseconds |
+| `filters.searchField` <br /><span class="type-text">string</span> | Search filter |
+| `filters.campaignTypeIds` <br /><span class="type-text">array of integers</span> | [Campaign Type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)s |
+| `filters.campaignBudgetTypeIds` <br /><span class="type-text">array of integers</span> | [Budget Type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types)s |
+| `filters.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative Type ID](/guidelines/creative-api#get-creative-types-list)s |
+| `filters.ioIds` <br /><span class="type-text">array of integers</span> | [Insertion Order ID](/guidelines/campaign-api#get-insertion-order-details)s |
+| `filters.campaignIds` <br /><span class="type-text">array of integers</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)s |
+| `filters.verticalIds` <br /><span class="type-text">array of integers</span> | Vertical IDs |
+| `filters.campaignStatusList` <br /><span class="type-text">array of strings</span> | Campaign statuses (e.g., <var>running</var>) |
+| `dimension` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Grouping dimension, e.g., <var>CAMPAIGN</var> |
+
+| Response Properties | |
+| --- | --- |
+| `data.current` <br /><span class="type-text">object</span> | Metrics for the requested time period |
+| `data.previous` <br /><span class="type-text">object</span> | Metrics for the equivalent preceding time period |
+| `impressions` <br /><span class="type-text">integer</span> | Number of impressions |
+| `clicks` <br /><span class="type-text">integer</span> | Number of clicks |
+| `spent` <br /><span class="type-text">number</span> | Total spend |
+| `mediaSpent` <br /><span class="type-text">number</span> | Media spend |
+| `CTR` <br /><span class="type-text">number</span> | Click-through rate |
+| `totalECPC` <br /><span class="type-text">number</span> | Total effective cost per click |
+| `totalECPM` <br /><span class="type-text">number</span> | Total effective cost per mille |
+| `winRate` <br /><span class="type-text">number</span> | Win rate percentage |
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "filters": {
+    "startTimeEpochMillis": 1773633600000,
+    "endTimeEpochMillis": 1774238399000,
+    "searchField": "temp-camp",
+    "creativeTypeIds": [11, 13, 14, 17],
+    "campaignTypeIds": [1],
+    "campaignIds": [582510, 582511, 582512],
+    "campaignStatusList": ["running"],
+    "owIds": [200058, 200062, 200153, 200178],
+    "ioIds": [],
+    "verticalIds": []
+  },
+  "dimension": "CAMPAIGN"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "current": {
+      "impressions": 500000,
+      "clicks": 15000,
+      "spent": 50000,
+      "CTR": 3,
+      "totalECPC": 3.33,
+      "totalECPM": 100,
+      "winRate": 285,
+      "mediaSpent": 45000
+    },
+    "previous": {
+      "impressions": 480000,
+      "clicks": 14400,
+      "spent": 48000,
+      "CTR": 3,
+      "totalECPC": 3.33,
+      "totalECPM": 100,
+      "winRate": 280,
+      "mediaSpent": 43200
+    }
+  }
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

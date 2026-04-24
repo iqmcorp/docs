@@ -2380,6 +2380,20 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Metrics Timeline',
+              href: '/guidelines/dashboard-api#metrics-timeline',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Metrics Comparison',
+              href: '/guidelines/dashboard-api#metrics-comparison',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
       ],
