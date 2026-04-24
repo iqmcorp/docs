@@ -2382,8 +2382,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Download Report',
-              href: '/guidelines/dashboard-api#download-report',
+              label: 'Metrics Timeline',
+              href: '/guidelines/dashboard-api#metrics-timeline',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Metrics Comparison',
+              href: '/guidelines/dashboard-api#metrics-comparison',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },

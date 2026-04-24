@@ -16,6 +16,8 @@ type CodeDropdownProps = {
   label?: string;
   /** Initial selected option's value */
   defaultValue?: string;
+  /** Display variant: "bar" (default) shows full-width bar, "minimal" shows just the select */
+  variant?: 'bar' | 'minimal';
   /** One or more <CodeOption> children */
   children: React.ReactNode;
 };
@@ -23,6 +25,7 @@ type CodeDropdownProps = {
 export const CodeDropdown: React.FC<CodeDropdownProps> = ({
   label = 'Select example',
   defaultValue,
+  variant = 'bar',
   children,
 }) => {
   const id = useId();
@@ -42,59 +45,77 @@ export const CodeDropdown: React.FC<CodeDropdownProps> = ({
 
   const [selected, setSelected] = useState<string>(defaultValue ?? items[0]?.value ?? '');
 
+  const selectElement = (
+    <select
+      id={id}
+      value={selected}
+      onChange={(e) => setSelected(e.target.value)}
+      aria-label={label}
+      style={{
+        padding: variant === 'minimal' ? '4px 10px' : '2px 8px',
+        border: '1px solid var(--ifm-toc-border-color)',
+        borderRadius: 'var(--ifm-code-border-radius)',
+        backgroundColor: 'transparent',
+        color: 'inherit',
+        fontSize: variant === 'minimal' ? '0.9rem' : '0.8rem',
+        fontWeight: 400,
+        cursor: 'pointer',
+
+      }}
+    >
+      {items.map(o => (
+        <option key={o.value} value={o.value}
+          style={{
+            padding: '4px 8px',
+            backgroundColor: o.value === selected ? 'var(--ifm-primary-color)' : 'transparent',
+            color: o.value === selected ? 'white' : 'inherit',
+          }}
+        >
+          {o.label}
+        </option>
+      ))}
+    </select>
+  );
+
   return (
     <div
-      className="code-dropdown"
+      className={`code-dropdown${variant === 'minimal' ? ' code-dropdown--minimal' : ''}`}
       style={{
         borderRadius: 'var(--ifm-code-border-radius)',
         marginBottom: 16,
       }}
     >
-      <div
-        className="code-dropdown__menu"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          justifyContent: 'space-between',
-          padding: '8px 12px',
-          background: 'var(--ifm-background-surface-color)',
-          borderRadius: 'var(--ifm-code-border-radius)',
-          border: '1px solid var(--ifm-toc-border-color)',
-        }}
-      >
-        <label htmlFor={id} style={{ 
-          fontWeight: 400, 
+      {variant === 'minimal' ? (
+        <div className="code-dropdown__menu code-dropdown__menu--minimal" style={{
+          display: 'inline-flex',
+          alignItems: 'baseline',
+          marginLeft: 12,
+          transform: 'translateY(-5px)',
         }}>
-          {label}
-        </label>
-        <select
-          id={id}
-          value={selected}
-          onChange={(e) => setSelected(e.target.value)}
-          style={{ marginLeft: 'auto',
-            padding: '4px 8px',
-            border: '1px solid var(--ifm-toc-border-color)',
+          {selectElement}
+        </div>
+      ) : (
+        <div
+          className="code-dropdown__menu"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            justifyContent: 'space-between',
+            padding: '8px 12px',
+            background: 'var(--ifm-background-surface-color)',
             borderRadius: 'var(--ifm-code-border-radius)',
-            backgroundColor: 'transparent',
-            color: 'inherit',
-           }}
+            border: '1px solid var(--ifm-toc-border-color)',
+          }}
         >
-          {items.map(o => (
-            <option key={o.value} value={o.value}
-              style={{
-                padding: '4px 8px',
-                backgroundColor: o.value === selected ? 'var(--ifm-primary-color)' : 'transparent',
-                color: o.value === selected ? 'white' : 'inherit',
-              }}
-            >
-              {o.label}
-            </option>
-          ))}
-        </select>
-      </div>
+          <label htmlFor={id} style={{ fontWeight: 400 }}>
+            {label}
+          </label>
+          {selectElement}
+        </div>
+      )}
 
-      <div style={{ padding: 0 }}>
+      <div style={{ padding: 0, ...(variant === 'minimal' ? { paddingTop: 'var(--ifm-heading-margin-bottom)' } : {}) }}>
         {items.map(o => (
           <div key={o.value} style={{ display: o.value === selected ? 'block' : 'none',
             backgroundColor: 'transparent',
