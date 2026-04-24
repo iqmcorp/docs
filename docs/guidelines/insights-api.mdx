@@ -9,6 +9,8 @@ import Caret from '@site/static/img/caret.svg'
 import VldReports from '@site/docs/_partials/insights-api/vld-reports.mdx';
 import PldReports from '@site/docs/_partials/insights-api/pld-reports.mdx';
 import SlsReports from '@site/docs/_partials/insights-api/sls-reports.mdx';
+import AqsReports from '@site/docs/_partials/insights-api/aqs-reports.mdx';
+import InsStatic from '@site/docs/_partials/insights-api/ins-static.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
 
 # Insights API
@@ -21,10 +23,23 @@ With pre-defined metrics and dimensions, Insights reports can be generated for t
   * **Voter Level Data** (VLD) Reports offer Insights about targeting in current or prior political Campaigns. These Reports include ad exposure, engagement data, demographic data, and voting-history details by voter.
   * **Provider Level Data** (PLD) Reports include details about healthcare professionals targeted in your Campaigns, and provide similar details as VLD Reports while adhering to healthcare data privacy regulations. 
   * **ScriptLift Studies** (SLS) Reports include key details about prescribing behaviors and how they are influenced by current and previous healthcare Campaigns. 
+  * **Audience Quality Score** (AQS) Reports leverage third-party healthcare data from PurpleLab to confirm Audience exposure based on patient-level targeting criteria including prescriptions, diagnoses, and procedures. 
+
+<div style={{ maxWidth: "1000px" }}>
+:::warning[NOTE]
+Some Insights reports will need to be enabled by an administrator to access. By default VLD, PLD, SLS, and AQS reports are not accessible to advertiser users. 
+
+You can check an advertiser's access to Insights reports with the [Get Customer Config Details](/guidelines/workspace-api/#get-customer-config-details) endpoint. 
+:::
+</div>
 
 ### More Resources
   * [Create an Insights Report](/tutorials/create-an-insights-report/) Tutorial
-  * [Reporting and Analytics<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics) Help Center article 
+  * [Reporting and Analytics<ExternalLink />](https://help.iqm.com/en/collections/1361396-reporting-and-analytics) Help Center articles
+  * [Provider Level Data (PLD) Insights Reports<ExternalLink />](https://help.iqm.com/en/collections/12010878-provider-level-data-pld-insights-reports) Help Center articles
+  * [Script Lift Study (SLS) Insights Reports<ExternalLink />](https://help.iqm.com/en/collections/12083517-script-lift-study-sls-insights-reports) Help Center articles
+  * [Audience Quality Insights Reports<ExternalLink />](https://help.iqm.com/en/collections/17249533-audience-quality-insights-reports) Help Center articles
+  * [Voter Level Data (VLD) Insights Reports<ExternalLink />](https://help.iqm.com/en/collections/10358580-voter-level-data-vld-insights-reports) Help Center articles
 
 ### Authentication
 
@@ -1723,228 +1738,10 @@ function downloadInsights(): Promise<Responses> {
 
 <SlsReports />
 
+## Audience Quality Score Reports
+
+<AqsReports />
+
 ## Get More Insights Details
 
-### Get List of Insights Types
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/static/insights/type/list" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get a list of Insights types by ID.
-
-<table>
-<th colSpan="2">Payment Term IDs</th>
-<tr>
-<td> `1`</td>
-<td>Audience Insights</td>
-</tr>
-<tr>
-  <td>`3` </td>
-  <td>Voter Level Data</td>
-</tr>
-<tr>
-  <td>`4` </td>
-  <td>Provider Level Data</td>
-</tr>
-<tr>
-  <td>`5` </td>
-  <td>Script Lift Study</td>
-</tr>
-</table>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "totalRecords": 2,
-    "filteredRecords": 2,
-    "insightsTypeData": [
-      {
-        "id": 1,
-        "name": "audiences",
-        "label": "Audience Insights",
-        "order": 1
-      },
-      {
-        "id": 3,
-        "name": "voter_level_data",
-        "label": "Voter Level Data",
-        "order": 3
-      },
-      {
-        "id": 4,
-        "name": "provider_level_data",
-        "label": "Provider Level Data",
-        "order": 4
-      },
-      {
-        "id": 5,
-        "name": "script_life_study",
-        "label": "Script Lift Study",
-        "order": 5
-      }
-    ]
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filteredRecords: number;
-          insightsTypeData: {
-            id: number;
-            name: string;
-            label: string;
-            order: number;
-          }[]
-        }
-      }
-    };
-  };
-};
-
-function getInsightsType(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/ins/static/insights/type/list',
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Get List of Insights Status
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/static/insights/status/list" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Get a list of Insights status types.
-
-<table>
-<th colSpan="2">Insights Status IDs</th>
-<tr>
-<td> `1`</td>
-<td>Processing</td>
-</tr>
-<tr>
-<td> `2`</td>
-<td>Ready</td>
-</tr>
-<tr>
-  <td>`3` </td>
-  <td>Failed</td>
-</tr>
-</table>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "totalRecords": 3,
-    "filterRecords": 3,
-    "insightsStatusData": [
-      {
-        "id": 1,
-        "name": "processing",
-        "label": "Processing",
-        "order": 1
-      },
-      {
-        "id": 2,
-        "name": "ready",
-        "label": "Ready",
-        "order": 2
-      },
-      {
-        "id": 3,
-        "name": "failed",
-        "label": "Failed",
-        "order": 3
-      }
-    ]
-  }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          totalRecords: number;
-          filterRecords: number;
-          insightsStatusData: {
-            id: number;
-            name: string;
-            label: string;
-            order: number;
-          }[]
-        }
-      }
-    };
-  };
-};
-
-function getInsightsStatus(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/ins/static/insights/status/list',
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
+<InsStatic />
