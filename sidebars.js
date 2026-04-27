@@ -3066,22 +3066,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Validate PLD Template Name',
-              href: '/guidelines/insights-api#validate-pld-template-name',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create PLD Report Template',
-              href: '/guidelines/insights-api#create-pld-report-template',
+              href: '/guidelines/insights-api#create-report-template',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Update PLD Report Template',
-              href: '/guidelines/insights-api#update-pld-report-template',
+              href: '/guidelines/insights-api#update-report-template',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -6374,22 +6367,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Validate PLD Template Name',
-              href: '/healthcare-vertical/insights-pld#validate-pld-template-name',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
               label: 'Create PLD Report Template',
-              href: '/healthcare-vertical/insights-pld#create-pld-report-template',
+              href: '/healthcare-vertical/insights-pld#create-report-template',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
               label: 'Update PLD Report Template',
-              href: '/healthcare-vertical/insights-pld#update-pld-report-template',
+              href: '/healthcare-vertical/insights-pld#update-report-template',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
