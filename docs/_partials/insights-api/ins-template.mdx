@@ -1,0 +1,1415 @@
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Caret from '@site/static/img/caret.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+import ExternalLink from '@site/static/img/external-link2.svg';
+
+### Get List of Templates
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/templates" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of all templates for the specified report type with optional filtering and pagination.
+
+A <var>templateId</var> can be used to get [Get Template Details](#get-template-details) or to update an existing template using the [Update Report Template](#update-report-template) endpoint. 
+
+| Query Parameters |  |
+| ---- | --- |
+| `category` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Insight type category: <var>pld</var>, <var>ict</var>, or <var>nld</var> |
+| `searchField` <br /><span class="type-text">string</span> | Filter templates by name |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>20</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination, default: <var>1</var> |
+| `frequencyIds` <br /><span class="type-text">integer</span> | Filter by [Scheduling Frequency IDs](/guidelines/insights-api#get-scheduling-frequencies) |
+| `statusIds` <br /><span class="type-text">integer</span> | Filter by [Template Status IDs](/guidelines/insights-api#get-list-of-template-statuses) |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-templateId</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Template Status ID](/guidelines/insights-api#get-list-of-template-statuses)</td>
+</tr>
+<tr>
+  <td>`nextRunPreviewUtc` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run (UTC), in milliseconds</td>
+</tr>
+<tr>
+  <td>`reportIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated report IDs</td>
+</tr>
+<tr>
+  <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns)</td>
+</tr>
+<tr>
+  <td>`reportStatusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by status ID</td>
+</tr>
+<tr>
+  <td>`statusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of template counts by status ID (top-level)</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the applied filters</td>
+</tr>
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "templateId": 1,
+        "name": "Monthly ICT Report",
+        "frequencyId": 2,
+        "startDate": 1764843796510,
+        "endDate": 1764843796510,
+        "timezoneId": 29,
+        "statusId": 1,
+        "nextRunPreviewUtc": 1764843796510,
+        "reportIds": [10001, 10002, 10004],
+        "campaignIds": [10001, 10003],
+        "reportStatusSummary": [
+          {
+            "id": 1,
+            "count": 5
+          },
+          {
+            "id": 2,
+            "count": 2
+          }
+        ]
+      }
+    ],
+    "statusSummary": [
+      {
+        "id": 1,
+        "count": 5
+      },
+      {
+        "id": 2,
+        "count": 5
+      }
+    ],
+    "filteredRecords": 1,
+    "totalRecords": 10
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            templateId: number;
+            name: string;
+            frequencyId: number;
+            startDate: number;
+            endDate: number;
+            timezoneId: number;
+            statusId: number;
+            nextRunPreviewUtc: number;
+            reportIds: number[];
+            campaignIds: number[];
+            reportStatusSummary: {
+              id: number;
+              count: number;
+            }[];
+          }[];
+          statusSummary: {
+            id: number;
+            count: number;
+          }[];
+          filteredRecords: number;
+          totalRecords: number;
+        }
+      }
+    }
+  };
+}
+
+function getAllTemplates(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/templates',
+    params: {
+      query: {
+        category: `string`,
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        frequencyIds?: `number`,
+        statusIds?: `number`,
+        sortBy?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Template Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/templates/{templateId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the details of a template by its template ID.
+
+| Path Parameters |  |
+| ---- | --- |
+| `templateId` <br /><span class="type-text">integer</span> | The ID of the template to retrieve |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Template ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Template name</td>
+</tr>
+<tr>
+  <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Associated [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns)</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`frequencyDetails` <br /><span class="type-text">object</span></td>
+  <td>Scheduling details based on frequency type</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+</tr>
+<tr>
+  <td>`aggregationEnabled` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether report data is aggregated</td>
+</tr>
+<tr>
+  <td>`recipientEmails` <br /><span class="type-text">array of strings</span></td>
+  <td>Recipient email addresses</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>[Template Status ID](/guidelines/insights-api#get-list-of-template-statuses)</td>
+</tr>
+<tr>
+  <td>`nextRunPreviewUtc` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run (UTC), in milliseconds</td>
+</tr>
+<tr>
+  <td>`firstRunLocked` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the first run is locked</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "templateId": 1,
+    "name": "Monthly PLD Report",
+    "campaignIds": [101, 102, 103],
+    "frequencyId": 2,
+    "frequencyDetails": {
+      "dayOfMonthTypeId": 2,
+      "dayOfMonth": 15
+    },
+    "startDate": 1704067200000,
+    "endDate": 1735689599000,
+    "timezoneId": 29,
+    "aggregationEnabled": true,
+    "recipientEmails": [
+      "xyz@gmail.com"
+    ],
+    "statusId": 1,
+    "nextRunPreviewUtc": 1706745600000,
+    "firstRunLocked": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          templateId: number;
+          name: string;
+          campaignIds: number[];
+          frequencyId: number;
+          frequencyDetails: {
+            dayOfWeekId?: number;
+            dayOfMonthTypeId?: number;
+            dayOfMonth?: number;
+            intervalModeId?: number;
+            intervalValue?: number;
+          };
+          startDate: number;
+          endDate: number;
+          timezoneId: number;
+          aggregationEnabled: boolean;
+          recipientEmails: string[];
+          statusId: number;
+          nextRunPreviewUtc: number;
+          firstRunLocked: boolean;
+        }
+      }
+    }
+  };
+}
+
+function getTemplateById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/templates/{templateId}',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Template Reports
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/templates/{templateId}/report" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the reports for a specific template with optional filtering and pagination.
+
+| Path Parameters |  |
+| ---- | --- |
+| `templateId` <br /><span class="type-text">integer</span> | The ID of the template for which to retrieve reports |
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Filter reports by search string |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>20</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination, default: <var>1</var> |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-reportId</var> |
+| `statusIds` <br /><span class="type-text">integer</span> | Filter by status IDs |
+| `frequencyIds` <br /><span class="type-text">integer</span> | Filter by [Scheduling Frequency IDs](/guidelines/insights-api#get-scheduling-frequencies) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`reportId` <br /><span class="type-text">integer</span></td>
+  <td>Report ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Report name</td>
+</tr>
+<tr>
+  <td>`requestedStartDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report's requested start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`requestedEndDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report's requested end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>Report status ID</td>
+</tr>
+<tr>
+  <td>`frequencyId` <br /><span class="type-text">integer</span></td>
+  <td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+  <td>`generatedAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of when the report was generated, in milliseconds</td>
+</tr>
+<tr>
+  <td>`filePaths` <br /><span class="type-text">object</span></td>
+  <td>Presigned download URLs for the report files</td>
+</tr>
+<tr>
+  <td>`fileSizes` <br /><span class="type-text">object</span></td>
+  <td>File sizes in bytes for each format</td>
+</tr>
+<tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the applied filters</td>
+</tr>
+<tr>
+  <td>`statusSummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by status ID</td>
+</tr>
+<tr>
+  <td>`frequencySummary` <br /><span class="type-text">array of objects</span></td>
+  <td>Summary of report counts by frequency ID</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "reportId": 180,
+        "name": "23897_PLD_Insights_7",
+        "requestedEndDate": 1762885799000,
+        "requestedStartDate": 1762799400000,
+        "statusId": 3,
+        "frequencyId": 3,
+        "generatedAt": 1764671972077,
+        "filePaths": {
+          "csvUrl": "https://.../9876.csv",
+          "xlsxUrl": "https://.../9876.xlxs",
+          "pdfUrl": "https://.../9876.pdf",
+          "zipUrl": "https://.../9876.zip"
+        },
+        "fileSizes": {
+          "csvBytes": 27223,
+          "xlsxBytes": 98604,
+          "pdfBytes": 84259,
+          "zipBytes": 20471
+        }
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 1,
+    "statusSummary": [
+      {
+        "id": 3,
+        "count": 1
+      },
+      {
+        "id": 4,
+        "count": 1
+      }
+    ],
+    "frequencySummary": [
+      {
+        "id": 3,
+        "count": 1
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          data: {
+            reportId: number;
+            name: string;
+            requestedStartDate: number;
+            requestedEndDate: number;
+            statusId: number;
+            frequencyId: number;
+            generatedAt: number;
+            filePaths: {
+              csvUrl: string;
+              xlsxUrl: string;
+              pdfUrl: string;
+              zipUrl: string;
+            };
+            fileSizes: {
+              csvBytes: number;
+              xlsxBytes: number;
+              pdfBytes: number;
+              zipBytes: number;
+            };
+          }[];
+          totalRecords: number;
+          filteredRecords: number;
+          statusSummary: {
+            id: number;
+            count: number;
+          }[];
+          frequencySummary: {
+            id: number;
+            count: number;
+          }[];
+        }
+      }
+    }
+  };
+}
+
+function getReportsForTemplate(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/templates/{templateId}/report',
+    params: {
+      query: {
+        searchField?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        sortBy?: `string`,
+        statusIds?: `number`,
+        frequencyIds?: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Validate Template Name
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/templates/validate-name" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Checks if the given template name is available (not already in use) within the caller's organization.
+
+| Request Schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> | Template name to validate (3–100 characters) |
+| `category` <br /><span class="type-text">string</span> | Insight type category: <var>pld</var>, <var>ict</var>, or <var>nld</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`available` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the template name is available: <var>true</var> or <var>false</var></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "name": "Monthly PLD Report",
+  "category": "pld"
+}
+```
+
+```json title="Response 200 (name available)"
+{
+  "success": true,
+  "data": {
+    "available": true
+  }
+}
+```
+
+```json title="Response 200 (name not available)"
+{
+  "success": true,
+  "data": {
+    "available": false
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          available: boolean;
+        }
+      }
+    };
+  };
+}
+
+function validateTemplateName(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/templates/validate-name',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          category: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create Report Template
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/templates" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Creates a report template for the given Campaigns and scheduling configuration.
+
+The request defines a template name, associated Campaign IDs, frequency and frequency details (daily, weekly, monthly, or custom), template start/end dates, aggregation flag, recipient emails, template status, and report category.
+
+When the template is <var>ACTIVE</var>, the platform will use the configured schedule to trigger periodic report generation.
+
+<table>
+<th>Request Schema</th>
+<tr>
+<td>`name` <br /><span class="type-text">string</span></td>
+<td>Template name (3–100 characters)</td>
+</tr>
+<tr>
+<td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+<td>[Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns) (max 50)</td>
+</tr>
+<tr>
+<td>`frequencyId` <br /><span class="type-text">integer</span></td>
+<td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+<td>`frequencyDetails` <br /><span class="type-text">object</span></td>
+<td>Scheduling details based on frequency type (see examples)</td>
+</tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`frequencyDetails` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`dayOfWeekId` <br /><span class="type-text">integer</span></td>
+      <td>Day of week (for weekly/custom-weekly)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonthTypeId` <br /><span class="type-text">integer</span></td>
+      <td>Day of month type: first day (<var>1</var>), specific day (<var>2</var>), last day (<var>3</var>)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonth` <br /><span class="type-text">integer</span></td>
+      <td>Specific day of month (2–28, when <var>dayOfMonthTypeId</var> = <var>2</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalModeId` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval mode: days (<var>501</var>), weeks (<var>502</var>), months (<var>503</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalValue` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval value (e.g., every X days/weeks/months)</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`aggregationEnabled` <br /><span class="type-text">boolean</span></td>
+<td>Indicates whether to aggregate report data</td>
+</tr>
+<tr>
+<td>`recipientEmails` <br /><span class="type-text">array of strings</span></td>
+<td>Recipient email addresses (max 15)</td>
+</tr>
+<tr>
+<td>`status` <br /><span class="type-text">string</span></td>
+<td>Template status: <var>ACTIVE</var> or <var>INACTIVE</var></td>
+</tr>
+<tr>
+<td>`category` <br /><span class="type-text">string</span></td>
+<td>Insight type category: <var>pld</var>, <var>ict</var>, or <var>nld</var></td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Created template ID</td>
+</tr>
+<tr>
+  <td>`nextRunDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run, in milliseconds</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="One-Time Run">
+```json
+{
+  "name": "One-Time Template",
+  "campaignIds": [111, 222, 333],
+  "frequencyId": 1,
+  "frequencyDetails": {},
+  "startDate": 1763145600000,
+  "endDate": 1765737600000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "a@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "pld"
+}
+```
+</CodeOption>
+  <CodeOption label="Daily Run">
+```json
+{
+  "name": "Daily Template",
+  "campaignIds": [111, 222],
+  "frequencyId": 2,
+  "frequencyDetails": {},
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "daily@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "ict"
+}
+```
+</CodeOption>
+  <CodeOption label="Weekly Run">
+```json
+{
+  "name": "Weekly Template",
+  "campaignIds": [111, 222, 333],
+  "frequencyId": 3,
+  "frequencyDetails": {
+    "dayOfWeekId": 3
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "weekly@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "nld"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (First Day)">
+```json
+{
+  "name": "Monthly Template (1st day)",
+  "campaignIds": [111],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 1
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "m1@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "pld"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (Specific Day)">
+```json
+{
+  "name": "Monthly Template (15th)",
+  "campaignIds": [111, 222],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 2,
+    "dayOfMonth": 15
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "m2@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "ict"
+}
+```
+</CodeOption>
+  <CodeOption label="Monthly (Last Day)">
+```json
+{
+  "name": "Monthly Template (last day)",
+  "campaignIds": [111, 222],
+  "frequencyId": 4,
+  "frequencyDetails": {
+    "dayOfMonthTypeId": 3
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "m3@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "nld"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Days Interval)">
+```json
+{
+  "name": "Custom Every 10 Days Template",
+  "campaignIds": [111],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 501,
+    "intervalValue": 10
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "cdays@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "pld"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Weekly Interval)">
+```json
+{
+  "name": "Custom Every 3 Weeks Template",
+  "campaignIds": [111, 222],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 502,
+    "intervalValue": 3,
+    "dayOfWeekId": 4
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "cweeks@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "ict"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Monthly - First Day)">
+```json
+{
+  "name": "Custom Every 2 Months – 1st Day Template",
+  "campaignIds": [111],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 503,
+    "intervalValue": 2,
+    "dayOfMonthTypeId": 1
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "cm1@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "nld"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Monthly - Specific Day)">
+```json
+{
+  "name": "Custom Every 2 Months – 10th Template",
+  "campaignIds": [111],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 503,
+    "intervalValue": 2,
+    "dayOfMonthTypeId": 2,
+    "dayOfMonth": 10
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "cm2@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "pld"
+}
+```
+</CodeOption>
+  <CodeOption label="Custom (Monthly - Last Day)">
+```json
+{
+  "name": "Custom Every 2 Months – Last Day Template",
+  "campaignIds": [111, 222],
+  "frequencyId": 5,
+  "frequencyDetails": {
+    "intervalModeId": 503,
+    "intervalValue": 2,
+    "dayOfMonthTypeId": 3
+  },
+  "startDate": 1763145600000,
+  "endDate": 1789334400000,
+  "aggregationEnabled": true,
+  "recipientEmails": [
+    "cm3@ws.com"
+  ],
+  "status": "ACTIVE",
+  "category": "ict"
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "templateId": 101,
+    "nextRunDate": 1764460800000
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          templateId: number;
+          nextRunDate: number;
+        }
+      }
+    };
+  };
+}
+
+function createTemplate(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/templates',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          campaignIds: `number[]`,
+          frequencyId: `number`,
+          frequencyDetails: {
+            dayOfWeekId?: `number`,
+            dayOfMonthTypeId?: `number`,
+            dayOfMonth?: `number`,
+            intervalModeId?: `number`,
+            intervalValue?: `number`,
+          },
+          startDate: `number`,
+          endDate?: `number`,
+          aggregationEnabled: `boolean`,
+          recipientEmails?: `string[]`,
+          status: `string`,
+          category: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Report Template
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/ins/templates/{templateId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Apply a partial update to an existing report template. Only the fields present in the request are evaluated and applied.
+
+The platform automatically re-evaluates future executions based on the effective configuration after the update. Past executions and generated reports are never modified.
+
+:::warning[Important Notes]
+- Updates only affect **future executions**
+- A resumed template may not necessarily produce a future run
+- "One Time" templates (frequency ID <var>1</var>) execute at most once
+- If no future execution exists, nextRunDate will be null
+:::
+
+
+| Path Parameters |  |
+| ---- | --- |
+| `templateId` <br /><span class="type-text">integer</span> | The ID of the template to update |
+
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Update Scenarios</summary>
+
+
+<table className="scenarioTable">
+<th>Change Made</th>
+<th>Future Execution Impact</th>
+<tr>
+  <td>Metadata-only update</td>
+  <td>No impact to future executions</td>
+</tr>
+<tr>
+  <td>Aggregation flag toggle</td>
+  <td>Future executions are recalculated</td>
+</tr>
+<tr>
+  <td>End date modified</td>
+  <td>Future execution horizon is recalculated</td>
+</tr>
+<tr>
+  <td>Start date modified</td>
+  <td>Future execution plan is recalculated</td>
+</tr>
+<tr>
+  <td>Recurring → Recurring (frequency change)</td>
+  <td>Future execution pattern changes</td>
+</tr>
+<tr>
+  <td>Recurring → One-time</td>
+  <td>One-time execution is triggered</td>
+</tr>
+<tr>
+  <td>One-time → Recurring</td>
+  <td>Future recurring executions are scheduled</td>
+</tr>
+<tr>
+  <td>ACTIVE → INACTIVE</td>
+  <td>All future executions are stopped</td>
+</tr>
+<tr>
+  <td>INACTIVE → ACTIVE (recurring)</td>
+  <td>Future executions resume</td>
+</tr>
+<tr>
+  <td>Multiple changes in one request</td>
+  <td>Strongest applicable rule applies</td>
+</tr>
+</table>
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Request Schema</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`name` <br /><span class="type-text">string</span></td>
+<td>Template name (3–100 characters)</td>
+</tr>
+<tr>
+<td>`recipientEmails` <br /><span class="type-text">array of strings</span></td>
+<td>Recipient email addresses</td>
+</tr>
+<tr>
+<td>`status` <br /><span class="type-text">string</span></td>
+<td>Template status: <var>ACTIVE</var> or <var>INACTIVE</var></td>
+</tr>
+<tr>
+<td>`frequencyId` <br /><span class="type-text">integer</span></td>
+<td>[Scheduling Frequency ID](/guidelines/insights-api#get-scheduling-frequencies)</td>
+</tr>
+<tr>
+<td>`frequencyDetails` <br /><span class="type-text">object</span></td>
+<td>Scheduling details based on frequency type</td>
+</tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`frequencyDetails` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`dayOfWeekId` <br /><span class="type-text">integer</span></td>
+      <td>Day of week (for weekly/custom-weekly)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonthTypeId` <br /><span class="type-text">integer</span></td>
+      <td>Day of month type: first day (<var>1</var>), specific day (<var>2</var>), last day (<var>3</var>)</td>
+      </tr>
+      <tr>
+      <td>`dayOfMonth` <br /><span class="type-text">integer</span></td>
+      <td>Specific day of month (2–28, when <var>dayOfMonthTypeId</var> = <var>2</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalModeId` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval mode: days (<var>501</var>), weeks (<var>502</var>), months (<var>503</var>)</td>
+      </tr>
+      <tr>
+      <td>`intervalValue` <br /><span class="type-text">integer</span></td>
+      <td>Custom interval value (e.g., every X days/weeks/months)</td>
+      </tr>
+      </table></details>
+      </td>
+      <td></td>
+    </tr>
+<tr>
+<td>`startDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template start date, in milliseconds</td>
+</tr>
+<tr>
+<td>`endDate` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch timestamp of template end date, in milliseconds</td>
+</tr>
+<tr>
+<td>`aggregationEnabled` <br /><span class="type-text">boolean</span></td>
+<td>Indicates whether to aggregate report data</td>
+</tr>
+</table>
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Updated template ID</td>
+</tr>
+<tr>
+  <td>`nextRunDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run, in milliseconds (may be <var>null</var> if no future execution exists)</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown label="Request Examples">
+  <CodeOption label="Rename Template">
+```json
+{
+  "name": "Updated Template Name"
+}
+```
+</CodeOption>
+  <CodeOption label="Enable Aggregation">
+```json
+{
+  "aggregationEnabled": true
+}
+```
+</CodeOption>
+  <CodeOption label="Extend End Date">
+```json
+{
+  "endDate": 1790000000000
+}
+```
+</CodeOption>
+  <CodeOption label="Change Frequency (Daily to Weekly)">
+```json
+{
+  "frequencyId": 3,
+  "frequencyDetails": {
+    "dayOfWeekId": 2
+  }
+}
+```
+</CodeOption>
+  <CodeOption label="Recurring to One-Time">
+```json
+{
+  "frequencyId": 1,
+  "frequencyDetails": {},
+  "startDate": 1763145600000,
+  "endDate": 1763145600000
+}
+```
+</CodeOption>
+  <CodeOption label="One-Time to Recurring">
+```json
+{
+  "frequencyId": 2,
+  "frequencyDetails": {},
+  "startDate": 1763145600000
+}
+```
+</CodeOption>
+  <CodeOption label="Pause Template">
+```json
+{
+  "status": "INACTIVE"
+}
+```
+</CodeOption>
+  <CodeOption label="Resume Template">
+```json
+{
+  "status": "ACTIVE"
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "templateId": 101,
+    "nextRunDate": 1764460800000
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          templateId: number;
+          nextRunDate: number;
+        }
+      }
+    };
+  };
+}
+
+function updateTemplate(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/ins/templates/{templateId}',
+    requestBody: {
+      content: {
+        "application/json": {
+          name?: `string`,
+          recipientEmails?: `string[]`,
+          status?: `string`,
+          frequencyId?: `number`,
+          frequencyDetails?: {
+            dayOfWeekId?: `number`,
+            dayOfMonthTypeId?: `number`,
+            dayOfMonth?: `number`,
+            intervalModeId?: `number`,
+            intervalValue?: `number`,
+          },
+          startDate?: `number`,
+          endDate?: `number`,
+          aggregationEnabled?: `boolean`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
