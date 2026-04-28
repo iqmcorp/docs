@@ -1,0 +1,451 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Caret from '@site/static/img/caret.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Download Report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/report/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download a PLD, NLD, or ICT Insights report. Only reports with a <var>ready</var> status are eligible for download. The API validates the report status, file type, and user permissions before generating a pre-signed download URL.
+
+| Request Schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report ID](/guidelines/insights-api#get-template-reports) to download |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID: <var>1</var> (XLSX), <var>2</var> (CSV), <var>3</var> (PDF), <var>4</var> (ZIP) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`reportUrl` <br /><span class="type-text">string</span></td>
+  <td>Pre-signed download URL for the report</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "fileTypeId": 1,
+  "reportId": 50
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "reportUrl": "https://xyz.abc.com/reports/abcd/2024-12-03/50_acbd_Report.xlsx?X-Amz-Algorithm=AWS4-HMAC"
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The provided ICT report ID: 50 is not in the ready state."
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      success: boolean;
+      data: {
+        reportUrl: string;
+      };
+    };
+  };
+  422: {
+    content: {
+      success: boolean;
+      errorObjects: Array<{ error: string }>;
+    };
+  };
+};
+
+function downloadReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/report/download',
+    data: {
+      fileTypeId: 1,
+      reportId: 50
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Delete Report
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/ins/report" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Delete PLD, NLD, or ICT reports that have a <var>failed</var> status. Reports that are already deleted or do not have a <var>failed</var> status cannot be deleted with this endpoint.
+
+| Query Parameters |  |
+| ---- | --- |
+| `reportIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comma-separated list of [Report ID](/guidelines/insights-api#get-template-reports)s to delete |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success or error message</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200 (bulk delete)"
+{
+  "success": true,
+  "data": {
+    "message": "2 ICT insights deleted successfully"
+  }
+}
+```
+
+```json title="Response 200 (individual delete)"
+{
+  "success": true,
+  "data": {
+    "message": "255944_PLD_Insights_2 deleted successfully"
+  }
+}
+```
+
+```json title="Response 422 (invalid state)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Some of the provided NLD ID(s) are either already deleted, do not exist, or do not have a 'failed' status."
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      success: boolean;
+      data: {
+        message: string;
+      };
+    };
+  };
+  422: {
+    content: {
+      success: boolean;
+      errorObjects: Array<{ error: string }>;
+    };
+  };
+};
+
+function deleteReport(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://api.iqm.com/api/v3/ins/report',
+    params: {
+      reportIds: '50,51'
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Email Report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/report/email" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send a PLD, NLD, or ICT Insights report as an email attachment to specified recipients. Only reports with a <var>ready</var> status are eligible to be emailed. Reports larger than 25 MB cannot be sent.
+
+| Request Schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report ID](/guidelines/insights-api#get-template-reports) to email |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID: <var>1</var> (XLSX), <var>2</var> (CSV), <var>3</var> (PDF), <var>4</var> (ZIP) |
+| `emailIds` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Recipient email addresses (1–15) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success or error message</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "fileTypeId": 1,
+  "emailIds": [
+    "user1@email.com",
+    "user2@email.com"
+  ],
+  "reportId": 50
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "ICT report e-mail sent successfully."
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "data": {
+    "message": "The provided ICT ID: 50 is not in the ready state."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      success: boolean;
+      data: {
+        message: string;
+      };
+    };
+  };
+  422: {
+    content: {
+      success: boolean;
+      data: {
+        message: string;
+      };
+    };
+  };
+};
+
+function emailReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/report/email',
+    data: {
+      fileTypeId: 1,
+      emailIds: ['user1@email.com'],
+      reportId: 50
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Regenerate Report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/regenerate/report/{reportId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Regenerate a PLD, NLD, or ICT Insights report that has a <var>failed</var> status. The report must be associated with a scheduling template. Reports that are already deleted or in a <var>ready</var>/<var>processing</var> state cannot be regenerated.
+
+| Path Parameters |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report ID](/guidelines/insights-api#get-template-reports) to regenerate |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`reportId` <br /><span class="type-text">integer</span></td>
+  <td>Report ID that was regenerated</td>
+</tr>
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Associated [Template ID](/guidelines/insights-api#get-list-of-templates)</td>
+</tr>
+<tr>
+  <td>`nextRunDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run, in milliseconds</td>
+</tr>
+<tr>
+  <td>`reportName` <br /><span class="type-text">string</span></td>
+  <td>Name of the regenerated report</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "reportId": 12,
+    "templateId": 123,
+    "nextRunDate": 1765774800000,
+    "reportName": "sample report"
+  }
+}
+```
+
+```json title="Response 400 (invalid state)"
+{
+  "success": false,
+  "data": {
+    "message": "ICT Report ID : 12 is already deleted or is in READY/PROCESSING state."
+  }
+}
+```
+
+```json title="Response 422 (invalid ID)"
+{
+  "success": false,
+  "data": {
+    "message": "Please provide valid insights id value."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      success: boolean;
+      data: {
+        reportId: number;
+        templateId: number;
+        nextRunDate: number;
+        reportName: string;
+      };
+    };
+  };
+  400: {
+    content: {
+      success: boolean;
+      data: {
+        message: string;
+      };
+    };
+  };
+};
+
+function regenerateReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/regenerate/report/{reportId}',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
