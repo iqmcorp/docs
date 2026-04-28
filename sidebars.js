@@ -2871,6 +2871,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Eligible Campaigns',
+              href: '/guidelines/insights-api#get-eligible-campaigns',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Calculate Insights Computation',
+              href: '/guidelines/insights-api#calculate-insights-computation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
           ]
         },
         {
@@ -3217,6 +3231,41 @@ const sidebars = {
               label: 'Update Report Template',
               href: '/guidelines/insights-api#update-report-template',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Report Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Download Report',
+              href: '/guidelines/insights-api#download-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Report',
+              href: '/guidelines/insights-api#delete-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email Report',
+              href: '/guidelines/insights-api#email-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Report',
+              href: '/guidelines/insights-api#regenerate-report',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -6296,6 +6345,27 @@ const sidebars = {
         id: 'healthcare-vertical/insights-pld'
       },
       items: [
+        {
+          type: `category`,
+          label: `Insights Details`,
+          className: 'sidebarItem',
+          items: [
+              {
+              type: 'link',
+              label: 'Get Eligible Campaigns',
+              href: '/healthcare-vertical/insights-pld#get-eligible-campaigns',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Calculate Insights Computation',
+              href: '/healthcare-vertical/insights-pld#calculate-insights-computation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
         {  
           type: 'category',
           label: 'Audience Quality Score Reports',
@@ -6509,6 +6579,41 @@ const sidebars = {
               label: 'Update Report Template',
               href: '/healthcare-vertical/insights-pld#update-report-template',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Report Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Download Report',
+              href: '/healthcare-vertical/insights-pld#download-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete Report',
+              href: '/healthcare-vertical/insights-pld#delete-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email Report',
+              href: '/healthcare-vertical/insights-pld#email-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Report',
+              href: '/healthcare-vertical/insights-pld#regenerate-report',
+              customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
           ]
