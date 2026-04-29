@@ -5474,6 +5474,20 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Get CVA Reach',
+              href: '/political-vertical/audience-segments#get-cva-reach',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get CVA Insights',
+              href: '/political-vertical/audience-segments#get-cva-insights',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            }
           ]
         },
         {

@@ -523,3 +523,281 @@ You can see an example of this format in the Request Sample code block on the ri
 
 </div></div>
 
+---
+
+### Get CVA Reach
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cva/get-reach" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get reach data for a Custom Voter Audience. 
+
+See the [Create Custom Voter Audience](#create-custom-voter-audience) endpoint for details on the <var>equation</var> parameter. 
+
+| Request Schema |  |
+| ---- | --- |
+| `equation` <br /><span class="type-text">string</span> | Equation string representing the segment ID groups in AND/OR relationship |
+| `state_ids` <br /><span class="type-text">array of integers</span> | [State IDs](#get-available-states-for-custom-voter-audiences) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`segment_num_voters` <br /><span class="type-text">integer</span></td>
+  <td>Number of voters in the segment matching the equation criteria</td>
+</tr>
+<tr>
+  <td>`total_num_voters` <br /><span class="type-text">integer</span></td>
+  <td>Total number of voters across all selected states</td>
+</tr>
+<tr>
+  <td>`map_metrics` <br /><span class="type-text">object</span></td>
+  <td>Party registration breakdown by state ID</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`map_metrics` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`{stateId}` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by party (Republican, Democrat, Other) for the given state</td>
+  </tr>
+  </table>
+  </details>
+</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+```json title="Request Sample"
+{
+  "equation":"((IQMCVACA069112))",
+  "state_ids":["30200005"]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "segment_num_voters": 2887320,
+        "total_num_voters": 23165810,
+        "map_metrics": {
+            "30200005": {
+                "Republican": 664123,
+                "Democrat": 1202940,
+                "Other": 1020257
+            }
+        }
+    }
+}
+```
+
+  </div>
+</div>
+
+---
+
+### Get CVA Insights
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cva/get-insights" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get Insights data for a Custom Voter Audience, including demographic breakdowns for party registration, gender, urbanicity, age, and ethnicity.
+
+See the [Create Custom Voter Audience](#create-custom-voter-audience) endpoint for details on the <var>equation</var> parameter. 
+
+| Request Schema |  |
+| ---- | --- |
+| `equation` <br /><span class="type-text">string</span> | Equation string representing the segment ID groups in AND/OR relationship |
+| `state_ids` <br /><span class="type-text">array of integers</span> | [State IDs](#get-available-states-for-custom-voter-audiences) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`segment_num_voters` <br /><span class="type-text">integer</span></td>
+  <td>Total number of voters in the segment</td>
+</tr>
+<tr>
+  <td>`insights` <br /><span class="type-text">object</span></td>
+  <td>Demographic breakdown of voters in the segment</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`insights` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`party_registration` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by party registration (e.g., Democratic, Republican, Others)</td>
+  </tr>
+  <tr>
+    <td>`gender` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by gender (e.g., Male, Female, Unknown)</td>
+  </tr>
+  <tr>
+    <td>`urbanicity` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by urbanicity (e.g., Urban, Rural, Sub-Urban, Unknown)</td>
+  </tr>
+  <tr>
+    <td>`age` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by age range (e.g., 18-20, 21-24, 25-34, 35-44, 45-54, 55-64, 65+)</td>
+  </tr>
+  <tr>
+    <td>`ethnicity` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by ethnicity</td>
+  </tr>
+  </table>
+  </details>
+</td>
+</tr>
+</table>
+</details>
+
+  </div><div class="child2">
+
+```json title="Request Sample"
+{
+  "equation":"((IQMCVACA069112))",
+  "state_ids":["30200005"]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "segment_num_voters": 2887320,
+        "insights": {
+            "party_registration": {
+                "Others": 18529,
+                "Democratic": 1202940,
+                "Republican": 664123
+            },
+            "gender": {
+                "Male": 2799766,
+                "Unknown": 86698,
+                "Female": 856
+            },
+            "urbanicity": {
+                "Urban": 2104851,
+                "Rural": 235643,
+                "Unknown": 647,
+                "Sub-Urban": 546179
+            },
+            "age": {
+                "18-20": 98295,
+                "55-64": 395914,
+                "35-44": 560105,
+                "25-34": 641809,
+                "Unknown": 1287,
+                "45-54": 377989,
+                "21-24": 180553,
+                "65+": 631368
+            },
+            "ethnicity": {
+                "Scots": 92125,
+                "Filipino": 12130,
+                "Tonga": 70,
+                "Ukrainian": 1434,
+                "Icelandic": 56,
+                "Maldivian": 12,
+                "Armenian": 16818,
+                "Greek": 6766,
+                "Norwegian": 9410,
+                "Slovenian": 485,
+                "Irish": 114132,
+                "Uzbek": 51,
+                "Dutch (Netherlands)": 24345,
+                "Lithuanian": 1016,
+                "Austrian": 4745,
+                "Pakistani": 4233,
+                "Turkish": 2162,
+                "Basque": 3,
+                "Arab": 58847,
+                "Polish": 14424,
+                "Bosnian Muslim": 79,
+                "Italian": 102771,
+                "Indian/Hindu": 52524,
+                "Kirghiz": 2,
+                "unknown": 314065,
+                "Slovakian": 1256,
+                "Danish": 2811,
+                "Nepalese": 4,
+                "Serbian": 2312,
+                "Persian": 10578,
+                "Laotian": 3235,
+                "Khmer": 1896,
+                "Hawaiian": 1454,
+                "Belgian": 885,
+                "Kazak": 12,
+                "Tibetan": 158,
+                "Native American": 332,
+                "Afghan": 747,
+                "Bhutanese": 153,
+                "Georgian": 78,
+                "Chinese": 113393,
+                "Finnish": 1698,
+                "Bangladeshi": 131,
+                "Chechnian": 108,
+                "Macedonian": 21,
+                "Manx": 13,
+                "Tajik": 7,
+                "African or Af-Am Self Reported": 709,
+                "Vietnamese": 49542,
+                "Kurdish": 367,
+                "Romanian": 1849,
+                "Hispanic": 906044,
+                "Russian (omitting former Soviet States)": 13926,
+                "Western Samoa": 43,
+                "Myanmar (Burmese)": 1954,
+                "Nauruan": 1,
+                "Thai": 2287,
+                "Estonian": 495,
+                "English/Welsh": 582938,
+                "Croatian": 860,
+                "Moldavian": 8,
+                "French": 38330,
+                "Swedish": 22868,
+                "Czech": 4310,
+                "German": 112880,
+                "Japanese": 17738,
+                "Swiss": 365,
+                "Latvian": 386,
+                "Multi-Ethnic": 18,
+                "Portuguese": 4511,
+                "Luxembourgian": 66,
+                "Papua New Guinea": 11,
+                "Likely Af-Am (Modeled)": 109723,
+                "Bulgarian": 841,
+                "Albanian": 302,
+                "Malay": 71,
+                "Australian": 14,
+                "Korean": 29395,
+                "Byelorussian": 1351,
+                "Indonesian": 446,
+                "Mongolian": 403,
+                "Sri Lankan": 166,
+                "Azerb": 57,
+                "Unknown Asian": 2682,
+                "Hungarian": 5337,
+                "Turkmenistan": 39
+            }
+        }
+    }
+}
+```
+
+  </div>
+</div>
+
