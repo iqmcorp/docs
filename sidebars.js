@@ -3207,13 +3207,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'PLD Reports Interval',
-              href: '/guidelines/insights-api#get-pld-reports-interval',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Validate Template Name',
               href: '/guidelines/insights-api#validate-template-name',
               customProps: { method: 'POST' },
@@ -6550,13 +6543,6 @@ const sidebars = {
               type: 'link',
               label: 'Template Reports',
               href: '/healthcare-vertical/insights-pld#get-template-reports',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'PLD Reports Interval',
-              href: '/healthcare-vertical/insights-pld#get-pld-reports-interval',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
