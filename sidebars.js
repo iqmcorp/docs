@@ -5768,6 +5768,12 @@ const sidebars = {
           label: 'Reports Tutorial',
           id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
           className: 'sidebarItem'  
+        },
+        {
+          type: 'doc',
+          label: 'Insights Tutorial',
+          id: `mcp/mcp-tutorials/mcp-insights-tutorial`,
+          className: 'sidebarItem'
         }
       ]
     }
