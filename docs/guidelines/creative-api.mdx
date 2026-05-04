@@ -3702,6 +3702,405 @@ function updateCreativeClickUrl(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Get HTML5 Creative Content
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve HTML5 content (index.html) stored in S3 for a specific HTML5 Creative.
+
+| Path Parameters ||
+| --- | --- |
+| `creativeId` <br /><span class="type-text">integer</span> | [Creative ID](#get-creative-details) of the HTML5 Creative |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`html5Content` <br /><span class="type-text">string</span></td>
+  <td>HTML5 content string</td>
+</tr>
+<tr>
+  <td>`s3Path` <br /><span class="type-text">string</span></td>
+  <td>S3 path of the HTML5 file</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creativeId": 720273,
+    "html5Content": "<!DOCTYPE html><html><head><title>Creative</title></head><body>...</body></html>",
+    "s3Path": "assets/204876/eJP1zca_1772170251691/index.html"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          html5Content: string;
+          s3Path: string;
+        }
+      };
+    };
+  };
+}
+
+function getHtml5Content(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update HTML5 Creative Content
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the HTML5 content (index.html) stored in S3 for a specific HTML5 Creative. Validates user edit access, uploads the new content to S3, increments the <var>cb</var> version parameter in the iframe src, and updates the Creative record with modified timestamps.
+
+| Path Parameters ||
+| --- | --- |
+| `creativeId` <br /><span class="type-text">integer</span> | [Creative ID](#get-creative-details) of the HTML5 Creative |
+
+| Request Schema ||
+| --- | --- |
+| `html5Content` <br /><span class="type-text">string</span> | Updated HTML5 content string |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`s3Path` <br /><span class="type-text">string</span></td>
+  <td>Updated S3 path with cache-busting version</td>
+</tr>
+<tr>
+  <td>`cbVersion` <br /><span class="type-text">integer</span></td>
+  <td>Cache-busting version number</td>
+</tr>
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "html5Content": "<!DOCTYPE html><html><head><title>Updated Creative</title></head><body><h1>Updated Content</h1></body></html>"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creativeId": 720273,
+    "s3Path": "assets/204876/eJP1zca_1772170251691/index.html?cb=2",
+    "cbVersion": 2,
+    "message": "HTML5 content updated successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          s3Path: string;
+          cbVersion: number;
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateHtml5Content(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          html5Content: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Submit Creatives for Validation
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/crt/creatives/submit" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Fetches eligible Creatives and submits them for validation based on the provided limit.
+
+| Query Parameters ||
+| --- | --- |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of Creatives to submit. Default: <var>-1</var> (all available) |
+| `clientId` <br /><span class="type-text">string</span> | Client identifier whose Creatives will be submitted |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`creativeName` <br /><span class="type-text">string</span></td>
+  <td>Creative name</td>
+</tr>
+<tr>
+  <td>`creativeSource` <br /><span class="type-text">string</span></td>
+  <td>Creative source URL</td>
+</tr>
+<tr>
+  <td>`advertiserDetails` <br /><span class="type-text">object</span></td>
+  <td>Advertiser details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`advertiserDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`advertiserName` <br /><span class="type-text">string</span></td>
+    <td>Advertiser name</td>
+  </tr>
+  <tr>
+    <td>`website` <br /><span class="type-text">string</span></td>
+    <td>Advertiser website</td>
+  </tr>
+  <tr>
+    <td>`chiefName` <br /><span class="type-text">string</span></td>
+    <td>Chief/contact name</td>
+  </tr>
+  <tr>
+    <td>`contactNumber` <br /><span class="type-text">string</span></td>
+    <td>Contact phone number</td>
+  </tr>
+  <tr>
+    <td>`address` <br /><span class="type-text">string</span></td>
+    <td>Advertiser address</td>
+  </tr>
+  <tr>
+    <td>`politicalIdentifier` <br /><span class="type-text">string</span></td>
+    <td>Political identifier (e.g., FEC ID)</td>
+  </tr>
+  <tr>
+    <td>`advertiserId` <br /><span class="type-text">integer</span></td>
+    <td>Advertiser ID</td>
+  </tr>
+  <tr>
+    <td>`legalInfo` <br /><span class="type-text">string</span></td>
+    <td>Legal information</td>
+  </tr>
+  <tr>
+    <td>`links` <br /><span class="type-text">array of strings</span></td>
+    <td>Associated links</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "creativeId": 636912,
+      "creativeName": "Creative - 1",
+      "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202318/wqh1afg_1709622657169.png",
+      "advertiserDetails": {
+        "advertiserName": "Political Advertiser",
+        "website": "https://iqm.com",
+        "chiefName": "IQM",
+        "contactNumber": "1234567890",
+        "address": "IQM Corporation",
+        "politicalIdentifier": "fec_123",
+        "advertiserId": 3278,
+        "legalInfo": "Other info added",
+        "links": [
+          "www.google.com"
+        ]
+      }
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: Array<{
+          creativeId: number;
+          creativeName: string;
+          creativeSource: string;
+          advertiserDetails: {
+            advertiserName: string;
+            website: string;
+            chiefName: string;
+            contactNumber: string;
+            address: string;
+            politicalIdentifier: string;
+            advertiserId: number;
+            legalInfo: string;
+            links: string[];
+          }
+        }>
+      };
+    };
+  };
+}
+
+function submitCreatives(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/submit',
+    params: {
+      query: {
+        limit?: `number`,
+        clientId?: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ## More Creative Details
 
 ### Get Creative Types List
