@@ -2237,6 +2237,27 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get HTML5 Creative Content',
+              href: '/guidelines/creative-api#get-html5-creative-content',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update HTML5 Creative Content',
+              href: '/guidelines/creative-api#update-html5-creative-content',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Submit Creatives for Validation',
+              href: '/guidelines/creative-api#submit-creatives-for-validation',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
