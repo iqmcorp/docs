@@ -6309,6 +6309,34 @@ const sidebars = {
             }
           ]
         },
+        {
+          type: `category`,
+          label: `Campaign Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Campaign Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#campaign-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-campaign-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Audience History',
+              href: '/healthcare-vertical/audience-healthcare#get-campaign-audience-history',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
       ]
     },
     {
