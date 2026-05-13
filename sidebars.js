@@ -5759,6 +5759,12 @@ const sidebars = {
         },
         {
           type: 'doc',
+          label: 'Campaign Tutorial',
+          id: `mcp/mcp-tutorials/mcp-campaign-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
           label: 'Conversion Tutorial',
           id: `mcp/mcp-tutorials/mcp-conversion-tutorial`,
           className: 'sidebarItem'
