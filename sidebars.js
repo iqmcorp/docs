@@ -2082,7 +2082,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'List of Conversion Property Types',
-              href: '/guidelines/Conversion-API-guidelines/#get-list-of-conversion-property-types',
+              href: '/guidelines/conversion-api/#get-list-of-conversion-property-types',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
