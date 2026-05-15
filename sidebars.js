@@ -1757,6 +1757,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'IO Details by ID',
+              href: '/guidelines/campaign-api#get-insertion-order-details-by-id',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'IO Details',
               href: '/guidelines/campaign-api#get-insertion-order-details',
               customProps: { method: 'POST' },
