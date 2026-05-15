@@ -1,0 +1,338 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Caret from '@site/static/img/caret.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Get Eligible Campaigns
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/insights/eligible-campaigns" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a status-wise list of eligible Campaigns for generation of PLD, ICT, or NLD Insights reports.
+
+Eligible Campaign IDs can be used to in the [Calculate Insights Computation](#calculate-insights-computation) and [Create Report Template](#create-report-template) endpoints.
+
+| Query Parameters |  |
+| ---- | --- |
+| `reportType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Type of report: <var>pld</var>, <var>ict</var>, or <var>nld</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`running` <br /><span class="type-text">array of objects</span></td>
+  <td>Campaigns with running status</td>
+</tr>
+<tr>
+  <td>`paused` <br /><span class="type-text">array of objects</span></td>
+  <td>Campaigns with paused status</td>
+</tr>
+<tr>
+  <td>`expired` <br /><span class="type-text">array of objects</span></td>
+  <td>Campaigns with expired status</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>Campaign object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`campaignId` <br /><span class="type-text">integer</span></td>
+      <td>[Campaign ID](/guidelines/campaign-api#get-list-of-campaigns)</td>
+    </tr>
+    <tr>
+      <td>`campaignTimezoneId` <br /><span class="type-text">integer</span></td>
+      <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "running": [
+      {
+        "campaignId": 451351,
+        "campaignTimezoneId": 29
+      }
+    ],
+    "paused": [
+      {
+        "campaignId": 451350,
+        "campaignTimezoneId": 29
+      }
+    ],
+    "expired": [
+      {
+        "campaignId": 470839,
+        "campaignTimezoneId": 29
+      }
+    ]
+  }
+}
+```
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid report type provided : vlds"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          running: {
+            campaignId: number;
+            campaignTimezoneId: number;
+          }[];
+          paused: {
+            campaignId: number;
+            campaignTimezoneId: number;
+          }[];
+          expired: {
+            campaignId: number;
+            campaignTimezoneId: number;
+          }[];
+        }
+      }
+    };
+  };
+}
+
+function getEligibleCampaigns(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/insights/eligible-campaigns',
+    params: {
+      query: {
+        reportType: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Calculate Insights Computation
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/computation" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Compute the cost and impressions for creation of PLD, ICT, or NLD Insights reports based on the provided Campaign IDs and date range.
+
+The computation calculates the chargeable impressions and cost based on the markup charged to the organization.
+
+| Request Schema |  |
+| ---- | --- |
+| `category` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Insight type category: <var>pld</var>, <var>ict</var>, or <var>nld</var> |
+| `campaignIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns) for which to compute the report |
+| `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of report start date, in milliseconds |
+| `endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of report end date, in milliseconds |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`ioId` <br /><span class="type-text">integer</span></td>
+  <td>Insertion Order ID</td>
+</tr>
+<tr>
+  <td>`ioName` <br /><span class="type-text">string</span></td>
+  <td>Insertion Order name</td>
+</tr>
+<tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of report start date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of report end date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Campaign IDs included in the computation</td>
+</tr>
+<tr>
+  <td>`reportCreatable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether the report can be created</td>
+</tr>
+<tr>
+  <td>`chargeableImps` <br /><span class="type-text">integer</span></td>
+  <td>Number of chargeable impressions</td>
+</tr>
+<tr>
+  <td>`chargedImps` <br /><span class="type-text">integer</span></td>
+  <td>Number of already charged impressions</td>
+</tr>
+<tr>
+  <td>`chargeableCost` <br /><span class="type-text">number</span></td>
+  <td>Chargeable cost amount</td>
+</tr>
+<tr>
+  <td>`chargedCost` <br /><span class="type-text">number</span></td>
+  <td>Already charged cost amount</td>
+</tr>
+<tr>
+  <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether sufficient funds are available</td>
+</tr>
+<tr>
+  <td>`effectiveRate` <br /><span class="type-text">number</span></td>
+  <td>Effective rate for the report</td>
+</tr>
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>Associated [Template ID](/guidelines/insights-api#get-list-of-templates)</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "category": "pld",
+  "campaignIds": [451351, 451352],
+  "startDate": 1640995200000,
+  "endDate": 1643673599000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "ioId": 101,
+    "ioName": "Test IO",
+    "startDate": 1742898000000,
+    "endDate": 1774238399000,
+    "campaignIds": [11011],
+    "reportCreatable": true,
+    "chargeableImps": 100,
+    "chargedImps": 25,
+    "chargeableCost": 345.23,
+    "chargedCost": 45.21,
+    "fundsAvailable": true,
+    "effectiveRate": 3.45,
+    "templateId": 111
+  }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Date range is invalid or exceeds maximum allowed period"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          ioId: number;
+          ioName: string;
+          startDate: number;
+          endDate: number;
+          campaignIds: number[];
+          reportCreatable: boolean;
+          chargeableImps: number;
+          chargedImps: number;
+          chargeableCost: number;
+          chargedCost: number;
+          fundsAvailable: boolean;
+          effectiveRate: number;
+          templateId: number;
+        }
+      }
+    };
+  };
+}
+
+function computeInsightsReports(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/insights/computation',
+    requestBody: {
+      content: {
+        "application/json": {
+          category: `string`,
+          campaignIds: `number[]`,
+          startDate: `number`,
+          endDate: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
