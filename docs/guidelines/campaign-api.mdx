@@ -3342,7 +3342,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Comma separated [Ethnicity IDs](/guidelines/master-api#get-ethnicity-segment) for targeting </td>
     </tr>
         <tr>
-    <td>`schedule` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
+    <td>`scheduling` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
     <td>key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] </td>
     </tr>
             <tr>
@@ -3761,7 +3761,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`incomeRangeIds` <br /><span class="type-text">string</span> |	Comma separated [Income Range IDs](/guidelines/master-api#get-income-range-segment) for targeting
 |`languageIds` <br /><span class="type-text">string</span> |	Comma separated [Language IDs](/guidelines/master-api#get-language-segment) for targeting
 |`ethnicityIds` <br /><span class="type-text">string</span> |	Comma separated [Ethnicity IDs](/guidelines/master-api#get-ethnicity-segment) for targeting
-|`schedule` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
+|`scheduling` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
 |`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target IAB categories. Value in form of a string of comma-separated ID. Only super user can update IAB categories
 |`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
 |`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
@@ -6327,12 +6327,12 @@ Assign or unassign Creatives from Campaigns.
 
 ### Inventory Group Targeting
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/inventorygroups/{groupId}/includeExclude" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/{groupId}/includeExclude" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Target Inventories by including or excluding Inventory groups from your Campaigns advertising strategies.
+Include or exclude specific Campaigns from an Inventory Group. Use this to manage which Campaigns are targeted by the Inventory Group by providing comma-separated lists of Campaign IDs to include and/or exclude.
 
 Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory-api#create-a-new-inventory-group).
 
@@ -6342,14 +6342,18 @@ Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory
 
 | Request Schema | |
 | --- | --- |
-| `campaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](#get-list-of-campaigns)s |
-| `isExcluded` <br /><span class="type-text">boolean</span> | Include Campaigns in Group: <var>0</var> <br />Exclude Campaigns from Group: <var>1</var> |
+| `includedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [Campaign ID](#get-list-of-campaigns)s to include in the Inventory Group. Use an empty string if no Campaigns should be included. |
+| `excludedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [Campaign ID](#get-list-of-campaigns)s to exclude from the Inventory Group. Use an empty string if no Campaigns should be excluded. |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether the operation was successful: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
     </tr>
     </table>
@@ -6360,19 +6364,44 @@ Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory
 
 ```json title="Request Sample"
 {
-  "campaignIds": "172813,177146",
-  "isExcluded": 0
+  "includedCampaignIds": "101,102",
+  "excludedCampaignIds": "200"
 }
 ```
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "message": "Inventory Group excluded successfully."
-  }
+  "success": true,
+  "data": "Campaigns successfully updated for inventory group"
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid campaign IDs provided"
+    }
+  ]
+}
+```
+
+```json title="Response 401"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid token"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -7077,6 +7106,146 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 </table>
 </details>
+</div></div>
+
+---
+
+### Get Insertion Order Details by ID
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/{ioId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get Insertion Order details by IO ID.
+
+| Path Parameter | |
+| --- | --- |
+| `ioId` <br /><span class="type-text">integer</span> | [Insertion Order ID](#get-insertion-order-details) |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`ioId` <br /><span class="type-text">integer</span></td>
+    <td>Insertion Order ID</td>
+    </tr>
+    <tr>
+    <td>`ioName` <br /><span class="type-text">string</span></td>
+    <td>Insertion Order name</td>
+    </tr>
+    <tr>
+    <td>`ioStartTime` <br /><span class="type-text">integer</span></td>
+    <td>IO start time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioEndTime` <br /><span class="type-text">integer</span></td>
+    <td>IO end time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioTotalBudget` <br /><span class="type-text">number</span></td>
+    <td>Total budget of the Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`ioTimeZoneId` <br /><span class="type-text">integer</span></td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones) for Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`isBudgetAutoSum` <br /><span class="type-text">boolean</span></td>
+    <td>Whether the IO total budget is auto-summed from Campaign budgets</td>
+    </tr>
+    <tr>
+    <td>`ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Distribution Method ID](#get-list-of-budget-distribution-methods)</td>
+    </tr>
+    <tr>
+    <td>`ioBudgetTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Type ID](#get-list-of-campaign-budget-types)</td>
+    </tr>
+    <tr>
+    <td>`ioStatusId` <br /><span class="type-text">integer</span></td>
+    <td>[IO Status ID](#get-io-status-list)</td>
+    </tr>
+    <tr>
+    <td>`ioTotalImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Total impressions for the Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID</td>
+    </tr>
+    <tr>
+    <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+    <td>User Organization Workspace ID of the creator</td>
+    </tr>
+    <tr>
+    <td>`modifiedByUowId` <br /><span class="type-text">integer</span></td>
+    <td>User Organization Workspace ID of the last modifier</td>
+    </tr>
+    <tr>
+    <td>`isIoPrioritise` <br /><span class="type-text">boolean</span></td>
+    <td>Whether IO prioritization is enabled</td>
+    </tr>
+    <tr>
+    <td>`ioNextPerformanceCheck` <br /><span class="type-text">integer</span></td>
+    <td>Next performance check time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioLastPriorityShift` <br /><span class="type-text">integer</span></td>
+    <td>Last priority shift time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioCurrentPriority` <br /><span class="type-text">integer</span></td>
+    <td>Current priority level of the IO</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "ioId": 985,
+    "ioName": "TEST UPDATE",
+    "ioStartTime": 1793251767612,
+    "ioEndTime": 1794251767612,
+    "ioTotalBudget": 0,
+    "ioTimeZoneId": 29,
+    "isBudgetAutoSum": true,
+    "ioBudgetDistributionMethodId": 1,
+    "ioBudgetTypeId": 1,
+    "ioStatusId": 1,
+    "ioTotalImpressions": 0,
+    "owId": 201427,
+    "createdByUowId": 9480,
+    "modifiedByUowId": 9480,
+    "isIoPrioritise": true,
+    "ioNextPerformanceCheck": 1708606327000,
+    "ioLastPriorityShift": 1704976116958,
+    "ioCurrentPriority": 4
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid insertion order id."
+    }
+  ]
+}
+```
+
+</details>
+
 </div></div>
 
 ---
@@ -9697,18 +9866,26 @@ Create an Insertion Order with the following minimum required fields:
 
 ```json title="Response 200"
 {
-    "success": true,
+  "success": true,
     "data": {
-        "ioId": 6,
-        "ioName": "IO Name 1",
-        "ioStartTime": 1690898148000,
-        "ioEndTime": 1690898888000,
-        "ioTotalBudget": 0,
-        "ioTimeZoneId": 29,
-        "ioBudgetTypeId": 1,
-        "ioBudgetDistributionMethodId": 1,
-        "isAutoSumIoTotalBudget": true,
-        "ioTotalImpressions": null
+      "ioId": 25096,
+      "ioName": "new IO 1",
+      "owId": 203578,
+      "createdByUowId": 188494,
+      "modifiedByUowId": 188494,
+      "ioStartTime": 1778299200000,
+      "ioEndTime": null,
+      "ioTotalBudget": null,
+      "ioTimeZoneId": 29,
+      "isAutoSumIoTotalBudget": true,
+      "ioBudgetDistributionMethodId": 1,
+      "ioBudgetTypeId": 1,
+      "ioTotalImpressions": null,
+      "ioStatusId": 1,
+      "ioNextPerformanceCheck": null,
+      "ioLastPriorityShift": null,
+      "ioCurrentPriority": null,
+      "isIoPrioritise": false
     }
 }
 ```
