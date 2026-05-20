@@ -3588,7 +3588,7 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of Deal statuses',
+              label: 'List of Deal Statuses',
               href: '/guidelines/inventory-api#get-list-of-deal-statuses',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
