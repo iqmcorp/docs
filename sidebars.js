@@ -1702,13 +1702,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Assign Conversions to Campaign',
-              href: '/guidelines/campaign-api#assign-conversions-to-campaigns',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Update Audience Targeting',
               href: '/guidelines/campaign-api#update-audience-targeting-in-campaigns',
               customProps: { method: 'POST' },
@@ -3595,7 +3588,7 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of Deal statuses',
+              label: 'List of Deal Statuses',
               href: '/guidelines/inventory-api#get-list-of-deal-statuses',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
