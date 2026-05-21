@@ -1107,6 +1107,189 @@ function addInventoriesToBlockedList(): Promise<Responses> {
 
 ---
 
+### Unblock Inventories
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/inventories/unblock" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Remove inventories from the blocked list by ID or search field.
+
+| Request Schema |  |
+| ---- | --- |
+| `inventoryIds` <br /><span class="type-text">array of integers</span> | [Inventory ID](#get-list-of-inventories)s to unblock |
+| `searchField` <br /><span class="type-text">string</span> | Unblock Inventories by search field |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "inventoryIds": [
+        1,
+        2,
+        3
+    ]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Inventories unblocked successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function unblockInventoriesFromBlockedList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/inventories/unblock',
+    requestBody: {
+      content: {
+        "application/json": {
+          inventoryIds: `number[]`,
+          searchField: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Comment for Blocked Inventory
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/comment/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add a comment to a blocked inventory item.
+
+| Request Schema |  |
+| ---- | --- |
+| `inventoryId` <br /><span class="type-text">integer</span> | The [Inventory ID](#get-list-of-inventories) to add a comment to (minimum: 1) |
+| `comment` <br /><span class="type-text">string</span> | Comment text (required) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "inventoryId": 1234,
+    "comment": "Blocking due to brand safety concerns"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Comment added successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function addCommentForInventoryBlocking(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/comment/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          inventoryId: `number`,
+          comment: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Block Inventory File
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/blocked-inventories/block-file" />
@@ -1707,6 +1890,309 @@ function getInventoriesCountByCSV(): Promise<Responses> {
       content: {
         "application/json": {
           domainsFile?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Fetch Contextual Inventories
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/contextual/inventories" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve a paginated list of contextual inventories.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search filter (default: empty string) |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page (default: 10) |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (default: 1) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Paginated list of contextual inventories</td>
+  </tr>
+  <tr>
+  <td>`data.data` <br /><span class="type-text">array</span></td>
+  <td>Array of contextual inventory objects</td>
+  </tr>
+  <tr>
+  <td>`data.data[].id` <br /><span class="type-text">integer</span></td>
+  <td>Contextual inventory ID</td>
+  </tr>
+  <tr>
+  <td>`data.data[].inventory` <br /><span class="type-text">string</span></td>
+  <td>Inventory name or URL</td>
+  </tr>
+  <tr>
+  <td>`data.data[].contextualType` <br /><span class="type-text">integer</span></td>
+  <td>Contextual type identifier</td>
+  </tr>
+  <tr>
+  <td>`data.totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+  </tr>
+  <tr>
+  <td>`data.filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of filtered records</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "inventory": "example.com",
+                "contextualType": 2
+            }
+        ],
+        "totalRecords": 50,
+        "filteredRecords": 10
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          data: Array<{
+            id: number;
+            inventory: string;
+            contextualType: number;
+          }>;
+          totalRecords: number;
+          filteredRecords: number;
+        };
+      };
+    };
+  };
+}
+
+function getContextualInventories(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories',
+    params: {
+      searchField: `string`,
+      noOfEntries: `number`,
+      pageNo: `number`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Contextual Inventories
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/contextual/inventories/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create new contextual inventories by providing a group name with associated keywords and/or URLs.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupName` <br /><span class="type-text">string</span> | Name for the contextual inventory group |
+| `keywords` <br /><span class="type-text">array of strings</span> | List of keywords to associate |
+| `urls` <br /><span class="type-text">array of strings</span> | List of URLs to associate |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "groupName": "Sports Contextual",
+    "keywords": ["basketball", "football"],
+    "urls": ["https://espn.com", "https://sports.yahoo.com"]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Contextual inventories added successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function addContextualInventories(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          groupName: `string`,
+          keywords: `string[]`,
+          urls: `string[]`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Remove Contextual Inventories
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/inv/contextual/inventories/remove" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Permanently delete contextual inventories from the user's global contextual inventory pool.
+
+| Request Schema |  |
+| ---- | --- |
+| `contextualInventoryIds` <br /><span class="type-text">array of integers</span> | IDs of contextual inventories to remove |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "contextualInventoryIds": [101, 102, 103]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Contextual inventories removed successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function removeContextualInventories(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories/remove',
+    requestBody: {
+      content: {
+        "application/json": {
+          contextualInventoryIds: `number[]`,
         }
       }
     }
@@ -3254,6 +3740,169 @@ function getAutoSuggestKeywords(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+---
+
+### Get Inventory Groups Count
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/groups/count" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the total count of inventory groups for the authenticated user.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Count data</td>
+  </tr>
+  <tr>
+  <td>`data.inventoryGroupsCount` <br /><span class="type-text">integer</span></td>
+  <td>Total number of inventory groups</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "inventoryGroupsCount": 26
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: {
+          inventoryGroupsCount: number;
+        };
+      };
+    };
+  };
+}
+
+function getInventoryGroupsCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/groups/count',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Download Open Exchange Inventories for Group
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/group/{groupId}/open-exchange/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download open exchange inventory details for a specific group as a file.
+
+| Path Parameters |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Inventory Group ID (required) |
+
+| Query Parameters |  |
+| ---- | --- |
+| `fileType` <br /><span class="type-text">string</span> | File type for download (required), e.g., `csv` |
+| `searchField` <br /><span class="type-text">string</span> | Search filter for inventories |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>S3 download URL for the generated file</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "https://s3.amazonaws.com/bucket/inventories-export.csv"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function downloadOpenExchangeInventoriesForGroup(groupId: number): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: `https://api.iqm.com/api/v3/inv/group/${groupId}/open-exchange/download`,
+    params: {
+      fileType: `string`,
+      searchField: `string`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
 
 ## Inventory Group Management
 
@@ -4969,6 +5618,261 @@ function deleteInventoryGroup(): Promise<Responses> {
         groupId: `number`
       }
     },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Contextual Inventories to Group
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/contextual/inventories/group/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add contextual inventories to one or more inventory groups.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> | Group IDs to add contextual inventories to (required) |
+| `contextualIds` <br /><span class="type-text">array of integers</span> | Contextual inventory IDs to add (required) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Body"
+{
+    "groupIds": [1, 2, 3],
+    "contextualIds": [101, 102]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Contextual Inventories added to group successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function addContextualInventoriesToGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories/group/add',
+    data: {
+      groupIds: [1, 2, 3],
+      contextualIds: [101, 102],
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Remove Contextual Inventories from Group
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/inv/contextual/inventories/group/remove" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Remove contextual inventories from an inventory group.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupId` <br /><span class="type-text">integer</span> | Group ID to remove contextual inventories from |
+| `contextualIds` <br /><span class="type-text">array of integers</span> | Contextual inventory IDs to remove (required) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Body"
+{
+    "groupId": 1,
+    "contextualIds": [101, 102]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Contextual Inventories removed from group successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function removeContextualInventoriesFromGroup(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories/group/remove',
+    data: {
+      groupId: 1,
+      contextualIds: [101, 102],
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Validate Inventory Group
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/group/validate" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Validate whether the authenticated user is authorized to access the specified inventory groups.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> | Group IDs to validate |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the user is authorized for the specified groups</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Body"
+{
+    "groupIds": [1, 2, 3]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": true
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json;charset=UTF-8": {
+        success: boolean;
+        data: boolean;
+      };
+    };
+  };
+}
+
+function validateInventoryGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/group/validate',
+    data: {
+      groupIds: [1, 2, 3],
+    }
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
