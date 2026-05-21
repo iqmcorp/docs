@@ -7059,6 +7059,12 @@ const sidebars = {
         },
         {
           type: 'doc',
+          label: 'Inventory Tutorial',
+          id: `mcp/mcp-tutorials/mcp-inventory-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
           label: 'Reports Tutorial',
           id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
           className: 'sidebarItem'  
