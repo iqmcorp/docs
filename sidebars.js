@@ -3399,6 +3399,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Unblock Inventories',
+              href: '/guidelines/inventory-api#unblock-inventories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Comment for Blocked Inventory',
+              href: '/guidelines/inventory-api#add-comment-for-blocked-inventory',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Block Inventory File',
               href: '/guidelines/inventory-api#block-inventory-file',
               customProps: { method: 'POST' },
@@ -3430,6 +3444,27 @@ const sidebars = {
               label: 'Inventory Count Based on CSV File',
               href: '/guidelines/inventory-api#get-inventory-count-based-on-csv-file',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Fetch Contextual Inventories',
+              href: '/guidelines/inventory-api#fetch-contextual-inventories',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories',
+              href: '/guidelines/inventory-api#add-contextual-inventories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remove Contextual Inventories',
+              href: '/guidelines/inventory-api#remove-contextual-inventories',
+              customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
           ]
@@ -3523,6 +3558,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Inventory Groups Count',
+              href: '/guidelines/inventory-api#get-inventory-groups-count',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Open Exchange Inventories for Group',
+              href: '/guidelines/inventory-api#download-open-exchange-inventories-for-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3563,6 +3612,27 @@ const sidebars = {
               label: 'Delete Inventory Group',
               href: '/guidelines/inventory-api#delete-inventory-group',
               customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories to Group',
+              href: '/guidelines/inventory-api#add-contextual-inventories-to-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remove Contextual Inventories from Group',
+              href: '/guidelines/inventory-api#remove-contextual-inventories-from-group',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate Inventory Group',
+              href: '/guidelines/inventory-api#validate-inventory-group',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
