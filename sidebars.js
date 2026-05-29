@@ -7074,6 +7074,12 @@ const sidebars = {
           label: 'Insights Tutorial',
           id: `mcp/mcp-tutorials/mcp-insights-tutorial`,
           className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Finance Tutorial',
+          id: `mcp/mcp-tutorials/mcp-finance-tutorial`,
+          className: 'sidebarItem'
         }
       ]
     }
