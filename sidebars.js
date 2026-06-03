@@ -2491,15 +2491,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Customer AQS Finance Details',
-              href: '/guidelines/finance-api#get-customer-aqs-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/guidelines/finance-api/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Customer AQS Details',
-              href: '/guidelines/finance-api#update-customer-aqs-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/guidelines/finance-api/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -5650,15 +5650,15 @@ const sidebars = {
       items: [
             {
               type: 'link',
-              label: 'Customer VLD Finance Details',
-              href: '/political-vertical/finance#get-customer-vld-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/political-vertical/finance/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Update Customer VLD Details',
-              href: '/political-vertical/finance#update-customer-vld-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/political-vertical/finance/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
@@ -6420,43 +6420,15 @@ const sidebars = {
       items: [
             {
               type: 'link',
-              label: 'Customer PLD Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-pld-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/healthcare-vertical/finance/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Customer PLD Details',
-              href: '/healthcare-vertical/finance#update-customer-pld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer SLS Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-sls-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer SLS Details',
-              href: '/healthcare-vertical/finance#update-customer-sls-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer AQS Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-aqs-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer AQS Details',
-              href: '/healthcare-vertical/finance#update-customer-aqs-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/healthcare-vertical/finance/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             }
