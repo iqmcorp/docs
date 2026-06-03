@@ -2645,6 +2645,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Invoice Template Margin Details',
+              href: '/guidelines/finance-api#get-invoice-template-margin-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Invoice Template Margin Pre-Requisite',
               href: '/guidelines/finance-api#get-invoice-template-margin-pre-requisite',
               customProps: { method: 'GET' },
@@ -2778,6 +2785,27 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'PayPal Payment Success Callback',
+              href: '/guidelines/finance-api#paypal-payment-success-callback',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PayPal Payment Cancel Callback',
+              href: '/guidelines/finance-api#paypal-payment-cancel-callback',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Complete PayPal Payment',
+              href: '/guidelines/finance-api#complete-paypal-payment',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Initiate Refund',
               href: '/guidelines/finance-api#initiate-refund',
               customProps: { method: 'POST' },
@@ -2802,6 +2830,13 @@ const sidebars = {
               label: 'Download Payment Receipt',
               href: '/guidelines/finance-api#download-payment-receipt',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add or Update Payment Comment',
+              href: '/guidelines/finance-api#add-or-update-payment-comment',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
