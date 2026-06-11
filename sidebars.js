@@ -3502,6 +3502,48 @@ const sidebars = {
               customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories to Groups',
+              href: '/guidelines/inventory-api#add-contextual-inventories-to-inventory-groups',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `CTV Inventories`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'CTV Inventory List',
+              href: '/guidelines/inventory-api#get-ctv-inventory-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Count',
+              href: '/guidelines/inventory-api#get-ctv-inventories-count',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Distribution',
+              href: '/guidelines/inventory-api#get-ctv-inventories-distribution',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download CTV Inventory List',
+              href: '/guidelines/inventory-api#download-ctv-inventory-list',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3604,6 +3646,34 @@ const sidebars = {
               type: 'link',
               label: 'Download Open Exchange Inventories for Group',
               href: '/guidelines/inventory-api#download-open-exchange-inventories-for-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Statistics for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-statistics-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Distributions for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-distributions-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download CTV Inventories for an Inventory Group',
+              href: '/guidelines/inventory-api#download-ctv-inventories-for-an-inventory-group',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },

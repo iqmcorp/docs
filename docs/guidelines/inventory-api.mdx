@@ -17,7 +17,7 @@ IQM's advanced algorithm determines the most relevant ads to display to a user b
 
   * **Private Marketplace (PMP)** deals are a type of programmatic advertising arrangement that allows Advertisers to purchase ad Inventory through a private, invitation-only auction.
   * **Programmatic Guaranteed (PG)** deals are a direct negotiation between one publisher and one Advertiser that offer budget predictability and avoid auction volatility by ensuring a fixed amount of ad Inventory at a pre-negotiated price.
-  * **Inventory Groups** are a collection or grouping of Inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other properties. There are three types of Inventory group: Open Exchange, PMP deals, and Contextual Inventory.
+  * **Inventory Groups** are a collection or grouping of Inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other properties. There are four types of Inventory group: Open Exchange, PMP deals, Contextual Inventory, and CTV.
 
 This page will cover common methods and endpoints associated with the Inventory API. 
 
@@ -2207,6 +2207,686 @@ function removeContextualInventories(): Promise<Responses> {
 </div></div>
 
 
+---
+
+### Add Contextual Inventories to Inventory Groups
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/contextual/inventories/group/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Associate contextual inventories with one or more inventory groups. The authenticated user must be authorized to access all provided group IDs.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> | [Inventory Group ID](#get-list-of-inventory-groups)s to add contextual inventories to |
+| `contextualIds` <br /><span class="type-text">array of integers</span> | Contextual inventory IDs to associate |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table></details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "groupIds": [
+    170800,
+    170801
+  ],
+  "contextualIds": [
+    42386,
+    42387
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Contextual Inventories added to groups successfully."
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Unauthorized"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function addContextualInventoriesToGroups(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/contextual/inventories/group/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          groupIds: `number[]`,
+          contextualIds: `number[]`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+## CTV Inventories
+
+Connected TV (CTV) Inventories are app-based inventory sources available on smart TVs and streaming devices.
+
+### Get CTV Inventory List
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/inventories/ctv/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a paginated list of CTV inventories available to the authenticated user.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search term matching publisher name or inventory name |
+| `countries` <br /><span class="type-text">string</span> | Filter by country |
+| `categories` <br /><span class="type-text">string</span> | Filter by IAB category |
+| `creativeTypes` <br /><span class="type-text">string</span> | Filter by creative type |
+| `creativeDurations` <br /><span class="type-text">string</span> | Filter by creative duration (video/audio) |
+| `exchanges` <br /><span class="type-text">string</span> | Filter by exchange |
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by video player size |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page (default: <var>10</var>) |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (default: <var>1</var>) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`inventoryDataList` <br /><span class="type-text">array</span></td>
+  <td>List of CTV inventory objects</td>
+  </tr>
+  <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventoryDataList` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Inventory ID</td>
+      </tr>
+      <tr>
+        <td>`name` <br /><span class="type-text">string</span></td>
+        <td>Inventory name</td>
+      </tr>
+      <tr>
+        <td>`publisherName` <br /><span class="type-text">string</span></td>
+        <td>Publisher name</td>
+      </tr>
+      <tr>
+        <td>`appId` <br /><span class="type-text">string</span></td>
+        <td>Bundle ID (app) or domain (web)</td>
+      </tr>
+      <tr>
+        <td>`inventoryType` <br /><span class="type-text">string</span></td>
+        <td>Inventory type (e.g., Android App)</td>
+      </tr>
+      <tr>
+        <td>`impressions` <br /><span class="type-text">integer</span></td>
+        <td>Impressions count</td>
+      </tr>
+      <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>Unique individuals reached</td>
+      </tr>
+      <tr>
+        <td>`videoPercentage` <br /><span class="type-text">number</span></td>
+        <td>Percentage of video impressions</td>
+      </tr>
+      <tr>
+        <td>`displayPercentage` <br /><span class="type-text">number</span></td>
+        <td>Percentage of display impressions</td>
+      </tr>
+      <tr>
+        <td>`inventoryLogoUrl` <br /><span class="type-text">string</span></td>
+        <td>URL of the inventory logo</td>
+      </tr>
+      <tr>
+        <td>`ctv` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates CTV inventory: <var>true</var></td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+  </tr>
+  <tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the current filter</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "filteredRecords": 2,
+    "totalRecords": 100,
+    "inventoryDataList": [
+      {
+        "id": 10035129,
+        "name": "HISTORY Vault",
+        "publisherName": "A&E (A+E Networks)",
+        "appId": "com.svod",
+        "inventoryType": "Android App",
+        "impressions": 120,
+        "reach": 180,
+        "videoPercentage": 100.0,
+        "displayPercentage": 0.0,
+        "inventoryLogoUrl": "https://cdn.com/adhoc/ctv-logos/1003514129",
+        "ctv": true
+      },
+      {
+        "id": 10014132,
+        "name": "FYI",
+        "publisherName": "ATC",
+        "appId": "com.watch",
+        "inventoryType": "Android App",
+        "impressions": 1100,
+        "reach": 1079,
+        "videoPercentage": 100.0,
+        "displayPercentage": 0.0,
+        "inventoryLogoUrl": "https://cdn.com/adhoc/ctv-logos/1003514132",
+        "ctv": true
+      }
+    ]
+  }
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to access provided inventory group."
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface CtvInventoryItem {
+  id: number;
+  name: string;
+  publisherName: string;
+  appId: string;
+  inventoryType: string;
+  impressions: number;
+  reach: number;
+  videoPercentage: number;
+  displayPercentage: number;
+  inventoryLogoUrl: string;
+  ctv: boolean;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          filteredRecords: number;
+          totalRecords: number;
+          inventoryDataList: CtvInventoryItem[];
+        };
+      };
+    };
+  };
+}
+
+function getCtvInventoriesList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/inventories/ctv/list',
+    params: {
+      query: {
+        searchField?: `string`,
+        countries?: `string`,
+        categories?: `string`,
+        creativeTypes?: `string`,
+        creativeDurations?: `string`,
+        exchanges?: `string`,
+        videoPlayerSizes?: `string`,
+        noOfEntries?: `number`,
+        pageNo?: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get CTV Inventories Count
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/inventories/ctv/count" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the count of unique CTV inventories, total impressions, and total reach available to the authenticated user.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search term matching publisher name or inventory name |
+| `countries` <br /><span class="type-text">string</span> | Filter by country |
+| `categories` <br /><span class="type-text">string</span> | Filter by IAB category |
+| `creativeTypes` <br /><span class="type-text">string</span> | Filter by creative type |
+| `creativeDurations` <br /><span class="type-text">string</span> | Filter by creative duration (video/audio) |
+| `exchanges` <br /><span class="type-text">string</span> | Filter by exchange |
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by video player size |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Total unique individuals reached</td>
+  </tr>
+  <tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Total impressions count</td>
+  </tr>
+  <tr>
+  <td>`inventories` <br /><span class="type-text">integer</span></td>
+  <td>Count of unique CTV inventories</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "reach": 7983253,
+    "impressions": 119256646,
+    "inventories": 13870
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          reach: number;
+          impressions: number;
+          inventories: number;
+        };
+      };
+    };
+  };
+}
+
+function getCtvInventoriesCount(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/inventories/ctv/count',
+    params: {
+      query: {
+        searchField?: `string`,
+        countries?: `string`,
+        categories?: `string`,
+        creativeTypes?: `string`,
+        creativeDurations?: `string`,
+        exchanges?: `string`,
+        videoPlayerSizes?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get CTV Inventories Distribution
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/inventories/ctv/distributions" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the distribution of CTV inventories across countries, creative types, and traffic types.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search term matching publisher name or inventory name |
+| `countries` <br /><span class="type-text">string</span> | Filter by country |
+| `categories` <br /><span class="type-text">string</span> | Filter by IAB category |
+| `creativeTypes` <br /><span class="type-text">string</span> | Filter by creative type |
+| `creativeDurations` <br /><span class="type-text">string</span> | Filter by creative duration (video/audio) |
+| `exchanges` <br /><span class="type-text">string</span> | Filter by exchange |
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by video player size |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`trafficTypes` <br /><span class="type-text">object</span></td>
+  <td>Distribution across traffic types</td>
+  </tr>
+  <tr>
+  <td>`countries` <br /><span class="type-text">object</span></td>
+  <td>Distribution across countries</td>
+  </tr>
+  <tr>
+  <td>`creativeTypes` <br /><span class="type-text">object</span></td>
+  <td>Distribution across creative types</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`label` <br /><span class="type-text">string</span></td>
+  <td>Label</td>
+  </tr>
+  <tr>
+  <td>`value` <br /><span class="type-text">number</span></td>
+  <td>Percentage value</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "trafficTypes": [
+      { "label": "App", "value": 100.0 },
+      { "label": "Web", "value": 0.0 }
+    ],
+    "countries": [
+      { "label": "United States", "value": 99.6 },
+      { "label": "Dominican Republic", "value": 0.12 },
+      { "label": "Canada", "value": 0.11 },
+      { "label": "United Kingdom", "value": 0.02 },
+      { "label": "Brazil", "value": 0.02 }
+    ],
+    "creativeTypes": [
+      { "label": "Video", "value": 99.57 },
+      { "label": "Audio", "value": 0.42 },
+      { "label": "Banner", "value": 0.02 },
+      { "label": "Native", "value": 0.0 }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface DistributionEntry {
+  label: string;
+  value: number;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          trafficTypes: DistributionEntry[];
+          countries: DistributionEntry[];
+          creativeTypes: DistributionEntry[];
+        };
+      };
+    };
+  };
+}
+
+function getCtvInventoriesDistribution(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/inventories/ctv/distributions',
+    params: {
+      query: {
+        searchField?: `string`,
+        countries?: `string`,
+        categories?: `string`,
+        creativeTypes?: `string`,
+        creativeDurations?: `string`,
+        exchanges?: `string`,
+        videoPlayerSizes?: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Download CTV Inventory List
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/inventories/ctv/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download a CSV or XLSX file of the CTV inventory list based on requested filters.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search term matching publisher name or inventory name |
+| `countries` <br /><span class="type-text">string</span> | Filter by country |
+| `categories` <br /><span class="type-text">string</span> | Filter by IAB category |
+| `creativeTypes` <br /><span class="type-text">string</span> | Filter by creative type |
+| `creativeDurations` <br /><span class="type-text">string</span> | Filter by creative duration |
+| `exchanges` <br /><span class="type-text">string</span> | Filter by exchange |
+| `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by video player size |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Output file format: <var>csv</var> or <var>xlsx</var> |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Download URL for the generated file</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "https://sample-download-url.com/CTVInventories_ctv.csv"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function downloadCtvInventoryList(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/inventories/ctv/download',
+    params: {
+      query: {
+        searchField?: `string`,
+        countries?: `string`,
+        categories?: `string`,
+        creativeTypes?: `string`,
+        creativeDurations?: `string`,
+        exchanges?: `string`,
+        videoPlayerSizes?: `string`,
+        fileType: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ## Inventory Groups
 
 ### Get List of Inventory Groups
@@ -2223,7 +2903,7 @@ An Inventory group <var>id</var> can be use to perform various actions in [Inven
 | Query Parameters |  |
 | ---- | --- |
 | `groupFilterId` <br /><span class="type-text">integer</span> | Filters groups list. Supported values: <br />All Groups [default]: <var>0</var> <br />Share by Admin: <var>1</var> <br />Own Groups: <var>2</var> |
-| `groupTypeIds` <br /><span class="type-text">string</span> | Filters groups list. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupTypeIds` <br /><span class="type-text">string</span> | Filters groups list. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `ids` <br /><span class="type-text">string</span> | Comma separated IDs
 | `provideAccountLevelExcludedGroup` <br /><span class="type-text">boolean</span> | Flag to indicate whether to include account-level excluded group in response or not, default: <var>false</var> |
 | `includeStatistics` <br /><span class="type-text">boolean</span> | Flag to indicate whether to include statistics in response or not, default: <var>true</var> |
@@ -3930,6 +4610,534 @@ function downloadOpenExchangeInventoriesForGroup(groupId: number): Promise<Respo
     params: {
       fileType: `string`,
       searchField: `string`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get CTV Inventories for an Inventory Group
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a paginated list of CTV inventories belonging to a specific inventory group.
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups) |
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Filter inventories by name |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page (default: <var>50</var>) |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (default: <var>0</var>) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`inventoryDataList` <br /><span class="type-text">array</span></td>
+  <td>List of CTV inventory objects</td>
+  </tr>
+  <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventoryDataList` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Inventory ID</td>
+      </tr>
+      <tr>
+        <td>`name` <br /><span class="type-text">string</span></td>
+        <td>Inventory name</td>
+      </tr>
+      <tr>
+        <td>`publisherName` <br /><span class="type-text">string</span></td>
+        <td>Publisher name</td>
+      </tr>
+      <tr>
+        <td>`appId` <br /><span class="type-text">string</span></td>
+        <td>Bundle ID (app) or domain (web)</td>
+      </tr>
+      <tr>
+        <td>`inventoryType` <br /><span class="type-text">string</span></td>
+        <td>Inventory type</td>
+      </tr>
+      <tr>
+        <td>`impressions` <br /><span class="type-text">integer</span></td>
+        <td>Impressions count</td>
+      </tr>
+      <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>Unique individuals reached</td>
+      </tr>
+      <tr>
+        <td>`videoPercentage` <br /><span class="type-text">number</span></td>
+        <td>Percentage of video impressions</td>
+      </tr>
+      <tr>
+        <td>`displayPercentage` <br /><span class="type-text">number</span></td>
+        <td>Percentage of display impressions</td>
+      </tr>
+      <tr>
+        <td>`inventoryLogoUrl` <br /><span class="type-text">string</span></td>
+        <td>URL of the inventory logo</td>
+      </tr>
+      <tr>
+        <td>`ctv` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates CTV inventory: <var>true</var></td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of records</td>
+  </tr>
+  <tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of records matching the current filter</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 24397208,
+    "filteredRecords": 2,
+    "inventoryDataList": [
+      {
+        "id": 3408578,
+        "name": "Tubi (Roku)",
+        "publisherName": "Roku",
+        "appId": "41468",
+        "inventoryType": "Other App",
+        "impressions": 3928807709,
+        "reach": 36173425,
+        "videoPercentage": 99.999869,
+        "displayPercentage": 0.0,
+        "inventoryLogoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/3408578",
+        "ctv": true
+      },
+      {
+        "id": 68028,
+        "name": "NewsON (Android TV)",
+        "publisherName": "NewsON",
+        "appId": "com.newson.vinson",
+        "inventoryType": "Android App",
+        "impressions": 962565737,
+        "reach": 859260,
+        "videoPercentage": 100.0,
+        "displayPercentage": 0.0,
+        "inventoryLogoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/68028",
+        "ctv": true
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface CtvInventoryItem {
+  id: number;
+  name: string;
+  publisherName: string;
+  appId: string;
+  inventoryType: string;
+  impressions: number;
+  reach: number;
+  videoPercentage: number;
+  displayPercentage: number;
+  inventoryLogoUrl: string;
+  ctv: boolean;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          inventoryDataList: CtvInventoryItem[];
+        };
+      };
+    };
+  };
+}
+
+function getCtvGroupInventories(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories',
+    params: {
+      path: {
+        groupId: `number`
+      },
+      query: {
+        searchField?: `string`,
+        noOfEntries?: `number`,
+        pageNo?: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get CTV Inventories Statistics for an Inventory Group
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories/count" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get inventory count, total reach, and total impressions for CTV inventories in a specific inventory group.
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`inventories` <br /><span class="type-text">integer</span></td>
+  <td>Count of CTV inventories in the group</td>
+  </tr>
+  <tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Total unique individuals reached</td>
+  </tr>
+  <tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Total impressions count</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "inventories": 3,
+    "reach": 37657018,
+    "impressions": 5031212348
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          inventories: number;
+          reach: number;
+          impressions: number;
+        };
+      };
+    };
+  };
+}
+
+function getCtvGroupInventoriesStatistics(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories/count',
+    params: {
+      path: {
+        groupId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get CTV Inventories Distributions for an Inventory Group
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories/distributions" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the distribution of CTV inventories in a specific inventory group across countries, device types, traffic types, and creative types.
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`countries` <br /><span class="type-text">object</span></td>
+  <td>Distribution across countries</td>
+  </tr>
+  <tr>
+  <td>`deviceTypes` <br /><span class="type-text">object</span></td>
+  <td>Distribution across device types</td>
+  </tr>
+  <tr>
+  <td>`trafficTypes` <br /><span class="type-text">object</span></td>
+  <td>Distribution across traffic types</td>
+  </tr>
+  <tr>
+  <td>`creativeTypes` <br /><span class="type-text">object</span></td>
+  <td>Distribution across creative types</td>
+  </tr>
+  <tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`label` <br /><span class="type-text">string</span></td>
+  <td>Label</td>
+  </tr>
+  <tr>
+  <td>`value` <br /><span class="type-text">number</span></td>
+  <td>Percentage value</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "countries": [
+      { "label": "United States", "value": 99.99 },
+      { "label": "Canada", "value": 0.01 },
+      { "label": "Mexico", "value": 0.0 }
+    ],
+    "deviceTypes": [
+      { "label": "Connected TV", "value": 99.96 },
+      { "label": "Mobile", "value": 0.04 },
+      { "label": "Tablet", "value": 0.0 },
+      { "label": "Desktop", "value": 0.0 }
+    ],
+    "trafficTypes": [
+      { "label": "App", "value": 100.0 }
+    ],
+    "creativeTypes": [
+      { "label": "Video", "value": 100.0 },
+      { "label": "Audio", "value": 0.0 }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface DistributionEntry {
+  label: string;
+  value: number;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          countries: DistributionEntry[];
+          deviceTypes: DistributionEntry[];
+          trafficTypes: DistributionEntry[];
+          creativeTypes: DistributionEntry[];
+        };
+      };
+    };
+  };
+}
+
+function getCtvGroupInventoriesDistributions(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/group/{groupId}/ctv-inventories/distributions',
+    params: {
+      path: {
+        groupId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Download CTV Inventories for an Inventory Group
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/group/{groupId}/ctv/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download CTV inventory details for a specific inventory group as a CSV or XLSX file.
+
+| Path Parameter | |
+| --- | --- |
+| `groupId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups) |
+
+| Query Parameters |  |
+| ---- | --- |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type for download: <var>csv</var> or <var>xlsx</var> |
+| `searchField` <br /><span class="type-text">string</span> | Filter inventories by name |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>S3 download URL for the generated file</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "https://iqm-ephemeral-2ach617e13f8-stage.s3.amazonaws.com/inventory/download/csv/Yash%20org%202_1720435555550.csv?response-expires-Amz-Credential"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function downloadCtvInventoriesForGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/group/{groupId}/ctv/download',
+    params: {
+      path: {
+        groupId: `number`
+      },
+      query: {
+        fileType: `string`,
+        searchField?: `string`,
+      }
     }
   };
 
