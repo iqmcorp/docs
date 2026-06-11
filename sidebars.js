@@ -3518,15 +3518,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of Inventory Groups Statistics',
-              href: '/guidelines/inventory-api#get-list-of-inventory-groups-statistics',
+              label: 'List of Shared Group Customer Details',
+              href: '/guidelines/inventory-api#get-list-of-shared-group-customer-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'List of Campaigns Attached to Group',
-              href: '/guidelines/inventory-api#get-list-of-campaigns-attached-to-group',
+              label: 'List of Inventory Groups Statistics',
+              href: '/guidelines/inventory-api#get-list-of-inventory-groups-statistics',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
