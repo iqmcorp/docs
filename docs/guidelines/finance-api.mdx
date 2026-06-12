@@ -5,20 +5,16 @@ hide_table_of_contents: true
 import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import VldFinance from '@site/docs/_partials/finance-api/vld-finance.mdx';
-import PldFinance from '@site/docs/_partials/finance-api/pld-finance.mdx';
-import SlsFinance from '@site/docs/_partials/finance-api/sls-finance.mdx';
-import AqsFinance from '@site/docs/_partials/finance-api/aqs-finance.mdx';
+import InsightsFees from '@site/docs/_partials/finance-api/insights-fees.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
 import ExternalLink from '@site/static/img/external-link2.svg';
+
 
 # Finance API
 
 The Finance API allows you to access finance details and lists, and manage invoices, credit, and payment.
 
 This page covers the methods and endpoints associated with finance operations.
-
-For details on how to access and manage fees associated with Provider Level Data (PLD), ScriptLift Studies (SLS), and Voter Level Data (VLD) reports, see the [Healthcare Finance API](/healthcare-vertical/finance) and [Political Finance API](/political-vertical/finance/) Guidelines.
 
 For more information on financial operations see the following Help Center articles:
 
@@ -973,7 +969,7 @@ function editPgFeesDetails(): Promise<Responses> {
 
 ---
 
-<AqsFinance />
+<InsightsFees />
 
 ---
 
@@ -2121,6 +2117,10 @@ Get a list of invoices by Customer or Organization.
 | ----| --- |
 | `status` <br /><span class="type-text">string</span> | [Invoice Status ID](#invoice-status) |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-invoiceId</var> <br />Supported values: <var>issuedOn</var>, <var>invoiceAmount</var>, <var>status</var> |
+| `paymentMode` <br /><span class="type-text">integer</span> | Payment mode filter |
+| `searchField` <br /><span class="type-text">string</span> | Search keyword to filter invoices |
+| `limit` <br /><span class="type-text">integer</span> | Number of results per page |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number for pagination |
 | `isCustomerRequest` <br /><span class="type-text">boolean</span> | (Organization endpoint only) Customer app request (default): <var>true</var> <br />Organization app request: <var>false</var>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
@@ -3057,6 +3057,102 @@ function DownloadInvoice(): Promise<Responses> {
         owId: `number`,
         invoiceId: `number`,
       }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Invoice Template Margin Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/invoice-template-margin-details" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get invoice template and margin configuration status for the specified organization workspace IDs, including whether margins are enabled and the parent Organization Workspace ID.
+
+| Query Parameters |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comma-separated list of Organization Workspace IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`isParentInvoiceTemplateSet` <br /><span class="type-text">boolean</span></td>
+    <td>Whether the parent invoice template is set</td>
+    </tr>
+    <tr>
+    <td>`isMarginSet` <br /><span class="type-text">boolean</span></td>
+    <td>Whether margin settings are configured</td>
+    </tr>
+    <tr>
+    <td>`parentOWId` <br /><span class="type-text">integer</span></td>
+    <td>Parent Organization Workspace ID</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "parentOWId": 201186
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          isParentInvoiceTemplateSet: boolean;
+          isMarginSet: boolean;
+          parentOWId: number;
+        };
+      };
+    };
+  };
+}
+
+function GetInvoiceTemplateMarginDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/invoice-template-margin-details',
+    params: {
+      owIds: `string`
     }
   };
 
@@ -5293,6 +5389,255 @@ function PaymentwithPayPal(): Promise<Responses> {
 
 ---
 
+### PayPal Payment Success Callback
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/paypal/payment/{internalToken}/success" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Validates a PayPal payment and checks if it has been completed. This is the callback URL that PayPal redirects to after a successful payment approval.
+
+| Path Parameters |  |
+| ---- | --- |
+| `internalToken` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Internal token for the payment session |
+
+| Query Parameters |  |
+| ---- | --- |
+| `paymentId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PayPal payment identifier |
+| `PayerID` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PayPal payer identifier |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates request was successful: <var>true</var></td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+      };
+    };
+  };
+}
+
+function PayPalPaymentSuccessCallback(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/paypal/payment/{internalToken}/success',
+    params: {
+      paymentId: `string`,
+      PayerID: `string`
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### PayPal Payment Cancel Callback
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/paypal/payment/{internalToken}/cancel" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Cancels an in-progress PayPal payment. This is the callback URL that PayPal redirects to when a user cancels the payment flow.
+
+| Path Parameters |  |
+| ---- | --- |
+| `internalToken` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Internal token for the payment session |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates request was successful: <var>true</var></td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+      };
+    };
+  };
+}
+
+function PayPalPaymentCancelCallback(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/paypal/payment/{internalToken}/cancel'
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Complete PayPal Payment
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/paypal/payment/complete" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Completes the PayPal payment flow and returns a confirmation.
+
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Customer Organization Workspace ID |
+| `paymentId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment ID |
+| `comment` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comment on payment |
+| `customerRequest` <br /><span class="type-text">boolean</span> <span class="required-text">required</span> | Flag for requested by customer |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates request was successful: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Confirmation message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Comment saved successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function CompletePayPalPayment(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/paypal/payment/complete',
+    params: {
+      owId: `number`,
+      paymentId: `number`,
+      comment: `string`,
+      customerRequest: `boolean`
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Initiate Refund
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/fa/customer/payment/refund" />
@@ -5677,6 +6022,100 @@ function DownloadPaymentReceiptpdf(): Promise<Responses> {
       query: {
         owId: `number`,
         isCustomerRequest: `boolean`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add or Update Payment Comment
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/payment/comment" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add or update a comment on a payment record.
+
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID |
+| `paymentId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment ID |
+| `comment` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comment text to add or update |
+| `customerRequest` <br /><span class="type-text">boolean</span> | Whether this is a customer-initiated request |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates request was successful: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Comment saved successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddOrUpdatePaymentComment(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/fa/payment/comment',
+    requestBody: {
+      content: {
+        "application/json": {
+          owId: `number`,
+          paymentId: `number`,
+          comment: `string`,
+          customerRequest: `boolean`,
+        }
       }
     }
   };
