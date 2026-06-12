@@ -2258,6 +2258,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Approve Creative',
+              href: '/guidelines/creative-api#approve-creative',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -5139,6 +5146,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'User Status',
+              href: '/guidelines/workspace-api#user-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Customer Type',
               href: '/guidelines/workspace-api#customer-type',
               customProps: { method: 'GET' },
@@ -5162,6 +5176,13 @@ const sidebars = {
               type: 'link',
               label: 'Customer List Sortable Fields',
               href: '/guidelines/workspace-api#customer-list-sortable-fields',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'User Sort By Options',
+              href: '/guidelines/workspace-api#user-sort-by-options',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },

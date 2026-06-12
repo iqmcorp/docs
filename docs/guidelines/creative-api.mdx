@@ -4101,6 +4101,167 @@ function submitCreatives(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Approve Creative
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/crt/creatives/approve" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Approve or reject pending Creatives by updating their status to <var>running</var> or <var>rejected</var> respectively. Ownership and permission checks are applied to ensure the request is authorized.
+
+| Request Schema | |
+| --- | --- |
+| `creativeIds` <br /><span class="type-text">array of integers</span> | List of pending [Creative ID](#get-list-of-creatives-and-details)s to approve or reject |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>approve</var> or <var>reject</var> |
+| `creativeRejectionReason` <br /><span class="type-text">string</span> | Required when action is <var>reject</var>. Reason for rejecting the Creative(s) (max 255 characters) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message indicating how many Creatives were updated</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample: Approve creatives"
+{
+  "creativeIds": [
+    688549,
+    688550
+  ],
+  "action": "approve"
+}
+```
+
+```json title="Request Sample: Reject creatives"
+{
+  "creativeIds": [
+    688549,
+    688550
+  ],
+  "action": "reject",
+  "creativeRejectionReason": "Harmful content found!"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "2 Creatives updated successfully"
+  }
+}
+```
+
+```json title="Response 400: Invalid action"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid action. Allowed values are: approve, reject"
+    }
+  ]
+}
+```
+
+```json title="Response 400: Rejection reason not provided"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Rejection reason not provided. Please provide the reason for rejecting the creative/s."
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Logged in user does not have access to reject/approve/pause/delete/restore the creative"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid creative ids found. Please provide valid creative ids"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function approveCreatives(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/approve',
+    requestBody: {
+      content: {
+        "application/json": {
+          creativeIds: `array of numbers`,
+          action: `string`,
+          creativeRejectionReason?: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ## More Creative Details
 
 ### Get Creative Types List
