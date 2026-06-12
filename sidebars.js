@@ -2258,6 +2258,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Approve Creative',
+              href: '/guidelines/creative-api#approve-creative',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -2491,15 +2498,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Customer AQS Finance Details',
-              href: '/guidelines/finance-api#get-customer-aqs-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/guidelines/finance-api/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Customer AQS Details',
-              href: '/guidelines/finance-api#update-customer-aqs-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/guidelines/finance-api/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -2645,6 +2652,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Invoice Template Margin Details',
+              href: '/guidelines/finance-api#get-invoice-template-margin-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Invoice Template Margin Pre-Requisite',
               href: '/guidelines/finance-api#get-invoice-template-margin-pre-requisite',
               customProps: { method: 'GET' },
@@ -2778,6 +2792,27 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'PayPal Payment Success Callback',
+              href: '/guidelines/finance-api#paypal-payment-success-callback',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'PayPal Payment Cancel Callback',
+              href: '/guidelines/finance-api#paypal-payment-cancel-callback',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Complete PayPal Payment',
+              href: '/guidelines/finance-api#complete-paypal-payment',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Initiate Refund',
               href: '/guidelines/finance-api#initiate-refund',
               customProps: { method: 'POST' },
@@ -2802,6 +2837,13 @@ const sidebars = {
               label: 'Download Payment Receipt',
               href: '/guidelines/finance-api#download-payment-receipt',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add or Update Payment Comment',
+              href: '/guidelines/finance-api#add-or-update-payment-comment',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -3399,6 +3441,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Unblock Inventories',
+              href: '/guidelines/inventory-api#unblock-inventories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Comment for Blocked Inventory',
+              href: '/guidelines/inventory-api#add-comment-for-blocked-inventory',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Block Inventory File',
               href: '/guidelines/inventory-api#block-inventory-file',
               customProps: { method: 'POST' },
@@ -3432,6 +3488,69 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Fetch Contextual Inventories',
+              href: '/guidelines/inventory-api#fetch-contextual-inventories',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories',
+              href: '/guidelines/inventory-api#add-contextual-inventories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remove Contextual Inventories',
+              href: '/guidelines/inventory-api#remove-contextual-inventories',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories to Groups',
+              href: '/guidelines/inventory-api#add-contextual-inventories-to-inventory-groups',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `CTV Inventories`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'CTV Inventory List',
+              href: '/guidelines/inventory-api#get-ctv-inventory-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Count',
+              href: '/guidelines/inventory-api#get-ctv-inventories-count',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Distribution',
+              href: '/guidelines/inventory-api#get-ctv-inventories-distribution',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download CTV Inventory List',
+              href: '/guidelines/inventory-api#download-ctv-inventory-list',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3448,15 +3567,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'List of Inventory Groups Statistics',
-              href: '/guidelines/inventory-api#get-list-of-inventory-groups-statistics',
+              label: 'List of Shared Group Customer Details',
+              href: '/guidelines/inventory-api#get-list-of-shared-group-customer-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'List of Campaigns Attached to Group',
-              href: '/guidelines/inventory-api#get-list-of-campaigns-attached-to-group',
+              label: 'List of Inventory Groups Statistics',
+              href: '/guidelines/inventory-api#get-list-of-inventory-groups-statistics',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3523,6 +3642,48 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Inventory Groups Count',
+              href: '/guidelines/inventory-api#get-inventory-groups-count',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Open Exchange Inventories for Group',
+              href: '/guidelines/inventory-api#download-open-exchange-inventories-for-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Statistics for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-statistics-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'CTV Inventories Distributions for an Inventory Group',
+              href: '/guidelines/inventory-api#get-ctv-inventories-distributions-for-an-inventory-group',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download CTV Inventories for an Inventory Group',
+              href: '/guidelines/inventory-api#download-ctv-inventories-for-an-inventory-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3563,6 +3724,27 @@ const sidebars = {
               label: 'Delete Inventory Group',
               href: '/guidelines/inventory-api#delete-inventory-group',
               customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual Inventories to Group',
+              href: '/guidelines/inventory-api#add-contextual-inventories-to-group',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remove Contextual Inventories from Group',
+              href: '/guidelines/inventory-api#remove-contextual-inventories-from-group',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate Inventory Group',
+              href: '/guidelines/inventory-api#validate-inventory-group',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -4964,6 +5146,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'User Status',
+              href: '/guidelines/workspace-api#user-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Customer Type',
               href: '/guidelines/workspace-api#customer-type',
               customProps: { method: 'GET' },
@@ -4987,6 +5176,13 @@ const sidebars = {
               type: 'link',
               label: 'Customer List Sortable Fields',
               href: '/guidelines/workspace-api#customer-list-sortable-fields',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'User Sort By Options',
+              href: '/guidelines/workspace-api#user-sort-by-options',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -5580,15 +5776,15 @@ const sidebars = {
       items: [
             {
               type: 'link',
-              label: 'Customer VLD Finance Details',
-              href: '/political-vertical/finance#get-customer-vld-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/political-vertical/finance/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Update Customer VLD Details',
-              href: '/political-vertical/finance#update-customer-vld-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/political-vertical/finance/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
@@ -6350,43 +6546,15 @@ const sidebars = {
       items: [
             {
               type: 'link',
-              label: 'Customer PLD Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-pld-finance-details',
+              label: 'Customer Insights Fees Details',
+              href: '/healthcare-vertical/finance/#get-customer-insights-fees-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Customer PLD Details',
-              href: '/healthcare-vertical/finance#update-customer-pld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer SLS Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-sls-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer SLS Details',
-              href: '/healthcare-vertical/finance#update-customer-sls-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer AQS Finance Details',
-              href: '/healthcare-vertical/finance#get-customer-aqs-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer AQS Details',
-              href: '/healthcare-vertical/finance#update-customer-aqs-details',
+              label: 'Update Customer Insights Fees Details',
+              href: '/healthcare-vertical/finance/#update-customer-insights-fees-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             }
