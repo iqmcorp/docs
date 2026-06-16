@@ -6971,6 +6971,13 @@ const sidebars = {
                   },
                   {
                     type: 'link',
+                    label: 'Get Audience Summary',
+                    href: '/healthcare-vertical/planner/#get-audience-summary',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
                     label: 'Generate Campaigns Plan',
                     href: '/healthcare-vertical/planner/#generate-campaigns-plan',
                     customProps: { method: 'POST' },
