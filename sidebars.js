@@ -4650,6 +4650,20 @@ const sidebars = {
               },
               {
                 type: 'link',
+                label: 'Basic User List',
+                href: '/guidelines/user-api#basic-user-list',
+                customProps: { method: 'GET' },
+                className: "sidebarItem"
+              },
+              {
+                type: 'link',
+                label: 'Users for Customer Sharing',
+                href: '/guidelines/user-api#users-for-customer-sharing',
+                customProps: { method: 'GET' },
+                className: "sidebarItem"
+              },
+              {
+                type: 'link',
                 label: 'User Profile Details',
                 href: '/guidelines/user-api#get-user-profile-details',
                 customProps: { method: 'GET' },
@@ -4673,6 +4687,13 @@ const sidebars = {
               type: 'link',
               label: 'Send User Invitation',
               href: '/guidelines/user-api#send-user-invitation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend User Invitation',
+              href: '/guidelines/user-api#resend-user-invitation',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -4730,6 +4751,13 @@ const sidebars = {
               label: 'Revoke App Access for User',
               href: '/guidelines/user-api#revoke-app-access-for-user',
               customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remaining Applications',
+              href: '/guidelines/user-api#remaining-applications',
+              customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
           ]

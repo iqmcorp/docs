@@ -690,21 +690,6 @@ Generate and send an MFA code to the user associated with the provided organizat
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization workspace ID |
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates MFA code was successfully sent: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Success message</td>
-</tr>
-</table>
-</details>
-
 </div><div class="child2">
 
 <Tabs>
@@ -810,27 +795,19 @@ Verify a Multi-Factor Authentication (MFA) code (OTP) for the user. Upon success
 
 <table className="objectProperties">
 <tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates MFA was successfully verified: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">object</span></td>
-<td>Session details</td>
-</tr>
-<tr>
-<td>`data.accessToken` <br /><span class="type-text">string</span></td>
+<td>`accessToken` <br /><span class="type-text">string</span></td>
 <td>JWT access token for authenticating API requests</td>
 </tr>
 <tr>
-<td>`data.tokenType` <br /><span class="type-text">string</span></td>
+<td>`tokenType` <br /><span class="type-text">string</span></td>
 <td>Type of the token issued</td>
 </tr>
 <tr>
-<td>`data.expiresIn` <br /><span class="type-text">integer</span></td>
+<td>`expiresIn` <br /><span class="type-text">integer</span></td>
 <td>Expiration time of the token in seconds</td>
 </tr>
 <tr>
-<td>`data.owId` <br /><span class="type-text">integer</span></td>
+<td>`owId` <br /><span class="type-text">integer</span></td>
 <td>Organizational workspace ID associated with the user</td>
 </tr>
 </table>
@@ -951,19 +928,11 @@ Enable Multi-Factor Authentication for one or more users by user ID.
 
 <table className="objectProperties">
 <tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates the request was processed: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">object</span></td>
-<td>MFA update results</td>
-</tr>
-<tr>
-<td>`data.mfaEnabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
+<td>`mfaEnabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
 <td>User IDs for which MFA was enabled successfully</td>
 </tr>
 <tr>
-<td>`data.mfaEnablingFailed` <br /><span class="type-text">array of integers</span></td>
+<td>`mfaEnablingFailed` <br /><span class="type-text">array of integers</span></td>
 <td>User IDs for which MFA enabling failed</td>
 </tr>
 </table>
@@ -1053,19 +1022,11 @@ Disable Multi-Factor Authentication for one or more users by user ID.
 
 <table className="objectProperties">
 <tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates the request was processed: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">object</span></td>
-<td>MFA update results</td>
-</tr>
-<tr>
-<td>`data.mfaDisabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
+<td>`mfaDisabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
 <td>User IDs for which MFA was disabled successfully</td>
 </tr>
 <tr>
-<td>`data.mfaDisablingFailed` <br /><span class="type-text">array of integers</span></td>
+<td>`mfaDisablingFailed` <br /><span class="type-text">array of integers</span></td>
 <td>User IDs for which MFA disabling failed</td>
 </tr>
 </table>
@@ -1386,6 +1347,358 @@ function getUsersList(): Promise < Responses > {
 
 ---
 
+### Basic User List
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/users/basic/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Returns a paginated list of users with basic details. Supports filtering by search term, status, MFA settings, and sorting.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search by user ID, first name, last name, display name, or email |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (starts from 1) |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
+| `sortBy` <br /><span class="type-text">string</span> | Sort field: <var>+displayName</var> (asc) or <var>-displayName</var> (desc) |
+| `statusIds` <br /><span class="type-text">array of integers</span> | Filter by status IDs (e.g., <var>1</var> for active, <var>2</var> for invited) |
+| `mfaEnabled` <br /><span class="type-text">boolean</span> | Filter by MFA enabled status |
+| `includeMfaMeta` <br /><span class="type-text">boolean</span> | Include MFA metadata in the response |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`totalRecords` <br /><span class="type-text">integer</span></td>
+<td>Total number of records</td>
+</tr>
+<tr>
+<td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+<td>Number of records matching the filter</td>
+</tr>
+<tr>
+<td>`mfaEnabledCount` <br /><span class="type-text">integer</span></td>
+<td>Count of users with MFA enabled</td>
+</tr>
+<tr>
+<td>`mfaDisabledCount` <br /><span class="type-text">integer</span></td>
+<td>Count of users with MFA disabled</td>
+</tr>
+<tr>
+<td>`usersBasicList` <br /><span class="type-text">array of objects</span></td>
+<td>List of users</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`usersBasicList` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`userId` <br /><span class="type-text">integer</span></td>
+      <td>User ID</td>
+    </tr>
+    <tr>
+      <td>`firstName` <br /><span class="type-text">string</span></td>
+      <td>First name</td>
+    </tr>
+    <tr>
+      <td>`lastName` <br /><span class="type-text">string</span></td>
+      <td>Last name</td>
+    </tr>
+    <tr>
+      <td>`email` <br /><span class="type-text">string</span></td>
+      <td>Email address</td>
+    </tr>
+    <tr>
+      <td>`displayName` <br /><span class="type-text">string</span></td>
+      <td>Display name</td>
+    </tr>
+    <tr>
+      <td>`statusId` <br /><span class="type-text">integer</span></td>
+      <td>User status ID</td>
+    </tr>
+    <tr>
+      <td>`userProfileUrl` <br /><span class="type-text">string</span></td>
+      <td>Profile picture URL</td>
+    </tr>
+    <tr>
+      <td>`createdAt` <br /><span class="type-text">string</span></td>
+      <td>Timestamp when the user was created</td>
+    </tr>
+    <tr>
+      <td>`mfaEnabled` <br /><span class="type-text">boolean</span></td>
+      <td>Whether MFA is enabled for the user</td>
+    </tr>
+    <tr>
+      <td>`canToggleMfa` <br /><span class="type-text">boolean</span></td>
+      <td>Whether the user can toggle their MFA setting</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 120,
+    "filteredRecords": 2,
+    "mfaEnabledCount": 10,
+    "mfaDisabledCount": 5,
+    "usersBasicList": [
+      {
+        "userId": 12345,
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "displayName": "John Doe",
+        "statusId": 1,
+        "userProfileUrl": "https://example.com/profile.jpg",
+        "createdAt": "2024-01-01T12:00:00Z",
+        "mfaEnabled": true,
+        "canToggleMfa": true
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface UserBasic {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  displayName: string;
+  statusId: number;
+  userProfileUrl: string;
+  createdAt: string;
+  mfaEnabled: boolean;
+  canToggleMfa: boolean;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          mfaEnabledCount: number;
+          mfaDisabledCount: number;
+          usersBasicList: UserBasic[];
+        };
+      };
+    };
+  };
+};
+
+function GetBasicUserList(params?: {
+  searchField?: string;
+  pageNo?: number;
+  noOfEntries?: number;
+  sortBy?: string;
+  statusIds?: number[];
+  mfaEnabled?: boolean;
+  includeMfaMeta?: boolean;
+}): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/users/basic/list',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Users for Customer Sharing
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/users/list/share-customer" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve a list of users who can share or have access to a specific customer, for assignment or sharing purposes.
+
+| Query Parameters |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Customer organization workspace ID |
+| `searchField` <br /><span class="type-text">string</span> | Search term to filter users |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (default: 1) |
+| `limit` <br /><span class="type-text">integer</span> | Number of records per page (default: 100) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`totalRecords` <br /><span class="type-text">integer</span></td>
+<td>Total number of records</td>
+</tr>
+<tr>
+<td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+<td>Number of records matching the filter</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">array of objects</span></td>
+<td>List of users</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`userId` <br /><span class="type-text">integer</span></td>
+      <td>User ID</td>
+    </tr>
+    <tr>
+      <td>`owId` <br /><span class="type-text">integer</span></td>
+      <td>Organization workspace ID</td>
+    </tr>
+    <tr>
+      <td>`uowId` <br /><span class="type-text">integer</span></td>
+      <td>User organization workspace ID</td>
+    </tr>
+    <tr>
+      <td>`displayName` <br /><span class="type-text">string</span></td>
+      <td>Display name</td>
+    </tr>
+    <tr>
+      <td>`email` <br /><span class="type-text">string</span></td>
+      <td>Email address</td>
+    </tr>
+    <tr>
+      <td>`status` <br /><span class="type-text">integer</span></td>
+      <td>User status</td>
+    </tr>
+    <tr>
+      <td>`customerAssigned` <br /><span class="type-text">boolean</span></td>
+      <td>Whether the user is already assigned to this customer</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 50,
+    "filteredRecords": 2,
+    "data": [
+      {
+        "userId": 12345,
+        "owId": 67890,
+        "uowId": 112233,
+        "displayName": "John Doe",
+        "email": "john.doe@example.com",
+        "status": 1,
+        "customerAssigned": false
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface UserShareEntry {
+  userId: number;
+  owId: number;
+  uowId: number;
+  displayName: string;
+  email: string;
+  status: number;
+  customerAssigned: boolean;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          data: UserShareEntry[];
+        };
+      };
+    };
+  };
+};
+
+function GetUsersForCustomerSharing(params: {
+  owId: number;
+  searchField?: string;
+  pageNo?: number;
+  limit?: number;
+}): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/users/list/share-customer',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Get User Profile Details
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/profile" />
@@ -1679,6 +1992,85 @@ function SendUserInvitations(): Promise < Responses > {
         ]
       }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Resend User Invitation
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/re-invite" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Resend an invitation to a user within an organization workspace.
+
+| Request Schema |  |
+| ---- | --- |
+| `userId` <br /><span class="type-text">integer</span> | User ID |
+| `email` <br /><span class="type-text">string</span> | User's email address |
+| `uowId` <br /><span class="type-text">integer</span> | User organization workspace ID |
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "userId": 1001,
+  "email": "john.doe@example.com",
+  "uowId": 2001
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Invitation resent successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+};
+
+function ResendUserInvitation(body: {
+  userId: number;
+  email: string;
+  uowId: number;
+}): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/user/re-invite',
+    data: body,
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -2465,6 +2857,107 @@ Revoke a user's access to specified apps.
   "data": "Application access revoked successfully."
 }
 ```
+
+</div></div>
+
+---
+
+### Remaining Applications
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/user/remaining-applications" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the list of applications that can still be assigned to a user.
+
+| Query Parameters |  |
+| ---- | --- |
+| `uowId` <br /><span class="type-text">integer</span> | User organization workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`applicationId` <br /><span class="type-text">integer</span></td>
+<td>Application ID</td>
+</tr>
+<tr>
+<td>`applicationName` <br /><span class="type-text">string</span></td>
+<td>Application name</td>
+</tr>
+<tr>
+<td>`applicationCode` <br /><span class="type-text">string</span></td>
+<td>Application code</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "applicationId": 1,
+      "applicationName": "Google Ads",
+      "applicationCode": "GA"
+    },
+    {
+      "applicationId": 2,
+      "applicationName": "Facebook Ads",
+      "applicationCode": "FB"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          applicationId: number;
+          applicationName: string;
+          applicationCode: string;
+        }[];
+      };
+    };
+  };
+};
+
+function GetRemainingApplications(params: {
+  uowId: number;
+}): Promise < Responses > {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/user/remaining-applications',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
 
 </div></div>
 
