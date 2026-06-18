@@ -4750,7 +4750,7 @@ const sidebars = {
               type: 'link',
               label: 'Revoke App Access for User',
               href: '/guidelines/user-api#revoke-app-access-for-user',
-              customProps: { method: 'DEL' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
