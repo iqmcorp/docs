@@ -4854,6 +4854,13 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Organization Applications List',
+              href: '/guidelines/workspace-api#organization-applications-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -5036,6 +5043,13 @@ const sidebars = {
           items: [
             {
               type: 'link',
+              label: 'Invitation Pre-Requisite Details',
+              href: '/guidelines/workspace-api#invitation-pre-requisite-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Invite Customer to Platform',
               href: '/guidelines/workspace-api#customer-management',
               customProps: { method: 'POST' },
@@ -5073,6 +5087,13 @@ const sidebars = {
               type: 'link',
               label: 'Assign Customer to User',
               href: '/guidelines/workspace-api#assign-customer-to-user',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Share Customer with Users',
+              href: '/guidelines/workspace-api#share-customer-with-users',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
