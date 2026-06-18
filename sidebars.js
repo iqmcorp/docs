@@ -4561,6 +4561,83 @@ const sidebars = {
       items: [
         {
           type: 'category',
+          label: 'Authentication',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'User Login',
+              href: '/guidelines/user-api#login',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'OAuth Token',
+              href: '/guidelines/user-api#oauth-token',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'User Logout',
+              href: '/guidelines/user-api#user-logout',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Change Password',
+              href: '/guidelines/user-api#change-password',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Reset User Password',
+              href: '/guidelines/user-api#reset-user-password',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Reset Password Email',
+              href: '/guidelines/user-api#reset-password-email',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Send MFA Code',
+              href: '/guidelines/user-api#send-mfa-code',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Verify MFA Code',
+              href: '/guidelines/user-api#verify-mfa-code',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Enable MFA',
+              href: '/guidelines/user-api#enable-mfa',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Disable MFA',
+              href: '/guidelines/user-api#disable-mfa',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
           label: 'User Details',
           className: 'sidebarItem',
           items: [
@@ -4603,48 +4680,6 @@ const sidebars = {
               type: 'link',
               label: 'User Sign-Up',
               href: '/guidelines/user-api#user-sign-up',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'User Login',
-              href: '/guidelines/user-api#login',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'OAuth Token',
-              href: '/guidelines/user-api#oauth-token',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'User Logout',
-              href: '/guidelines/user-api#user-logout',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Change Password',
-              href: '/guidelines/user-api#change-password',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Reset User Password',
-              href: '/guidelines/user-api#reset-user-password',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Reset Password Email',
-              href: '/guidelines/user-api#reset-password-email',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
