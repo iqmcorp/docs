@@ -28,6 +28,1115 @@ Use the following header parameters for all requests:
 
 </div>
 
+## Authentication
+
+### Login
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/login" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Log in to the IQM platform with your email and password, and grant type set to <var>password</var>.
+
+| Request Schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> |  [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates user succesfully logged in: <var>true</var></td>
+</tr>
+<tr>
+<td>`access_token` <br /><span class="type-text">string</span></td>
+<td>Access token</td>
+</tr>
+<tr>
+<td>`refresh_token` <br /><span class="type-text">string</span></td>
+<td>Refresh token</td>
+</tr>
+<tr>
+<td>`scope` <br /><span class="type-text">string</span></td>
+<td>User access rights</td>
+</tr>
+<tr>
+<td>`token_type` <br /><span class="type-text">string</span></td>
+<td>Token type</td>
+</tr>
+<tr>
+<td>`expires_in` <br /><span class="type-text">integer</span></td>
+<td>Time until token expires</td>
+</tr>
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Organization Workspace ID</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "grantType": "password",
+  "email": "pratik.t+ihp@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+    "scope": "read write",
+    "token_type": "bearer",
+    "expires_in": 35999,
+    "owId": 200001
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "data": {
+    "status": "On Hold",
+    "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+    "supportEmail": "support@iqm.com"
+  },
+  "errorObjects": [
+    {
+      "error": "User is not allowed to access provided customer",
+      "reason": "User is not associated with any active organization."
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User doesn't exist or user is not allowed to provided workspace."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+
+          expires_in: number;
+
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          grantType: `string`,
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### OAuth Token
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+
+<div class="endpoint-container">
+<div class="child1">
+
+This endpoint functions as the main authenticator for external connections. 
+
+This API accepts a URL encoded form with different grant types. This endpoint can be used to log in via user password, authorization code or client credentials, or it can be used to refresh an access token. 
+
+The API will send an [OAuth Compliant Response<ExternalLink />](https://www.oauth.com/oauth2-servers/authorization/the-authorization-response/), as seen in the example <var>Response 200</var> on the right side column.
+
+| Authentication |  |
+| --- | --- |   
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Client ID and Client Secret |
+| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | application/x-www-form-urlencoded |
+
+
+| Request Parameters | |
+| --- | --- |
+| `grantType` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/): <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret <br /><var>password</var>: log in with username and password <br /><var>refresh_token</var>: obtain a new access token|
+| `refresh_token` <br /><span class="type-text">string</span> | Refresh token to obtain new access token |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
+| `client_id` <br /><span class="type-text">string</span> | Client ID |
+| `client_secret` <br /><span class="type-text">string</span> | Client secret |
+
+
+</div>
+<div class="child2">
+
+```curl title="Request Sample (refresh token)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=refresh_token' \
+--data-urlencode 'refresh_token=eac4c1f6-781e-4b04-baff-9c2e415d1f64'
+```
+
+```curl title="Request Sample (password)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
+```
+
+```curl title="Request Sample (auth code)"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=authorization_code' \
+--data-urlencode 'client_id=<client_id>' \
+--data-urlencode 'client_secret=<client_secret>' \
+--data-urlencode 'redirect_uri=http://iqm-authenticator.stage.iqm/showAuthCode'
+```
+
+```json title="Response 200"
+{
+  "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+  "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 35999
+}
+```
+
+</div></div>
+
+---
+
+### User Logout
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/logout" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Log a user out from the API.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates user succesfully logged out: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "User logged out successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+};
+
+function Logout(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/logout',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Change Password
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/update-password" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update a user's password. 
+
+| Request Schema|  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | User's email |
+| `password` <br /><span class="type-text">string</span> | User's password |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates user's password was succesfully updated: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "email": "kartik.g@iqm.com",
+  "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Password changed successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+
+```json title="Response 403"
+{
+  "success": true,
+  "data": {
+    "invalidReason": "Reset password link either not valid or it is already processed.",
+    "isValid": false
+  }
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  403: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          invalidReason: string;
+          isValid: boolean;
+        };
+      };
+    };
+  };
+};
+
+function UpdatePassword(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/user/update-password',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Reset User Password
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/password/reset" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Reset your password directly with this endpoint. 
+
+| Request Schema |  |
+| ---- | --- |
+| `oldPassword` <br /><span class="type-text">string</span> | User's old password | 
+| `newPassword` <br /><span class="type-text">string</span> | User's new password | 
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary> 
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates reset link was succesfully sent: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+
+```json title="Request Sample"
+{
+  "oldPassword": "123456",
+  "newPassword": "123456789"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Password reset successfully."
+}
+```
+
+</div></div>
+
+---
+
+### Reset Password Email
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/reset-password" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send a link to reset a user's password to a specified email.
+
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> | User's email |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates reset link was succesfully sent: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "email": "kartik@iqm.com"
+}
+```
+
+Response 200
+
+```json
+{
+  "success": true,
+  "data": "Email with reset password link sent successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 404"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The email is not available in the system."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+  404: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function ResetPasswordEmail(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/user/reset-password',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Send MFA Code
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/auth/mfa/send" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Generate and send an MFA code to the user associated with the provided organization workspace ID. The code is sent via email or SMS based on user preferences.
+
+| Request Schema |  |
+| ---- | --- |
+| `owId` <br /><span class="type-text">integer</span> | Organization workspace ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates MFA code was successfully sent: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "owId": 12345
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "MFA code sent successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid owId or user not found."
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User MFA settings not configured."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+};
+
+function SendMfaCode(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/auth/mfa/send',
+    data: {
+      owId: `integer`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Verify MFA Code
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/auth/mfa/verify" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Verify a Multi-Factor Authentication (MFA) code (OTP) for the user. Upon successful verification, returns user session details and organization workspace ID.
+
+| Request Schema |  |
+| ---- | --- |
+| `otp` <br /><span class="type-text">string</span> | MFA one-time passcode |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates MFA was successfully verified: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Session details</td>
+</tr>
+<tr>
+<td>`data.accessToken` <br /><span class="type-text">string</span></td>
+<td>JWT access token for authenticating API requests</td>
+</tr>
+<tr>
+<td>`data.tokenType` <br /><span class="type-text">string</span></td>
+<td>Type of the token issued</td>
+</tr>
+<tr>
+<td>`data.expiresIn` <br /><span class="type-text">integer</span></td>
+<td>Expiration time of the token in seconds</td>
+</tr>
+<tr>
+<td>`data.owId` <br /><span class="type-text">integer</span></td>
+<td>Organizational workspace ID associated with the user</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "otp": "123456"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenType": "Bearer",
+    "expiresIn": 3600,
+    "owId": 12345
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 401"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid or expired MFA code."
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "MFA verification failed."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          accessToken: string;
+          tokenType: string;
+          expiresIn: number;
+          owId: number;
+        };
+      };
+    };
+  };
+};
+
+function VerifyMfaCode(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/auth/mfa/verify',
+    data: {
+      otp: `string`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Enable MFA
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/mfa/enable" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Enable Multi-Factor Authentication for one or more users by user ID.
+
+| Request Schema |  |
+| ---- | --- |
+| `userIds` <br /><span class="type-text">array of integers</span> | User IDs to enable MFA for (required) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates the request was processed: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>MFA update results</td>
+</tr>
+<tr>
+<td>`data.mfaEnabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
+<td>User IDs for which MFA was enabled successfully</td>
+</tr>
+<tr>
+<td>`data.mfaEnablingFailed` <br /><span class="type-text">array of integers</span></td>
+<td>User IDs for which MFA enabling failed</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "userIds": [123, 345]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "mfaEnabledSuccessfully": [123, 345],
+    "mfaEnablingFailed": []
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          mfaEnabledSuccessfully: number[];
+          mfaEnablingFailed: number[];
+        };
+      };
+    };
+  };
+};
+
+function EnableMfa(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/mfa/enable',
+    data: {
+      userIds: `integer[]`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Disable MFA
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/mfa/disable" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Disable Multi-Factor Authentication for one or more users by user ID.
+
+| Request Schema |  |
+| ---- | --- |
+| `userIds` <br /><span class="type-text">array of integers</span> | User IDs to disable MFA for (required) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates the request was processed: <var>true</var></td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>MFA update results</td>
+</tr>
+<tr>
+<td>`data.mfaDisabledSuccessfully` <br /><span class="type-text">array of integers</span></td>
+<td>User IDs for which MFA was disabled successfully</td>
+</tr>
+<tr>
+<td>`data.mfaDisablingFailed` <br /><span class="type-text">array of integers</span></td>
+<td>User IDs for which MFA disabling failed</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+  <TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "userIds": [123, 345]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "mfaDisabledSuccessfully": [123, 345],
+    "mfaDisablingFailed": []
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          mfaDisabledSuccessfully: number[];
+          mfaDisablingFailed: number[];
+        };
+      };
+    };
+  };
+};
+
+function DisableMfa(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/mfa/disable',
+    data: {
+      userIds: `integer[]`,
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ## User Details 
 
 ### Get List of Users
@@ -740,652 +1849,6 @@ function UserSign-up/PasswordCreation(): Promise < Responses > {
 
 ---
 
-### Login
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/login" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Log in to the IQM platform with your email and password, and grant type set to <var>password</var>.
-
-| Request Schema |  |
-| ---- | --- |
-| `grantType` <br /><span class="type-text">string</span> |  [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `email` <br /><span class="type-text">string</span> | User's email |
-| `password` <br /><span class="type-text">string</span> | User's password |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates user succesfully logged in: <var>true</var></td>
-</tr>
-<tr>
-<td>`access_token` <br /><span class="type-text">string</span></td>
-<td>Access token</td>
-</tr>
-<tr>
-<td>`refresh_token` <br /><span class="type-text">string</span></td>
-<td>Refresh token</td>
-</tr>
-<tr>
-<td>`scope` <br /><span class="type-text">string</span></td>
-<td>User access rights</td>
-</tr>
-<tr>
-<td>`token_type` <br /><span class="type-text">string</span></td>
-<td>Token type</td>
-</tr>
-<tr>
-<td>`expires_in` <br /><span class="type-text">integer</span></td>
-<td>Time until token expires</td>
-</tr>
-<tr>
-<td>`owId` <br /><span class="type-text">integer</span></td>
-<td>Organization Workspace ID</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-  <TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "grantType": "password",
-  "email": "pratik.t+ihp@iqm.com",
-  "password": "123456"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 400"
-{
-  "success": false,
-  "data": {
-    "status": "On Hold",
-    "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-    "supportEmail": "support@iqm.com"
-  },
-  "errorObjects": [
-    {
-      "error": "User is not allowed to access provided customer",
-      "reason": "User is not associated with any active organization."
-    }
-  ]
-}
-```
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "User doesn't exist or user is not allowed to provided workspace."
-    }
-  ]
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          access_token: string;
-          refresh_token: string;
-          scope: string;
-          token_type: string;
-
-          expires_in: number;
-
-          owId: number;
-        };
-      };
-    };
-  };
-  400: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          status: string;
-          reason: string;
-          supportEmail: string;
-        };
-        errorObjects: {
-          error: string;
-          reason: string;
-        }[];
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function Login(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/login',
-    requestBody: {
-      content: {
-        "application/json": {
-          grantType: `string`,
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### OAuth Token
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
-
-<div class="endpoint-container">
-<div class="child1">
-
-This endpoint functions as the main authenticator for external connections. 
-
-This API accepts a URL encoded form with different grant types. This endpoint can be used to log in via user password, authorization code or client credentials, or it can be used to refresh an access token. 
-
-The API will send an [OAuth Compliant Response<ExternalLink />](https://www.oauth.com/oauth2-servers/authorization/the-authorization-response/), as seen in the example <var>Response 200</var> on the right side column.
-
-| Authentication |  |
-| --- | --- |   
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Client ID and Client Secret |
-| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | application/x-www-form-urlencoded |
-
-
-| Request Parameters | |
-| --- | --- |
-| `grantType` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/): <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret <br /><var>password</var>: log in with username and password <br /><var>refresh_token</var>: obtain a new access token|
-| `refresh_token` <br /><span class="type-text">string</span> | Refresh token to obtain new access token |
-| `email` <br /><span class="type-text">string</span> | User's email |
-| `password` <br /><span class="type-text">string</span> | User's password |
-| `client_id` <br /><span class="type-text">string</span> | Client ID |
-| `client_secret` <br /><span class="type-text">string</span> | Client secret |
-
-
-</div>
-<div class="child2">
-
-```curl title="Request Sample (refresh token)"
-curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
---header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'grant_type=refresh_token' \
---data-urlencode 'refresh_token=eac4c1f6-781e-4b04-baff-9c2e415d1f64'
-```
-
-```curl title="Request Sample (password)"
-curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
---header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'grant_type=password' \
---data-urlencode 'username=user@iqm.com' \
---data-urlencode 'password=<your password>'
-```
-
-```curl title="Request Sample (auth code)"
-curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
---header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'grant_type=authorization_code' \
---data-urlencode 'client_id=<client_id>' \
---data-urlencode 'client_secret=<client_secret>' \
---data-urlencode 'redirect_uri=http://iqm-authenticator.stage.iqm/showAuthCode'
-```
-
-```json title="Response 200"
-{
-  "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-  "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-  "scope": "read write",
-  "token_type": "bearer",
-  "expires_in": 35999
-}
-```
-
-</div></div>
-
----
-
-### User Logout
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/logout" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Log a user out from the API.
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates user succesfully logged out: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Success message</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-  <TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "User logged out successfully."
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      };
-    };
-  };
-};
-
-function Logout(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/logout',
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Change Password
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/update-password" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Update a user's password. 
-
-| Request Schema|  |
-| ---- | --- |
-| `email` <br /><span class="type-text">string</span> | User's email |
-| `password` <br /><span class="type-text">string</span> | User's password |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates user's password was succesfully updated: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Success message</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-  <TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "email": "kartik.g@iqm.com",
-  "password": "123456"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Password changed successfully."
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-
-```json title="Response 403"
-{
-  "success": true,
-  "data": {
-    "invalidReason": "Reset password link either not valid or it is already processed.",
-    "isValid": false
-  }
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      };
-    };
-  };
-  403: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          invalidReason: string;
-          isValid: boolean;
-        };
-      };
-    };
-  };
-};
-
-function UpdatePassword(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/user/update-password',
-    requestBody: {
-      content: {
-        "application/json": {
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Reset User Password
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/password/reset" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Reset your password directly with this endpoint. 
-
-| Request Schema |  |
-| ---- | --- |
-| `oldPassword` <br /><span class="type-text">string</span> | User's old password | 
-| `newPassword` <br /><span class="type-text">string</span> | User's new password | 
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary> 
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates reset link was succesfully sent: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Success message</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-
-```json title="Request Sample"
-{
-  "oldPassword": "123456",
-  "newPassword": "123456789"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": "Password reset successfully."
-}
-```
-
-</div></div>
-
----
-
-### Reset Password Email
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/reset-password" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Send a link to reset a user's password to a specified email.
-
-| Request Schema |  |
-| ---- | --- |
-| `email` <br /><span class="type-text">string</span> | User's email |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates reset link was succesfully sent: <var>true</var></td>
-</tr>
-<tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Success message</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-  <TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-  "email": "kartik@iqm.com"
-}
-```
-
-Response 200
-
-```json
-{
-  "success": true,
-  "data": "Email with reset password link sent successfully."
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 404"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "The email is not available in the system."
-    }
-  ]
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      };
-    };
-  };
-  404: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function ResetPasswordEmail(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/user/reset-password',
-    requestBody: {
-      content: {
-        "application/json": {
-          email: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
 
 ### Update User Profile
 
