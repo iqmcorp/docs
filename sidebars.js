@@ -7080,6 +7080,18 @@ const sidebars = {
           label: 'Finance Tutorial',
           id: `mcp/mcp-tutorials/mcp-finance-tutorial`,
           className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'User Management Tutorial',
+          id: `mcp/mcp-tutorials/mcp-user-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Workspace Tutorial',
+          id: `mcp/mcp-tutorials/mcp-workspace-tutorial`,
+          className: 'sidebarItem'
         }
       ]
     }
