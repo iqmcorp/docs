@@ -1,0 +1,3892 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MCP Conversion API Specification",
+    "version": "v0",
+    "description": "MCP Conversion API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
+    }
+  ],
+  "paths": {
+    "/api/v3/conversion/postback/add": {
+      "post": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "API for adding postback type conversion.",
+        "description": "This API facilitates the insertion of postback type conversion records",
+        "operationId": "addPostbackConversion",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostbackDetailsVO"
+              },
+              "examples": {
+                "RequestBody for Adding Postback Conversion": {
+                  "description": "RequestBody for Adding Postback Conversion",
+                  "value": {
+                    "name": "testing postback",
+                    "partnerTypeId": "1",
+                    "impressionUrl": "https://imp.control.kochava.com/track/impression?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603",
+                    "clickUrl": "https://control.kochava.com/v1/cpi/click?campaign_id?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddConversionResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 3215,
+                    "name": "testing postback",
+                    "partnerName": null,
+                    "status": "Active",
+                    "type": "Postback",
+                    "created": 1687460629,
+                    "totalConversions": 0,
+                    "owId": 202017,
+                    "createdByUowId": 108658,
+                    "modifiedByUowId": 108658,
+                    "uuid": "879127abaab7459585b602b1f25dec41",
+                    "attributedConversions": 0,
+                    "attributedViewThroughConversions": 0,
+                    "attributedClickThroughConversions": 0,
+                    "pixelFinancialMetric": null,
+                    "postbackPartnerLogoURL": "http://partnerUrl/partnerName",
+                    "partnerUrl": "http://partnerUrl/partnerName"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/pixel/send-email": {
+      "post": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "Send Email for Pixel Integration.",
+        "description": "This API allows to send email containing information of integration pixel in html while allowing to customize subject and greeting text.",
+        "operationId": "sendEmailForPixelConversion",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PixelEmailRequestVO"
+              },
+              "examples": {
+                "RequestBody for Sending Email for pixel integration": {
+                  "description": "RequestBody for Sending Email for pixel integration",
+                  "value": {
+                    "conversionId": 3114,
+                    "recipients": "username@gmail.com,anotherUser@yahoo.com",
+                    "emailSubject": "Integrate Pixel Conversion",
+                    "emailText": "Hello ${userName} has sent you a pixel code to integrate. Please follow the steps below to integrate the pixel code."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Pixel conversion e-mail sent successfully."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/pixel/add": {
+      "post": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "Create Pixel type Conversion.",
+        "description": "This api is used to create a pixel type conversion.",
+        "operationId": "addPixelConversion",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PixelVO"
+              },
+              "examples": {
+                "RequestBody for Adding Pixel Conversion": {
+                  "description": "RequestBody for Adding Pixel Conversion",
+                  "value": {
+                    "name": "PixelConversion",
+                    "attributionId": "1",
+                    "customFields": [
+                      "field_1",
+                      "field_2",
+                      "field_3"
+                    ],
+                    "financialMetrics": "field_4",
+                    "piggybackData": {
+                      "url": "http://piggybackdata.com/url",
+                      "type": 1
+                    },
+                    "conversionSetting": {
+                      "conversionDuration": {
+                        "view": 10,
+                        "click": 10
+                      },
+                      "repeatConversion": {
+                        "count": 1,
+                        "frequency": 1,
+                        "unit": "Day"
+                      },
+                      "crossModelling": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddConversionResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 3213,
+                    "name": "PixelConversion",
+                    "postbackPartnerName": null,
+                    "status": "Pending",
+                    "type": "Pixel",
+                    "created": 1687459918,
+                    "totalConversions": 0,
+                    "owId": 202017,
+                    "createdByUowId": 108658,
+                    "modifiedByUowId": 108658,
+                    "uuid": "a574ca49cc244c3bb3089491a11aae43",
+                    "attributedConversions": 0,
+                    "attributedViewThroughConversions": 0,
+                    "attributedClickThroughConversions": 0,
+                    "pixelFinancialMetric": "name",
+                    "postbackPartnerLogoURL": null,
+                    "pixelConversionScript": "\u003Cscript src='https://pxl.stage.iqm.com/i/pixel/8f3165d0-b714-440e-bc1d-621127fa5fad?cv={CONVERSION_VALUE}' async\u003E\u003C/script\u003E",
+                    "partnerUrl": null
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/assign-to/campaign": {
+      "post": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "API for assign conversion to campaign",
+        "description": "This api assigns conversion to campaign while validating the conversionIds as well as the campaignIds.",
+        "operationId": "assignConversionToCampaign",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignCampaignVO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignToCampaign"
+                },
+                "examples": {
+                  "Assign to Campaign with Valid CampaignIds and Valid ConversionIds": {
+                    "description": "This responses provides message for saved conversionIds and campaignIds.",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "conversionIdsList": 3925,
+                        "validAddCampaignIdsList": [253396, 256374],
+                        "invalidAddCampaignIdsList": [234567],
+                        "validRemoveCampaignIdsList": [256321, 256432],
+                        "invalidRemoveCampaignIdsList": [256433]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/allowed/campaign-list": {
+      "post": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "API for providing allowed campaign details for conversion ids",
+        "description": "This API fetches a list of campaign details which can be associated with provided conversion ids based on isGroup flag.Group details are fetched when isGroup is true otherwise basic list of campaigns are fetched.\n---\n\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pageNo `[optional]` | Number | Page number for the required data. The default value is 1. Setting the page number to -1 will disable pagination and return all data in a single page. |\n| noOfEntries `[optional]` | Number | The maximum number of returned results per page.  The default value is 50. |\n| searchField `[optional]` | String | Search the result by provided keyword in the searchField.  |\n| conversionIds `[required]`  | Array of Integer | Conversion Ids which needs to be excluded from the campaign which have pixel conversions already attached. |\n| sortBy `[optional]` | String | Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign.  |\n",
+        "operationId": "getAttachableCampaignListByConversionIds",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversionListRequestVO"
+              },
+              "example": {
+                "conversionIds": [5109, 5108, 5107],
+                "pageNo": 1,
+                "noOfEntries": 50,
+                "searchField": "test",
+                "sortBy": "ioId,-campaignId"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllowedCampaigns"
+                },
+                "examples": {
+                  "Basic Campaign List": {
+                    "description": "This response contains all details about campaign as a list.",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "totalRecords": 12,
+                        "ioCampaignsList": [
+                          {
+                            "ioId": 23405,
+                            "ioName": "dsjbegawhuje",
+                            "ioBudgetTypeId": 1,
+                            "ioStatusId": 1,
+                            "created": 1758022688258,
+                            "lastModified": 1760078918000,
+                            "owId": 201427,
+                            "uowId": 198031,
+                            "campaignCount": 1,
+                            "campaigns": [
+                              {
+                                "id": 568934,
+                                "campaignId": 568934,
+                                "name": "jou49034",
+                                "creativeTypeId": 11,
+                                "status": "pending",
+                                "startTime": 1779204800,
+                                "endTime": 2478830400,
+                                "createdAt": 1759999354,
+                                "modifiedAt": 1759968000000,
+                                "owId": 201427,
+                                "ioId": 0,
+                                "ioName": null,
+                                "ioStatusId": 0,
+                                "timezoneId": 29,
+                                "campaignTypeId": 1,
+                                "ioBudgetTypeId": 0,
+                                "targetedAudienceIds": null,
+                                "prebidAudienceProviderId": null
+                              }
+                            ]
+                          }
+                        ],
+                        "filteredRecords": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/postback/update": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update Postback type Conversion.",
+        "description": "This api is used to update name of a postback type conversion.",
+        "operationId": "updateConversion",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConversionVO"
+              },
+              "examples": {
+                "RequestBody for Updating Pixel Conversion": {
+                  "description": "RequestBody for Updating Pixel Conversion",
+                  "value": {
+                    "id": 3114,
+                    "name": "Postback Conversion Update testing"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateConversionResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 3114,
+                    "name": "Postback Conversion Update testing"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/pixel/update": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update Pixel type Conversion.",
+        "description": "This api is used to update name and piggyback data of a pixel type conversion.",
+        "operationId": "updateConversion_1",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePixelConversionVO"
+              },
+              "examples": {
+                "RequestBody for Updating Pixel Conversion": {
+                  "description": "RequestBody for Updating Pixel Conversion",
+                  "value": {
+                    "id": 3114,
+                    "name": "Pixel Conversion Update testing",
+                    "piggybackData": {
+                      "url": "update piggybackData",
+                      "type": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePixel"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 3114,
+                    "name": "Pixel Conversion Update testing",
+                    "piggybackData": {
+                      "url": "update piggybackData",
+                      "type": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid conversion id."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/{conversionId}": {
+      "get": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "Get Conversion details by conversion id",
+        "description": "These api provides details about a conversion based on conversion id provided as a path variable",
+        "operationId": "getConversionDetailsById",
+        "parameters": [
+          {
+            "name": "conversionId",
+            "in": "path",
+            "description": "Id for which the conversion details needs to be fetched.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "typeId",
+            "in": "query",
+            "description": "Type of conversion for which the details needs to fetched[typeIds](?path=/Conversion%20API/getListOfConversionTypes) |\n",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionDetailsResponse"
+                },
+                "examples": {
+                  "Pixel Based Conversion": {
+                    "description": "Pixel Based Conversion",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 3121,
+                        "name": "PixelConversion",
+                        "uuid": "7e955ccbb92340f7b28c744eb876c9c6",
+                        "typeId": 1,
+                        "owId": 202017,
+                        "createdByUowId": 12121,
+                        "modifiedByUowId": 12121,
+                        "attributionId": 1,
+                        "statusId": 1,
+                        "customFields": [
+                          "field_1",
+                          "field_2",
+                          "field_3"
+                        ],
+                        "financialMetrics": "field_1",
+                        "piggybackData": {
+                          "url": "http://thisPiggybackUrl.com/piggy",
+                          "type": 1
+                        },
+                        "pixelConversionScript": "\u003Cscript src='https://pxl.stage.iqm.com/i/pixel/7e955ccbb92340f7b28c744eb876c9c6?cv={CONVERSION_VALUE}' async\u003E\u003C/script\u003E",
+                        "conversionSetting": {
+                          "conversionDuration": {
+                            "view": 10,
+                            "click": 10
+                          },
+                          "repeatConversion": {
+                            "count": 1,
+                            "frequency": 1,
+                            "unit": "Day"
+                          },
+                          "crossModelling": true
+                        }
+                      }
+                    }
+                  },
+                  "Postback Based Conversion": {
+                    "description": "Postback Based Conversion",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 3109,
+                        "name": "Postback Conversion",
+                        "uuid": "fb75a80c7b254234b910399f34be5482",
+                        "typeId": 2,
+                        "owId": 202017,
+                        "createdByUowId": 108658,
+                        "modifiedByUowId": 108658,
+                        "statusId": 0,
+                        "partnerTypeId": 1,
+                        "impressionUrl": "https://imp.control.kochava.com/track/impression?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603",
+                        "clickUrl": "https://imp.control.kochava.com/track/impression?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid conversion id."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/type-wise-count": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "List of type wise Conversion count",
+        "description": "This api provides details about number of conversion according to the type of conversions.",
+        "operationId": "getConversionCountTypeWise",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionCount"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "conversionType": "PIXEL",
+                      "conversionCount": 1,
+                      "order": 1
+                    },
+                    {
+                      "conversionType": "POSTBACK",
+                      "conversionCount": 9,
+                      "order": 2
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/postback/partner-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of partner types for postback type of conversion.",
+        "description": "This api provides details about partner details for postback conversions like logo and name",
+        "operationId": "getListOfConversionPartnerType",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "partnerTypeIds",
+            "in": "query",
+            "description": "This parameter is optional just as to provide support for filtering list based on partner type ids.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostbackPartnerType"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "Kochava",
+                        "logoUrl": "https://logo-bucket/partners/kochava.com",
+                        "order": 1,
+                        "active": true
+                      },
+                      {
+                        "id": 2,
+                        "name": "Singular",
+                        "logoUrl": "https://logo-bucket/partners/singular.net",
+                        "order": 2,
+                        "active": true
+                      },
+                      {
+                        "id": 3,
+                        "name": "Appsflyr",
+                        "logoUrl": "https://logo-bucket/partners/appsflyer.com",
+                        "order": 3,
+                        "active": true
+                      },
+                      {
+                        "id": 4,
+                        "name": "Adjust",
+                        "logoUrl": "https://logo-bucket/partners/adjust.com",
+                        "order": 4,
+                        "active": true
+                      }
+                    ],
+                    "totalRecords": 4,
+                    "filteredRecords": 4
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/pixel/conversion-default-advanced-setting-data": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of default value of advanced setting for pixel based conversion.",
+        "description": "This api provides details about default values of advanced setting for pixel based conversions",
+        "operationId": "getConversionDefaultAdvancedSettingData",
+        "parameters": [
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PixelSettings"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "post_click_interval",
+                        "displayName": "Post Click Interval",
+                        "value": "15",
+                        "active": true
+                      },
+                      {
+                        "id": 2,
+                        "name": "post_view_interval",
+                        "displayName": "Post View Interval",
+                        "value": "28",
+                        "active": true
+                      },
+                      {
+                        "id": 3,
+                        "name": "cross_device",
+                        "displayName": "Cross Device",
+                        "value": "true",
+                        "active": true
+                      }
+                    ],
+                    "totalRecords": 3,
+                    "filteredRecords": 3
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/conversion-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of conversion types.",
+        "description": "This api provides details about conversion types i.e. pixel and postback",
+        "operationId": "getListOfConversionTypes",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "conversionTypeIds",
+            "in": "query",
+            "description": "This parameter is optional just as to provide support for filtering list based on conversion type ids.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionType"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "pixel",
+                        "displayName": "Pixel",
+                        "order": 1,
+                        "active": true
+                      },
+                      {
+                        "id": 2,
+                        "name": "postback",
+                        "displayName": "Postback",
+                        "order": 2,
+                        "active": true
+                      }
+                    ],
+                    "totalRecords": 2,
+                    "filteredRecords": 2
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/conversion-status": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of conversion status.",
+        "description": "This api provides details about conversion status i.e. active and pending",
+        "operationId": "getListOfConversionStatus",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "statusIds",
+            "in": "query",
+            "description": "This parameter is optional just as to provide support for filtering list based on status ids.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionType"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "active",
+                        "displayName": "Active",
+                        "order": 1,
+                        "active": true
+                      },
+                      {
+                        "id": 2,
+                        "name": "pending",
+                        "displayName": "Pending",
+                        "order": 2,
+                        "active": true
+                      }
+                    ],
+                    "totalRecords": 2,
+                    "filteredRecords": 2
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/conversion-piggyback-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of conversion piggyback types.",
+        "description": "This api provides details about conversion piggyback types i.e. image_pixel and javascript_pixel",
+        "operationId": "getListOfConversionPiggybackTypes",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "piggybackTypeIds",
+            "in": "query",
+            "description": "This parameter is optional just as to provide support for filtering list based on piggyback type ids.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionType"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "image_pixel",
+                        "displayName": "Image Pixel",
+                        "order": 1,
+                        "active": true
+                      },
+                      {
+                        "id": 2,
+                        "name": "javascript_pixel",
+                        "displayName": "Javascript Pixel",
+                        "order": 2,
+                        "active": true
+                      }
+                    ],
+                    "totalRecords": 2,
+                    "filteredRecords": 2
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/static/conversion-attribution-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get list of conversion atttribution types.",
+        "description": "This api provides details about conversion attribution types i.e. bybrid, click_based and view_based",
+        "operationId": "getListOfConversionAttributionTypes",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "attributionTypeIds",
+            "in": "query",
+            "description": "This parameter is optional just as to provide support for filtering list based on attribution type ids.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionAttributionType"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 1,
+                        "name": "hybrid",
+                        "displayName": "Hybrid",
+                        "order": 1,
+                        "active": true,
+                        "description": "this is a hybrid type of attribution"
+                      },
+                      {
+                        "id": 2,
+                        "name": "click_based",
+                        "displayName": "Click Based",
+                        "order": 2,
+                        "active": true,
+                        "description": "This conversion attribution is based on the click."
+                      },
+                      {
+                        "id": 3,
+                        "name": "view_based",
+                        "displayName": "View Based",
+                        "order": 3,
+                        "active": true,
+                        "description": "this is the view based conversion attribution type."
+                      }
+                    ],
+                    "totalRecords": 3,
+                    "filteredRecords": 3
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Listing api for the Conversions",
+        "description": "This api provides details for the listing of conversions with pagination searching on name and id along with sorting.",
+        "operationId": "getConversionList",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search the result by provided keyword in the searchField. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of returned results per page. ",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page number for the required data. The default value is 1. ",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "-created"
+            }
+          },
+          {
+            "name": "conversionIds",
+            "in": "query",
+            "description": "Conversion ids which needs to be searched.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "typeIds",
+            "in": "query",
+            "description": "Ids of conversion type like pixel or postback for filtering the records. TypeIds should be from [typeIds](?path=/Conversion%20API/getListOfConversionTypes) |\n",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "statusIds",
+            "in": "query",
+            "description": "Ids of conversion status like pending or active for filtering the records. StatusIds should be from [statusIds](?path=/Conversion%20API/getListOfConversionStatus) |\n",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "postbackPartnerIds",
+            "in": "query",
+            "description": "Ids of postback conversion partner type for filtering the records. PartnerIds should be from [postbackPartnerIds](?path=/Conversion%20API/getListOfConversionPartnerType) |\n",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversionList"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "id": 2539,
+                        "name": "conversion-197",
+                        "postbackPartnerName": null,
+                        "status": "Active",
+                        "type": "Pixel",
+                        "created": 1677805806,
+                        "totalConversion": 0,
+                        "owId": 201352,
+                        "createdByUowId": 6255,
+                        "modifiedByUowId": 6255,
+                        "uuid": "8f3165d0-b714-440e-bc1d-621127fa5fad",
+                        "pixelConversionScript": "\u003Cscript src='https://pxl.stage.iqm.com/i/pixel/8f3165d0-b714-440e-bc1d-621127fa5fad?cv={CONVERSION_VALUE}' async\u003E\u003C/script\u003E",
+                        "attributedConversion": 0,
+                        "attributedViewThroughConversion": 0,
+                        "attributedClickThroughConversion": 0,
+                        "pixelFinancialMetric": "test_metric",
+                        "postbackPartnerLogoUrl": "https://logo-bucket/partners/kochava.com",
+                        "campaignCount": 0
+                      }
+                    ],
+                    "totalRecords": 8,
+                    "filteredRecords": 1
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/attached/campaigns/list": {
+      "get": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "API for providing campaign details for provided conversion id",
+        "description": "This API fetches a list of campaign details attached with provided conversion id",
+        "operationId": "getAttachedCampaignsListByConversionId",
+        "parameters": [
+          {
+            "name": "conversionId",
+            "in": "query",
+            "description": "Single conversion id whose mapping with campaign needs to be derived.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachedCampaigns"
+                },
+                "examples": {
+                  "Get Campaign List For Provided Conversion": {
+                    "description": "This response contains all campaign details attached to the provided conversion id",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "campaignId": 1000,
+                          "campaignName": "Campaign - 1",
+                          "creativeTypeId": 17,
+                          "status": "expired",
+                          "startTime": 1888705936,
+                          "endTime": 1669420800,
+                          "ioId": 1,
+                          "ioName": "Insertion Order Name",
+                          "ioStatusId": 1,
+                          "ioBudgetTypeId": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/delete": {
+      "delete": {
+         "tags": [
+          "MCP"
+        ],
+        "summary": "Delete Conversion API ",
+        "description": "The API provides a soft delete functionality for conversions.",
+        "operationId": "deleteConversions",
+        "parameters": [
+          {
+            "name": "conversionIds",
+            "in": "query",
+            "description": "Multiple conversionIds separated with comma",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+       {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Conversion has been deleted successfully!"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid Conversion Id": {
+                    "description": "Invalid Conversion Id",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid conversion id."
+                        }
+                      ]
+                    }
+                  },
+                  "Attached To Campaign": {
+                    "description": "Attached To Campaign",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "This conversion is associated with a running campaign and cannot be deleted"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomFieldRequestVO": {
+        "type": "object",
+        "properties": {
+          "sortCriteriaMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "pageNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noOfEntries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "searchField": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "SortOrderEnum[id=1, name='asc', symbol='+']",
+              "SortOrderEnum[id=2, name='desc', symbol='-']"
+            ]
+          },
+          "owIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "PostbackDetailsVO": {
+        "required": [
+          "clickUrl",
+          "impressionUrl",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conversion Name",
+            "example": "My Conversion"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Conversion UUID",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "typeId": {
+            "type": "integer",
+            "description": "Conversion Type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 101010
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "Created By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "Modified By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "statusId": {
+            "type": "integer",
+            "description": "Status ID",
+            "format": "int32",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "ACTIVE"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Created Timestamp",
+            "format": "int64",
+            "example": 1622547800000
+          },
+          "postbackPartnerId": {
+            "type": "integer",
+            "description": "Postback Partner ID",
+            "format": "int32",
+            "example": 1
+          },
+          "partnerTypeId": {
+            "type": "integer",
+            "description": "Partner type ID",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2, 3, 4]
+          },
+          "impressionUrl": {
+            "type": "string",
+            "description": "Impression URL",
+            "example": "https://example.com/impression"
+          },
+          "clickUrl": {
+            "type": "string",
+            "description": "Click URL",
+            "example": "https://example.com/click"
+          }
+        },
+        "description": "Postback-based conversion details"
+      },
+      "AddConversionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConversionListResponseVO"
+          }
+        }
+      },
+      "ConversionListResponseVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Conversion name",
+            "example": "Signup"
+          },
+          "postbackPartnerName": {
+            "type": "string",
+            "description": "Postback partner name",
+            "nullable": true,
+            "example": "Signup"
+          },
+          "status": {
+            "type": "string",
+            "description": "Conversion status",
+            "example": "Active"
+          },
+          "type": {
+            "type": "string",
+            "description": "Conversion type",
+            "example": "pixel"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Creation timestamp",
+            "format": "int64",
+            "example": 1622547800000
+          },
+          "totalConversions": {
+            "type": "integer",
+            "description": "Total conversions",
+            "format": "int32",
+            "example": 100
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "Created By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "Modified By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "uuid": {
+            "type": "string",
+            "description": "UUID",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "attributedConversions": {
+            "type": "integer",
+            "description": "The number of Conversions that are attributed to a specific Campaign based on the Attribution model",
+            "format": "int32",
+            "example": 100
+          },
+          "attributedViewThroughConversions": {
+            "type": "integer",
+            "description": "Attributed View Through Conversions",
+            "format": "int32",
+            "example": 100
+          },
+          "attributedClickThroughConversions": {
+            "type": "integer",
+            "description": "Attributed Click Through Conversions",
+            "format": "int32",
+            "example": 100
+          },
+          "pixelFinancialMetric": {
+            "type": "string",
+            "description": "Pixel Financial Metric",
+            "example": "100"
+          },
+          "postbackPartnerLogoUrl": {
+            "type": "string",
+            "description": "Postback Partner Logo URL",
+            "nullable": true,
+            "example": "http://example.com/logo.png"
+          },
+          "campaignCount": {
+            "type": "integer",
+            "description": "Campaign Count",
+            "format": "int32",
+            "example": 5
+          },
+          "aiBasedConversion": {
+            "type": "boolean",
+            "description": "AI Based Conversion flag",
+            "example": true
+          },
+          "pixelConversionScript": {
+            "type": "string",
+            "description": "Pixel Conversion Script",
+            "example": "\u003Cscript\u003E...\u003C/script\u003E"
+          },
+          "customFields": {
+            "type": "array",
+            "description": "Custom Fields",
+            "example": [
+              "customField1",
+              "customField2"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Custom Fields",
+              "example": "[\"customField1\",\"customField2\"]"
+            }
+          }
+        },
+        "description": "Conversion list response details"
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "PixelEmailRequestVO": {
+        "required": [
+          "emailSubject",
+          "recipients"
+        ],
+        "type": "object",
+        "properties": {
+          "conversionId": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "recipients": {
+            "type": "string",
+            "description": "Recipients",
+            "example": "user@example.com"
+          },
+          "recipientsList": {
+            "type": "array",
+            "description": "Recipients List",
+            "example": [
+              "user@example.com"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Recipients List",
+              "example": "[\"user@example.com\"]"
+            }
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 67890
+          },
+          "uowId": {
+            "type": "integer",
+            "description": "User Organization Workspace ID",
+            "format": "int32",
+            "example": 54321
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email Subject",
+            "example": "Your Pixel Integration Details"
+          },
+          "emailText": {
+            "type": "string",
+            "description": "Email Text",
+            "example": "Please find your pixel integration details attached."
+          }
+        },
+        "description": "Pixel Email Request Details"
+      },
+      "CommonResponseString": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response",
+            "example": true
+          },
+          "data": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Operation completed successfully"
+          }
+        },
+        "description": "Common response with data as message"
+      },
+      "ConversionDurationVO": {
+        "type": "object",
+        "properties": {
+          "view": {
+            "maximum": 30,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "click": {
+            "maximum": 60,
+            "minimum": 7,
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ConversionSettingVO": {
+        "required": [
+          "conversionDuration",
+          "repeatConversion"
+        ],
+        "type": "object",
+        "properties": {
+          "conversionDuration": {
+            "$ref": "#/components/schemas/ConversionDurationVO"
+          },
+          "repeatConversion": {
+            "$ref": "#/components/schemas/RepeatConversionVO"
+          },
+          "crossModelling": {
+            "type": "boolean"
+          }
+        },
+        "description": "Pixel conversion settings"
+      },
+      "PiggybackData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL for piggyback data",
+            "example": "https://example.com/piggyback"
+          },
+          "type": {
+            "type": "integer",
+            "description": "Type of piggyback data",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2]
+          }
+        },
+        "description": "Piggyback data for conversions"
+      },
+      "PixelVO": {
+        "required": [
+          "attributionId",
+          "conversionSetting",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conversion Name",
+            "example": "My Conversion"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Conversion UUID",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "typeId": {
+            "type": "integer",
+            "description": "Conversion Type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 101010
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "Created By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "Modified By User Organization Workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "statusId": {
+            "type": "integer",
+            "description": "Status ID",
+            "format": "int32",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "ACTIVE"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Created Timestamp",
+            "format": "int64",
+            "example": 1622547800000
+          },
+          "postbackPartnerId": {
+            "type": "integer",
+            "description": "Postback Partner ID",
+            "format": "int32",
+            "example": 1
+          },
+          "attributionId": {
+            "type": "integer",
+            "description": "Pixel conversion type ID",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2, 3]
+          },
+          "customFields": {
+            "type": "array",
+            "description": "Pixel conversion custom fields",
+            "example": [
+              "custom1",
+              "custom2"
+            ],
+            "items": {
+              "type": "string",
+              "description": "Pixel conversion custom fields",
+              "example": "[\"custom1\",\"custom2\"]"
+            }
+          },
+          "financialMetrics": {
+            "type": "string",
+            "description": "Pixel conversion financial metrics",
+            "example": "revenue,profit"
+          },
+          "piggybackData": {
+            "$ref": "#/components/schemas/PiggybackData"
+          },
+          "pixelConversionScript": {
+            "type": "string",
+            "description": "Pixel conversion script",
+            "example": "\u003Cscript\u003E/* Pixel Script */\u003C/script\u003E"
+          },
+          "conversionSetting": {
+            "$ref": "#/components/schemas/ConversionSettingVO"
+          }
+        },
+        "description": "Pixel conversion details"
+      },
+      "RepeatConversionVO": {
+        "required": [
+          "count",
+          "frequency",
+          "unit"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "frequency": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "AssignToCampaign": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/AssignToCampaignResponseVO"
+          }
+        }
+      },
+      "AssignToCampaignResponseVO": {
+        "type": "object",
+        "properties": {
+          "conversionIdsList": {
+            "type": "array",
+            "description": "List of Conversion Ids for which the operation was performed",
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "List of Conversion Ids for which the operation was performed",
+              "format": "int32"
+            }
+          },
+          "validAddCampaignIdsList": {
+            "type": "array",
+            "description": "List of valid Campaign Ids for which the operation was successful",
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "List of valid Campaign Ids for which the operation was successful",
+              "format": "int32"
+            }
+          },
+          "invalidAddCampaignIdsList": {
+            "type": "array",
+            "description": "List of invalid Campaign Ids for which the operation was not successful",
+            "example": [4, 5, 6],
+            "items": {
+              "type": "integer",
+              "description": "List of invalid Campaign Ids for which the operation was not successful",
+              "format": "int32"
+            }
+          },
+          "validRemoveCampaignIdsList": {
+            "type": "array",
+            "description": "List of valid Campaign Ids which were successfully removed",
+            "example": [7, 8, 9],
+            "items": {
+              "type": "integer",
+              "description": "List of valid Campaign Ids which were successfully removed",
+              "format": "int32"
+            }
+          },
+          "invalidRemoveCampaignIdsList": {
+            "type": "array",
+            "description": "List of invalid Campaign Ids which were not removed",
+            "example": [10, 11, 12],
+            "items": {
+              "type": "integer",
+              "description": "List of invalid Campaign Ids which were not removed",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Response object for Assigning/Removing Conversion to/from Campaigns"
+      },
+      "AssignCampaignVO": {
+        "type": "object",
+        "properties": {
+          "conversionIdList": {
+            "type": "array",
+            "description": "List of Conversion IDs to be assigned or removed",
+            "example": [1, 2, 3],
+            "items": {
+              "type": "integer",
+              "description": "List of Conversion IDs to be assigned or removed",
+              "format": "int32"
+            }
+          },
+          "addCampaignsList": {
+            "type": "array",
+            "description": "List of Campaign IDs to which the conversions will be added",
+            "example": [4, 5],
+            "items": {
+              "type": "integer",
+              "description": "List of Campaign IDs to which the conversions will be added",
+              "format": "int32"
+            }
+          },
+          "removeCampaignsList": {
+            "type": "array",
+            "description": "List of Campaign IDs from which the conversions will be removed",
+            "example": [6, 7],
+            "items": {
+              "type": "integer",
+              "description": "List of Campaign IDs from which the conversions will be removed",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Request object for Assigning/Removing Conversion to/from Campaigns"
+      },
+      "AllowedCampaigns": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/AllowedCampaignsRecords"
+          }
+        }
+      },
+      "AllowedCampaignsRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "ioCampaignsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IODetailResponse"
+            }
+          }
+        },
+        "description": "Records fields for Allowed Campaigns data"
+      },
+      "CampaignDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Campaign record ID",
+            "format": "int32",
+            "example": 437060
+          },
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID",
+            "format": "int32",
+            "example": 437060
+          },
+          "name": {
+            "type": "string",
+            "description": "Campaign name",
+            "example": "Test-CB-2229"
+          },
+          "creativeTypeId": {
+            "type": "integer",
+            "description": "Creative type ID",
+            "format": "int32",
+            "example": 11
+          },
+          "status": {
+            "type": "string",
+            "description": "Campaign status",
+            "example": "running"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Campaign start time (epoch seconds)",
+            "format": "int64",
+            "example": 1793972800
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "Campaign end time (epoch seconds)",
+            "format": "int64",
+            "example": 0
+          },
+          "createdAt": {
+            "type": "integer",
+            "description": "Creation timestamp (epoch seconds)",
+            "format": "int64",
+            "example": 1694153838
+          },
+          "modifiedAt": {
+            "type": "integer",
+            "description": "Last modified timestamp (epoch ms)",
+            "format": "int64",
+            "example": 1695945600000
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 201427
+          },
+          "ioId": {
+            "type": "integer",
+            "description": "Associated IO ID",
+            "format": "int32",
+            "example": 0
+          },
+          "ioName": {
+            "type": "string",
+            "description": "Associated IO name",
+            "example": "null"
+          },
+          "ioStatusId": {
+            "type": "integer",
+            "description": "Insertion Order status ID",
+            "format": "int32",
+            "example": 0
+          },
+          "timezoneId": {
+            "type": "integer",
+            "description": "Timezone ID",
+            "format": "int32",
+            "example": 1
+          },
+          "campaignTypeId": {
+            "type": "integer",
+            "description": "Campaign type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "ioBudgetTypeId": {
+            "type": "integer",
+            "description": "Insertion Order budget type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "targetedAudienceIds": {
+            "type": "array",
+            "description": "List of targeted audience IDs",
+            "nullable": true,
+            "example": [101, 102, 103],
+            "items": {
+              "type": "integer",
+              "description": "List of targeted audience IDs",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "prebidAudienceProviderId": {
+            "type": "integer",
+            "description": "Prebid audience provider ID",
+            "format": "int32",
+            "nullable": true,
+            "example": 5
+          }
+        },
+        "description": "Campaign details under the IO"
+      },
+      "IODetailResponse": {
+        "type": "object",
+        "properties": {
+          "ioId": {
+            "type": "integer",
+            "description": "Insertion Order ID",
+            "format": "int32",
+            "example": 1215
+          },
+          "ioName": {
+            "type": "string",
+            "description": "Insertion Order name",
+            "example": "new name"
+          },
+          "ioBudgetTypeId": {
+            "type": "integer",
+            "description": "Budget type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "ioStatusId": {
+            "type": "integer",
+            "description": "IO status ID",
+            "format": "int32",
+            "example": 0
+          },
+          "created": {
+            "type": "integer",
+            "description": "Creation timestamp (epoch ms)",
+            "format": "int64",
+            "example": 1693886215726
+          },
+          "lastModified": {
+            "type": "integer",
+            "description": "Last modified timestamp (epoch ms)",
+            "format": "int64",
+            "example": 1695216128000
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization Workspace ID",
+            "format": "int32",
+            "example": 201427
+          },
+          "uowId": {
+            "type": "integer",
+            "description": "User Workspace ID",
+            "format": "int32",
+            "example": 111357
+          },
+          "campaignCount": {
+            "type": "integer",
+            "description": "Number of campaigns linked to this IO",
+            "format": "int32",
+            "example": 1
+          },
+          "campaigns": {
+            "type": "array",
+            "description": "List of campaigns under this IO",
+            "items": {
+              "$ref": "#/components/schemas/CampaignDetail"
+            }
+          }
+        },
+        "description": "Response containing IO details and associated campaigns"
+      },
+      "ConversionListRequestVO": {
+        "type": "object",
+        "properties": {
+          "sortCriteriaMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "typeIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conversionIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "statusIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "postbackPartnerIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "pageNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noOfEntries": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "searchField": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "SortOrderEnum[id=1, name='asc', symbol='+']",
+              "SortOrderEnum[id=2, name='desc', symbol='-']"
+            ]
+          }
+        }
+      },
+      "UpdateConversionVO": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conversion Name",
+            "example": "Purchase Conversion"
+          }
+        },
+        "description": "Update Conversion"
+      },
+      "UpdateConversionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateConversionVO"
+          }
+        }
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "UpdatePixelConversionVO": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conversion Name",
+            "example": "Purchase Conversion"
+          },
+          "piggybackData": {
+            "$ref": "#/components/schemas/PiggybackData"
+          }
+        },
+        "description": "Update Pixel Conversion Setting"
+      },
+      "UpdatePixel": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdatePixelConversionVO"
+          }
+        }
+      },
+      "ConversionDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Operation success flag",
+            "example": true
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConversionDetailsUnion"
+          }
+        },
+        "description": "Response where `data` is Pixel or Postback details"
+      },
+      "ConversionDetailsUnion": {
+        "type": "object",
+        "description": "Pixel or Postback conversion details",
+        "discriminator": {
+          "propertyName": "typeId",
+          "mapping": {
+            "1": "#/components/schemas/PixelVO",
+            "2": "#/components/schemas/PostbackDetailsVO"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PixelVO"
+          },
+          {
+            "$ref": "#/components/schemas/PostbackDetailsVO"
+          }
+        ]
+      },
+      "ConversionCount": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionCountVO"
+            }
+          }
+        }
+      },
+      "ConversionCountVO": {
+        "type": "object",
+        "properties": {
+          "conversionType": {
+            "type": "string",
+            "description": "Type of conversion",
+            "example": "PIXEL",
+            "enum": [
+              "PIXEL",
+              "POSTBACK"
+            ]
+          },
+          "conversionCount": {
+            "type": "integer",
+            "description": "Count of conversions",
+            "format": "int32",
+            "example": 100
+          },
+          "order": {
+            "type": "integer",
+            "description": "Order of conversion",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "description": "Conversion count details"
+      },
+      "ConversionPartnerTypeVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Partner Type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Partner Type Name",
+            "example": "Google"
+          },
+          "logoUrl": {
+            "type": "string",
+            "description": "Partner Type Logo URL",
+            "example": "https://example.com/logo.png"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Partner Type Order",
+            "format": "int32",
+            "example": 1
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Partner Type Active Status",
+            "example": true
+          }
+        },
+        "description": "Conversion Partner Type Value Object"
+      },
+      "PostbackPartnerType": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PostbackPartnerTypeRecords"
+          }
+        }
+      },
+      "PostbackPartnerTypeRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionPartnerTypeVO"
+            }
+          }
+        },
+        "description": "Records fields for Postback Partner Type data"
+      },
+      "ConversionAdvancedSettingDefaultValueVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Default value setting ID",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Default value setting name",
+            "example": "post_click_interval"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Default value setting display name",
+            "example": "Post Click Interval"
+          },
+          "value": {
+            "type": "string",
+            "description": "Default value setting value",
+            "example": "15"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Indicates if the setting is active",
+            "example": true
+          }
+        },
+        "description": "Default values for Advanced Settings of Pixel based conversions"
+      },
+      "PixelSettings": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PixelSettingsRecords"
+          }
+        }
+      },
+      "PixelSettingsRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionAdvancedSettingDefaultValueVO"
+            }
+          }
+        },
+        "description": "Records fields for Pixel Settings data"
+      },
+      "ConversionStaticVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Conversion type name",
+            "example": "pixel"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Conversion type display name",
+            "example": "Pixel"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Conversion type order",
+            "format": "int32",
+            "example": 1
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Conversion type active status",
+            "example": true
+          }
+        },
+        "description": "Static Conversion type list details"
+      },
+      "ConversionType": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConversionTypeRecords"
+          }
+        }
+      },
+      "ConversionTypeRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionStaticVO"
+            }
+          }
+        },
+        "description": "Records fields for Conversion Type data"
+      },
+      "ConversionAttributionType": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConversionAttributionTypeRecords"
+          }
+        }
+      },
+      "ConversionAttributionTypeRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionAttributionTypeVO"
+            }
+          }
+        },
+        "description": "Records fields for Conversion Attribution Type data"
+      },
+      "ConversionAttributionTypeVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion Attribution type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Conversion Attribution type name",
+            "example": "hybrid"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Conversion Attribution type display name",
+            "example": "Hybrid"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Conversion Attribution type order",
+            "format": "int32",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Conversion Attribution type description",
+            "example": "Hybrid type attribution."
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Conversion Attribution type active status",
+            "example": true
+          }
+        },
+        "description": "Static Conversion Attribution type list details"
+      },
+      "ConversionList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConversionListRecords"
+          }
+        }
+      },
+      "ConversionListRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records",
+            "format": "int32",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Filtered number of records",
+            "format": "int32",
+            "example": 2
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionListResponseVO"
+            }
+          }
+        },
+        "description": "Records fields for Conversion List data"
+      },
+      "AttachedCampaigns": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignBasicDetailsVO"
+            }
+          }
+        }
+      },
+      "CampaignBasicDetailsVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign Id",
+            "format": "int32",
+            "example": 1
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign Name",
+            "example": "Campaign 1"
+          },
+          "creativeTypeId": {
+            "type": "integer",
+            "description": "Campaign Type Id",
+            "format": "int32",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Campaign Type Name",
+            "example": "Display"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start Time in epoch milliseconds",
+            "format": "int64",
+            "example": 1677628800000
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End Time in epoch milliseconds",
+            "format": "int64",
+            "example": 1680307199000
+          },
+          "ioId": {
+            "type": "integer",
+            "description": "Insertion Order Id",
+            "format": "int32",
+            "example": 1
+          },
+          "ioName": {
+            "type": "string",
+            "description": "Insertion Order Name",
+            "example": "IO 1"
+          },
+          "ioStatusId": {
+            "type": "integer",
+            "description": "Insertion Order Status Id",
+            "format": "int32",
+            "example": 1
+          },
+          "ioBudgetTypeId": {
+            "type": "integer",
+            "description": "Insertion Order Budget Type Id",
+            "format": "int32",
+            "example": 1
+          },
+          "aiConversionId": {
+            "type": "integer",
+            "description": "AI Conversion Id",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "description": "Basic details of Campaign"
+      }
+    }
+  }
+}
