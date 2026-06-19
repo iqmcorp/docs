@@ -621,8 +621,8 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 6: Get List of Groups by Campaign',
-              href: `/tutorials/optimize-your-inventory#step-6-get-list-of-groups-by-campaign`,
+              label: 'Step 6: Get List of Campaigns by Group',
+              href: `/tutorials/optimize-your-inventory#step-6-get-list-of-campaigns-by-group`,
               className: 'sidebarItemQS'
             },
           ]
@@ -831,77 +831,21 @@ const sidebars = {
               type: 'link',
               label: 'Audience Details List',
               href: '/guidelines/audience-api#audience-details-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Paginated Audience Details List',
-              href: '/guidelines/audience-api#paginated-audience-details-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Matched Audience Details',
-              href: '/guidelines/audience-api#matched-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Retargeted Audience Details',
-              href: '/guidelines/audience-api#retargeted-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Geo-Farmed Audience Details',
-              href: '/guidelines/audience-api#geo-farmed-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Campaign Audience Details',
-              href: '/guidelines/audience-api#campaign-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Pre-bid Audience Details',
-              href: '/guidelines/audience-api#pre-bid-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Search Pre-bid Audience Details',
-              href: '/guidelines/audience-api#search-pre-bid-audience-details',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'DoubleVerify Pre-bid Audience Segment',
-              href: '/guidelines/audience-api#doubleverify-pre-bid-audience-segment-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Contextual Audience Details',
-              href: '/guidelines/audience-api#contextual-audience-details',
-              customProps: { method: 'GET' },
+              label: 'Basic Audience Details',
+              href: '/guidelines/audience-api#basic-audience-details',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
               label: 'Audience Count by Status',
               href: '/guidelines/audience-api#audience-count-by-status',
-              customProps: { method: 'GET' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -911,53 +855,11 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Segment Details`,
-          className: 'sidebarItem',
-          items: [
             {
               type: 'link',
-              label: 'Audience Segment Details',
-              href: '/guidelines/audience-api#audience-segment-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Search Audience Segment',
-              href: '/guidelines/audience-api#search-audience-segment',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment Partner Provider List',
-              href: '/guidelines/audience-api#segment-partner-provider-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Provider/Partner IDs',
-              href: '/guidelines/audience-api#segment-list-by-providerpartner-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Audience IDs',
-              href: '/guidelines/audience-api#segment-list-by-audience-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Audience Segment Insights',
-              href: '/guidelines/audience-api#audience-segment-insights',
-              customProps: { method: 'GET' },
+              label: 'Audience Count by Data Partner',
+              href: '/guidelines/audience-api#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -967,6 +869,62 @@ const sidebars = {
           label: `Audience Management`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Update Audience Name',
+              href: '/guidelines/audience-api#update-audience-name',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Audience',
+              href: '/guidelines/audience-api#regenerate-audience',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Insights',
+              href: '/guidelines/audience-api#get-audience-insights',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Audience Insights',
+              href: '/guidelines/audience-api#create-audience-insights',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Attach Data Partner',
+              href: '/guidelines/audience-api#attach-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Audience',
+              href: '/guidelines/audience-api#delete-audience',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Matched Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Matched Audience Details',
+              href: '/guidelines/audience-api#matched-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'Create Matched Audience',
@@ -983,248 +941,9 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Retargeted Audience',
-              href: '/guidelines/audience-api#create-retargeted-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Retargeted Audience',
-              href: '/guidelines/audience-api#update-retargeted-audience',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
               customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Retargeted Audience Email',
-              href: '/guidelines/audience-api#retargeted-audience-email-notification',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Geo-Farmed Audience',
-              href: '/guidelines/audience-api#create-geo-farmed-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Campaign Audience',
-              href: '/guidelines/audience-api#create-campaign-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Audience Segment',
-              href: '/guidelines/audience-api#create-audience-segment',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Audience Segment',
-              href: '/guidelines/audience-api#update-audience-segment',
-              customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Pre-bid Audience',
-              href: '/guidelines/audience-api#create-pre-bid-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Pre-bid Audience',
-              href: '/guidelines/audience-api#update-pre-bid-audience',
-              customProps: { method: 'PUT' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Contextual Audience',
-              href: '/guidelines/audience-api#create-contextual-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create ABM Audience',
-              href: '/guidelines/audience-api#create-abm-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Lookalike Audience',
-              href: '/guidelines/audience-api#create-lookalike-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Audience Name',
-              href: '/guidelines/audience-api#update-audience-name',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Duplicate Matched Audience',
-              href: '/guidelines/audience-api#duplicate-matched-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Create Audience Insights',
-              href: '/guidelines/audience-api#create-audience-insights',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Send Insights Email',
-              href: '/guidelines/audience-api#send-insights-email',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Regenerate Insights Report',
-              href: '/guidelines/audience-api#regenerate-audience-insights-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download Insights Report',
-              href: '/guidelines/audience-api#download-audience-insights-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Validate URL for Contextual Audience',
-              href: '/guidelines/audience-api#validate-url-for-contextual-audience',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Delete Audience',
-              href: '/guidelines/audience-api#delete-audience',
-              customProps: { method: 'DEL' },
-              className: 'sidebarItem'
-            }
-          ]
-        },
-        {
-          type: `category`,
-          label: `Healthcare Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'ABM Audience Details',
-              href: '/guidelines/audience-api#abm-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'ABM Audience Statistics',
-              href: '/guidelines/audience-api#abm-audience-statistics',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Titles List',
-              href: '/guidelines/audience-api#healthcare-titles-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Specialties List',
-              href: '/guidelines/audience-api#healthcare-specialties-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Systems List',
-              href: '/guidelines/audience-api#healthcare-systems-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Data',
-              href: '/guidelines/audience-api#healthcare-data',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Statistics',
-              href: '/guidelines/audience-api#healthcare-statistics',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Account Types',
-              href: '/guidelines/audience-api#healthcare-account-types',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Account Subtypes',
-              href: '/guidelines/audience-api#healthcare-account-subtypes',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Healthcare Account Names',
-              href: '/guidelines/audience-api#healthcare-account-names',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `More Audience Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Matched Audience Fields',
-              href: '/guidelines/audience-api#matched-audience-fields',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment Reach Range',
-              href: '/guidelines/audience-api#reach-range-list-for-audience-segment',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Segment Price Range',
-              href: '/guidelines/audience-api#price-range-list-for-audience-segment',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
             },
             {
               type: 'link',
@@ -1243,7 +962,273 @@ const sidebars = {
             {
               type: 'link',
               label: 'Matched Column List',
-              href: '/guidelines/audience-api#column-list-for-matched-audience',
+              href: '/guidelines/audience-api#matched-column-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Matched Column Combinations',
+              href: '/guidelines/audience-api#matched-column-combinations',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Matched Audience File',
+              href: '/guidelines/audience-api#download-matched-audience-file',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Segmented Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Segmented Audience Details',
+              href: '/guidelines/audience-api#segmented-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Search Segmented Audiences',
+              href: '/guidelines/audience-api#search-segmented-audiences',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Segmented Audience',
+              href: '/guidelines/audience-api#create-segmented-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Segmented Audience',
+              href: '/guidelines/audience-api#update-segmented-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Segment Partner Provider List',
+              href: '/guidelines/audience-api#segment-partner-provider-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Segment List by Provider/Partner IDs',
+              href: '/guidelines/audience-api#segment-list-by-providerpartner-ids',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Retargeted Audiences`,
+          className: 'sidebarItem',
+          items: [
+          {
+              type: 'link',
+              label: 'Create Retargeted Audience',
+              href: '/guidelines/audience-api#create-retargeted-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Retargeted Audience',
+              href: '/guidelines/audience-api#update-retargeted-audience',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Retargeted Audience Email',
+              href: '/guidelines/audience-api#retargeted-audience-email-notification',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Geofarmed Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/guidelines/audience-api#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/guidelines/audience-api#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Contextual Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Contextual Audience Details',
+              href: '/guidelines/audience-api#contextual-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Contextual Audience',
+              href: '/guidelines/audience-api#create-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate URL for Contextual Audience',
+              href: '/guidelines/audience-api#validate-url-for-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Lookalike Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Lookalike Audience Details',
+              href: '/guidelines/audience-api#get-lookalike-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Lookalike Audience',
+              href: '/guidelines/audience-api#create-lookalike-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Campaign Audience Details',
+              href: '/guidelines/audience-api#campaign-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Audience',
+              href: '/guidelines/audience-api#create-campaign-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaign Audience History',
+              href: '/guidelines/audience-api#get-campaign-audience-history',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Pre-bid Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Pre-bid Audience Details',
+              href: '/guidelines/audience-api#pre-bid-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Search Pre-bid Audience Details',
+              href: '/guidelines/audience-api#search-pre-bid-audience-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Pre-bid Audience',
+              href: '/guidelines/audience-api#create-pre-bid-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Pre-bid Audience',
+              href: '/guidelines/audience-api#update-pre-bid-audience',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Pre-bid Provider Child Segment Details',
+              href: '/guidelines/audience-api#get-pre-bid-provider-child-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Prebid Child Segment Details',
+              href: '/guidelines/audience-api#get-pre-bid-child-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'DoubleVerify Pre-bid Audience Segment',
+              href: '/guidelines/audience-api#doubleverify-pre-bid-audience-segment-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Audience Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Segmented Reach Range',
+              href: '/guidelines/audience-api#reach-range-list-for-segmented-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Segmented Price Range',
+              href: '/guidelines/audience-api#price-range-list-for-segmented-audiences',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -1251,6 +1236,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience Type List',
               href: '/guidelines/audience-api#audience-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Subtype List',
+              href: '/guidelines/audience-api#audience-subtype-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -1267,14 +1259,7 @@ const sidebars = {
               href: '/guidelines/audience-api#frequency-type-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Provider Details List',
-              href: '/guidelines/audience-api#provider-details-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
+            }
           ]
         },
       ],
@@ -1633,6 +1618,90 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Update Campaign Status',
+              href: '/guidelines/campaign-api#update-campaign-status',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Duplicate Campaigns',
+              href: '/guidelines/campaign-api#duplicate-campaigns',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Cost Details',
+              href: '/guidelines/campaign-api#get-campaign-cost-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Audience Reach Estimation',
+              href: '/guidelines/campaign-api#get-audience-reach-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Bid Landscape Estimation',
+              href: '/guidelines/campaign-api#get-bid-landscape-estimation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email to Set Margin',
+              href: '/guidelines/campaign-api#resend-email-to-set-margin',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Resend Email Reminder to Set Invoice Template',
+              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Templates`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get List of Campaign Templates',
+              href: '/guidelines/campaign-api#get-list-of-campaign-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Template Details',
+              href: '/guidelines/campaign-api#get-campaign-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Template',
+              href: '/guidelines/campaign-api#create-campaign-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Targeting`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
               label: 'Assign Conversions to Campaign',
               href: '/guidelines/campaign-api#assign-conversions-to-campaigns',
               customProps: { method: 'POST' },
@@ -1640,9 +1709,16 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Update Audience Targeting in Campaign',
+              label: 'Update Audience Targeting',
               href: '/guidelines/campaign-api#update-audience-targeting-in-campaigns',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Creative Targeting',
+              href: '/guidelines/campaign-api#update-creative-targeting-in-campaigns',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
@@ -1664,20 +1740,6 @@ const sidebars = {
               label: 'Assign PG Deals',
               href: '/guidelines/campaign-api#assign-pg-deals',
               customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email to Set Margin',
-              href: '/guidelines/campaign-api#resend-email-to-set-margin',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Resend Email Reminder to Set Invoice Template',
-              href: '/guidelines/campaign-api#resend-email-reminder-to-set-invoice-template',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -1802,7 +1864,7 @@ const sidebars = {
               type: 'link',
               label: 'Delete an Insertion Order',
               href: '/guidelines/campaign-api#delete-an-insertion-order',
-              customProps: { method: 'DEL' },
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -1812,6 +1874,27 @@ const sidebars = {
           label: `Get More Details`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'Frequency Cap Types',
+              href: '/guidelines/campaign-api#get-frequency-cap-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Goal-AI Objectives and Goals',
+              href: '/guidelines/campaign-api#get-goal-ai-objectives-and-goals',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Estimator Dimension List',
+              href: '/guidelines/campaign-api#get-estimator-dimension-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'List of IO Status',
@@ -2154,6 +2237,27 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get HTML5 Creative Content',
+              href: '/guidelines/creative-api#get-html5-creative-content',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update HTML5 Creative Content',
+              href: '/guidelines/creative-api#update-html5-creative-content',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Submit Creatives for Validation',
+              href: '/guidelines/creative-api#submit-creatives-for-validation',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -2204,6 +2308,20 @@ const sidebars = {
               type: 'link',
               label: 'Dashboard List',
               href: '/guidelines/dashboard-api#dashboard-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Graph Data',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-graph-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Goal AI Optimization Activity',
+              href: '/guidelines/dashboard-api#get-campaign-goal-ai-optimization-activity',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -2285,8 +2403,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Download Report',
-              href: '/guidelines/dashboard-api#download-report',
+              label: 'Metrics Timeline',
+              href: '/guidelines/dashboard-api#metrics-timeline',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Metrics Comparison',
+              href: '/guidelines/dashboard-api#metrics-comparison',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -2331,6 +2456,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Organization Margin Settings',
+              href: '/guidelines/finance-api#get-organization-margin-settings',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Organization Margin Settings',
+              href: '/guidelines/finance-api#update-organization-margin-settings',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Campaign Margin Details',
               href: '/guidelines/finance-api#campaign-margin-details',
               customProps: { method: 'GET' },
@@ -2352,43 +2491,15 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Customer VLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-vld-finance-details',
+              label: 'Customer AQS Finance Details',
+              href: '/guidelines/finance-api#get-customer-aqs-finance-details',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
             {
               type: 'link',
-              label: 'Update Customer VLD Details',
-              href: '/guidelines/finance-api#update-customer-vld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer PLD Finance Details',
-              href: '/guidelines/finance-api#get-customer-pld-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer PLD Details',
-              href: '/guidelines/finance-api#update-customer-pld-details',
-              customProps: { method: 'PATCH' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer SLS Finance Details',
-              href: '/guidelines/finance-api#get-customer-sls-finance-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update Customer SLS Details',
-              href: '/guidelines/finance-api#update-customer-sls-details',
+              label: 'Update Customer AQS Details',
+              href: '/guidelines/finance-api#update-customer-aqs-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
@@ -2418,6 +2529,41 @@ const sidebars = {
               label: 'Available Balance',
               href: '/guidelines/finance-api#available-balance',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Ad Serving Cost',
+              href: '/guidelines/finance-api#add-ad-serving-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Ad Serving Cost',
+              href: '/guidelines/finance-api#get-ad-serving-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add or Update Third Party Cost',
+              href: '/guidelines/finance-api#add-or-update-third-party-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Third Party Cost',
+              href: '/guidelines/finance-api#get-third-party-cost',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Disable Third Party Cost',
+              href: '/guidelines/finance-api#disable-third-party-cost',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
           ]
@@ -2494,6 +2640,13 @@ const sidebars = {
               type: 'link',
               label: 'Download Invoice',
               href: '/guidelines/finance-api#download-invoice',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Invoice Template Margin Pre-Requisite',
+              href: '/guidelines/finance-api#get-invoice-template-margin-pre-requisite',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -2739,6 +2892,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Eligible Campaigns',
+              href: '/guidelines/insights-api#get-eligible-campaigns',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Calculate Insights Computation',
+              href: '/guidelines/insights-api#calculate-insights-computation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
           ]
         },
         {
@@ -2811,11 +2978,92 @@ const sidebars = {
             },
           ]
         },
+                {
+          type: 'category',
+          label: 'Audience Quality Score Reports',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'AQS Eligibility Requirements',
+              href: '/guidelines/insights-api#aqs-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'AQS Resource Properties',
+              href: '/guidelines/insights-api#aqs-resource-properties',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/guidelines/insights-api#get-list-of-campaigns-eligible-for-aqs-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate AQS Report Name',
+              href: '/guidelines/insights-api#validate-aqs-report-name',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Compute AQS Report Cost',
+              href: '/guidelines/insights-api#compute-aqs-report-cost',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate AQS Report',
+              href: '/guidelines/insights-api#generate-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'AQS Report Types',
+              href: '/guidelines/insights-api#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/guidelines/insights-api#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/guidelines/insights-api#delete-aqs-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
         {
           type: `category`,
           label: `Voter Level Data Reports`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'VLD Eligibility Requirements',
+              href: '/guidelines/insights-api#vld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'VLD Resource Properties',
@@ -2866,73 +3114,17 @@ const sidebars = {
             },
           ]
         },
-        {
-          type: `category`,
-          label: `Provider Level Data Reports`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'PLD Resource Properties',
-              href: '/guidelines/insights-api/#pld-resource-properties',
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'List of PLD Reports',
-              href: '/guidelines/insights-api#get-list-of-pld-reports',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'List of Campaigns Eligible for PLD Reports',
-              href: '/guidelines/insights-api#get-list-of-campaigns-eligible-for-pld-reports',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Generate PLD Report',
-              href: '/guidelines/insights-api#generate-pld-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'PLD Reports Columns',
-              href: '/guidelines/insights-api#get-pld-reports-columns',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Update PLD Reports Columns',
-              href: '/guidelines/insights-api#update-pld-reports-columns',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download PLD Insight Report',
-              href: '/guidelines/insights-api#download-pld-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Delete PLD Report',
-              href: '/guidelines/insights-api#delete-pld-report',
-              customProps: { method: 'DEL' },
-              className: 'sidebarItem'
-            },
-          ]
-        },
-        {
+                {
           type: 'category',
           label: 'ScriptLift Studies Reports',
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'SLS Eligibility Requirements',
+              href: '/guidelines/insights-api#sls-eligiblity-requirements',
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'SLS Resource Properties',
@@ -2992,6 +3184,108 @@ const sidebars = {
         },
         {
           type: `category`,
+          label: `Report Templates`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'PLD Eligibility Requirements',
+              href: '/guidelines/insights-api#pld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'NLD Eligibility Requirements',
+              href: '/guidelines/insights-api#nld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'ICT Eligibility Requirements',
+              href: '/guidelines/insights-api#ict-eligibility-requirements',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Templates',
+              href: '/guidelines/insights-api#get-list-of-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Details',
+              href: '/guidelines/insights-api#get-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Reports',
+              href: '/guidelines/insights-api#get-template-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Validate Template Name',
+              href: '/guidelines/insights-api#validate-template-name',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Report Template',
+              href: '/guidelines/insights-api#create-report-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Report Template',
+              href: '/guidelines/insights-api#update-report-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Report Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Download Report',
+              href: '/guidelines/insights-api#download-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Report',
+              href: '/guidelines/insights-api#delete-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email Report',
+              href: '/guidelines/insights-api#email-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Report',
+              href: '/guidelines/insights-api#regenerate-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
           label: `More Insights Details`,
           className: 'sidebarItem',
           items: [
@@ -3006,6 +3300,20 @@ const sidebars = {
               type: 'link',
               label: 'List of Insights Status',
               href: '/guidelines/insights-api#get-list-of-insights-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Statuses',
+              href: '/guidelines/insights-api#get-list-of-template-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Scheduling Frequencies',
+              href: '/guidelines/insights-api#get-scheduling-frequencies',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3086,6 +3394,13 @@ const sidebars = {
               type: 'link',
               label: 'Block Inventories',
               href: '/guidelines/inventory-api#block-inventories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Block Inventory File',
+              href: '/guidelines/inventory-api#block-inventory-file',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -5003,9 +5318,44 @@ const sidebars = {
               type: 'link',
               label: 'Audience Details List',
               href: '/political-vertical/audience-segments#audience-details-list',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Basic Audience Details',
+              href: '/political-vertical/audience-segments#basic-audience-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Status',
+              href: '/political-vertical/audience-segments#audience-count-by-status',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Type',
+              href: '/political-vertical/audience-segments#audience-count-by-type',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Audience Count by Data Partner',
+              href: '/political-vertical/audience-segments#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Matched Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
               label: 'Matched Audience Details',
@@ -5013,76 +5363,6 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
-            {
-              type: 'link',
-              label: 'Geo-Farmed Audience Details',
-              href: '/political-vertical/audience-segments#geo-farmed-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Contextual Audience Details',
-              href: '/political-vertical/audience-segments#contextual-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Segment Details`,
-          className: 'sidebarItem',
-          items: [
-            {
-              type: 'link',
-              label: 'Audience Segment Details',
-              href: '/political-vertical/audience-segments#audience-segment-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Search Audience Segment',
-              href: '/political-vertical/audience-segments#search-audience-segment',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment Partner Provider List',
-              href: '/political-vertical/audience-segments#segment-partner-provider-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Provider/Partner IDs',
-              href: '/political-vertical/audience-segments#segment-list-by-providerpartner-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Segment List by Audience IDs',
-              href: '/political-vertical/audience-segments#segment-list-by-audience-ids',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'Audience Segment Insights',
-              href: '/political-vertical/audience-segments#audience-segment-insights',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem',
-            },
-          ]
-        },
-        {
-          type: `category`,
-          label: `Audience Management`,
-          className: 'sidebarItem',
-          items: [
             {
               type: 'link',
               label: 'Create Matched Audience',
@@ -5099,23 +5379,78 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Create Audience Segment',
-              href: '/political-vertical/audience-segments#create-audience-segment',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Geofarmed Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/political-vertical/audience-segments#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/political-vertical/audience-segments#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Segmented Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Segmented Audience Details',
+              href: '/political-vertical/audience-segments#segmented-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Search Segmented Audiences',
+              href: '/political-vertical/audience-segments#search-segmented-audiences',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Update Audience Segment',
-              href: '/political-vertical/audience-segments#update-audience-segment',
+              label: 'Create Segmented Audience',
+              href: '/political-vertical/audience-segments#create-segmented-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Update Segmented Audience',
+              href: '/political-vertical/audience-segments#update-segmented-audience',
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
             },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Contextual Audience',
+          className: 'sidebarItem',
+          items: [
             {
               type: 'link',
-              label: 'Create Geo-Farmed Audience',
-              href: '/political-vertical/audience-segments#create-geo-farmed-audience',
-              customProps: { method: 'POST' },
+              label: 'Contextual Audience Details',
+              href: '/political-vertical/audience-segments#contextual-audience-details',
+              customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
@@ -5128,8 +5463,57 @@ const sidebars = {
           ]
         },
         {
-          type: `category`,
-          label: `More Audience Details`,
+          type: 'category',
+          label: 'Custom Voter Audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Available States for Custom Voter Audiences',
+              href: '/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Custom Voter Audience Segment Details',
+              href: '/political-vertical/audience-segments#get-custom-voter-audience-segment-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Custom Voter Audience',
+              href: '/political-vertical/audience-segments#create-custom-voter-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get CVA Reach',
+              href: '/political-vertical/audience-segments#get-cva-reach',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get CVA Insights',
+              href: '/political-vertical/audience-segments#get-cva-insights',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            }
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Audience Details',
           className: 'sidebarItem',
           items: [
             {
@@ -5141,11 +5525,46 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Provider Details List',
-              href: '/political-vertical/audience-segments#provider-details-list',
+              label: 'Segmented Reach Range',
+              href: '/political-vertical/audience-segments#reach-range-list-for-segmented-audiences',
               customProps: { method: 'GET' },
-              className: 'sidebarItem',
+              className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Segmented Price Range',
+              href: '/political-vertical/audience-segments#price-range-list-for-segmented-audiences',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Type List',
+              href: '/political-vertical/audience-segments#audience-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Subtype List',
+              href: '/political-vertical/audience-segments#audience-subtype-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience Status List',
+              href: '/political-vertical/audience-segments#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Frequency Type List',
+              href: '/political-vertical/audience-segments#frequency-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
           ]
         }
       ]
@@ -5189,6 +5608,12 @@ const sidebars = {
           label: `Voter Level Data Reports`,
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'VLD Eligibility Requirements',
+              href: '/political-vertical/insights-vld/#vld-eligibility-requirements',
+              className: 'sidebarItem'
+            },
             {
               type: 'link',
               label: 'VLD Resource Properties',
@@ -5240,6 +5665,233 @@ const sidebars = {
           ]
         },
       ],
+    },
+    {
+      type: 'category',
+      label: 'Planner API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'political-vertical/planner'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Political Planner Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Resource Properties',
+              href: '/political-vertical/planner#political-planner-resource-properties',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Details by ID',
+              href: '/political-vertical/planner#get-plan-details-by-id',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Plans',
+              href: '/political-vertical/planner#get-list-of-political-plans',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Proposals',
+              href: '/political-vertical/planner#get-list-of-proposals',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Proposal Details',
+              href: '/political-vertical/planner#get-proposal-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download Proposal',
+              href: '/political-vertical/planner#download-proposal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Proposal Summary',
+              href: '/political-vertical/planner#get-proposal-summary',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Strategies',
+              href: '/political-vertical/planner#get-list-of-strategies',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Strategy Details',
+              href: '/political-vertical/planner#get-strategy-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Estimate Plan Reach',
+              href: '/political-vertical/planner#estimate-plan-reach',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Political Planner Management',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Create Plan',
+              href: '/political-vertical/planner#create-plan',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Edit Plan',
+              href: '/political-vertical/planner#edit-plan',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Plans',
+              href: '/political-vertical/planner#delete-plans',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Activate Proposal',
+              href: '/political-vertical/planner#activate-proposal',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Edit Proposal',
+              href: '/political-vertical/planner#edit-proposal',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate IO and Campaigns',
+              href: '/political-vertical/planner#generate-io-and-campaigns',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Proposals',
+              href: '/political-vertical/planner#delete-proposals',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Restore Proposals',
+              href: '/political-vertical/planner#restore-proposals',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create CVA Details',
+              href: '/political-vertical/planner#create-cva-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update CVA Details',
+              href: '/political-vertical/planner#update-cva-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Generate Custom Strategies',
+              href: '/political-vertical/planner#generate-custom-strategies',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Strategy',
+              href: '/political-vertical/planner#delete-strategy',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'More Political Planner Details',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Supported Parameters',
+              href: '/political-vertical/planner#get-supported-parameters',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Targeting Types',
+              href: '/political-vertical/planner#get-targeting-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Strategy Types',
+              href: '/political-vertical/planner#get-strategy-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Split Types',
+              href: '/political-vertical/planner#get-split-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Statuses',
+              href: '/political-vertical/planner#get-plan-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Plan Objectives',
+              href: '/political-vertical/planner#get-plan-objectives',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+      ]
     },
     {
       type: 'category',
@@ -5426,40 +6078,51 @@ const sidebars = {
       items: [
         {
           type: `category`,
-          label: `Matched Audience`,
+          label: `Audience Details`,
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'Matched Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
-              customProps: { method: 'GET' },
+              label: 'Audience Details List',
+              href: '/healthcare-vertical/audience-healthcare#audience-details-list',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Create Matched Audience',
-              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
+              label: 'Basic Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#basic-audience-details',
               customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Status',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-status',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Type',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-type',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Audience Count by Data Partner',
+              href: '/healthcare-vertical/audience-healthcare#audience-count-by-data-partner',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
             },
           ]
         },
         {
           type: `category`,
-          label: `Healthcare Details`,
+          label: `Healthcare Data Details`,
           className: 'sidebarItem',
           items: [
-            {
-              type: 'link',
-              label: 'ABM Audience Details',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'ABM Audience Statistics',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
-              customProps: { method: 'GET' },
-            },
             {
               type: 'link',
               label: 'Healthcare Titles List',
@@ -5511,12 +6174,169 @@ const sidebars = {
           ]
         },
         {
-          type: 'link',
-          label: 'Create ABM Audience',
-          href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
-          customProps: { method: 'POST' },
+          type: `category`,
+          label: `Matched Audiences`,
           className: 'sidebarItem',
-        }
+          items: [
+            {
+              type: 'link',
+              label: 'Matched Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#matched-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-matched-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Update Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#update-matched-audience',
+              customProps: { method: 'PATCH' },
+            },
+            {
+              type: 'link',
+              label: 'Refresh Matched Audience',
+              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              customProps: { method: 'PUT' },
+            },
+            {
+              type: 'link',
+              label: 'Matched Data Partners',
+              href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `ABM Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'ABM Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ABM Audience Statistics',
+              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ABM Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-abm-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Upload ABM Filter File',
+              href: '/healthcare-vertical/audience-healthcare#upload-abm-filter-file',
+              customProps: { method: 'POST' },
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `ICT Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get ICT Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#get-ict-audience-details',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'ICT Audience Subtypes and Extensions',
+              href: '/healthcare-vertical/audience-healthcare#ict-audience-subtypes-and-extensions',
+              customProps: { method: 'GET' },
+            },
+            {
+              type: 'link',
+              label: 'Create ICT Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-ict-audience',
+              customProps: { method: 'POST' },
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Geofarmed Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Geofarmed Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#geofarmed-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Geofarmed Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-geofarmed-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Contextual Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Contextual Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#contextual-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Contextual Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-contextual-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Campaign Audiences`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Campaign Audience Details',
+              href: '/healthcare-vertical/audience-healthcare#campaign-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Campaign Audience',
+              href: '/healthcare-vertical/audience-healthcare#create-campaign-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Campaign Audience History',
+              href: '/healthcare-vertical/audience-healthcare#get-campaign-audience-history',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
       ]
     },
     {
@@ -5555,6 +6375,20 @@ const sidebars = {
               href: '/healthcare-vertical/finance#update-customer-sls-details',
               customProps: { method: 'PATCH' },
               className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Customer AQS Finance Details',
+              href: '/healthcare-vertical/finance#get-customer-aqs-finance-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Customer AQS Details',
+              href: '/healthcare-vertical/finance#update-customer-aqs-details',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
             }
           ]
     },
@@ -5569,60 +6403,94 @@ const sidebars = {
       items: [
         {
           type: `category`,
-          label: `Provider Level Data Reports`,
+          label: `Insights Details`,
+          className: 'sidebarItem',
+          items: [
+              {
+              type: 'link',
+              label: 'Get Eligible Campaigns',
+              href: '/healthcare-vertical/insights-pld#get-eligible-campaigns',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Calculate Insights Computation',
+              href: '/healthcare-vertical/insights-pld#calculate-insights-computation',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {  
+          type: 'category',
+          label: 'Audience Quality Score Reports',
           className: 'sidebarItem',
           items: [
             {
               type: 'link',
-              label: 'PLD Resource Properties',
-              href: '/healthcare-vertical/insights-pld#pld-resource-properties'
+              label: 'AQS Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#aqs-eligibility-requirements',
+              className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'List of PLD Reports',
-              href: '/healthcare-vertical/insights-pld#get-list-of-pld-reports',
+              label: 'AQS Resource Properties',
+              href: '/healthcare-vertical/insights-pld#aqs-resource-properties',
+            },
+            {
+              type: 'link',
+              label: 'List of AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-aqs-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'List of Campaigns Eligible for PLD Reports',
-              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-pld-reports',
+              label: 'Campaigns Eligible for AQS Reports',
+              href: '/healthcare-vertical/insights-pld#get-list-of-campaigns-eligible-for-aqs-reports',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Generate PLD Report',
-              href: '/healthcare-vertical/insights-pld#generate-pld-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem',
-            },
-            {
-              type: 'link',
-              label: 'PLD Reports Columns',
-              href: '/healthcare-vertical/insights-pld#get-pld-reports-columns',
+              label: 'Validate AQS Report Name',
+              href: '/healthcare-vertical/insights-pld#validate-aqs-report-name',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Update PLD Reports Columns',
-              href: '/healthcare-vertical/insights-pld#update-pld-reports-columns',
+              label: 'Compute AQS Report Cost',
+              href: '/healthcare-vertical/insights-pld#compute-aqs-report-cost',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Download PLD Insight Report',
-              href: '/healthcare-vertical/insights-pld#download-pld-report',
+              label: 'Generate AQS Report',
+              href: '/healthcare-vertical/insights-pld#generate-aqs-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
             {
               type: 'link',
-              label: 'Delete PLD Report',
-              href: '/healthcare-vertical/insights-pld#delete-pld-report',
+              label: 'AQS Report Types',
+              href: '/healthcare-vertical/insights-pld#get-aqs-report-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Download AQS Report',
+              href: '/healthcare-vertical/insights-pld#download-aqs-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete AQS Report',
+              href: '/healthcare-vertical/insights-pld#delete-aqs-report',
               customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
@@ -5633,6 +6501,12 @@ const sidebars = {
           label: 'ScriptLift Studies Reports',
           className: 'sidebarItem',
           items: [
+            {
+              type: 'link',
+              label: 'SLS Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#sls-eligiblity-requirements',
+              className: 'sidebarItem',
+            },
             {
               type: 'link',
               label: 'SLS Resource Properties',
@@ -5691,6 +6565,414 @@ const sidebars = {
             },
           ]
         },
+        {
+          type: `category`,
+          label: `Report Templates`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'PLD Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#pld-eligibility-requirements',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'NLD Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#nld-eligibility-requirements',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'ICT Eligibility Requirements',
+              href: '/healthcare-vertical/insights-pld#ict-eligibility-requirements',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'List of Templates',
+              href: '/healthcare-vertical/insights-pld#get-list-of-templates',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Template Details',
+              href: '/healthcare-vertical/insights-pld#get-template-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Template Reports',
+              href: '/healthcare-vertical/insights-pld#get-template-reports',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Validate Template Name',
+              href: '/healthcare-vertical/insights-pld#validate-template-name',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Report Template',
+              href: '/healthcare-vertical/insights-pld#create-report-template',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Update Report Template',
+              href: '/healthcare-vertical/insights-pld#update-report-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Report Management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Download Report',
+              href: '/healthcare-vertical/insights-pld#download-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Delete Report',
+              href: '/healthcare-vertical/insights-pld#delete-report',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email Report',
+              href: '/healthcare-vertical/insights-pld#email-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Regenerate Report',
+              href: '/healthcare-vertical/insights-pld#regenerate-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `More Insights Details`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'List of Insights Types',
+              href: '/healthcare-vertical/insights-pld#get-list-of-insights-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Insights Status',
+              href: '/healthcare-vertical/insights-pld#get-list-of-insights-status',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Template Statuses',
+              href: '/healthcare-vertical/insights-pld#get-list-of-template-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Scheduling Frequencies',
+              href: '/healthcare-vertical/insights-pld#get-scheduling-frequencies',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Planner API',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'healthcare-vertical/planner'
+      },
+      items: [
+            {
+              type: 'category',
+              label: 'HCP Planner Details',
+              className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'HCP Planner Resource Properties',
+                    href: '/healthcare-vertical/planner/#hcp-planner-resource-properties',
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'HCP Planner Details by ID',
+                    href: '/healthcare-vertical/planner/#hcp-planner-details-by-id',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },    
+                  {
+                    type: 'link',
+                    label: 'List of HCP Planners',
+                    href: '/healthcare-vertical/planner/#get-list-of-hcp-planners',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'List of Accounts',
+                    href: '/healthcare-vertical/planner/#get-list-of-accounts',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Download HCP Planner',
+                    href: '/healthcare-vertical/planner/#download-hcp-planner',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  }
+               ]
+            },
+            {
+              type: 'category',
+              label: 'HCP Planner Management',
+              className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'Create HCP Planner',
+                    href: '/healthcare-vertical/planner/#create-hcp-planner',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },    
+                  {
+                    type: 'link',
+                    label: 'Update HCP Planner',
+                    href: '/healthcare-vertical/planner/#update-hcp-planner',
+                    customProps: { method: 'PUT' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Delete HCP Planner',
+                    href: '/healthcare-vertical/planner/#delete-hcp-planner',
+                    customProps: { method: 'DEL' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Validate Planner Name',
+                    href: '/healthcare-vertical/planner/#validate-planner-name',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Targeting Graphs',
+                    href: '/healthcare-vertical/planner/#get-targeting-graphs',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Audience Graph',
+                    href: '/healthcare-vertical/planner/#get-audience-graph',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Generate Campaigns Plan',
+                    href: '/healthcare-vertical/planner/#generate-campaigns-plan',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Publish Campaigns Plan',
+                    href: '/healthcare-vertical/planner/#publish-campaigns-plan',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  }
+               ]
+            },
+            {
+              type: 'category',
+              label: 'More HCP Details',
+              className: 'sidebarItem',
+              items: [
+                  {
+                    type: 'link',
+                    label: 'Split Strategy List',
+                    href: '/healthcare-vertical/planner/#get-split-strategy-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'NPI Type List',
+                    href: '/healthcare-vertical/planner/#npi-type-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Geography Segments',
+                    href: '/healthcare-vertical/planner/#get-geography-segments',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Data Partners List',
+                    href: '/healthcare-vertical/planner/#get-data-partners-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Audience Selection Methods List',
+                    href: '/healthcare-vertical/planner/#get-audience-selection-methods-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Specialties List',
+                    href: '/healthcare-vertical/planner/#get-specialties-list',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get Account Types',
+                    href: '/healthcare-vertical/planner/#get-account-types',
+                    customProps: { method: 'GET' },
+                    className: 'sidebarItem',
+                  }
+              ]
+            }          
+          ]
+    }
+  ],
+  partnershipsSidebar: [
+    {
+      type: 'category',
+      label: 'Partnerships & Integrations',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'partnerships/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Reporting Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/google-looker-studio',
+              label: 'Google Looker Studio',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/google-sheets',
+              label: 'Google Sheets',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/microsoft-power-bi',
+              label: 'Microsoft Power BI',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/tableau',
+              label: 'Tableau',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Supermetrics',
+              href: 'https://docs.supermetrics.com/docs/iqm',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'TapClicks',
+              href: 'https://www.tapclicks.com/resources/connectors/iqm-reports/',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'doc',
+              id: 'partnerships/improvado',
+              label: 'Improvado',
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'CRM Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/hubspot',
+              label: 'HubSpot',
+              className: 'sidebarItem',
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Automation Integrations',
+          className: 'sidebarItem',
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'partnerships/zapier',
+              label: 'Zapier',
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Make',
+              href: 'https://www.make.com/en/integrations/iqmreports',
+              className: 'sidebarItem',
+            },
+          ]
+        },
       ]
     }
   ],
@@ -5722,42 +7004,96 @@ const sidebars = {
           id: `mcp/mcp-getting-started/setup-guide`,
           className: 'sidebarItem'
         },
+        {
+          type: `doc`,
+          label: 'Prompts and Examples',
+          id: `mcp/mcp-getting-started/mcp-actions`,
+          className: 'sidebarItem'
+        }
       ],
     },
     {
       type: "category",
-      label: 'MCP Actions',
+      label: 'MCP Tutorials',
       className: 'sidebarCategory',
       link: {
         type: 'doc',
-        id: 'mcp/mcp-actions/index'
+        id: 'mcp/mcp-tutorials/index'
       },
       items: [
         {
-          type: `doc`,
-          label: 'Dashboard',
-          id: `mcp/mcp-actions/dashboard`,
+          type: 'doc',
+          label: 'Assets Tutorial',
+          id: `mcp/mcp-tutorials/mcp-asset-tutorial`,
           className: 'sidebarItem'
         },
         {
-          type: `doc`,
-          label: 'Bid Model',
-          id: `mcp/mcp-actions/bid-model`,
+          type: 'doc',
+          label: 'Audience Tutorial',
+          id: `mcp/mcp-tutorials/mcp-audience-tutorial`,
           className: 'sidebarItem'
         },
         {
-          type: `doc`,
-          label: 'Reports',
-          id: `mcp/mcp-actions/reports`,
+          type: 'doc',
+          label: 'Bid Model Tutorial',
+          id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
           className: 'sidebarItem'
         },
         {
-          type: `doc`,
-          label: 'Master API',
-          id: `mcp/mcp-actions/master`,
+          type: 'doc',
+          label: 'Campaign Tutorial',
+          id: `mcp/mcp-tutorials/mcp-campaign-tutorial`,
           className: 'sidebarItem'
         },
-      ],
+        {
+          type: 'doc',
+          label: 'Conversion Tutorial',
+          id: `mcp/mcp-tutorials/mcp-conversion-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Creative Tutorial',
+          id: `mcp/mcp-tutorials/mcp-creative-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Inventory Tutorial',
+          id: `mcp/mcp-tutorials/mcp-inventory-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Reports Tutorial',
+          id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
+          className: 'sidebarItem'  
+        },
+        {
+          type: 'doc',
+          label: 'Insights Tutorial',
+          id: `mcp/mcp-tutorials/mcp-insights-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Finance Tutorial',
+          id: `mcp/mcp-tutorials/mcp-finance-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'User Management Tutorial',
+          id: `mcp/mcp-tutorials/mcp-user-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Workspace Tutorial',
+          id: `mcp/mcp-tutorials/mcp-workspace-tutorial`,
+          className: 'sidebarItem'
+        }
+      ]
     }
   ],
 }

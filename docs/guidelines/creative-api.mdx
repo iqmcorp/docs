@@ -25,14 +25,14 @@ You can also get Creative details and manage Creatives, Creative groups and asso
 
 For more information on [VAST<ExternalLink />](https://www.iab.com/guidelines/vast/) and DAAST XML format specifications, please see [IAB Tech Lab's Documentation<ExternalLink />](https://iabtechlab.com/standards/digital-audio-ad-serving-template-daast/).
 
-Sample CSV file: [https://api.iqm.com/creatives/example-files/sample_html_creatives.csv<ExternalLink />](https://api.iqm.com/creatives/example-files/sample_html_creatives.csv)
+Sample CSV file: [https://app.iqm.com/creatives/example-files/sample_html_creatives.csv<ExternalLink />](https://app.iqm.com/creatives/example-files/sample_html_creatives.csv)
 
 :::
 </div>
 
 ### More Resources
   * [Upload a Creative](/quickstart-guides/upload-a-creative-quickstart/) Quickstart Guide
-  * [Creative and Specifications<ExternalLink />](https://help.iqm.com/en/collections/1387054-manage-your-creatives) Help Center article 
+  * [Creatives and Specifications<ExternalLink />](https://help.iqm.com/en/collections/1387054-manage-your-creatives) Help Center article 
 
 ### Authentication
 
@@ -108,8 +108,8 @@ Get Creative details by ID.
   <summary>`imageDetails` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`pixelUrl` <br /><span class="type-text">string</span></td>
-    <td>Pixel URL</td>
+    <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+    <td>Pixel URLs, up to five supported per Creative</td>
   </tr>
     <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
@@ -215,7 +215,7 @@ Get Creative details by ID.
     "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
     "clickUrl": "http://iqm.com",
     "imageDetails": {
-      "pixelUrl": "http://pixel.com",
+      "pixelUrls": ["http://pixel.com"],
       "creativeWidth": 300,
       "creativeHeight": 600
     },
@@ -268,7 +268,7 @@ interface Responses {
           creativeCardSource: string;
           clickUrl: string;
           imageDetails: {
-            pixelUrl: string;
+            pixelUrls: string[];
             creativeWidth: number;
             creativeHeight: number;
           };
@@ -390,8 +390,8 @@ A Creative <var>id</var> can be used to [Get Creative Details by ID](#creative-d
   <td>Click URL</td>
 </tr>
 <tr>
-  <td>`pixelUrl` <br /><span class="type-text">string</span></td>
-  <td>Pixel URL</td>
+  <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+  <td>Pixel URLs, up to five supported per Creative</td>
 </tr>
   <tr>
   <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
@@ -590,7 +590,7 @@ A Creative <var>id</var> can be used to [Get Creative Details by ID](#creative-d
         "createdAt": 1671813949233,
         "modifiedAt": 1671819653000,
         "clickUrl": "https://example.com/id=130141",
-        "pixelUrl": "http://app.iqm.com",
+        "pixelUrls": ["http://app.iqm.com"],
         "creativeHeight": 50,
         "creativeWidth": 320,
         "subMediaType": "Image",
@@ -1632,24 +1632,380 @@ function getCreativeStatusCount(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Add a new Creative by providing the Creative metadata and files. Endpoint accepts a JSON payload with Creative details and supports file uploads in multipart form data. The API handles both the metadata and Creative file uploads simultaneously. 
+This API allows you to add Creatives of various types by providing the Creative metadata and Creative files using multipart/form-data. The metadata is sent as a JSON string in the <var>creativeRequest</var> form field, and files (when creativeSourceType is <var>FILE</var>) are uploaded in the <var>creativeFiles</var> form field. The API supports batch creation of multiple Creatives in a single request, with partial success/failure handling.
 
-Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US/Learn/Forms/Sending_and_retrieving_form_data) on form data format.
+Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US/Learn/Forms/Sending_and_retrieving_form_data) on form data format for more information.
 
-| Query Parameters | |
+| Request Schema | |
 | --- | --- | 
-| `creativeRequest`<br /><span class="type-text">string</span> | This parameter accepts a Map of UUIDs to Creative details. Each UUID corresponds to a single Creative. |
-| `creativeFiles`<br /><span class="type-text">array of strings</span> | Array of Creative files uploaded as multipart files. These files will be used for creating the Creatives. Each file is processed according to its type (image, video, etc.) |
+| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to Creative metadata. Each ID corresponds to a single Creative. |
+| `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of Creative files to upload. Required only when Creative source type is <var>FILE</var> in the Creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding Creative object. Supports multiple file uploads for batch Creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Creative Metadata</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeName` <br /><span class="type-text">string</span></td>
+  <td>Creative name</td>
+</tr>
+<tr>
+  <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
+  <td>External Creative ID</td>
+</tr>
+<tr>
+  <td>`platformCreativeTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list)</td>
+</tr>
+<tr>
+  <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
+  <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, <var>DAAST_URL</var>, <var>DAAST_XML</var></td>
+</tr>
+<tr>
+  <td>`creativeSource` <br /><span class="type-text">string</span></td>
+  <td>Creative source</td>
+</tr>
+<tr>
+  <td>`clickUrl` <br /><span class="type-text">string</span></td>
+  <td>Click URL</td>
+</tr>
+<tr>
+  <td>`subMediaType` <br /><span class="type-text">integer</span></td>
+  <td>Subcategory of media type (for native video creatives)</td>
+</tr>
+<tr>
+  <td>`htmlDetails` <br /><span class="type-text">object</span></td>
+  <td>HTML Creative details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`htmlDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+    <td>Pixel URLs, up to five supported per Creative</td>
+  </tr>
+  <tr>
+    <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
+    <td>Creative width (px)</td>
+  </tr>
+  <tr>
+    <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
+    <td>Creative height (px)</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+<tr>
+  <td>`imageDetails` <br /><span class="type-text">object</span></td>
+  <td>Image Creative details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`imageDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+    <td>Pixel URLs, up to five supported per Creative</td>
+  </tr>
+  <tr>
+    <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
+    <td>Creative width (px)</td>
+  </tr>
+  <tr>
+    <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
+    <td>Creative height (px)</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+<tr>
+  <td>`audioDetails` <br /><span class="type-text">object</span></td>
+  <td>Audio Creative details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`audioDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+    <td>Pixel URLs, up to five supported per Creative</td>
+  </tr>
+  <tr>
+    <td>`duration` <br /><span class="type-text">integer</span></td>
+    <td>Audio duration (s)</td>
+  </tr>
+  <tr>
+    <td>`customTracking` <br /><span class="type-text">object</span></td>
+    <td>Custom tracking details</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`customTracking` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`startUrl` <br /><span class="type-text">string</span></td>
+      <td>Start URL</td>
+    </tr>
+    <tr>
+      <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
+      <td>First quartile URL</td>
+    </tr>
+    <tr>
+      <td>`midPointUrl` <br /><span class="type-text">string</span></td>
+      <td>Midpoint URL</td>
+    </tr>
+    <tr>
+      <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
+      <td>Third quartile URL</td>
+    </tr>
+    <tr>
+      <td>`completeUrl` <br /><span class="type-text">string</span></td>
+      <td>Complete URL</td>
+    </tr>
+    <tr>
+      <td>`impressionUrl` <br /><span class="type-text">string</span></td>
+      <td>Impression URL</td>
+    </tr>
+    </table></details>
+    </td>
+  </tr>
+  <tr>
+    <td>`logoSource` <br /><span class="type-text">string</span></td>
+    <td>Logo source</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+<tr>
+  <td>`videoDetails` <br /><span class="type-text">object</span></td>
+  <td>Video Creative details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`videoDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`pixelUrls` <br /><span class="type-text">array of strings</span></td>
+    <td>Pixel URLs, up to five supported per Creative</td>
+  </tr>
+  <tr>
+    <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
+    <td>Creative width (px)</td>
+  </tr>
+  <tr>
+    <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
+    <td>Creative height (px)</td>
+  </tr>
+  <tr>
+    <td>`duration` <br /><span class="type-text">integer</span></td>
+    <td>Video duration (s)</td>
+  </tr>
+  <tr>
+    <td>`customTracking` <br /><span class="type-text">object</span></td>
+    <td>Custom tracking details</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`customTracking` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`startUrl` <br /><span class="type-text">string</span></td>
+      <td>Start URL</td>
+    </tr>
+    <tr>
+      <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
+      <td>First quartile URL</td>
+    </tr>
+    <tr>
+      <td>`midPointUrl` <br /><span class="type-text">string</span></td>
+      <td>Midpoint URL</td>
+    </tr>
+    <tr>
+      <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
+      <td>Third quartile URL</td>
+    </tr>
+    <tr>
+      <td>`completeUrl` <br /><span class="type-text">string</span></td>
+      <td>Complete URL</td>
+    </tr>
+    <tr>
+      <td>`impressionUrl` <br /><span class="type-text">string</span></td>
+      <td>Impression URL</td>
+    </tr>
+    </table></details>
+    </td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+<tr>
+  <td>`nativeDetails` <br /><span class="type-text">object</span></td>
+  <td>Native Creative details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`nativeDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`title` <br /><span class="type-text">string</span></td>
+    <td>Title</td>
+  </tr>
+  <tr>
+    <td>`description` <br /><span class="type-text">string</span></td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>`cta` <br /><span class="type-text">object</span></td>
+    <td>Call-to-Action object details (for native video)</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`cta` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`id` <br /><span class="type-text">integer</span></td>
+      <td>[CTA ID](/guidelines/creative-api#add-new-creative)</td>
+    </tr>
+    <tr>
+      <td>`ctaText` <br /><span class="type-text">string</span></td>
+      <td>CTA display text</td>
+    </tr>
+    <tr>
+      <td>`defaultCta` <br /><span class="type-text">boolean</span></td>
+      <td>Default CTA for associated Creative</td>
+    </tr>
+    </table></details>
+    </td>
+  </tr>
+  <tr>
+    <td>`brandName` <br /><span class="type-text">string</span></td>
+    <td>Brand name</td>
+  </tr>
+  <tr>
+    <td>`brandIconSourceUrl` <br /><span class="type-text">string</span></td>
+    <td>Brand icon source URL</td>
+  </tr>
+  <tr>
+    <td>`brandIconHeight` <br /><span class="type-text">integer</span></td>
+    <td>Brand icon height (px)</td>
+  </tr>
+  <tr>
+    <td>`brandIconWidth` <br /><span class="type-text">integer</span></td>
+    <td>Brand icon width (px)</td>
+  </tr>
+  <tr>
+    <td>`thumbnailSourceUrl` <br /><span class="type-text">string</span></td>
+    <td>Thumbnail source URL (for native video)</td>
+  </tr>
+  <tr>
+    <td>`thumbnailHeight` <br /><span class="type-text">integer</span></td>
+    <td>Thumbnail height (px, for native video)</td>
+  </tr>
+  <tr>
+    <td>`thumbnailWidth` <br /><span class="type-text">integer</span></td>
+    <td>Thumbnail width (px, for native video)</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+</table>
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`successData` <br /><span class="type-text">object</span></td>
+  <td>Success data</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`successData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`PS` <br /><span class="type-text">string</span></td>
+    <td>Partial success</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>`failedData` <br /><span class="type-text">object</span></td>
+  <td>Success data</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`failedData` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`PF` <br /><span class="type-text">string</span></td>
+    <td>Partial failure</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
 
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
 
-<CodeDropdown>
+<CodeDropdown label="Request Samples">
+<CodeOption label="Form Data Sample">
+```bash
+POST /api/v3/crt/creatives HTTP/1.1
+Host: https://api.iqm.com
+Authorization: Bearer YOUR_TOKEN_HERE
+X-IAA-OW-ID: 12345
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="creativeRequest"
+
+{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href='https://example.com'><img src='https://cdn.example.com/ad.jpg'></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="creativeFiles"; filename="summer-banner.jpg"
+Content-Type: image/jpeg
+
+[Binary image data]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="creativeFiles"; filename="product-demo.mp4"
+Content-Type: video/mp4
+
+[Binary video data]
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
+</CodeOption>
+<CodeOption label="curl Sample">
+```bash
+curl -X POST https://api.iqm.com/api/v3/crt/creatives \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "X-IAA-OW-ID: 12345" \
+  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}' \
+  -F 'creativeFiles=@summer-banner.jpg' \
+  -F 'creativeFiles=@product-demo.mp4'
+```
+</CodeOption>
+</CodeDropdown>
+
+<CodeDropdown label="Creative Details Samples">
 <CodeOption label="HTML Creative (H001)">
-```json title="Request Sample"
+```json
 {
   "H001": {
     "creativeName": "html",
@@ -1659,6 +2015,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "<a href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1><img src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg></a>",
     "clickUrl": "www.example.com",
     "htmlDetails": {
+      "pixelUrls": ["https://iqm.pixel.com"],
       "creativeWidth": 500,
       "creativeHeight": 1200
     }
@@ -1677,7 +2034,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "green.jpeg",
     "clickUrl": "www.example.com",
     "imageDetails": {
-      "pixelUrl": "www.example.com",
+      "pixelUrls": ["www.example.com"],
       "creativeWidth": 750,
       "creativeHeight": 750
     }
@@ -1696,7 +2053,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "https://tmpd3vsekqsh1zre3k8n-stage.s3.amazonaws.com/Image/200001/Mcn7L08_1731899937158.png",
     "clickUrl": "www.example.com",
     "imageDetails": {
-      "pixelUrl": "www.example.com",
+      "pixelUrls": ["www.example.com"],
       "creativeWidth": 3800,
       "creativeHeight": 2534
     }
@@ -1716,6 +2073,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "38823f5d-8dea-40ed-8a53-78ff9910befa-wl.mp3",
     "audioDetails": {
       "duration": 15,
+      "pixelUrls": ["https://pixel1.iqm.com", "https://pixel2.iqm.com"],
       "customTracking": {
         "startUrl": "www.example.com",
         "firstQuartileURL": "www.example.com",
@@ -1742,6 +2100,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "https://d15mohg007lzeb.cloudfront.net/mu/20250116/163554.948946-38823f5d-8dea-40ed-8a53-78ff9910befa.mp3",
     "audioDetails": {
       "duration": 19,
+      "pixelUrls": ["https://pixel1.iqm.com", "https://pixel2.iqm.com"],
       "customTracking": {
         "startUrl": "www.example.com",
         "firstQuartileURL": "www.example.com",
@@ -1821,6 +2180,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
       "creativeHeight": 2160,
       "creativeWidth": 4096,
       "duration": 22,
+      "pixelUrls": ["https://pixel1.iqm.com", "https://pixel2.iqm.com"],
       "customTracking": {
         "startUrl": "www.example.com",
         "firstQuartileURL": "www.example.com",
@@ -1848,6 +2208,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
       "creativeHeight": 2160,
       "creativeWidth": 4096,
       "duration": 22,
+      "pixelUrls": ["https://pixel1.iqm.com", "https://pixel2.iqm.com"],
       "customTracking": {
         "startUrl": "www.example.com",
         "firstQuartileURL": "www.example.com",
@@ -1899,7 +2260,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "image_creative.jpeg",
     "clickUrl": "www.example.com",
     "imageDetails": {
-      "pixelUrl": "www.example.com"
+      "pixelUrls": ["www.example.com"]
     },
     "nativeDetails": {
       "title": "Native image file upload",
@@ -1925,7 +2286,7 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
     "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/assets/201427/y4SLpav_1734345286762.jpeg",
     "clickUrl": "www.example.com",
     "imageDetails": {
-      "pixelUrl": "www.example.com"
+      "pixelUrls": ["www.example.com"]
     },
     "nativeDetails": {
       "title": "Native image url upload",
@@ -2103,705 +2464,9 @@ Please refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.or
 }
 ```
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    headers: {
-      [name: string]: unknown;
-    };
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          successData: {
-            PS: string;
-          };
-          failedData: {
-            PF: string;
-          }
-        }
-      };
-    };
-  };
-}
-
-function createCreatives(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/crt/creatives',
-    params: {
-      query: {
-        creativeRequest: `string`,
-        creativeFiles?: `array of strings`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
 </div></div>
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}>Request Schema</summary>
 
-<table className="objectProperties">
-<tr>
-  <td>`H001` <br /><span class="type-text">object</span></td>
-  <td>HTML Creative</td>
-</tr>
-<tr>
-  <td>`I001` <br /><span class="type-text">object</span></td>
-  <td>Image file Creative</td>
-</tr>
-<tr>
-  <td>`I002` <br /><span class="type-text">object</span></td>
-  <td>Image URL Creative</td>
-</tr>
-<tr>
-    <td colSpan="3">
-      <details className="objectPropertiesDetails">
-      <summary>`H001`, `I001`, `I002` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-        <td>`creativeName` <br /><span class="type-text">string</span></td>
-        <td>Creative name</td>
-      </tr>
-        <tr>
-        <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-        <td>External Creative ID</td>
-      </tr>
-        <tr>
-        <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
-        <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) </td>
-      </tr>
-        <tr>
-        <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-        <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var></td>
-      </tr>
-          <tr>
-        <td>`creativeSource` <br /><span class="type-text">string</span></td>
-        <td>Creative source</td>
-      </tr>
-        <tr>
-        <td>`clickUrl` <br /><span class="type-text">string</span></td>
-        <td>Click URL</td>
-      </tr>
-    <tr>
-      <td>`htmlDetails` <br /><span class="type-text">object</span></td>
-      <td>HTML details</td>
-    </tr>
-    <tr>
-    <td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`htmlDetails` object properties</summary>
-      <table className="objectProperties">
-        <tr>
-        <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-        <td>Creative width (px)</td>
-      </tr>
-        <tr>
-        <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-        <td>Creative height (px)</td>
-      </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>`imageDetails` <br /><span class="type-text">object</span></td>
-      <td>Image details</td>
-    </tr>
-    <tr>
-    <td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`imageDetails` object properties</summary>
-      <table className="objectProperties">
-        <tr>
-        <td>`pixelUrl` <br /><span class="type-text">string</span></td>
-        <td>Pixel URL</td>
-      </tr>
-        <tr>
-        <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-        <td>Creative width (px)</td>
-      </tr>
-        <tr>
-        <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-        <td>Creative height (px)</td>
-      </tr>
-      </table></details>
-      </td>
-      <td></td>
-</tr></table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`A001` <br /><span class="type-text">object</span></td>
-  <td>Audio file Creative</td>
-          <td><span class="badge bar badge"></span></td>
-</tr>
-<tr>
-  <td>`A002` <br /><span class="type-text">object</span></td>
-  <td>Audio URL Creative</td>
-</tr>
-<tr>
-  <td>`A003` <br /><span class="type-text">object</span></td>
-  <td>Audio VAST URL Creative</td>
-</tr>
-<tr>
-  <td>`A004` <br /><span class="type-text">object</span></td>
-  <td>Audio VAST XML Creative</td>
-</tr>
-<tr>
-  <td>`A005` <br /><span class="type-text">object</span></td>
-  <td>Audio DAAST URL Creative</td>
-</tr>
-<tr>
-  <td>`A006` <br /><span class="type-text">object</span></td>
-  <td>Audio DAAST XML Creative</td>
-</tr>
-<tr>
-<td colSpan="3">
-  <details className="objectPropertiesDetails">
-  <summary>`A001`, `A002`, `A003`, `A004`, `A005`, `A006` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`creativeName` <br /><span class="type-text">string</span></td>
-    <td>Creative name</td>
-  </tr>
-    <tr>
-    <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-    <td>External Creative ID</td>
-  </tr>
-    <tr>
-    <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
-    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) </td>
-  </tr>
-    <tr>
-    <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-    <td>Creative source type <br />Supported values: <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, <var>DAAST_URL</var>, <var>DAAST_XML</var> </td>
-  </tr>
-      <tr>
-    <td>`creativeSource` <br /><span class="type-text">string</span></td>
-    <td>Creative source</td>
-  </tr>
-    <tr>
-    <td>`clickUrl` <br /><span class="type-text">string</span></td>
-    <td>Click URL</td>
-  </tr>
-<tr>
-  <td>`audioDetails` <br /><span class="type-text">object</span></td>
-  <td>HTML details</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`audioDetails` object properties</summary>
-  <table className="objectProperties">
-    <tr>
-    <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Audio duration (s)</td>
-  </tr>
-    <tr>
-    <td>`customTracking` <br /><span class="type-text">object</span></td>
-    <td>Custom tracking details</td>
-  </tr>
-  <tr>
-        <td colSpan="2">
-          <details className="objectPropertiesDetails">
-          <summary>`customTracking` object properties</summary>
-          <table className="objectProperties">
-            <tr>
-            <td>`startUrl` <br /><span class="type-text">string</span></td>
-            <td>Start URL</td>
-          </tr>
-               <tr>
-            <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>First quartile URL</td>
-          </tr>
-              <tr>
-            <td>`midPointUrl` <br /><span class="type-text">string</span></td>
-            <td>Midpoint URL</td>
-          </tr>
-              <tr>
-            <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>Third quartile URL</td>
-          </tr>
-              <tr>
-            <td>`completeUrl` <br /><span class="type-text">string</span></td>
-            <td>Complete URL</td>
-          </tr>
-              <tr>
-            <td>`impressionUrl` <br /><span class="type-text">string</span></td>
-            <td>Impression URL</td>
-          </tr>
-          </table></details>
-          </td>
-          <td></td>
-        </tr>
-          <tr>
-    <td>`logoSource` <br /><span class="type-text">string</span></td>
-    <td>Logo source</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr></table></details>
-</td>
-</tr>
-<tr>
-  <td>`V001` <br /><span class="type-text">object</span></td>
-  <td>Video file Creative</td>
-</tr>
-<tr>
-  <td>`V002` <br /><span class="type-text">object</span></td>
-  <td>Video URL Creative</td>
-</tr>
-<tr>
-  <td>`V003` <br /><span class="type-text">object</span></td>
-  <td>Video VAST URL Creative</td>
-</tr>
-<tr>
-  <td>`V004` <br /><span class="type-text">object</span></td>
-  <td>Video VAST XML Creative</td>
-</tr>
-<tr>
-<td colSpan="3">
-  <details className="objectPropertiesDetails">
-  <summary>`V001`, `V002`, `V003`, `V004`, object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`creativeName` <br /><span class="type-text">string</span></td>
-    <td>Creative name</td>
-  </tr>
-    <tr>
-    <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-    <td>External Creative ID</td>
-  </tr>
-    <tr>
-    <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
-    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) </td>
-  </tr>
-    <tr>
-    <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-    <td>Creative source type <br />Supported values: <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, </td>
-  </tr>
-      <tr>
-    <td>`creativeSource` <br /><span class="type-text">string</span></td>
-    <td>Creative source</td>
-  </tr>
-    <tr>
-    <td>`clickUrl` <br /><span class="type-text">string</span></td>
-    <td>Click URL</td>
-  </tr>
-<tr>
-  <td>`videoDetails` <br /><span class="type-text">object</span></td>
-  <td>Video details</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`videoDetails` object properties</summary>
-  <table className="objectProperties">
-      <tr>
-    <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-    <td>Creative width (px)</td>
-  </tr>
-    <tr>
-    <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-    <td>Creative height (px)</td>
-  </tr>
-    <tr>
-    <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Video duration (s)</td>
-  </tr>
-    <tr>
-    <td>`customTracking` <br /><span class="type-text">object</span></td>
-    <td>Custom tracking details</td>
-  </tr>
-  <tr>
-        <td colSpan="2">
-          <details className="objectPropertiesDetails">
-          <summary>`customTracking` object properties</summary>
-          <table className="objectProperties">
-            <tr>
-            <td>`startUrl` <br /><span class="type-text">string</span></td>
-            <td>Start URL</td>
-          </tr>
-               <tr>
-            <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>First quartile URL</td>
-          </tr>
-              <tr>
-            <td>`midPointUrl` <br /><span class="type-text">string</span></td>
-            <td>Midpoint URL</td>
-          </tr>
-              <tr>
-            <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>Third quartile URL</td>
-          </tr>
-              <tr>
-            <td>`completeUrl` <br /><span class="type-text">string</span></td>
-            <td>Complete URL</td>
-          </tr>
-              <tr>
-            <td>`impressionUrl` <br /><span class="type-text">string</span></td>
-            <td>Impression URL</td>
-          </tr>
-          </table></details>
-          </td>
-          <td></td>
-        </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`NI001` <br /><span class="type-text">object</span></td>
-  <td>Native image file Creative</td>
-</tr>
-<tr>
-  <td>`NI002` <br /><span class="type-text">object</span></td>
-  <td>Native image URL Creative</td>
-</tr>
-<tr>
-    <td colSpan="3">
-      <details className="objectPropertiesDetails">
-      <summary>`NI001`, `NI002` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-        <td>`creativeName` <br /><span class="type-text">string</span></td>
-        <td>Creative name</td>
-      </tr>
-        <tr>
-        <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-        <td>External Creative ID</td>
-      </tr>
-        <tr>
-        <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
-        <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) </td>
-      </tr>
-        <tr>
-        <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-        <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var></td>
-      </tr>
-          <tr>
-        <td>`creativeSource` <br /><span class="type-text">string</span></td>
-        <td>Creative source</td>
-      </tr>
-        <tr>
-        <td>`clickUrl` <br /><span class="type-text">string</span></td>
-        <td>Click URL</td>
-      </tr>
-    <tr>
-      <td>`imageDetails` <br /><span class="type-text">object</span></td>
-      <td>Image details</td>
-    </tr>
-    <tr>
-    <td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`imageDetails` object properties</summary>
-      <table className="objectProperties">
-        <tr>
-        <td>`pixelUrl` <br /><span class="type-text">string</span></td>
-        <td>Pixel URL</td>
-      </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
-      <tr>
-      <td>`nativeDetails` <br /><span class="type-text">object</span></td>
-      <td>Native Creative details</td>
-    </tr>
-    <tr>
-        <td colSpan="2">
-          <details className="objectPropertiesDetails">
-          <summary>`nativeDetails` object properties</summary>
-          <table className="objectProperties">
-            <tr>
-            <td>`title` <br /><span class="type-text">string</span></td>
-            <td>Title</td>
-          </tr>
-              <tr>
-            <td>`description` <br /><span class="type-text">string</span></td>
-            <td>Description</td>
-          </tr>
-              <tr>
-            <td>`brandName` <br /><span class="type-text">string</span></td>
-            <td>Brand name</td>
-          </tr>
-              <tr>
-            <td>`brandIconSourceUrl` <br /><span class="type-text">string</span></td>
-            <td>Brand icon source URL</td>
-          </tr>
-              <tr>
-            <td>`brandIconHeight` <br /><span class="type-text">integer</span></td>
-            <td>Brand icon height (px)</td>
-          </tr>
-              <tr>
-            <td>`brandIconWidth` <br /><span class="type-text">integer</span></td>
-            <td>Brand icon width (px)</td>
-          </tr>
-          </table></details>
-          </td>
-          <td></td>
-    </tr>
-</table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`NV001` <br /><span class="type-text">object</span></td>
-  <td>Native video file Creative</td>
-</tr>
-<tr>
-  <td>`NV002` <br /><span class="type-text">object</span></td>
-  <td>Native video URL Creative</td>
-</tr>
-<tr>
-  <td>`NV003` <br /><span class="type-text">object</span></td>
-  <td>Native video VAST URL Creative</td>
-</tr>
-<tr>
-  <td>`NV004` <br /><span class="type-text">object</span></td>
-  <td>Native video VAST XML Creative</td>
-</tr>
-<tr>
-<td colSpan="3">
-  <details className="objectPropertiesDetails">
-  <summary>`NV001`, `NV002`, `NV003`, `NV004`, object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`creativeName` <br /><span class="type-text">string</span></td>
-    <td>Creative name</td>
-  </tr>
-    <tr>
-    <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-    <td>External Creative ID</td>
-  </tr>
-  <tr>
-    <td>`subMediaType` <br /><span class="type-text">integer</span></td>
-    <td>Subcategory of media type</td>
-  </tr>
-    <tr>
-    <td>`platformCreativeTypeId` <br /><span class="type-text">string</span></td>
-    <td>[Creative Type ID](/guidelines/creative-api#get-creative-types-list) </td>
-  </tr>
-    <tr>
-    <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-    <td>Creative source type <br />Supported values: <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, </td>
-  </tr>
-      <tr>
-    <td>`creativeSource` <br /><span class="type-text">string</span></td>
-    <td>Creative source</td>
-  </tr>
-    <tr>
-    <td>`clickUrl` <br /><span class="type-text">string</span></td>
-    <td>Click URL</td>
-  </tr>
-<tr>
-  <td>`videoDetails` <br /><span class="type-text">object</span></td>
-  <td>Video details</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`videoDetails` object properties</summary>
-  <table className="objectProperties">
-      <tr>
-    <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-    <td>Creative width (px)</td>
-  </tr>
-    <tr>
-    <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-    <td>Creative height (px)</td>
-  </tr>
-    <tr>
-    <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Video duration (s)</td>
-  </tr>
-    <tr>
-    <td>`customTracking` <br /><span class="type-text">object</span></td>
-    <td>Custom tracking details</td>
-  </tr>
-  <tr>
-        <td colSpan="2">
-          <details className="objectPropertiesDetails">
-          <summary>`customTracking` object properties</summary>
-          <table className="objectProperties">
-            <tr>
-            <td>`startUrl` <br /><span class="type-text">string</span></td>
-            <td>Start URL</td>
-          </tr>
-               <tr>
-            <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>First quartile URL</td>
-          </tr>
-              <tr>
-            <td>`midPointUrl` <br /><span class="type-text">string</span></td>
-            <td>Midpoint URL</td>
-          </tr>
-              <tr>
-            <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
-            <td>Third quartile URL</td>
-          </tr>
-              <tr>
-            <td>`completeUrl` <br /><span class="type-text">string</span></td>
-            <td>Complete URL</td>
-          </tr>
-              <tr>
-            <td>`impressionUrl` <br /><span class="type-text">string</span></td>
-            <td>Impression URL</td>
-          </tr>
-          </table></details>
-          </td>
-          <td></td>
-        </tr>
-      </table></details>
-      </td>
-      <td></td>
-    </tr>
-     <tr>
-      <td>`nativeDetails` <br /><span class="type-text">object</span></td>
-      <td>Native Creative details</td>
-    </tr>
-    <tr>
-        <td colSpan="2">
-          <details className="objectPropertiesDetails">
-          <summary>`nativeDetails` object properties</summary>
-          <table className="objectProperties">
-            <tr>
-            <td>`title` <br /><span class="type-text">string</span></td>
-            <td>Title</td>
-          </tr>
-              <tr>
-            <td>`description` <br /><span class="type-text">string</span></td>
-            <td>Description</td>
-          </tr>
-                <tr>
-            <td>`cta` <br /><span class="type-text">object</span></td>
-            <td>Call-to-Action object details</td>
-          </tr>
-          <tr>
-              <td colSpan="2">
-                <details className="objectPropertiesDetails">
-                <summary>`cta` object properties</summary>
-                <table className="objectProperties">
-                <tr>
-                  <td>`id` <br /><span class="type-text">integer</span></td>
-                  <td>[CTA ID](/guidelines/creative-api#add-new-creative)</td>
-                </tr>
-                  <tr>
-                  <td>`ctaText` <br /><span class="type-text">string</span></td>
-                  <td>CTA display text</td>
-                </tr>
-                  <tr>
-                  <td>`defaultCta` <br /><span class="type-text">boolean</span></td>
-                  <td>Default CTA for associated Creative</td>
-                </tr>
-                </table></details>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-            <td>`brandName` <br /><span class="type-text">string</span></td>
-            <td>Brand name</td>
-          </tr>
-              <tr>
-            <td>`brandIconSourceUrl` <br /><span class="type-text">string</span></td>
-            <td>Brand icon source URL</td>
-          </tr>
-              <tr>
-            <td>`brandIconHeight` <br /><span class="type-text">integer</span></td>
-            <td>Brand icon height (px)</td>
-          </tr>
-              <tr>
-            <td>`brandIconWidth` <br /><span class="type-text">integer</span></td>
-            <td>Brand icon width (px)</td>
-          </tr>
-                 <tr>
-            <td>`thumbnailSourceUrl` <br /><span class="type-text">string</span></td>
-            <td>Thumbnail source URL</td>
-          </tr>
-              <tr>
-            <td>`thumbnailHeight` <br /><span class="type-text">integer</span></td>
-            <td>Thumbnail height (px)</td>
-          </tr>
-              <tr>
-            <td>`thumbnailWidth` <br /><span class="type-text">integer</span></td>
-            <td>Thumbnail width (px)</td>
-          </tr>
-          </table></details>
-          </td>
-          <td></td>
-    </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
-</details>
-
-<p /><details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-  <td>`successData` <br /><span class="type-text">object</span></td>
-  <td>Success data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`successData` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`PS` <br /><span class="type-text">string</span></td>
-    <td>Partial success</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`failedData` <br /><span class="type-text">object</span></td>
-  <td>Success data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`failedData` object properties</summary>
-  <table className="objectProperties">
-  <tr>
-    <td>`PF` <br /><span class="type-text">string</span></td>
-    <td>Partial failure</td>
-  </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-</table>
-</details>
 
 ---
 
@@ -2818,12 +2483,62 @@ Update the details of an existing Creative. Users authorized to modify a Creativ
 | --- | --- |
 | `creativeId` <br /><span class="type-text">integer</span> | [Creative ID](#get-list-of-creatives-and-details) |
 
-| Request Schema | |
-| --- | --- |
-| `creativeName` <br /><span class="type-text">string</span> | Creative name
-| `externalCreativeId` <br /><span class="type-text">string</span> | 3rd party ID for Creative 
-| `creativeRejectionReason` <br /><span class="type-text">string</span> | Reason for rejecting Creative if applicable
-| `creativeRemarks`<br /><span class="type-text">string</span> | Adds remarks to Creative 
+  <table>
+<th colSpan={3}>Request Schema</th>
+<tr>
+  <td>`creativeName` <br /><span class="type-text">string</span></td>
+  <td>Creative name</td>
+</tr>
+<tr>
+  <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
+  <td>3rd party ID for Creative</td>
+</tr>
+<tr>
+  <td>`creativeRejectionReason` <br /><span class="type-text">string</span></td>
+  <td>Reason for rejecting Creative if applicable</td>
+</tr>
+<tr>
+  <td>`creativeRemarks` <br /><span class="type-text">string</span></td>
+  <td>Adds remarks to Creative</td>
+</tr>
+<tr>
+  <td>`trackingData` <br /><span class="type-text">object</span></td>
+  <td>Tracking URLs for video, audio, and native video Creatives. Can only be updated for video, audio, and native video Creative types. Pass a URL key with an empty string to remove the value of that URL.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`trackingData` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`startUrl` <br /><span class="type-text">string</span></td>
+        <td>Start URL for the video</td>
+      </tr>
+      <tr>
+        <td>`firstQuartileURL` <br /><span class="type-text">string</span></td>
+        <td>Tracking URL for first quartile</td>
+      </tr>
+      <tr>
+        <td>`midPointURL` <br /><span class="type-text">string</span></td>
+        <td>Tracking URL for mid point</td>
+      </tr>
+      <tr>
+        <td>`thirdQuartileURL` <br /><span class="type-text">string</span></td>
+        <td>Tracking URL for third quartile</td>
+      </tr>
+      <tr>
+        <td>`completeURL` <br /><span class="type-text">string</span></td>
+        <td>Tracking URL for complete</td>
+      </tr>
+      <tr>
+        <td>`impressionURL` <br /><span class="type-text">string</span></td>
+        <td>Tracking URL for impression</td>
+      </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -2907,7 +2622,7 @@ function updateCreative(): Promise<Responses> {
           creativeName?: `string`,
           externalCreativeId?: `string`,
           clickUrl?: `string`,
-          pixelUrl?: `string`,
+          pixelUrls?: `string[]`,
           creativeRemarks?: `string`,
           creativeSource?: `string`,
           title?: `string`,
@@ -3975,6 +3690,405 @@ function updateCreativeClickUrl(): Promise<Responses> {
           clickUrl?: `string`,
           creativeIds: `array of numbers`
         }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get HTML5 Creative Content
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve HTML5 content (index.html) stored in S3 for a specific HTML5 Creative.
+
+| Path Parameters ||
+| --- | --- |
+| `creativeId` <br /><span class="type-text">integer</span> | [Creative ID](#get-creative-details) of the HTML5 Creative |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`html5Content` <br /><span class="type-text">string</span></td>
+  <td>HTML5 content string</td>
+</tr>
+<tr>
+  <td>`s3Path` <br /><span class="type-text">string</span></td>
+  <td>S3 path of the HTML5 file</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creativeId": 720273,
+    "html5Content": "<!DOCTYPE html><html><head><title>Creative</title></head><body>...</body></html>",
+    "s3Path": "assets/204876/eJP1zca_1772170251691/index.html"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          html5Content: string;
+          s3Path: string;
+        }
+      };
+    };
+  };
+}
+
+function getHtml5Content(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update HTML5 Creative Content
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the HTML5 content (index.html) stored in S3 for a specific HTML5 Creative. Validates user edit access, uploads the new content to S3, increments the <var>cb</var> version parameter in the iframe src, and updates the Creative record with modified timestamps.
+
+| Path Parameters ||
+| --- | --- |
+| `creativeId` <br /><span class="type-text">integer</span> | [Creative ID](#get-creative-details) of the HTML5 Creative |
+
+| Request Schema ||
+| --- | --- |
+| `html5Content` <br /><span class="type-text">string</span> | Updated HTML5 content string |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`s3Path` <br /><span class="type-text">string</span></td>
+  <td>Updated S3 path with cache-busting version</td>
+</tr>
+<tr>
+  <td>`cbVersion` <br /><span class="type-text">integer</span></td>
+  <td>Cache-busting version number</td>
+</tr>
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "html5Content": "<!DOCTYPE html><html><head><title>Updated Creative</title></head><body><h1>Updated Content</h1></body></html>"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "creativeId": 720273,
+    "s3Path": "assets/204876/eJP1zca_1772170251691/index.html?cb=2",
+    "cbVersion": 2,
+    "message": "HTML5 content updated successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          creativeId: number;
+          s3Path: string;
+          cbVersion: number;
+          message: string;
+        }
+      };
+    };
+  };
+}
+
+function updateHtml5Content(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/{creativeId}/html5',
+    params: {
+      path: {
+        creativeId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          html5Content: `string`
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Submit Creatives for Validation
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/crt/creatives/submit" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Fetches eligible Creatives and submits them for validation based on the provided limit.
+
+| Query Parameters ||
+| --- | --- |
+| `limit` <br /><span class="type-text">integer</span> | Maximum number of Creatives to submit. Default: <var>-1</var> (all available) |
+| `clientId` <br /><span class="type-text">string</span> | Client identifier whose Creatives will be submitted |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`creativeId` <br /><span class="type-text">integer</span></td>
+  <td>Creative ID</td>
+</tr>
+<tr>
+  <td>`creativeName` <br /><span class="type-text">string</span></td>
+  <td>Creative name</td>
+</tr>
+<tr>
+  <td>`creativeSource` <br /><span class="type-text">string</span></td>
+  <td>Creative source URL</td>
+</tr>
+<tr>
+  <td>`advertiserDetails` <br /><span class="type-text">object</span></td>
+  <td>Advertiser details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`advertiserDetails` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`advertiserName` <br /><span class="type-text">string</span></td>
+    <td>Advertiser name</td>
+  </tr>
+  <tr>
+    <td>`website` <br /><span class="type-text">string</span></td>
+    <td>Advertiser website</td>
+  </tr>
+  <tr>
+    <td>`chiefName` <br /><span class="type-text">string</span></td>
+    <td>Chief/contact name</td>
+  </tr>
+  <tr>
+    <td>`contactNumber` <br /><span class="type-text">string</span></td>
+    <td>Contact phone number</td>
+  </tr>
+  <tr>
+    <td>`address` <br /><span class="type-text">string</span></td>
+    <td>Advertiser address</td>
+  </tr>
+  <tr>
+    <td>`politicalIdentifier` <br /><span class="type-text">string</span></td>
+    <td>Political identifier (e.g., FEC ID)</td>
+  </tr>
+  <tr>
+    <td>`advertiserId` <br /><span class="type-text">integer</span></td>
+    <td>Advertiser ID</td>
+  </tr>
+  <tr>
+    <td>`legalInfo` <br /><span class="type-text">string</span></td>
+    <td>Legal information</td>
+  </tr>
+  <tr>
+    <td>`links` <br /><span class="type-text">array of strings</span></td>
+    <td>Associated links</td>
+  </tr>
+  </table></details>
+  </td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "creativeId": 636912,
+      "creativeName": "Creative - 1",
+      "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202318/wqh1afg_1709622657169.png",
+      "advertiserDetails": {
+        "advertiserName": "Political Advertiser",
+        "website": "https://iqm.com",
+        "chiefName": "IQM",
+        "contactNumber": "1234567890",
+        "address": "IQM Corporation",
+        "politicalIdentifier": "fec_123",
+        "advertiserId": 3278,
+        "legalInfo": "Other info added",
+        "links": [
+          "www.google.com"
+        ]
+      }
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: Array<{
+          creativeId: number;
+          creativeName: string;
+          creativeSource: string;
+          advertiserDetails: {
+            advertiserName: string;
+            website: string;
+            chiefName: string;
+            contactNumber: string;
+            address: string;
+            politicalIdentifier: string;
+            advertiserId: number;
+            legalInfo: string;
+            links: string[];
+          }
+        }>
+      };
+    };
+  };
+}
+
+function submitCreatives(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/crt/creatives/submit',
+    params: {
+      query: {
+        limit?: `number`,
+        clientId?: `string`
       }
     }
   };
