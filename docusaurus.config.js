@@ -103,7 +103,7 @@ const config = {
       },
       algolia: {
         appId: "09FZUVDE53",
-        apiKey: "***REMOVED***",
+        apiKey: "REDACTED_ALGOLIA_KEY",
         indexName: "IQM API Docs",
         contextualSearch: true,
         replaceSearchResultPathname: {
