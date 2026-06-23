@@ -317,6 +317,189 @@ function getOrganizationProfile(): Promise < Responses > {
 
 ---
 
+### Get List of User Interaction Events
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/interaction/events" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the list of user interaction events available.
+
+| Query Parameters |  |
+| ---- | --- |
+| `userInteractionEvent` <br /><span class="type-text">string</span> | Filter by interaction event name; use comma-separated values for multiple events |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`userInteractionEvent` <br /><span class="type-text">string</span></td>
+<td>Interaction event identifier</td>
+</tr>
+<tr>
+<td>`eventCount` <br /><span class="type-text">integer</span></td>
+<td>Number of times the event has occurred</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "userInteractionEvent": "advertiser_user_login",
+      "eventCount": 5
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          userInteractionEvent: string;
+          eventCount: number;
+        }[];
+      };
+    };
+  };
+}
+
+function GetUserInteractionEvents(params?: {
+  userInteractionEvent?: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/interaction/events',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Upsert Interaction Event
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/ua/interaction/event" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update or insert a user interaction event for the logged-in user.
+
+| Request Schema |  |
+| ---- | --- |
+| `userInteractionEvent` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Unique interaction event identifier |
+| `metaData` <br /><span class="type-text">object</span> | Key-value metadata to associate with the event |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Confirmation message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "userInteractionEvent": "advertiser_user_login",
+  "metaData": {
+    "isOwnerUser": true
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "User interaction event persisted successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function UpsertInteractionEvent(requestBody: {
+  userInteractionEvent: string;
+  metaData?: Record<string, unknown>;
+}): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/ua/interaction/event',
+    data: requestBody,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Check for Available Domain
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/organization/available-domain" />
@@ -391,6 +574,110 @@ function GetavailableDomain(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Organization Applications List
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/organizations/applications/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve a list of applications available for Organizations, filtered by whether the Organization is an Advertiser or Workspace.
+
+| Query Parameters |  |
+| ---- | --- |
+| `isAdvertiser` <br /><span class="type-text">boolean</span> | Filter applications for Advertiser Organizations (default: <var>false</var>) |
+| `isWorkspace` <br /><span class="type-text">boolean</span> | Filter applications for Workspace Organizations (default: <var>false</var>) |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`appId` <br /><span class="type-text">integer</span></td>
+  <td>Application ID</td>
+  </tr>
+  <tr>
+  <td>`appName` <br /><span class="type-text">string</span></td>
+  <td>Application name</td>
+  </tr>
+  <tr>
+  <td>`appIcon` <br /><span class="type-text">string</span></td>
+  <td>Application icon URL</td>
+  </tr>
+  <tr>
+  <td>`appUrl` <br /><span class="type-text">string</span></td>
+  <td>Application URL</td>
+  </tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "appId": 1,
+      "appName": "IQM Platform",
+      "appIcon": "https://example.com/icon.png",
+      "appUrl": "https://app.iqm.com"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          appId: number;
+          appName: string;
+          appIcon: string;
+          appUrl: string;
+        }[];
+      };
+    };
+  };
+}
+
+function GetOrganizationApplicationsList(params?: {
+  isAdvertiser?: boolean;
+  isWorkspace?: boolean;
+}): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/organizations/applications/list',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
 ## Organization Management
 
 ### Update Organization Profile
@@ -415,8 +702,8 @@ Refer to the Organization resource properties for schema. Include any properties
 <td>Indicates Report was succesfully created: <var>true</var></td>
 </tr>
 <tr>
-<td>`organizationLogo` <br /><span class="type-text">string</span></td>
-<td>Organization logo</td>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Updated organization details</td>
 </tr>
 <tr>
 <td>`message` <br /><span class="type-text">string</span></td>
@@ -442,6 +729,8 @@ Refer to the Organization resource properties for schema. Include any properties
 {
   "success": true,
   "data": {
+    "organizationId": 12345,
+    "organizationName": "Updated Org Name",
     "organizationLogo": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/organization-profile/391/1633180356403.png",
     "message": "Profile updated successfully."
   }
@@ -525,7 +814,7 @@ function UpdateOrganizationprofile(): Promise < Responses > {
 <div class="endpoint-container">
   <div class="child1">
 
-Update Organization email. 
+Update the primary email address for an Organization.
 
 | Request Schema |  |
 | ---- | --- |
@@ -540,8 +829,8 @@ Update Organization email.
 <td>Indicates Report was succesfully created: <var>true</var></td>
 </tr>
 <tr>
-<td>`isVerified` <br /><span class="type-text">boolean</span></td>
-<td>Indicates email is valid: <var>true</var></td>
+<td>`email` <br /><span class="type-text">string</span></td>
+<td>Updated email address</td>
 </tr>
 <tr>
 <td>`message` <br /><span class="type-text">string</span></td>
@@ -566,7 +855,7 @@ Update Organization email.
 {
   "success": true,
   "data": {
-    "isVerified": false,
+    "email": "example.gmail.com",
     "message": "Organization email updated successfully."
   }
 }
@@ -592,7 +881,7 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          isVerified: boolean;
+          email: string;
           message: string;
         };
       };
@@ -621,6 +910,485 @@ function Add/Updateorganizationsupportemail(): Promise<Responses> {
 
 </div></div>
 
+
+## Whitelabel Settings
+
+Manage custom branding for your organization's white label configuration, including domain settings, favicon, and pixel tracking URLs.
+
+### Get Whitelabel Settings
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/organization/whitelabel-settings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the current white label branding settings for the organization.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`isIncludeOrganizationName` <br /><span class="type-text">boolean</span></td>
+<td>Whether to include the organization name in branding</td>
+</tr>
+<tr>
+<td>`smallFavIconUrl` <br /><span class="type-text">string</span></td>
+<td>URL of the small favicon image</td>
+</tr>
+<tr>
+<td>`largeFavIconUrl` <br /><span class="type-text">string</span></td>
+<td>URL of the large favicon image</td>
+</tr>
+<tr>
+<td>`landingPageUrl` <br /><span class="type-text">string</span></td>
+<td>URL of the white label landing page</td>
+</tr>
+<tr>
+<td>`headerUrls` <br /><span class="type-text">array of objects</span></td>
+<td>List of header URL objects</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`headerUrls` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`url` <br /><span class="type-text">string</span></td>
+      <td>Header URL</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+<td>`footerUrls` <br /><span class="type-text">array of objects</span></td>
+<td>List of footer URL objects</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`footerUrls` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`url` <br /><span class="type-text">string</span></td>
+      <td>Footer URL</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "isIncludeOrganizationName": true,
+    "smallFavIconUrl": "https://icon-url.com/favicon-small.ico",
+    "largeFavIconUrl": "https://icon-url.com/favicon-large.ico",
+    "landingPageUrl": "https://landing-page.com/page.html",
+    "headerUrls": [{ "url": "http://example.com" }],
+    "footerUrls": [{ "url": "http://example.com" }]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          isIncludeOrganizationName: boolean;
+          smallFavIconUrl: string;
+          largeFavIconUrl: string;
+          landingPageUrl: string;
+          headerUrls: { url: string }[];
+          footerUrls: { url: string }[];
+        };
+      };
+    };
+  };
+}
+
+function GetWhitelabelSettings(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/organization/whitelabel-settings',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Whitelabel Settings
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/ua/organization/whitelabel-settings" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update white label branding settings. Accepts multipart/form-data for file uploads.
+
+| Form Fields |  |
+| ---- | --- |
+| `isIncludeOrganizationName` <br /><span class="type-text">boolean</span> | Whether to include the organization name in branding |
+| `smallFavIcon` <br /><span class="type-text">binary</span> | Small favicon image file |
+| `largeFavIcon` <br /><span class="type-text">binary</span> | Large favicon image file |
+| `landingPage` <br /><span class="type-text">binary</span> | Landing page file |
+| `headerUrls` <br /><span class="type-text">string</span> | JSON array string of header URL objects |
+| `footerUrls` <br /><span class="type-text">string</span> | JSON array string of footer URL objects |
+| `removeSmallFavIcon` <br /><span class="type-text">string</span> | Flag to remove the existing small favicon |
+| `removeLargeFavIcon` <br /><span class="type-text">string</span> | Flag to remove the existing large favicon |
+| `removeLandingPage` <br /><span class="type-text">string</span> | Flag to remove the existing landing page |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "White label settings updated successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function UpdateWhitelabelSettings(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/ua/organization/whitelabel-settings',
+    headers: { 'Content-Type': 'multipart/form-data' },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Whitelabel Domain
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/organization/whitelabel-domain" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Configure a custom white label domain for the organization.
+
+| Request Schema |  |
+| ---- | --- |
+| `whitelabelDomain` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Custom domain to configure for white labeling |
+| `verificationToken` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | DNS verification token |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "whitelabelDomain": "brand.example.com"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "White label domain configured successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddWhitelabelDomain(requestBody: {
+  whitelabelDomain: string;
+  verificationToken?: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/organization/whitelabel-domain',
+    data: requestBody,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Verify Whitelabel Domain
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/organization/verify-whitelabel-domain" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Verify the DNS configuration for the organization's white label domain.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`verified` <br /><span class="type-text">boolean</span></td>
+<td>Whether the domain DNS configuration has been verified</td>
+</tr>
+<tr>
+<td>`domain` <br /><span class="type-text">string</span></td>
+<td>The white label domain that was verified</td>
+</tr>
+<tr>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Message describing the verification result</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "verified": true,
+    "domain": "brand.example.com",
+    "message": "Domain verified successfully"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          verified: boolean;
+          domain: string;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function VerifyWhitelabelDomain(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/organization/verify-whitelabel-domain',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Add Whitelabel Pixel URL
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/organization/whitelabel-pixel-url" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Add a white label pixel URL for tracking or integration purposes.
+
+| Request Schema |  |
+| ---- | --- |
+| `whitelabelPixelUrl` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Pixel URL to associate with the organization's white label configuration |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Success message</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "whitelabelPixelUrl": "example.pixel.com"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Whitelabel pixel URL added successfully"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function AddWhitelabelPixelUrl(requestBody: {
+  whitelabelPixelUrl: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/organization/whitelabel-pixel-url',
+    data: requestBody,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ## Workspace Management
 
 A **Workspace** provides DSP service to another company, meaning it can have 'child' Workspaces known as **Customers** (see [Multi-level Customers List](#get-multi-level-customers-list)). This section covers the methods and endpoints for managing Workspace details.
@@ -646,7 +1414,7 @@ Create a Workspace by providing an invitation hash, Workspace domain, and creato
 <table className="objectProperties">
 <tr>
 <td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates Report was succesfully created: <var>true</var></td>
+<td>Indicates Workspace was succesfully created: <var>true</var></td>
 </tr>
 <tr>
 <td>`message` <br /><span class="type-text">string</span></td>
@@ -714,6 +1482,132 @@ function CreateWorkspace(): Promise<Responses> {
         }
       }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get List of Admin Users
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/admin-users/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve a paginated list of admin users, filterable by status and searchable by name or ID.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search by user name or user ID |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Results per page (default: <var>20</var>) |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number (default: <var>1</var>) |
+| `sortBy` <br /><span class="type-text">string</span> | Sort field and direction: prefix <var>`+`</var> for ascending, <var>`-`</var> for descending. Allowed: <var>`userId`</var>, <var>`userName`</var> (default: <var>`+userId`</var>) |
+| `userStatusIds` <br /><span class="type-text">string</span> | Comma-separated [User Status IDs](#user-status) |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`totalRecords` <br /><span class="type-text">integer</span></td>
+<td>Total number of admin user records</td>
+</tr>
+<tr>
+<td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+<td>Number of records matching the applied filters</td>
+</tr>
+<tr>
+<td>`adminUsersList` <br /><span class="type-text">array of objects</span></td>
+<td>List of admin users</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`adminUsersList` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`userName` <br /><span class="type-text">string</span></td>
+      <td>Display name of the admin user</td>
+    </tr>
+    <tr>
+      <td>`userId` <br /><span class="type-text">integer</span></td>
+      <td>Unique identifier of the admin user</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 598,
+    "filteredRecords": 255,
+    "adminUsersList": [
+      { "userName": "user-1", "userId": 1 },
+      { "userName": "user-2", "userId": 2 }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          adminUsersList: {
+            userName: string;
+            userId: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function GetAdminUserList(params?: {
+  searchField?: string;
+  noOfEntries?: number;
+  pageNo?: number;
+  sortBy?: string;
+  userStatusIds?: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/admin-users/list',
+    params,
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -857,7 +1751,7 @@ function Updateworkspacedomain(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Validate a Workspace for a given email.
+Validate if a Workspace domain is available and if the user email is associated with the Workspace.
 
 | Request Schema |  |
 | ----| --- |
@@ -870,7 +1764,15 @@ Validate a Workspace for a given email.
 <table className="objectProperties">
 <tr>
 <td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates Report was succesfully created: <var>true</var></td>
+<td>Indicates if the workspace domain validation was successful: <var>true</var></td>
+</tr>
+<tr>
+<td>`isValid` <br /><span class="type-text">boolean</span></td>
+<td>Indicates if the workspace domain is valid: <var>true</var></td>
+</tr>
+<tr>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Validation message</td>
 </tr>
 </table>
 </details>
@@ -889,7 +1791,11 @@ Validate a Workspace for a given email.
 
 ```json title="Response 200"
 {
-    "success": true
+    "success": true,
+    "data": {
+        "isValid": true,
+        "message": "Workspace is valid"
+    }
 }
 ```
 
@@ -913,6 +1819,10 @@ interface Responses {
     content: {
       "application/json": {
         success: boolean;
+        data: {
+          isValid: boolean;
+          message: string;
+        };
       };
     };
   };
@@ -962,7 +1872,7 @@ function Validateworkspacedomain(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Get a list of workspaces.
+Get a list of Workspaces associated with the logged in user (i.e. Customers). Results can be filtered by search field.
 
 | Query Parameters |  |
 | ----| --- |
@@ -973,8 +1883,8 @@ Get a list of workspaces.
 
 <table className="objectProperties">
 <tr>
-<td>`owId` <br /><span class="type-text">boolean</span></td>
-<td>Indicates Report was succesfully created: <var>true</var></td>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Organization Workspace ID</td>
 </tr>
 <tr>
 <td>`workspaceName` <br /><span class="type-text">string</span></td>
@@ -1086,6 +1996,381 @@ function getWorkspaces(): Promise<Responses> {
 
 </div></div>
 
+---
+
+### Get Workspace Initialization Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/init" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve initialization details for the workspace, including configuration, settings, and metadata.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`workspaceId` <br /><span class="type-text">integer</span></td>
+<td>Workspace ID</td>
+</tr>
+<tr>
+<td>`workspaceName` <br /><span class="type-text">string</span></td>
+<td>Workspace name</td>
+</tr>
+<tr>
+<td>`organizationName` <br /><span class="type-text">string</span></td>
+<td>Organization name</td>
+</tr>
+<tr>
+<td>`domain` <br /><span class="type-text">string</span></td>
+<td>Workspace domain</td>
+</tr>
+<tr>
+<td>`isActive` <br /><span class="type-text">boolean</span></td>
+<td>Whether the workspace is active</td>
+</tr>
+<tr>
+<td>`features` <br /><span class="type-text">array of strings</span></td>
+<td>List of enabled features for the workspace</td>
+</tr>
+<tr>
+<td>`configuration` <br /><span class="type-text">object</span></td>
+<td>Workspace configuration settings</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`configuration` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`theme` <br /><span class="type-text">string</span></td>
+      <td>UI theme (e.g., <var>light</var>, <var>dark</var>)</td>
+    </tr>
+    <tr>
+      <td>`language` <br /><span class="type-text">string</span></td>
+      <td>Language code (e.g., <var>en</var>)</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "workspaceId": 1,
+    "workspaceName": "My Workspace",
+    "organizationName": "My Organization",
+    "domain": "my-workspace.example.com",
+    "isActive": true,
+    "features": ["feature1", "feature2"],
+    "configuration": { "theme": "light", "language": "en" }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          workspaceId: number;
+          workspaceName: string;
+          organizationName: string;
+          domain: string;
+          isActive: boolean;
+          features: string[];
+          configuration: { theme: string; language: string };
+        };
+      };
+    };
+  };
+}
+
+function GetWorkspaceInitDetails(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/init',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Workspace Organization Logo
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/logo" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the logo for the workspace organization. Returns a redirect (HTTP 308) to the logo URL.
+
+</div><div class="child2">
+
+
+</div></div>
+
+---
+
+### Get Workspace Chatbot App ID
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/chatbot" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the chatbot application ID for the workspace based on the user's organization type and role.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`chatbotAppId` <br /><span class="type-text">string</span></td>
+<td>Chatbot application ID; empty string if not configured</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "chatbotAppId": "p7yzll40"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: { chatbotAppId: string };
+      };
+    };
+  };
+}
+
+function GetWorkspaceChatBotAppIdByOwId(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/chatbot',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Workspace Chatbot App ID by Domain
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/st/chatbot" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the chatbot application ID configured for a workspace identified by domain.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`chatbotAppId` <br /><span class="type-text">string</span></td>
+<td>Chatbot app ID; empty string if not configured</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "chatbotAppId": "p7yzll40"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: { chatbotAppId: string };
+      };
+    };
+  };
+}
+
+function GetWorkspaceChatBotAppIdByWorkspaceDomain(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/st/chatbot',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Send Find My Workspace Email
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/find-my-workspace" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send an email to help a user locate their workspace.
+
+| Request Schema |  |
+| ---- | --- |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User's email address |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`data` <br /><span class="type-text">string</span></td>
+<td>Confirmation message indicating the email was sent</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "email": "user@example.com"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Email sent to user@example.com"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function SendFindMyWorkspaceEmail(requestBody: {
+  email: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/find-my-workspace',
+    data: requestBody,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ## Customer Details
 
 A **Customer** is an **Advertiser** or **Workspace** in a financial agreement with another Workspace. For any given Workspace, an Advertiser is a Customer. This section covers the methods and endpoints for getting lists and details of customers.
@@ -1108,7 +2393,7 @@ A **Customer** is an **Advertiser** or **Workspace** in a financial agreement wi
 | `createdAt` <br /><span class="type-text">string</span> | Creation timestamp |
 | `modifiedAt` <br /><span class="type-text">string</span> | Modification timestamp |
 | `parentOrganizationName` <br /><span class="type-text">string</span>| Parent Organization name |
-| `tags` <br /><span class="type-text">array of strings</span> | [Customer Type IDs](#customer-type) |
+| `tags` <br /><span class="type-text">array of strings</span> | [Customer Type](#customer-type) tags |
 | `customersCount` <br /><span class="type-text">integer</span> | Customer count |
 | `balance` <br /><span class="type-text">integer</span> | Budget balance |
 | `contactPersonName` <br /><span class="type-text">string</span> | Name of contact |
@@ -2881,6 +4166,77 @@ function GetCustomerAllowedApplications(): Promise<Responses> {
 
 ---
 
+### Get Allowed Customer OW IDs
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/allowed-customers-ids" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the list of Organization Workspace IDs that the logged-in user has access to.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`data` <br /><span class="type-text">array of integers</span></td>
+<td>List of Organization Workspace IDs the logged-in user has access to</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [200002, 200003, 200004, 200005]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: number[];
+      };
+    };
+  };
+}
+
+function GetAllowedCustomersOWIds(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/allowed-customers-ids',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
 ### Get List of Remaining Apps for Customer
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/customers/remaining-applications/list" />
@@ -2994,6 +4350,193 @@ function GetremainingApplicationlistforCustomer(): Promise<Responses> {
         owId: `number`
       }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Remaining Applications for User
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/user/remaining-applications" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the list of applications that can still be assigned to a user.
+
+| Query Parameters |  |
+| ---- | --- |
+| `uowId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | User Organization Workspace ID |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`applicationId` <br /><span class="type-text">integer</span></td>
+<td>Application ID</td>
+</tr>
+<tr>
+<td>`applicationName` <br /><span class="type-text">string</span></td>
+<td>Application name</td>
+</tr>
+<tr>
+<td>`applicationCode` <br /><span class="type-text">string</span></td>
+<td>Application code</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    { "applicationId": 1, "applicationName": "Google Ads", "applicationCode": "GA" },
+    { "applicationId": 2, "applicationName": "Facebook Ads", "applicationCode": "FB" }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          applicationId: number;
+          applicationName: string;
+          applicationCode: string;
+        }[];
+      };
+    };
+  };
+}
+
+function GetRemainingApplications(params: {
+  uowId: number;
+}): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/user/remaining-applications',
+    params,
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Metabase Client Credentials
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/ext/metabase-details" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the Metabase embed URL for dashboard visualization. Restricted to allowed users of super workspace with Campaign Insight app access.
+
+| Query Parameters |  |
+| ---- | --- |
+| `dashboardType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Dashboard type (e.g., <var>demographic</var>, <var>geographic</var>) |
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`embedUrl` <br /><span class="type-text">string</span></td>
+<td>Metabase embed URL for the dashboard</td>
+</tr>
+<tr>
+<td>`dashboardType` <br /><span class="type-text">string</span></td>
+<td>Dashboard type identifier</td>
+</tr>
+<tr>
+<td>`expiresAt` <br /><span class="type-text">string</span></td>
+<td>Expiration timestamp in ISO 8601 format</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "embedUrl": "https://metabase.example.com/embed/dashboard/...",
+    "dashboardType": "demographic",
+    "expiresAt": "2026-05-06T15:30:00Z"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          embedUrl: string;
+          dashboardType: string;
+          expiresAt: string;
+        };
+      };
+    };
+  };
+}
+
+function GetMetabaseClientCredentials(params: {
+  dashboardType: string;
+}): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/ext/metabase-details',
+    params,
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -3394,6 +4937,111 @@ function getCustomerConfig(): Promise<Responses> {
 </div></div>
 
 ## Customer Management
+
+### Invitation Pre-Requisite Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/customer/invite/pre-requisite" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Retrieve the pre-requisite details required before sending a Customer invitation, including white label domain and support email configuration.
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`workspaceDomain` <br /><span class="type-text">string</span></td>
+  <td>Workspace domain</td>
+  </tr>
+  <tr>
+  <td>`whiteLabelDomain` <br /><span class="type-text">string</span></td>
+  <td>White label domain</td>
+  </tr>
+  <tr>
+  <td>`isVerified` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the white label domain is verified</td>
+  </tr>
+  <tr>
+  <td>`supportEmail` <br /><span class="type-text">string</span></td>
+  <td>Support email address</td>
+  </tr>
+  <tr>
+  <td>`isSupportEmailVerified` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the support email is verified</td>
+  </tr>
+  <tr>
+  <td>`organizationAppAccessible` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the organization application is accessible</td>
+  </tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "workspaceDomain": "example-workspace",
+    "whiteLabelDomain": "example-whitelabel",
+    "isVerified": true,
+    "supportEmail": "support@example.com",
+    "isSupportEmailVerified": true,
+    "organizationAppAccessible": true
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          workspaceDomain: string;
+          whiteLabelDomain: string;
+          isVerified: boolean;
+          supportEmail: string;
+          isSupportEmailVerified: boolean;
+          organizationAppAccessible: boolean;
+        };
+      };
+    };
+  };
+}
+
+function GetInvitationPreRequisite(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ua/customer/invite/pre-requisite',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
 
 ### Invite Customer to Platform
 
@@ -4078,6 +5726,94 @@ function AssignCustomerstoUser(): Promise<Responses> {
         }
       }
     }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Share Customer with Users
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/user/customer/share" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Share access to a Customer with one or more users in the Organization.
+
+| Request Schema |  |
+| ---- | --- |
+| `owIds` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs to share |
+| `uowIds` <br /><span class="type-text">array of integers</span> | User Organization Workspace IDs to grant access |
+| `logInAccessOwIds` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs to grant login access |
+| `removeLogInAccessOwIds` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs to remove login access from |
+| `removeOwIds` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs to remove access from |
+| `isLogInAccess` <br /><span class="type-text">boolean</span> | Whether the user has login access |
+| `isCustomerAccess` <br /><span class="type-text">boolean</span> | Whether the user has customer access |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "owIds": [12345],
+  "uowIds": [67890],
+  "isLogInAccess": false,
+  "isCustomerAccess": true
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Customer shared successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function ShareCustomerWithUsers(body: {
+  owIds?: number[];
+  uowIds?: number[];
+  logInAccessOwIds?: number[];
+  removeLogInAccessOwIds?: number[];
+  removeOwIds?: number[];
+  isLogInAccess?: boolean;
+  isCustomerAccess?: boolean;
+}): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/user/customer/share',
+    data: body,
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
@@ -5697,6 +7433,14 @@ Fetches the available statuses for user entities within organizations and worksp
 <td> `3`</td>
 <td>Invited</td>
 </tr>
+<tr>
+<td> `4`</td>
+<td>Suspended</td>
+</tr>
+<tr>
+<td> `5`</td>
+<td>Deleted</td>
+</tr>
 </table>
 
 </div><div class="child2">
@@ -5709,22 +7453,34 @@ Fetches the available statuses for user entities within organizations and worksp
     "success": true,
     "data": [
         {
-            "name": "active",
-            "id": 1,
-            "label": "Active",
-            "order": 1
-        },
-        {
-            "name": "pending",
             "id": 2,
-            "label": "Pending",
-            "order": 2
+            "name": "pending",
+            "order": 1,
+            "label": "Pending"
         },
         {
-            "name": "invited",
+            "id": 1,
+            "name": "active",
+            "order": 2,
+            "label": "Active"
+        },
+        {
             "id": 3,
-            "label": "Invited",
-            "order": 3
+            "name": "invited",
+            "order": 3,
+            "label": "Invited"
+        },
+        {
+            "id": 4,
+            "name": "suspended",
+            "order": 4,
+            "label": "Suspended"
+        },
+        {
+            "id": 5,
+            "name": "deleted",
+            "order": 5,
+            "label": "Deleted"
         }
     ]
 }
