@@ -4619,21 +4619,7 @@ const sidebars = {
               href: '/guidelines/user-api#verify-mfa-code',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Enable MFA',
-              href: '/guidelines/user-api#enable-mfa',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Disable MFA',
-              href: '/guidelines/user-api#disable-mfa',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
+            }
           ]
         },
         {
@@ -4718,6 +4704,20 @@ const sidebars = {
               customProps: { method: 'PUT' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Enable MFA',
+              href: '/guidelines/user-api#enable-mfa',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Disable MFA',
+              href: '/guidelines/user-api#disable-mfa',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            }
           ]
         },
         {
@@ -4861,6 +4861,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'User Interaction Events',
+              href: '/guidelines/workspace-api#get-list-of-user-interaction-events',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Upsert Interaction Event',
+              href: '/guidelines/workspace-api#upsert-interaction-event',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -4880,6 +4894,55 @@ const sidebars = {
               label: 'Update Organization Email',
               href: '/guidelines/workspace-api#update-organization-email',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Admin User List',
+              href: '/guidelines/workspace-api#get-list-of-admin-users',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            }
+          ]
+        },
+        {
+          type: `category`,
+          label: `Whitelabel Settings`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Get Whitelabel Settings',
+              href: '/guidelines/workspace-api#get-whitelabel-settings',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Whitelabel Settings',
+              href: '/guidelines/workspace-api#update-whitelabel-settings',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Whitelabel Domain',
+              href: '/guidelines/workspace-api#add-whitelabel-domain',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Verify Whitelabel Domain',
+              href: '/guidelines/workspace-api#verify-whitelabel-domain',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Whitelabel Pixel URL',
+              href: '/guidelines/workspace-api#add-whitelabel-pixel-url',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -4915,6 +4978,41 @@ const sidebars = {
               label: 'List of Workspaces',
               href: '/guidelines/workspace-api#get-list-of-workspaces',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Workspace Initialization Details',
+              href: '/guidelines/workspace-api#get-workspace-initialization-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Workspace Organization Logo',
+              href: '/guidelines/workspace-api#get-workspace-organization-logo',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Workspace Chatbot App ID',
+              href: '/guidelines/workspace-api#get-workspace-chatbot-app-id',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Workspace Chatbot App ID by Domain',
+              href: '/guidelines/workspace-api#get-workspace-chatbot-app-id-by-domain',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Find My Workspace Email',
+              href: '/guidelines/workspace-api#send-find-my-workspace-email',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
@@ -5015,9 +5113,30 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Allowed Customer OW IDs',
+              href: '/guidelines/workspace-api#get-allowed-customer-ow-ids',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'List of Remaining Apps for Customer',
               href: '/guidelines/workspace-api#get-list-of-remaining-apps-for-customer',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Remaining Applications for User',
+              href: '/guidelines/workspace-api#get-remaining-applications-for-user',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Metabase Client Credentials',
+              href: '/guidelines/workspace-api#get-metabase-client-credentials',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
