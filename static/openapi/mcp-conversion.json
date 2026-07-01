@@ -2323,50 +2323,488 @@
           }
         }
       }
+    },
+    "/api/v3/conversion/universal-pixel/send-email": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Send Email for Universal Pixel Integration.",
+        "description": "Sends an email containing the Universal Pixel script tag and conversion details to one or more recipients.\nThe email subject and greeting text are fully customisable by the caller.\n\n---\n\n#### Request Body Detail\n\n| **Field**       | **Type** | **Required** | **Description**                                                                 | **Validation**                               |\n|-----------------|----------|--------------|---------------------------------------------------------------------------------|----------------------------------------------|\n| conversionId    | Integer  | Required     | ID of the Universal Pixel conversion whose script tag is to be shared.          | Must be ≥ 1 and owned by the caller's owId. |\n| recipients      | String   | Required     | Comma-separated list of recipient email addresses.                              | Each address must be a valid email format.   |\n| emailSubject    | String   | Required     | Subject line for the outgoing email.                                            | Must not be blank.                           |\n| emailText       | String   | Optional     | Opening greeting text rendered in the email body (supports `${userName}` token).| —                                            |\n\n---\n\n#### Notes\n\n- The Universal Pixel feature must be enabled for the caller's organisation (`isUniversalPixelEnabled`).\n- `owId` and `uowId` are resolved from the authenticated session; do **not** pass them in the request body.\n",
+        "operationId": "universal-pixel-send-email",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PixelEmailRequestVO"
+              },
+              "examples": {
+                "Request payload for sending a Universal Pixel integration email": {
+                  "description": "Request payload for sending a Universal Pixel integration email",
+                  "value": {
+                    "conversionId": 3300,
+                    "recipients": "developer@example.com,partner@example.com",
+                    "emailSubject": "Integrate Universal Pixel Conversion",
+                    "emailText": "Hello ${userName} has sent you a Universal Pixel code to integrate. Please follow the steps below."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "examples": {
+                  "Email dispatched successfully": {
+                    "description": "Email dispatched successfully",
+                    "value": {
+                      "success": true,
+                      "data": "Universal Pixel conversion e-mail sent successfully."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid conversion ID": {
+                    "description": "Invalid conversion ID",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid conversion id."
+                        }
+                      ]
+                    }
+                  },
+                  "Blank email subject": {
+                    "description": "Blank email subject",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Email subject cannot be null/blank."
+                        }
+                      ]
+                    }
+                  },
+                  "Blank recipients": {
+                    "description": "Blank recipients",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "recipients can not be null or empty."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/universal-pixel/add": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Create a Universal Pixel type Conversion.",
+        "description": "Creates a new Universal Pixel type conversion and returns the full conversion record.\nUse this endpoint to set up a universal-pixel-based conversion that tracks user actions via a JavaScript snippet embedded on a webpage.\n\n---\n\n#### Request Body Detail\n\n| **Field**                                        | **Type**  | **Required** | **Description**                                                                                         | **Validation / Notes**                                                  |\n|--------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|\n| name                                             | String    | Required     | Display name for the conversion.                                                                        | 3–255 characters, not blank.                                            |\n| attributionId                                    | Integer   | Required     | Attribution model for this conversion.                                                                  | `1` = HYBRID, `2` = CLICK_BASED, `3` = VIEW_BASED. Must be a valid id. |\n| conversionSetting                                | Object    | Required     | Advanced settings for the conversion.                                                                   | Must not be null.                                                       |\n| conversionSetting.conversionDuration             | Object    | Required     | Post-view and post-click attribution window durations.                                                  | Must not be null.                                                       |\n| conversionSetting.conversionDuration.view        | Integer   | Optional     | Post-view attribution window in days.                                                                   | 1–30. Overridden to system default when `attributionId` = CLICK_BASED. |\n| conversionSetting.conversionDuration.click       | Integer   | Optional     | Post-click attribution window in days.                                                                  | 7–60. Overridden to system default when `attributionId` = VIEW_BASED.  |\n| conversionSetting.repeatConversion               | Object    | Required     | Controls how repeated conversions from the same user are counted.                                       | Must not be null.                                                       |\n| conversionSetting.repeatConversion.count         | Integer   | Required     | Maximum number of repeat conversions to count per user.                                                 | Not null.                                                               |\n| conversionSetting.repeatConversion.frequency     | Integer   | Required     | Frequency interval for repeat conversion counting.                                                      | Not null.                                                               |\n| conversionSetting.repeatConversion.unit          | String    | Required     | Time unit for the repeat frequency window.                                                              | Not blank. e.g. `\"Day\"`, `\"Hour\"`.                                      |\n| conversionSetting.crossModelling                 | Boolean   | Optional     | Whether cross-device modelling is enabled for attribution.                                              | Defaults to `false`.                                                    |\n\n---\n\n#### Defaults applied automatically\n\n- `status` is always set to **Pending** on creation.\n- `type` is always set to **Universal Pixel**.\n- A unique `uuid` is auto-generated and assigned.\n- `owId`, `createdByUowId`, and `modifiedByUowId` are resolved from the authenticated session.\n- After a successful insert, a data-sync event (`CREATE_UNIVERSAL_PIXEL_CONVERSION`) is dispatched to downstream systems.\n",
+        "operationId": "universal-pixel-conversion-add",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UniversalPixelVO"
+              },
+              "examples": {
+                "Request payload for creating a Universal Pixel Conversion": {
+                  "description": "Request payload for creating a Universal Pixel Conversion",
+                  "value": {
+                    "name": "UniversalPixelConversion",
+                    "attributionId": 1,
+                    "conversionSetting": {
+                      "conversionDuration": {
+                        "view": 10,
+                        "click": 10
+                      },
+                      "repeatConversion": {
+                        "count": 1,
+                        "frequency": 1,
+                        "unit": "Day"
+                      },
+                      "crossModelling": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UniversalPixelConversionCreationResponse"
+                },
+                "examples": {
+                  "Response for successful Universal Pixel Conversion creation": {
+                    "description": "Response for successful Universal Pixel Conversion creation",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 3300,
+                        "name": "UniversalPixelConversion",
+                        "status": "Pending",
+                        "type": "Universal Pixel",
+                        "created_at": 1687459918,
+                        "totalConversions": 0,
+                        "owId": 202017,
+                        "createdByUowId": 108658,
+                        "modifiedByUowId": 108658,
+                        "uuid": "d3f2a1b0-c514-44ee-ab2d-7321fa6dbc90",
+                        "attributedConversions": 0,
+                        "attributedViewThroughConversions": 0,
+                        "attributedClickThroughConversions": 0,
+                        "campaignCount": 0,
+                        "pixelConversionScript": "<script src='https://pxl.stage.iqm.com/i/pixel/d3f2a1b0?cv={CONVERSION_VALUE}' async></script>"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid attribution ID": {
+                    "description": "Invalid attribution ID",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid attribution id"
+                        }
+                      ]
+                    }
+                  },
+                  "Invalid conversion name length": {
+                    "description": "Invalid conversion name length",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Conversion name must be between 3 and 255 characters"
+                        }
+                      ]
+                    }
+                  },
+                  "Missing conversion setting": {
+                    "description": "Missing conversion setting",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "There should be conversion setting present."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/conversion/universal-pixel/update": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update the name of an existing Universal Pixel Conversion.",
+        "description": "Partially updates a Universal Pixel conversion record — currently supports renaming only.\nUse this endpoint when the user needs to change the display name of an existing Universal Pixel conversion.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type**   | **Required** | **Description**                                                      | **Validation**                         |\n|-----------|------------|--------------|----------------------------------------------------------------------|----------------------------------------|\n| id        | Integer    | Required     | Unique identifier of the Universal Pixel conversion to be updated.   | Must refer to a valid conversion owned by the caller's `owId`. |\n| name      | String     | Required     | New display name for the conversion.                                 | Must be 3–255 characters, not blank.   |\n",
+        "operationId": "universal-pixel-conversion-update",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "example": 1,
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConversionVO"
+              },
+              "examples": {
+                "Request payload for renaming a Universal Pixel Conversion": {
+                  "description": "Request payload for renaming a Universal Pixel Conversion",
+                  "value": {
+                    "id": 3300,
+                    "name": "My Renamed Universal Pixel Conversion"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateConversionResponse"
+                },
+                "examples": {
+                  "Response for successful Universal Pixel Conversion update": {
+                    "description": "Response for successful Universal Pixel Conversion update",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 3300,
+                        "name": "My Renamed Universal Pixel Conversion"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid conversion ID": {
+                    "description": "Invalid conversion ID",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid conversion id"
+                        }
+                      ]
+                    }
+                  },
+                  "Blank or missing name": {
+                    "description": "Blank or missing name",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Conversion name must be between 3 and 255 characters"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "CustomFieldRequestVO": {
-        "type": "object",
-        "properties": {
-          "sortCriteriaMap": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "pageNo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "noOfEntries": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sortBy": {
-            "type": "string"
-          },
-          "searchField": {
-            "type": "string"
-          },
-          "order": {
-            "type": "string",
-            "enum": [
-              "SortOrderEnum[id=1, name='asc', symbol='+']",
-              "SortOrderEnum[id=2, name='desc', symbol='-']"
-            ]
-          },
-          "owIds": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
       "PostbackDetailsVO": {
         "required": [
           "clickUrl",
@@ -3886,6 +4324,204 @@
           }
         },
         "description": "Basic details of Campaign"
+      },
+      "UniversalPixelVO": {
+        "required": [
+          "conversionSetting",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conversion name",
+            "example": "My Conversion"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Conversion UUID",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "typeId": {
+            "type": "integer",
+            "description": "Conversion type ID",
+            "format": "int32",
+            "example": 1
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization workspace ID",
+            "format": "int32",
+            "example": 101010
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "Created by user organization workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "Modified by user organization workspace ID",
+            "format": "int32",
+            "example": 202020
+          },
+          "statusId": {
+            "type": "integer",
+            "description": "Status ID",
+            "format": "int32",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "ACTIVE"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Created timestamp",
+            "format": "int64",
+            "example": 1622547800000
+          },
+          "postbackPartnerId": {
+            "type": "integer",
+            "description": "Postback partner ID",
+            "format": "int32",
+            "example": 1
+          },
+          "attributionId": {
+            "type": "integer",
+            "description": "Unique identifier for the attribution associated with this universal pixel conversion",
+            "format": "int32",
+            "example": 1,
+            "enum": [1, 2, 3]
+          },
+          "pixelConversionScript": {
+            "type": "string",
+            "description": "JavaScript code snippet for the universal pixel conversion",
+            "example": "<script>/* Pixel code here */</script>"
+          },
+          "conversionSetting": {
+            "$ref": "#/components/schemas/ConversionSettingVO"
+          }
+        },
+        "description": "UniversalPixelVO represents the details of a universal pixel conversion, including attribution ID, conversion script, and associated conversion settings."
+      },
+      "UniversalPixelConversionCreationResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/UniversalPixelConversionListResponseVO"
+          }
+        }
+      },
+      "UniversalPixelConversionListResponseVO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Conversion ID",
+            "format": "int32",
+            "example": 12345
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the conversion",
+            "example": "Purchase Conversion"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the conversion",
+            "example": "Active"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the conversion",
+            "example": "Universal Pixel"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Timestamp (epoch seconds) when the conversion was created",
+            "format": "int64",
+            "example": 1627847261
+          },
+          "totalConversions": {
+            "type": "integer",
+            "description": "Total number of conversions recorded",
+            "format": "int32",
+            "example": 150
+          },
+          "owId": {
+            "type": "integer",
+            "description": "Organization workspace ID that owns this conversion",
+            "format": "int32",
+            "example": 203123
+          },
+          "createdByUowId": {
+            "type": "integer",
+            "description": "User workspace ID of the user who created this conversion",
+            "format": "int32",
+            "example": 456789
+          },
+          "modifiedByUowId": {
+            "type": "integer",
+            "description": "User workspace ID of the user who last modified this conversion",
+            "format": "int32",
+            "example": 456789
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Universally unique identifier for this conversion",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "attributedConversions": {
+            "type": "integer",
+            "description": "Total number of attributed conversions",
+            "format": "int32",
+            "example": 100
+          },
+          "attributedViewThroughConversions": {
+            "type": "integer",
+            "description": "Number of attributed view-through conversions",
+            "format": "int32",
+            "example": 50
+          },
+          "attributedClickThroughConversions": {
+            "type": "integer",
+            "description": "Number of attributed click-through conversions",
+            "format": "int32",
+            "example": 50
+          },
+          "campaignCount": {
+            "type": "integer",
+            "description": "Number of campaigns associated with this conversion",
+            "format": "int32",
+            "example": 10
+          },
+          "pixelConversionScript": {
+            "type": "string",
+            "description": "JavaScript pixel tag script used for tracking this conversion",
+            "example": "<script>...</script>"
+          }
+        },
+        "description": "UniversalPixelConversionListResponseVO represents the response structure for a universal pixel conversion record."
       }
     }
   }
