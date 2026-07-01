@@ -13,9 +13,10 @@ import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 
 The Conversions API allows you to create and manage Conversions to track user traffic for advertising Campaigns. 
 
-This page covers the common endpoints and methods associated with the Conversions API. The IQM platform supports two types of Conversions:
+This page covers the common endpoints and methods associated with the Conversions API. The IQM platform supports three types of Conversions:
   * **Pixel** Conversions are client-side tracking and they feature advanced settings for fine-tuned optimization.
-  * **Postback** Conversions are server-side.
+  * **Postback** Conversions use server-to-server tracking, sending conversion data directly from your server to IQM without relying on browser-based JavaScript or cookies.
+  * **Universal Pixel** Conversions are client-side and use a single JavaScript snippet that can track multiple conversion events across your site without deploying separate per-page pixels.
 
 ### More Resources
   * [Create a Conversion](/tutorials/create-a-conversion/) Tutorial
@@ -1150,213 +1151,6 @@ function getAttachableCampaignListByConversionIds(): Promise<Responses> {
 
 ## Conversions Management
 
-### Create Postback Conversion
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/conversion/postback/add" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Create postback type Conversion records.
-
-| Request Schema |  |
-| ---- | --- |
-| `name` <br /><span class="type-text">string</span> | Name for postback Conversion |
-| `partnerTypeId` <br /><span class="type-text">string</span> | [Partner Type ID](#get-list-of-partner-types-for-postback-conversions) |
-| `impressionsUrl` <br /><span class="type-text">string</span> | Impressions URL |
-| `clickUrl` <br /><span class="type-text">string</span>| Click URL |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response Properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`id` <br /><span class="type-text">integer</span></td>
-<td>Conversion ID</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Conversion name</td>
-</tr>
-<tr>
-  <td>`partnerName` <br /><span class="type-text">string</span></td>
-  <td>Postback partner name</td>
-</tr>
-<tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Conversion status</td>
-</tr>
-<tr>
-  <td>`type` <br /><span class="type-text">string</span></td>
-  <td>Conversion type</td>
-</tr>
-<tr>
-  <td>`created` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
-</tr>
-<tr>
-  <td>`totalConversions` <br /><span class="type-text">integer</span></td>
-  <td>Total Conversions count</td>
-</tr>
-<tr>
-  <td>`owID` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Created by User Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`modifiedByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Modified by User Organization Workspace ID</td>
-</tr>
-<tr>
-  <td>`uuid` <br /><span class="type-text">integer</span></td>
-  <td>Universally Unique Identifier</td>
-</tr>
-<tr>
-  <td>`attributedConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of Conversions that are attributed to a specific Campaign based on the Attribution model</td>
-</tr>
-<tr>
-  <td style={{ fontSize: "85%" }}>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of Conversions that occurred after a user viewed an ad but did not click on it</td>
-</tr>
-<tr>
-  <td style={{ fontSize: "85%" }}>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of Conversions that occurred after a user clicked on an ad</td>
-</tr>
-<tr>
-  <td>`pixelFinancialMetric` <br /><span class="type-text">string</span></td>
-  <td>Pixel financial metric</td>
-</tr>
-<tr>
-  <td>`postbackPartnerLogoUrl` <br /><span class="type-text">string</span></td>
-  <td>Postback partner logo URL</td>
-</tr>
-<tr>
-  <td>`partnerUrl` <br /><span class="type-text">string</span></td>
-  <td>Partner URL</td>
-</tr>
-</table>
-
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-    "name": "testing postback",
-    "partnerTypeId": "1",
-    "impressionUrl": "https://imp.control.kochava.com/track/impression?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603",
-    "clickUrl": "https://control.kochava.com/v1/cpi/click?campaign_id?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603"
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "id": 3215,
-        "name": "testing postback",
-        "partnerName": null,
-        "status": "Active",
-        "type": "Postback",
-        "created": 1687460629,
-        "totalConversions": 0,
-        "owId": 202017,
-        "createdByUowId": 108658,
-        "modifiedByUowId": 108658,
-        "uuid": "879127abaab7459585b602b1f25dec41",
-        "attributedConversions": 0,
-        "attributedViewThroughConversions": 0,
-        "attributedClickThroughConversions": 0,
-        "pixelFinancialMetric": null,
-        "postbackPartnerLogoURL": "http://partnerUrl/partnerName",
-        "partnerUrl": "http://partnerUrl/partnerName"
-    }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          name: string;
-          partnerName: string;
-          status: string;
-          type: string;
-          created: number;
-          totalConversions: number;
-          owId: number;
-          createdByUowId: number;
-          modifiedByUowId: number;
-          uuid: string;
-          attributedConversions: number;
-          attributedViewThroughConversion: number;
-          attributedClickThroughConversions: number;
-          pixelFinancialMetric: null;
-          postbackPartnerLogoURL: string;
-          partnerUrl: string;
-        }
-      }
-    };
-  };
-};
-
-function addPostbackConversion(): Promise<Responses> {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/conversion/postback/add',
-    requestBody: {
-      content: {
-        "application/json": {
-          id?: `number`,
-          name: `string`,
-          uuid?: `string`,
-          typeId?: `number`,
-          owId?: `number`,
-          createdByUowId?: `number`,
-          modifiedByUowId?: `number`,
-          statusId?: `number`,
-          status?: `string`,
-          created?: `number`,
-          partnerTypeId?: `number`,
-          impressionUrl: `string`,
-          clickUrl: `string`,
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
 ### Create Pixel Conversion
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/conversion/pixel/add" />
@@ -1605,189 +1399,6 @@ function addPixelConversion(): Promise<Responses> {
 
 ---
 
-### Delete Conversion
-
-<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/conversion/delete" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Delete one or multiple Conversions. 
-
-| Query Parameters  |  |
-| ----  | --- |
-| `conversionIds` <br /><span class="type-text">string</span> | Comma separated [Conversion ID](#get-list-of-conversions)s to delete|
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-       <tr>
-    <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates Conversion was succesfully deleted: <var>true</var></td>
-    </tr>
-        <tr>
-    <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": "Conversion has been deleted successfully!"
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string;
-      }
-    };
-  };
-};
-
-function deleteConversions(): Promise<Responses> {
-  const options = {
-    method: 'DELETE',
-    url: 'https://api.iqm.com/api/v3/conversion/delete',
-    params: {
-      query: {
-        conversionIds: `string`
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
-### Update Postback Conversion
-
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/conversion/postback/update" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Update the name of a postback type Conversion.
-
-| Request Schema  | |
-| ---- | --- |
-| `id` <br /><span class="type-text">string</span> | Postback [Conversion ID](#get-list-of-conversions) |
-| `name` <br /><span class="type-text">string</span> | New postback Conversion name |
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-       <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Conversion ID</td>
-    </tr>
-        <tr>
-    <td>`name` <br /><span class="type-text">string</span></td>
-    <td>Updated Conversion name</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request Sample"
-{
-    "id": "3114",
-    "name": "Postback Conversion Update testing"
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "id": 3114,
-        "name": "Postback Conversion Update testing"
-    }
-}
-```
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          id: number;
-          name: string;
-        }
-      }
-    };
-  };
-};
-
-function updateConversion(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/conversion/postback/update',
-    requestBody: {
-      content: {
-        "application/json": {
-          id?: `number`,
-          name: `string`,
-        }
-      }
-    }
-  };
-  
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
 ### Update Pixel Conversion
 
 <CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/conversion/pixel/update" />
@@ -1914,6 +1525,776 @@ function updateConversion_1(): Promise<Responses> {
             type?: `number`,
           }
         }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create Postback Conversion
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/conversion/postback/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create postback type Conversion records.
+
+| Request Schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> | Name for postback Conversion |
+| `partnerTypeId` <br /><span class="type-text">string</span> | [Partner Type ID](#get-list-of-partner-types-for-postback-conversions) |
+| `impressionsUrl` <br /><span class="type-text">string</span> | Impressions URL |
+| `clickUrl` <br /><span class="type-text">string</span>| Click URL |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`id` <br /><span class="type-text">integer</span></td>
+<td>Conversion ID</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Conversion name</td>
+</tr>
+<tr>
+  <td>`partnerName` <br /><span class="type-text">string</span></td>
+  <td>Postback partner name</td>
+</tr>
+<tr>
+  <td>`status` <br /><span class="type-text">string</span></td>
+  <td>Conversion status</td>
+</tr>
+<tr>
+  <td>`type` <br /><span class="type-text">string</span></td>
+  <td>Conversion type</td>
+</tr>
+<tr>
+  <td>`created` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds</td>
+</tr>
+<tr>
+  <td>`totalConversions` <br /><span class="type-text">integer</span></td>
+  <td>Total Conversions count</td>
+</tr>
+<tr>
+  <td>`owID` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+  <td>Created by User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`modifiedByUowId` <br /><span class="type-text">integer</span></td>
+  <td>Modified by User Organization Workspace ID</td>
+</tr>
+<tr>
+  <td>`uuid` <br /><span class="type-text">integer</span></td>
+  <td>Universally Unique Identifier</td>
+</tr>
+<tr>
+  <td>`attributedConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that are attributed to a specific Campaign based on the Attribution model</td>
+</tr>
+<tr>
+  <td style={{ fontSize: "85%" }}>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user viewed an ad but did not click on it</td>
+</tr>
+<tr>
+  <td style={{ fontSize: "85%" }}>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
+  <td>The number of Conversions that occurred after a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`pixelFinancialMetric` <br /><span class="type-text">string</span></td>
+  <td>Pixel financial metric</td>
+</tr>
+<tr>
+  <td>`postbackPartnerLogoUrl` <br /><span class="type-text">string</span></td>
+  <td>Postback partner logo URL</td>
+</tr>
+<tr>
+  <td>`partnerUrl` <br /><span class="type-text">string</span></td>
+  <td>Partner URL</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "name": "testing postback",
+    "partnerTypeId": "1",
+    "impressionUrl": "https://imp.control.kochava.com/track/impression?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603",
+    "clickUrl": "https://control.kochava.com/v1/cpi/click?campaign_id?campaign_id=kodragons-blade-1svu3szpd4b2be3253705&network_id=3603"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 3215,
+        "name": "testing postback",
+        "partnerName": null,
+        "status": "Active",
+        "type": "Postback",
+        "created": 1687460629,
+        "totalConversions": 0,
+        "owId": 202017,
+        "createdByUowId": 108658,
+        "modifiedByUowId": 108658,
+        "uuid": "879127abaab7459585b602b1f25dec41",
+        "attributedConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "attributedClickThroughConversions": 0,
+        "pixelFinancialMetric": null,
+        "postbackPartnerLogoURL": "http://partnerUrl/partnerName",
+        "partnerUrl": "http://partnerUrl/partnerName"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          partnerName: string;
+          status: string;
+          type: string;
+          created: number;
+          totalConversions: number;
+          owId: number;
+          createdByUowId: number;
+          modifiedByUowId: number;
+          uuid: string;
+          attributedConversions: number;
+          attributedViewThroughConversion: number;
+          attributedClickThroughConversions: number;
+          pixelFinancialMetric: null;
+          postbackPartnerLogoURL: string;
+          partnerUrl: string;
+        }
+      }
+    };
+  };
+};
+
+function addPostbackConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/conversion/postback/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          name: `string`,
+          uuid?: `string`,
+          typeId?: `number`,
+          owId?: `number`,
+          createdByUowId?: `number`,
+          modifiedByUowId?: `number`,
+          statusId?: `number`,
+          status?: `string`,
+          created?: `number`,
+          partnerTypeId?: `number`,
+          impressionUrl: `string`,
+          clickUrl: `string`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Postback Conversion
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/conversion/postback/update" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the name of a postback type Conversion.
+
+| Request Schema  | |
+| ---- | --- |
+| `id` <br /><span class="type-text">string</span> | Postback [Conversion ID](#get-list-of-conversions) |
+| `name` <br /><span class="type-text">string</span> | New postback Conversion name |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+       <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Conversion ID</td>
+    </tr>
+        <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Updated Conversion name</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "id": "3114",
+    "name": "Postback Conversion Update testing"
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 3114,
+        "name": "Postback Conversion Update testing"
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+        }
+      }
+    };
+  };
+};
+
+function updateConversion(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/conversion/postback/update',
+    requestBody: {
+      content: {
+        "application/json": {
+          id?: `number`,
+          name: `string`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Create a Universal Pixel Conversion
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/conversion/universal-pixel/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a Universal Pixel type Conversion. The status is set to **Pending** and a unique UUID is auto-generated on creation.
+
+<table>
+<tr>
+<th>Request Schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Display name for the Conversion (3–255 characters)</td>
+</tr>
+<tr>
+  <td>`attributionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Attribution Type ID](#get-list-of-conversion-property-types)</td>
+</tr>
+<tr>
+  <td>`conversionSetting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Advanced settings for the Conversion</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`conversionSetting` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`conversionDuration` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+        <td>Post-view and post-click attribution window durations</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`conversionDuration` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`view` <br /><span class="type-text">integer</span></td>
+              <td>Post-view attribution window in days (1–30) <br />Overridden to system default when <var>attributionId</var> is Click-based</td>
+            </tr>
+            <tr>
+              <td>`click` <br /><span class="type-text">integer</span></td>
+              <td>Post-click attribution window in days (7–60) <br />Overridden to system default when <var>attributionId</var> is View-based</td>
+            </tr>
+          </table>
+          </details>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>`repeatConversion` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+        <td>Controls how repeated conversions from the same user are counted</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`repeatConversion` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`count` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Maximum number of repeat conversions to count per user</td>
+            </tr>
+            <tr>
+              <td>`frequency` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+              <td>Frequency interval for repeat conversion counting</td>
+            </tr>
+            <tr>
+              <td>`unit` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+              <td>Time unit for the repeat frequency window (e.g. <var>Day</var>, <var>Hour</var>)</td>
+            </tr>
+          </table>
+          </details>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>`crossModelling` <br /><span class="type-text">boolean</span></td>
+        <td>Whether cross-device modelling is enabled for attribution, default: <var>false</var></td>
+      </tr>
+    </table>
+    </details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Conversion ID</td>
+  </tr>
+  <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Conversion name</td>
+  </tr>
+  <tr>
+    <td>`status` <br /><span class="type-text">string</span></td>
+    <td>Conversion status (always <var>Pending</var> on creation)</td>
+  </tr>
+  <tr>
+    <td>`type` <br /><span class="type-text">string</span></td>
+    <td>Conversion type (always <var>Universal Pixel</var>)</td>
+  </tr>
+  <tr>
+    <td>`created_at` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch timestamp of creation, in seconds</td>
+  </tr>
+  <tr>
+    <td>`totalConversions` <br /><span class="type-text">integer</span></td>
+    <td>Total Conversions count</td>
+  </tr>
+  <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
+    <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+    <td>Created by User Organization Workspace ID</td>
+  </tr>
+  <tr>
+    <td>`modifiedByUowId` <br /><span class="type-text">integer</span></td>
+    <td>Modified by User Organization Workspace ID</td>
+  </tr>
+  <tr>
+    <td>`uuid` <br /><span class="type-text">string</span></td>
+    <td>Universally Unique Identifier</td>
+  </tr>
+  <tr>
+    <td>`attributedConversions` <br /><span class="type-text">integer</span></td>
+    <td>Number of Conversions attributed to a Campaign based on the attribution model</td>
+  </tr>
+  <tr>
+    <td style={{ fontSize: "85%" }}>`attributedViewThroughConversions` <br /><span class="type-text">integer</span></td>
+    <td>Number of Conversions that occurred after a user viewed an ad but did not click</td>
+  </tr>
+  <tr>
+    <td style={{ fontSize: "85%" }}>`attributedClickThroughConversions` <br /><span class="type-text">integer</span></td>
+    <td>Number of Conversions that occurred after a user clicked an ad</td>
+  </tr>
+  <tr>
+    <td>`campaignCount` <br /><span class="type-text">integer</span></td>
+    <td>Number of Campaigns this Conversion is assigned to</td>
+  </tr>
+  <tr>
+    <td>`pixelConversionScript` <br /><span class="type-text">string</span></td>
+    <td>JavaScript snippet to embed on your webpage for this Universal Pixel Conversion</td>
+  </tr>
+  </table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "name": "UniversalPixelConversion",
+  "attributionId": 1,
+  "conversionSetting": {
+    "conversionDuration": {
+      "view": 10,
+      "click": 10
+    },
+    "repeatConversion": {
+      "count": 1,
+      "frequency": 1,
+      "unit": "Day"
+    },
+    "crossModelling": true
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 3300,
+    "name": "UniversalPixelConversion",
+    "status": "Pending",
+    "type": "Universal Pixel",
+    "created_at": 1687459918,
+    "totalConversions": 0,
+    "owId": 202017,
+    "createdByUowId": 108658,
+    "modifiedByUowId": 108658,
+    "uuid": "d3f2a1b0-c514-44ee-ab2d-7321fa6dbc90",
+    "attributedConversions": 0,
+    "attributedViewThroughConversions": 0,
+    "attributedClickThroughConversions": 0,
+    "campaignCount": 0,
+    "pixelConversionScript": "<script src='https://pxl.stage.iqm.com/i/pixel/d3f2a1b0?cv={CONVERSION_VALUE}' async></script>"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          status: string;
+          type: string;
+          created_at: number;
+          totalConversions: number;
+          owId: number;
+          createdByUowId: number;
+          modifiedByUowId: number;
+          uuid: string;
+          attributedConversions: number;
+          attributedViewThroughConversions: number;
+          attributedClickThroughConversions: number;
+          campaignCount: number;
+          pixelConversionScript: string;
+        };
+      };
+    };
+  };
+}
+
+function addUniversalPixelConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/conversion/universal-pixel/add',
+    data: {
+      name: `string`,
+      attributionId: `number`,
+      conversionSetting: {
+        conversionDuration: {
+          view?: `number`,
+          click?: `number`,
+        },
+        repeatConversion: {
+          count: `number`,
+          frequency: `number`,
+          unit: `string`,
+        },
+        crossModelling?: `boolean`,
+      },
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update a Universal Pixel Conversion
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/conversion/universal-pixel/update" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the name of an existing Universal Pixel Conversion.
+
+<table>
+<tr>
+<th>Request Schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Conversion ID](#get-list-of-conversions) of the Universal Pixel Conversion to update</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>New display name (3–255 characters)</td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Conversion ID</td>
+  </tr>
+  <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Updated Conversion name</td>
+  </tr>
+  </table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "id": 3300,
+  "name": "My Renamed Universal Pixel Conversion"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 3300,
+    "name": "My Renamed Universal Pixel Conversion"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+        };
+      };
+    };
+  };
+}
+
+function updateUniversalPixelConversion(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/conversion/universal-pixel/update',
+    data: {
+      id: `number`,
+      name: `string`,
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Delete Conversion
+
+<CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/conversion/delete" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Delete one or multiple Conversions. 
+
+| Query Parameters  |  |
+| ----  | --- |
+| `conversionIds` <br /><span class="type-text">string</span> | Comma separated [Conversion ID](#get-list-of-conversions)s to delete|
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+       <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates Conversion was succesfully deleted: <var>true</var></td>
+    </tr>
+        <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "Conversion has been deleted successfully!"
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      }
+    };
+  };
+};
+
+function deleteConversions(): Promise<Responses> {
+  const options = {
+    method: 'DELETE',
+    url: 'https://api.iqm.com/api/v3/conversion/delete',
+    params: {
+      query: {
+        conversionIds: `string`
       }
     }
   };
@@ -2125,7 +2506,7 @@ Send an email containing information of integration pixel in html.
   "conversionId": "3114",
   "recipients": "username@gmail.com,anotherUser@yahoo.com",
   "emailSubject": "Integrate Pixel Conversion",
-  "emailText": "Hello ${userName} has sent you a pixel code to integrate. Please follow the steps below to integrate the pixel code."
+  "emailText": "Hello IQM has sent you a pixel code to integrate. Please follow the steps below to integrate the pixel code."
 }
 ```
 
@@ -2187,6 +2568,116 @@ function sendEmailForPixelConversion(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
+
+---
+
+### Send Email for Universal Pixel Integration
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/conversion/universal-pixel/send-email" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send an email containing the Universal Pixel script tag and integration instructions to one or more recipients.
+
+<table>
+<tr>
+<th>Request Schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`conversionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Conversion ID](#get-list-of-conversions) of the Universal Pixel Conversion to share</td>
+</tr>
+<tr>
+  <td>`recipients` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Comma-separated list of recipient email addresses</td>
+</tr>
+<tr>
+  <td>`emailSubject` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Subject line for the outgoing email</td>
+</tr>
+<tr>
+  <td>`emailText` <br /><span class="type-text">string</span></td>
+  <td>Opening greeting text rendered in the email body, supports the <var>$\{userName\}</var> token</td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+  <summary style={{fontSize: "16px"}}>Response Properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
+    <td>Success message confirming the email was dispatched</td>
+  </tr>
+  </table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "conversionId": 3300,
+  "recipients": "developer@example.com,partner@example.com",
+  "emailSubject": "Integrate Universal Pixel Conversion",
+  "emailText": "Hello ${userName} has sent you a Universal Pixel code to integrate. Please follow the steps below."
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": "Universal Pixel conversion e-mail sent successfully."
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string;
+      };
+    };
+  };
+}
+
+function sendEmailForUniversalPixelConversion(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/conversion/universal-pixel/send-email',
+    data: {
+      conversionId: `number`,
+      recipients: `string`,
+      emailSubject: `string`,
+      emailText?: `string`,
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
 
 ## More Conversion Details
 
@@ -2452,6 +2943,7 @@ Get a list and details of Conversion types.
 | --- | --- |
 | `1` | Pixel
 | `2` | Postback
+| `3` | Universal Pixel
 
 </div><div class="child2">
 
@@ -2460,27 +2952,34 @@ Get a list and details of Conversion types.
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data": {
-    "data": [
-        {
-          "id": 1,
-          "name": "pixel",
-          "displayName": "Pixel",
-          "order": 1,
-          "active": true
-        },
-        {
-          "id": 2,
-          "name": "postback",
-          "displayName": "Postback",
-          "order": 2,
-          "active": true
-        }
-    ],
-    "totalRecords": 2,
-    "filteredRecords": 2
-  }
+    "success": true,
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "name": "pixel",
+                "displayName": "Pixel",
+                "order": 1,
+                "isActive": true
+            },
+            {
+                "id": 2,
+                "name": "postback",
+                "displayName": "Postback",
+                "order": 2,
+                "isActive": true
+            },
+            {
+                "id": 3,
+                "name": "universalPixel",
+                "displayName": "Universal Pixel",
+                "order": 3,
+                "isActive": true
+            }
+        ],
+        "totalRecords": 3,
+        "filteredRecords": 3
+    }
 }
 ```
 

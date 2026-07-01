@@ -1990,13 +1990,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Create Postback Conversion',
-              href: '/guidelines/conversion-api#create-postback-conversion',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Pixel Conversion',
               href: '/guidelines/conversion-api#create-pixel-conversion',
               customProps: { method: 'POST' },
@@ -2004,9 +1997,16 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Delete Conversion',
-              href: '/guidelines/conversion-api#delete-conversion',
-              customProps: { method: 'DEL' },
+              label: 'Update Pixel Conversion',
+              href: '/guidelines/conversion-api#update-pixel-conversion',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Create Postback Conversion',
+              href: '/guidelines/conversion-api#create-postback-conversion',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -2018,9 +2018,23 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Update Pixel Conversion',
-              href: '/guidelines/conversion-api#update-pixel-conversion',
+              label: 'Create Universal Pixel Conversion',
+              href: '/guidelines/conversion-api#create-a-universal-pixel-conversion',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Update Universal Pixel Conversion',
+              href: '/guidelines/conversion-api#update-a-universal-pixel-conversion',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete Conversion',
+              href: '/guidelines/conversion-api#delete-conversion',
+              customProps: { method: 'DEL' },
               className: 'sidebarItem'
             },
             {
@@ -2034,6 +2048,13 @@ const sidebars = {
               type: 'link',
               label: 'Send Email for Pixel Integration',
               href: '/guidelines/conversion-api#send-email-for-pixel-integration',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Send Email for Universal Pixel Integration',
+              href: '/guidelines/conversion-api#send-email-for-universal-pixel-integration',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
