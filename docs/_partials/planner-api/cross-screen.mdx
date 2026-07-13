@@ -1,0 +1,297 @@
+import CopyUrl from '@site/src/components/CopyUrl';
+
+## Cross-Screen Planner Graph
+
+### Get Reach Saturation Graph
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/reach-saturation-graph" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Fetch cross-screen planner graph data based on the targeting and budgeting criteria provided, including a venn-diagram audience overlap breakdown and a line graph of linear TV and CTV reach over time.
+
+| Request Schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> | Plan name |
+| `objectiveId` <br /><span class="type-text">integer</span> | [Plan Objective ID](#get-plan-objectives) |
+| `totalBudget` <br /><span class="type-text">number</span> | Total plan budget |
+| `lastVisitedScreen` <br /><span class="type-text">string</span> | Last visited screen in plan creation |
+| `details` <br /><span class="type-text">object</span> | Plan details object (see [Plan Resource Properties](#political-planner-resource-properties)) |
+| `targeting` <br /><span class="type-text">object</span> | Targeting object, including `whiteListedLocation`, `ageGroupSegments`, `genderSegments`, `incomeRangeSegments`, and `ethnicitySegments` (see [Plan Resource Properties](#political-planner-resource-properties)) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`graphId` <br /><span class="type-text">string</span></td>
+  <td>Unique identifier for the generated graph</td>
+</tr>
+<tr>
+  <td>`overview` <br /><span class="type-text">object</span></td>
+  <td>Overview metrics</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`overview` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+  <td>Linear TV cost per thousand impressions</td>
+  </tr>
+  <tr>
+  <td>`ctvCpm` <br /><span class="type-text">number</span></td>
+  <td>CTV cost per thousand impressions</td>
+  </tr>
+  <tr>
+  <td>`grp` <br /><span class="type-text">number</span></td>
+  <td>Gross rating points</td>
+  </tr>
+  <tr>
+  <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
+  <td>Percentage of budget allocated to linear TV</td>
+  </tr>
+  </table></details>
+</td></tr>
+<tr>
+  <td>`audienceOverlap` <br /><span class="type-text">object</span></td>
+  <td>Venn-diagram audience overlap data</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`audienceOverlap` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`population` <br /><span class="type-text">integer</span></td>
+  <td>Total addressable population</td>
+  </tr>
+  <tr>
+  <td>`totalReach` <br /><span class="type-text">integer</span></td>
+  <td>Total combined reach</td>
+  </tr>
+  <tr>
+  <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV reach</td>
+  </tr>
+  <tr>
+  <td>`ctvReach` <br /><span class="type-text">integer</span></td>
+  <td>CTV reach</td>
+  </tr>
+  <tr>
+  <td>`overlapReach` <br /><span class="type-text">integer</span></td>
+  <td>Reach overlapping between linear TV and CTV</td>
+  </tr>
+  <tr>
+  <td>`ctvIncrementalReach` <br /><span class="type-text">integer</span></td>
+  <td>Incremental reach contributed by CTV</td>
+  </tr>
+  </table></details>
+</td></tr>
+<tr>
+  <td>`reachSaturation` <br /><span class="type-text">array of objects</span></td>
+  <td>Daily reach saturation data points</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`reachSaturation` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`day` <br /><span class="type-text">integer</span></td>
+  <td>Day number in the flight</td>
+  </tr>
+  <tr>
+  <td>`ctvReach` <br /><span class="type-text">integer</span></td>
+  <td>Cumulative CTV reach on this day</td>
+  </tr>
+  <tr>
+  <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+  <td>Cumulative linear TV reach on this day</td>
+  </tr>
+  <tr>
+  <td>`overallReach` <br /><span class="type-text">integer</span></td>
+  <td>Cumulative overall reach on this day</td>
+  </tr>
+  </table></details>
+</td></tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "name": "This is an example for request",
+  "objectiveId": 3,
+  "totalBudget": 1000000,
+  "lastVisitedScreen": "graph",
+  "details": {
+    "startDate": 1781244151000,
+    "endDate": 1791244151000,
+    "timezoneId": 29,
+    "frequencyCap": 3
+  },
+  "targeting": {
+    "whiteListedLocation": {
+      "country": 3010001,
+      "states": [2]
+    },
+    "ageGroupSegments": [6073147, 6073145, 6073146, 6073141, 6073144, 6073143, 6073142],
+    "genderSegments": [6189394, 6189395],
+    "incomeRangeSegments": [5999450, 5999451, 5999443, 5999448, 5999442, 5999446, 5999447, 5999449, 5999444, 5999445, 5999452, 5999453],
+    "ethnicitySegments": [6189388, 6189390, 6189391, 6189389, 6189392]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "graphId": "89c9639c44f05be2a3aaef9778fe6a24a04f441657172bba680ad66924a403fe",
+    "overview": {
+      "linearTvCpm": 20,
+      "ctvCpm": 7,
+      "grp": 180,
+      "linearTvPercentage": 50
+    },
+    "audienceOverlap": {
+      "population": 16780000,
+      "totalReach": 6820000,
+      "linearTvReach": 4350000,
+      "ctvReach": 3120000,
+      "overlapReach": 650000,
+      "ctvIncrementalReach": 2470000
+    },
+    "reachSaturation": [
+      { "day": 1, "ctvReach": 12, "linearTvReach": 14, "overallReach": 20 },
+      { "day": 2, "ctvReach": 24, "linearTvReach": 28, "overallReach": 54 },
+      { "day": 3, "ctvReach": 36, "linearTvReach": 32, "overallReach": 66 },
+      { "day": 4, "ctvReach": 48, "linearTvReach": 34, "overallReach": 78 },
+      { "day": 5, "ctvReach": 60, "linearTvReach": 34, "overallReach": 90 },
+      { "day": 6, "ctvReach": 72, "linearTvReach": 34, "overallReach": 112 },
+      { "day": 7, "ctvReach": 84, "linearTvReach": 34, "overallReach": 114 }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+## Demographics Segments
+
+### Get Demographics Keys
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/static/demographics-key" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get active demographics segment definitions used for cross-screen planning audience mapping (e.g. age, gender, income, and ethnicity groupings).
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Demographics key ID</td>
+</tr>
+<tr>
+  <td>`segmentId` <br /><span class="type-text">integer</span></td>
+  <td>Segment ID used for audience targeting</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Segment display name</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "segmentId": 10,
+      "name": "Age Group"
+    },
+    {
+      "id": 2,
+      "segmentId": 20,
+      "name": "Income Level"
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
+## Cross-Screen Proposal Management
+
+### Split Proposal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/split" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Split an existing Proposal across linear TV and CTV using the provided advanced targeting criteria.
+
+| Path Parameters |  |
+| ---- | --- |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Proposal ID](#get-list-of-proposals) to split |
+
+| Request Schema |  |
+| ---- | --- |
+| `splitTypeId` <br /><span class="type-text">integer</span> | [Split Type ID](#get-split-types) |
+| `locations` <br /><span class="type-text">array of integers</span> | [Targeting Type IDs](#get-targeting-types) for locations |
+| `devices` <br /><span class="type-text">array of integers</span> | [Device Type IDs](/guidelines/master-api/#get-device-type) |
+| `inventoryGroupIds` <br /><span class="type-text">array of integers</span> | [Inventory Group IDs](/guidelines/inventory-api/#get-inventory-groups-list) |
+| `audienceTypes` <br /><span class="type-text">array of integers</span> | Audience Type IDs |
+| `creatives` <br /><span class="type-text">array of integers</span> | [Creative Type IDs](/guidelines/creative-api/#get-creative-types-list) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>[Proposal ID](#get-list-of-proposals)</td>
+</tr>
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Confirmation message</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "advanced": {
+    "locations": [15]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 42,
+    "message": "Proposal updated successfully."
+  }
+}
+```
+
+</div></div>

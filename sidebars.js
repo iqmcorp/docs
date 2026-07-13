@@ -6115,6 +6115,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Download Plan',
+              href: '/political-vertical/planner#download-plan',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'List of Plans',
               href: '/political-vertical/planner#get-list-of-political-plans',
               customProps: { method: 'GET' },
@@ -6192,6 +6199,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Edit Plan Name',
+              href: '/political-vertical/planner#edit-plan-name',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Delete Plans',
               href: '/political-vertical/planner#delete-plans',
               customProps: { method: 'DEL' },
@@ -6209,6 +6223,13 @@ const sidebars = {
               label: 'Edit Proposal',
               href: '/political-vertical/planner#edit-proposal',
               customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Edit Proposal Name',
+              href: '/political-vertical/planner#edit-proposal-name',
+              customProps: { method: 'PATCH' },
               className: 'sidebarItem'
             },
             {
@@ -6307,6 +6328,34 @@ const sidebars = {
               label: 'Plan Objectives',
               href: '/political-vertical/planner#get-plan-objectives',
               customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Cross-Screen Planner',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Reach Saturation Graph',
+              href: '/political-vertical/planner#get-reach-saturation-graph',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Demographics Keys',
+              href: '/political-vertical/planner#get-demographics-keys',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Split Proposal',
+              href: '/political-vertical/planner#split-proposal',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]

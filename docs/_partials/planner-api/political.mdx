@@ -1,5 +1,6 @@
 import CopyUrl from '@site/src/components/CopyUrl';
 import Caret from '@site/static/img/caret.svg'
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 
 ## Political Proposal Planner Details
 
@@ -21,6 +22,36 @@ import Caret from '@site/static/img/caret.svg'
   <td>`objectiveId` <br /><span class="type-text">integer</span></td>
   <td>[Plan Objective ID](#get-plan-objectives)</td>
 </tr>
+<tr>
+  <td>`graphId` <br /><span class="type-text">string</span></td>
+  <td>Cross-screen graph ID (cross-screen plans only, see [Get Reach Saturation Graph](#get-reach-saturation-graph))</td>
+</tr>
+<tr>
+  <td>`overview` <br /><span class="type-text">object</span></td>
+  <td>Cross-screen overview metrics (cross-screen plans only)</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`overview` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+  <td>Linear TV cost per thousand impressions</td>
+  </tr>
+  <tr>
+  <td>`ctvCpm` <br /><span class="type-text">number</span></td>
+  <td>CTV cost per thousand impressions</td>
+  </tr>
+  <tr>
+  <td>`grp` <br /><span class="type-text">number</span></td>
+  <td>Gross rating points</td>
+  </tr>
+  <tr>
+  <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
+  <td>Percentage of budget allocated to linear TV</td>
+  </tr>
+  </table></details>
+</td></tr>
 <tr>
   <td>`totalBudget` <br /><span class="type-text">number</span></td>
   <td>Total plan budget</td>
@@ -214,6 +245,22 @@ import Caret from '@site/static/img/caret.svg'
   <td>Audience Segment IDs</td>
   </tr>
   <tr>
+  <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Age Group Segment IDs (cross-screen plans only, see [Get Demographics Keys](#get-demographics-keys))</td>
+  </tr>
+  <tr>
+  <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Gender Segment IDs (cross-screen plans only, see [Get Demographics Keys](#get-demographics-keys))</td>
+  </tr>
+  <tr>
+  <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Income Range Segment IDs (cross-screen plans only, see [Get Demographics Keys](#get-demographics-keys))</td>
+  </tr>
+  <tr>
+  <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Ethnicity Segment IDs (cross-screen plans only, see [Get Demographics Keys](#get-demographics-keys))</td>
+  </tr>
+  <tr>
   <td>`advanced` <br /><span class="type-text">object</span></td>
   <td>Advanced targeting</td>
   </tr>
@@ -263,6 +310,14 @@ import Caret from '@site/static/img/caret.svg'
 <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Proposal name</td>
+</tr>
+<tr>
+  <td>`objectiveId` <br /><span class="type-text">integer</span></td>
+  <td>[Plan Objective ID](#get-plan-objectives)</td>
+</tr>
+<tr>
+  <td>`planId` <br /><span class="type-text">integer</span></td>
+  <td>[Plan ID](#get-list-of-political-plans) (cross-screen proposals only)</td>
 </tr>
 <tr>
   <td>`startTime` <br /><span class="type-text">integer</span></td>
@@ -319,6 +374,30 @@ import Caret from '@site/static/img/caret.svg'
 <tr>
   <td>`timeZoneName` <br /><span class="type-text">string</span></td>
   <td>Timezone name</td>
+</tr>
+<tr>
+  <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV reach (cross-screen proposals only)</td>
+</tr>
+<tr>
+  <td>`linearTvImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV impressions (cross-screen proposals only)</td>
+</tr>
+<tr>
+  <td>`linearTvBudget` <br /><span class="type-text">number</span></td>
+  <td>Linear TV budget (cross-screen proposals only)</td>
+</tr>
+<tr>
+  <td>`linearTvMaxReach` <br /><span class="type-text">integer</span></td>
+  <td>Maximum linear TV reach (cross-screen proposals only)</td>
+</tr>
+<tr>
+  <td>`linearTvMaxImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Maximum linear TV impressions (cross-screen proposals only)</td>
+</tr>
+<tr>
+  <td>`linearTvMaxBudget` <br /><span class="type-text">number</span></td>
+  <td>Maximum linear TV budget (cross-screen proposals only)</td>
 </tr>
 <tr>
   <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
@@ -423,13 +502,16 @@ Get Political Proposal Planner details by Plan ID.
 </div>
 <div class="child2">
 
+<CodeDropdown label="Select vertical">
+<CodeOption label="Political Plan" default>
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
     "id": 1,
     "name": "Pollies Political Planner",
-    "objectiveId": 3,
+    "objectiveId": 1,
     "totalBudget": 120000,
     "details": {
       "startDate": 1747195200000,
@@ -495,6 +577,132 @@ Get Political Proposal Planner details by Plan ID.
         "creatives": [11, 13]
       }
     }
+  }
+}
+```
+
+</CodeOption>
+<CodeOption label="Cross-Screen Plan">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Pollies Political Planner",
+    "objectiveId": 3,
+    "graphId": "550e8400-e29b-41d4-a716-446655440000",
+    "overview": {
+      "linearTvCpm": 12,
+      "ctvCpm": 8,
+      "grp": 45,
+      "linearTvPercentage": 65
+    },
+    "totalBudget": 120000,
+    "details": {
+      "startDate": 1747195200000,
+      "endDate": 1777089600000,
+      "timezoneId": 29,
+      "frequencyCap": 3
+    },
+    "owId": 204366,
+    "statusId": 1,
+    "lastVisitedScreen": "Screen 1",
+    "cva": {
+      "id": 1,
+      "equation": "((IQMCVAAL017144|IQMCVAAL086142))",
+      "stateIds": [30200012, 30200013, 30200014, 30200015],
+      "segmentIds": [88432, 18589],
+      "reach": 293180
+    },
+    "targeting": {
+      "whiteListedLocation": {
+        "country": 30100001,
+        "states": [30200035],
+        "dma": [30900026],
+        "city": [30436781, 30436782],
+        "county": [30318981],
+        "congressionalDistrict": [30617273],
+        "stateHouse": [30803564],
+        "stateSenate": [30718340],
+        "zipCodes": ["10002"]
+      },
+      "blackListedLocation": {
+        "country": 30100001,
+        "states": [30200003],
+        "dma": [30900139],
+        "city": [30442811],
+        "county": [30321244],
+        "congressionalDistrict": [30601009],
+        "stateHouse": [30800263],
+        "stateSenate": [30701056],
+        "zipCodes": ["10002"]
+      },
+      "device": {
+        "deviceTypeIds": [20300004, 20300003],
+        "channelTypeIds": [11, 12]
+      },
+      "inventory": {
+        "openExchange": null,
+        "inventoryGroupIds": [3904859, 3897153]
+      },
+      "creative": {
+        "creativeTypeIds": [11, 13],
+        "isTvAutoBuying": true
+      },
+      "whitelistedAudiences": [1142625, 1143191, 1156665, 1144602, 1157452, 1159375],
+      "blacklistedAudiences": [1140931, 1142626, 1143189, 1144600, 1157451, 1159357, 1142239],
+      "prebidSegments": [32, 422],
+      "audienceSegments": [323, 232, 12],
+      "ageGroupSegments": [101, 102, 103],
+      "genderSegments": [201, 202],
+      "incomeRangeSegments": [301, 302, 303],
+      "ethnicitySegments": [401, 402],
+      "advanced": {
+        "splitTypeId": 1,
+        "locations": [8, 9, 10],
+        "devices": [20300004, 20300003],
+        "inventoryGroupIds": [3904859, 3897153],
+        "audienceTypes": [18, 19],
+        "creatives": [11, 13]
+      }
+    }
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
+
+</div></div>
+
+---
+
+### Download Plan
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/plans/{planId}/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Generate a signed URL for downloading a Political Plan report in CSV or XLSX format.
+
+| Path Parameters  |  |
+| ----  | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Plan ID](#get-list-of-political-plans) to download |
+
+| Query Parameters  |  |
+| ----  | --- |
+| `fileType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type: <var>1</var> (Excel), <var>2</var> (CSV) |
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "planReportUrl": "https://example.s3.amazonaws.com/planner/plan/report/download/12345/plan_report.xlsx"
   }
 }
 ```
@@ -703,11 +911,26 @@ Get a paginated list of Political Proposals with comprehensive metadata includin
   <td>`strategyTypeId` <br /><span class="type-text">integer</span></td>
   <td>[Strategy Type ID](#get-strategy-types)</td>
 </tr>
+<tr>
+  <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV reach (cross-screen proposals only, <var>null</var> otherwise)</td>
+</tr>
+<tr>
+  <td>`linearTvImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV impressions (cross-screen proposals only, <var>null</var> otherwise)</td>
+</tr>
+<tr>
+  <td>`linearTvBudget` <br /><span class="type-text">number</span></td>
+  <td>Linear TV budget (cross-screen proposals only, <var>null</var> otherwise)</td>
+</tr>
 </table>
 </details>
 
 </div>
 <div class="child2">
+
+<CodeDropdown label="Select vertical">
+<CodeOption label="Political Proposals" default>
 
 ```json title="Response 200"
 {
@@ -730,7 +953,10 @@ Get a paginated list of Political Proposals with comprehensive metadata includin
         "cpm": 15.50,
         "budget": 31000.00,
         "frequency": 3,
-        "strategyTypeId": 1
+        "strategyTypeId": 1,
+        "linearTvReach": null,
+        "linearTvImpressions": null,
+        "linearTvBudget": null
       },
       {
         "id": 2002,
@@ -748,7 +974,10 @@ Get a paginated list of Political Proposals with comprehensive metadata includin
         "cpm": 12.75,
         "budget": 38250.00,
         "frequency": 4,
-        "strategyTypeId": 2
+        "strategyTypeId": 2,
+        "linearTvReach": null,
+        "linearTvImpressions": null,
+        "linearTvBudget": null
       }
     ],
     "totalRecords": 45,
@@ -759,6 +988,69 @@ Get a paginated list of Political Proposals with comprehensive metadata includin
   }
 }
 ```
+
+</CodeOption>
+<CodeOption label="Cross-Screen Proposals">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 2001,
+        "name": "Q1 2026 Digital Campaign",
+        "statusId": 1,
+        "ioId": 1,
+        "createdOn": 1709654400000,
+        "createdByUserId": 5001,
+        "createdBy": "John Smith",
+        "userAvatarUrl": "https://example.com/avatars/john-smith.png",
+        "startDate": 1709654400000,
+        "endDate": 1717430400000,
+        "reach": 500000,
+        "impressions": 2000000,
+        "cpm": 15.50,
+        "budget": 31000.00,
+        "frequency": 3,
+        "strategyTypeId": 1,
+        "linearTvReach": 232322,
+        "linearTvImpressions": 3245,
+        "linearTvBudget": 23232323
+      },
+      {
+        "id": 2002,
+        "name": "Voter Engagement Initiative",
+        "statusId": 2,
+        "ioId": null,
+        "createdOn": 1710259200000,
+        "createdByUserId": 5002,
+        "createdBy": "Jane Doe",
+        "userAvatarUrl": "https://example.com/avatars/jane-doe.png",
+        "startDate": 1710259200000,
+        "endDate": 1718640000000,
+        "reach": 750000,
+        "impressions": 3000000,
+        "cpm": 12.75,
+        "budget": 38250.00,
+        "frequency": 4,
+        "strategyTypeId": 2,
+        "linearTvReach": 232322,
+        "linearTvImpressions": 3245,
+        "linearTvBudget": 23232323
+      }
+    ],
+    "totalRecords": 45,
+    "filteredRecords": 2,
+    "recordsAggregation": {
+      "totalBudget": 69250
+    }
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
 
 </div></div>
 
@@ -782,12 +1074,16 @@ Get the complete details of a Political Proposal including budgeting metrics, ti
 </div>
 <div class="child2">
 
+<CodeDropdown label="Select vertical">
+<CodeOption label="Political Proposal" default>
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
     "id": 14,
     "name": "sample",
+    "objectiveId": 1,
     "startTime": 1730658720000,
     "endTime": 1733250720000,
     "owId": 202500,
@@ -827,6 +1123,66 @@ Get the complete details of a Political Proposal including budgeting metrics, ti
   }
 }
 ```
+
+</CodeOption>
+<CodeOption label="Cross-Screen Proposal">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 14,
+    "name": "sample",
+    "planId": 3,
+    "objectiveId": 3,
+    "startTime": 1730658720000,
+    "endTime": 1733250720000,
+    "owId": 202500,
+    "statusId": 1,
+    "ioId": 1,
+    "reach": 122344433,
+    "impressions": 12232323,
+    "budget": 1212233.23,
+    "frequencyCap": 3,
+    "maxReach": 200000000,
+    "maxImpressions": 25000000,
+    "maxBudget": 2500000,
+    "timeZoneId": 29,
+    "timeZoneName": "US/EASTERN",
+    "linearTvReach": 1000,
+    "linearTvImpressions": 2000,
+    "linearTvBudget": 1001,
+    "linearTvMaxReach": 10000,
+    "linearTvMaxImpressions": 20000,
+    "linearTvMaxBudget": 10002,
+    "proposedCampaigns": [
+      {
+        "id": 101,
+        "name": "Sample Campaign",
+        "startTime": 1747195200000,
+        "endTime": 1777089600000,
+        "creativeTypeId": 13,
+        "duration": 30,
+        "modelType": "CPM",
+        "targetedReach": 500000,
+        "maxTargetedReach": 750000,
+        "frequencyCap": 3,
+        "targetedImpressions": 1500000,
+        "maxTargetedImpressions": 2000000,
+        "cpm": 2.5,
+        "minCpm": 1.5,
+        "maxCpm": 3.5,
+        "budget": 10000,
+        "maxBudget": 15000,
+        "strategy": "Device + Channel"
+      }
+    ]
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
 
 </div></div>
 
@@ -1440,6 +1796,43 @@ See resource properties for request schema.
 
 ---
 
+### Edit Plan Name
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/plan/political/plans/name" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the name of an existing Political Plan.
+
+| Request Schema |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Plan ID](#get-list-of-political-plans) |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Updated plan name |
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "id": 1,
+  "name": "Update Plan Name"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Plan updated successfully."
+  }
+}
+```
+
+</div></div>
+
+---
+
 ### Delete Plans
 
 <CopyUrl method="DELETE" url="https://api.iqm.com/api/v3/plan/political/plans" />
@@ -1585,6 +1978,43 @@ Update a Proposal's name, date range, Campaign budgeting details, and soft-delet
   "success": true,
   "data": {
     "id": 42,
+    "message": "Proposal updated successfully."
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Edit Proposal Name
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/plan/political/proposals/name" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update the name of an existing Political Proposal.
+
+| Request Schema |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Proposal ID](#get-list-of-proposals) |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Updated proposal name |
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "id": 1,
+  "name": "Update Proposal Name"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
     "message": "Proposal updated successfully."
   }
 }
