@@ -3190,6 +3190,18 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Max bid for each bid request</td>
     </tr>
         <tr>
+    <td>`minBid` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Minimum bid for each bid request</td>
+    </tr>
+        <tr>
+    <td>`allowedMinBid` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Server-enforced minimum bid floor allowed for this Campaign</td>
+    </tr>
+        <tr>
+    <td>`totalCPM` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Total CPM for the Campaign</td>
+    </tr>
+        <tr>
     <td>`timezone` <br /><span class="type-text">integer</span></td>
     <td>[Timezone ID](/guidelines/master-api#get-timezones) for Campaign</td>
     </tr>
@@ -3209,6 +3221,31 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>`impressionCapping` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
     <td>Maximum impressions in one Inventory </td>
     </tr>
+            <tr>
+    <td>`frequencyCapEnabled` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span></td>
+    <td>Enables frequency capping via <var>frequencyCapping</var>: <var>true</var></td>
+    </tr>
+            <tr>
+    <td>`frequencyCapping` <br /><span class="type-text">object</span> <span class="required-text">optional</span></td>
+    <td>Map of [Frequency Cap Type ID] to cap duration/value, keyed by the recurrence period the cap applies over: <var>1</var> = Day(s), <var>2</var> = Week(s), <var>3</var> = Month(s), <var>4</var> = Campaign Duration</td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`frequencyCapping` entry properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`frequencyCapDuration` <br /><span class="type-text">integer</span></td>
+        <td>Number of days/weeks/months the cap spans (per the key's type); must be <var>0</var> for the Campaign Duration type (id <var>4</var>)</td>
+        </tr>
+        <tr>
+        <td>`frequencyCapValue` <br /><span class="type-text">integer</span></td>
+        <td>Maximum impressions allowed within `frequencyCapDuration`</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
             <tr>
     <td>`maxDayClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
     <td>Maximum daily clicks </td>
@@ -3366,8 +3403,12 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Campaign Estimator data with <var>reachMeta</var>, <var>landScapeMeta</var> and <var>sliderMeta</var> </td>
     </tr>
     <tr>
+    <td>`campaignOptimizationType` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
+    <td>Toggles AI optimization for the Campaign <br />Allowed values: <var>ai_based</var>, <var>rule_based</var> <br />When <var>ai_based</var>, `campaignOptimization` is required <br />When <var>rule_based</var>, any `campaignOptimization` sent is ignored</td>
+    </tr>
+    <tr>
     <td>`campaignOptimization` <br /><span class="type-text">object</span> <span class="required-text">optional</span></td>
-    <td>Campaign optimization settings for Goal-AI</td>
+    <td>Campaign optimization settings for Goal-AI <br />Required when `campaignOptimizationType` is <var>ai_based</var></td>
     </tr>
     <tr>
       <td colSpan="2">
@@ -3434,10 +3475,24 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
   "timezone": 105,
   "creativeIds": "100027,100028",
   "maxBid": 10,
+  "minBid": 1,
+  "allowedMinBid": 0.5,
+  "totalCPM": 8,
   "bidOptimization": false,
   "bidPacing": true,
   "isBidShading": true,
   "impressionCapping": 2,
+  "frequencyCapEnabled": true,
+  "frequencyCapping": {
+    "1": {
+      "frequencyCapDuration": 6,
+      "frequencyCapValue": 5
+    },
+    "4": {
+      "frequencyCapDuration": 0,
+      "frequencyCapValue": 100
+    }
+  },
   "conversionType": "install",
   "conversionTypeId": 1,
   "appURL": "https://www.example.com",
@@ -3467,6 +3522,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     "landScapeMeta": {},
     "sliderMeta": {}
   },
+  "campaignOptimizationType": "ai_based",
   "campaignOptimization": {
     "aiObjective": 1,
     "aiGoal": 8,
