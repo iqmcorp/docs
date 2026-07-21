@@ -11,7 +11,7 @@ import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 
 The Dashboard API allows you to create and manage Dashboard configurations. 
 
-With IQM's Dashboards you can monitor your Campaigns' real-time performance at a glance and customize the filters and metrics by which those analytics are generated. 
+With IQM's Dashboards you can monitor your Campaigns' real-time performance at a glance and customize the filters and metrics by which those analytics are generated. This page also covers Campaign Pulse, which surfaces automated diagnostic checks and severity counts to help you monitor Campaign health. 
 
 <div style={{ maxWidth: "1000px" }}>
 :::info
@@ -849,6 +849,399 @@ Delete a Dashboard.
 ```
 
 </div></div>
+
+---
+
+## Campaign Pulse
+
+Run automated health diagnostics against a Campaign and review the resulting checks, grouped by severity and category. 
+
+### Get Campaign Pulse Categories
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/static/campaign-pulse/categories" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the static list of Campaign Pulse category metadata, with display order.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`category` <br /><span class="type-text">string</span></td>
+<td>Campaign Pulse category name</td>
+</tr>
+<tr>
+<td>`order` <br /><span class="type-text">integer</span></td>
+<td>Display order for the category</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "category": "Audience",
+      "order": 10
+    },
+    {
+      "category": "Balance",
+      "order": 20
+    },
+    {
+      "category": "Budget",
+      "order": 30
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
+### Get Campaign Pulse Diagnosis Results
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/campaign-pulse/result" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the latest Campaign Pulse run details and diagnosis checks for a given Campaign ID. 
+
+| Query Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`lastRun` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch of the last Campaign Pulse run, in milliseconds</td>
+</tr>
+<tr>
+<td>`campaignName` <br /><span class="type-text">string</span></td>
+<td>Campaign name</td>
+</tr>
+<tr>
+<td>`campaignId` <br /><span class="type-text">integer</span></td>
+<td>Campaign ID</td>
+</tr>
+<tr>
+<td>`timezoneId` <br /><span class="type-text">integer</span></td>
+<td>Timezone ID</td>
+</tr>
+<tr>
+<td>`diagnosisResults` <br /><span class="type-text">array of objects</span></td>
+<td>Diagnosis checks returned by the run</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`diagnosisResults` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`checkId` <br /><span class="type-text">integer</span></td>
+      <td>Diagnosis check ID</td>
+    </tr>
+    <tr>
+      <td>`checkLabel` <br /><span class="type-text">string</span></td>
+      <td>Short label describing the check</td>
+    </tr>
+    <tr>
+      <td>`checkDescription` <br /><span class="type-text">string</span></td>
+      <td>Description of the condition the check detected</td>
+    </tr>
+    <tr>
+      <td>`recommendedActions` <br /><span class="type-text">string</span></td>
+      <td>Recommended action(s) to resolve the check</td>
+    </tr>
+    <tr>
+      <td>`severity` <br /><span class="type-text">string</span></td>
+      <td>Severity level of the check, e.g. <var>Critical</var>, <var>Medium</var></td>
+    </tr>
+    <tr>
+      <td>`category` <br /><span class="type-text">string</span></td>
+      <td>[Campaign Pulse category](#get-campaign-pulse-categories) the check belongs to</td>
+    </tr>
+    <tr>
+      <td>`agentName` <br /><span class="type-text">string</span></td>
+      <td>Name of the agent that produced the check</td>
+    </tr>
+    <tr>
+      <td>`order` <br /><span class="type-text">integer</span></td>
+      <td>Display order for the check</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "lastRun": 1774245600000,
+    "campaignName": "Summer Awareness Campaign",
+    "campaignId": 582510,
+    "timezoneId": 29,
+    "diagnosisResults": [
+      {
+        "checkId": 1,
+        "checkLabel": "Low CTR",
+        "checkDescription": "CTR is below the expected threshold for this campaign type.",
+        "recommendedActions": "Refresh creatives and validate audience targeting.",
+        "severity": "Critical",
+        "category": "PERFORMANCE",
+        "agentName": "campaign-pulse-agent",
+        "order": 1
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get Campaign Pulse Severity Counts
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/campaign-pulse/severity-count" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the count of diagnosis checks grouped by severity, for one or more given Campaign IDs. 
+
+| Query Parameter | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Campaign IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`campaignId` <br /><span class="type-text">integer</span></td>
+<td>Campaign ID</td>
+</tr>
+<tr>
+<td>`severityCount` <br /><span class="type-text">object</span></td>
+<td>Name-Value pairs of severity level (e.g. <var>Critical</var>, <var>Medium</var>) and diagnosis check count</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "campaignId": 582510,
+      "severityCount": {
+        "Critical": 3,
+        "Medium": 2
+      }
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
+### Run Campaign Pulse Now
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/das/campaign-pulse/run/{campaignId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Trigger Campaign Pulse execution for a single Campaign and return the latest Campaign Pulse response. 
+
+| Path Parameter | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`lastRun` <br /><span class="type-text">integer</span></td>
+<td>Unix epoch of the last Campaign Pulse run, in milliseconds</td>
+</tr>
+<tr>
+<td>`campaignName` <br /><span class="type-text">string</span></td>
+<td>Campaign name</td>
+</tr>
+<tr>
+<td>`campaignId` <br /><span class="type-text">integer</span></td>
+<td>Campaign ID</td>
+</tr>
+<tr>
+<td>`timezoneId` <br /><span class="type-text">integer</span></td>
+<td>Timezone ID</td>
+</tr>
+<tr>
+<td>`diagnosisResults` <br /><span class="type-text">array of objects</span></td>
+<td>Diagnosis checks returned by the run</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`diagnosisResults` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+      <td>`checkId` <br /><span class="type-text">integer</span></td>
+      <td>Diagnosis check ID</td>
+    </tr>
+    <tr>
+      <td>`checkLabel` <br /><span class="type-text">string</span></td>
+      <td>Short label describing the check</td>
+    </tr>
+    <tr>
+      <td>`checkDescription` <br /><span class="type-text">string</span></td>
+      <td>Description of the condition the check detected</td>
+    </tr>
+    <tr>
+      <td>`recommendedActions` <br /><span class="type-text">string</span></td>
+      <td>Recommended action(s) to resolve the check</td>
+    </tr>
+    <tr>
+      <td>`severity` <br /><span class="type-text">string</span></td>
+      <td>Severity level of the check, e.g. <var>Critical</var>, <var>Medium</var></td>
+    </tr>
+    <tr>
+      <td>`category` <br /><span class="type-text">string</span></td>
+      <td>[Campaign Pulse category](#get-campaign-pulse-categories) the check belongs to</td>
+    </tr>
+    <tr>
+      <td>`agentName` <br /><span class="type-text">string</span></td>
+      <td>Name of the agent that produced the check</td>
+    </tr>
+    <tr>
+      <td>`order` <br /><span class="type-text">integer</span></td>
+      <td>Display order for the check</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "lastRun": 1774245600000,
+    "campaignName": "Summer Awareness Campaign",
+    "campaignId": 582510,
+    "timezoneId": 29,
+    "diagnosisResults": [
+      {
+        "checkId": 1,
+        "checkLabel": "Low CTR",
+        "checkDescription": "CTR is below the expected threshold for this campaign type.",
+        "recommendedActions": "Refresh creatives and validate audience targeting.",
+        "severity": "Critical",
+        "category": "PERFORMANCE",
+        "agentName": "campaign-pulse-agent",
+        "order": 1
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Run Campaign Pulse Severity Check Now
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/campaign-pulse/diagnosis" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Trigger an asynchronous Campaign Pulse severity check for the specified Campaign IDs. Validates Campaign ownership and status, then invokes the diagnosis run. 
+
+| Request Schema | |
+| --- | --- |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to check <br />If omitted, all running Campaigns for the Insertion Order (or Organization Workspace) are checked |
+| `ioId` <br /><span class="type-text">integer</span> | Insertion Order ID to filter Campaigns by <br />If omitted, `campaignIds` alone determines the Campaigns checked |
+
+</div>
+<div class="child2">
+
+```json title="Request Sample"
+{
+  "campaignIds": [334740, 334741, 334742],
+  "ioId": 625
+}
+```
+
+<p />
+```json title="Response 200"
+{
+  "success": true,
+  "data": null
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+<summary style={{ fontSize: "16px" }}>More Responses</summary>
+
+```json title="Response 422 (Empty campaign IDs)"
+{
+  "success": false,
+  "error": "campaignIds is required and cannot be empty"
+}
+```
+
+```json title="Response 422 (Non-running campaigns)"
+{
+  "success": false,
+  "error": "CampaignIds are not in running status - [334740, 334741]"
+}
+```
+
+```json title="Response 422 (Invalid campaign IDs)"
+{
+  "success": false,
+  "error": "CampaignIds are not valid"
+}
+```
+
+</details>
+
+</div></div>
+
+---
 
 ## Dashboard Reports
 
