@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "v0",
+    "version": "1.0.0",
     "description": "MCP Creative API Specification",
     "contact": {
       "name": "IQM Support",
@@ -29,7 +29,7 @@
           "MCP"
         ],
         "summary": "Add creative",
-        "description": "This API creates creatives of various types via multipart/form-data. The metadata is sent as a JSON string in the 'creativeRequest' form field, and files (when creativeSourceType is 'FILE') are uploaded in the 'creativeFiles' form field. Supports batch creation of multiple creatives in a single request, with partial success/failure handling.\n\nThe 'creativeRequest' JSON is a map where each key is a unique reference ID (e.g. 'I001') and each value is an object with these fields:\n\nCommon fields: creativeName (String, required), platformCreativeTypeId (Integer, required: 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio), creativeSourceType (String enum, required: FILE | URL | HTML | HTML5 | VAST_URL | VAST_XML | DAAST_URL | DAAST_XML), creativeSource (String, required), clickUrl (String, required for non-VAST/DAAST types), externalCreativeId (String, optional), subMediaType (String, required for Native: 'image' or 'video').\n\nType-specific nested objects:\n- imageDetails: {creativeWidth, creativeHeight, pixelUrl} — for platformCreativeTypeId=11\n- htmlDetails: {creativeWidth, creativeHeight} — for platformCreativeTypeId=13\n- videoDetails: {creativeWidth, creativeHeight, duration, customTracking:{startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL}} — for platformCreativeTypeId=14\n- audioDetails: {duration, logoSource, logoHeight, logoWidth, customTracking:{...}} — for platformCreativeTypeId=17\n- nativeDetails: {title, description, cta:{id, ctaText, defaultCta}, brandName, brandIconSourceUrl, brandIconHeight, brandIconWidth, thumbnailSourceUrl, thumbnailHeight, thumbnailWidth} — for platformCreativeTypeId=15, combined with imageDetails (subMediaType='image') or videoDetails (subMediaType='video').",
+        "description": "This API creates creatives of various types via multipart/form-data. The metadata is sent as a JSON string in the 'creativeRequest' form field, and files (when creativeSourceType is 'FILE') are uploaded in the 'creativeFiles' form field. Supports batch creation of multiple creatives in a single request, with partial success/failure handling.\n\nThe 'creativeRequest' JSON is a map where each key is a unique reference ID (e.g. 'I001') and each value is an object with these fields:\n\nCommon fields: creativeName (String, required), platformCreativeTypeId (Integer, required: 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio), creativeSourceType (String enum, required: FILE | URL | HTML | HTML5 | VAST_URL | VAST_XML | DAAST_URL | DAAST_XML), creativeSource (String, required), clickUrl (String, required for non-VAST/DAAST types), externalCreativeId (String, optional), subMediaType (String, required for Native: 'image' or 'video').\n\nType-specific nested objects:\n- imageDetails: {creativeWidth, creativeHeight, pixelUrl} \u2014 for platformCreativeTypeId=11\n- htmlDetails: {creativeWidth, creativeHeight} \u2014 for platformCreativeTypeId=13\n- videoDetails: {creativeWidth, creativeHeight, duration, customTracking:{startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL}} \u2014 for platformCreativeTypeId=14\n- audioDetails: {duration, logoSource, logoHeight, logoWidth, customTracking:{...}} \u2014 for platformCreativeTypeId=17\n- nativeDetails: {title, description, cta:{id, ctaText, defaultCta}, brandName, brandIconSourceUrl, brandIconHeight, brandIconWidth, thumbnailSourceUrl, thumbnailHeight, thumbnailWidth} \u2014 for platformCreativeTypeId=15, combined with imageDetails (subMediaType='image') or videoDetails (subMediaType='video').",
         "operationId": "createCreatives",
         "parameters": [
           {
@@ -48,13 +48,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -74,7 +73,7 @@
                       "externalCreativeId": "google_421_dcm_435",
                       "platformCreativeTypeId": 13,
                       "creativeSourceType": "HTML",
-                      "creativeSource": "\u003Ca href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1\u003E\u003Cimg src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg\u003E\u003C/a\u003E",
+                      "creativeSource": "<a href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1><img src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg></a>",
                       "clickUrl": "www.example.com",
                       "htmlDetails": {
                         "creativeWidth": 500,
@@ -188,7 +187,7 @@
                       "externalCreativeId": "google_421_dcm_435",
                       "platformCreativeTypeId": 17,
                       "creativeSourceType": "VAST_XML",
-                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E"
+                      "creativeSource": "<VAST ... >...</VAST>"
                     }
                   }
                 },
@@ -212,7 +211,7 @@
                       "externalCreativeId": "google_421_dcm_435",
                       "platformCreativeTypeId": 17,
                       "creativeSourceType": "DAAST_XML",
-                      "creativeSource": "\u003CDAAST ... \u003E...\u003C/DAAST\u003E"
+                      "creativeSource": "<DAAST ... >...</DAAST>"
                     }
                   }
                 },
@@ -288,7 +287,7 @@
                       "externalCreativeId": "google_421_dcm_435",
                       "platformCreativeTypeId": 14,
                       "creativeSourceType": "VAST_XML",
-                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E"
+                      "creativeSource": "<VAST ... >...</VAST>"
                     }
                   }
                 },
@@ -466,7 +465,7 @@
                       "subMediaType": "video",
                       "platformCreativeTypeId": 15,
                       "creativeSourceType": "VAST_XML",
-                      "creativeSource": "\u003CVAST ... \u003E...\u003C/VAST\u003E",
+                      "creativeSource": "<VAST ... >...</VAST>",
                       "nativeDetails": {
                         "title": "native-video-url-title",
                         "description": "native-video-url-description",
@@ -621,13 +620,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -645,11 +643,27 @@
                     "noOfEntries": 2,
                     "sortBy": "-creativeId",
                     "searchField": "creative",
-                    "platformCreativeTypeIds": [11, 13, 14, 15, 17],
-                    "creativeStatusIds": [1, 2, 3, 4],
-                    "creativeIds": [130141, 130142],
+                    "platformCreativeTypeIds": [
+                      11,
+                      13,
+                      14,
+                      15,
+                      17
+                    ],
+                    "creativeStatusIds": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "creativeIds": [
+                      130141,
+                      130142
+                    ],
                     "creativeGroupId": null,
-                    "campaignIds": [20141],
+                    "campaignIds": [
+                      20141
+                    ],
                     "startTime": 1734998399000,
                     "endTime": 1735206867000,
                     "includeCreativeSourceDetails": true,
@@ -664,14 +678,32 @@
                     "noOfEntries": 2,
                     "sortBy": "-creativeId",
                     "searchField": "creative",
-                    "platformCreativeTypeIds": [11, 13, 14, 15, 17],
-                    "creativeStatusIds": [1, 2, 3, 4],
-                    "creativeIds": [130141, 130142],
+                    "platformCreativeTypeIds": [
+                      11,
+                      13,
+                      14,
+                      15,
+                      17
+                    ],
+                    "creativeStatusIds": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "creativeIds": [
+                      130141,
+                      130142
+                    ],
                     "creativeGroupId": null,
-                    "campaignIds": [20141],
+                    "campaignIds": [
+                      20141
+                    ],
                     "startTime": 1734998399000,
                     "endTime": 1735206867000,
-                    "owIds": [201353],
+                    "owIds": [
+                      201353
+                    ],
                     "allOwIds": true,
                     "includeOrganizationDetails": true,
                     "includeUserDetails": true
@@ -714,7 +746,9 @@
                             "creativeHeight": 50,
                             "creativeWidth": 320,
                             "campaignDetails": {
-                              "campaignIds": [20141]
+                              "campaignIds": [
+                                20141
+                              ]
                             },
                             "userDetails": {
                               "uowId": 981
@@ -738,7 +772,9 @@
                             "clickUrl": "https://example.com/id=130142",
                             "duration": 16,
                             "campaignDetails": {
-                              "campaignIds": [20141]
+                              "campaignIds": [
+                                20141
+                              ]
                             },
                             "userDetails": {
                               "uowId": 981
@@ -777,7 +813,9 @@
                             "subMediaType": "Image",
                             "approvalRequiredPostUrlUpdate": true,
                             "campaignDetails": {
-                              "campaignIds": [20141]
+                              "campaignIds": [
+                                20141
+                              ]
                             },
                             "userDetails": {
                               "uowId": 981,
@@ -808,7 +846,9 @@
                             "subMediaType": "Video",
                             "approvalRequiredPostUrlUpdate": false,
                             "campaignDetails": {
-                              "campaignIds": [20141]
+                              "campaignIds": [
+                                20141
+                              ]
                             },
                             "userDetails": {
                               "uowId": 981,
@@ -884,13 +924,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1067,13 +1106,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1216,13 +1254,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1401,13 +1438,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1421,15 +1457,26 @@
                 "Assign Creatives to Campaigns": {
                   "description": "Assign Creatives to Campaigns",
                   "value": {
-                    "assignedCampaignIds": [1, 2, 3],
-                    "creativeIds": [11, 22]
+                    "assignedCampaignIds": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "creativeIds": [
+                      11,
+                      22
+                    ]
                   }
                 },
                 "Unassign Creatives from Campaigns": {
                   "description": "Unassign Creatives from Campaigns",
                   "value": {
-                    "removedCampaignIds": [2],
-                    "creativeIds": [11]
+                    "removedCampaignIds": [
+                      2
+                    ],
+                    "creativeIds": [
+                      11
+                    ]
                   }
                 }
               }
@@ -1504,7 +1551,7 @@
           "MCP"
         ],
         "summary": "Update creative details",
-        "description": " This API endpoint allows authorized users to update the status of an existing creative. \n Updating a Creative's status to \"deleted\" is how to remove a Creative from the system. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeIds | List\u003CInteger\u003E | Represents list of creative ids |\n| creativeStatusId | Integer | Creative status ID: 1=pending, 2=running, 3=paused, 4=deleted, 5=rejected|\n| creativeRejectionReason | String | Represents the reason for rejecting a creative |\n",
+        "description": " This API endpoint allows authorized users to update the status of an existing creative. \n Updating a Creative's status to \"deleted\" is how to remove a Creative from the system. \n The creative's attributes can be modified by advertisers, workspaces, or super users. \n Additionally, ownership and edit permissions are validated to ensure the request is authorized.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| creativeIds | List<Integer> | Represents list of creative ids |\n| creativeStatusId | Integer | Creative status ID: 1=pending, 2=running, 3=paused, 4=deleted, 5=rejected|\n| creativeRejectionReason | String | Represents the reason for rejecting a creative |\n",
         "operationId": "updateCreativeStatus",
         "parameters": [
           {
@@ -1523,13 +1570,12 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
             "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1545,7 +1591,9 @@
                   "summary": "Set creativeStatusId to 4 to mark as deleted",
                   "description": "Delete creative",
                   "value": {
-                    "creativeIds": [688549],
+                    "creativeIds": [
+                      688549
+                    ],
                     "creativeStatusId": 4
                   }
                 },
@@ -1553,7 +1601,9 @@
                   "summary": "Set creativeStatusId to 5 and provide rejection reason",
                   "description": "Reject creative",
                   "value": {
-                    "creativeIds": [688549],
+                    "creativeIds": [
+                      688549
+                    ],
                     "creativeStatusId": 5,
                     "creativeRejectionReason": "Harmful content found!"
                   }
@@ -1708,7 +1758,11 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of Creative status IDs to filter by",
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "Set of Creative status IDs to filter by",
@@ -1719,7 +1773,11 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of platform Creative type IDs to filter by",
-            "example": [11, 14, 17],
+            "example": [
+              11,
+              14,
+              17
+            ],
             "items": {
               "type": "integer",
               "description": "Set of platform Creative type IDs to filter by",
@@ -1730,7 +1788,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of specific Creative IDs to retrieve",
-            "example": [688549, 688550],
+            "example": [
+              688549,
+              688550
+            ],
             "items": {
               "type": "integer",
               "description": "Set of specific Creative IDs to retrieve",
@@ -1748,7 +1809,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of campaign IDs associated with the Creatives",
-            "example": [321, 322],
+            "example": [
+              321,
+              322
+            ],
             "items": {
               "type": "integer",
               "description": "Set of campaign IDs associated with the Creatives",
@@ -1759,7 +1823,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of Organization Workspac IDs that own the Creatives",
-            "example": [2001, 2002],
+            "example": [
+              2001,
+              2002
+            ],
             "items": {
               "type": "integer",
               "description": "Set of Organization Workspac IDs that own the Creatives",
@@ -1827,8 +1894,8 @@
         "properties": {
           "creativeRequest": {
             "type": "string",
-            "description": "JSON string containing a map of unique identifiers to creative metadata objects. Each key is a temporary reference ID (any unique string, e.g. 'I001', 'H001', 'V001'). Each value is a CreateCreativeRequest object with these fields:\n\n--- Common Fields (all creative types) ---\n- creativeName (String, required): Name of the creative.\n- platformCreativeTypeId (Integer, required): 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio.\n- creativeSourceType (String enum, required): Must be one of: FILE, URL, HTML, HTML5, VAST_URL, VAST_XML, DAAST_URL, DAAST_XML. FILE means upload via creativeFiles; URL means external URL; HTML means raw HTML markup; VAST_URL/VAST_XML and DAAST_URL/DAAST_XML are for video/audio ad-serving tags.\n- creativeSource (String, required): The content source. For FILE: must match a filename in creativeFiles. For URL: the full URL. For HTML: the HTML markup string. For VAST_XML/DAAST_XML: the XML string. For VAST_URL/DAAST_URL: the URL to the XML document.\n- clickUrl (String, required for IMAGE/HTML/VIDEO/AUDIO/NATIVE with FILE or URL source): Click-through URL.\n- externalCreativeId (String, optional): Third-party creative ID.\n- subMediaType (String, optional): Required for Native creatives only. Must be 'image' or 'video'.\n\n--- Type-Specific Detail Objects (nested inside each creative) ---\n\nFor Image creatives (platformCreativeTypeId=11), include 'imageDetails' object:\n  - creativeWidth (Integer): Image width in pixels.\n  - creativeHeight (Integer): Image height in pixels.\n  - pixelUrl (String, optional): Tracking pixel URL.\n\nFor HTML creatives (platformCreativeTypeId=13), include 'htmlDetails' object:\n  - creativeWidth (Integer, required): HTML creative width in pixels.\n  - creativeHeight (Integer, required): HTML creative height in pixels.\n\nFor Video creatives (platformCreativeTypeId=14), include 'videoDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML):\n  - creativeWidth (Integer): Video width in pixels.\n  - creativeHeight (Integer): Video height in pixels.\n  - duration (Long): Duration in seconds.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} — all Strings.\n\nFor Audio creatives (platformCreativeTypeId=17), include 'audioDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML/DAAST_URL/DAAST_XML):\n  - duration (Long): Duration in seconds.\n  - logoSource (String, optional): Logo image URL.\n  - logoHeight (Integer, optional): Logo height in pixels.\n  - logoWidth (Integer, optional): Logo width in pixels.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} — all Strings.\n\nFor Native creatives (platformCreativeTypeId=15), include 'nativeDetails' object AND the media detail object:\n  nativeDetails:\n  - title (String): Creative title.\n  - description (String): Creative description.\n  - cta (Object, optional): {id (Integer), ctaText (String), defaultCta (Boolean)}.\n  - brandName (String): Brand name.\n  - brandIconSourceUrl (String): Brand icon URL.\n  - brandIconHeight (Integer): Brand icon height.\n  - brandIconWidth (Integer): Brand icon width.\n  - thumbnailSourceUrl (String, optional): Thumbnail URL (for native video).\n  - thumbnailHeight (Integer, optional): Thumbnail height.\n  - thumbnailWidth (Integer, optional): Thumbnail width.\n  Also include 'imageDetails' (when subMediaType='image') or 'videoDetails' (when subMediaType='video') as described above.\n  Native video creatives also support VAST_URL and VAST_XML as creativeSourceType.\n\n--- Key Patterns (convention, not enforced) ---\nH001-H999 (HTML), I001-I999 (Image), V001-V999 (Video), A001-A999 (Audio), NI001-NI999 (Native Image), NV001-NV999 (Native Video). Any unique string works as a key.",
-            "example": "{\"H001\":{\"creativeName\":\"Summer Campaign Banner\",\"externalCreativeId\":\"ext-12345\",\"platformCreativeTypeId\":13,\"creativeSourceType\":\"HTML\",\"creativeSource\":\"\u003Ca href='https://example.com'\u003E\u003Cimg src='banner.jpg'\u003E\u003C/a\u003E\",\"clickUrl\":\"https://example.com\",\"htmlDetails\":{\"creativeWidth\":728,\"creativeHeight\":90}},\"I001\":{\"creativeName\":\"Product Image\",\"platformCreativeTypeId\":11,\"creativeSourceType\":\"FILE\",\"creativeSource\":\"product.jpg\",\"clickUrl\":\"https://example.com/product\",\"imageDetails\":{\"creativeWidth\":1200,\"creativeHeight\":628}}}"
+            "description": "JSON string containing a map of unique identifiers to creative metadata objects. Each key is a temporary reference ID (any unique string, e.g. 'I001', 'H001', 'V001'). Each value is a CreateCreativeRequest object with these fields:\n\n--- Common Fields (all creative types) ---\n- creativeName (String, required): Name of the creative.\n- platformCreativeTypeId (Integer, required): 11=Image, 13=HTML, 14=Video, 15=Native, 17=Audio.\n- creativeSourceType (String enum, required): Must be one of: FILE, URL, HTML, HTML5, VAST_URL, VAST_XML, DAAST_URL, DAAST_XML. FILE means upload via creativeFiles; URL means external URL; HTML means raw HTML markup; VAST_URL/VAST_XML and DAAST_URL/DAAST_XML are for video/audio ad-serving tags.\n- creativeSource (String, required): The content source. For FILE: must match a filename in creativeFiles. For URL: the full URL. For HTML: the HTML markup string. For VAST_XML/DAAST_XML: the XML string. For VAST_URL/DAAST_URL: the URL to the XML document.\n- clickUrl (String, required for IMAGE/HTML/VIDEO/AUDIO/NATIVE with FILE or URL source): Click-through URL.\n- externalCreativeId (String, optional): Third-party creative ID.\n- subMediaType (String, optional): Required for Native creatives only. Must be 'image' or 'video'.\n\n--- Type-Specific Detail Objects (nested inside each creative) ---\n\nFor Image creatives (platformCreativeTypeId=11), include 'imageDetails' object:\n  - creativeWidth (Integer): Image width in pixels.\n  - creativeHeight (Integer): Image height in pixels.\n  - pixelUrl (String, optional): Tracking pixel URL.\n\nFor HTML creatives (platformCreativeTypeId=13), include 'htmlDetails' object:\n  - creativeWidth (Integer, required): HTML creative width in pixels.\n  - creativeHeight (Integer, required): HTML creative height in pixels.\n\nFor Video creatives (platformCreativeTypeId=14), include 'videoDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML):\n  - creativeWidth (Integer): Video width in pixels.\n  - creativeHeight (Integer): Video height in pixels.\n  - duration (Long): Duration in seconds.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} \u2014 all Strings.\n\nFor Audio creatives (platformCreativeTypeId=17), include 'audioDetails' object (required when creativeSourceType is FILE or URL; not used for VAST_URL/VAST_XML/DAAST_URL/DAAST_XML):\n  - duration (Long): Duration in seconds.\n  - logoSource (String, optional): Logo image URL.\n  - logoHeight (Integer, optional): Logo height in pixels.\n  - logoWidth (Integer, optional): Logo width in pixels.\n  - customTracking (Object, optional): {startUrl, firstQuartileURL, midPointURL, thirdQuartileURL, completeURL, impressionURL} \u2014 all Strings.\n\nFor Native creatives (platformCreativeTypeId=15), include 'nativeDetails' object AND the media detail object:\n  nativeDetails:\n  - title (String): Creative title.\n  - description (String): Creative description.\n  - cta (Object, optional): {id (Integer), ctaText (String), defaultCta (Boolean)}.\n  - brandName (String): Brand name.\n  - brandIconSourceUrl (String): Brand icon URL.\n  - brandIconHeight (Integer): Brand icon height.\n  - brandIconWidth (Integer): Brand icon width.\n  - thumbnailSourceUrl (String, optional): Thumbnail URL (for native video).\n  - thumbnailHeight (Integer, optional): Thumbnail height.\n  - thumbnailWidth (Integer, optional): Thumbnail width.\n  Also include 'imageDetails' (when subMediaType='image') or 'videoDetails' (when subMediaType='video') as described above.\n  Native video creatives also support VAST_URL and VAST_XML as creativeSourceType.\n\n--- Key Patterns (convention, not enforced) ---\nH001-H999 (HTML), I001-I999 (Image), V001-V999 (Video), A001-A999 (Audio), NI001-NI999 (Native Image), NV001-NV999 (Native Video). Any unique string works as a key.",
+            "example": "{\"H001\":{\"creativeName\":\"Summer Campaign Banner\",\"externalCreativeId\":\"ext-12345\",\"platformCreativeTypeId\":13,\"creativeSourceType\":\"HTML\",\"creativeSource\":\"<a href='https://example.com'><img src='banner.jpg'></a>\",\"clickUrl\":\"https://example.com\",\"htmlDetails\":{\"creativeWidth\":728,\"creativeHeight\":90}},\"I001\":{\"creativeName\":\"Product Image\",\"platformCreativeTypeId\":11,\"creativeSourceType\":\"FILE\",\"creativeSource\":\"product.jpg\",\"clickUrl\":\"https://example.com/product\",\"imageDetails\":{\"creativeWidth\":1200,\"creativeHeight\":628}}}"
           },
           "creativeFiles": {
             "type": "array",
@@ -2615,7 +2682,9 @@
           "creativeIds": {
             "type": "array",
             "description": "List of Creative internal IDs to update",
-            "example": [688549],
+            "example": [
+              688549
+            ],
             "items": {
               "type": "integer",
               "description": "List of Creative internal IDs to update",
@@ -2673,7 +2742,11 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of creative IDs involved in the targeting operation",
-            "example": [101, 102, 103],
+            "example": [
+              101,
+              102,
+              103
+            ],
             "items": {
               "type": "integer",
               "description": "Set of creative IDs involved in the targeting operation",
@@ -2684,7 +2757,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of campaign IDs to assign to the creatives",
-            "example": [201, 202],
+            "example": [
+              201,
+              202
+            ],
             "items": {
               "type": "integer",
               "description": "Set of campaign IDs to assign to the creatives",
@@ -2695,7 +2771,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of campaign IDs to remove from the creatives",
-            "example": [301, 302],
+            "example": [
+              301,
+              302
+            ],
             "items": {
               "type": "integer",
               "description": "Set of campaign IDs to remove from the creatives",
