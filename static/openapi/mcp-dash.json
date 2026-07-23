@@ -47,7 +47,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -58,7 +57,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -149,8 +147,15 @@
                           "active": true
                         }
                       ],
-                      "filteredGroupsIds": [135120],
-                      "filteredCampaignsIds": [334656, 334651, 334650, 334649],
+                      "filteredGroupsIds": [
+                        135120
+                      ],
+                      "filteredCampaignsIds": [
+                        334656,
+                        334651,
+                        334650,
+                        334649
+                      ],
                       "sortingGroupsColumns": [
                         {
                           "label": "ID",
@@ -255,7 +260,7 @@
           "MCP"
         ],
         "summary": "Get campaign performance metrics over time (graph)",
-        "description": "Returns time-bucketed data points representing campaign performance over the requested date range.\n\n**Output-point count by range**\n- 1–11 days (hourly): always **24 points** — hourly slots are merged so that each output point covers an equal number of hours.\n- 12–24 days (daily): **one point per day** — no merging, output count equals the number of calendar days.\n- 25–360 days (daily): **≤ 24 points** — consecutive days are merged into buckets using the smallest factor that keeps the output count ≤ 24.\n    - Example: if the range is 44 days, the system will merge days into 2-day buckets to produce 22 output points.\n    - If the range is 75 days, it will use 4-day buckets to produce 19 output points.\n- \u003E 360 days (daily): same as above, with the first N buckets absorbing one extra day each to distribute the remainder evenly.\n- Missing time slots (no DB data for a slot) are gap-filled with zero-value data points so the response always covers the full requested range.\n\n",
+        "description": "Returns time-bucketed data points representing campaign performance over the requested date range.\n\n**Output-point count by range**\n- 1\u201311 days (hourly): always **24 points** \u2014 hourly slots are merged so that each output point covers an equal number of hours.\n- 12\u201324 days (daily): **one point per day** \u2014 no merging, output count equals the number of calendar days.\n- 25\u2013360 days (daily): **\u2264 24 points** \u2014 consecutive days are merged into buckets using the smallest factor that keeps the output count \u2264 24.\n    - Example: if the range is 44 days, the system will merge days into 2-day buckets to produce 22 output points.\n    - If the range is 75 days, it will use 4-day buckets to produce 19 output points.\n- > 360 days (daily): same as above, with the first N buckets absorbing one extra day each to distribute the remainder evenly.\n- Missing time slots (no DB data for a slot) are gap-filled with zero-value data points so the response always covers the full requested range.\n\n",
         "operationId": "dashboard-report-metrics-timeline",
         "parameters": [
           {
@@ -263,7 +268,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -274,7 +278,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -291,9 +294,9 @@
                 "$ref": "#/components/schemas/CampaignGraphRequest"
               },
               "examples": {
-                "Single day hourly graph (\u003C 12 days)": {
+                "Single day hourly graph (< 12 days)": {
                   "summary": "Hourly breakdown for today",
-                  "description": "Single day hourly graph (\u003C 12 days)",
+                  "description": "Single day hourly graph (< 12 days)",
                   "value": {
                     "filters": {
                       "startTimeEpochMillis": 1773633600000,
@@ -314,8 +317,14 @@
                         "running",
                         "paused"
                       ],
-                      "owIds": [200058, 200062],
-                      "campaignIds": [582510, 582511]
+                      "owIds": [
+                        200058,
+                        200062
+                      ],
+                      "campaignIds": [
+                        582510,
+                        582511
+                      ]
                     },
                     "dimension": "CAMPAIGN",
                     "timezoneId": 29
@@ -442,7 +451,7 @@
           "MCP"
         ],
         "summary": "Compare aggregated campaign metrics between two periods",
-        "description": "Returns aggregated performance metrics for the selected date range (current period)\nand for the immediately preceding period of the exact same duration (previous period).\n\nComparison logic:\n- If the selected range is 1 day, response compares \"today vs yesterday\".\n- If the selected range is 7 days, response compares \"this 7‑day period vs previous 7‑day period\".\n- In general, previous period = [startTimeEpochMillis - duration, startTimeEpochMillis),\n  where duration = endTimeEpochMillis - startTimeEpochMillis.\n\nThe API supports rich filtering on campaigns, creatives, IOs, verticals, statuses and owners.\nData is fetched from reporting.tblr_campaigns and is filtered partition‑first on ow_id and ts_epoch_hourly.\n\n**Ownership rules and owIds behaviour**\n- If filters.owIds is provided, it is validated against the logged‑in user's ownership configuration.\n- If filters.owIds is omitted or empty, the system will automatically expand it to:\n  (a) all customer OW IDs the user is allowed to see, plus\n  (b) the logged‑in user's own OW ID.\n- For app / workspace owners, if after validation there are no effective OW IDs,\n  the API returns a successful response with all metrics set to 0 for both periods.\n\n**Validation rules**\n- filters: mandatory object.\n- filters.startTimeEpochMillis: required, must be \u003C endTimeEpochMillis.\n- filters.endTimeEpochMillis: required, must be \u003E startTimeEpochMillis.\n- dimension: required, must be one of the supported values of DashboardDimension\n  (e.g. CAMPAIGN, IO, CUSTOMER, WORKSPACE, EXCHANGE). Any other value results\n  in HTTP 422 with an appropriate error message.\n\n**Search behaviour (searchField)**\n- When dimension = CAMPAIGN, the free‑text search is applied on campaign fields\n\n**Response semantics**\n- data.current: metrics aggregated over [startTimeEpochMillis, endTimeEpochMillis).\n- data.previous: metrics aggregated over the immediately preceding window of the same duration.\n",
+        "description": "Returns aggregated performance metrics for the selected date range (current period)\nand for the immediately preceding period of the exact same duration (previous period).\n\nComparison logic:\n- If the selected range is 1 day, response compares \"today vs yesterday\".\n- If the selected range is 7 days, response compares \"this 7\u2011day period vs previous 7\u2011day period\".\n- In general, previous period = [startTimeEpochMillis - duration, startTimeEpochMillis),\n  where duration = endTimeEpochMillis - startTimeEpochMillis.\n\nThe API supports rich filtering on campaigns, creatives, IOs, verticals, statuses and owners.\nData is fetched from reporting.tblr_campaigns and is filtered partition\u2011first on ow_id and ts_epoch_hourly.\n\n**Ownership rules and owIds behaviour**\n- If filters.owIds is provided, it is validated against the logged\u2011in user's ownership configuration.\n- If filters.owIds is omitted or empty, the system will automatically expand it to:\n  (a) all customer OW IDs the user is allowed to see, plus\n  (b) the logged\u2011in user's own OW ID.\n- For app / workspace owners, if after validation there are no effective OW IDs,\n  the API returns a successful response with all metrics set to 0 for both periods.\n\n**Validation rules**\n- filters: mandatory object.\n- filters.startTimeEpochMillis: required, must be < endTimeEpochMillis.\n- filters.endTimeEpochMillis: required, must be > startTimeEpochMillis.\n- dimension: required, must be one of the supported values of DashboardDimension\n  (e.g. CAMPAIGN, IO, CUSTOMER, WORKSPACE, EXCHANGE). Any other value results\n  in HTTP 422 with an appropriate error message.\n\n**Search behaviour (searchField)**\n- When dimension = CAMPAIGN, the free\u2011text search is applied on campaign fields\n\n**Response semantics**\n- data.current: metrics aggregated over [startTimeEpochMillis, endTimeEpochMillis).\n- data.previous: metrics aggregated over the immediately preceding window of the same duration.\n",
         "operationId": "dashboard-report-metrics-comparison",
         "parameters": [
           {
@@ -450,7 +459,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -461,7 +469,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -480,38 +487,56 @@
               "examples": {
                 "Single day, campaign dimension, minimal filters": {
                   "summary": "Today vs yesterday for a single campaign",
-                  "description": "Compares metrics for one campaign for a 1‑day window against the previous day.",
+                  "description": "Compares metrics for one campaign for a 1\u2011day window against the previous day.",
                   "value": {
                     "filters": {
                       "startTimeEpochMillis": 1773719999000,
                       "endTimeEpochMillis": 1773806399000,
-                      "campaignIds": [582510]
+                      "campaignIds": [
+                        582510
+                      ]
                     },
                     "dimension": "CAMPAIGN"
                   }
                 },
-                "Seven‑day range with rich filters": {
-                  "summary": "Week‑over‑week comparison for multiple campaigns and owners",
-                  "description": "Compares a 7‑day period vs the previous 7‑day period with campaign, status and owner filters.",
+                "Seven\u2011day range with rich filters": {
+                  "summary": "Week\u2011over\u2011week comparison for multiple campaigns and owners",
+                  "description": "Compares a 7\u2011day period vs the previous 7\u2011day period with campaign, status and owner filters.",
                   "value": {
                     "filters": {
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1774238399000,
                       "searchField": "temp-camp",
-                      "creativeTypeIds": [11, 13, 14, 17],
-                      "campaignTypeIds": [1],
-                      "campaignIds": [582510, 582511, 582512],
+                      "creativeTypeIds": [
+                        11,
+                        13,
+                        14,
+                        17
+                      ],
+                      "campaignTypeIds": [
+                        1
+                      ],
+                      "campaignIds": [
+                        582510,
+                        582511,
+                        582512
+                      ],
                       "campaignStatusList": [
                         "running"
                       ],
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "ioIds": [],
                       "verticalIds": []
                     },
                     "dimension": "CAMPAIGN"
                   }
                 },
-                "Invalid range (start \u003E= end)": {
+                "Invalid range (start >= end)": {
                   "summary": "Validation error example",
                   "description": "Demonstrates a request that will fail validation because the start time is not less than end time.",
                   "value": {
@@ -562,9 +587,9 @@
                   "$ref": "#/components/schemas/MetricsComparisonResponse"
                 },
                 "examples": {
-                  "Successful response with non‑zero metrics": {
+                  "Successful response with non\u2011zero metrics": {
                     "summary": "Today vs yesterday example",
-                    "description": "Successful response with non‑zero metrics",
+                    "description": "Successful response with non\u2011zero metrics",
                     "value": {
                       "success": true,
                       "data": {
@@ -592,7 +617,7 @@
                     }
                   },
                   "Empty metrics for app/workspace owner with no accessible OW IDs": {
-                    "summary": "All‑zero metrics when user has no effective ownership scope",
+                    "summary": "All\u2011zero metrics when user has no effective ownership scope",
                     "description": "Empty metrics for app/workspace owner with no accessible OW IDs",
                     "value": {
                       "success": true,
@@ -656,7 +681,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -667,7 +691,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -695,12 +718,24 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
-                      "creativeTypeIds": [11, 13, 14, 17],
-                      "campaignTypeIds": [1],
+                      "creativeTypeIds": [
+                        11,
+                        13,
+                        14,
+                        17
+                      ],
+                      "campaignTypeIds": [
+                        1
+                      ],
                       "verticalIds": [],
                       "campaignStatusList": [
                         "running"
@@ -721,7 +756,12 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
@@ -734,7 +774,12 @@
                   "description": "Totals only",
                   "value": {
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000
                     },
@@ -1029,7 +1074,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1040,7 +1084,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1328,7 +1371,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1339,7 +1381,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1367,12 +1408,23 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
-                      "ioIds": [1001, 1002],
-                      "campaignBudgetTypeIds": [1, 2],
+                      "ioIds": [
+                        1001,
+                        1002
+                      ],
+                      "campaignBudgetTypeIds": [
+                        1,
+                        2
+                      ],
                       "campaignStatusList": [
                         "running",
                         "paused",
@@ -1394,12 +1446,20 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
                       "ioIds": [],
-                      "campaignBudgetTypeIds": [1, 2],
+                      "campaignBudgetTypeIds": [
+                        1,
+                        2
+                      ],
                       "campaignStatusList": [
                         "running",
                         "paused",
@@ -1421,7 +1481,12 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000
                     },
@@ -1826,7 +1891,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1837,7 +1901,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1857,7 +1920,10 @@
                   "description": "IO Report Download Request",
                   "value": {
                     "filters": {
-                      "owIds": [200058, 200062],
+                      "owIds": [
+                        200058,
+                        200062
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
@@ -2126,7 +2192,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2137,7 +2202,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2165,7 +2229,11 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [1, 2, 3],
+                      "owIds": [
+                        1,
+                        2,
+                        3
+                      ],
                       "startTimeEpochMillis": 1773979200000,
                       "endTimeEpochMillis": 1774065599000,
                       "searchField": "",
@@ -2189,7 +2257,11 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [1, 2, 3],
+                      "owIds": [
+                        1,
+                        2,
+                        3
+                      ],
                       "startTimeEpochMillis": 1773979200000,
                       "endTimeEpochMillis": 1774065599000,
                       "searchField": "",
@@ -2205,7 +2277,11 @@
                   "description": "Totals only",
                   "value": {
                     "filters": {
-                      "owIds": [1, 2, 3],
+                      "owIds": [
+                        1,
+                        2,
+                        3
+                      ],
                       "startTimeEpochMillis": 1773979200000,
                       "endTimeEpochMillis": 1774065599000
                     },
@@ -2420,7 +2496,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2431,7 +2506,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2597,7 +2671,7 @@
           "MCP"
         ],
         "summary": "Get campaign performance report grouped by customer/advertiser (v4).",
-        "description": "Fetches aggregated campaign performance metrics grouped by advertiser owId. Accessible by workspace owners and Super IQM users. Last-level advertisers (who have no sub-customers) receive a 403 Forbidden response. When owIds is empty the API auto-populates all child (advertiser-level) owIds of the logged-in user. Workspace-level owIds supplied in the request are silently dropped — only advertiser (leaf) owIds are used for aggregation. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types.",
+        "description": "Fetches aggregated campaign performance metrics grouped by advertiser owId. Accessible by workspace owners and Super IQM users. Last-level advertisers (who have no sub-customers) receive a 403 Forbidden response. When owIds is empty the API auto-populates all child (advertiser-level) owIds of the logged-in user. Workspace-level owIds supplied in the request are silently dropped \u2014 only advertiser (leaf) owIds are used for aggregation. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types.",
         "operationId": "v4-dashboard-get-report-by-customer",
         "parameters": [
           {
@@ -2605,7 +2679,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2616,7 +2689,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2644,12 +2716,24 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
-                      "creativeTypeIds": [11, 13, 14, 17],
-                      "campaignTypeIds": [1],
+                      "creativeTypeIds": [
+                        11,
+                        13,
+                        14,
+                        17
+                      ],
+                      "campaignTypeIds": [
+                        1
+                      ],
                       "verticalIds": [],
                       "campaignStatusList": [
                         "running",
@@ -2672,7 +2756,12 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000,
                       "searchField": "",
@@ -2685,7 +2774,12 @@
                   "description": "Totals only",
                   "value": {
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773633600000,
                       "endTimeEpochMillis": 1773719999000
                     },
@@ -2984,7 +3078,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2995,7 +3088,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3019,7 +3111,12 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [200058, 200062, 200153, 200178],
+                      "owIds": [
+                        200058,
+                        200062,
+                        200153,
+                        200178
+                      ],
                       "startTimeEpochMillis": 1773896400000,
                       "endTimeEpochMillis": 1773982799000,
                       "campaignStatusList": [
@@ -3264,7 +3361,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3275,7 +3371,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3303,20 +3398,46 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [1, 2, 3, 4],
+                      "owIds": [
+                        1,
+                        2,
+                        3,
+                        4
+                      ],
                       "startTimeEpochMillis": 1660834800000,
                       "endTimeEpochMillis": 1660834800001,
                       "searchField": "",
-                      "campaignTypeIds": [1],
-                      "campaignBudgetTypeIds": [1, 2],
+                      "campaignTypeIds": [
+                        1
+                      ],
+                      "campaignBudgetTypeIds": [
+                        1,
+                        2
+                      ],
                       "campaignStatusList": [
                         "pending",
                         "running"
                       ],
-                      "creativeTypeIds": [11, 13, 14, 17],
-                      "ioIds": [1, 2, 3],
-                      "campaignIds": [1, 2, 3],
-                      "verticalIds": [1, 2]
+                      "creativeTypeIds": [
+                        11,
+                        13,
+                        14,
+                        17
+                      ],
+                      "ioIds": [
+                        1,
+                        2,
+                        3
+                      ],
+                      "campaignIds": [
+                        1,
+                        2,
+                        3
+                      ],
+                      "verticalIds": [
+                        1,
+                        2
+                      ]
                     },
                     "requestType": "AGGREGATED",
                     "campaignRequest": true
@@ -3334,20 +3455,46 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [1, 2, 3, 4],
+                      "owIds": [
+                        1,
+                        2,
+                        3,
+                        4
+                      ],
                       "startTimeEpochMillis": 1660834800000,
                       "endTimeEpochMillis": 1660834800001,
                       "searchField": "",
-                      "campaignTypeIds": [1],
-                      "campaignBudgetTypeIds": [1, 2],
+                      "campaignTypeIds": [
+                        1
+                      ],
+                      "campaignBudgetTypeIds": [
+                        1,
+                        2
+                      ],
                       "campaignStatusList": [
                         "pending",
                         "running"
                       ],
-                      "creativeTypeIds": [11, 13, 14, 17],
-                      "ioIds": [1, 2, 3],
-                      "campaignIds": [1, 2, 3],
-                      "verticalIds": [1, 2]
+                      "creativeTypeIds": [
+                        11,
+                        13,
+                        14,
+                        17
+                      ],
+                      "ioIds": [
+                        1,
+                        2,
+                        3
+                      ],
+                      "campaignIds": [
+                        1,
+                        2,
+                        3
+                      ],
+                      "verticalIds": [
+                        1,
+                        2
+                      ]
                     },
                     "requestType": "AGGREGATED_LIST"
                   }
@@ -3364,7 +3511,12 @@
                       "order": "DESC"
                     },
                     "filters": {
-                      "owIds": [1, 2, 3, 4],
+                      "owIds": [
+                        1,
+                        2,
+                        3,
+                        4
+                      ],
                       "startTimeEpochMillis": 1660834800000,
                       "endTimeEpochMillis": 1660834800001
                     },
@@ -3747,7 +3899,11 @@
                             "workspaceAQInsightsEarnings": null,
                             "platformAQInsightsEarnings": null,
                             "aiGoalId": 0,
-                            "modelledDimensionIds": [1, 7, 8],
+                            "modelledDimensionIds": [
+                              1,
+                              7,
+                              8
+                            ],
                             "optimizationMethod": null,
                             "creativesCount": 1,
                             "isEligibleForAQInsightsReport": null,
@@ -4011,9 +4167,7 @@
                             "ecpm": 0,
                             "ecpc": 0,
                             "ecpcv": 0,
-                            "campaignPulseResult": {
-
-                            }
+                            "campaignPulseResult": {}
                           },
                           {
                             "impressions": 0,
@@ -4114,7 +4268,11 @@
                             "workspaceAQInsightsEarnings": null,
                             "platformAQInsightsEarnings": null,
                             "aiGoalId": 0,
-                            "modelledDimensionIds": [1, 7, 8],
+                            "modelledDimensionIds": [
+                              1,
+                              7,
+                              8
+                            ],
                             "optimizationMethod": null,
                             "creativesCount": 1,
                             "isEligibleForAQInsightsReport": false,
@@ -4126,9 +4284,7 @@
                             "ecpm": 0,
                             "ecpc": 0,
                             "ecpcv": 0,
-                            "campaignPulseResult": {
-
-                            }
+                            "campaignPulseResult": {}
                           }
                         ]
                       }
@@ -4170,7 +4326,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4181,7 +4336,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4589,7 +4743,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4600,7 +4753,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4773,7 +4925,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4784,7 +4935,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4882,7 +5032,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4893,7 +5042,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -4913,14 +5061,21 @@
                 "Run pulse check for campaigns": {
                   "description": "Run pulse check for campaigns",
                   "value": {
-                    "campaignIds": [334740, 334741, 334742],
+                    "campaignIds": [
+                      334740,
+                      334741,
+                      334742
+                    ],
                     "ioId": 625
                   }
                 },
                 "Run pulse check for campaigns without IO filter": {
                   "description": "Run pulse check for campaigns without IO filter",
                   "value": {
-                    "campaignIds": [334740, 334741]
+                    "campaignIds": [
+                      334740,
+                      334741
+                    ]
                   }
                 },
                 "Run pulse check for campaigns with IO id only": {
@@ -4931,9 +5086,7 @@
                 },
                 "Run pulse check without request body": {
                   "description": "Run pulse check without request body",
-                  "value": {
-
-                  }
+                  "value": {}
                 }
               }
             }
@@ -5033,7 +5186,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5044,7 +5196,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5143,7 +5294,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5154,7 +5304,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5298,7 +5447,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5309,7 +5457,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5448,7 +5595,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5459,7 +5605,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5534,7 +5679,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5545,7 +5689,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5802,7 +5945,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5813,7 +5955,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5907,7 +6048,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -5918,7 +6058,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -6021,7 +6160,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -6032,7 +6170,6 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -6202,7 +6339,12 @@
           "owIds": {
             "type": "array",
             "description": "Advertiser (owner) IDs to filter by",
-            "example": [1, 2, 3, 4],
+            "example": [
+              1,
+              2,
+              3,
+              4
+            ],
             "items": {
               "type": "integer",
               "description": "Advertiser (owner) IDs to filter by",
@@ -6228,7 +6370,9 @@
           "campaignTypeIds": {
             "type": "array",
             "description": "Campaign type IDs: 1=Advanced, 2=Programmatic Guaranteed (PG)",
-            "example": [1],
+            "example": [
+              1
+            ],
             "items": {
               "type": "integer",
               "description": "Campaign type IDs: 1=Advanced, 2=Programmatic Guaranteed (PG)",
@@ -6238,7 +6382,10 @@
           "campaignBudgetTypeIds": {
             "type": "array",
             "description": "Campaign budget type IDs: 1=Budget, 2=Impression",
-            "example": [1, 2],
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "integer",
               "description": "Campaign budget type IDs: 1=Budget, 2=Impression",
@@ -6248,7 +6395,10 @@
           "creativeTypeIds": {
             "type": "array",
             "description": "Creative type IDs: 0=all, 11=image, 13=html, 14=video, 15=native, 17=audio",
-            "example": [11, 13],
+            "example": [
+              11,
+              13
+            ],
             "items": {
               "type": "integer",
               "description": "Creative type IDs: 0=all, 11=image, 13=html, 14=video, 15=native, 17=audio",
@@ -6258,7 +6408,11 @@
           "ioIds": {
             "type": "array",
             "description": "Insertion order IDs to filter by",
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "Insertion order IDs to filter by",
@@ -6268,7 +6422,11 @@
           "campaignIds": {
             "type": "array",
             "description": "Campaign IDs to filter by",
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "Campaign IDs to filter by",
@@ -6278,7 +6436,10 @@
           "verticalIds": {
             "type": "array",
             "description": "Vertical IDs to filter by",
-            "example": [1, 2],
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "integer",
               "description": "Vertical IDs to filter by",
@@ -7541,7 +7702,7 @@
           },
           "ioTotalBudget": {
             "type": "number",
-            "description": "Monetary total budget — populated only when budget_type_id = 1",
+            "description": "Monetary total budget \u2014 populated only when budget_type_id = 1",
             "format": "double",
             "example": 8000
           },
@@ -7553,13 +7714,13 @@
           },
           "ioTotalImpressions": {
             "type": "integer",
-            "description": "Impression target — populated only when budget_type_id = 2",
+            "description": "Impression target \u2014 populated only when budget_type_id = 2",
             "format": "int64",
             "example": 500000
           },
           "targetImpression": {
             "type": "integer",
-            "description": "Alias of ioTotalImpressions — kept for UI/front-end compatibility",
+            "description": "Alias of ioTotalImpressions \u2014 kept for UI/front-end compatibility",
             "format": "int64",
             "example": 500000
           },
@@ -9237,7 +9398,11 @@
           "modelledDimensionIds": {
             "type": "array",
             "description": "Modelled dimension IDs used for rule-based optimization",
-            "example": [1, 7, 8],
+            "example": [
+              1,
+              7,
+              8
+            ],
             "items": {
               "type": "integer",
               "description": "Modelled dimension IDs used for rule-based optimization",
@@ -9466,7 +9631,11 @@
           "campaignIds": {
             "type": "array",
             "description": "Optional list of campaign ids to restrict response",
-            "example": [334740, 334741, 334742],
+            "example": [
+              334740,
+              334741,
+              334742
+            ],
             "items": {
               "type": "integer",
               "description": "Optional list of campaign ids to restrict response",
