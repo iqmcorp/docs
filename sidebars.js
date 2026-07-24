@@ -2384,6 +2384,48 @@ const sidebars = {
           ]
         },
         {
+          type: 'category',
+          label: 'Campaign Pulse',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Campaign Pulse Categories',
+              href: '/guidelines/dashboard-api#get-campaign-pulse-categories',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaign Pulse Diagnosis Results',
+              href: '/guidelines/dashboard-api#get-campaign-pulse-diagnosis-results',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Campaign Pulse Severity Counts',
+              href: '/guidelines/dashboard-api#get-campaign-pulse-severity-counts',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Run Campaign Pulse Now',
+              href: '/guidelines/dashboard-api#run-campaign-pulse-now',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Run Campaign Pulse Severity Check Now',
+              href: '/guidelines/dashboard-api#run-campaign-pulse-severity-check-now',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
           type: `category`,
           label: `Dashboard Reports`,
           className: 'sidebarItem',
@@ -3570,6 +3612,13 @@ const sidebars = {
               label: 'Download CTV Inventory List',
               href: '/guidelines/inventory-api#download-ctv-inventory-list',
               customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'List of Streaming Devices',
+              href: '/guidelines/inventory-api#get-list-of-streaming-devices',
+              customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
           ]

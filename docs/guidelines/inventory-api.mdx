@@ -18,6 +18,7 @@ IQM's advanced algorithm determines the most relevant ads to display to a user b
   * **Private Marketplace (PMP)** deals are a type of programmatic advertising arrangement that allows Advertisers to purchase ad Inventory through a private, invitation-only auction.
   * **Programmatic Guaranteed (PG)** deals are a direct negotiation between one publisher and one Advertiser that offer budget predictability and avoid auction volatility by ensuring a fixed amount of ad Inventory at a pre-negotiated price.
   * **Inventory Groups** are a collection or grouping of Inventory sources categorized by specific criteria such as ad format, placement type, targeting options, or other properties. There are four types of Inventory group: Open Exchange, PMP deals, Contextual Inventory, and CTV.
+  * **CTV Inventories** are app-based Inventory sources available on smart TVs and streaming devices, and can be filtered or grouped by streaming device.
 
 This page will cover common methods and endpoints associated with the Inventory API. 
 
@@ -2343,6 +2344,7 @@ Get a paginated list of CTV inventories available to the authenticated user.
 | `creativeDurations` <br /><span class="type-text">string</span> | Filter by [Creative Duration ID](/guidelines/master-api/#get-creative-sizes) (video/audio) |
 | `exchanges` <br /><span class="type-text">string</span> | Filter by [Exchange ID](/guidelines/master-api/#get-exchanges) |
 | `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by [Video Player Size ID](/guidelines/master-api/#get-video-player-size-parameters) |
+| `streamingDevices` <br /><span class="type-text">string</span> | Filter by [Streaming Device ID](#get-list-of-streaming-devices) |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page (default: <var>10</var>) |
 | `pageNo` <br /><span class="type-text">integer</span> | Page number (default: <var>1</var>) |
 
@@ -2360,24 +2362,16 @@ Get a paginated list of CTV inventories available to the authenticated user.
       <summary>`inventoryDataList` object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`id` <br /><span class="type-text">integer</span></td>
-        <td>Inventory ID</td>
+        <td>`bunchId` <br /><span class="type-text">integer</span></td>
+        <td>CTV Inventory (bunch) ID</td>
       </tr>
       <tr>
-        <td>`name` <br /><span class="type-text">string</span></td>
-        <td>Inventory name</td>
+        <td>`appName` <br /><span class="type-text">string</span></td>
+        <td>App name</td>
       </tr>
       <tr>
         <td>`publisherName` <br /><span class="type-text">string</span></td>
         <td>Publisher name</td>
-      </tr>
-      <tr>
-        <td>`appId` <br /><span class="type-text">string</span></td>
-        <td>Bundle ID (app) or domain (web)</td>
-      </tr>
-      <tr>
-        <td>`inventoryType` <br /><span class="type-text">string</span></td>
-        <td>Inventory type (e.g., Android App)</td>
       </tr>
       <tr>
         <td>`impressions` <br /><span class="type-text">integer</span></td>
@@ -2400,8 +2394,25 @@ Get a paginated list of CTV inventories available to the authenticated user.
         <td>URL of the inventory logo</td>
       </tr>
       <tr>
-        <td>`ctv` <br /><span class="type-text">boolean</span></td>
-        <td>Indicates CTV inventory: <var>true</var></td>
+        <td>`streamingDevices` <br /><span class="type-text">array of objects</span></td>
+        <td>Streaming devices this CTV inventory is available on</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`streamingDevices` object properties</summary>
+          <table className="objectProperties">
+          <tr>
+            <td>`deviceName` <br /><span class="type-text">string</span></td>
+            <td>Streaming device name</td>
+          </tr>
+          <tr>
+            <td>`logoUrl` <br /><span class="type-text">string</span></td>
+            <td>URL of the streaming device logo</td>
+          </tr>
+          </table></details>
+        </td>
+        <td></td>
       </tr>
       </table></details>
     </td>
@@ -2432,30 +2443,44 @@ Get a paginated list of CTV inventories available to the authenticated user.
     "totalRecords": 100,
     "inventoryDataList": [
       {
-        "id": 10035129,
-        "name": "HISTORY Vault",
+        "bunchId": 100129,
+        "appName": "HISTORY Vault",
         "publisherName": "A&E (A+E Networks)",
-        "appId": "com.svod",
-        "inventoryType": "Android App",
         "impressions": 120,
         "reach": 180,
         "videoPercentage": 100.0,
         "displayPercentage": 0.0,
         "inventoryLogoUrl": "https://cdn.com/adhoc/ctv-logos/1003514129",
-        "ctv": true
+        "streamingDevices": [
+          {
+            "deviceName": "Amazon Fire TV",
+            "logoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/streaming-devices-logos/FireTV.png"
+          },
+          {
+            "deviceName": "Android TV",
+            "logoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/streaming-devices-logos/AndoidTV.png"
+          }
+        ]
       },
       {
-        "id": 10014132,
-        "name": "FYI",
+        "bunchId": 100132,
+        "appName": "FYI",
         "publisherName": "ATC",
-        "appId": "com.watch",
-        "inventoryType": "Android App",
         "impressions": 1100,
         "reach": 1079,
         "videoPercentage": 100.0,
         "displayPercentage": 0.0,
         "inventoryLogoUrl": "https://cdn.com/adhoc/ctv-logos/1003514132",
-        "ctv": true
+        "streamingDevices": [
+          {
+            "deviceName": "Amazon Fire TV",
+            "logoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/streaming-devices-logos/FireTV.png"
+          },
+          {
+            "deviceName": "Android TV",
+            "logoUrl": "https://iqm-data-lake-stage.s3.us-east-1.amazonaws.com/adhoc/ctv-logos/streaming-devices-logos/AndoidTV.png"
+          }
+        ]
       }
     ]
   }
@@ -2486,17 +2511,18 @@ import {
 const axios = getInstance();
 
 interface CtvInventoryItem {
-  id: number;
-  name: string;
+  bunchId: number;
+  appName: string;
   publisherName: string;
-  appId: string;
-  inventoryType: string;
   impressions: number;
   reach: number;
   videoPercentage: number;
   displayPercentage: number;
   inventoryLogoUrl: string;
-  ctv: boolean;
+  streamingDevices: {
+    deviceName: string;
+    logoUrl: string;
+  }[];
 }
 
 interface Responses {
@@ -2527,6 +2553,7 @@ function getCtvInventoriesList(): Promise<Responses> {
         creativeDurations?: `string`,
         exchanges?: `string`,
         videoPlayerSizes?: `string`,
+        streamingDevices?: `string`,
         noOfEntries?: `number`,
         pageNo?: `number`,
       }
@@ -2561,6 +2588,7 @@ Get the count of unique CTV inventories, total impressions, and total reach avai
 | `creativeDurations` <br /><span class="type-text">string</span> | Filter by [Creative Duration ID](/guidelines/master-api/#get-creative-sizes) (video/audio) |
 | `exchanges` <br /><span class="type-text">string</span> | Filter by [Exchange ID](/guidelines/master-api/#get-exchanges) |
 | `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by [Video Player Size ID](/guidelines/master-api/#get-video-player-size-parameters) |
+| `streamingDevices` <br /><span class="type-text">string</span> | Filter by [Streaming Device ID](#get-list-of-streaming-devices) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
@@ -2638,6 +2666,7 @@ function getCtvInventoriesCount(): Promise<Responses> {
         creativeDurations?: `string`,
         exchanges?: `string`,
         videoPlayerSizes?: `string`,
+        streamingDevices?: `string`,
       }
     }
   };
@@ -2670,15 +2699,12 @@ Get the distribution of CTV inventories across countries, creative types, and tr
 | `creativeDurations` <br /><span class="type-text">string</span> | Filter by [Creative Duration ID](/guidelines/master-api/#get-creative-sizes) (video/audio) |
 | `exchanges` <br /><span class="type-text">string</span> | Filter by [Exchange ID](/guidelines/master-api/#get-exchanges) |
 | `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by [Video Player Size ID](/guidelines/master-api/#get-video-player-size-parameters) |
+| `streamingDevices` <br /><span class="type-text">string</span> | Filter by [Streaming Device ID](#get-list-of-streaming-devices) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response Properties</summary>
 
 <table className="objectProperties">
-  <tr>
-  <td>`trafficTypes` <br /><span class="type-text">object</span></td>
-  <td>Distribution across traffic types</td>
-  </tr>
   <tr>
   <td>`countries` <br /><span class="type-text">object</span></td>
   <td>Distribution across countries</td>
@@ -2686,6 +2712,10 @@ Get the distribution of CTV inventories across countries, creative types, and tr
   <tr>
   <td>`creativeTypes` <br /><span class="type-text">object</span></td>
   <td>Distribution across creative types</td>
+  </tr>
+  <tr>
+  <td>`streamingDevices` <br /><span class="type-text">object</span></td>
+  <td>Distribution across streaming devices</td>
   </tr>
   <tr>
 <td colSpan="2">
@@ -2717,22 +2747,28 @@ Get the distribution of CTV inventories across countries, creative types, and tr
 {
   "success": true,
   "data": {
-    "trafficTypes": [
-      { "label": "App", "value": 100.0 },
-      { "label": "Web", "value": 0.0 }
-    ],
     "countries": [
-      { "label": "United States", "value": 99.6 },
-      { "label": "Dominican Republic", "value": 0.12 },
-      { "label": "Canada", "value": 0.11 },
-      { "label": "United Kingdom", "value": 0.02 },
-      { "label": "Brazil", "value": 0.02 }
+      { "label": "United States", "value": 99.06 },
+      { "label": "Dominican Republic", "value": 0.27 },
+      { "label": "Canada", "value": 0.26 },
+      { "label": "Mexico", "value": 0.12 },
+      { "label": "France", "value": 0.04 }
     ],
     "creativeTypes": [
-      { "label": "Video", "value": 99.57 },
-      { "label": "Audio", "value": 0.42 },
-      { "label": "Banner", "value": 0.02 },
+      { "label": "Video", "value": 98.19 },
+      { "label": "Audio", "value": 1.81 },
+      { "label": "Banner", "value": 0.0 },
       { "label": "Native", "value": 0.0 }
+    ],
+    "streamingDevices": [
+      { "label": "Roku", "value": 33.89 },
+      { "label": "Samsung TV", "value": 27.82 },
+      { "label": "Android TV", "value": 16.62 },
+      { "label": "Amazon Fire TV", "value": 8.31 },
+      { "label": "Other", "value": 7.85 },
+      { "label": "Apple TV", "value": 2.49 },
+      { "label": "Vizio", "value": 1.6 },
+      { "label": "LG TV", "value": 1.44 }
     ]
   }
 }
@@ -2761,9 +2797,9 @@ interface Responses {
       "application/json": {
         success: boolean;
         data: {
-          trafficTypes: DistributionEntry[];
           countries: DistributionEntry[];
           creativeTypes: DistributionEntry[];
+          streamingDevices: DistributionEntry[];
         };
       };
     };
@@ -2783,6 +2819,7 @@ function getCtvInventoriesDistribution(): Promise<Responses> {
         creativeDurations?: `string`,
         exchanges?: `string`,
         videoPlayerSizes?: `string`,
+        streamingDevices?: `string`,
       }
     }
   };
@@ -2815,6 +2852,7 @@ Download a CSV or XLSX file of the CTV inventory list based on requested filters
 | `creativeDurations` <br /><span class="type-text">string</span> | Filter by [Creative Duration ID](/guidelines/master-api/#get-creative-sizes) |
 | `exchanges` <br /><span class="type-text">string</span> | Filter by [Exchange ID](/guidelines/master-api/#get-exchanges) |
 | `videoPlayerSizes` <br /><span class="type-text">string</span> | Filter by [Video Player Size ID](/guidelines/master-api/#get-video-player-size-parameters) |
+| `streamingDevices` <br /><span class="type-text">string</span> | Filter by [Streaming Device ID](#get-list-of-streaming-devices) |
 | `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Output file format: <var>csv</var> or <var>xlsx</var> |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -2877,7 +2915,112 @@ function downloadCtvInventoryList(): Promise<Responses> {
         creativeDurations?: `string`,
         exchanges?: `string`,
         videoPlayerSizes?: `string`,
+        streamingDevices?: `string`,
         fileType: `string`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get List of Streaming Devices
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/static/streaming-devices" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the static list of streaming devices available for CTV inventories, sorted in ascending order by display order.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search term matching streaming device name |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Streaming device ID</td>
+  </tr>
+  <tr>
+  <td>`displayName` <br /><span class="type-text">string</span></td>
+  <td>Streaming device name</td>
+  </tr>
+  <tr>
+  <td>`logoUrl` <br /><span class="type-text">string</span></td>
+  <td>URL of the streaming device logo</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "displayName": "Samsung",
+      "logoUrl": "https://samsunglogo.com"
+    },
+    {
+      "id": 2,
+      "displayName": "Roku TV",
+      "logoUrl": "https://rokuTV.com"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          displayName: string;
+          logoUrl: string;
+        }[];
+      };
+    };
+  };
+}
+
+function getListOfStreamingDevices(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/inv/static/streaming-devices',
+    params: {
+      query: {
+        searchField?: `string`,
       }
     }
   };
@@ -4934,7 +5077,7 @@ function getCtvGroupInventoriesStatistics(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Get the distribution of CTV inventories in a specific inventory group across countries, device types, traffic types, and creative types.
+Get the distribution of CTV inventories in a specific inventory group across countries, creative types, and streaming devices.
 
 | Path Parameter | |
 | --- | --- |
@@ -4949,16 +5092,12 @@ Get the distribution of CTV inventories in a specific inventory group across cou
   <td>Distribution across countries</td>
   </tr>
   <tr>
-  <td>`deviceTypes` <br /><span class="type-text">object</span></td>
-  <td>Distribution across device types</td>
-  </tr>
-  <tr>
-  <td>`trafficTypes` <br /><span class="type-text">object</span></td>
-  <td>Distribution across traffic types</td>
-  </tr>
-  <tr>
   <td>`creativeTypes` <br /><span class="type-text">object</span></td>
   <td>Distribution across creative types</td>
+  </tr>
+  <tr>
+  <td>`streamingDevices` <br /><span class="type-text">object</span></td>
+  <td>Distribution across streaming devices</td>
   </tr>
   <tr>
 <td colSpan="2">
@@ -4991,22 +5130,19 @@ Get the distribution of CTV inventories in a specific inventory group across cou
   "success": true,
   "data": {
     "countries": [
-      { "label": "United States", "value": 99.99 },
-      { "label": "Canada", "value": 0.01 },
-      { "label": "Mexico", "value": 0.0 }
-    ],
-    "deviceTypes": [
-      { "label": "Connected TV", "value": 99.96 },
-      { "label": "Mobile", "value": 0.04 },
-      { "label": "Tablet", "value": 0.0 },
-      { "label": "Desktop", "value": 0.0 }
-    ],
-    "trafficTypes": [
-      { "label": "App", "value": 100.0 }
+      { "label": "United States", "value": 99.11 },
+      { "label": "Canada", "value": 0.39 },
+      { "label": "Brazil", "value": 0.11 },
+      { "label": "Mexico", "value": 0.09 },
+      { "label": "United Kingdom", "value": 0.05 }
     ],
     "creativeTypes": [
-      { "label": "Video", "value": 100.0 },
-      { "label": "Audio", "value": 0.0 }
+      { "label": "Video", "value": 99.6 },
+      { "label": "Audio", "value": 0.4 }
+    ],
+    "streamingDevices": [
+      { "label": "Roku", "value": 99.92 },
+      { "label": "Samsung TV", "value": 0.08 }
     ]
   }
 }
@@ -5036,9 +5172,8 @@ interface Responses {
         success: boolean;
         data: {
           countries: DistributionEntry[];
-          deviceTypes: DistributionEntry[];
-          trafficTypes: DistributionEntry[];
           creativeTypes: DistributionEntry[];
+          streamingDevices: DistributionEntry[];
         };
       };
     };
@@ -5172,7 +5307,7 @@ Update details or delete group Inventories.
 | Request Schema |  |
 | ---- | --- |
 | `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `inventoryIds` <br /><span class="type-text">array of integers</span> | [Inventory ID](#get-list-of-inventories)s to include in group |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -5375,7 +5510,7 @@ function addInventoryGroup(): Promise<Responses> {
 | Request Schema |  |
 | ---- | --- |
 | `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `excludedInventoryIds` <br /><span class="type-text">array of integers</span> | [Inventory ID](#get-list-of-inventories)s to exclude from group |
 | `countries` <br /><span class="type-text">array of integers</span> | [Country IDs](/guidelines/master-api#get-country-segment) |
 | `categories` <br /><span class="type-text">array of strings</span> | [IAB Categories](/guidelines/master-api#get-publisher-ad-categories) to include in group
@@ -5621,7 +5756,7 @@ function addInventoryGroup(): Promise<Responses> {
 | Request Schema |  |
 | ---- | --- |
 | `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `dealIds` <br /><span class="type-text">array of integers</span> | [PMP Deal ID](#get-pmp-deals-list)s to include in group |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -5823,7 +5958,7 @@ function addInventoryGroup(): Promise<Responses> {
 | Request Schema |  |
 | ---- | --- |
 | `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `contextualUrls` <br /><span class="type-text">array of strings</span> | Contextual URLs to include in group 
 | `contextualKeywords` <br /><span class="type-text">array of strings</span> | Contextual keywords to include in group
 
@@ -6024,6 +6159,256 @@ function addInventoryGroup(): Promise<Responses> {
 ---
 </details>
 
+<details className="endpointPropertiesDetails">
+<summary style={{ fontSize: "16px" }}>Create a CTV Inventory Group with <var>bunchIds</var></summary>
+<div class="endpoint-container">
+  <div class="child1">
+
+| Request Schema |  |
+| ---- | --- |
+| `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
+| `bunchIds` <br /><span class="type-text">array of integers</span> | [CTV Inventory (bunch) ID](#get-ctv-inventory-list)s to include in group |
+| `streamingDevice` <br /><span class="type-text">array of integers</span> | [Streaming Device ID](#get-list-of-streaming-devices)s to filter the group's CTV inventories by |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+                 <tr>
+        <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+        <td>[Inventory Group Type ID](/guidelines/inventory-api#get-inventory-group-types)</td>
+        </tr>
+              <tr>
+        <td>`created` <br /><span class="type-text">integer</span></td>
+        <td>Unix epoch creation date, in milliseconds</td>
+        </tr>
+              <tr>
+        <td>`modifiedDate` <br /><span class="type-text">integer</span></td>
+        <td>Modified date</td>
+        </tr>
+              <tr>
+        <td>`owID` <br /><span class="type-text">integer</span></td>
+        <td>Organization Workspace ID</td>
+        </tr>
+              <tr>
+        <td>`impressions` <br /><span class="type-text">integer</span></td>
+        <td>Impressions count</td>
+        </tr>
+              <tr>
+        <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates that account-level excluded group is included</td>
+        </tr>
+              <tr>
+        <td>`campaignWhitelistCount` <br /><span class="type-text">integer</span></td>
+        <td>Number of Campaigns where this Inventory group is whitelisted</td>
+        </tr>
+              <tr>
+        <td>`campaignBlacklistCount` <br /><span class="type-text">integer</span></td>
+        <td>Number of Campaigns where this Inventory group is blacklisted</td>
+        </tr>
+              <tr>
+        <td>`distribution` <br /><span class="type-text">object</span></td>
+        <td>Distribution of the group's CTV inventories across countries, creative types, and streaming devices. See [Get CTV Inventories Distributions for an Inventory Group](#get-ctv-inventories-distributions-for-an-inventory-group)</td>
+        </tr>
+              <tr>
+        <td>`publishers` <br /><span class="type-text">integer</span></td>
+        <td>Publishers count</td>
+        </tr>
+              <tr>
+        <td>`uniques` <br /><span class="type-text">integer</span></td>
+        <td>Total number of unique impressions of the Inventories in a group</td>
+        </tr>
+        <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>The number of unique individuals reached by an Inventory group, does not count repeat views </td>
+        </tr>
+          <tr>
+        <td>`deals` <br /><span class="type-text">integer</span></td>
+        <td>Deals count</td>
+        </tr>
+             <tr>
+        <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
+        <td>Contextual Inventories count</td>
+        </tr>
+             <tr>
+        <td>`count` <br /><span class="type-text">integer</span></td>
+        <td>Inventories count</td>
+        </tr>
+             <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Inventory group ID</td>
+        </tr>
+             <tr>
+        <td>`name` <br /><span class="type-text">integer</span></td>
+        <td>Inventory group name</td>
+        </tr>
+                 <tr>
+        <td>`isShared` <br /><span class="type-text">boolean</span></td>
+        <td>Indicates the Inventory group is shared from the Workspace: <var>true</var></td>
+        </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown>
+<CodeOption label="With bunchIds only" value="With bunchIds only">
+```json title="Request Sample"
+{
+    "groupName": "test-ctv-grp-5",
+    "bunchIds": [
+        101,
+        201
+    ],
+    "groupTypeId": 4
+}
+```
+</CodeOption>
+<CodeOption label="With streaming device filter" value="With streaming device filter">
+```json title="Request Sample"
+{
+    "groupName": "test-ctv-grp-5",
+    "bunchIds": [
+        101,
+        201
+    ],
+    "streamingDevice": [
+        7001,
+        8001
+    ],
+    "groupTypeId": 4
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "groupTypeId": 4,
+        "created": 1783938142,
+        "modifiedDate": "2026-07-13T10:22:30.809+00:00",
+        "owId": 203615,
+        "impressions": 344567520,
+        "isAccountLevelExcluded": false,
+        "distribution": {
+            "countries": [
+                { "label": "United States", "value": 99.11 },
+                { "label": "Canada", "value": 0.39 },
+                { "label": "Brazil", "value": 0.11 },
+                { "label": "Mexico", "value": 0.09 },
+                { "label": "United Kingdom", "value": 0.05 }
+            ],
+            "creativeTypes": [
+                { "label": "Video", "value": 99.6 },
+                { "label": "Audio", "value": 0.4 }
+            ],
+            "streamingDevices": [
+                { "label": "Roku", "value": 99.92 },
+                { "label": "Samsung TV", "value": 0.08 }
+            ]
+        },
+        "campaignWhitelistCount": 0,
+        "campaignBlacklistCount": 0,
+        "publishers": 0,
+        "sharedCount": 0,
+        "uniques": 0,
+        "reach": 2253113,
+        "inventories": 0,
+        "deals": 0,
+        "contextualInventories": 0,
+        "count": 3,
+        "id": 191713,
+        "name": "test-ctv-grp-1",
+        "isShared": false
+    }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface DistributionEntry {
+  label: string;
+  value: number;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          groupTypeId: number;
+          created: number;
+          modifiedDate: string;
+          owId: number;
+          impressions: number;
+          isAccountLevelExcluded: boolean;
+          campaignWhitelistCount: number;
+          campaignBlacklistCount: number;
+          distribution: {
+            countries: DistributionEntry[];
+            creativeTypes: DistributionEntry[];
+            streamingDevices: DistributionEntry[];
+          };
+          publishers: number;
+          sharedCount: number;
+          uniques: number;
+          reach: number;
+          inventories: number;
+          deals: number;
+          contextualInventories: number;
+          count: number;
+          id: number;
+          name: string;
+          isShared: boolean
+        }
+      }
+    };
+  };
+}
+
+function addInventoryGroup(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/groups',
+    requestBody: {
+      content: {
+        "application/json": {
+          groupTypeId?: `number`,
+          groupName: `string`,
+          bunchIds?: `array of numbers`,
+          streamingDevice?: `array of numbers`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+---
+</details>
+
 ---
 
 ### Add or Remove Mappings to an Inventory Group
@@ -6034,9 +6419,9 @@ function addInventoryGroup(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Add or Remove Inventories (open exchange, private deals, Contextual) to a group or multiple groups.
+Add or Remove Inventories (open exchange, private deals, Contextual, CTV) to a group or multiple groups.
 
-Inventories can be added/removed by filtering for results, inputting <var>dealIds</var>, contextual details, or <var>inventoryIds</var>.
+Inventories can be added/removed by filtering for results, inputting <var>dealIds</var>, contextual details, <var>inventoryIds</var>, or CTV <var>bunchIds</var>.
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
@@ -6088,6 +6473,10 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     <td>`isAllInventories` <br /><span class="type-text">boolean</span></td>
     <td>Indicates Inventory IDs will be retrieved from the database instead of the UI: <var>true</var></td>
     </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
+    </tr>
     </table>
 
 </details>
@@ -6105,6 +6494,10 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     <tr>
     <td>`dealIds` <br /><span class="type-text">array of integers</span></td>
     <td>Deal IDs to add/remove to/from group</td>
+    </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
     </tr>
     </table>
 
@@ -6128,6 +6521,10 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     <td>`contextualUrls` <br /><span class="type-text">array of strings</span></td>
     <td>URLs of Contextual Inventories</td>
     </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
+    </tr>
     </table>
 
 </details>
@@ -6145,6 +6542,36 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     <tr>
     <td>`inventoryIds` <br /><span class="type-text">array of integers</span></td>
     <td>[Inventory ID](#get-list-of-inventories)s to add/remove to/from group</td>
+    </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
+    </tr>
+    </table>
+
+</details>
+
+<p />
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Add/Remove by CTV Bunch IDs</summary>
+
+    <table className="objectProperties">
+    <th>Request Schema</th>
+    <tr>
+    <td>`groupIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Group ID](#get-list-of-inventory-groups)s to add/remove mappings to/from</td>
+    </tr>
+    <tr>
+    <td>`bunchIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[CTV Inventory (bunch) ID](#get-ctv-inventory-list)s to add/remove to/from group</td>
+    </tr>
+    <tr>
+    <td>`streamingDevice` <br /><span class="type-text">array of integers</span></td>
+    <td>[Streaming Device ID](#get-list-of-streaming-devices)s to filter the group's CTV inventories by (add only)</td>
+    </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
     </tr>
     </table>
 
@@ -6205,6 +6632,10 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
              <tr>
         <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
         <td>Contextual Inventories count</td>
+        </tr>
+             <tr>
+        <td>`distribution` <br /><span class="type-text">object</span></td>
+        <td>CTV Inventory Groups only: distribution across countries, creative types, and streaming devices. See [Get CTV Inventories Distributions for an Inventory Group](#get-ctv-inventories-distributions-for-an-inventory-group)</td>
         </tr>
              <tr>
         <td>`count` <br /><span class="type-text">integer</span></td>
@@ -6286,7 +6717,8 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     4,
     -1
   ],
-  "isAllInventories": true
+  "isAllInventories": true,
+  "groupTypeId": 1
 }
 ```
 </CodeOption>
@@ -6299,7 +6731,8 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
   ],
   "dealIds": [
     10
-  ]
+  ],
+  "groupTypeId": 2
 }
 ```
 </CodeOption>
@@ -6317,7 +6750,8 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
   "contextualUrls": [
     "http://google.com",
     "http://google1.com"
-  ]
+  ],
+  "groupTypeId": 3
 }
 ```
 </CodeOption>
@@ -6331,7 +6765,25 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
   "inventoryIds": [
     200462,
     200463
-  ]
+  ],
+  "groupTypeId": 1
+}
+```
+</CodeOption>
+<CodeOption label="Add/Remove by CTV Bunch IDs" value="Add/Remove by CTV Bunch IDs">
+```json
+{
+  "groupIds": [
+    100462,
+    100463
+  ],
+  "bunchIds": [
+    101
+  ],
+  "streamingDevice": [
+    1001
+  ],
+  "groupTypeId": 4
 }
 ```
 </CodeOption>
@@ -6366,6 +6818,52 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
 }
 ```
 
+```json title="Response 200 (CTV Inventory Group)"
+{
+    "success": true,
+    "data": [
+        {
+            "groupTypeId": 4,
+            "created": 1783938142,
+            "modifiedDate": "2026-07-13T10:22:30.809+00:00",
+            "owId": 203615,
+            "impressions": 344567520,
+            "isAccountLevelExcluded": false,
+            "distribution": {
+                "countries": [
+                    { "label": "United States", "value": 99.11 },
+                    { "label": "Canada", "value": 0.39 },
+                    { "label": "Brazil", "value": 0.11 },
+                    { "label": "Mexico", "value": 0.09 },
+                    { "label": "United Kingdom", "value": 0.05 }
+                ],
+                "creativeTypes": [
+                    { "label": "Video", "value": 99.6 },
+                    { "label": "Audio", "value": 0.4 }
+                ],
+                "streamingDevices": [
+                    { "label": "Roku", "value": 99.92 },
+                    { "label": "Samsung TV", "value": 0.08 }
+                ]
+            },
+            "campaignWhitelistCount": 0,
+            "campaignBlacklistCount": 0,
+            "publishers": 0,
+            "sharedCount": 0,
+            "uniques": 0,
+            "reach": 2253113,
+            "inventories": 0,
+            "deals": 0,
+            "contextualInventories": 0,
+            "count": 3,
+            "id": 191713,
+            "name": "test-ctv-grp-1",
+            "isShared": false
+        }
+    ]
+}
+```
+
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
@@ -6377,6 +6875,11 @@ import {
 } from "prerequisites"
 
 const axios = getInstance();
+
+interface DistributionEntry {
+  label: string;
+  value: number;
+}
 
 interface Responses {
   200: {
@@ -6390,6 +6893,11 @@ interface Responses {
           owId: number;
           impressions: number;
           isAccountLevelExcluded: boolean;
+          distribution?: {
+            countries: DistributionEntry[];
+            creativeTypes: DistributionEntry[];
+            streamingDevices: DistributionEntry[];
+          };
           publishers: number;
           sharedCount: number;
           uniques: number;
@@ -6414,7 +6922,14 @@ function addMappingsToInventoryGroups(): Promise<Responses> {
     requestBody: {
       content: {
         "application/json": {
-          groupName: `string`,
+          groupIds?: `array of numbers`,
+          groupTypeId?: `number`,
+          bunchIds?: `array of numbers`,
+          streamingDevice?: `array of numbers`,
+          inventoryIds?: `array of numbers`,
+          dealIds?: `array of numbers`,
+          contextualKeywords?: `array of strings`,
+          contextualUrls?: `array of strings`,
         }
       }
     }
@@ -6436,6 +6951,7 @@ function removeMappingsOfInventoryGroup(): Promise<Responses> {
           allInventories?: `boolean`,
           groupTypeId?: `number`,
           groupId?: `number`,
+          bunchIds?: `array of numbers`,
           inventoryIds?: `array of numbers`,
           dealIds?: `array of numbers`,
         }
