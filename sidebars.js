@@ -4233,13 +4233,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Verticals',
-              href: '/guidelines/master-api#get-verticals',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Traffic Types',
               href: '/guidelines/master-api#get-traffic-types',
               customProps: { method: 'GET' },
