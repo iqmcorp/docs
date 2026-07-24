@@ -3614,6 +3614,13 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'List of Streaming Devices',
+              href: '/guidelines/inventory-api#get-list-of-streaming-devices',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
