@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "description": "MCP Campaign API Specification",
     "contact": {
       "name": "IQM Support",
@@ -6093,7 +6093,18 @@
             "$ref": "#/components/schemas/InventoryTargetingVO"
           },
           "pgCampaignInfo": {
-            "$ref": "#/components/schemas/PGCampaignInfoVO"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PGCampaignInfoVO"
+              },
+              {
+                "required": [
+                  "ioId",
+                  "budgetTypeId"
+                ]
+              }
+            ],
+            "description": "In addition to PGCampaignInfoVO's own required fields, draft PG campaign creation also requires ioId and budgetTypeId in practice (confirmed via \"Invalid Campaign Insertion Order\" / \"Invalid Campaign Budget Type\" errors when omitted)."
           }
         },
         "description": "Request body for creating a draft PG campaign"
@@ -6562,6 +6573,9 @@
       },
       "CampaignDuplicateRequestDTO": {
         "type": "object",
+        "required": [
+          "ioId"
+        ],
         "properties": {
           "existingCampaignIds": {
             "type": "string",
@@ -7830,7 +7844,9 @@
       },
       "IODetailsVO": {
         "required": [
-          "ioName"
+          "ioName",
+          "ioStartTime",
+          "ioBudgetTypeId"
         ],
         "type": "object",
         "properties": {
@@ -8012,6 +8028,9 @@
       },
       "IODuplicateRequestVO": {
         "type": "object",
+        "required": [
+          "ioExistingCampaignIds"
+        ],
         "properties": {
           "ioExistingCampaignIds": {
             "type": "array",
