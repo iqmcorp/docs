@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "MCP Campaign API Specification",
     "contact": {
       "name": "IQM Support",
@@ -1224,7 +1224,7 @@
           "MCP"
         ],
         "summary": "This method duplicates single IO ",
-        "description": "This method duplicates single IO and also duplicates the campaigns with status : **Running, Paused, Pending, Expired, Rejected** And within the IO ",
+        "description": "This method duplicates single IO and also duplicates the campaigns with status : **Running, Paused, Pending, Expired, Rejected** And within the IO\n\n**Note:** `ioExistingCampaignIds` is required (see schema) -- omitting it previously produced a generic `500 \"Server encountered an error !\"` with no field-level detail. Always supply it.",
         "operationId": "duplicateIO",
         "parameters": [
           {
@@ -1631,7 +1631,7 @@
           "MCP"
         ],
         "summary": "Save Campaign as a draft",
-        "description": "This API saves the campaign as a draft with given targeting and with `draft` status.\n\n**Important Notes:**\n- `advertiserDomain` must include the protocol (e.g. `https://www.example.com`)\n- `exchanges` and `publisherAdCategory` accept empty strings even though the schema lists them as required\n- `countryId` uses IQM internal master IDs (e.g. 30100001 for US), not ISO country codes",
+        "description": "This API saves the campaign as a draft with given targeting and with `draft` status.\n\n**Important Notes:**\n- `advertiserDomain` must include the protocol (e.g. `https://www.example.com`)\n- `exchanges` and `publisherAdCategory` accept empty strings even though the schema lists them as required\n- `countryId` uses IQM internal master IDs (e.g. 30100001 for US), not ISO country codes\n- Unlike `exchanges`/`publisherAdCategory`, `creativeIds` does NOT tolerate an empty string -- it fails with a generic, undiagnostic `500 \"Error in saving campaign.\"` rather than a clear validation error. Always supply at least one real creative ID.",
         "operationId": "saveDraftCampaign",
         "parameters": [
           {
@@ -2635,7 +2635,7 @@
           "MCP"
         ],
         "summary": "This method will duplicate campaigns within an Insertion Order",
-        "description": "This API will duplicate campaigns in the Insertion Order with start date and end date",
+        "description": "This API will duplicate campaigns in the Insertion Order with start date and end date.\n\n**Note:** `ioId` is required (see schema) -- omitting it previously caused a raw, unhandled Java exception (including internal class/method names) to leak through the response instead of a clean validation error. Always supply it.",
         "operationId": "duplicateCampaign",
         "parameters": [
           {
@@ -3418,7 +3418,7 @@
           "MCP"
         ],
         "summary": "Bulk Assign/De-assign PMP Deals to/from Campaigns",
-        "description": "Performs bulk assignment or de-assignment of PMP deals to/from campaigns based on the provided operations.\n\n**Request Body Details**:\n| Field       | Type   | Description                                                            |\n|-------------|--------|------------------------------------------------------------------------|\n| operations  | Array  | List of operations specifying the action, campaign IDs and PMP deal IDs |\n| action      | String | Action to perform: 'assign' or 'deassign'                              |\n| campaignIds | Array  | List of campaign IDs to be assigned/de-assigned PMP deals               |\n| pmpDealIds  | Array  | List of PMP deal IDs to assign/de-assign to/from campaigns              |\n",
+        "description": "Performs bulk assignment or de-assignment of PMP deals to/from campaigns based on the provided operations.\n\n**Request Body Details**:\n| Field       | Type   | Description                                                            |\n|-------------|--------|------------------------------------------------------------------------|\n| operations  | Array  | List of operations specifying the action, campaign IDs and PMP deal IDs |\n| action      | String | Action to perform: `ASSIGN` or `DEASSIGN` (case-sensitive, uppercase)                              |\n| campaignIds | Array  | List of campaign IDs to be assigned/de-assigned PMP deals               |\n| pmpDealIds  | Array  | List of PMP deal IDs to assign/de-assign to/from campaigns              |\n",
         "operationId": "managePMPDealCampaignMappings",
         "parameters": [
           {
@@ -3673,7 +3673,7 @@
           "MCP"
         ],
         "summary": "Bulk Assign/Deassign PG Deals to/from Campaigns",
-        "description": "Performs bulk assignment or deassignment of PG deals to/from campaigns based on the provided operations.\n\n**Request Body Details**:\n| Field       | Type   | Description                                                            |\n|-------------|--------|------------------------------------------------------------------------|\n| operations  | Array  | List of operations specifying the action, campaign IDs and PG deal IDs |\n| action      | String | Action to perform: 'assign' or 'deassign'                              |\n| campaignIds | Array  | List of campaign IDs to be assigned/deassigned PG deals                |\n| pgDealIds   | Array  | List of PG deal IDs to assign/deassign to/from campaigns               |\n",
+        "description": "Performs bulk assignment or deassignment of PG deals to/from campaigns based on the provided operations.\n\n**Request Body Details**:\n| Field       | Type   | Description                                                            |\n|-------------|--------|------------------------------------------------------------------------|\n| operations  | Array  | List of operations specifying the action, campaign IDs and PG deal IDs |\n| action      | String | Action to perform: `ASSIGN` or `DEASSIGN` (case-sensitive, uppercase)                              |\n| campaignIds | Array  | List of campaign IDs to be assigned/deassigned PG deals                |\n| pgDealIds   | Array  | List of PG deal IDs to assign/deassign to/from campaigns               |\n\n**Note:** `ASSIGN` against a campaign that isn't Programmatic Guaranteed type (`campaignTypeId` must be `2`) returns a generic `500 \"Server encountered an error!\"` rather than a clear validation error. Confirm the target campaign's type before assigning a PG deal.",
         "operationId": "managePgDealCampaignMappings",
         "parameters": [
           {
@@ -4239,7 +4239,7 @@
           "MCP"
         ],
         "summary": "It will Create the new draft PG Campaign for advertiser.",
-        "description": "Given API will Create the new draft PG Campaign for advertiser User.\n\n---\n\n#### Request Body Detail\n\n|  **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pgCampaignInfoVO |Object| Object contains of campaign information| |\n| campaignName | String | Name of the given campaign|\n| ioId | int | Id of insertion order associated with campaign|\n| timeZoneId | int | Represent timezone of campaign|\n| totalImpressions | int | Targeted impressions for impression based campaign as budget |\n| maxBid | double | Maximum allowed bid price for campaign|\n| startTime | long | Start time of the campaign in epoch seconds|\n| endTime | long | End time of the campaign in epoch seconds |\n| budgetTypeId | int | Id of Budget type of given campaign (impression based / dollar based)|\n| campaignTypeId | int | Id of Campaign Type (advanced Campaign(not supported in this API)/ PG deal campaign) |\n| advertiserDomain | String | Domain of the advertiser user|\n| budgetTotal | double | Total budget of the campaign in dollar for dollar based campaign|\n| creativeTargeting | Object | consist of campaign creative targeting details|\n| creativeTypeId | int | Type Id of creatives attached with campaign  |\n| creativeIds | String | Ids of creatives attached with campaign |\n| inventoryTargeting | Object | Consist of campaign PG deal targeting details|\n| pgDealIds | String | Ids of PG Deal attached with campaign |\n| conversionTargeting | Object | Consist of campaign conversion targeting details |\n| conversionTypeId | int | Type Id of conversion attached with campaign|\n| conversionIds | String | Ids of conversion attached with campaign |\n| politicalAdvertiserClientId | int | Advertiser client Id if User is political advertiser |\n| countryId | int | Id of the targeted country |\n",
+        "description": "Given API will Create the new draft PG Campaign for advertiser User.\n\n---\n\n#### Request Body Detail\n\n|  **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pgCampaignInfoVO |Object| Object contains of campaign information| |\n| campaignName | String | Name of the given campaign|\n| ioId | int | Id of insertion order associated with campaign|\n| timeZoneId | int | Represent timezone of campaign|\n| totalImpressions | int | Targeted impressions for impression based campaign as budget |\n| maxBid | double | Maximum allowed bid price for campaign|\n| startTime | long | Start time of the campaign in epoch seconds|\n| endTime | long | End time of the campaign in epoch seconds |\n| budgetTypeId | int | Id of Budget type of given campaign (impression based / dollar based)|\n| campaignTypeId | int | Id of Campaign Type (advanced Campaign(not supported in this API)/ PG deal campaign) |\n| advertiserDomain | String | Domain of the advertiser user|\n| budgetTotal | double | Total budget of the campaign in dollar for dollar based campaign|\n| creativeTargeting | Object | consist of campaign creative targeting details|\n| creativeTypeId | int | Type Id of creatives attached with campaign  |\n| creativeIds | String | Ids of creatives attached with campaign |\n| inventoryTargeting | Object | Consist of campaign PG deal targeting details|\n| pgDealIds | String | Ids of PG Deal attached with campaign |\n| conversionTargeting | Object | Consist of campaign conversion targeting details |\n| conversionTypeId | int | Type Id of conversion attached with campaign|\n| conversionIds | String | Ids of conversion attached with campaign |\n| politicalAdvertiserClientId | int | Advertiser client Id if User is political advertiser |\n| countryId | int | Id of the targeted country |\n\n\n**Known issue:** even with every field above populated, this operation has been observed to still return a generic `500 \"Server encountered an error !\"` with no field-level detail -- there is at least one additional required field that neither the schema nor any error message names. If you hit this after supplying all documented fields, it's a backend gap to escalate, not a caller mistake to keep debugging.",
         "operationId": "addDraftPGCampaign",
         "parameters": [
           {
@@ -4540,7 +4540,7 @@
           "MCP"
         ],
         "summary": "Include or exclude campaigns from an inventory group",
-        "description": "This API allows you to include or exclude specific campaigns from a given inventory group. Use this to manage which campaigns are targeted by the inventory group by providing comma-separated lists of campaign IDs to include and/or exclude.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| includedCampaignIds `[required]` | String | Comma-separated list of campaign IDs to include in the inventory group (e.g. \"123,456,789\"). Use an empty string to skip. |\n| excludedCampaignIds `[required]` | String | Comma-separated list of campaign IDs to exclude from the inventory group (e.g. \"321,654\"). Use an empty string to skip. |\n",
+        "description": "This API allows you to include or exclude specific campaigns from a given inventory group.\n\n**WARNING -- this is a full-replace operation, not additive.** Supplying `includedCampaignIds`/`excludedCampaignIds` REPLACES the group's entire included/excluded campaign lists with exactly what you send -- any campaign not in your list is silently dropped from the group, even if it was included/excluded before this call and you didn't intend to touch it. Fetch and merge the current state yourself before calling this if you want to add to (rather than replace) the existing lists; there is no separate add/remove-delta endpoint.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| includedCampaignIds `[required]` | String | Comma-separated list of campaign IDs to include in the inventory group (e.g. \"123,456,789\"). Use an empty string to skip. **Replaces the existing included list entirely.** |\n| excludedCampaignIds `[required]` | String | Comma-separated list of campaign IDs to exclude from the inventory group (e.g. \"321,654\"). Use an empty string to skip. **Replaces the existing excluded list entirely.** |\n",
         "operationId": "includeExcludeInventoryGroup",
         "parameters": [
           {
@@ -4837,7 +4837,7 @@
           },
           "creativeIds": {
             "type": "string",
-            "description": "Comma-separated creative IDs",
+            "description": "Comma-separated creative IDs. Must not be an empty string -- unlike `exchanges`/`publisherAdCategory`, an empty value here produces a generic `500` rather than a validation error.",
             "example": "101,102,103"
           },
           "targetCPI": {
@@ -6748,8 +6748,12 @@
         "properties": {
           "action": {
             "type": "string",
-            "description": "The action to perform",
-            "example": "add"
+            "description": "The action to perform. Values are case-sensitive uppercase -- lowercase values like 'add'/'assign' are rejected with \"Invalid actions: <value>\".",
+            "example": "ASSIGN",
+            "enum": [
+              "ASSIGN",
+              "DEASSIGN"
+            ]
           },
           "campaignIds": {
             "uniqueItems": true,
@@ -6808,8 +6812,12 @@
         "properties": {
           "action": {
             "type": "string",
-            "description": "The action to perform",
-            "example": "add"
+            "description": "The action to perform. Values are case-sensitive uppercase -- lowercase values like 'add'/'assign' are rejected with \"Invalid actions: <value>\".",
+            "example": "ASSIGN",
+            "enum": [
+              "ASSIGN",
+              "DEASSIGN"
+            ]
           },
           "campaignIds": {
             "uniqueItems": true,
@@ -8472,12 +8480,12 @@
         "properties": {
           "includedCampaignIds": {
             "type": "string",
-            "description": "Comma-separated list of campaign IDs to include in the inventory group. Use an empty string if no campaigns should be included.",
+            "description": "Comma-separated list of campaign IDs to include in the inventory group. Use an empty string if no campaigns should be included. Replaces the existing included list entirely -- this is not additive.",
             "example": "101,102,103"
           },
           "excludedCampaignIds": {
             "type": "string",
-            "description": "Comma-separated list of campaign IDs to exclude from the inventory group. Use an empty string if no campaigns should be excluded.",
+            "description": "Comma-separated list of campaign IDs to exclude from the inventory group. Use an empty string if no campaigns should be excluded. Replaces the existing excluded list entirely -- this is not additive.",
             "example": "200,201"
           }
         }
