@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "MCP Campaign API Specification",
     "contact": {
       "name": "IQM Support",
@@ -4713,13 +4713,13 @@
           },
           "totalBudgetPacing": {
             "type": "boolean",
-            "description": "Enable total budget pacing. When false, budgetDay is required.",
+            "description": "Enable total budget pacing. On saveCampaign, this drives a real conditional requirement: false (or omitted) requires budgetDay, true requires endTime instead. Confirmed live that this schema is shared with saveDraftCampaign, which does NOT enforce either side of that conditional (drafts are lenient) -- the same is assumed, not separately tested, for editDraftCampaign.",
             "example": true
           },
           "budgetDay": {
             "minimum": 0,
             "type": "number",
-            "description": "Daily budget amount in dollars. Required when totalBudgetPacing is false. Must not be provided when totalBudgetPacing is true.",
+            "description": "Daily budget amount in dollars. On saveCampaign: required when totalBudgetPacing is false; must not be provided when totalBudgetPacing is true. Confirmed live NOT enforced on saveDraftCampaign regardless of totalBudgetPacing.",
             "format": "double",
             "example": 500
           },
@@ -4762,7 +4762,7 @@
           },
           "endTime": {
             "type": "integer",
-            "description": "Campaign end time (Unix timestamp in seconds)",
+            "description": "Campaign end time (Unix timestamp in seconds). On saveCampaign: required when totalBudgetPacing is true; otherwise optional. Confirmed live NOT enforced on saveDraftCampaign regardless of totalBudgetPacing.",
             "format": "int64",
             "example": 1691821517
           },
