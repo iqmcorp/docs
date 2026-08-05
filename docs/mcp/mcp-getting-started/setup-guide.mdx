@@ -12,7 +12,7 @@ import MCPInstSetup from '@site/static/img/MCP/MCP-inst-setup.png';
 import MCPBearer from '@site/static/img/MCP/MCP-bearer.png';
 import MCPExe from '@site/static/img/MCP/MCP-make-exe.png';
 import MCPChatTools from '@site/static/img/MCP/MCP-chat-tools.png';
-import MCPConfigTools from '@site/static/img/MCP/MCP-config-tools.png';
+import MCPConfigTools from '@site/static/img/MCP/setup/mcp-copilot-tools.png';
 import MCPWindows from '@site/static/img/MCP/MCP-windows-inst.png';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -25,6 +25,10 @@ import Columns from '@site/src/components/Columns';
 import Column from '@site/src/components/Column';
 import MacOS from '@site/static/img/macos.svg';
 import Windows from '@site/static/img/windows.svg';
+import MCPAuth from '@site/static/img/MCP/setup/mcp-auth.png';
+import MCPLogin from '@site/static/img/MCP/setup/mcp-login.png';
+import MCPConfig from '@site/static/img/MCP/setup/mcp-config.png';
+import MCPClaudeTools from '@site/static/img/MCP/setup/mcp-claude-tools.png';
 
 
 # Setup Guide
@@ -41,168 +45,102 @@ You will also need to have either [Claude Desktop](https://www.claude.com/downlo
 
 ### Authorization Credentials 
 
-You will need the following credentials for the MCP to connect to your IQM account:
+You will need the following credentials to set up your IQM MCP connection:
 * Organization Workspace ID
 * Bearer Token
 
-##### OW ID 
 
-To find your Organization Workspace ID (OW ID):
-1. Log in to the [IQM Platform](https://app.iqm.com/)
-2. Click on your profile icon in the top right corner
-3. Select "Manage my profile"
-4. Navigate to "Organizations" tab
-5. Your OW ID is listed on the User's Org card 
+1. Using your IQM credentials, log in to the [MCP portal](https://mcp.iqm.com/).
+1. In the left panel you will find an "Authorization Token" and a "Default Customer ID" (OWID) to use in your MCP session. 
 
-<center><img className='diagram' src={MCPowid} /></center>
-
-##### Bearer Token 
-
-To find your Bearer Token:
-1. While logged in to the [IQM Platform](https://app.iqm.com/), right click anywhere on the page and select "Inspect" to open the Developer Tools.
-2. Navigate to the "Application" tab in the Developer Tools.
-3. In the left sidebar, under "Storage", click on "Local Storage" and then select the URL for the IQM Platform (https://app.iqm.com).
-4. Look for the key named "auth" in the list of local storage items.
-5. The value associated with the <var>access_token</var> is your Bearer Token. Copy this value for use in the MCP setup.
-
-<center><img className='diagram' src={MCPBearer} /></center>
+<center><img className='diagram' src={MCPConfig} /></center>
 
 
+## MCP Setup
 
-## Installation Guide 
+### Tool Installation
 
-### Download Installer 
+Run the following commands to install the required tools for MCP:
 
-Download the installer for your operating system:
+##### Step 1: Install uv 
 
-<Columns>
-<Column>
-<a class='card'  href={useBaseUrl("/mcp-installer/iqm-mcp-macos.zip")}>
-  <Card className='downloadCard'>
-    <CardHeader>
-      <h5><MacOS /> macOS</h5>
-    </CardHeader>
-  </Card></a>
-  </Column>
-  <Column>
-  <a class='card'  href={useBaseUrl("/mcp-installer/iqm-mcp-windows.zip")}>
-  <Card className='downloadCard'>
-    <CardHeader>
-      <h5><Windows /> Windows</h5>
-    </CardHeader>
-  </Card></a>
-  </Column>
-</Columns>
+```bash
+brew install uv
+```
 
-### Install MCP 
+##### Step 2: Install the Windsor MCP Proxy
 
-The installer contains an executable file to install the IQM MCP. You will be prompted to set up with Claude Desktop or GitHub Copilot. The installer will set up the config files and download the necessary specifications to get started with your chosen AI model. You will also be prompted for your [Authorization Credentials](#authorization-credentials).
+```bash
+uv tool install mcp-proxy
+```
 
-<Tabs>
-<TabItem value="macos" label="macOS" className='genericTab'>
-  
-  To install IQM MCP on macOS:
-  1. Double-click the downloaded .zip file to extract installer contents.
-  2. Open the <var>IQM MCP Installer</var> folder and Double-click <var>Installation Setup.workflow</var>.
-    <center><img style={{ width:"50%"}} className='diagram' src={MCPInstSetup} /></center>
-  3. Right-click <var>Install IQM MCP.command</var> and select `Quick Actions > Make Executable`.
-    <center><img style={{ width:"50%"}} className='diagram' src={MCPExe} /></center>
-  4. Double-click <var>Install IQM MCP.command</var> and follow the on-screen instructions to complete the installation.
+##### Step 3: Locate the Installed Path:
 
-  :::warning[NOTE]
-  If you encounter a security warning when trying to run the installer, you may need to adjust your macOS security settings to allow the installation of applications from unidentified developers. 
-  
-  To do this, go to `System Settings > Privacy & Security > Security`, and under the "Allow apps downloaded from" section, select "Open Anyway". You may need to click the lock icon and enter your administrator password to make changes.
+```bash
+which mcp-proxy
+```
 
-  <center><img style={{ width:"65%"}} className='diagram' src={MCPInstallerSecurity} /></center>
-  :::
+This will return the path to the installed mcp-proxy tool. You will need this path for the next step.
 
-:::tip[Update Specifications or Credentials]
+```
+/Users/<USERNAME>/.local/bin/mcp-proxy
+```
 
-To get the latest IQM MCP specifications or to update your authorization credentials, run the <var>.command</var> executable again.
+### MCP Client Configuration
 
+##### Step 1: Retrieve Config
+
+On the MCP Portal, copy and paste the JSON in the MCP Client Configuration window. 
+
+<center><img className='diagram' src={MCPConfig} /></center>
+
+##### Step 2: Open Claude Desktop
+
+In Claude Desktop navigate to **Claude Desktop > Settings > Developer > Edit Config** and paste the JSON configuration from the MCP Portal.
+
+##### Step 3: Insert Credentials
+
+In the JSON configuration, replace the placeholder values for <var>WORKSPACE_ID</var>, <var>BEARER_TOKEN</var>, and <var>USERNAME</var> with the values from the MCP Portal ([Authorization Credentials](#authorization-credentials)) and step 3 from [Tool Installation](#tool-installation).
+
+##### Step 4: Save Configuration
+
+After inserting your credentials, save the configuration file and restart Claude Desktop. You are now ready to use IQM MCP!
+
+## MCP Tool Selection
+
+### Claude Desktop
+
+In Claude Desktop you can see the available tools in two different ways:
+
+##### 1. Settings
+
+Navigate to **Claude Desktop > Settings > Connectors**. You will see a list of available servers, their corresponding tools, and their permissions.
+
+##### 2. Tool List
+
+You can also toggle on/off tools by server in the chat window. Click the "+" icon and view **Connectors** to see the available servers.
+
+<center><img className='diagram' src={MCPClaudeTools} /></center>
+
+### Github Copilot
+
+In GitHub Copilot you can see the available tools in the chat window or view their settings:
+
+##### 1. Settings
+
+At the top of the window click the **Open Quick Access** bar and then **Show and Run Commands > MCP: List Servers** (you may need to type "MCP" to filter the commands). This will display the available servers and their settings.
+
+##### 2. Tool List
+
+You can also toggle on/off tools by server from the chat window. Click the **Configure Tools** button and a server/tool list will appear. You may need to click the **Update Tools** button to refresh the list of available tools.
+
+:::warning
+Github Copilot enforces a limit of 128 tools per request. If you have more than 128 tools enabled, you may need to disable some tools to avoid errors.
 :::
 
-</TabItem>
-  <TabItem value="windows" label="Windows" className='genericTab'>
+<center><img className='diagram' src={MCPChatTools} /></center>
 
-
-  
-  To install IQM MCP on Windows:
-
-1. Unzip the downloaded installer contents. 
-2. Open the <var>IQM MCP Installer</var> folder and double-click <var>Install IQM MCP.cmd</var>. Follow the on-screen instructions to complete the installation.
- <center><img style={{ width:"75%"}} className='diagram' src={MCPWindows} /></center>
-
-:::tip[Update Specifications or Credentials]
-
-To get the latest IQM MCP specifications or to update your authorization credentials, run the <var>.cmd</var> executable again.
-
-:::
-
-</TabItem>
-</Tabs>
-
-### Github Copilot Setup
-
-You may have to enable MCP tools in GitHub Copilot settings:
-1. Click the `Configure Tools` icon in the Copilot Chat window.
- <center><img style={{ width:"65%"}} className='diagram' src={MCPChatTools} /></center>
-2. In the `Tools panel`, check the <var>iqm-mcp-...</var> tools to enable them.
-3. If you have updated the MCP specifications, you may need to click the `Update Tools` button to see the latest tools.
- <center><img style={{ width:"65%"}} className='diagram' src={MCPConfigTools} /></center>
-
-### Installation Video
-
-
-<Tabs>
-<TabItem value="macos" label="macOS" className='genericTab'>
-
-You can also follow along with this installation video:
-
-<div
-  style={{
-    position: 'relative',
-    width: '100%',
-    maxWidth: 960,
-    aspectRatio: '16 / 9',
-    margin: '0 auto'
-  }}
->
-  <iframe
-    src="https://www.youtube.com/embed/Yl14Bbr2MO8?si=NAXfv2_HiNWl-a5r"
-    title="MCP Mac Installation Demo"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
-  />
-</div>
-
-</TabItem>
-<TabItem value="windows" label="Windows" className='genericTab'>
-
-You can also follow along with this installation video:
-
-<div
-  style={{
-    position: 'relative',
-    width: '100%',
-    maxWidth: 960,
-    aspectRatio: '16 / 9',
-    margin: '0 auto'
-  }}
->
-  <iframe
-    src="https://www.youtube.com/embed/4axksztzfKY?si=R59q7hG50C1V1zgf"
-    title="MCP Windows Installation Demo"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
-  />
-</div>
-
-</TabItem>
-</Tabs>
+<p /><center><img className='diagram' src={MCPConfigTools} /></center>
 
 
 ## Use IQM MCP!
