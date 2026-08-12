@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "MCP User API Specification",
     "contact": {
       "name": "IQM Support",
@@ -343,88 +343,6 @@
                     "isValid": true,
                     "message": "Workspace is valid"
                   }
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/v3/ua/user/update-password": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Update user password via reset invitation",
-        "description": "Update password for a user through a valid password reset invitation (forgot password flow).",
-        "operationId": "resetUserPassword",
-        "requestBody": {
-          "description": "Password update request via invitation",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordRequestVO"
-              },
-              "examples": {
-                "Update Password Request": {
-                  "description": "Update Password Request",
-                  "value": {
-                    "email": "user@example.com",
-                    "resetToken": "reset_token_123",
-                    "newPassword": "NewPassword456!"
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Password updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "Password updated successfully"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid or expired reset token",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
                 }
               }
             }
@@ -1361,90 +1279,6 @@
         }
       }
     },
-    "/api/v3/ua/sign-up": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "User sign-up",
-        "description": "This API handles user registration on the platform. It creates a new user account with provided credentials and performs necessary initialization.",
-        "operationId": "createUser",
-        "requestBody": {
-          "description": "User sign-up details",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserRequestVO"
-              },
-              "examples": {
-                "User Sign-up Request": {
-                  "description": "User Sign-up Request",
-                  "value": {
-                    "email": "user@example.com",
-                    "password": "SecurePassword123!",
-                    "firstName": "John",
-                    "lastName": "Doe",
-                    "organizationName": "User Organization",
-                    "organizationTypeId": 1,
-                    "verticalId": 2
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "User registration successful and redirected",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseRedirectResponse"
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "redirectUrl": "https://workspace.example.com/dashboard",
-                    "message": "User registered successfully"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid user data provided",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Email already exists",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
     "/api/v3/ua/organization/whitelabel-pixel-url": {
       "post": {
         "tags": [
@@ -2055,168 +1889,6 @@
                       "error": "server encountered an error !"
                     }
                   ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/ua/logout": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "User logout",
-        "description": "Logout the authenticated user and invalidate the current session token.",
-        "operationId": "logout",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Logout successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "User logged out successfully"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing token",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/ua/login": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "User login",
-        "description": "This API authenticates a user and generates an authentication token. Supports both password grant and client credentials grant types. May trigger MFA verification if enabled.",
-        "operationId": "login",
-        "parameters": [
-          {
-            "name": "X-IAA-HOST",
-            "in": "header",
-            "description": "Workspace domain used to identify the workspace context. Falls back to the Host header if not provided.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "app.stage.iqm.com"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Basic authentication credentials for the OAuth client: Base64-encoded clientId:clientSecret. Required when the workspace does not have a stored authorization code.",
-            "schema": {
-              "type": "string"
-            },
-            "example": "Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0"
-          }
-        ],
-        "requestBody": {
-          "description": "User login credentials",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserLoginRequestVO"
-              },
-              "examples": {
-                "Password Grant Login": {
-                  "description": "Password Grant Login",
-                  "value": {
-                    "email": "user@example.com",
-                    "password": "UserPassword123!",
-                    "grantType": "password"
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                    "expires_at": 1781042734639,
-                    "scope": "read write",
-                    "token_type": "bearer",
-                    "expires_in": 86399,
-                    "jti": "f4b2a9f1-df69-4abd-b99f-d0d894350859",
-                    "owId": 203123,
-                    "mfa_required": false
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "User not authorized for this workspace",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "MFA verification required",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
                 }
               }
             }
@@ -3140,173 +2812,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/ua/auth/mfa/verify": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Verify MFA Code",
-        "description": "Verifies the provided Multi-Factor Authentication (MFA) code (OTP) for the user. Upon successful verification, returns user session details and organization workspace ID.",
-        "operationId": "verifyMFACode",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Request containing MFA OTP code",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string",
-                "example": {
-                  "otp": "123456"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "MFA verification successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MfaVerifyResponse"
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                    "tokenType": "Bearer",
-                    "expiresIn": 3600,
-                    "owId": 12345
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid or expired MFA code",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "MFA verification failed",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/ua/auth/mfa/send": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Send MFA Code",
-        "description": "Generates and sends a Multi-Factor Authentication (MFA) code to the user associated with the provided organizational workspace ID (owId). The code is sent via email or SMS based on user preferences.",
-        "operationId": "sendMFACode",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Request containing owId for MFA code generation",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string",
-                "example": {
-                  "owId": "12345"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "MFA code sent successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "MFA code has been sent to your email"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid owId or user not found"
-          },
-          "422": {
-            "description": "User MFA settings not configured"
           },
           "500": {
             "description": "Internal server error",
@@ -5711,6 +5216,57 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v3/ua/user/accessible-organizations": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get organizations accessible to the authenticated user",
+        "description": "Returns every organization/workspace the authenticated user may select. This operation requires only the Keycloak bearer token and intentionally does not require X-IAA-OW-ID.",
+        "operationId": "getAccessibleOrganizations",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Keycloak authorization bearer token. Supplied automatically by the authenticated MCP connection.",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{bearer_token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accessible organizations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessibleOrganizationsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "owId": 202714,
+                      "organizationName": "Example Workspace",
+                      "workspaceDomain": "example.stage.iqm.com",
+                      "customerType": "Workspace"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing bearer token"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -10530,6 +10086,49 @@
   },
   "components": {
     "schemas": {
+      "AccessibleOrganization": {
+        "type": "object",
+        "required": [
+          "owId"
+        ],
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Organization/workspace ID used in X-IAA-OW-ID"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "workspaceDomain": {
+            "type": "string"
+          },
+          "customerType": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "AccessibleOrganizationsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessibleOrganization"
+            }
+          }
+        }
+      },
       "CommonResponseString": {
         "type": "object",
         "properties": {
