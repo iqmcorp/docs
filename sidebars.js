@@ -3122,7 +3122,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'SLS Eligibility Requirements',
-              href: '/guidelines/insights-api#sls-eligiblity-requirements',
+              href: '/guidelines/insights-api#sls-eligibility-requirements',
               className: 'sidebarItem'
             },
             {
@@ -6504,7 +6504,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'SLS Eligibility Requirements',
-              href: '/healthcare-vertical/insights-pld#sls-eligiblity-requirements',
+              href: '/healthcare-vertical/insights-pld#sls-eligibility-requirements',
               className: 'sidebarItem',
             },
             {
@@ -7091,6 +7091,12 @@ const sidebars = {
           type: 'doc',
           label: 'Workspace Tutorial',
           id: `mcp/mcp-tutorials/mcp-workspace-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Tools Index',
+          id: `mcp/mcp-tutorials/mcp-tools-index`,
           className: 'sidebarItem'
         }
       ]
