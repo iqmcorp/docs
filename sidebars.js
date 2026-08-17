@@ -3798,6 +3798,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Bulk Delete Inventory Groups',
+              href: '/guidelines/inventory-api#bulk-delete-inventory-groups',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Add Contextual Inventories to Group',
               href: '/guidelines/inventory-api#add-contextual-inventories-to-group',
               customProps: { method: 'POST' },
