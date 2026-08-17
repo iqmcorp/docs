@@ -6971,19 +6971,16 @@ function removeMappingsOfInventoryGroup(): Promise<Responses> {
 
 ### Add or Remove Customers From a Shared Inventory Group
 
-<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/inv/group/{groupId}/shared/customers/edit" />
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/inv/groups/shared/customers/edit" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Add or remove Customers from an Inventory group by group ID with the following endpoint: 
-
-| Path Parameters |  |
-| ---- | --- |
-| `groupId` <br /><span class="type-text">integer</span> | [Group ID](#get-list-of-inventory-groups) |
+Add or remove Customers from one or more Inventory groups with the following endpoint: 
 
 | Request Schema |  |
 | ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups)s to update shared customer mappings for |
 | `addOwIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to add to Inventory group |
 | `removeOwIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to remove from Inventory group |
 
@@ -7005,6 +7002,10 @@ Add or remove Customers from an Inventory group by group ID with the following e
 
 ```json title="Request Sample"
 {
+    "groupIds": [
+        191712,
+        191714
+    ],
     "addOWIds": [
         200425,
         200495,
@@ -7012,9 +7013,7 @@ Add or remove Customers from an Inventory group by group ID with the following e
     ],
     "removeOWIds": [
         200929,
-        200931,
-        200963,
-        200964
+        200931
     ]
 }
 ```
@@ -7052,15 +7051,11 @@ interface Responses {
 function editSharedGroupMapping(): Promise<Responses> {
   const options = {
     method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/inv/group/{groupId}/shared/customers/edit',
-    params: {
-      path: {
-        groupId: `number`
-      }
-    },
+    url: 'https://api.iqm.com/api/v3/inv/groups/shared/customers/edit',
     requestBody: {
       content: {
         "application/json": {
+          groupIds: `array of numbers`,
           addOWIds?: `array of numbers`,
           removeOWIds?: `array of numbers`
         }
@@ -7386,6 +7381,113 @@ function deleteInventoryGroup(): Promise<Responses> {
         groupId: `number`
       }
     },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Bulk Delete Inventory Groups
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/groups/delete" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Delete multiple existing Inventory groups at once by group IDs.
+
+| Request Schema |  |
+| ---- | --- |
+| `groupIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Group ID](#get-list-of-inventory-groups)s to delete |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response Properties</summary>
+
+<table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">string</span></td>
+  <td>Success message</td>
+  </tr>
+  </table>
+  </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "groupIds": [
+        191712,
+        191714
+    ]
+}
+```
+
+```json title="Response 200"
+{
+    "success": true,
+    "data": "2 inventory group(s) deleted successfully."
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 403"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Unauthorized user or invalid inventory group."
+        }
+    ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: string
+      }
+    };
+  };
+}
+
+function bulkDeleteInventoryGroups(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/inv/groups/delete',
+    requestBody: {
+      content: {
+        "application/json": {
+          groupIds: `array of numbers`,
+        }
+      }
+    }
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
