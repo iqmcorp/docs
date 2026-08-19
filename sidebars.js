@@ -2438,6 +2438,12 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Date Range Requirement',
+              href: '/guidelines/dashboard-api#date-range-requirement',
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Workspace Report',
               href: '/guidelines/dashboard-api#workspace-report',
               customProps: { method: 'POST' },
