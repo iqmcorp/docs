@@ -58,7 +58,7 @@ const config = {
 
   stylesheets: [
     {
-      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Nata+Sans:wght@400;600;700&display=swap",
+      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Nata+Sans:wght@400;600;700;800&display=swap",
       type: "text/css",
     },
   ],
