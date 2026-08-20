@@ -41,6 +41,28 @@ const config = {
     format: "detect",
   },
 
+  headTags: [
+    {
+      tagName: "link",
+      attributes: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
+      },
+    },
+  ],
+
+  stylesheets: [
+    {
+      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Nata+Sans:wght@400;600;700&display=swap",
+      type: "text/css",
+    },
+  ],
+
   presets: [
     [
       "classic",
