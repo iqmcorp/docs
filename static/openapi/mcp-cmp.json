@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "4.0.0",
+    "version": "5.0.0",
     "description": "MCP Campaign API Specification",
     "contact": {
       "name": "IQM Support",
@@ -4640,6 +4640,291 @@
           }
         }
       }
+    },
+    "/api/v2/cmp/campaign/budgetInfo": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get campaign budget info and graph details",
+        "description": "Calculates and returns campaign budget and impression information. Derives any missing budget or daily-impression value from the supplied combination of total budget, timezone, daily budget, start/end time, and budget type. When a `scheduling` map is provided, daily amounts are proportionally distributed across scheduled hours only. Pass `isGraphInfoRequired: true` to include per-day graph data in the response.\n\n**Method change note:** this operation was `GET` with query-string parameters prior to 2026-09-01; it is now `POST` with a JSON request body so that the `scheduling` map (not expressible as query params) can be supplied. Existing callers must switch from query params to a JSON body.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| campaignId `[optional]` | Integer | Existing campaign ID to calculate budget info for. |\n| budgetTotal `[optional]` | Number | Total budget amount in dollars. |\n| budgetDay `[optional]` | Number | Daily budget amount in dollars. |\n| fixedDailyBudget `[optional]` | Boolean | Whether the daily budget is a fixed amount every day. Defaults to false. |\n| startTime | Number | Campaign start time as an epoch timestamp in seconds. |\n| endTime `[optional]` | Number | Campaign end time as an epoch timestamp in seconds. Required to derive total/daily budget for impression-based or PG campaigns. |\n| timezone | Number | Timezone ID for the campaign. |\n| isGraphInfoRequired `[optional]` | Boolean | Set to true to include per-day graph data (`graphInfo`) in the response. |\n| totalImpressions `[optional]` | Number | Total impressions for an impression-based (budgetTypeId: 2) campaign. |\n| budgetTypeId `[optional]` | Number | Budget type ID -- 1 for dollar-based, 2 for impression-based. |\n| maxBid `[optional]` | Number | Maximum bid price for the campaign. |\n| dailyImpressions `[optional]` | Number | Daily impressions target for an impression-based campaign. |\n| campaignTypeId `[optional]` | Number | Campaign type ID. Defaults to 1 (standard). |\n| spendingBudget `[optional]` | Number | PG campaign spending budget amount, distinct from budgetTotal. |\n| scheduling `[optional]` | JSON Map: String to Array | Keys `\"0\"`-`\"6\"` map to Monday-Sunday; values are arrays of `[\"HH:mm:ss\", \"HH:mm:ss\"]` time ranges restricting which hours budget is distributed across. |\n\n---\n\n#### Scheduling example\n\n```\n\"scheduling\": {\n    \"0\": [[\"09:00:00\", \"17:00:00\"]],\n    \"1\": [[\"09:00:00\", \"17:00:00\"]]\n}\n```",
+        "operationId": "getCampaignBudgetInfo",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignBudgetInfoRequestVO"
+              },
+              "examples": {
+                "Budget info for existing dollar-based campaign with scheduling": {
+                  "description": "Recalculate budget info for an existing campaign, restricting distribution to a Mon/Tue 9am-5pm schedule.",
+                  "value": {
+                    "campaignId": 12345,
+                    "budgetTotal": 10000.0,
+                    "startTime": 1700000000,
+                    "endTime": 1702678400,
+                    "timezone": 1,
+                    "budgetTypeId": 1,
+                    "isGraphInfoRequired": false,
+                    "scheduling": {
+                      "0": [
+                        [
+                          "09:00:00",
+                          "17:00:00"
+                        ]
+                      ],
+                      "1": [
+                        [
+                          "09:00:00",
+                          "17:00:00"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "Budget info for a new campaign (no scheduling)": {
+                  "description": "Estimate budget info before a campaign has been created, deriving budgetDay from budgetTotal/startTime/endTime.",
+                  "value": {
+                    "budgetTotal": 5000.0,
+                    "startTime": 1700000000,
+                    "endTime": 1701000000,
+                    "timezone": 105,
+                    "budgetTypeId": 1,
+                    "fixedDailyBudget": false,
+                    "isGraphInfoRequired": true
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success": {
+                    "description": "Success",
+                    "value": {
+                      "statusCode": 200,
+                      "responseObject": {
+                        "campaignId": 12345,
+                        "budgetTotal": 10000.0,
+                        "budgetDay": 476.19,
+                        "actualSpent": 1200.5,
+                        "fixedDailyBudget": false,
+                        "startTime": 1700000000,
+                        "endTime": 1702678400,
+                        "timezone": 1,
+                        "budgetTypeId": 1,
+                        "graphInfo": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request -- validation failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Missing required field": {
+                    "description": "Missing required field",
+                    "value": {
+                      "statusCode": 400,
+                      "errorObjects": [
+                        {
+                          "error": "Start time is required"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 500,
+                  "responseObject": {
+                    "errorMsg": "Internal server error",
+                    "errorCode": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/cmp/campaign/cost": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Cost Details for provided input",
+        "description": "Retrieves the cost details for a specific campaign, or for a proposed combination of audience/creative/pre-bid targeting before a campaign is created. The request body must include either `campaignId`, or a combination of `audienceIds`, `creativeIds`, `preBidSegmentIds`, and `creativeTypeId`.\n\nThe response includes `thirdPartyCost` -- the resolved 3rd-party cost after applying any campaign-level override set via `saveCampaign`/`saveDraftCampaign`/`editCampaignPatch`/`editDraftCampaign` (see their `thirdPartyCost` request field), falling back to the account-level 3rd-party cost when no override is set.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| campaignId `[optional]` | Integer | Existing campaign ID to look up cost details for. Either this or the fields below must be provided. |\n| owId `[optional]` | Integer | Organization workspace ID. |\n| audienceIds `[optional]` | Array of Integer | Audience segment IDs to estimate data cost for. |\n| creativeIds `[optional]` | Array of Integer | Creative IDs to estimate ad-serving cost for. |\n| preBidSegmentIds `[optional]` | Array of Integer | Pre-bid audience segment IDs to estimate data cost for. |\n| creativeTypeId `[optional]` | Integer | Creative type ID. |\n\n---\n\n#### Response Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| maxBidPrice | Number | Maximum bid price used in the cost calculation. |\n| adServingCost | Number | Ad-serving cost component. |\n| dataCost | Number | Data cost component. |\n| preBidCost | Number | Pre-bid segment cost component. Nullable. |\n| msaExistsWith | String | Name of the partner an MSA exists with, if any. |\n| logoURL | String | Logo URL associated with the MSA partner, if any. |\n| thirdPartyCost | Number | Resolved 3rd-party cost after applying any campaign-level override. |",
+        "operationId": "getCostDetails",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignCostDetailsRequestVO"
+              },
+              "examples": {
+                "Cost details for an existing campaign": {
+                  "description": "Look up cost details by campaignId.",
+                  "value": {
+                    "campaignId": 12345,
+                    "owId": 67890,
+                    "audienceIds": null,
+                    "creativeIds": null,
+                    "preBidSegmentIds": null
+                  }
+                },
+                "Estimated cost details before campaign creation": {
+                  "description": "Estimate cost details for a proposed targeting combination, without an existing campaign.",
+                  "value": {
+                    "campaignId": null,
+                    "owId": 67890,
+                    "audienceIds": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "creativeIds": [
+                      4,
+                      5,
+                      6
+                    ],
+                    "preBidSegmentIds": [
+                      7,
+                      8,
+                      9
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Cost details with 3rd-party cost override applied": {
+                    "description": "Cost details with 3rd-party cost override applied",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "maxBidPrice": 25.0,
+                        "adServingCost": 1.25,
+                        "dataCost": 15.0,
+                        "preBidCost": null,
+                        "msaExistsWith": "Partner A",
+                        "logoURL": "https://example.com/logo.png",
+                        "thirdPartyCost": 10.5
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Request": {
+                    "description": "Invalid Request",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid campaignId or missing required fields."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 500,
+                  "responseObject": {
+                    "errorMsg": "Internal server error",
+                    "errorCode": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5498,6 +5783,14 @@
               "description": "Modelled dimension IDs for AI optimization",
               "format": "int32"
             }
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser-supplied campaign-level 3rd-party cost override. `null` (or omitted) means no override is set and the account-level 3rd-party cost continues to apply. Enforced server-side to the 0-999 range; out-of-range values are rejected.",
+            "format": "double",
+            "example": 10.5
           }
         },
         "description": "Request object for creating or updating a campaign"
@@ -6023,6 +6316,14 @@
           },
           "isAdvanceAudioVideoTargeted": {
             "type": "boolean"
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser-supplied campaign-level 3rd-party cost override. `null` (or omitted) means the advertiser did not change the value and the current cost continues to apply. Enforced server-side to the 0-999 range; out-of-range values are rejected.",
+            "format": "double",
+            "example": 10.5
           }
         },
         "description": "Request object for partially updating an existing campaign (PATCH semantics) -- all fields are optional, only supplied fields are changed. Distinct from AddCampaignRequestVO: lacks create-only fields such as allowedMinBid/templateId."
@@ -6038,6 +6339,14 @@
             "description": "Country ID for the campaign",
             "format": "int32",
             "example": 30100001
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser supplied campaign-level 3rd party cost (CPM) override. Optional; when omitted the account-level cost applies. Allowed range 0 to 999. **Planned -- sourced from branch origin/release/25.75.0 (feature/CB-5114, PR #2232), not yet merged to master as of 2026-09-01; re-verify against master before relying on this in production.**",
+            "format": "double",
+            "example": 3.5
           },
           "politicalAdvertiserClientId": {
             "type": "integer",
@@ -6101,6 +6410,14 @@
             "description": "Country ID for the campaign",
             "format": "int32",
             "example": 30100001
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser supplied campaign-level 3rd party cost (CPM) override. Optional; when omitted the account-level cost applies. Allowed range 0 to 999. **Planned -- sourced from branch origin/release/25.75.0 (feature/CB-5114, PR #2232), not yet merged to master as of 2026-09-01; re-verify against master before relying on this in production.**",
+            "format": "double",
+            "example": 3.5
           },
           "politicalAdvertiserClientId": {
             "type": "integer",
@@ -7180,6 +7497,14 @@
             "format": "int32",
             "example": 30100001
           },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser supplied campaign-level 3rd party cost (CPM) override. Optional; when omitted the account-level cost applies. Allowed range 0 to 999. **Planned -- sourced from branch origin/release/25.75.0 (feature/CB-5114, PR #2232), not yet merged to master as of 2026-09-01; re-verify against master before relying on this in production.**",
+            "format": "double",
+            "example": 3.5
+          },
           "politicalAdvertiserClientId": {
             "type": "integer",
             "description": "Political advertiser client ID",
@@ -7233,6 +7558,14 @@
             "description": "Country ID",
             "format": "int32",
             "example": 30100001
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser supplied campaign-level 3rd party cost (CPM) override. Optional; when omitted the account-level cost applies. Allowed range 0 to 999. **Planned -- sourced from branch origin/release/25.75.0 (feature/CB-5114, PR #2232), not yet merged to master as of 2026-09-01; re-verify against master before relying on this in production.**",
+            "format": "double",
+            "example": 3.5
           },
           "politicalAdvertiserClientId": {
             "type": "integer",
@@ -9372,9 +9705,350 @@
               "description": "Modelled dimension IDs for AI optimization",
               "format": "int32"
             }
+          },
+          "thirdPartyCost": {
+            "minimum": 0,
+            "maximum": 999,
+            "type": "number",
+            "description": "Advertiser-supplied campaign-level 3rd-party cost override. `null` (or omitted) means no override is set and the account-level 3rd-party cost continues to apply. Enforced server-side to the 0-999 range; out-of-range values are rejected.",
+            "format": "double",
+            "example": 10.5
           }
         },
         "description": "Full duplicate of AddCampaignRequestDTO (not a $ref/allOf composition) with three additional required fields specific to saveCampaign, confirmed via live field-named validation errors (\"Daily budget must not exceed total budget\", \"Start time is required\", \"Timezone is required\"). A literal duplicate, rather than allOf-composing with AddCampaignRequestDTO, because fastmcp (3.4.4) silently collapses an allOf-based request body into a single opaque 'body' parameter with no properties, rather than flattening it into named tool arguments like a plain object schema. budgetDay is deliberately NOT in this required list -- it's genuinely conditional (see its own description and totalBudgetPacing's), and fastmcp also silently drops if/then schema keywords, so encoding that conditional in the schema wouldn't actually surface to a caller anyway. Keep in sync with AddCampaignRequestDTO if that schema changes."
+      },
+      "CampaignBudgetGraphInfoVO": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Day this graph data point represents.",
+            "example": "2023-11-15T00:00:00Z"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double",
+            "description": "Budget or impression amount allocated/spent for this day.",
+            "example": 476.19
+          },
+          "type": {
+            "type": "string",
+            "description": "What `amount` represents for this data point (e.g. budget vs. spend)."
+          }
+        },
+        "description": "One per-day data point in the budget/impression graph, only present when `isGraphInfoRequired` is true on the request."
+      },
+      "CampaignBudgetInfoRequestVO": {
+        "required": [
+          "startTime",
+          "timezone"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Existing campaign ID to calculate budget info for. Omit when estimating budget info for a campaign that has not been created yet.",
+            "example": 123456
+          },
+          "budgetTotal": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double",
+            "description": "Total budget amount in dollars. If omitted, it is derived from `budgetDay`, `startTime`/`endTime`, and `fixedDailyBudget`.",
+            "example": 10000
+          },
+          "budgetDay": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double",
+            "description": "Daily budget amount in dollars. If omitted, it is derived from `budgetTotal`, `startTime`/`endTime`, and `fixedDailyBudget`.",
+            "example": 476.19
+          },
+          "fixedDailyBudget": {
+            "type": "boolean",
+            "description": "Whether the daily budget is a fixed amount every day rather than spread evenly across the flight. Defaults to false.",
+            "default": false
+          },
+          "startTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign start time as an epoch timestamp in seconds. Required.",
+            "example": 1700000000
+          },
+          "endTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign end time as an epoch timestamp in seconds. Required to derive total/daily budget for impression-based (`budgetTypeId: 2`) or PG campaigns; otherwise optional.",
+            "example": 1702678400
+          },
+          "timezone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Timezone ID for the campaign. Required.",
+            "example": 1
+          },
+          "isGraphInfoRequired": {
+            "type": "boolean",
+            "description": "Set to true to include per-day graph data (`graphInfo`) in the response.",
+            "example": false
+          },
+          "totalImpressions": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total impressions for an impression-based (`budgetTypeId: 2`) campaign."
+          },
+          "budgetTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Budget type ID -- 1 for dollar-based, 2 for impression-based.",
+            "example": 1
+          },
+          "maxBid": {
+            "type": "number",
+            "format": "double",
+            "description": "Maximum bid price for the campaign."
+          },
+          "dailyImpressions": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Daily impressions target for an impression-based campaign."
+          },
+          "campaignTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Campaign type ID. Defaults to 1 (standard). Use the PG campaign type ID to apply PG-specific requirements (e.g. endTime becomes required).",
+            "default": 1
+          },
+          "spendingBudget": {
+            "type": "number",
+            "format": "double",
+            "description": "PG campaign spending budget amount, distinct from `budgetTotal`."
+          },
+          "scheduling": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Day-of-week schedule restricting which hours budget is distributed across. Keys are `\"0\"`-`\"6\"` (Monday-Sunday); each value is an array of `[\"HH:mm:ss\", \"HH:mm:ss\"]` time ranges. When provided, daily budget/impression amounts are distributed proportionally across only the scheduled hours rather than evenly across the full day. This is the reason this operation moved from GET to POST -- a nested map like this cannot be expressed as query parameters.",
+            "example": {
+              "0": [
+                [
+                  "09:00:00",
+                  "17:00:00"
+                ]
+              ],
+              "1": [
+                [
+                  "09:00:00",
+                  "17:00:00"
+                ]
+              ]
+            }
+          }
+        },
+        "description": "Request body for calculating campaign budget/impression info. Exactly which fields are required beyond `startTime`/`timezone` depends on which of `budgetTotal`/`budgetDay`/`endTime` are supplied and on `campaignTypeId`/`budgetTypeId` -- the service derives whichever of budgetTotal/budgetDay/endTime is missing from the others."
+      },
+      "CampaignBudgetInfoResponseVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Echoed campaign ID, omitted from the response entirely if not supplied in the request.",
+            "example": 123456
+          },
+          "budgetTotal": {
+            "type": "number",
+            "format": "double",
+            "description": "Resolved total budget amount in dollars.",
+            "example": 10000
+          },
+          "actualSpent": {
+            "type": "number",
+            "format": "double",
+            "description": "Amount already spent against this campaign to date.",
+            "example": 1200.5
+          },
+          "budgetDay": {
+            "type": "number",
+            "format": "double",
+            "description": "Resolved daily budget amount in dollars.",
+            "example": 476.19
+          },
+          "fixedDailyBudget": {
+            "type": "boolean",
+            "description": "Whether the daily budget is fixed rather than spread evenly across the flight."
+          },
+          "startTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign start time as an epoch timestamp in seconds.",
+            "example": 1700000000
+          },
+          "endTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign end time as an epoch timestamp in seconds.",
+            "example": 1702678400
+          },
+          "timezone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Timezone ID for the campaign.",
+            "example": 1
+          },
+          "dailyImpressions": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Resolved daily impressions target. Omitted from the response when null."
+          },
+          "actualImpressionSpent": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Impressions already served against this campaign to date. Omitted from the response when null."
+          },
+          "totalImpressions": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Resolved total impressions target. Omitted from the response when null."
+          },
+          "maxBid": {
+            "type": "number",
+            "format": "double",
+            "description": "Maximum bid price for the campaign. Omitted from the response when null."
+          },
+          "budgetTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Budget type ID -- 1 for dollar-based, 2 for impression-based.",
+            "example": 1
+          },
+          "spendingBudget": {
+            "type": "number",
+            "format": "double",
+            "description": "PG campaign spending budget amount. Omitted from the response when null."
+          },
+          "pgFeesBudget": {
+            "type": "number",
+            "format": "double",
+            "description": "PG campaign fees budget amount. Omitted from the response when null."
+          },
+          "graphInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignBudgetGraphInfoVO"
+            },
+            "description": "Per-day budget/impression graph data. Only populated (and only present at all) when the request set `isGraphInfoRequired: true`; empty otherwise."
+          }
+        },
+        "description": "Response body returned by getCampaignBudgetInfo, wrapped in the standard `responseObject` envelope."
+      },
+      "CampaignCostDetailsRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Existing campaign ID to look up cost details for. Either this or the audienceIds/creativeIds/preBidSegmentIds/creativeTypeId combination below must be provided.",
+            "example": 12345
+          },
+          "owId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Organization workspace ID.",
+            "example": 67890
+          },
+          "audienceIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Audience segment IDs to estimate data cost for, when not looking up an existing campaign by campaignId.",
+            "example": [
+              1,
+              2,
+              3
+            ]
+          },
+          "creativeIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Creative IDs to estimate ad-serving cost for, when not looking up an existing campaign by campaignId.",
+            "example": [
+              4,
+              5,
+              6
+            ]
+          },
+          "preBidSegmentIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Pre-bid audience segment IDs to estimate data cost for, when not looking up an existing campaign by campaignId.",
+            "example": [
+              7,
+              8,
+              9
+            ]
+          },
+          "creativeTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Creative type ID, used alongside audienceIds/creativeIds/preBidSegmentIds when not looking up an existing campaign by campaignId."
+          }
+        },
+        "description": "Request body for retrieving cost details. Either `campaignId` should be present, or a combination of `audienceIds`, `creativeIds`, `preBidSegmentIds`, and `creativeTypeId`."
+      },
+      "CampaignCostDetailsResponseVO": {
+        "type": "object",
+        "properties": {
+          "maxBidPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Maximum bid price used in the cost calculation.",
+            "example": 25.0
+          },
+          "adServingCost": {
+            "type": "number",
+            "format": "double",
+            "description": "Ad-serving cost component, driven by the targeted creatives.",
+            "example": 1.25
+          },
+          "dataCost": {
+            "type": "number",
+            "format": "double",
+            "description": "Data cost component, driven by the targeted audience/pre-bid segments.",
+            "example": 15.0
+          },
+          "preBidCost": {
+            "type": "number",
+            "format": "double",
+            "description": "Pre-bid segment cost component. Nullable."
+          },
+          "msaExistsWith": {
+            "type": "string",
+            "description": "Name of the partner an MSA (Master Service Agreement) exists with, if any, affecting cost calculation.",
+            "example": "Partner A"
+          },
+          "logoURL": {
+            "type": "string",
+            "description": "Logo URL associated with the MSA partner, if any.",
+            "example": "https://example.com/logo.png"
+          },
+          "thirdPartyCost": {
+            "type": "number",
+            "format": "double",
+            "description": "Resolved 3rd-party cost after applying any campaign-level `thirdPartyCost` override (see saveCampaign/editCampaignPatch); falls back to the account-level 3rd-party cost when no override is set, or `0` when 3rd-party cost is not active for the account.",
+            "example": 10.5
+          }
+        },
+        "description": "Response body for getCostDetails, wrapped in the standard `data` envelope."
       }
     }
   }

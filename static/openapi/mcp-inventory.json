@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "MCP Inventory API Specification",
     "contact": {
       "name": "IQM Support",
@@ -553,13 +553,31 @@
           "MCP"
         ],
         "summary": "Unblock inventories from blocked list",
-        "description": "Removes specified inventories from the organization's blocked inventory list and triggers a data sync to update inventory group mappings.",
+        "description": "Removes specified inventories from the organization's blocked inventory list and triggers a data sync to update inventory group mappings. Accepts regular inventory IDs via `inventoryIds` and/or wildcard subdomain group IDs via `subdomainInventoryIds` (the IDs returned as `invGroupSubType: 2` rows by the blocked-inventories listing) -- at least one of the two must be non-empty.",
         "operationId": "unblockInventoriesFromBlockedList",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/BlockedInventoryVO"
+              },
+              "examples": {
+                "Unblock by inventory IDs": {
+                  "description": "Unblock by inventory IDs",
+                  "value": {
+                    "inventoryIds": [
+                      4781473
+                    ]
+                  }
+                },
+                "Unblock a wildcard subdomain group": {
+                  "description": "Unblock a wildcard subdomain group",
+                  "value": {
+                    "subdomainInventoryIds": [
+                      101
+                    ]
+                  }
+                }
               }
             }
           },
@@ -572,6 +590,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Inventories unblocked successfully."
                 }
               }
             }
@@ -2611,7 +2633,7 @@
         "tags": [
           "MCP"
         ],
-        "description": "This API blocks the Inventories based on the file uploaded. The files should be in CSV format with domains and bundles as columns. ",
+        "description": "This API blocks the Inventories based on the file uploaded. The files should be in CSV format with domains and bundles as columns. A domain may be a wildcard subdomain pattern (e.g. `*.example.com`) to block that domain and all of its subdomains as a single wildcard subdomain group entry.",
         "operationId": "blockInventoriesToBlockedListViaFile",
         "parameters": [
           {
@@ -2675,10 +2697,25 @@
                 "schema": {
                   "$ref": "#/components/schemas/CommonResponse"
                 },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "message": "{numberOfInventoryIds} inventories blocked successfully"
+                "examples": {
+                  "All rows blocked successfully": {
+                    "description": "All rows blocked successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "1,234 inventories blocked successfully"
+                      }
+                    }
+                  },
+                  "Some rows were invalid -- still HTTP 200, with an error file link": {
+                    "description": "Some rows were invalid -- still HTTP 200, with an error file link",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "Error": "12 Entries could not be uploaded. Download the error file and retry",
+                        "errorFileUrl": "https://s3.amazonaws.com/iqm-inventory-blocklist/invalid-records/owId-123-1699999999.csv"
+                      }
+                    }
                   }
                 }
               }
@@ -7081,7 +7118,7 @@
         "tags": [
           "MCP"
         ],
-        "description": "This API will provide the list of globally blocked open exchange inventories.",
+        "description": "This API will provide the list of globally blocked open exchange inventories. Each record always includes `invGroupSubType` (1 = regular inventory, 2 = wildcard subdomain group) and `reach` (defaults to 0 when not computed).",
         "operationId": "getBlockedInventories",
         "parameters": [
           {
@@ -7093,11 +7130,6 @@
               "type": "string",
               "default": ""
             }
-          },
-          {
-            "name": "inventoryIds",
-            "in": "query",
-            "description": "Filter the inventories by inventoryIds"
           },
           {
             "name": "noOfEntries",
@@ -7159,18 +7191,23 @@
                       {
                         "id": 35109,
                         "name": "Pluto TV - It's Free TV",
-                        "publisher": "UNKNOWN",
                         "appId": "74519",
                         "inventoryType": "Other App",
                         "comment": "This is the comment for this inventory",
                         "impressions": 0,
-                        "uniques": 0,
-                        "videoPercentage": 0,
-                        "displayPercentage": 0
+                        "reach": 0,
+                        "invGroupSubType": 1
+                      },
+                      {
+                        "id": 101,
+                        "name": "*.com.au",
+                        "impressions": 0,
+                        "reach": 0,
+                        "invGroupSubType": 2
                       }
                     ]
                   },
-                  "globalBlockedInventoryIds": 1,
+                  "totalRecords": 13,
                   "filteredRecords": 13
                 }
               }
@@ -8080,7 +8117,7 @@
           },
           "inventoryIds": {
             "type": "array",
-            "description": "List of inventory IDs to be blocked",
+            "description": "List of inventory IDs to be blocked or unblocked",
             "example": [
               1,
               2,
@@ -8088,7 +8125,21 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of inventory IDs to be blocked",
+              "description": "List of inventory IDs to be blocked or unblocked",
+              "format": "int32"
+            }
+          },
+          "subdomainInventoryIds": {
+            "type": "array",
+            "description": "List of subdomain inventory IDs to be blocked or unblocked",
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "items": {
+              "type": "integer",
+              "description": "List of subdomain inventory IDs to be blocked or unblocked",
               "format": "int32"
             }
           }
@@ -10285,6 +10336,12 @@
               "$ref": "#/components/schemas/ErrorObject"
             }
           },
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records matching the search criteria, before pagination",
+            "format": "int32",
+            "example": 13
+          },
           "filteredRecords": {
             "type": "integer",
             "description": "Number of records returned after filtering",
@@ -10293,12 +10350,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/BlockedInventoriesData"
-          },
-          "globalBlockedInventoryIds": {
-            "type": "integer",
-            "description": "Total number of blocked inventory IDs",
-            "format": "int32",
-            "example": 1
           }
         },
         "description": "Response for global blocked inventories listing"
@@ -10316,11 +10367,6 @@
             "type": "string",
             "description": "Inventory name",
             "example": "Pluto TV - It's Free TV"
-          },
-          "publisher": {
-            "type": "string",
-            "description": "Publisher",
-            "example": "UNKNOWN"
           },
           "appId": {
             "type": "string",
@@ -10343,23 +10389,17 @@
             "format": "int32",
             "example": 0
           },
-          "uniques": {
+          "reach": {
             "type": "integer",
-            "description": "Number of unique users",
-            "format": "int32",
+            "description": "Number of unique users reached. Always present on every row; defaults to 0.",
+            "format": "int64",
             "example": 0
           },
-          "videoPercentage": {
+          "invGroupSubType": {
             "type": "integer",
-            "description": "Video percentage",
+            "description": "Inventory group sub-type. Always present on every row: 1 = regular inventory, 2 = wildcard subdomain group.",
             "format": "int32",
-            "example": 0
-          },
-          "displayPercentage": {
-            "type": "integer",
-            "description": "Display percentage",
-            "format": "int32",
-            "example": 0
+            "example": 1
           }
         },
         "description": "Represents a single globally blocked inventory item"
