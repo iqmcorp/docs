@@ -1521,76 +1521,177 @@ function getCampaignDetails(): Promise<Responses> {
 
 ### Get campaign budget details
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/budgetInfo" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/campaign/budgetInfo" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get campaign budget info and graph details.
+Calculates and returns campaign budget and impression information. Derives any missing budget or daily-impression value from the supplied combination of total budget, timezone, daily budget, start/end time, and budget type. 
 
-| Query parameters |  |
+When a <var>scheduling</var> map is provided, daily amounts are proportionally distributed across scheduled hours only. Pass <var>isGraphInfoRequired=true</var> to include per-day graph data in the response.
+
+| Request schema |  |
 | ---- | --- |
-| `budgetTotal` <br /><span class="type-text">integer</span> | Campaign total budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `dailyBudget` <br /><span class="type-text">integer</span> |Campaign daily budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `fixedDailyBudget` <br /><span class="type-text">boolean</span> | Flag to indicate whether daily budget is fixed or not |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](#get-list-of-campaigns) to get budget info for |
+| `budgetTotal` <br /><span class="type-text">number</span> | Campaign total budget <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `budgetDay` <br /><span class="type-text">number</span> | Campaign daily budget <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `fixedDailyBudget` <br /><span class="type-text">boolean</span> | Flag to indicate whether daily budget is fixed or not, default: <var>false</var> |
 | `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign start time | 
-| `endTime` <br /><span class="type-text">integer</span> | Campaign end time  <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign timezone
+| `endTime` <br /><span class="type-text">integer</span> | Campaign end time  <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Timezone ID](/guidelines/master-api#get-timezones) |
+| `budgetTypeId` <br /><span class="type-text">integer</span> | [Budget Type ID](#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based) |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](#get-campaign-count-with-campaign-type), default: <var>1</var> (Advanced) |
+| `isGraphInfoRequired` <br /><span class="type-text">boolean</span> | Include per-day `graphInfo` data in the response: <var>true</var> |
+| `scheduling` <br /><span class="type-text">object</span> | Map of weekday index (<var>0</var>–<var>6</var>) to an array of <var>[startTime, endTime]</var> string ranges campaign delivery is scheduled for that day |
+| `maxBid` <br /><span class="type-text">number</span> | Maximum allowed bid price, used for impression-based PG campaigns |
+| `totalImpressions` <br /><span class="type-text">integer</span> | Targeted total impressions, used for impression-based PG campaigns |
+| `dailyImpressions` <br /><span class="type-text">integer</span> | Targeted daily impressions, used for impression-based campaigns |
 
-<a href="#campaign-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID, only present when a <var>campaignId</var> was supplied in the request</td>
+    </tr>
+    <tr>
+    <td>`budgetTotal` <br /><span class="type-text">number</span></td>
+    <td>Campaign total budget</td>
+    </tr>
+    <tr>
+    <td>`actualSpent` <br /><span class="type-text">number</span></td>
+    <td>Amount spent by the campaign so far</td>
+    </tr>
+    <tr>
+    <td>`budgetDay` <br /><span class="type-text">number</span></td>
+    <td>Campaign daily budget</td>
+    </tr>
+    <tr>
+    <td>`fixedDailyBudget` <br /><span class="type-text">boolean</span></td>
+    <td>Whether daily budget is fixed</td>
+    </tr>
+    <tr>
+    <td>`startTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign start time</td>
+    </tr>
+    <tr>
+    <td>`endTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign end time</td>
+    </tr>
+    <tr>
+    <td>`timezone` <br /><span class="type-text">integer</span></td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+    </tr>
+    <tr>
+    <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Type ID](#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based)</td>
+    </tr>
+    <tr>
+    <td>`dailyImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Targeted daily impressions, only present for impression-based campaigns</td>
+    </tr>
+    <tr>
+    <td>`actualImpressionSpent` <br /><span class="type-text">integer</span></td>
+    <td>Impressions served so far, only present for impression-based campaigns</td>
+    </tr>
+    <tr>
+    <td>`totalImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Targeted total impressions, only present for impression-based campaigns</td>
+    </tr>
+    <tr>
+    <td>`maxBid` <br /><span class="type-text">number</span></td>
+    <td>Maximum allowed bid price, only present for impression-based PG campaigns</td>
+    </tr>
+    <tr>
+    <td>`spendingBudget` <br /><span class="type-text">number</span></td>
+    <td>Budget available for delivery after PG fees, only present for PG campaigns</td>
+    </tr>
+    <tr>
+    <td>`pgFeesBudget` <br /><span class="type-text">number</span></td>
+    <td>Budget reserved for PG deal fees, only present for PG campaigns</td>
+    </tr>
+    <tr>
+    <td>`graphInfo` <br /><span class="type-text">array of objects</span></td>
+    <td>Per-day budget graph data, only present when `isGraphInfoRequired` is <var>true</var></td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`graphInfo` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`date` <br /><span class="type-text">string</span></td>
+      <td>Date of the graph data point</td>
+      </tr>
+      <tr>
+      <td>`amount` <br /><span class="type-text">number</span></td>
+      <td>Budget amount for the date</td>
+      </tr>
+      <tr>
+      <td>`type` <br /><span class="type-text">string</span></td>
+      <td>Amount type: <var>spent</var> or <var>projected</var></td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table>
+    </details>
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request Sample"
+{
+  "campaignId": 12345,
+  "budgetTotal": 10000.00,
+  "startTime": 1700000000,
+  "endTime": 1702678400,
+  "timezone": 1,
+  "budgetTypeId": 1,
+  "isGraphInfoRequired": false,
+  "scheduling": {
+    "0": [["09:00:00", "17:00:00"]],
+    "1": [["09:00:00", "17:00:00"]]
+  }
+}
+```
+
 ```json title="Response 200"
 {
   "statusCode": 200,
   "responseObject": {
-    "campaignId": 168930,
-    "budgetTotal": 30000,
-    "actualSpent": 0,
-    "dailyBudget": 5000,
+    "campaignId": 12345,
+    "budgetTotal": 10000.00,
+    "budgetDay": 476.19,
+    "actualSpent": 1200.50,
     "fixedDailyBudget": false,
-    "startTime": 1610211600,
-    "endTime": 1610686800,
-    "timezone": 371,
-    "graphInfo": [
-      {
-        "date": "2021-01-08T18:30:00.000+0000",
-        "amount": 131.0083085876,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-09T18:30:00.000+0000",
-        "amount": 86.1821112588,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-10T18:30:00.000+0000",
-        "amount": 127.31636722319996,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-11T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      },
-      {
-        "date": "2021-01-12T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      },
-      {
-        "date": "2021-01-13T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      }
-    ]
+    "startTime": 1700000000,
+    "endTime": 1702678400,
+    "timezone": 1,
+    "budgetTypeId": 1,
+    "graphInfo": []
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "statusCode": 400,
+  "errorObjects": [
+    {
+      "error": "Start time is required"
+    }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -1610,15 +1711,22 @@ interface Responses {
       "application/json": {
         statusCode: number;
         responseObject: {
-          campaignId: number;
+          campaignId?: number;
           budgetTotal: number;
           actualSpent: number;
-          dailyBudget: number;
+          budgetDay: number;
           fixedDailyBudget: boolean;
           startTime: number;
           endTime: number;
           timezone: number;
-          graphInfo: {
+          budgetTypeId: number;
+          dailyImpressions?: number;
+          actualImpressionSpent?: number;
+          totalImpressions?: number;
+          maxBid?: number;
+          spendingBudget?: number;
+          pgFeesBudget?: number;
+          graphInfo?: {
             date: string;
             amount: number;
             type: string;
@@ -1629,21 +1737,28 @@ interface Responses {
   };
 }
 
-function CampaignBudgetInfo(): Promise<Responses> {
+function getCampaignBudgetInfo(): Promise<Responses> {
   const options = {
-    method: 'GET',
+    method: 'POST',
     url: 'https://api.iqm.com/api/v2/cmp/campaign/budgetInfo',
-    params: {
-      query: {
-        budgetTotal: `number`,
-        dailyBudget: `number`,
-        fixedDailyBudget: `boolean`,
-        startTime: `number`,
-        endTime: `number`,
-        timezone: `number`,
-      },
-      header: {
-        "X-IAA-HOST": `string`
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId: `number`,
+          budgetTotal: `number`,
+          budgetDay: `number`,
+          fixedDailyBudget: `boolean`,
+          startTime: `number`,
+          endTime: `number`,
+          timezone: `number`,
+          budgetTypeId: `number`,
+          campaignTypeId: `number`,
+          isGraphInfoRequired: `boolean`,
+          scheduling: `object`,
+          maxBid: `number`,
+          totalImpressions: `number`,
+          dailyImpressions: `number`,
+        }
       }
     }
   };
@@ -3202,6 +3317,10 @@ Create a new campaign in <var>pending</var> or <var>draft</var> status.
     <td>Total CPM for the campaign</td>
     </tr>
         <tr>
+    <td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the account-level cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
+    </tr>
+        <tr>
     <td>`timezone` <br /><span class="type-text">integer</span></td>
     <td>[Timezone ID](/guidelines/master-api#get-timezones) for campaign</td>
     </tr>
@@ -3763,6 +3882,7 @@ If campaign is in <var>draft</var> status, this API will automatically update st
 |`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for campaign serving daily
 |`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for campaign serving period
 |`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
+|`thirdPartyCost` <br /><span class="type-text">number</span> | Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the current cost applied. Only honored when 3rd-party cost is active and campaign-level editing is enabled for the Advertiser's workspace
 |`timezone`	<br /><span class="type-text">integer</span> |	[Timezone ID](/guidelines/master-api#get-timezones) for campaign
 |`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
 |`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
@@ -4232,6 +4352,10 @@ Create a new PG campaign for Advertiser.
 <td>`countryId` <br /><span class="type-text">integer</span></td>
 <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
 </tr>
+<tr>
+<td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+<td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the account-level cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
+</tr>
 </table>
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
@@ -4557,6 +4681,10 @@ Update properties of a created or draft PG campaign by campaign ID.
 <tr>
 <td>`countryId` <br /><span class="type-text">integer</span></td>
 <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+</tr>
+<tr>
+<td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+<td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the current cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
 </tr>
 </table>
 
@@ -5317,6 +5445,10 @@ Retrieve cost details for a specific campaign. The request body must include eit
     <td>`logoURL` <br /><span class="type-text">string</span></td>
     <td>Partner logo URL</td>
     </tr>
+    <tr>
+    <td>`thirdPartyCost` <br /><span class="type-text">number</span></td>
+    <td>Campaign-level 3rd-party cost, either the Advertiser's override or the account-level cost when no override is set</td>
+    </tr>
     </table>
     </details>
 
@@ -5337,7 +5469,8 @@ Retrieve cost details for a specific campaign. The request body must include eit
     "dataCost": 150,
     "preBidCost": 300,
     "msaExistsWith": "Partner A",
-    "logoURL": "https://example.com/logo.png"
+    "logoURL": "https://example.com/logo.png",
+    "thirdPartyCost": 10.5
   }
 }
 ```

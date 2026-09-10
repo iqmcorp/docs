@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Insights API Specification",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "MCP Insights API Specification",
     "contact": {
       "name": "IQM Support",
@@ -7999,6 +7999,682 @@
           }
         }
       }
+    },
+    "/api/v3/ins/psi/generate-report": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Generate Power Segment Insights Report",
+        "description": "Initiates report generation for a power segment insight identified by its taxonomy ID. The request is forwarded to the data team after validating the segment's current report status. Only segments with status 'NotRequested' or 'Failed' can be triggered. Restricted to political-vertical advertisers.",
+        "operationId": "generateReport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PsiGenerateReportRequestVO"
+              },
+              "examples": {
+                "Generate report": {
+                  "description": "Generate report",
+                  "value": {
+                    "taxonomyId": "IQMADV0002606"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report generation initiated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessageWrapper"
+                },
+                "examples": {
+                  "Success response": {
+                    "description": "Success response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Report generation initiated successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid taxonomy ID or report already in progress/ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Error response": {
+                    "description": "Error response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Report generation cannot be initiated. Current report status is: Processing"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ins/psi/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "It will provide list of power segments available in database.",
+        "description": "This API provides power segments details list based on requested search, sorting, and pagination data. Restricted to political-vertical advertisers.",
+        "operationId": "getPowerSegmentsDetailList",
+        "parameters": [
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search power segments by name.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort field. Allowed values - id, name, category",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page number for the required data. The default value is 1.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "noOfEntries",
+            "in": "query",
+            "description": "The maximum number of returned results per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "description": "Filter power segments by category.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponsePowerSegmentsListData"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "totalRecords": 2,
+                    "filteredRecords": 2,
+                    "powerSegmentsReports": [
+                      {
+                        "id": 1,
+                        "name": "Donal Trump",
+                        "category": "Neptune",
+                        "reports": [
+                          {
+                            "type": "SPHERE",
+                            "status": "NotRequested",
+                            "generationTime": 3,
+                            "sizeInBytes": null,
+                            "taxonomyId": "283230NNJW"
+                          },
+                          {
+                            "type": "ORBIT",
+                            "status": "NotRequested",
+                            "generationTime": 3,
+                            "sizeInBytes": null,
+                            "taxonomyId": "56329JJSH67"
+                          }
+                        ]
+                      },
+                      {
+                        "id": 2,
+                        "name": "Hillary Clinton",
+                        "category": null,
+                        "reports": [
+                          {
+                            "type": "SPHERE",
+                            "status": "NotRequested",
+                            "generationTime": 3,
+                            "sizeInBytes": null,
+                            "taxonomyId": "HHKNW972JL"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ins/psi/download-report": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Download Power Segment Insights Report",
+        "description": "Returns a presigned S3 URL for downloading the PSI report PDF for the given taxonomy ID. The report must be in Ready status. White-label vs. non-white-label variant is derived automatically from the caller's session. Restricted to political-vertical advertisers.",
+        "operationId": "downloadReport",
+        "parameters": [
+          {
+            "name": "taxonomyId",
+            "in": "query",
+            "description": "Taxonomy ID of the power segment insight report to download.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned download URL returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseDownloadResponseVO"
+                },
+                "examples": {
+                  "Success response": {
+                    "description": "Success response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "reportURL": "https://s3.amazonaws.com/..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Segment not active, report not ready, or file not found in S3.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Error response": {
+                    "description": "Error response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Report is not ready for download."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ins/psi/email": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Send PSI Report Email",
+        "description": "Sends the PSI report PDF to the calling user's email address(es). If the file size is within the 10 MB SES limit the PDF is attached; otherwise only a download link is included. White-label vs. non-white-label variant is derived automatically from the caller's session. Report must be in Ready status. Restricted to political-vertical advertisers.",
+        "operationId": "sendReportEmail",
+        "parameters": [
+          {
+            "name": "taxonomyId",
+            "in": "query",
+            "description": "Taxonomy ID of the power segment insight report to email.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PowerSegmentInsightsReportEmailRequestVO"
+              },
+              "examples": {
+                "Send to recipients": {
+                  "description": "Send to recipients",
+                  "value": {
+                    "emailIds": [
+                      "analyst@example.com"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Email sent successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessageWrapper"
+                },
+                "examples": {
+                  "Success response": {
+                    "description": "Success response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Report email sent successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Segment not active or report not in Ready status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Error response": {
+                    "description": "Error response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Report is not ready for download."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ins/static/psi/category-types": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get all PSI category types",
+        "description": "This API returns all Power Segment Insights category types with their names, display names and display orders.",
+        "operationId": "getPsiCategoryTypes",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched PSI category types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseListStaticDataResponseVO"
+                },
+                "examples": {
+                  "PSI Category Types Example": {
+                    "description": "PSI Category Types Example",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "name": "CABINET_MEMBERS",
+                          "displayName": "Cabinet Members",
+                          "order": 10
+                        },
+                        {
+                          "id": 2,
+                          "name": "GOVERNOR",
+                          "displayName": "Governor",
+                          "order": 20
+                        },
+                        {
+                          "id": 3,
+                          "name": "HOUSE_OF_REPRESENTATIVE",
+                          "displayName": "House of Representative",
+                          "order": 30
+                        },
+                        {
+                          "id": 4,
+                          "name": "SENATOR",
+                          "displayName": "Senator",
+                          "order": 40
+                        },
+                        {
+                          "id": 5,
+                          "name": "MAYOR",
+                          "displayName": "Mayor",
+                          "order": 50
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -11570,6 +12246,211 @@
           }
         },
         "description": "Response object for listing template reports with pagination and status/frequency summaries."
+      },
+      "PsiGenerateReportRequestVO": {
+        "type": "object",
+        "required": [
+          "taxonomyId"
+        ],
+        "properties": {
+          "taxonomyId": {
+            "type": "string",
+            "description": "Taxonomy ID of the power segment insight for which report generation should be triggered",
+            "example": "IQMADV0002606"
+          }
+        }
+      },
+      "PowerSegmentInsightsReportEmailRequestVO": {
+        "type": "object",
+        "properties": {
+          "emailIds": {
+            "type": "array",
+            "description": "List of email addresses to send the PSI report to (1-15 addresses, each 1-320 characters)",
+            "example": [
+              "analyst@example.com"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StaticDataResponseVO": {
+        "type": "object",
+        "description": "Generic static lookup entry",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Identifier of the static data entry",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Internal name/key of the entry",
+            "example": "CABINET_MEMBERS"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable display name",
+            "example": "Cabinet Members"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Display order for sorting in the UI",
+            "example": 10
+          }
+        }
+      },
+      "ReportDetails": {
+        "type": "object",
+        "description": "A single PSI report type's generation status for a power segment",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "PSI report type",
+            "example": "SPHERE"
+          },
+          "status": {
+            "type": "string",
+            "description": "Report generation status",
+            "example": "NotRequested",
+            "enum": [
+              "NotRequested",
+              "Processing",
+              "Ready",
+              "Failed"
+            ]
+          },
+          "generationTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Estimated report generation time",
+            "example": 3
+          },
+          "sizeInBytes": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "description": "Report file size in bytes. Null until the report is Ready.",
+            "example": null
+          },
+          "taxonomyId": {
+            "type": "string",
+            "description": "Taxonomy ID of the power segment insight",
+            "example": "283230NNJW"
+          }
+        }
+      },
+      "PowerSegmentsInsightResponseVO": {
+        "type": "object",
+        "description": "A power segment (political personality) with its per-report-type generation status",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Power segment ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Power segment (personality) name",
+            "example": "Donal Trump"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "description": "Power segment category display name",
+            "example": "Neptune"
+          },
+          "reports": {
+            "type": "array",
+            "description": "Per-report-type generation status for this power segment",
+            "items": {
+              "$ref": "#/components/schemas/ReportDetails"
+            }
+          }
+        }
+      },
+      "PowerSegmentsListData": {
+        "type": "object",
+        "description": "Paginated list of power segments and their PSI report statuses",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total number of power segments matching the search criteria, before pagination",
+            "example": 2
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of records returned on this page after filtering",
+            "example": 2
+          },
+          "powerSegmentsReports": {
+            "type": "array",
+            "description": "List of power segments with their report statuses",
+            "items": {
+              "$ref": "#/components/schemas/PowerSegmentsInsightResponseVO"
+            }
+          }
+        }
+      },
+      "CommonResponseDownloadResponseVO": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/DownloadResponseVO"
+          }
+        }
+      },
+      "CommonResponsePowerSegmentsListData": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PowerSegmentsListData"
+          }
+        }
+      },
+      "CommonResponseListStaticDataResponseVO": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaticDataResponseVO"
+            }
+          }
+        }
       }
     }
   }
