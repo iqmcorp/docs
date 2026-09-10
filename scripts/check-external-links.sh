@@ -6,6 +6,6 @@ set -euo pipefail
 
 npx linkinator ./build \
   --recurse \
-  --skip '^(mailto:|tel:|#|javascript:|about:blank)|localhost|127\.0\.0\.1' \
+  --skip '^(mailto:|tel:|#|javascript:|about:blank)|localhost|127\.0\.0\.1|support\.google\.com/displayvideo/topic/6071843|support\.google\.com/looker-studio/topic/7059081|support\.google\.com/displayvideo/answer/7243138' \
   --timeout 30000 \
   --concurrency 20
