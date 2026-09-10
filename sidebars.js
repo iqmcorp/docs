@@ -7479,7 +7479,7 @@ const sidebars = {
   partnershipsSidebar: [
     {
       type: 'category',
-      label: 'Partnerships & Integrations',
+      label: 'Partnerships & integrations',
       className: 'sidebarCategory',
       link: {
         type: 'doc',
@@ -7488,7 +7488,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Reporting Integrations',
+          label: 'Reporting integrations',
           className: 'sidebarItem',
           collapsible: true,
           collapsed: false,
@@ -7539,7 +7539,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'CRM Integrations',
+          label: 'CRM integrations',
           className: 'sidebarItem',
           collapsible: true,
           collapsed: false,
@@ -7554,7 +7554,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Automation Integrations',
+          label: 'Automation integrations',
           className: 'sidebarItem',
           collapsible: true,
           collapsed: false,
