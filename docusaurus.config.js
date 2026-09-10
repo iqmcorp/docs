@@ -200,7 +200,7 @@ const config = {
                 to: "https://iqm.com/",
               },
               {
-                label: "API Guidelines",
+                label: "API guidelines",
                 to: "/guidelines",
               },
               {
@@ -208,7 +208,7 @@ const config = {
                 to: "/partnerships",
               },
               {
-                label: "Github",
+                label: "GitHub",
                 to: "https://github.com/iqmcorp/docs"
               },
             ],
