@@ -5563,7 +5563,7 @@ const sidebars = {
   migrationSidebar: [
     {
       type: "category",
-      label: 'Migration Guides',
+      label: 'Migration guides',
       className: 'sidebarCategory',
       link: {
         type: 'doc',
@@ -5572,7 +5572,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Beeswax Migration Guide',
+          label: 'Beeswax migration guide',
           className: 'sidebarItem',
           items: [
             {
@@ -5633,7 +5633,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'DV360 Migration Guide',
+          label: 'DV360 migration guide',
           className: 'sidebarItem',
           items: [
             {
@@ -5694,7 +5694,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'The Trade Desk Migration Guide',
+          label: 'The Trade Desk migration guide',
           className: 'sidebarItem',
           items: [
             {
@@ -5755,7 +5755,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Xandr Migration',
+          label: 'Xandr migration guide',
           className: 'sidebarItem',
           items: [
             {
