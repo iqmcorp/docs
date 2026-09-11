@@ -45,9 +45,13 @@ function splitUrlForDisplay(full: string): {
 export default function CopyUrl({
   method = "GET",
   url,
+  operationId,
 }: {
   method?: string;
   url: string;
+  // Internal cross-reference to the OAS operationId for this endpoint, used to map
+  // docs sections back to spec source — intentionally not rendered anywhere.
+  operationId?: string;
 }) {
   const [copied, setCopied] = React.useState(false);
   const m = (method || "GET").trim().toUpperCase() as Method;
