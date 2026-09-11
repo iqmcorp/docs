@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Reports API Specification",
-    "version": "v0",
-    "description": "MCP Report API Specification",
+    "version": "1.0.2",
+    "description": "IQM Reports API for custom, ad-hoc, saved, and scheduled report construction and delivery. Use these tools to select dimensions, metrics, columns, filters, templates, reporting periods, and email schedules.",
     "contact": {
       "name": "IQM Support",
       "url": "https://iqm.com/contact/",
@@ -29,15 +29,14 @@
           "MCP"
         ],
         "summary": "Execute report and fetch serving data",
-        "description": "This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - This is report Id, report data will be fetched for this report id. |\n| dimensions | JSON String | [Optional] - JSON string representing dimension details. |\n| columns | Array of String | [Optional] - Metrics for showing serving result |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | JSON String | [Optional] - JSON string supporting campaignId, creativeTypeId and campaignStatus filtering. |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Optional] - ID to identify if report request is of Daily or Aggregate. \u003Cbr\u003Esample : [1- Daily, 2- Aggregated]  |\n| reportAggregated | String | [Optional] - Field to identify if report dimension is Aggregated or not. \u003Cbr\u003Esample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report start time.|\n| endDate | Long | [Optional] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is report end time.|\n| timezoneId | Integer | [Optional] - Timezone ID|\n| timezoneName | String | [Optional] - Timezone Name|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is 50|\n",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - Run a saved report by its ID. When supplied, none of dimensions/columns/startDate/endDate/timezoneId/requestType/reportAggregated below are needed. |\n| dimensions | JSON String | [Required, unless `id` is supplied] - JSON string representing dimension details. |\n| columns | Array of String | [Required, unless `id` is supplied] - Metrics for showing serving result. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail -- no fuzzy or case-insensitive matching. |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | Object | [Optional] - Additional filters, distinct from per-dimension value filtering. Known keys: campaignIds (array of Integer), creativeTypeIds (array of Integer), campaignStatuses (array of String, e.g. \"running\"/\"expired\"). |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Required, unless `id` is supplied; no default is applied if omitted] - ID to identify if report request is of Daily or Aggregate. <br>sample : [1 - Daily, 2 - Aggregated, 3 - Weekly, 4 - Monthly]  |\n| reportAggregated | String | [Required, unless `id` is supplied; no default is applied if omitted] - Field to identify if report dimension is Aggregated or not. <br>sample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Required, unless `id` is supplied] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is report start time.|\n| endDate | Long | [Required, unless `id` is supplied] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is report end time.|\n| timezoneId | Integer | [Required, unless `id` is supplied; no default is applied if omitted] - Timezone ID|\n| timezoneName | String | [Optional] - Timezone Name|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. <br>Default value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. <br>Default value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. <br>Default value is 50|\n",
         "operationId": "executeReportData",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -48,13 +47,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -96,10 +93,19 @@
                       "winRate",
                       "reach"
                     ],
-                    "customerIds": [201353, 201352],
+                    "customerIds": [
+                      201353,
+                      201352
+                    ],
                     "filters": {
-                      "campaignIds": [123, 234, 345],
-                      "creativeTypeIds": [11],
+                      "campaignIds": [
+                        123,
+                        234,
+                        345
+                      ],
+                      "creativeTypeIds": [
+                        11
+                      ],
                       "campaignStatuses": [
                         "expired",
                         "running"
@@ -412,15 +418,14 @@
           "MCP"
         ],
         "summary": "Save report scheduling event.",
-        "description": "This API saves the report scheduling event.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| reportId | Integer | [Required] - This is report Id, event will be created on this report id. |\n| subscriberEmails | Array of String | [Required] - List of the emails on which the report will be sent. |\n| fileType | Integer | [Required] - Report file type id. The report will be sent in the selected file format . \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | [Required] - Delivery frequency type id for the emails to be sent.\u003Cbr\u003Esample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API saves the report scheduling event.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| reportId | Integer | [Required] - This is report Id, event will be created on this report id. |\n| subscriberEmails | Array of String | [Required] - List of the emails on which the report will be sent. |\n| fileType | Integer | [Required] - Report file type id. The report will be sent in the selected file format . <br>sample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | [Required] - Delivery frequency type id for the emails to be sent.<br>sample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. <br>This is related to Delivery frequency. <br> WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] <br>MONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.<br> If this is true the start-date for the report duration should be the EARLIEST campaign start date, <br>so the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
         "operationId": "saveReportScheduleEvent",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -431,13 +436,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -662,7 +665,7 @@
           "MCP"
         ],
         "summary": "Remove report scheduling event",
-        "description": "This API removes the report scheduling event.",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API removes the report scheduling event.",
         "operationId": "deleteReportScheduleEvent",
         "parameters": [
           {
@@ -670,7 +673,6 @@
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -681,13 +683,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           },
           {
@@ -780,15 +780,14 @@
           "MCP"
         ],
         "summary": "Update report scheduling event",
-        "description": "This API update the report scheduling event. Whichever field is to be updated, that can be sent in the request body.\n \n**Request Body Description:**\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| subscriberEmails | Array of String | List of the emails on which the report will be sent. |\n| fileType | Integer | Report file type id. The report will be sent in the selected file format. \u003Cbr\u003Esample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | Delivery frequency type id for the emails to be sent. \u003Cbr\u003E sample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. \u003Cbr\u003EThis is related to Delivery frequency. \u003Cbr\u003E WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] \u003Cbr\u003EMONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency updated and is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.\u003Cbr\u003E If this is true the start-date for the report duration should be the EARLIEST campaign start date, \u003Cbr\u003Eso the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. \u003Cbr\u003EThis is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API update the report scheduling event. Whichever field is to be updated, that can be sent in the request body.\n \n**Request Body Description:**\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| subscriberEmails | Array of String | List of the emails on which the report will be sent. |\n| fileType | Integer | Report file type id. The report will be sent in the selected file format. <br>sample : [1 - CSV, 2 - XLS]|\n| deliveryFrequency | Integer | Delivery frequency type id for the emails to be sent. <br> sample : [1 - ONCE, 2 - DAILY, 3 - WEEKLY, 4 - MONTHLY] |\n| deliveryDay | String | [Required, if deliveryFrequency is not ONCE] - Delivery day to specify the day-time when the report should be sent. <br>This is related to Delivery frequency. <br> WEEKLY DELIVERY DAY: [\"SUNDAY\", \"MONDAY\", ...] <br>MONTHLY DELIVERY DAY: [\"FIRST\", \"LAST\", \"2\", \"3\", ..., \"29\"]|\n| eventEndDate | Long | [Required, if deliveryFrequency updated and is not ONCE] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is events end date, Scheduled report will be stopped after the eventEndDate is exceeded |\n| runningTotalEnabled | Boolean | [Optional] - Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension.<br> If this is true the start-date for the report duration should be the EARLIEST campaign start date, <br>so the report-time-period will be from the Earliest-campaign-start-date to the report-end-date |\n| earliestCampaignStartDate | Long | [Required with runningTotalEnabled as 'true'] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is campaign's EARLIEST  start date from the selected campaigns, which will be set as the start date of the report-time-period. |",
         "operationId": "updateReportScheduleEvent",
         "parameters": [
-                     {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -799,13 +798,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           },
           {
@@ -980,15 +977,14 @@
           "MCP"
         ],
         "summary": "Get Dimension & Metrics Details",
-        "description": "This API offers Dimension and Metrics information grouped by Category in predetermined order",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API offers Dimension and Metrics information grouped by Category in predetermined order. Current group names (e.g. \"Budget\", \"Performance\", \"Spending\", \"Cost\", \"Video\", \"Conversion\" for metrics; \"Insertion Order Specifics\", \"Campaign Specifics\", \"Creative Specifics\", \"Demographics\", \"Technologies\", \"Deliveries\", \"Locations\", \"Audience Specifics\" for dimensions) are not a fixed enum -- read them from this response rather than hardcoding a list. Individual metrics can be conditionally present or absent depending on the requesting organization's configuration (e.g. \"VLD Insights Cost\" only appears for orgs with VLD enabled on a political vertical; \"Organization Bid Shading Savings\" only appears when bid-shading is enabled) -- a metric's absence for a given org is expected, config-dependent behavior, not a spec gap. Each dimension's `isFilterSupported` indicates whether it can be restricted to specific values via `dimensions[].value` on POST /api/v3/ra/report/execute, not just grouped by.",
         "operationId": "getDimensionAndMetricDetails",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -999,13 +995,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1047,7 +1041,12 @@
                                 "description": "Amount up to which you allow platform to spend on average each day",
                                 "defaultEnabled": false,
                                 "key": "dailyBudget",
-                                "dependentDimensions": [1, 2, 43, 44]
+                                "dependentDimensions": [
+                                  1,
+                                  2,
+                                  43,
+                                  44
+                                ]
                               },
                               {
                                 "id": 2,
@@ -1055,7 +1054,12 @@
                                 "order": 2,
                                 "defaultEnabled": false,
                                 "key": "totalBudget",
-                                "dependentDimensions": [1, 2, 43, 44]
+                                "dependentDimensions": [
+                                  1,
+                                  2,
+                                  43,
+                                  44
+                                ]
                               }
                             ]
                           },
@@ -1161,15 +1165,14 @@
           "MCP"
         ],
         "summary": "Create Report",
-        "description": "This API will create new Report based on given fields",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API will create new Report based on given fields",
         "operationId": "saveReport",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1180,13 +1183,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1201,7 +1202,10 @@
                   "description": "Report with Scheduling",
                   "value": {
                     "reportName": "Campaign by Gender by Device type with customer and filtering",
-                    "customerIds": [200, 201],
+                    "customerIds": [
+                      200,
+                      201
+                    ],
                     "startDate": 1650177200000,
                     "endDate": 1666938296000,
                     "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
@@ -1332,7 +1336,7 @@
           "MCP"
         ],
         "summary": "Get Report By ID",
-        "description": "This API fetches report data by report ID",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API fetches report data by report ID",
         "operationId": "getReport",
         "parameters": [
           {
@@ -1345,12 +1349,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1361,13 +1364,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1485,7 +1486,7 @@
           "MCP"
         ],
         "summary": "Delete Report and Scheduling Data By ID",
-        "description": "This API deletes report and it's scheduling data",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API deletes report and it's scheduling data",
         "operationId": "deleteReport",
         "parameters": [
           {
@@ -1498,12 +1499,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1514,13 +1514,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1604,7 +1602,7 @@
           "MCP"
         ],
         "summary": "Edit Report",
-        "description": "This API will edit Report data based on given fields",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API will edit Report data based on given fields",
         "operationId": "updateReport",
         "parameters": [
           {
@@ -1616,12 +1614,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1632,13 +1629,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1663,7 +1658,9 @@
                       "startTime",
                       "endTime"
                     ],
-                    "customerIds": [12345],
+                    "customerIds": [
+                      12345
+                    ],
                     "requestType": 1,
                     "reportAggregated": "0"
                   }
@@ -1732,7 +1729,7 @@
           "MCP"
         ],
         "summary": "Get List of Reports",
-        "description": "This API fetches list of reports as per the given filters",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API fetches list of reports as per the given filters",
         "operationId": "getReportList",
         "parameters": [
           {
@@ -1787,12 +1784,11 @@
               "default": 1
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1803,13 +1799,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1888,9 +1882,7 @@
                             "customerIds": null,
                             "customerDetails": null,
                             "timezoneId": 12,
-                            "reportSchedulingEventDetails": {
-
-                            }
+                            "reportSchedulingEventDetails": {}
                           },
                           {
                             "id": 3,
@@ -1899,7 +1891,10 @@
                             "endDate": 1668470399,
                             "timezoneId": 11,
                             "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
-                            "customerIds": [200, 201],
+                            "customerIds": [
+                              200,
+                              201
+                            ],
                             "customerDetails": [
                               {
                                 "owId": 200,
@@ -1911,9 +1906,7 @@
                                 "timezone": 29
                               }
                             ],
-                            "reportSchedulingEventDetails": {
-
-                            }
+                            "reportSchedulingEventDetails": {}
                           }
                         ],
                         "totalRecords": 3,
@@ -1947,15 +1940,14 @@
           "MCP"
         ],
         "summary": "Get List of Reports",
-        "description": "This API fetches list of reports as per the given filters\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| customerIds | String | [Optional] - Comma separated String of Customer IDs for which Report's list is requested. Default value is `all` |\n| searchField | String | [Optional] - Search field for report listing data. Search is supported for Report ID and Report name |\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. \u003Cbr\u003EDefault value is `-modifyDate`|\n| pageNo | Integer | [Optional] - Page number for the required data. \u003Cbr\u003EDefault value is `1`|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. \u003Cbr\u003EDefault value is `20`|\n",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API fetches list of reports as per the given filters\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| customerIds | String | [Optional] - Comma separated String of Customer IDs for which Report's list is requested. Default value is `all` |\n| searchField | String | [Optional] - Search field for report listing data. Search is supported for Report ID and Report name |\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. <br>Default value is `-modifyDate`|\n| pageNo | Integer | [Optional] - Page number for the required data. <br>Default value is `1`|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. <br>Default value is `20`|\n",
         "operationId": "fetchReportList",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1966,13 +1958,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -2058,9 +2048,7 @@
                             "customerIds": null,
                             "customerDetails": null,
                             "timezoneId": 12,
-                            "reportSchedulingEventDetails": {
-
-                            }
+                            "reportSchedulingEventDetails": {}
                           },
                           {
                             "id": 3,
@@ -2069,7 +2057,10 @@
                             "endDate": 1668470399,
                             "timezoneId": 11,
                             "dimensions": "[{\"filter\": \"creative\"}, {\"value\": [10300002, 10300003], \"filter\": \"income_group\"}, {\"value\": [20200001, 20200002, 20200003], \"filter\": \"os\"}]",
-                            "customerIds": [200, 201],
+                            "customerIds": [
+                              200,
+                              201
+                            ],
                             "customerDetails": [
                               {
                                 "owId": 200,
@@ -2081,9 +2072,7 @@
                                 "timezone": 29
                               }
                             ],
-                            "reportSchedulingEventDetails": {
-
-                            }
+                            "reportSchedulingEventDetails": {}
                           }
                         ],
                         "totalRecords": 3,
@@ -2148,14 +2137,22 @@
             "description": "Delivery Frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
             "format": "int32",
             "example": 1,
-            "enum": [1, 2, 3, 4]
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
           },
           "fileType": {
             "type": "integer",
             "description": "File Type: 1 = CSV ; 2 = XLS",
             "format": "int32",
             "example": 1,
-            "enum": [1, 2]
+            "enum": [
+              1,
+              2
+            ]
           },
           "subscriberEmails": {
             "type": "array",
@@ -2189,7 +2186,7 @@
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the report",
+            "description": "Unique identifier for the report. If supplied, runs the saved report with this ID and none of dimensions/columns/startDate/endDate/timezoneId/requestType/reportAggregated below are needed (the saved report already has them). If omitted, all of those become required.",
             "format": "int32",
             "example": 1
           },
@@ -2200,26 +2197,30 @@
           },
           "startDate": {
             "type": "integer",
-            "description": "Start date of the report, unix epoch timestamp",
+            "description": "Start date of the report, unix epoch timestamp. Required unless `id` is supplied.",
             "format": "int64",
             "example": 1622505600000
           },
           "endDate": {
             "type": "integer",
-            "description": "End date of the report, unix epoch timestamp",
+            "description": "End date of the report, unix epoch timestamp. Required unless `id` is supplied.",
             "format": "int64",
             "example": 1625097600000
           },
           "dimensions": {
             "type": "string",
-            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array. Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]",
+            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array -- `filter` alone groups by that dimension; adding `value` restricts results to those specific values (only supported for dimensions where DimensionDetailsVO.isFilterSupported is true, per GET /api/v3/ra/report/dimension-metrics/detail). Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]. Required unless `id` is supplied.",
             "example": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]"
           },
           "customerIds": {
             "type": "array",
             "description": "List of customer IDs associated with the report",
             "nullable": true,
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "List of customer IDs associated with the report",
@@ -2229,32 +2230,29 @@
           },
           "columns": {
             "type": "array",
-            "description": "List of columns to be included in the report",
+            "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics[].key` (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required unless `id` is supplied.",
             "items": {
               "type": "string",
-              "description": "List of columns to be included in the report",
+              "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics[].key` (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required unless `id` is supplied.",
               "example": "['column1', 'column2']"
             }
           },
           "timezoneId": {
             "type": "integer",
-            "description": "ID of the timezone for the report: 29=eastern",
+            "description": "ID of the timezone for the report: 29=eastern. No default is applied if omitted -- required unless `id` is supplied.",
             "format": "int32",
-            "example": 1,
-            "default": 29
+            "example": 1
           },
           "requestType": {
             "type": "integer",
-            "description": "Report request type ID: 1=disaggregated(daily), 2=aggregated, 3=weekly, 4=monthly",
+            "description": "Report request type ID: 1=disaggregated(daily), 2=aggregated, 3=weekly, 4=monthly. No default is applied if omitted -- required unless `id` is supplied.",
             "format": "int32",
-            "example": 1,
-            "default": 2
+            "example": 1
           },
           "reportAggregated": {
             "type": "string",
-            "description": "Aggregation level of the report: 1=aggregated, 2=disaggregated(daily)",
-            "example": "2",
-            "default": "1"
+            "description": "Aggregation level of the report: 1=aggregated, 2=disaggregated(daily). No default is applied if omitted -- required unless `id` is supplied.",
+            "example": "2"
           },
           "owId": {
             "type": "integer",
@@ -2297,13 +2295,55 @@
             "type": "object",
             "additionalProperties": {
               "type": "array",
-              "description": "Filters",
+              "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
               "items": {
                 "type": "object",
-                "description": "Filters"
+                "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+                "example": {
+                  "campaignIds": [
+                    123,
+                    234,
+                    345
+                  ],
+                  "creativeTypeIds": [
+                    11
+                  ],
+                  "campaignStatuses": [
+                    "expired",
+                    "running"
+                  ]
+                }
+              },
+              "example": {
+                "campaignIds": [
+                  123,
+                  234,
+                  345
+                ],
+                "creativeTypeIds": [
+                  11
+                ],
+                "campaignStatuses": [
+                  "expired",
+                  "running"
+                ]
               }
             },
-            "description": "Filters"
+            "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+            "example": {
+              "campaignIds": [
+                123,
+                234,
+                345
+              ],
+              "creativeTypeIds": [
+                11
+              ],
+              "campaignStatuses": [
+                "expired",
+                "running"
+              ]
+            }
           },
           "internalRequest": {
             "type": "boolean"
@@ -2460,7 +2500,11 @@
             "type": "array",
             "description": "List of customer IDs associated with the report",
             "nullable": true,
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "List of customer IDs associated with the report",
@@ -2553,7 +2597,7 @@
           }
         }
       },
-       "ReportDetails": {
+      "ReportDetails": {
         "type": "object",
         "properties": {
           "success": {
@@ -3060,7 +3104,12 @@
             "description": "Delivery Frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
             "format": "int32",
             "example": 4,
-            "enum": [1, 2, 3, 4]
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
           },
           "fileType": {
             "type": "integer",

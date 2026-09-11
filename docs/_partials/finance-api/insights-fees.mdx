@@ -1,0 +1,326 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+### Get Customer Insights Fees Details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/insight-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get insight fees details for a Customer. If <var>type</var> is provided, fetches for that specific report type; otherwise, fetches for all types.
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+| Query Parameters | |
+| ---- | --- |
+| `type` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Insight report type, supported values: <var>vld</var>, <var>pld</var>, <var>sls</var>, <var>aqs</var>, <var>ict</var>, <var>nld</var> <br />If not provided, returns all applicable types for the Customer's vertical |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response Properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`owId` <br /><span class="type-text">integer</span></td>
+<td>Customer Organization Workspace ID</td>
+</tr>
+<tr>
+<td>`categories` <br /><span class="type-text">object</span></td>
+<td>Map of insight category names to their fee details</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`categories` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`rate` <br /><span class="type-text">number</span></td>
+  <td>Rate for the insight report</td>
+  </tr>
+  <tr>
+  <td>`enabled` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the category is enabled</td>
+  </tr>
+  <tr>
+  <td>`markupType` <br /><span class="type-text">string</span></td>
+  <td>Markup type: "Absolute" or "Percentage"</td>
+  </tr>
+  <tr>
+  <td>`markupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>Markup type ID</td>
+  </tr>
+  <tr>
+  <td>`markupValue` <br /><span class="type-text">number</span></td>
+  <td>Markup value</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+<CodeDropdown value="Response Examples" label="Response">
+<CodeOption value="All Categories" label="All Categories" default>
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "owId": 201427,
+        "categories": {
+            "nld": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            },
+            "ict": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            },
+            "pld": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            },
+            "vld": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            },
+            "sls": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            },
+            "aqs": {
+                "rate": 5.5,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+            }
+        }
+    }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface InsightCategoryDetails {
+  rate: number;
+  enabled: boolean;
+  markupType: string;
+  markupTypeId: number;
+  markupValue: number;
+}
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          owId: number;
+          categories: Record<string, InsightCategoryDetails>;
+        }
+      }
+    };
+  };
+}
+
+function getInsightFees(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/fa/customer/{customerOwId}/insight-fees',
+    params: {
+      path: {
+        customerOwId: `number`
+      },
+      query: {
+        type: `string`
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Update Customer Insights Fees Details
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/fa/customer/{customerOwId}/insight-fees" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Update insight fees for a specific category for a Customer.
+
+| Path Parameters | |
+| ---- | --- |
+| `customerOwId` <br /><span class="type-text">integer</span> | Customer Organization Workspace ID |
+
+| Request Schema |  |
+| ---- | --- |
+| `category` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Insight report type category. Valid values: <var>pld</var>, <var>vld</var>, <var>ict</var>, <var>sls</var>, <var>aqs</var>, <var>nld</var> |
+| `rate` <br /><span class="type-text">number</span> | Rate for the insight report |
+| `enabled` <br /><span class="type-text">boolean</span> | Enable or disable the report |
+| `markupType` <br /><span class="type-text">string</span> | Markup type: <var>Absolute</var> or <var>Percentage</var> |
+| `markupTypeId` <br /><span class="type-text">integer</span> | Markup type ID |
+| `markupValue` <br /><span class="type-text">number</span> | Markup value |
+
+ <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Updated record ID</td>
+    </tr>
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+    "category": "pld",
+    "rate": 11,
+    "enabled": true,
+    "markupType": "Percentage",
+    "markupTypeId": 2,
+    "markupValue": 55.5
+}
+```
+
+<CodeDropdown value="Response Examples" label="Response">
+<CodeOption value="Rate Updated" label="Rate Updated" default>
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "message": "Rate updated successfully. The new rate applies only to newly created reports"
+    }
+}
+```
+</CodeOption>
+<CodeOption value="Insights Enabled" label="Insights Enabled">
+```json title="Response 200"
+{
+    "success": true,
+    "data": {
+        "id": 6,
+        "message": "Insights enabled successfully."
+    }
+}
+```
+</CodeOption>
+</CodeDropdown>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    headers: {
+      [name: string]: unknown;
+    };
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        }
+      }
+    };
+  };
+}
+
+function updateInsightFees(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/fa/customer/{customerOwId}/insight-fees',
+    params: {
+      path: {
+        customerOwId: `number`
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          category: `string`,
+          rate?: `number`,
+          enabled?: `boolean`,
+          markupType?: `string`,
+          markupTypeId?: `number`,
+          markupValue?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

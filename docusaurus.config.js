@@ -41,6 +41,28 @@ const config = {
     format: "detect",
   },
 
+  headTags: [
+    {
+      tagName: "link",
+      attributes: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
+      },
+    },
+  ],
+
+  stylesheets: [
+    {
+      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nata+Sans:wght@400;600;700;800&display=swap",
+      type: "text/css",
+    },
+  ],
+
   presets: [
     [
       "classic",
@@ -103,7 +125,7 @@ const config = {
       },
       algolia: {
         appId: "09FZUVDE53",
-        apiKey: "***REMOVED***",
+        apiKey: "3d384eeb507077016596ab0421e11ffb",
         indexName: "IQM API Docs",
         contextualSearch: true,
         replaceSearchResultPathname: {

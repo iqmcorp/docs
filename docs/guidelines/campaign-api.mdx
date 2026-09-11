@@ -1521,76 +1521,178 @@ function getCampaignDetails(): Promise<Responses> {
 
 ### Get Campaign Budget Details
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/budgetInfo" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/campaign/budgetInfo" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get Campaign budget info and graph details.
+Calculates and returns campaign budget and impression information. Derives any missing budget or daily-impression value from the supplied combination of total budget, timezone, daily budget, start/end time, and budget type. 
 
-| Query Parameters |  |
+When a <var>scheduling</var> map is provided, daily amounts are proportionally distributed across scheduled hours only. Pass <var>isGraphInfoRequired=true</var> to include per-day graph data in the response.
+
+| Request Schema |  |
 | ---- | --- |
-| `budgetTotal` <br /><span class="type-text">integer</span> | Campaign total budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `dailyBudget` <br /><span class="type-text">integer</span> |Campaign daily budget <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `fixedDailyBudget` <br /><span class="type-text">boolean</span> | Flag to indicate whether daily budget is fixed or not |
+| `campaignId` <br /><span class="type-text">integer</span> | [Campaign ID](#get-list-of-campaigns) to get budget info for |
+| `budgetTotal` <br /><span class="type-text">number</span> | Campaign total budget <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `budgetDay` <br /><span class="type-text">number</span> | Campaign daily budget <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `fixedDailyBudget` <br /><span class="type-text">boolean</span> | Flag to indicate whether daily budget is fixed or not, default: <var>false</var> |
 | `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign start time | 
-| `endTime` <br /><span class="type-text">integer</span> | Campaign end time  <br />Note: can be null if fixed daily budget, start time, and end time are provided |
-| `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign timezone
+| `endTime` <br /><span class="type-text">integer</span> | Campaign end time  <br />Note: can be omitted if fixed daily budget, start time, and end time are provided |
+| `timezone` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Timezone ID](/guidelines/master-api#get-timezones) |
+| `budgetTypeId` <br /><span class="type-text">integer</span> | [Budget Type ID](#get-list-of-campaign-budget-types) of given Campaign (impression-based or dollar-based) |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign Type ID](#get-campaign-count-with-campaign-type), default: <var>1</var> (Advanced) |
+| `isGraphInfoRequired` <br /><span class="type-text">boolean</span> | Include per-day `graphInfo` data in the response: <var>true</var> |
+| `scheduling` <br /><span class="type-text">object</span> | Map of weekday index (<var>0</var>–<var>6</var>) to an array of <var>[startTime, endTime]</var> string ranges Campaign delivery is scheduled for that day |
+| `maxBid` <br /><span class="type-text">number</span> | Maximum allowed bid price, used for impression-based PG Campaigns |
+| `totalImpressions` <br /><span class="type-text">integer</span> | Targeted total impressions, used for impression-based PG Campaigns |
+| `dailyImpressions` <br /><span class="type-text">integer</span> | Targeted daily impressions, used for impression-based Campaigns |
 
-<a href="#campaign-resource-properties"><button className="responsePropertiesButton"><Caret />Resource Properties</button></a>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`campaignId` <br /><span class="type-text">integer</span></td>
+    <td>Campaign ID, only present when a <var>campaignId</var> was supplied in the request</td>
+    </tr>
+    <tr>
+    <td>`budgetTotal` <br /><span class="type-text">number</span></td>
+    <td>Campaign total budget</td>
+    </tr>
+    <tr>
+    <td>`actualSpent` <br /><span class="type-text">number</span></td>
+    <td>Amount spent by the Campaign so far</td>
+    </tr>
+    <tr>
+    <td>`budgetDay` <br /><span class="type-text">number</span></td>
+    <td>Campaign daily budget</td>
+    </tr>
+    <tr>
+    <td>`fixedDailyBudget` <br /><span class="type-text">boolean</span></td>
+    <td>Whether daily budget is fixed</td>
+    </tr>
+    <tr>
+    <td>`startTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign start time</td>
+    </tr>
+    <tr>
+    <td>`endTime` <br /><span class="type-text">integer</span></td>
+    <td>Campaign end time</td>
+    </tr>
+    <tr>
+    <td>`timezone` <br /><span class="type-text">integer</span></td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+    </tr>
+    <tr>
+    <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Type ID](#get-list-of-campaign-budget-types) of given Campaign (impression-based or dollar-based)</td>
+    </tr>
+    <tr>
+    <td>`dailyImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Targeted daily impressions, only present for impression-based Campaigns</td>
+    </tr>
+    <tr>
+    <td>`actualImpressionSpent` <br /><span class="type-text">integer</span></td>
+    <td>Impressions served so far, only present for impression-based Campaigns</td>
+    </tr>
+    <tr>
+    <td>`totalImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Targeted total impressions, only present for impression-based Campaigns</td>
+    </tr>
+    <tr>
+    <td>`maxBid` <br /><span class="type-text">number</span></td>
+    <td>Maximum allowed bid price, only present for impression-based PG Campaigns</td>
+    </tr>
+    <tr>
+    <td>`spendingBudget` <br /><span class="type-text">number</span></td>
+    <td>Budget available for delivery after PG fees, only present for PG Campaigns</td>
+    </tr>
+    <tr>
+    <td>`pgFeesBudget` <br /><span class="type-text">number</span></td>
+    <td>Budget reserved for PG deal fees, only present for PG Campaigns</td>
+    </tr>
+    <tr>
+    <td>`graphInfo` <br /><span class="type-text">array of objects</span></td>
+    <td>Per-day budget graph data, only present when `isGraphInfoRequired` is <var>true</var></td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`graphInfo` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`date` <br /><span class="type-text">string</span></td>
+      <td>Date of the graph data point</td>
+      </tr>
+      <tr>
+      <td>`amount` <br /><span class="type-text">number</span></td>
+      <td>Budget amount for the date</td>
+      </tr>
+      <tr>
+      <td>`type` <br /><span class="type-text">string</span></td>
+      <td>Amount type: <var>spent</var> or <var>projected</var></td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table>
+    </details>
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request Sample"
+{
+  "campaignId": 12345,
+  "budgetTotal": 10000.00,
+  "startTime": 1700000000,
+  "endTime": 1702678400,
+  "timezone": 1,
+  "budgetTypeId": 1,
+  "isGraphInfoRequired": false,
+  "scheduling": {
+    "0": [["09:00:00", "17:00:00"]],
+    "1": [["09:00:00", "17:00:00"]]
+  }
+}
+```
+
 ```json title="Response 200"
 {
   "statusCode": 200,
   "responseObject": {
-    "campaignId": 168930,
-    "budgetTotal": 30000,
-    "actualSpent": 0,
-    "dailyBudget": 5000,
+    "campaignId": 12345,
+    "budgetTotal": 10000.00,
+    "budgetDay": 476.19,
+    "actualSpent": 1200.50,
     "fixedDailyBudget": false,
-    "startTime": 1610211600,
-    "endTime": 1610686800,
-    "timezone": 371,
-    "graphInfo": [
-      {
-        "date": "2021-01-08T18:30:00.000+0000",
-        "amount": 131.0083085876,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-09T18:30:00.000+0000",
-        "amount": 86.1821112588,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-10T18:30:00.000+0000",
-        "amount": 127.31636722319996,
-        "type": "spent"
-      },
-      {
-        "date": "2021-01-11T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      },
-      {
-        "date": "2021-01-12T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      },
-      {
-        "date": "2021-01-13T18:30:00.000+0000",
-        "amount": 9885.01,
-        "type": "projected"
-      }
-    ]
+    "startTime": 1700000000,
+    "endTime": 1702678400,
+    "timezone": 1,
+    "budgetTypeId": 1,
+    "graphInfo": []
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "statusCode": 400,
+  "errorObjects": [
+    {
+      "error": "Start time is required"
+    }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -1610,15 +1712,22 @@ interface Responses {
       "application/json": {
         statusCode: number;
         responseObject: {
-          campaignId: number;
+          campaignId?: number;
           budgetTotal: number;
           actualSpent: number;
-          dailyBudget: number;
+          budgetDay: number;
           fixedDailyBudget: boolean;
           startTime: number;
           endTime: number;
           timezone: number;
-          graphInfo: {
+          budgetTypeId: number;
+          dailyImpressions?: number;
+          actualImpressionSpent?: number;
+          totalImpressions?: number;
+          maxBid?: number;
+          spendingBudget?: number;
+          pgFeesBudget?: number;
+          graphInfo?: {
             date: string;
             amount: number;
             type: string;
@@ -1629,21 +1738,28 @@ interface Responses {
   };
 }
 
-function CampaignBudgetInfo(): Promise<Responses> {
+function getCampaignBudgetInfo(): Promise<Responses> {
   const options = {
-    method: 'GET',
+    method: 'POST',
     url: 'https://api.iqm.com/api/v2/cmp/campaign/budgetInfo',
-    params: {
-      query: {
-        budgetTotal: `number`,
-        dailyBudget: `number`,
-        fixedDailyBudget: `boolean`,
-        startTime: `number`,
-        endTime: `number`,
-        timezone: `number`,
-      },
-      header: {
-        "X-IAA-HOST": `string`
+    requestBody: {
+      content: {
+        "application/json": {
+          campaignId: `number`,
+          budgetTotal: `number`,
+          budgetDay: `number`,
+          fixedDailyBudget: `boolean`,
+          startTime: `number`,
+          endTime: `number`,
+          timezone: `number`,
+          budgetTypeId: `number`,
+          campaignTypeId: `number`,
+          isGraphInfoRequired: `boolean`,
+          scheduling: `object`,
+          maxBid: `number`,
+          totalImpressions: `number`,
+          dailyImpressions: `number`,
+        }
       }
     }
   };
@@ -3190,6 +3306,22 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Max bid for each bid request</td>
     </tr>
         <tr>
+    <td>`minBid` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Minimum bid for each bid request</td>
+    </tr>
+        <tr>
+    <td>`allowedMinBid` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Server-enforced minimum bid floor allowed for this Campaign</td>
+    </tr>
+        <tr>
+    <td>`totalCPM` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Total CPM for the Campaign</td>
+    </tr>
+        <tr>
+    <td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+    <td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the account-level cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
+    </tr>
+        <tr>
     <td>`timezone` <br /><span class="type-text">integer</span></td>
     <td>[Timezone ID](/guidelines/master-api#get-timezones) for Campaign</td>
     </tr>
@@ -3209,6 +3341,31 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>`impressionCapping` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
     <td>Maximum impressions in one Inventory </td>
     </tr>
+            <tr>
+    <td>`frequencyCapEnabled` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span></td>
+    <td>Enables frequency capping via <var>frequencyCapping</var>: <var>true</var></td>
+    </tr>
+            <tr>
+    <td>`frequencyCapping` <br /><span class="type-text">object</span> <span class="required-text">optional</span></td>
+    <td>Map of [Frequency Cap Type ID] to cap duration/value, keyed by the recurrence period the cap applies over: <var>1</var> = Day(s), <var>2</var> = Week(s), <var>3</var> = Month(s), <var>4</var> = Campaign Duration</td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`frequencyCapping` entry properties</summary>
+        <table className="objectProperties">
+        <tr>
+        <td>`frequencyCapDuration` <br /><span class="type-text">integer</span></td>
+        <td>Number of days/weeks/months the cap spans (per the key's type); must be <var>0</var> for the Campaign Duration type (id <var>4</var>)</td>
+        </tr>
+        <tr>
+        <td>`frequencyCapValue` <br /><span class="type-text">integer</span></td>
+        <td>Maximum impressions allowed within `frequencyCapDuration`</td>
+        </tr>
+        </table></details>
+        </td>
+        <td></td>
+      </tr>
             <tr>
     <td>`maxDayClicks` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
     <td>Maximum daily clicks </td>
@@ -3342,7 +3499,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Comma separated [Ethnicity IDs](/guidelines/master-api#get-ethnicity-segment) for targeting </td>
     </tr>
         <tr>
-    <td>`schedule` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
+    <td>`scheduling` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
     <td>key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...] </td>
     </tr>
             <tr>
@@ -3366,8 +3523,12 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     <td>Campaign Estimator data with <var>reachMeta</var>, <var>landScapeMeta</var> and <var>sliderMeta</var> </td>
     </tr>
     <tr>
+    <td>`campaignOptimizationType` <br /><span class="type-text">string</span> <span class="required-text">optional</span></td>
+    <td>Toggles AI optimization for the Campaign <br />Allowed values: <var>ai_based</var>, <var>rule_based</var> <br />When <var>ai_based</var>, `campaignOptimization` is required <br />When <var>rule_based</var>, any `campaignOptimization` sent is ignored</td>
+    </tr>
+    <tr>
     <td>`campaignOptimization` <br /><span class="type-text">object</span> <span class="required-text">optional</span></td>
-    <td>Campaign optimization settings for Goal-AI</td>
+    <td>Campaign optimization settings for Goal-AI <br />Required when `campaignOptimizationType` is <var>ai_based</var></td>
     </tr>
     <tr>
       <td colSpan="2">
@@ -3434,10 +3595,24 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
   "timezone": 105,
   "creativeIds": "100027,100028",
   "maxBid": 10,
+  "minBid": 1,
+  "allowedMinBid": 0.5,
+  "totalCPM": 8,
   "bidOptimization": false,
   "bidPacing": true,
   "isBidShading": true,
   "impressionCapping": 2,
+  "frequencyCapEnabled": true,
+  "frequencyCapping": {
+    "1": {
+      "frequencyCapDuration": 6,
+      "frequencyCapValue": 5
+    },
+    "4": {
+      "frequencyCapDuration": 0,
+      "frequencyCapValue": 100
+    }
+  },
   "conversionType": "install",
   "conversionTypeId": 1,
   "appURL": "https://www.example.com",
@@ -3467,6 +3642,7 @@ Create a new Campaign in <var>pending</var> or <var>draft</var> status.
     "landScapeMeta": {},
     "sliderMeta": {}
   },
+  "campaignOptimizationType": "ai_based",
   "campaignOptimization": {
     "aiObjective": 1,
     "aiGoal": 8,
@@ -3707,6 +3883,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`budgetDay`	<br /><span class="type-text">integer</span> |	Daily budget for Campaign serving daily
 |`budgetTotal`	<br /><span class="type-text">integer</span> |	Total budget for Campaign serving period
 |`maxBid`	<br /><span class="type-text">integer</span> | Max bid for each bid request
+|`thirdPartyCost` <br /><span class="type-text">number</span> | Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the current cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace
 |`timezone`	<br /><span class="type-text">integer</span> |	[Timezone ID](/guidelines/master-api#get-timezones) for Campaign
 |`startTime`	<br /><span class="type-text">integer</span> |	Campaign start time
 |`endTime`	<br /><span class="type-text">integer</span> |	Campaign end time
@@ -3761,7 +3938,7 @@ If Campaign is in <var>draft</var> status, this API will automatically update st
 |`incomeRangeIds` <br /><span class="type-text">string</span> |	Comma separated [Income Range IDs](/guidelines/master-api#get-income-range-segment) for targeting
 |`languageIds` <br /><span class="type-text">string</span> |	Comma separated [Language IDs](/guidelines/master-api#get-language-segment) for targeting
 |`ethnicityIds` <br /><span class="type-text">string</span> |	Comma separated [Ethnicity IDs](/guidelines/master-api#get-ethnicity-segment) for targeting
-|`schedule` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
+|`scheduling` <br /><span class="type-text">string</span> |	key as [0 to 6] maps to [Monday to Sunday] & values [['hh:mm:ss','hh:mm:ss'], ...]
 |`campaignIabCategoryIds` <br /><span class="type-text">string</span> |	Target IAB categories. Value in form of a string of comma-separated ID. Only super user can update IAB categories
 |`isAdvanceAudioVideoTargeted`	<br /><span class="type-text">boolean</span> |	To indicate if the advance targeting is enabled if this is true, 'creativeAdvanceTargeting' is optional and it is assumed that every video Creative segment is targeted
 |`isBidShading`	<br /><span class="type-text">boolean</span> |	To indicate if the bid shading is enabled
@@ -4176,6 +4353,10 @@ Create a new PG Campaign for Advertiser.
 <td>`countryId` <br /><span class="type-text">integer</span></td>
 <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
 </tr>
+<tr>
+<td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+<td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the account-level cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
+</tr>
 </table>
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
@@ -4501,6 +4682,10 @@ Update properties of a created or draft PG Campaign by Campaign ID.
 <tr>
 <td>`countryId` <br /><span class="type-text">integer</span></td>
 <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+</tr>
+<tr>
+<td>`thirdPartyCost` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+<td>Campaign-level 3rd-party cost override, between <var>0</var> and <var>999</var>. Omit to keep the current cost applied. Only honored when 3rd-party cost is active and Campaign-level editing is enabled for the Advertiser's workspace</td>
 </tr>
 </table>
 
@@ -5261,6 +5446,10 @@ Retrieve cost details for a specific Campaign. The request body must include eit
     <td>`logoURL` <br /><span class="type-text">string</span></td>
     <td>Partner logo URL</td>
     </tr>
+    <tr>
+    <td>`thirdPartyCost` <br /><span class="type-text">number</span></td>
+    <td>Campaign-level 3rd-party cost, either the Advertiser's override or the account-level cost when no override is set</td>
+    </tr>
     </table>
     </details>
 
@@ -5281,7 +5470,8 @@ Retrieve cost details for a specific Campaign. The request body must include eit
     "dataCost": 150,
     "preBidCost": 300,
     "msaExistsWith": "Partner A",
-    "logoURL": "https://example.com/logo.png"
+    "logoURL": "https://example.com/logo.png",
+    "thirdPartyCost": 10.5
   }
 }
 ```
@@ -6087,74 +6277,7 @@ The request body accepts the full set of Campaign properties for targeting, crea
 
 ## Campaign Targeting 
 
-Configure targeting parameters for Campaigns including Audiences, Conversions, Creatives, Inventory Groups, and Deals.
-
-### Assign Conversions to Campaigns
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/target/conversion" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Assign Conversions to Campaigns.
-
-:::info 
-
-Conversions can be assigned, updated, or removed from a Campaign only before the Campaign is running.
-
-:::
-
-| Request Schema | |
-| --- | --- |
-| `conversionIds` <br /><span class="type-text">string</span> | Comma separated [Conversion ID](/guidelines/conversion-api#get-list-of-conversions)s |
-| `campaignIds` <br /><span class="type-text">string</span> | [Campaign ID](#get-list-of-campaigns)s to target | 
-
-  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-    <summary style={{fontSize: "16px"}}>Response Properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
-    </tr>
-    </table>
-    </details>
-
-</div><div class="child2">
-
-```json title="Request Schema"
-{
-  "conversionIds": "123, 321",
-  "campaignIds": "276417, 356234"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "message": "1 Conversions assigned to campaigns successfully."
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
-
-```json title="Response 422"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "invalid Conversion ids"
-    }
-  ]
-}
-```
-</details>
-
-</div></div>
-
----
+Configure targeting parameters for Campaigns including Audiences, Creatives, Inventory Groups, and Deals.
 
 ### Update Audience Targeting in Campaigns
 
@@ -6327,12 +6450,12 @@ Assign or unassign Creatives from Campaigns.
 
 ### Inventory Group Targeting
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/inventorygroups/{groupId}/includeExclude" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/{groupId}/includeExclude" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Target Inventories by including or excluding Inventory groups from your Campaigns advertising strategies.
+Include or exclude specific Campaigns from an Inventory Group. Use this to manage which Campaigns are targeted by the Inventory Group by providing comma-separated lists of Campaign IDs to include and/or exclude.
 
 Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory-api#create-a-new-inventory-group).
 
@@ -6342,14 +6465,18 @@ Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory
 
 | Request Schema | |
 | --- | --- |
-| `campaignIds` <br /><span class="type-text">string</span> | Comma separated [Campaign ID](#get-list-of-campaigns)s |
-| `isExcluded` <br /><span class="type-text">boolean</span> | Include Campaigns in Group: <var>0</var> <br />Exclude Campaigns from Group: <var>1</var> |
+| `includedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [Campaign ID](#get-list-of-campaigns)s to include in the Inventory Group. Use an empty string if no Campaigns should be included. |
+| `excludedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [Campaign ID](#get-list-of-campaigns)s to exclude from the Inventory Group. Use an empty string if no Campaigns should be excluded. |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response Properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates whether the operation was successful: <var>true</var></td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
     </tr>
     </table>
@@ -6360,19 +6487,44 @@ Review the Inventory API to [Create a New Inventory Group](/guidelines/inventory
 
 ```json title="Request Sample"
 {
-  "campaignIds": "172813,177146",
-  "isExcluded": 0
+  "includedCampaignIds": "101,102",
+  "excludedCampaignIds": "200"
 }
 ```
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "message": "Inventory Group excluded successfully."
-  }
+  "success": true,
+  "data": "Campaigns successfully updated for inventory group"
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid campaign IDs provided"
+    }
+  ]
+}
+```
+
+```json title="Response 401"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid token"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -7077,6 +7229,146 @@ Insertion Orders specify the parameters or details of an advertising Campaign.
 </tr>
 </table>
 </details>
+</div></div>
+
+---
+
+### Get Insertion Order Details by ID
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/{ioId}" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get Insertion Order details by IO ID.
+
+| Path Parameter | |
+| --- | --- |
+| `ioId` <br /><span class="type-text">integer</span> | [Insertion Order ID](#get-insertion-order-details) |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`ioId` <br /><span class="type-text">integer</span></td>
+    <td>Insertion Order ID</td>
+    </tr>
+    <tr>
+    <td>`ioName` <br /><span class="type-text">string</span></td>
+    <td>Insertion Order name</td>
+    </tr>
+    <tr>
+    <td>`ioStartTime` <br /><span class="type-text">integer</span></td>
+    <td>IO start time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioEndTime` <br /><span class="type-text">integer</span></td>
+    <td>IO end time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioTotalBudget` <br /><span class="type-text">number</span></td>
+    <td>Total budget of the Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`ioTimeZoneId` <br /><span class="type-text">integer</span></td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones) for Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`isBudgetAutoSum` <br /><span class="type-text">boolean</span></td>
+    <td>Whether the IO total budget is auto-summed from Campaign budgets</td>
+    </tr>
+    <tr>
+    <td>`ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Distribution Method ID](#get-list-of-budget-distribution-methods)</td>
+    </tr>
+    <tr>
+    <td>`ioBudgetTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Budget Type ID](#get-list-of-campaign-budget-types)</td>
+    </tr>
+    <tr>
+    <td>`ioStatusId` <br /><span class="type-text">integer</span></td>
+    <td>[IO Status ID](#get-io-status-list)</td>
+    </tr>
+    <tr>
+    <td>`ioTotalImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Total impressions for the Insertion Order</td>
+    </tr>
+    <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID</td>
+    </tr>
+    <tr>
+    <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+    <td>User Organization Workspace ID of the creator</td>
+    </tr>
+    <tr>
+    <td>`modifiedByUowId` <br /><span class="type-text">integer</span></td>
+    <td>User Organization Workspace ID of the last modifier</td>
+    </tr>
+    <tr>
+    <td>`isIoPrioritise` <br /><span class="type-text">boolean</span></td>
+    <td>Whether IO prioritization is enabled</td>
+    </tr>
+    <tr>
+    <td>`ioNextPerformanceCheck` <br /><span class="type-text">integer</span></td>
+    <td>Next performance check time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioLastPriorityShift` <br /><span class="type-text">integer</span></td>
+    <td>Last priority shift time in epoch milliseconds</td>
+    </tr>
+    <tr>
+    <td>`ioCurrentPriority` <br /><span class="type-text">integer</span></td>
+    <td>Current priority level of the IO</td>
+    </tr>
+    </table>
+    </details>
+
+</div>
+<div class="child2">
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "ioId": 985,
+    "ioName": "TEST UPDATE",
+    "ioStartTime": 1793251767612,
+    "ioEndTime": 1794251767612,
+    "ioTotalBudget": 0,
+    "ioTimeZoneId": 29,
+    "isBudgetAutoSum": true,
+    "ioBudgetDistributionMethodId": 1,
+    "ioBudgetTypeId": 1,
+    "ioStatusId": 1,
+    "ioTotalImpressions": 0,
+    "owId": 201427,
+    "createdByUowId": 9480,
+    "modifiedByUowId": 9480,
+    "isIoPrioritise": true,
+    "ioNextPerformanceCheck": 1708606327000,
+    "ioLastPriorityShift": 1704976116958,
+    "ioCurrentPriority": 4
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More Responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid insertion order id."
+    }
+  ]
+}
+```
+
+</details>
+
 </div></div>
 
 ---
@@ -9697,18 +9989,26 @@ Create an Insertion Order with the following minimum required fields:
 
 ```json title="Response 200"
 {
-    "success": true,
+  "success": true,
     "data": {
-        "ioId": 6,
-        "ioName": "IO Name 1",
-        "ioStartTime": 1690898148000,
-        "ioEndTime": 1690898888000,
-        "ioTotalBudget": 0,
-        "ioTimeZoneId": 29,
-        "ioBudgetTypeId": 1,
-        "ioBudgetDistributionMethodId": 1,
-        "isAutoSumIoTotalBudget": true,
-        "ioTotalImpressions": null
+      "ioId": 25096,
+      "ioName": "new IO 1",
+      "owId": 203578,
+      "createdByUowId": 188494,
+      "modifiedByUowId": 188494,
+      "ioStartTime": 1778299200000,
+      "ioEndTime": null,
+      "ioTotalBudget": null,
+      "ioTimeZoneId": 29,
+      "isAutoSumIoTotalBudget": true,
+      "ioBudgetDistributionMethodId": 1,
+      "ioBudgetTypeId": 1,
+      "ioTotalImpressions": null,
+      "ioStatusId": 1,
+      "ioNextPerformanceCheck": null,
+      "ioLastPriorityShift": null,
+      "ioCurrentPriority": null,
+      "isIoPrioritise": false
     }
 }
 ```

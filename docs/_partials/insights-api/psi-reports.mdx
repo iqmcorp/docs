@@ -1,0 +1,595 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CopyUrl from '@site/src/components/CopyUrl';
+
+:::info
+
+Power Segment Insights (PSI) is available to political vertical Advertisers only. All PSI endpoints return a `403` for non-political Organizations.
+
+:::
+
+### Generate PSI Report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/psi/generate-report" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Initiates report generation for a power segment identified by its <var>taxonomyId</var>. The request is forwarded to the data team after validating the segment's current report status.
+
+Only segments with a <var>status</var> of <var>NotRequested</var> or <var>Failed</var> can be triggered. 
+
+See [Get Power Segment Insights List](#get-power-segment-insights-list).
+
+| Request Schema |  |
+| ---- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> | [Taxonomy ID](#get-power-segment-insights-list) of the power segment |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "taxonomyId": "IQMADV0002606"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Report generation initiated successfully."
+  }
+}
+```
+
+```json title="Response 422 (report already in progress or ready)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Report generation cannot be initiated. Current report status is: Processing"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function generatePsiReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/psi/generate-report',
+    requestBody: {
+      content: {
+        "application/json": {
+          taxonomyId: `string`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights List
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/psi/list" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a list of power segments and their available reports, based on search, sorting, and pagination criteria.
+
+| Query Parameters |  |
+| ---- | --- |
+| `searchField` <br /><span class="type-text">string</span> | Search power segments by name |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), allowed values: <var>id</var>, <var>name</var>, <var>category</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>20</var> |
+| `categories` <br /><span class="type-text">array of strings</span> | Filter power segments by [category name](#get-power-segment-insights-category-types), e.g. <var>CABINET_MEMBERS</var> |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+    <td>Total number of power segments</td>
+    </tr>
+    <tr>
+    <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+    <td>Number of power segments matching the search/filter criteria</td>
+    </tr>
+    <tr>
+    <td>`powerSegmentsReports` <br /><span class="type-text">array of objects</span></td>
+    <td>Power segments matching the search/filter criteria</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Power Segment ID</td>
+    </tr>
+    <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Power Segment name</td>
+    </tr>
+    <tr>
+    <td>`category` <br /><span class="type-text">string</span></td>
+    <td>[Power Segment category](#get-power-segment-insights-category-types)</td>
+    </tr>
+    <tr>
+    <td>`reports` <br /><span class="type-text">array of objects</span></td>
+    <td>Reports available for this power segment</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`type` <br /><span class="type-text">string</span></td>
+    <td>Report type</td>
+    </tr>
+    <tr>
+    <td>`status` <br /><span class="type-text">string</span></td>
+    <td>Report status: <var>NotRequested</var>, <var>Processing</var>, <var>Ready</var>, or <var>Failed</var></td>
+    </tr>
+    <tr>
+    <td>`generationTime` <br /><span class="type-text">number</span></td>
+    <td>Estimated report generation time, in minutes</td>
+    </tr>
+    <tr>
+    <td>`sizeInBytes` <br /><span class="type-text">integer</span></td>
+    <td>Report file size, in bytes</td>
+    </tr>
+    <tr>
+    <td>`taxonomyId` <br /><span class="type-text">string</span></td>
+    <td>[Taxonomy ID](#generate-psi-report) used to generate, download, or email this report</td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 2,
+    "filteredRecords": 2,
+    "powerSegmentsReports": [
+      {
+        "id": 1,
+        "name": "Donald Trump",
+        "category": "Neptune",
+        "reports": [
+          {
+            "type": "SPHERE",
+            "status": "NotRequested",
+            "generationTime": 3.0,
+            "sizeInBytes": null,
+            "taxonomyId": "283230NNJW"
+          },
+          {
+            "type": "ORBIT",
+            "status": "NotRequested",
+            "generationTime": 3.0,
+            "sizeInBytes": null,
+            "taxonomyId": "56329JJSH67"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Hillary Clinton",
+        "category": null,
+        "reports": [
+          {
+            "type": "SPHERE",
+            "status": "NotRequested",
+            "generationTime": 3.0,
+            "sizeInBytes": null,
+            "taxonomyId": "HHKNW972JL"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          totalRecords: number;
+          filteredRecords: number;
+          powerSegmentsReports: {
+            id: number;
+            name: string;
+            category: string | null;
+            reports: {
+              type: string;
+              status: string;
+              generationTime: number;
+              sizeInBytes: number | null;
+              taxonomyId: string;
+            }[];
+          }[];
+        }
+      }
+    };
+  };
+};
+
+function getPowerSegmentInsightsList(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/psi/list',
+    params: {
+      query: {
+        searchField?: `string`,
+        sortBy?: `string`,
+        pageNo?: `number`,
+        noOfEntries?: `number`,
+        categories?: `string[]`,
+      },
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Download PSI Report
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/psi/download-report" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a presigned S3 URL for downloading the PSI Report PDF for the given <var>taxonomyId</var>. The report must be in <var>Ready</var> status.
+
+| Query Parameters |  |
+| ---- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#get-power-segment-insights-list) of the power segment |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`reportURL` <br /><span class="type-text">string</span></td>
+    <td>Presigned URL for downloading the PSI Report PDF</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "reportURL": "https://s3.amazonaws.com/..."
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Report is not ready for download."
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          reportURL: string;
+        }
+      }
+    };
+  };
+};
+
+function downloadPsiReport(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/psi/download-report',
+    params: {
+      query: {
+        taxonomyId: `string`,
+      },
+    },
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Email PSI Report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/psi/email" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Sends the PSI Report PDF for the given <var>taxonomyId</var> to the specified email addresses. If the file is 10 MB or smaller the PDF is attached directly; otherwise the email includes a download link only. The report must be in <var>Ready</var> status.
+
+| Query Parameters |  |
+| ---- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#get-power-segment-insights-list) of the power segment |
+
+| Request Schema |  |
+| ---- | --- |
+| `emailIds` <br /><span class="type-text">array of strings</span> | Email addresses to send the report to, 1-15 addresses, each 1-320 characters |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response Properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request Sample"
+{
+  "emailIds": ["jane.doe@example.com"]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Report email sent successfully."
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Report is not ready for download."
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        }
+      }
+    };
+  };
+};
+
+function emailPsiReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/psi/email',
+    params: {
+      query: {
+        taxonomyId: `string`,
+      },
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          emailIds: `string[]`,
+        }
+      }
+    }
+  };
+  
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights Category Types
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/static/psi/category-types" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get all Power Segment Insights category types with their names, display names, and display orders. 
+
+Use <var>name</var> as the value for the <var>categories</var> filter on [Get Power Segment Insights List](#get-power-segment-insights-list).
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    { "id": 1, "name": "CABINET_MEMBERS", "displayName": "Cabinet Members", "order": 10 },
+    { "id": 2, "name": "GOVERNOR", "displayName": "Governor", "order": 20 },
+    { "id": 3, "name": "HOUSE_OF_REPRESENTATIVE", "displayName": "House of Representative", "order": 30 },
+    { "id": 4, "name": "SENATOR", "displayName": "Senator", "order": 40 },
+    { "id": 5, "name": "MAYOR", "displayName": "Mayor", "order": 50 }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          displayName: string;
+          order: number;
+        }[]
+      }
+    };
+  };
+}
+
+function getPsiCategoryTypes(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/static/psi/category-types',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

@@ -246,31 +246,29 @@ Get list of available states for Custom Voter Audiences. (Note: This API only re
 <div class="endpoint-container">
   <div class="child1">
 
-Get Custom Voter Audience segment details by segment ID.
+Browse the Custom Voter Audience segment catalogue to find segments to reference in a CVA <var>equation</var> (see [Create CVA Details](/political-vertical/planner/#create-cva-details)).
 
-This endpoint will fetch the segments based on search parameters provided for Custom Voter Audience segment catalogue.
-  * If no search parameters are provided then it will fetch all root segments for whole country (currently U.S.) along with their child segments.
-  * If state IDs are provided then it will fetch all root segments for those states along with their child segments.
-  * If parent segment ID is provided then it will fetch all child segments for that parent segment.
-  * If search keywords are provided then it will fetch all leaf segments matching those keywords in column path_key and description.
-  * If taxonomy IDs are provided then it will fetch all leaf segments matching those taxonomy Ids. If validateTaxonomyIDs flag is true then it will validate all taxonomy IDs exist.
-  * If segment IDs are provided then it will fetch those segments.
-  * If none of the above criteria is met then it will return empty list.
+The catalogue is a tree. Only **leaf** segments (`isLeaf: true`) carry a real, non-zero `reach` and are valid to reference in an equation — category/grouping nodes (states, topic groupings, etc.) always report `reach: 0` and exist only to organize the tree. A leaf segment's `taxonomyId` (e.g. `IQMCVACA041742`) is the exact token to use inside an equation string.
 
-| Path Parameter | |
-| --- | --- |
-| `segmentId` <br /><span class="type-text">integer</span> | [Segment ID](/guidelines/audience-api/#search-segmented-audiences) |
+This endpoint fetches the segments based on the search parameters provided:
+  * If no parameters are provided, it fetches all root segments for the whole country (currently U.S.) along with their child segments.
+  * If state IDs are provided, it fetches all root segments for those states along with their child segments.
+  * If a parent segment ID is provided, it fetches all child segments for that parent segment — this is how you drill down the tree to find leaf segments.
+  * If search keywords are provided, it fetches all leaf segments matching those keywords in the path key and description.
+  * If taxonomy IDs are provided, it fetches all leaf segments matching those taxonomy IDs. If the `validateTaxonomyIds` flag is true, it validates that all taxonomy IDs exist.
+  * If segment IDs are provided, it fetches those segments.
+  * If none of the above criteria are met, it returns an empty list.
 
-| Query Parameters | |
+| Request Schema |  |
 | --- | --- |
 | `stateIds` <br /><span class="type-text">array of integers</span> | List of state IDs used to fetch root segments for those states along with their child segments |
-| `parentSegmentId` <br /><span class="type-text">integer</span> | Parent segment ID used to fetch child segments for that parent |
-| `searchField` <br /><span class="type-text">string</span> | Comma-separated search keywords used to fetch leaf segments matching those keywords in columns path_key and description |
+| `parentSegmentId` <br /><span class="type-text">integer</span> | Parent segment ID used to fetch child segments for that parent — use this to drill down the tree |
+| `searchField` <br /><span class="type-text">string</span> | Comma-separated search keywords used to fetch leaf segments matching those keywords in the path key and description |
 | `taxonomyIds` <br /><span class="type-text">array of strings</span> | List of taxonomy IDs used to fetch leaf segments |
 | `validateTaxonomyIds` <br /><span class="type-text">boolean</span> | Flag to validate if all taxonomy IDs provided exist, default: <var>false</var> |
 | `segmentIds` <br /><span class="type-text">array of integers</span> | List of segment IDs used to fetch segments |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>0</var> |
-| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page, default: <var>0</var> |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries per page |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -285,21 +283,21 @@ This endpoint will fetch the segments based on search parameters provided for Cu
   <td>Number of filtered records returned</td>
 </tr>
 <tr>
-  <td>`cvaFilterData` <br /><span class="type-text">array of objects</span></td>
+  <td>`cvaSegmentData` <br /><span class="type-text">array of objects</span></td>
   <td>Array of CVA segment data objects</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`cvaFilterData` object properties</summary>
+  <summary>`cvaSegmentData` object properties</summary>
   <table className="objectProperties">
   <tr>
     <td>`segmentId` <br /><span class="type-text">integer</span></td>
     <td>Segment ID</td>
   </tr>
   <tr>
-    <td>`segmentName` <br /><span class="type-text">string</span></td>
-    <td>Segment name</td>
+    <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+    <td>Human-readable name of the segment</td>
   </tr>
   <tr>
     <td>`description` <br /><span class="type-text">string</span></td>
@@ -307,19 +305,19 @@ This endpoint will fetch the segments based on search parameters provided for Cu
   </tr>
   <tr>
     <td>`taxonomyId` <br /><span class="type-text">string</span></td>
-    <td>Taxonomy ID</td>
+    <td>Taxonomy ID — for a leaf segment (`isLeaf: true`), this is the exact token to reference in a CVA `equation` string</td>
   </tr>
   <tr>
     <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if segment is a leaf node</td>
+    <td>Indicates if the segment is a leaf node. Only leaf segments are valid to reference in an equation and carry a real `reach` value</td>
   </tr>
   <tr>
     <td>`pathKey` <br /><span class="type-text">string</span></td>
-    <td>Taxonomy path key</td>
+    <td>Taxonomy path key, showing the segment's full position in the tree (e.g. <var>California (CA) &gt; Demographics &gt; Gender &gt; F</var>)</td>
   </tr>
   <tr>
     <td>`reach` <br /><span class="type-text">integer</span></td>
-    <td>Segment reach</td>
+    <td>Estimated reach of the segment. `0` for non-leaf (category/grouping) nodes; a real, non-zero value only on leaf nodes</td>
   </tr>
   <tr>
     <td>`parentSegmentId` <br /><span class="type-text">integer</span></td>
@@ -327,7 +325,7 @@ This endpoint will fetch the segments based on search parameters provided for Cu
   </tr>
   <tr>
     <td>`childSegments` <br /><span class="type-text">array of objects</span></td>
-    <td>Array of child segment objects (same structure as parent)</td>
+    <td>Array of child segment objects (same structure as parent). Only present when drilling into the top-level tree; not returned on every request</td>
   </tr>
   </table>
   </details>
@@ -338,97 +336,39 @@ This endpoint will fetch the segments based on search parameters provided for Cu
 
 </div><div class="child2">
 
+```json title="Request Sample"
+{
+  "parentSegmentId": 43660
+}
+```
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "totalRecords": 100,
-    "cvaFilterData": [
+    "cvaSegmentData": [
       {
-        "segmentId": 1,
-        "segmentName": "California",
-        "description": "California state",
-        "taxonomyId": "IQM_CA_001",
-        "isLeaf": false,
-        "pathKey": "CA",
-        "reach": 1003462,
-        "parentSegmentId": 0,
-        "childSegments": [
-          {
-            "segmentId": 157,
-            "segmentName": "Age",
-            "description": "Age segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_157",
-            "pathKey": "CA > AGE",
-            "parentSegmentId": 1,
-            "reach": 1003462
-          },
-          {
-            "segmentId": 158,
-            "segmentName": "Demographics",
-            "description": "Demographics segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_158",
-            "pathKey": "CA > DEMOGRAPHICS",
-            "parentSegmentId": 1,
-            "reach": 1003462
-          },
-          {
-            "segmentId": 159,
-            "segmentName": "Gender",
-            "description": "Gender segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_159",
-            "pathKey": "CA > GENDER",
-            "parentSegmentId": 1,
-            "reach": 1003462
-          }
-        ]
+        "segmentId": 43661,
+        "taxonomyValue": "F",
+        "description": "",
+        "taxonomyId": "IQMCVACA041742",
+        "isLeaf": true,
+        "reach": 11789748,
+        "pathKey": "California (CA) > Demographics > Gender > F",
+        "parentSegmentId": 43660
       },
       {
-        "segmentId": 2,
-        "segmentName": "New York",
-        "description": "New Tork state",
-        "taxonomyId": "IQM_NY_002",
-        "isLeaf": false,
-        "pathKey": "NY",
-        "parentSegmentId": 0,
-        "reach": 4002462,
-        "childSegments": [
-          {
-            "segmentId": 160,
-            "segmentName": "Age",
-            "description": "Age segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_160",
-            "pathKey": "NY > AGE",
-            "parentSegmentId": 2,
-            "reach": 4002462
-          },
-          {
-            "segmentId": 161,
-            "segmentName": "Demographics",
-            "description": "Demographics segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_161",
-            "pathKey": "NY > DEMOGRAPHICS",
-            "parentSegmentId": 2,
-            "reach": 4002462
-          },
-          {
-            "segmentId": 162,
-            "segmentName": "Gender",
-            "description": "Gender segment",
-            "isLeaf": false,
-            "taxonomyId": "IQM_162",
-            "pathKey": "NY > GENDER",
-            "parentSegmentId": 2,
-            "reach": 4002462
-          }
-        ]
+        "segmentId": 53424,
+        "taxonomyValue": "M",
+        "description": "",
+        "taxonomyId": "IQMCVACA051376",
+        "isLeaf": true,
+        "reach": 10737933,
+        "pathKey": "California (CA) > Demographics > Gender > M",
+        "parentSegmentId": 43660
       }
     ],
+    "totalRecords": 110724,
     "filteredRecords": 2
   }
 }
