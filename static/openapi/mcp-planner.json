@@ -342,6 +342,28 @@
                         232,
                         12
                       ],
+                      "ageGroupSegments": [
+                        101,
+                        102,
+                        103
+                      ],
+                      "genderSegments": [
+                        201,
+                        202
+                      ],
+                      "incomeRangeSegments": [
+                        301,
+                        302,
+                        303
+                      ],
+                      "ethnicitySegments": [
+                        401,
+                        402
+                      ],
+                      "partyAffiliationSegments": [
+                        501,
+                        502
+                      ],
                       "advanced": {
                         "locations": [
                           8,
@@ -375,7 +397,7 @@
         },
         "responses": {
           "200": {
-            "description": "Ready plan created successfully",
+            "description": "Plan updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -578,6 +600,28 @@
                         232,
                         12
                       ],
+                      "ageGroupSegments": [
+                        101,
+                        102,
+                        103
+                      ],
+                      "genderSegments": [
+                        201,
+                        202
+                      ],
+                      "incomeRangeSegments": [
+                        301,
+                        302,
+                        303
+                      ],
+                      "ethnicitySegments": [
+                        401,
+                        402
+                      ],
+                      "partyAffiliationSegments": [
+                        501,
+                        502
+                      ],
                       "advanced": {
                         "locations": [
                           8,
@@ -611,7 +655,7 @@
         },
         "responses": {
           "200": {
-            "description": "Ready plan created successfully",
+            "description": "Draft plan updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -701,6 +745,7 @@
                   "value": {
                     "id": 123,
                     "name": "Sample HCP Planner Request",
+                    "statusId": 2,
                     "startTime": 1735124399000,
                     "endTime": 1757534400000,
                     "timezoneId": 4,
@@ -709,7 +754,7 @@
                     "maxBudget": 80000,
                     "reach": 250000,
                     "maxReach": 300000,
-                    "impression": 1000000,
+                    "impressions": 1000000,
                     "maxImpressions": 1200000,
                     "frequencyCap": 5,
                     "frequencyCapTypeId": 1,
@@ -938,29 +983,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden vertical ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad request due to invalid input",
             "content": {
@@ -977,6 +999,29 @@
                         {
                           "error": "Invalid input data",
                           "field": "name"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden vertical ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -1071,7 +1116,7 @@
           "MCP"
         ],
         "summary": "This API initiates the process of generating campaigns for the Ready Proposal",
-        "description": "This API validates the proposal details, sets its status to statusId 5 (Processing), then\nasynchronously generates the IO and campaigns. The target proposal must currently have\nstatusId 6 (Ready) or 4 (Failed) -- any other status is rejected with \"Proposal Status is\ninvalid\". On successful completion of the async step, the proposal is transitioned to\nstatusId 1 (Converted) with a real ioId assigned -- this is a one-way transition after\nwhich edit/download/restore operations that require Ready/Failed/Expired status will start\nfailing for this proposal.\n",
+        "description": "This API validates the proposal details, sets its status to statusId 5 (Processing), then\nasynchronously generates the IO and campaigns. The target proposal must currently have\nstatusId 6 (Ready) or 4 (Failed) -- any other status is rejected with \"Proposal Status is\ninvalid\". On successful completion of the async step, the proposal is transitioned to\nstatusId 1 (Converted) with a real ioId assigned -- this is a one-way transition after\nwhich edit/restore operations that require Ready/Failed/Expired status will start\nfailing for this proposal (download remains available for Converted proposals).\n",
         "operationId": "generateIOCampaigns",
         "parameters": [
           {
@@ -1119,21 +1164,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -1143,6 +1173,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -1345,7 +1390,7 @@
                 "Proposal Request to create proposal": {
                   "description": "Proposal Request to create proposal",
                   "value": {
-                    "id": "11",
+                    "id": 11,
                     "name": "sample_planner",
                     "startTime": 1730658720000,
                     "endTime": 1733250720000,
@@ -1982,7 +2027,7 @@
           "MCP"
         ],
         "summary": "Bid Landscape data in the proposal summary",
-        "description": "This API provides distribution of impressions vs for different creatives types targeted in proposal summary",
+        "description": "This API provides bid landscape data (percentile, CPM, and impressions at each percentile) for the proposal, broken out by media format (e.g. HTML, Video)",
         "operationId": "getBidLandscapeData",
         "parameters": [
           {
@@ -2253,6 +2298,10 @@
                         6189391,
                         6189389,
                         6189392
+                      ],
+                      "partyAffiliationSegments": [
+                        6189396,
+                        6189397
                       ]
                     }
                   }
@@ -2281,7 +2330,8 @@
                           "linearTvCpm": 20,
                           "ctvCpm": 7,
                           "grp": 180,
-                          "linearTvPercentage": 50
+                          "linearTvPercentage": 50,
+                          "ctvFrequency": 3
                         },
                         "audienceOverlap": {
                           "population": 16780000,
@@ -2290,6 +2340,14 @@
                           "ctvReach": 3120000,
                           "overlapReach": 650000,
                           "ctvIncrementalReach": 2470000
+                        },
+                        "maximumAudienceOverlap": {
+                          "population": 16780000,
+                          "totalReach": 7200000,
+                          "linearTvReach": 4600000,
+                          "ctvReach": 3400000,
+                          "overlapReach": 800000,
+                          "ctvIncrementalReach": 2600000
                         },
                         "reachSaturation": [
                           {
@@ -2563,29 +2621,6 @@
               }
             }
           },
-          "403": {
-            "description": "Requesting political proposal listing for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Invalid request parameters",
             "content": {
@@ -2614,6 +2649,29 @@
                         {
                           "error": "Invalid status IDs format",
                           "field": "statusIds"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Requesting political proposal listing for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -2820,6 +2878,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting delete for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "No proposals found for the given IDs",
             "content": {
@@ -2836,29 +2917,6 @@
                         {
                           "error": "No proposals found for the given proposal ids",
                           "field": "proposalIds"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting delete for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -3252,6 +3310,28 @@
                         232,
                         12
                       ],
+                      "ageGroupSegments": [
+                        101,
+                        102,
+                        103
+                      ],
+                      "genderSegments": [
+                        201,
+                        202
+                      ],
+                      "incomeRangeSegments": [
+                        301,
+                        302,
+                        303
+                      ],
+                      "ethnicitySegments": [
+                        401,
+                        402
+                      ],
+                      "partyAffiliationSegments": [
+                        501,
+                        502
+                      ],
                       "advanced": {
                         "locations": [
                           8,
@@ -3479,6 +3559,28 @@
                         232,
                         12
                       ],
+                      "ageGroupSegments": [
+                        101,
+                        102,
+                        103
+                      ],
+                      "genderSegments": [
+                        201,
+                        202
+                      ],
+                      "incomeRangeSegments": [
+                        301,
+                        302,
+                        303
+                      ],
+                      "ethnicitySegments": [
+                        401,
+                        402
+                      ],
+                      "partyAffiliationSegments": [
+                        501,
+                        502
+                      ],
                       "advanced": {
                         "locations": [
                           8,
@@ -3512,7 +3614,7 @@
         },
         "responses": {
           "200": {
-            "description": "Ready plan created successfully",
+            "description": "Draft plan created successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4105,42 +4207,6 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable entity due to validation errors",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Validation error response for minimum length": {
-                    "description": "Validation error response for minimum length",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Planner name must be between 3 and 100 characters",
-                          "field": "name"
-                        }
-                      ]
-                    }
-                  },
-                  "Validation error response for maximum length": {
-                    "description": "Validation error response for maximum length",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Planner name must be between 3 and 100 characters",
-                          "field": "name"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad request due to null or empty planner name",
             "content": {
@@ -4180,6 +4246,42 @@
                       "errorObjects": [
                         {
                           "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity due to validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Validation error response for minimum length": {
+                    "description": "Validation error response for minimum length",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Planner name must be between 3 and 100 characters",
+                          "field": "name"
+                        }
+                      ]
+                    }
+                  },
+                  "Validation error response for maximum length": {
+                    "description": "Validation error response for maximum length",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Planner name must be between 3 and 100 characters",
+                          "field": "name"
                         }
                       ]
                     }
@@ -4233,7 +4335,7 @@
                     "maxBudget": 80000,
                     "reach": 250000,
                     "maxReach": 300000,
-                    "impression": 1000000,
+                    "impressions": 1000000,
                     "maxImpressions": 1200000,
                     "frequencyCap": 5,
                     "frequencyCapTypeId": 2,
@@ -4462,29 +4564,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden vertical ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad request due to invalid input",
             "content": {
@@ -4501,6 +4580,29 @@
                         {
                           "error": "Invalid input data",
                           "field": "name"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden vertical ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -4555,7 +4657,7 @@
                     "maxBudget": 80000,
                     "reach": 250000,
                     "maxReach": 300000,
-                    "impression": 1000000,
+                    "impressions": 1000000,
                     "maxImpressions": 1200000,
                     "frequencyCap": 5,
                     "frequencyCapTypeId": 2,
@@ -4784,29 +4886,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden vertical ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad request due to invalid input",
             "content": {
@@ -4823,6 +4902,29 @@
                         {
                           "error": "Invalid input data",
                           "field": "name"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden vertical ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -4898,6 +5000,21 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity due to invalid plan ID",
             "content": {
@@ -4941,21 +5058,6 @@
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
                     }
                   ]
                 }
@@ -5262,25 +5364,6 @@
           }
         },
         "responses": {
-          "422": {
-            "description": "Validation failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "This file\u2019s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
-                      "field": "npi"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "Upload accepted and stored",
             "content": {
@@ -5299,6 +5382,25 @@
                       "rows": 42
                     }
                   }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "This file’s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
+                      "field": "npi"
+                    }
+                  ]
                 }
               }
             }
@@ -5501,189 +5603,192 @@
                   "Proposed Campaigns Response": {
                     "description": "Proposed Campaigns Response",
                     "value": {
-                      "name": "Q4 Diabetes Awareness Campaign",
-                      "startTime": 1732707706666,
-                      "endTime": 1733312506666,
-                      "timezoneId": 3,
-                      "budgetTypeId": 1,
-                      "budget": 100000,
-                      "maxBudget": 120000,
-                      "reach": 50000,
-                      "maxReach": 70000,
-                      "impressions": 200000,
-                      "maxImpressions": 250000,
-                      "workspaceMarginPercentage": 20,
-                      "frequencyCap": 3,
-                      "audienceBlocks": [
-                        {
-                          "audienceSelectionMethodId": 1,
-                          "npiTypeIds": [
-                            3,
-                            4
-                          ],
-                          "speciality": {
-                            "allSpecialitiesSelected": true
-                          },
-                          "accounts": [
-                            {
-                              "allAccountsSelected": true
-                            }
-                          ],
-                          "locations": {
-                            "countryId": 30100001
-                          },
-                          "dataPartners": {
-                            "allDataPartnersSelected": true
-                          },
-                          "storagePath": null,
-                          "includeAudienceIds": [],
-                          "excludeAudienceIds": []
-                        },
-                        {
-                          "audienceSelectionMethodId": 2,
-                          "npiTypeIds": [
-                            3
-                          ],
-                          "speciality": {
-                            "allSpecialitiesSelected": true
-                          },
-                          "accounts": [
-                            {
-                              "allAccountsSelected": true
-                            }
-                          ],
-                          "locations": {
-                            "countryId": 30100001
-                          },
-                          "dataPartners": {
-                            "allDataPartnersSelected": true
-                          },
-                          "storagePath": "tmp/aud_uploads/upload_block2.csv",
-                          "includeAudienceIds": [],
-                          "excludeAudienceIds": []
-                        },
-                        {
-                          "audienceSelectionMethodId": 3,
-                          "npiTypeIds": null,
-                          "speciality": {
-                            "allSpecialitiesSelected": true
-                          },
-                          "accounts": [
-                            {
-                              "allAccountsSelected": true
-                            }
-                          ],
-                          "locations": {
-                            "countryId": 30100001
-                          },
-                          "dataPartners": {
-                            "allSpecialitiesSelected": true
-                          },
-                          "storagePath": null,
-                          "includeAudienceIds": [
-                            1,
-                            2,
-                            3
-                          ],
-                          "excludeAudienceIds": [
-                            1,
-                            2,
-                            3
-                          ]
-                        }
-                      ],
-                      "planLevelTargeting": {
-                        "devices": {
-                          "allDeviceTypesSelected": true
-                        },
-                        "channels": {
-                          "allChannelTypesSelected": true
-                        },
-                        "creativeTypes": {
-                          "allCreativeTypesSelected": true
-                        },
-                        "inventory": {
-                          "openExchangeVO": {
-                            "allExchangesSelected": true,
-                            "allIabCategoriesSelected": true
-                          },
-                          "inventoryGroup": {
-                            "allInventoryGroupsSelected": true
-                          }
-                        }
-                      },
-                      "splitStrategy": [
-                        {
-                          "splitDimensionTypeId": 1,
-                          "selectedValueIds": [
-                            11,
-                            13,
-                            14,
-                            15,
-                            17
-                          ]
-                        },
-                        {
-                          "splitDimensionTypeId": 2,
-                          "selectedValueIds": [
-                            3,
-                            4
-                          ]
-                        },
-                        {
-                          "splitDimensionTypeId": 3,
-                          "selectedValueIds": [
-                            7
-                          ]
-                        },
-                        {
-                          "splitDimensionTypeId": 4,
-                          "selectedValueIds": [
-                            11
-                          ]
-                        },
-                        {
-                          "splitDimensionTypeId": 5,
-                          "selectedValueIds": []
-                        }
-                      ],
-                      "campaigns": [
-                        {
-                          "id": null,
-                          "name": "Campaign_Image_HCP_Healthlink_Mobile",
-                          "startTime": 1732707706666,
-                          "endTime": 1733312506666,
-                          "frequencyCap": 1,
-                          "frequencyCapTypeId": 1,
-                          "budget": null,
-                          "maxBudget": 0,
-                          "minMediaCpm": null,
-                          "mediaCpm": null,
-                          "maxMediaCpm": null,
-                          "dataCpm": null,
-                          "minReach": 0,
-                          "reach": null,
-                          "maxReach": 0,
-                          "impressions": null,
-                          "maxImpressions": 0,
-                          "strategy": "Image + HCP + Healthlink + Mobile",
-                          "targeting": {
-                            "dataPartnerIds": [
-                              7
+                      "success": true,
+                      "data": {
+                        "name": "Q4 Diabetes Awareness Campaign",
+                        "startTime": 1732707706666,
+                        "endTime": 1733312506666,
+                        "timezoneId": 3,
+                        "budgetTypeId": 1,
+                        "budget": 100000,
+                        "maxBudget": 120000,
+                        "reach": 50000,
+                        "maxReach": 70000,
+                        "impressions": 200000,
+                        "maxImpressions": 250000,
+                        "workspaceMarginPercentage": 20,
+                        "frequencyCap": 3,
+                        "audienceBlocks": [
+                          {
+                            "audienceSelectionMethodId": 1,
+                            "npiTypeIds": [
+                              3,
+                              4
                             ],
-                            "creativeTypeId": 11,
-                            "deviceTypeIds": [
-                              11
+                            "speciality": {
+                              "allSpecialitiesSelected": true
+                            },
+                            "accounts": [
+                              {
+                                "allAccountsSelected": true
+                              }
                             ],
-                            "npiTypeId": 3,
-                            "audienceTypeIds": [
+                            "locations": {
+                              "countryId": 30100001
+                            },
+                            "dataPartners": {
+                              "allDataPartnersSelected": true
+                            },
+                            "storagePath": null,
+                            "includeAudienceIds": [],
+                            "excludeAudienceIds": []
+                          },
+                          {
+                            "audienceSelectionMethodId": 2,
+                            "npiTypeIds": [
+                              3
+                            ],
+                            "speciality": {
+                              "allSpecialitiesSelected": true
+                            },
+                            "accounts": [
+                              {
+                                "allAccountsSelected": true
+                              }
+                            ],
+                            "locations": {
+                              "countryId": 30100001
+                            },
+                            "dataPartners": {
+                              "allDataPartnersSelected": true
+                            },
+                            "storagePath": "tmp/aud_uploads/upload_block2.csv",
+                            "includeAudienceIds": [],
+                            "excludeAudienceIds": []
+                          },
+                          {
+                            "audienceSelectionMethodId": 3,
+                            "npiTypeIds": null,
+                            "speciality": {
+                              "allSpecialitiesSelected": true
+                            },
+                            "accounts": [
+                              {
+                                "allAccountsSelected": true
+                              }
+                            ],
+                            "locations": {
+                              "countryId": 30100001
+                            },
+                            "dataPartners": {
+                              "allSpecialitiesSelected": true
+                            },
+                            "storagePath": null,
+                            "includeAudienceIds": [
                               1,
-                              2
+                              2,
+                              3
+                            ],
+                            "excludeAudienceIds": [
+                              1,
+                              2,
+                              3
+                            ]
+                          }
+                        ],
+                        "planLevelTargeting": {
+                          "devices": {
+                            "allDeviceTypesSelected": true
+                          },
+                          "channels": {
+                            "allChannelTypesSelected": true
+                          },
+                          "creativeTypes": {
+                            "allCreativeTypesSelected": true
+                          },
+                          "inventory": {
+                            "openExchangeVO": {
+                              "allExchangesSelected": true,
+                              "allIabCategoriesSelected": true
+                            },
+                            "inventoryGroup": {
+                              "allInventoryGroupsSelected": true
+                            }
+                          }
+                        },
+                        "splitStrategy": [
+                          {
+                            "splitDimensionTypeId": 1,
+                            "selectedValueIds": [
+                              11,
+                              13,
+                              14,
+                              15,
+                              17
                             ]
                           },
-                          "isAbm": false
-                        }
-                      ]
+                          {
+                            "splitDimensionTypeId": 2,
+                            "selectedValueIds": [
+                              3,
+                              4
+                            ]
+                          },
+                          {
+                            "splitDimensionTypeId": 3,
+                            "selectedValueIds": [
+                              7
+                            ]
+                          },
+                          {
+                            "splitDimensionTypeId": 4,
+                            "selectedValueIds": [
+                              11
+                            ]
+                          },
+                          {
+                            "splitDimensionTypeId": 5,
+                            "selectedValueIds": []
+                          }
+                        ],
+                        "campaigns": [
+                          {
+                            "id": null,
+                            "name": "Campaign_Image_HCP_Healthlink_Mobile",
+                            "startTime": 1732707706666,
+                            "endTime": 1733312506666,
+                            "frequencyCap": 1,
+                            "frequencyCapTypeId": 1,
+                            "budget": null,
+                            "maxBudget": 0,
+                            "minMediaCpm": null,
+                            "mediaCpm": null,
+                            "maxMediaCpm": null,
+                            "dataCpm": null,
+                            "minReach": 0,
+                            "reach": null,
+                            "maxReach": 0,
+                            "impressions": null,
+                            "maxImpressions": 0,
+                            "strategy": "Image + HCP + Healthlink + Mobile",
+                            "targeting": {
+                              "dataPartnerIds": [
+                                7
+                              ],
+                              "creativeTypeId": 11,
+                              "deviceTypeIds": [
+                                11
+                              ],
+                              "npiTypeId": 3,
+                              "audienceTypeIds": [
+                                1,
+                                2
+                              ]
+                            },
+                            "isAbm": false
+                          }
+                        ]
+                      }
                     }
                   }
                 }
@@ -5896,21 +6001,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -5920,6 +6010,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -5964,6 +6069,7 @@
                   "value": {
                     "id": 123,
                     "name": "Sample HCP Planner Request",
+                    "statusId": 6,
                     "startTime": 1735124399000,
                     "endTime": 1757534400000,
                     "timezoneId": 4,
@@ -5972,7 +6078,7 @@
                     "maxBudget": 80000,
                     "reach": 250000,
                     "maxReach": 300000,
-                    "impression": 1000000,
+                    "impressions": 1000000,
                     "maxImpressions": 1200000,
                     "frequencyCap": 5,
                     "frequencyCapTypeId": 1,
@@ -6838,21 +6944,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -6862,6 +6953,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -6938,21 +7044,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -6962,6 +7053,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -7122,7 +7228,7 @@
                         "name": "sample",
                         "startTime": 1730658720000,
                         "endTime": 1733250720000,
-                        "status": 3,
+                        "status": 6,
                         "targetedReach": 2147483646,
                         "targetedImpressions": 2147483646,
                         "maxTargetedReach": 2147483646,
@@ -7307,21 +7413,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -7331,6 +7422,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -7594,6 +7700,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting restore for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Invalid proposal status or proposals not found",
             "content": {
@@ -7610,29 +7739,6 @@
                         {
                           "error": "One or more proposals are not in expired status",
                           "field": "proposalIds"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting restore for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -7972,21 +8078,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -7996,6 +8087,21 @@
                   "errorObjects": [
                     {
                       "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -8775,29 +8881,6 @@
               }
             }
           },
-          "403": {
-            "description": "Requesting political strategy listing for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Invalid request parameters",
             "content": {
@@ -8814,6 +8897,29 @@
                         {
                           "error": "Required request parameter 'planId' is not present",
                           "field": "planId"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Requesting political strategy listing for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -8905,6 +9011,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting strategy details for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Strategy not found",
             "content": {
@@ -8921,29 +9050,6 @@
                         {
                           "error": "Strategy with strategy id 999 does not exist",
                           "field": "strategyId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting strategy details for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -9360,62 +9466,6 @@
         }
       }
     },
-    "/api/v3/plan/political/static/demographics-key": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "    Retrieve active demographics segment definitions including segment ID,\n    parent segment ID, and display name for cross-screen planning audience mapping service.\n",
-        "description": "    Fetch hierarchical demographics segments used in political planning workflows.\n    Returns immutable segment metadata (segmentId, parentSegmentId, displayName) filtered for active status,\n    enabling deterministic mapping of segmented audiences across multiple planner modules and\n    cross-screen targeting logic with consistent identifiers and versioning support.\n",
-        "operationId": "getDemographicsKeyData",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Demographics keys fetched successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DemographicsKeyListResponse"
-                },
-                "examples": {
-                  "Success response": {
-                    "description": "Success response",
-                    "value": {
-                      "success": true,
-                      "data": [
-                        {
-                          "id": 1,
-                          "segmentId": 10,
-                          "name": "Age Group"
-                        },
-                        {
-                          "id": 2,
-                          "segmentId": 20,
-                          "name": "Income Level"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/plan/political/proposal/{proposalId}": {
       "get": {
         "tags": [
@@ -9565,6 +9615,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting proposal details for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Proposal not found",
             "content": {
@@ -9581,29 +9654,6 @@
                         {
                           "error": "Proposal with proposal id 999 does not exist",
                           "field": "proposalId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting proposal details for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -9795,6 +9845,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting proposal summary for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Proposal not found",
             "content": {
@@ -9811,29 +9884,6 @@
                         {
                           "error": "Proposal with proposal id 999 does not exist",
                           "field": "proposalId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting proposal summary for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -9991,29 +10041,6 @@
               }
             }
           },
-          "403": {
-            "description": "Requesting political planner listing for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Invalid request parameters",
             "content": {
@@ -10042,6 +10069,29 @@
                         {
                           "error": "Invalid status IDs format",
                           "field": "statusIds"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Requesting political planner listing for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -10108,6 +10158,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting delete for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "No plans found for the given IDs",
             "content": {
@@ -10124,29 +10197,6 @@
                         {
                           "error": "No plans found for the given plan ids",
                           "field": "planIds"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting delete for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -10213,8 +10263,31 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "planReportUrl": "https://example.s3.amazonaws.com/planner/plan/report/download/12345/plan_report.xlsx"
+                        "planReportUrl": "https://example.s3.amazonaws.com/planner/plan/report/download/12345/plan_report.pdf"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid file type requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid file type response": {
+                    "description": "Invalid file type response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid File type"
+                        }
+                      ]
                     }
                   }
                 }
@@ -10690,6 +10763,10 @@
                             401,
                             402
                           ],
+                          "partyAffiliationSegments": [
+                            501,
+                            502
+                          ],
                           "advanced": {
                             "splitTypeId": 1,
                             "locations": [
@@ -10722,6 +10799,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting plan details for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Plan not found",
             "content": {
@@ -10738,29 +10838,6 @@
                         {
                           "error": "Plan with plan id 999 does not exist",
                           "field": "planId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting plan details for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -11609,10 +11686,11 @@
                       "data": {
                         "id": 1,
                         "name": "Q4 Diabetes Awareness Campaign",
-                        "startDate": 1732707706666,
-                        "endDate": 1733312506666,
+                        "statusId": 2,
+                        "startTime": 1732707706666,
+                        "endTime": 1733312506666,
                         "timezoneId": 3,
-                        "budgetModeId": 1,
+                        "budgetTypeId": 1,
                         "budget": 100000,
                         "maxBudget": 120000,
                         "reach": 50000,
@@ -11782,7 +11860,7 @@
                         "campaigns": [
                           {
                             "id": 1,
-                            "name": "Filter\u2011Block1\u2022Device1\u2022Creative1",
+                            "name": "Filter‑Block1•Device1•Creative1",
                             "startDate": 1732707706666,
                             "endDate": 1733312506666,
                             "budget": 16000,
@@ -12115,15 +12193,24 @@
         ],
         "responses": {
           "200": {
-            "description": "individual proposal successfully deleted.",
+            "description": "Proposal report(s) successfully deleted.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CommonResponseMessageResponse"
                 },
                 "examples": {
-                  "Success response": {
-                    "description": "Success response",
+                  "Bulk delete response": {
+                    "description": "Bulk delete response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "2 Proposals deleted successfully"
+                      }
+                    }
+                  },
+                  "Individual delete response": {
+                    "description": "Individual delete response",
                     "value": {
                       "success": true,
                       "data": {
@@ -12131,6 +12218,21 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
                 }
               }
             }
@@ -12159,21 +12261,6 @@
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
                     }
                   ]
                 }
@@ -12237,6 +12324,29 @@
               }
             }
           },
+          "403": {
+            "description": "Requesting delete for non-political vertical",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Forbidden vertical response": {
+                    "description": "Forbidden vertical response",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for forbidden vertical"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
             "description": "Strategy not found",
             "content": {
@@ -12265,29 +12375,6 @@
                         {
                           "error": "Only custom strategy can be deleted",
                           "field": "strategyId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Requesting delete for non-political vertical",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Forbidden vertical response": {
-                    "description": "Forbidden vertical response",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for forbidden vertical"
                         }
                       ]
                     }
@@ -12366,6 +12453,21 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity due to invalid proposal IDs",
             "content": {
@@ -12398,21 +12500,6 @@
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
                     }
                   ]
                 }
@@ -12456,6 +12543,20 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "File deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "The NPI file was deleted successfully."
+                }
+              }
+            }
+          },
           "400": {
             "description": "Invalid fileId supplied",
             "content": {
@@ -12474,15 +12575,18 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
+          "403": {
+            "description": "File exists but is owned by a different organization workspace",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "server encountered an error !"
+                      "error": "Organization workspace 2001 is not authorized to delete file 123."
                     }
                   ]
                 }
@@ -12507,34 +12611,110 @@
               }
             }
           },
-          "200": {
-            "description": "File deleted successfully",
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "The NPI file was deleted successfully."
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "File exists but is owned by a different organization workspace",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "Organization workspace 2001 is not authorized to delete file 123."
+                      "error": "server encountered an error !"
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/plan/political/static/demographics": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "    Retrieve active demographics segment definitions including segment ID,\n    parent segment ID, and display name for cross-screen planning audience mapping service.\n",
+        "description": "    Fetch hierarchical demographics segments used in political planning workflows.\n    Returns immutable segment metadata (segmentId, parentSegmentId, displayName) filtered for active status,\n    enabling deterministic mapping of segmented audiences across multiple planner modules and\n    cross-screen targeting logic with consistent identifiers and versioning support.\n",
+        "operationId": "getDemographicsKeyData",
+        "parameters": [
+          {
+            "name": "parentIds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Demographics keys fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemographicsKeyListResponse"
+                },
+                "examples": {
+                  "Success response for Segment Keys": {
+                    "description": "Success response for Segment Keys",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "segmentId": 10,
+                          "name": "Age Group"
+                        },
+                        {
+                          "id": 2,
+                          "segmentId": 2,
+                          "name": "Income Range"
+                        }
+                      ]
+                    }
+                  },
+                  "Success response for Demographics Values": {
+                    "description": "Success response for Demographics Values",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 4,
+                          "segmentId": 10,
+                          "name": "65+",
+                          "parentId": 1,
+                          "reach": 5012322,
+                          "order": 1
+                        },
+                        {
+                          "id": 5,
+                          "segmentId": 20,
+                          "name": "100K+",
+                          "parentId": 2,
+                          "reach": 603242,
+                          "order": 1
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -12722,6 +12902,10 @@
             "description": "Percentage of linear TV in the overall plan",
             "format": "int32",
             "example": 60
+          },
+          "ctvFrequency": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "description": "Overview details for the Cross-Screen Planning graph, containing CPM, GRP and linear TV percentage for the plan"
@@ -12747,6 +12931,9 @@
             "items": {
               "$ref": "#/components/schemas/ReachSaturationGraph"
             }
+          },
+          "maximumAudienceOverlap": {
+            "$ref": "#/components/schemas/AudienceOverlapGraph"
           }
         },
         "description": "Response object for the Cross-Screen Planning graph, containing the overview, audience overlap and reach saturation graph details"
@@ -12838,7 +13025,8 @@
             "example": 1
           },
           "planName": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the political plan this proposal belongs to"
           },
           "objectiveId": {
             "type": "integer",
@@ -12932,10 +13120,12 @@
             "example": 1000
           },
           "linearTvCpm": {
-            "type": "number"
+            "type": "number",
+            "description": "Linear TV cost per thousand impressions (CPM)"
           },
           "campaignGeneratable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether campaigns can be generated for this proposal"
           },
           "cpm": {
             "type": "number",
@@ -13304,6 +13494,16 @@
               "format": "int32"
             }
           },
+          "partyAffiliationSegments": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Party affiliation segment targeting criteria for the campaign plan",
+            "items": {
+              "type": "integer",
+              "description": "Party affiliation segment targeting criteria for the campaign plan",
+              "format": "int32"
+            }
+          },
           "advanced": {
             "$ref": "#/components/schemas/Advanced"
           }
@@ -13471,6 +13671,11 @@
       "CommonResponseMessageId": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Operation completed successfully"
+          },
           "id": {
             "type": "integer",
             "description": "Response ID",
@@ -13631,7 +13836,7 @@
           },
           "objectiveId": {
             "type": "integer",
-            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required -- omitting either is rejected with \"Graph details are required\" /\n\"Overview is required\".\n",
+            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required on operations that validate against an already-persisted graph\n(PUT /plans/{id}, and transitioning a plan to Ready) -- omitting either is rejected with\n\"Graph details are required\" / \"Overview is required\". This does not apply to\nPOST /reach-saturation-graph (CrossScreenPlannerGraphController.getCrossScreenGraph), which\ngenerates the graph itself and is called before a graphId exists.\n",
             "format": "int32",
             "example": 1
           },
@@ -13789,7 +13994,7 @@
           },
           "dataPartners": {
             "type": "array",
-            "description": "Data partner details",
+            "description": "List of data partners with their incremental reach metrics (priority, selection status, and incremental reach contributed)",
             "items": {
               "$ref": "#/components/schemas/IncrementalReachMetricsVO"
             }
@@ -13905,7 +14110,6 @@
           "isTvAutoBuying": {
             "type": "boolean",
             "description": "Indicates if TV auto buying is enabled",
-            "nullable": true,
             "example": false
           }
         },
@@ -14697,6 +14901,11 @@
       "CommonResponseDuplicateId": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Operation completed successfully"
+          },
           "proposalId": {
             "type": "integer",
             "description": "Duplicate proposal ID",
@@ -14707,7 +14916,14 @@
         "description": "Common Response Message ID"
       },
       "CommonResponseMessage": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Operation completed successfully"
+          }
+        }
       },
       "CommonResponseMessageResponse": {
         "type": "object",
@@ -15027,9 +15243,9 @@
           },
           "zipCodes": {
             "type": "string",
-            "description": "ZIP Codes",
+            "description": "Comma-separated ZIP Codes",
             "nullable": true,
-            "example": "[12345,67890]"
+            "example": "12345,67890"
           },
           "isAdvanceTargeted": {
             "type": "boolean",
@@ -15524,7 +15740,8 @@
             "example": 1
           },
           "planName": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the political plan this proposal belongs to"
           },
           "objectiveId": {
             "type": "integer",
@@ -15618,10 +15835,12 @@
             "example": 1000
           },
           "linearTvCpm": {
-            "type": "number"
+            "type": "number",
+            "description": "Linear TV cost per thousand impressions (CPM)"
           },
           "campaignGeneratable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether campaigns can be generated for this proposal"
           },
           "cpm": {
             "type": "number",
@@ -15714,7 +15933,7 @@
           },
           "objectiveId": {
             "type": "integer",
-            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required -- omitting either is rejected with \"Graph details are required\" /\n\"Overview is required\".\n",
+            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required on operations that validate against an already-persisted graph\n(PUT /plans/{id}, and transitioning a plan to Ready) -- omitting either is rejected with\n\"Graph details are required\" / \"Overview is required\". This does not apply to\nPOST /reach-saturation-graph (CrossScreenPlannerGraphController.getCrossScreenGraph), which\ngenerates the graph itself and is called before a graphId exists.\n",
             "format": "int32",
             "example": 1
           },
@@ -16178,7 +16397,7 @@
             }
           }
         },
-        "description": "Channel type distribution value object representing the total number of channels and the breakdown of each channel type in a proposal"
+        "description": "Channel type distribution value object representing the total number of NPIs and the breakdown of each channel type in a proposal"
       },
       "CreativeTypeDistributionVO": {
         "type": "object",
@@ -18023,6 +18242,18 @@
             "type": "string",
             "description": "Display name of the demographics segment",
             "example": "Age Group"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reach": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "description": "Demographics segment definition used for cross-screen planning audience mapping"
@@ -18123,7 +18354,7 @@
           },
           "createdByUserId": {
             "type": "integer",
-            "description": "User ID of the creator of the political proposal",
+            "description": "Organization workspace ID of the creator of the political proposal",
             "format": "int32",
             "example": 789
           },
@@ -18345,12 +18576,12 @@
             "type": "object",
             "additionalProperties": {
               "type": "array",
-              "description": "Bid landscape data for the proposal, mapping CPM to percentile and impressions",
+              "description": "Bid landscape data for the proposal, grouped by media/channel name (e.g. \"Audio\"); each entry in the list carries its own cpm, percentile, and impressions",
               "items": {
                 "$ref": "#/components/schemas/BidLandscapeEntry"
               }
             },
-            "description": "Bid landscape data for the proposal, mapping CPM to percentile and impressions"
+            "description": "Bid landscape data for the proposal, grouped by media/channel name (e.g. \"Audio\"); each entry in the list carries its own cpm, percentile, and impressions"
           },
           "deviceGraph": {
             "$ref": "#/components/schemas/DeviceGraph"
@@ -18455,7 +18686,7 @@
           },
           "createdByUowId": {
             "type": "integer",
-            "description": "User ID of the creator of the political plan",
+            "description": "Organization workspace ID of the creator of the political plan",
             "format": "int32",
             "example": 789
           },
@@ -18976,29 +19207,29 @@
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the account type",
+            "description": "Unique identifier for the account",
             "format": "int64"
           },
           "name": {
             "type": "string",
-            "description": "Name of the account type"
+            "description": "Name of the account"
           },
           "order": {
             "type": "integer",
-            "description": "Order of the account type in the listing",
+            "description": "Order of the account in the listing",
             "format": "int32"
           },
           "displayName": {
             "type": "string",
-            "description": "Display name for the account type"
+            "description": "Display name for the account"
           },
           "reach": {
             "type": "integer",
-            "description": "Reach associated with the account type",
+            "description": "Reach associated with the account",
             "format": "int32"
           }
         },
-        "description": "Response object for accounts listing, containing account type ID and reach."
+        "description": "Response object for accounts listing, containing account ID and reach."
       },
       "AccountTypeListRecords": {
         "type": "object",
@@ -19061,7 +19292,7 @@
           },
           "accountTypeReach": {
             "type": "integer",
-            "description": "Total count of account types",
+            "description": "Reach associated with the account type",
             "format": "int64",
             "example": 5
           }
