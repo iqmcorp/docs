@@ -1322,13 +1322,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Include/exclude management',
-              href: '/guidelines/bid-model-api#includeexclude-management',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Include/exclude entities from a campaign',
               href: '/guidelines/bid-model-api#includeexclude-entities-from-a-campaign',
               customProps: { method: 'POST' },
@@ -1733,6 +1726,76 @@ const sidebars = {
               label: 'Assign PG deals',
               href: '/guidelines/campaign-api#assign-pg-deals',
               customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+          ]
+        },
+        {
+          type: `category`,
+          label: `Include/exclude management`,
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Include/exclude device types',
+              href: '/guidelines/campaign-api#includeexclude-device-types',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude exchanges',
+              href: '/guidelines/campaign-api#includeexclude-exchanges',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude traffic sources',
+              href: '/guidelines/campaign-api#includeexclude-traffic-sources',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude ZIP codes',
+              href: '/guidelines/campaign-api#includeexclude-zip-codes',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude states',
+              href: '/guidelines/campaign-api#includeexclude-states',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude publisher categories',
+              href: '/guidelines/campaign-api#includeexclude-publisher-categories',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude deal IDs',
+              href: '/guidelines/campaign-api#includeexclude-deal-ids',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude cities',
+              href: '/guidelines/campaign-api#includeexclude-cities',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Include/exclude campaigns from inventory groups',
+              href: '/guidelines/campaign-api#includeexclude-campaigns-from-inventory-groups',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
           ]
