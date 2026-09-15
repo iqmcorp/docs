@@ -54,15 +54,53 @@ Computation time for this endpoint may take more than 60 seconds depending on th
   <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
   <td>Percentage of budget allocated to linear TV.</td>
   </tr>
+  <tr>
+  <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
+  <td>Average CTV frequency.</td>
+  </tr>
   </table></details>
 </td></tr>
 <tr>
   <td>`audienceOverlap` <br /><span class="type-text">object</span></td>
-  <td>Venn-diagram audience overlap data.</td>
+  <td>Venn-diagram audience overlap data for the requested targeting and budget.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
   <summary>`audienceOverlap` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`population` <br /><span class="type-text">integer</span></td>
+  <td>Total addressable population.</td>
+  </tr>
+  <tr>
+  <td>`totalReach` <br /><span class="type-text">integer</span></td>
+  <td>Total combined reach.</td>
+  </tr>
+  <tr>
+  <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+  <td>Linear TV reach.</td>
+  </tr>
+  <tr>
+  <td>`ctvReach` <br /><span class="type-text">integer</span></td>
+  <td>CTV reach.</td>
+  </tr>
+  <tr>
+  <td>`overlapReach` <br /><span class="type-text">integer</span></td>
+  <td>Reach overlapping between linear TV and CTV.</td>
+  </tr>
+  <tr>
+  <td>`ctvIncrementalReach` <br /><span class="type-text">integer</span></td>
+  <td>Incremental reach contributed by CTV.</td>
+  </tr>
+  </table></details>
+</td></tr>
+<tr>
+  <td>`maximumAudienceOverlap` <br /><span class="type-text">object</span></td>
+  <td>Same shape as `audienceOverlap`, representing the maximum achievable overlap for the requested targeting and budget.</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`maximumAudienceOverlap` object properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`population` <br /><span class="type-text">integer</span></td>
@@ -156,7 +194,8 @@ Computation time for this endpoint may take more than 60 seconds depending on th
       "linearTvCpm": 20,
       "ctvCpm": 7,
       "grp": 180,
-      "linearTvPercentage": 50
+      "linearTvPercentage": 50,
+      "ctvFrequency": 3
     },
     "audienceOverlap": {
       "population": 16780000,
@@ -165,6 +204,14 @@ Computation time for this endpoint may take more than 60 seconds depending on th
       "ctvReach": 3120000,
       "overlapReach": 650000,
       "ctvIncrementalReach": 2470000
+    },
+    "maximumAudienceOverlap": {
+      "population": 16780000,
+      "totalReach": 7200000,
+      "linearTvReach": 4600000,
+      "ctvReach": 3400000,
+      "overlapReach": 800000,
+      "ctvIncrementalReach": 2600000
     },
     "reachSaturation": [
       { "day": 1, "ctvReach": 12, "linearTvReach": 14, "overallReach": 20 },
@@ -185,19 +232,23 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 
 ### Get demographics keys
 
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/static/demographics-key" operationId="getDemographicsKeyData" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/static/demographics" operationId="getDemographicsKeyData" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get active demographics segment definitions used for cross-screen planning audience mapping (e.g. age, gender, income, and ethnicity groupings).
+Get active demographics segment definitions used for cross-screen planning audience mapping (e.g. age, gender, income, and ethnicity groupings). Call without <var>parentIds</var> to get the top-level segment keys (categories like `Age Group`, `Income Level`). Call with <var>parentIds</var> set to one or more of those keys' <var>id</var>s to get the specific demographics values nested under them (e.g. `65+` under `Age Group`), each with its own <var>parentId</var>, <var>reach</var>, and display <var>order</var>.
+
+| Query parameters |  |
+| ---- | --- |
+| `parentIds` <br /><span class="type-text">array of integers</span> | Segment key <var>id</var>s to fetch demographics values for. Omit to get the top-level segment keys instead. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 <table className="objectProperties">
 <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Demographics key ID.</td>
+  <td>Demographics segment ID.</td>
 </tr>
 <tr>
   <td>`segmentId` <br /><span class="type-text">integer</span></td>
@@ -207,13 +258,25 @@ Get active demographics segment definitions used for cross-screen planning audie
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Segment display name.</td>
 </tr>
+<tr>
+  <td>`parentId` <br /><span class="type-text">integer</span></td>
+  <td><var>id</var> of the parent segment key. Only present when <var>parentIds</var> was supplied in the request.</td>
+</tr>
+<tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Reach for this demographics value. Only present when <var>parentIds</var> was supplied in the request.</td>
+</tr>
+<tr>
+  <td>`order` <br /><span class="type-text">integer</span></td>
+  <td>Display order of this demographics value. Only present when <var>parentIds</var> was supplied in the request.</td>
+</tr>
 </table>
 </details>
 
 </div>
 <div class="child2">
 
-```json title="Response 200"
+```json title="Response 200 (segment keys, no parentIds)"
 {
   "success": true,
   "data": [
@@ -224,8 +287,32 @@ Get active demographics segment definitions used for cross-screen planning audie
     },
     {
       "id": 2,
+      "segmentId": 2,
+      "name": "Income Range"
+    }
+  ]
+}
+```
+
+```json title="Response 200 (demographics values, parentIds=1,2)"
+{
+  "success": true,
+  "data": [
+    {
+      "id": 4,
+      "segmentId": 10,
+      "name": "65+",
+      "parentId": 1,
+      "reach": 5012322,
+      "order": 1
+    },
+    {
+      "id": 5,
       "segmentId": 20,
-      "name": "Income Level"
+      "name": "100K+",
+      "parentId": 2,
+      "reach": 603242,
+      "order": 1
     }
   ]
 }
@@ -242,7 +329,7 @@ Get active demographics segment definitions used for cross-screen planning audie
 <div class="endpoint-container">
   <div class="child1">
 
-Split an existing proposal across linear TV and CTV using the provided advanced targeting criteria. Only works for cross-screen proposals with a [plan objective ID](#get-plan-objectives) of <var>3</var>. 
+Split an existing proposal across linear TV and CTV using the provided advanced targeting criteria. Only works for cross-screen proposals with a [plan objective ID](#get-plan-objectives) of <var>3</var>.
 
 :::info
 Computation time for this endpoint may take more than 60 seconds depending on the complexity of the targeting criteria and the size of the proposal being split. Please allow for sufficient time for the request to complete.
@@ -280,9 +367,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 
 ```json title="Request sample"
 {
-  "advanced": {
-    "locations": [15]
-  }
+  "locations": [15]
 }
 ```
 
