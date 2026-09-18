@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "MCP Inventory API Specification",
     "contact": {
       "name": "IQM Support",
@@ -553,7 +553,7 @@
           "MCP"
         ],
         "summary": "Unblock inventories from blocked list",
-        "description": "Removes specified inventories from the organization's blocked inventory list and triggers a data sync to update inventory group mappings. Accepts regular inventory IDs via `inventoryIds` and/or wildcard subdomain group IDs via `subdomainInventoryIds` (the IDs returned as `invGroupSubType: 2` rows by the blocked-inventories listing) -- at least one of the two must be non-empty.",
+        "description": "Removes specified inventories from the organization's blocked inventory list and triggers a data sync to update inventory group mappings. Accepts regular inventory IDs via `inventoryIds` and/or subdomain inventory mapping IDs via `subdomainInventoryIds` (the IDs returned as `invGroupSubType: 2` rows by the blocked-inventories listing). If both are omitted or empty, the request falls back to filter mode: matching blocked inventories are looked up via `searchField` (and other supported filters) and unblocked instead. In filter mode, the request is rejected only if `searchField` is non-blank and the lookup finds no matches; if `searchField` is also omitted, the call can succeed as a no-op.",
         "operationId": "unblockInventoriesFromBlockedList",
         "requestBody": {
           "content": {
@@ -2713,7 +2713,7 @@
                       "success": true,
                       "data": {
                         "Error": "12 Entries could not be uploaded. Download the error file and retry",
-                        "errorFileUrl": "https://s3.amazonaws.com/iqm-inventory-blocklist/invalid-records/owId-123-1699999999.csv"
+                        "errorFileUrl": "<returned error-file URL>"
                       }
                     }
                   }
@@ -10344,7 +10344,7 @@
           },
           "filteredRecords": {
             "type": "integer",
-            "description": "Number of records returned after filtering",
+            "description": "Total number of records matching the search criteria, after filtering and before pagination",
             "format": "int32",
             "example": 13
           },
