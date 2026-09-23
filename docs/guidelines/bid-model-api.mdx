@@ -7,6 +7,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
+import SupportedDimensionsNote from '@site/docs/_partials/bid-model-api/supported-dimensions-note.mdx';
 
 # Bid Model API
 
@@ -21,21 +22,7 @@ Bid Model settings comprise the following tools:
   * **Dimension Priority**: dictates the sequence of bidding for specified targeting dimensions, expressed as a range of 1-10
   * **Bid Modifier**: adjusts the base bid of a campaign for the specified dimension that is modified, expressed as a multiplier in a range of 0.1-100
 
-<div style={{ maxWidth: "1000px" }}>
-:::warning[NOTE]
-
-IQM's Bid Model currently supports applying Bid Modifiers to the following dimensions: 
-
-* **Creative**: Creative ID
-* **Location**: State, City, ZIP code 
-* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
-
-*Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
-
-**Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
-
-:::
-</div>
+<SupportedDimensionsNote />
 
 ### More resources
   * [Create a Bid Model](/tutorials/create-a-bid-model/) tutorial
@@ -493,6 +480,159 @@ A Bid Model data <var>id</var> can be used in various [Bid Model settings manage
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>10</var>.
 | `skipReporting` <br /><span class="type-text">boolean</span> | Indicates the reporting data is to be skipped, e.g. <var>impressions</var> and <var>clicks</var> will be skipped, and only Bid Model settings will be returned.
 
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+<summary style={{fontSize: "16px"}}>Response properties (creative)</summary>
+<table className="objectProperties">
+<tr>
+<td>`recordsList` <br /><span class="type-text">array of objects</span></td>
+<td>Modeled creative entities for the campaign. Entities that have been added to a Bundle are grouped under a parent entry, as described below.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`recordsList` entry properties</summary>
+    <table className="objectProperties">
+    <tr><td>`id` <br /><span class="type-text">integer</span></td><td>Creative ID.</td></tr>
+    <tr><td>`name` <br /><span class="type-text">string</span></td><td>Creative name.</td></tr>
+    <tr><td>`isExcluded` <br /><span class="type-text">integer</span></td><td>Whether the entity is excluded via Allowlist/Blocklist.</td></tr>
+    <tr><td>`modelled` <br /><span class="type-text">boolean</span></td><td>Whether the entity has Bid Model settings applied.</td></tr>
+    <tr><td>`targeted` <br /><span class="type-text">boolean</span></td><td>Whether the entity is targeted by the campaign.</td></tr>
+    <tr><td>`bundleId` <br /><span class="type-text">integer</span></td><td>[Bundle ID](#get-list-of-bid-model-bundles) the entity belongs to, if any.</td></tr>
+    <tr><td>`creativeStatus` <br /><span class="type-text">string</span></td><td>Creative status, e.g. <var>Running</var>, <var>Deleted</var>.</td></tr>
+    <tr><td>`creativeThumbnailSource` <br /><span class="type-text">string</span></td><td>Creative thumbnail image URL.</td></tr>
+    <tr><td>`creativeCardSource` <br /><span class="type-text">string</span></td><td>Creative card preview image URL.</td></tr>
+    <tr><td>`creativeType` <br /><span class="type-text">string</span></td><td>Creative type, e.g. <var>Video</var>.</td></tr>
+    <tr><td>`creativeWidth` <br /><span class="type-text">integer</span></td><td>Creative width, in pixels.</td></tr>
+    <tr><td>`creativeHeight` <br /><span class="type-text">integer</span></td><td>Creative height, in pixels.</td></tr>
+    <tr><td>`creativeDuration` <br /><span class="type-text">integer</span></td><td>Creative duration, in seconds.</td></tr>
+    <tr><td>`spentDistribution` <br /><span class="type-text">number</span></td><td>Share of spend distributed to this entity.</td></tr>
+    <tr>
+    <td>`bidModelData` <br /><span class="type-text">object</span></td>
+    <td>Bid Model settings applied to the entity, if modelled.</td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`bidModelData` object properties</summary>
+        <table className="objectProperties">
+        <tr><td>`id` <br /><span class="type-text">integer</span></td><td>[Bid Model data ID](#get-list-of-modeled-entities-for-a-campaign).</td></tr>
+        <tr><td>`priority` <br /><span class="type-text">integer</span></td><td>Assigned priority: [ <var>1</var> .. <var>10</var> ].</td></tr>
+        <tr><td>`bidMultiplier` <br /><span class="type-text">number</span></td><td>Bid Modifier: [ <var>0.1</var> .. <var>100</var> ].</td></tr>
+        <tr><td>`spendRatio` <br /><span class="type-text">number</span></td><td>Spend Ratio: [ <var>0</var> .. <var>100</var> ].</td></tr>
+        <tr><td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td><td>Spend Ratio type ID. Flexible: <var>1</var>. Strict: <var>2</var>.</td></tr>
+        </table></details>
+      </td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>Entry properties when grouped in a Bundle</summary>
+        <table className="objectProperties">
+        <tr><td>`bundleName` <br /><span class="type-text">string</span></td><td>Bundle name.</td></tr>
+        <tr><td>`bundleEntityIds` <br /><span class="type-text">array of integers</span></td><td>Creative IDs belonging to the Bundle.</td></tr>
+        <tr><td>`entityRecordsList` <br /><span class="type-text">array of objects</span></td><td>The underlying creative entities in the Bundle, each with the same properties described above (except <var>bidModelData</var> and Bundle grouping, which only apply at the Bundle level).</td></tr>
+        </table></details>
+      </td>
+    </tr>
+    </table></details>
+  </td>
+</tr>
+<tr>
+<td>`campaignBidDetails` <br /><span class="type-text">object</span></td>
+<td>Campaign-level bid and priority-shift details.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`campaignBidDetails` object properties</summary>
+    <table className="objectProperties">
+    <tr><td>`baseBid` <br /><span class="type-text">number</span></td><td>Campaign base bid.</td></tr>
+    <tr><td>`maxBid` <br /><span class="type-text">number</span></td><td>Campaign max bid.</td></tr>
+    <tr><td>`minBid` <br /><span class="type-text">number</span></td><td>Campaign min bid.</td></tr>
+    <tr><td>`currentPriority` <br /><span class="type-text">integer</span></td><td>Campaign's current Bid Model priority, once serving has started.</td></tr>
+    <tr><td>`nextPerformanceCheck` <br /><span class="type-text">integer</span></td><td>Unix epoch timestamp (in milliseconds) of the next scheduled priority-shift performance check, once serving has started.</td></tr>
+    <tr><td>`lastPerformanceCheck` <br /><span class="type-text">integer</span></td><td>Unix epoch timestamp (in milliseconds) of the last priority-shift performance check, once serving has started.</td></tr>
+    </table></details>
+  </td>
+</tr>
+</table>
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+<summary style={{fontSize: "16px"}}>Response properties (audience)</summary>
+<table className="objectProperties">
+<tr>
+<td>`recordsList` <br /><span class="type-text">array of objects</span></td>
+<td>Modeled audience entities for the campaign. Audiences that have been added to a Bundle are grouped under a parent entry, as described below.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`recordsList` entry properties</summary>
+    <table className="objectProperties">
+    <tr><td>`id` <br /><span class="type-text">integer</span></td><td>Audience ID.</td></tr>
+    <tr><td>`name` <br /><span class="type-text">string</span></td><td>Audience name.</td></tr>
+    <tr><td>`isExcluded` <br /><span class="type-text">integer</span></td><td>Whether the entity is excluded via Allowlist/Blocklist.</td></tr>
+    <tr><td>`modelled` <br /><span class="type-text">boolean</span></td><td>Whether the entity has Bid Model settings applied. Only ever <var>true</var> for an ID-Based audience.</td></tr>
+    <tr><td>`targeted` <br /><span class="type-text">boolean</span></td><td>Whether the entity is targeted by the campaign.</td></tr>
+    <tr><td>`bundleId` <br /><span class="type-text">integer</span></td><td>[Bundle ID](#get-list-of-bid-model-bundles) the entity belongs to, if any.</td></tr>
+    <tr><td>`audienceStatus` <br /><span class="type-text">string</span></td><td>Audience status, e.g. <var>Ready</var>, <var>Processing</var>.</td></tr>
+    <tr><td>`audienceType` <br /><span class="type-text">string</span></td><td>Audience category, e.g. <var>Matched Audience</var>, <var>Lookalike Audience</var>.</td></tr>
+    <tr><td>`classType` <br /><span class="type-text">string</span></td><td><var>ID-Based</var> or <var>Non-ID-Based</var>. Only ID-Based audiences are eligible to be modelled.</td></tr>
+    <tr><td>`parentAudienceId` <br /><span class="type-text">integer</span></td><td>Parent audience ID. Only ever populated for Integrated Care Team audiences, <var>null</var> otherwise.</td></tr>
+    <tr><td>`spentDistribution` <br /><span class="type-text">number</span></td><td>Share of spend distributed to this entity.</td></tr>
+<tr>
+    <td>`bidModelData` <br /><span class="type-text">object</span></td>
+    <td>Bid Model settings applied to the entity, if modelled.</td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`bidModelData` object properties</summary>
+        <table className="objectProperties">
+        <tr><td>`id` <br /><span class="type-text">integer</span></td><td>[Bid Model data ID](#get-list-of-modeled-entities-for-a-campaign).</td></tr>
+        <tr><td>`priority` <br /><span class="type-text">integer</span></td><td>Assigned priority: [ <var>1</var> .. <var>10</var> ].</td></tr>
+        <tr><td>`bidMultiplier` <br /><span class="type-text">number</span></td><td>Bid Modifier: [ <var>0.1</var> .. <var>100</var> ].</td></tr>
+        <tr><td>`spendRatio` <br /><span class="type-text">number</span></td><td>Spend Ratio: [ <var>0</var> .. <var>100</var> ].</td></tr>
+        <tr><td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td><td>Spend Ratio type ID. Flexible: <var>1</var>. Strict: <var>2</var>.</td></tr>
+        </table></details>
+      </td>
+    </tr>
+    <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>Entry properties when grouped in a Bundle</summary>
+        <table className="objectProperties">
+        <tr><td>`bundleName` <br /><span class="type-text">string</span></td><td>Bundle name.</td></tr>
+        <tr><td>`bundleEntityIds` <br /><span class="type-text">array of integers</span></td><td>Audience IDs belonging to the Bundle.</td></tr>
+        <tr><td>`entityRecordsList` <br /><span class="type-text">array of objects</span></td><td>The underlying audience entities in the Bundle, each with the same properties described above (except <var>bidModelData</var> and Bundle grouping, which only apply at the Bundle level).</td></tr>
+        </table></details>
+      </td>
+    </tr>
+    </table></details>
+  </td>
+</tr>
+<tr>
+<td>`campaignBidDetails` <br /><span class="type-text">object</span></td>
+<td>Campaign-level bid and priority-shift details.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`campaignBidDetails` object properties</summary>
+    <table className="objectProperties">
+    <tr><td>`baseBid` <br /><span class="type-text">number</span></td><td>Campaign base bid.</td></tr>
+    <tr><td>`maxBid` <br /><span class="type-text">number</span></td><td>Campaign max bid.</td></tr>
+    <tr><td>`minBid` <br /><span class="type-text">number</span></td><td>Campaign min bid.</td></tr>
+    <tr><td>`currentPriority` <br /><span class="type-text">integer</span></td><td>Campaign's current Bid Model priority, once serving has started.</td></tr>
+    <tr><td>`nextPerformanceCheck` <br /><span class="type-text">integer</span></td><td>Unix epoch timestamp (in milliseconds) of the next scheduled priority-shift performance check, once serving has started.</td></tr>
+    <tr><td>`lastPerformanceCheck` <br /><span class="type-text">integer</span></td><td>Unix epoch timestamp (in milliseconds) of the last priority-shift performance check, once serving has started.</td></tr>
+    </table></details>
+  </td>
+</tr>
+</table>
+</details>
+
 </div><div class="child2">
 
 <Tabs>
@@ -511,6 +651,8 @@ A Bid Model data <var>id</var> can be used in various [Bid Model settings manage
 }
 ```
 
+<CodeDropdown label="Response examples">
+  <CodeOption label="Modeled creatives listing (dimensionId = 1)">
 ```json title="Response 200"
 {
   "success": true,
@@ -650,6 +792,145 @@ A Bid Model data <var>id</var> can be used in various [Bid Model settings manage
   }
 }
 ```
+  </CodeOption>
+  <CodeOption label="Modeled audiences listing (dimensionId = 14)">
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 5,
+      "impressions": 9534,
+      "winRate": 99.40569283703472,
+      "clicks": 8573,
+      "eCPM": 82.57879955947136,
+      "totalECPM": 90.06778634361234,
+      "eCPC": 0.0918355622302578,
+      "totalECPC": 0.10016403534352035,
+      "dataCost": 14.301,
+      "mediaSpent": 787.306275,
+      "CTR": 89.92028529473464,
+      "spent": 858.706275,
+      "conversionCount": 0,
+      "conversionValue": 0,
+      "returnOnAdSpend": 0.0,
+      "bidImpressions": 9591,
+      "prebidCost": 0.0,
+      "spentDistribution": 0.0
+    },
+    "recordsList": [
+      {
+        "bundleId": 1627,
+        "bundleName": "sample bundle",
+        "bundleEntityIds": [1176057, 1176058],
+        "entityRecordsList": [
+          {
+            "id": 1176058,
+            "name": "Plan Failure Check 1_HCP_pl_Filtered",
+            "modelled": false,
+            "bundleId": 1627,
+            "audienceStatus": "Ready",
+            "audienceType": "Matched Audience",
+            "classType": "ID-Based",
+            "parentAudienceId": null,
+            "targeted": true,
+            "impressions": 4540,
+            "clicks": 4534,
+            "winRate": 99.30008748906387,
+            "CTR": 99.86784140969164,
+            "mediaSpent": 407.531,
+            "spent": 446.121
+          },
+          {
+            "id": 1176057,
+            "name": "Plan Failure Check 1_HCP_data360_Filtered",
+            "modelled": false,
+            "bundleId": 1627,
+            "audienceStatus": "Processing",
+            "audienceType": "Matched Audience",
+            "classType": "ID-Based",
+            "parentAudienceId": null,
+            "targeted": true,
+            "impressions": 451,
+            "clicks": 450,
+            "winRate": 99.77876106194691,
+            "CTR": 99.77827050997783,
+            "mediaSpent": 40.139,
+            "spent": 43.9725
+          }
+        ],
+        "modelled": true,
+        "bidModelData": {
+          "id": 30544,
+          "priority": 3,
+          "bidMultiplier": 1.0,
+          "spendRatio": 0
+        },
+        "impressions": 4991,
+        "clicks": 4984,
+        "winRate": 99.34315286624204,
+        "CTR": 99.85974754558205,
+        "mediaSpent": 447.67,
+        "spent": 490.0935
+      },
+      {
+        "id": 1176047,
+        "name": "Plan Failure Check_HCP_pl_Filtered",
+        "modelled": false,
+        "bundleId": 0,
+        "audienceStatus": "Ready",
+        "audienceType": "Matched Audience",
+        "classType": "ID-Based",
+        "parentAudienceId": null,
+        "targeted": true,
+        "impressions": 3166,
+        "clicks": 3158,
+        "winRate": 99.24764890282131,
+        "CTR": 99.74731522425773,
+        "mediaSpent": 282.329,
+        "spent": 309.24,
+        "bidModelData": {
+          "id": 30543,
+          "priority": 2,
+          "bidMultiplier": 1.0,
+          "spendRatio": 0
+        }
+      },
+      {
+        "id": -1,
+        "name": "Others",
+        "modelled": false,
+        "bundleId": 0,
+        "targeted": false,
+        "impressions": 531,
+        "clicks": 431,
+        "winRate": 100.0,
+        "CTR": 81.16760828625236,
+        "mediaSpent": 22.1875875,
+        "spent": 22.9840875,
+        "bidModelData": {
+          "id": 30545,
+          "priority": 10,
+          "bidMultiplier": 1.0,
+          "spendRatio": 0
+        }
+      }
+    ],
+    "totalRecords": 5,
+    "filteredRecords": 5,
+    "campaignBidDetails": {
+      "baseBid": null,
+      "minBid": 1.0,
+      "lastPerformanceCheck": null,
+      "maxBid": 50.0,
+      "currentPriority": null,
+      "nextPerformanceCheck": null
+    }
+  }
+}
+```
+  </CodeOption>
+</CodeDropdown>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -701,177 +982,6 @@ function getModelledItemsCount(): Promise<Responses> {
 </TabItem></Tabs>
 
 </div></div>
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response properties</summary>
-
-<table className="objectProperties">
-<tr>
-      <td>`bidModelData` <br /><span class="type-text">object</span></td>
-      <td>Object containing Bid Model Data properties.</td>
-      </tr>
-       <tr>
-          <td colSpan="2">
-              <details className="objectPropertiesDetails">
-              <summary>`bidModelData` object properties</summary>
-              <table className="objectProperties">
-              <tr>
-              <td>`id`<br /><span class="type-text">integer</span></td>
-              <td>Bid Model data ID.</td>
-              </tr>
-                <tr>
-              <td>`priority` <br /><span class="type-text">integer</span></td>
-              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ].</td>
-              </tr>
-                <tr>
-              <td>`bidMultiplier` <br /><span class="type-text">integer</span></td>
-              <td>Bid Modifier.<br /> [ <var>0.1</var> .. <var>100</var> ].</td>
-              </tr>
-              <tr>
-              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
-              <td>Spend Ratio.<br /> [ <var>0</var> .. <var>100</var> ].</td>
-              </tr>
-              <tr>
-              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
-              <td>Spend Ratio type ID.<br />Flexible: <var>1</var>. <br />Strict: <var>2</var>.</td>
-              </tr>
-              </table></details>
-            </td>
-            <td></td>
-          </tr>
-<tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID.</td>
-</tr>
-<tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Campaign name.</td>
-</tr>
-<tr>
-  <td>`isExcluded` <br /><span class="type-text">integer</span></td>
-  <td>Indicates the entity is excluded from the Bid Model: <var>true</var>.</td>
-</tr>
-<tr>
-  <td>`modelled` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates entity is has Bid Model settings applied: <var>true</var>. </td>
-</tr>
-<tr>
-  <td>`targeted` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates entity is targeted in the campaign or served via other targeting parameter: <var>true</var>.</td>
-</tr>
-<tr>
-  <td>`totalCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of total records.</td>
-</tr>
-<tr>
-  <td>`impressions` <br /><span class="type-text">integer</span></td>
-  <td>Impressions count.</td>
-</tr>
-<tr>
-  <td>`winRate` <br /><span class="type-text">integer</span></td>
-  <td>Percentage of impressions bid on and won.</td>
-</tr>
-<tr>
-  <td>`clicks` <br /><span class="type-text">integer</span></td>
-  <td>The number of times a user clicked on an ad.</td>
-</tr>
-<tr>
-  <td>`eCPM` <br /><span class="type-text">integer</span></td>
-  <td>Effective cost per mille.</td>
-</tr>
-<tr>
-  <td>`eCPC` <br /><span class="type-text">integer</span></td>
-  <td>Effective cost per click.</td>
-</tr>
-<tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Data cost applied on campaigns of given Customer.</td>
-</tr>
-<tr>
-  <td>`mediaSpent` <br /><span class="type-text">integer</span></td>
-  <td>Media spent.</td>
-</tr>
-<tr>
-  <td>`CTR` <br /><span class="type-text">integer</span></td>
-  <td>Click-through rate.</td>
-</tr>
-<tr>
-  <td>`spent` <br /><span class="type-text">integer</span></td>
-  <td>Amount spent.</td>
-</tr>
-<tr>
-  <td>`conversionCount` <br /><span class="type-text">integer</span></td>
-  <td>Conversion count.</td>
-</tr>
-<tr>
-  <td>`conversionValue` <br /><span class="type-text">integer</span></td>
-  <td>Conversion value.</td>
-</tr>
-<tr>
-  <td>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user clicked on an ad.</td>
-</tr>
-<tr>
-  <td>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user viewed an ad but did not click on it.</td>
-</tr>
-<tr>
-  <td>`costPerAttributedConversions` <br /><span class="type-text">integer</span></td>
-  <td>Cost per attributed conversion.</td>
-</tr>
-<tr>
-  <td>`attributedConversionsRate` <br /><span class="type-text">integer</span></td>
-  <td>Total attributed conversion rate.</td>
-</tr>
-<tr>
-  <td>`returnOnAdSpend` <br /><span class="type-text">integer</span></td>
-  <td>Return on ad spend.</td>
-</tr>
-<tr>
-  <td>`VCR` <br /><span class="type-text">integer</span></td>
-  <td>Video completion rate.</td>
-</tr>
-<tr>
-  <td>`eCPV` <br /><span class="type-text">integer</span></td>
-  <td>Effective cost per visit.</td>
-</tr>
-<tr>
-  <td>`eCPCV` <br /><span class="type-text">integer</span></td>
-  <td>Effective cost per completed view.</td>
-</tr>
-<tr>
-  <td>`startCount` <br /><span class="type-text">integer</span></td>
-  <td>Ad viewing metric, video start.</td>
-</tr>
-<tr>
-  <td>`firstCount` <br /><span class="type-text">integer</span></td>
-  <td>Ad viewing metric, video first quarter.</td>
-</tr>
-<tr>
-  <td>`midCount` <br /><span class="type-text">integer</span></td>
-  <td>Ad viewing metric, video midpoint.</td>
-</tr>
-<tr>
-  <td>`thirdCount` <br /><span class="type-text">integer</span></td>
-  <td>Ad viewing metric, video last quarter.</td>
-</tr>
-<tr>
-  <td>`completeCount` <br /><span class="type-text">integer</span></td>
-  <td>Ad viewing metric, video completed.</td>
-</tr>
-<tr>
-  <td>`bidImpressions` <br /><span class="type-text">integer</span></td>
-  <td>Bid on impressions count.</td>
-</tr>
-<tr>
-  <td>`audioVideoViewed` <br /><span class="type-text">integer</span></td>
-  <td>Audio/video viewed.</td>
-</tr>
-<tr>
-  <td>`prebidCost` <br /><span class="type-text">integer</span></td>
-  <td>Data cost of Pre-bid audiences.</td>
-</tr>
-</table></details>
 
 ## Include/exclude management
 
@@ -992,19 +1102,7 @@ function toggleCampaignDimensionStatus(): Promise<Responses> {
     * Strict Spend Ratios must equal 100% across all allocated dimensions
     * Flexible Spend Ratios require a dimension Priority
 
-:::warning[NOTE]
-
-IQM currently supports Bid Model settings for the following dimensions: 
-
-* **Creative**: Creative ID
-* **Location**: State, City, ZIP code 
-* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
-
-*Note that Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
-
-**Not that Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
-
-:::
+<SupportedDimensionsNote />
 
 ### Manage Bid Model settings
 
@@ -1027,6 +1125,11 @@ See the request examples in the right-hand code block to see how to structure re
 
 **INCLUDE/EXCLUDE Map**: Defines which entity IDs are explicitly included or excluded in Bid Model settings.
 
+**Audience-specific rules**:
+  * <var>spendRatio</var> and <var>spendRatioTypeId</var> are not supported.
+  * <var>priority</var> is required.
+  * <var>bidMultiplier</var> is required.
+  * Include/exclude map is not supported.
 
 | Path parameters |  |
 | --- | --- |
@@ -1293,6 +1396,30 @@ See the request examples in the right-hand code block to see how to structure re
             2,
             3
           ]
+        }
+      ]
+    }
+  }
+}
+```
+</CodeOption>
+<CodeOption label="Add Bid Model settings for audiences">
+```json 
+{
+  "actionWiseBidModelEntities": {
+    "ADD": {
+      "bidModelEntityDetails": [
+        {
+          "entityId": 50,
+          "entityTypeId": 1,
+          "priority": 1,
+          "bidMultiplier": 2
+        },
+        {
+          "entityId": -1,
+          "entityTypeId": 3,
+          "priority": 1,
+          "bidMultiplier": 2
         }
       ]
     }
@@ -2783,6 +2910,109 @@ Create a Bid Model metrics report for the specified campaign and dimension IDs. 
 }
 ```
 </CodeOption>
+<CodeOption label="Audience Listing (dimensionId = 14)">
+```json
+{
+  "success": true,
+  "data": {
+    "recordsTotal": {
+      "totalCount": 2,
+      "impressions": 1000,
+      "dataCost": 2.5,
+      "winRate": 20.0,
+      "clicks": 25,
+      "eCPM": 12.0,
+      "totalECPM": 15.0,
+      "eCPC": 0.48,
+      "totalECPC": 0.6,
+      "mediaSpent": 12.0,
+      "CTR": 2.5,
+      "spent": 15.0,
+      "conversionCount": 2,
+      "conversionValue": 50,
+      "attributedClickThroughConversions": 1,
+      "attributedViewThroughConversions": 1,
+      "costPerAttributedConversions": 7.5,
+      "attributedConversionsRate": 8.0,
+      "returnOnAdSpend": 333.33,
+      "prebidCost": 1.0
+    },
+    "recordsList": [
+      {
+        "id": 54321,
+        "name": "Political Voters - Segment A",
+        "audienceStatus": "Active",
+        "audienceType": "Matched Audience",
+        "classType": "ID-Based",
+        "parentAudienceId": null,
+        "modelled": true,
+        "targeted": true,
+        "impressions": 1000,
+        "clicks": 25,
+        "winRate": 20.0,
+        "CTR": 2.5,
+        "eCPM": 12.0,
+        "totalECPM": 15.0,
+        "eCPC": 0.48,
+        "totalECPC": 0.6,
+        "mediaSpent": 12.0,
+        "dataCost": 2.5,
+        "prebidCost": 1.0,
+        "spent": 15.0,
+        "spentDistribution": 4.2,
+        "conversionCount": 2,
+        "conversionValue": 50,
+        "attributedClickThroughConversions": 1,
+        "attributedViewThroughConversions": 1,
+        "costPerAttributedConversions": 7.5,
+        "attributedConversionsRate": 8.0,
+        "returnOnAdSpend": 333.33,
+        "bidModelData": {
+          "id": 19322,
+          "priority": 3,
+          "bidMultiplier": 1.5,
+          "spendRatio": 100,
+          "spendRatioTypeId": 1
+        }
+      },
+      {
+        "id": 65432,
+        "name": "Lookalike - Household Income",
+        "audienceStatus": "Active",
+        "audienceType": "Lookalike Audience",
+        "classType": "Non-ID-Based",
+        "parentAudienceId": null,
+        "modelled": false,
+        "targeted": true,
+        "impressions": 0,
+        "clicks": 0,
+        "winRate": 0.0,
+        "CTR": 0.0,
+        "eCPM": 0.0,
+        "totalECPM": 0.0,
+        "eCPC": 0.0,
+        "totalECPC": 0.0,
+        "mediaSpent": 0.0,
+        "dataCost": 0.0,
+        "prebidCost": 0.0,
+        "spent": 0.0,
+        "spentDistribution": 0.0,
+        "conversionCount": 0,
+        "conversionValue": 0,
+        "attributedClickThroughConversions": 0,
+        "attributedViewThroughConversions": 0,
+        "costPerAttributedConversions": 0.0,
+        "attributedConversionsRate": 0.0,
+        "returnOnAdSpend": 0.0
+      }
+    ],
+    "totalRecords": 2,
+    "filteredRecords": 2
+  }
+}
+```
+<p>Note the second record: a <var>Non-ID-Based</var> audience can appear in the listing for visibility, but has no `bidModelData` since it isn't eligible to be modelled.</p>
+</CodeOption>
 </CodeDropdown>
 
 
@@ -3130,6 +3360,7 @@ This API will provide values of Bid Model dimensions and sub-dimensions.
 | `11` | City. |
 | `12` | Zip. |
 | `13` | Exchange. |
+| `14` | Audience. |
 
 </div>
  <div class="child2">
@@ -3141,8 +3372,8 @@ This API will provide values of Bid Model dimensions and sub-dimensions.
 {
   "success": true,
   "data": {
-    "totalRecords": 5,
-    "filteredRecords": 5,
+    "totalRecords": 6,
+    "filteredRecords": 6,
     "dimensions": [
       {
         "name": "creative",
@@ -3240,6 +3471,13 @@ This API will provide values of Bid Model dimensions and sub-dimensions.
         "label": "Exchange",
         "order": 5,
         "modellingEnabled": false
+      },
+      {
+        "name": "audience",
+        "id": 14,
+        "label": "Audience",
+        "order": 6,
+        "modellingEnabled": true
       }
     ]
   }

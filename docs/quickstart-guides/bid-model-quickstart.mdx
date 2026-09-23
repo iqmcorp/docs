@@ -8,6 +8,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
+import SupportedDimensionsNote from '@site/docs/_partials/bid-model-api/supported-dimensions-note.mdx';
 
 # Create a Bid Model
 
@@ -75,15 +76,7 @@ Use the following header parameters for all requests after logging in:
 
 ### Bid Model criteria
 
-The IQM Bid Model currently supports the following dimensions:
-
-* **Creative**: Creative ID
-* **Location**: State, City, ZIP code
-* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
-
-*Note that Spend Ratios are not supported for the Publisher Category dimension subcategory. Refer to [Spend Ratio overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
-
-**Note that Bid Modifiers are not supported for the Deal ID dimension subcategory. Refer to the [Bid Modifier overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
+<SupportedDimensionsNote />
 
 ### Step 1: Check campaign for eligibility
 
@@ -750,6 +743,7 @@ This API provides values of Bid Model dimensions and sub-dimensions. Select the 
 | `11` | City |
 | `12` | Zip |
 | `13` | Exchange |
+| `14` | Audience |
 
 </div>
  <div class="child2">
@@ -761,8 +755,8 @@ This API provides values of Bid Model dimensions and sub-dimensions. Select the 
 {
   "success": true,
   "data": {
-    "totalRecords": 5,
-    "filteredRecords": 5,
+    "totalRecords": 6,
+    "filteredRecords": 6,
     "dimensions": [
       {
         "name": "creative",
@@ -860,6 +854,13 @@ This API provides values of Bid Model dimensions and sub-dimensions. Select the 
         "label": "Exchange",
         "order": 5,
         "modellingEnabled": false
+      },
+      {
+        "name": "audience",
+        "id": 14,
+        "label": "Audience",
+        "order": 6,
+        "modellingEnabled": true
       }
     ]
   }
@@ -929,12 +930,15 @@ function getDimensions(): Promise<Responses> {
 
 Once you have determined your campaign is eligible, you can pass the <var>campaignId</var> and your selected <var>dimensionId</var> to create a Bid Model. Review the Bid Model tools descriptions in the [About](#about-iqm-bid-model) section, the [Bid Model criteria](#bid-model-criteria), and the Request schema table below to create a Bid Model.
 
+See the [Manage Bid Model settings](/guidelines/bid-model-api/#manage-bid-model-settings) endpoint for full documentation. 
+
 :::info
 
 Spend Ratio:
   * Strict Spend Ratios must equal 100% across all allocated dimensions.
   * Flexible Spend Ratios require a dimension priority.
 :::
+
 
 :::tip
 
@@ -1081,7 +1085,7 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Priority Updated Successfully"
+  "data": "Bid Model updated successfully"
 }
 ```
 
@@ -1108,35 +1112,51 @@ interface Responses {
   };
 };
 
-function addBidModellingOfDimensionForCampaign(): Promise<Responses> {
+function manageBidModelling(): Promise<Responses> {
   const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models',
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}',
     params: {
       path: {
-        campaignId: `number`
+        campaignId: `number`,
+        dimensionId: `number`
       }
     },
     requestBody: {
       content: {
         "application/json": {
-          bidModelling: [
-            {
-              bidModelData?: {
-                id?: `number`,
+          actionWiseBidModelEntities?: {
+            ADD?: {
+              bidModelEntityDetails?: {
+                entityId: `number`,
+                entityTypeId: `number`,
+                priority: `number`,
+                bidMultiplier: `number`,
+                spendRatio: `number`,
+                spendRatioTypeId: `number`,
+                bundleName?: `string`,
+                entityIds?: `array of numbers`,
+              }[]
+            },
+            UPDATE?: {
+              bidModelEntityDetails?: {
+                bidModelDataId: `number`,
                 priority?: `number`,
                 bidMultiplier?: `number`,
                 spendRatio?: `number`,
-                spendRatioTypeId?: `number`
-              },
-              dimensionEntityMappings?: [
-                {
-                  dimensionId?: `number`,
-                  entityId?: `number`,
-                }
-              ]
+                spendRatioTypeId?: `number`,
+              }[]
+            },
+            DELETE?: {
+              bidModelDataId?: `array of numbers`,
+              bundleIds?: `array of numbers`,
             }
-          ]  
+          },
+          inclusionExclusionEntityMap?: {
+            INCLUDE?: `array of numbers`,
+            EXCLUDE?: `array of numbers`,
+          },
+          baseBid?: `number`,
         }
       }
     }
