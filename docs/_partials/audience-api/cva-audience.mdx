@@ -1,5 +1,6 @@
 import CopyUrl from '@site/src/components/CopyUrl';
 import ExternalLink from '@site/static/img/external-link2.svg';
+import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 
 ### Get Custom Voter Audience details
 
@@ -248,14 +249,14 @@ Get list of available states for Custom Voter Audiences. (Note: This endpoint on
 
 Browse the Custom Voter Audience segment catalogue to find segments to reference in a CVA <var>equation</var> (see [Create CVA Details](/political-vertical/planner/#create-cva-details)).
 
-The catalogue is a tree. Only **leaf** segments (`isLeaf: true`) carry a real, non-zero `reach` and are valid to reference in an equation — category/grouping nodes (states, topic groupings, etc.) always report `reach: 0` and exist only to organize the tree. A leaf segment's `taxonomyId` (e.g. `IQMCVACA041742`) is the exact token to use inside an equation string.
+The catalogue is a tree. Only leaf segments (<var>isLeaf: true</var>) carry a real, non-zero reach and are valid to reference in an equation. Category/grouping nodes (states, topic groupings, etc.) always report <var>reach: 0</var> and exist only to organize the tree. A leaf segment's <var>taxonomyId</var> (e.g. <var>IQMCVACA041742</var>) is the exact token to use inside an equation string.
 
 This endpoint fetches the segments based on the search parameters provided:
   * If no parameters are provided, it fetches all root segments for the whole country (currently U.S.) along with their child segments.
   * If state IDs are provided, it fetches all root segments for those states along with their child segments.
   * If a parent segment ID is provided, it fetches all child segments for that parent segment — this is how you drill down the tree to find leaf segments.
   * If search keywords are provided, it fetches all leaf segments matching those keywords in the path key and description.
-  * If taxonomy IDs are provided, it fetches all leaf segments matching those taxonomy IDs. If the `validateTaxonomyIds` flag is true, it validates that all taxonomy IDs exist.
+  * If taxonomy IDs are provided, it fetches all leaf segments matching those taxonomy IDs. If the <var>validateTaxonomyIds</var> flag is true, it validates that all taxonomy IDs exist.
   * If segment IDs are provided, it fetches those segments.
   * If none of the above criteria are met, it returns an empty list.
 
@@ -305,11 +306,11 @@ This endpoint fetches the segments based on the search parameters provided:
   </tr>
   <tr>
     <td>`taxonomyId` <br /><span class="type-text">string</span></td>
-    <td>Taxonomy ID — for a leaf segment (`isLeaf: true`), this is the exact token to reference in a CVA `equation` string.</td>
+    <td>Taxonomy ID — for a leaf segment (<var>isLeaf: true</var>), this is the exact token to reference in a CVA <var>equation</var> string.</td>
   </tr>
   <tr>
     <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if the segment is a leaf node. Only leaf segments are valid to reference in an equation and carry a real `reach` value.</td>
+    <td>Indicates if the segment is a leaf node. Only leaf segments are valid to reference in an equation and carry a real <var>reach</var> value.</td>
   </tr>
   <tr>
     <td>`pathKey` <br /><span class="type-text">string</span></td>
@@ -317,7 +318,7 @@ This endpoint fetches the segments based on the search parameters provided:
   </tr>
   <tr>
     <td>`reach` <br /><span class="type-text">integer</span></td>
-    <td>Estimated reach of the segment. `0` for non-leaf (category/grouping) nodes; a real, non-zero value only on leaf nodes.</td>
+    <td>Estimated reach of the segment. <var>0</var> for non-leaf (category/grouping) nodes; a real, non-zero value only on leaf nodes.</td>
   </tr>
   <tr>
     <td>`parentSegmentId` <br /><span class="type-text">integer</span></td>
@@ -336,43 +337,338 @@ This endpoint fetches the segments based on the search parameters provided:
 
 </div><div class="child2">
 
-```json title="Request sample"
+<CodeDropdown label="Request examples">
+  <CodeOption label="Some states selected">
+```json
 {
-  "parentSegmentId": 43660
+  "stateIds": [
+    123,
+    456
+  ],
+  "pageNo": 1,
+  "noOfEntries": 20
 }
 ```
+  </CodeOption>
+  <CodeOption label="All states selected (PAN-USA)">
+```json
+{
+  "stateIds": [],
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+  <CodeOption label="Keyword search with some states selected">
+```json
+{
+  "searchField": "male,female",
+  "stateIds": [
+    123,
+    456
+  ],
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+  <CodeOption label="Keyword search with all states selected (PAN-USA)">
+```json
+{
+  "searchField": "male,female",
+  "stateIds": [],
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+  <CodeOption label="Expanding a parent segment">
+```json
+{
+  "parentSegmentId": 123,
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+  <CodeOption label="Fetching by segment IDs">
+```json
+{
+  "segmentIds": [
+    123,
+    456
+  ],
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+  <CodeOption label="Validating taxonomy IDs">
+```json
+{
+  "taxonomyIds": [
+    "iqm123",
+    "iqm234"
+  ],
+  "validateTaxonomyIds": true,
+  "pageNo": 1,
+  "noOfEntries": 20
+}
+```
+  </CodeOption>
+</CodeDropdown>
 
-```json title="Response 200"
+<CodeDropdown label="Response 200 examples">
+  <CodeOption label="Segment details for some selected states">
+```json
 {
   "success": true,
   "data": {
+    "totalRecords": 100,
     "cvaSegmentData": [
       {
-        "segmentId": 43661,
-        "taxonomyValue": "F",
-        "description": "",
-        "taxonomyId": "IQMCVACA041742",
-        "isLeaf": true,
-        "reach": 11789748,
-        "pathKey": "California (CA) > Demographics > Gender > F",
-        "parentSegmentId": 43660
+        "segmentId": 1,
+        "taxonomyValue": "California",
+        "description": "California state",
+        "taxonomyId": "iqmcva1",
+        "isLeaf": false,
+        "pathKey": "California (CA)",
+        "reach": 0,
+        "parentSegmentId": 0,
+        "childSegments": [
+          {
+            "segmentId": 157,
+            "taxonomyValue": "Age",
+            "description": "Age segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva157",
+            "pathKey": "California (CA) > Age",
+            "parentSegmentId": 1,
+            "reach": 0
+          },
+          {
+            "segmentId": 158,
+            "taxonomyValue": "Demographics",
+            "description": "Demographics segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva158",
+            "pathKey": "California (CA) > Demographics",
+            "parentSegmentId": 1,
+            "reach": 0
+          },
+          {
+            "segmentId": 159,
+            "taxonomyValue": "Gender",
+            "description": "Gender segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva159",
+            "pathKey": "California (CA) > Gender",
+            "parentSegmentId": 1,
+            "reach": 0
+          }
+        ]
       },
       {
-        "segmentId": 53424,
-        "taxonomyValue": "M",
-        "description": "",
-        "taxonomyId": "IQMCVACA051376",
-        "isLeaf": true,
-        "reach": 10737933,
-        "pathKey": "California (CA) > Demographics > Gender > M",
-        "parentSegmentId": 43660
+        "segmentId": 2,
+        "taxonomyValue": "New York",
+        "description": "New York state",
+        "taxonomyId": "iqmcva2",
+        "isLeaf": false,
+        "pathKey": "New York (NY)",
+        "reach": 0,
+        "parentSegmentId": 0,
+        "childSegments": [
+          {
+            "segmentId": 160,
+            "taxonomyValue": "Age",
+            "description": "Age segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva160",
+            "pathKey": "New York (NY) > Age",
+            "parentSegmentId": 2,
+            "reach": 0
+          },
+          {
+            "segmentId": 161,
+            "taxonomyValue": "Demographics",
+            "description": "Demographics segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva161",
+            "pathKey": "New York (NY) > Demographics",
+            "parentSegmentId": 2,
+            "reach": 0
+          },
+          {
+            "segmentId": 162,
+            "taxonomyValue": "Gender",
+            "description": "Gender segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva162",
+            "pathKey": "New York (NY) > Gender",
+            "parentSegmentId": 2,
+            "reach": 0
+          }
+        ]
       }
     ],
-    "totalRecords": 110724,
     "filteredRecords": 2
   }
 }
 ```
+  </CodeOption>
+  <CodeOption label="Segment details for all states selected (PAN-USA)">
+```json
+{
+  "success": true,
+  "data": {
+    "totalRecords": 100,
+    "cvaSegmentData": [
+      {
+        "segmentId": 1,
+        "taxonomyValue": "Age",
+        "description": "Age segment",
+        "taxonomyId": "iqmcva1",
+        "isLeaf": false,
+        "pathKey": "Age",
+        "reach": 0,
+        "parentSegmentId": 0,
+        "childSegments": [
+          {
+            "segmentId": 157,
+            "taxonomyValue": "Age greater than 20",
+            "description": "Age segment",
+            "isLeaf": true,
+            "taxonomyId": "IQMCVAUS041742",
+            "pathKey": "Age > Greater than 20",
+            "parentSegmentId": 1,
+            "reach": 145003462
+          },
+          {
+            "segmentId": 158,
+            "taxonomyValue": "Age greater than 40",
+            "description": "Age segment",
+            "isLeaf": true,
+            "taxonomyId": "IQMCVAUS041743",
+            "pathKey": "Age > Greater than 40",
+            "parentSegmentId": 1,
+            "reach": 132558211
+          },
+          {
+            "segmentId": 159,
+            "taxonomyValue": "Age greater than 60",
+            "description": "Age segment",
+            "isLeaf": true,
+            "taxonomyId": "IQMCVAUS041744",
+            "pathKey": "Age > Greater than 60",
+            "parentSegmentId": 1,
+            "reach": 98421007
+          }
+        ]
+      },
+      {
+        "segmentId": 2,
+        "taxonomyValue": "Demographics",
+        "description": "Demographics segment",
+        "taxonomyId": "iqmcva2",
+        "isLeaf": false,
+        "pathKey": "Demographics",
+        "parentSegmentId": 0,
+        "reach": 0,
+        "childSegments": [
+          {
+            "segmentId": 160,
+            "taxonomyValue": "Demographics 1",
+            "description": "Demographics segment",
+            "isLeaf": true,
+            "taxonomyId": "IQMCVAUS041745",
+            "pathKey": "Demographics > D1",
+            "parentSegmentId": 2,
+            "reach": 4002462
+          },
+          {
+            "segmentId": 161,
+            "taxonomyValue": "Demographics 2",
+            "description": "Demographics segment",
+            "isLeaf": true,
+            "taxonomyId": "IQMCVAUS041746",
+            "pathKey": "Demographics > D2",
+            "parentSegmentId": 2,
+            "reach": 3811290
+          },
+          {
+            "segmentId": 162,
+            "taxonomyValue": "Demographics 3",
+            "description": "Demographics segment",
+            "isLeaf": false,
+            "taxonomyId": "iqmcva162",
+            "pathKey": "Demographics > D3",
+            "parentSegmentId": 2,
+            "reach": 0
+          }
+        ]
+      }
+    ],
+    "filteredRecords": 2
+  }
+}
+```
+  </CodeOption>
+  <CodeOption label="Segment details for a keyword search">
+```json
+{
+  "success": true,
+  "data": {
+    "totalRecords": 100,
+    "cvaSegmentData": [
+      {
+        "segmentId": 157,
+        "taxonomyValue": "Age greater than 20",
+        "description": "Age segment",
+        "isLeaf": true,
+        "taxonomyId": "IQMCVACA041742",
+        "pathKey": "California (CA) > Age > Greater than 20",
+        "parentSegmentId": 1,
+        "reach": 11789748
+      },
+      {
+        "segmentId": 158,
+        "taxonomyValue": "Age greater than 40",
+        "description": "Age segment",
+        "isLeaf": true,
+        "taxonomyId": "IQMCVACA041743",
+        "pathKey": "California (CA) > Age > Greater than 40",
+        "parentSegmentId": 1,
+        "reach": 10334521
+      },
+      {
+        "segmentId": 159,
+        "taxonomyValue": "Age greater than 60",
+        "description": "Age segment",
+        "isLeaf": true,
+        "taxonomyId": "IQMCVACA041744",
+        "pathKey": "California (CA) > Age > Greater than 60",
+        "parentSegmentId": 1,
+        "reach": 8221903
+      }
+    ],
+    "filteredRecords": 3
+  }
+}
+```
+  </CodeOption>
+  <CodeOption label="Invalid taxonomy IDs provided">
+```json
+{
+  "success": false,
+  "data": {
+    "invalidTaxonomyIds": [
+      "imq-123"
+    ]
+  }
+}
+```
+  </CodeOption>
+</CodeDropdown>
 
 </div></div>
 
