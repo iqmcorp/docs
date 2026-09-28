@@ -29,7 +29,7 @@
           "MCP"
         ],
         "summary": "Manage bid modelling attributes for a campaign and dimension",
-        "description": "This API allows advertisers to manage bid modelling configurations for campaigns, providing full Create, Update, and Delete operations on bid modelling attributes.\n\n**Campaign Criteria for Bid Modeling Eligibility**\n- A duration of at least 3 days\n- A daily budget of at least $100\n- Base bid and max bid price must be defined\n\nBid Modeling attributes control campaign prioritization and spending distribution across various dimensions such as:\n\n**Supported Dimensions**\n- Creative\n- Location: State, City, Zip Code\n- Inventory: Open Exchange, Publisher Category, Deal IDs\n- Device: Traffic Type, Device Type\n- AdExchange\n- Audience\n\n**Bid model attributes include:**\n- Priority: The priority of the bid model.\n- Bid Multiplier: The multiplier applied to the base bid.\n- Spend Ratio: The ratio of spend allocated to the bid model.\n- Spend Ratio Type: The type of spend ratio.\n\n**Bundle support details:**\n- Bundles can be created to group entities together for bid modelling.\n- Entities can be bundled or unbundled as needed.\n- Bundles can be added, updated, or deleted in the bid modelling configuration.\n- Bundle's bid modelling attributes are propagated to all entities present in the bundle.\n\n**The API supports the following actions:**\n- ADD: Add new bid model entities or bundles.\n- DELETE: Remove existing bid model entities or bundles.\n- UPDATE: Modify existing bid model entities or bundles.\n- INCLUDE/EXCLUDE: Set inclusion or exclusion for entities in the bid modelling configuration.\n- Base Bid: Update the base bid for the campaign.\n\n**Request Structure (BidModelManagement schema)**\n1. `actionWiseBidModelEntities`: Contains ADD / UPDATE / DELETE operations (accepts a dictionary or JSON string).\n2. `inclusionExclusionEntityMap`: Contains INCLUDE / EXCLUDE lists.\n3. `baseBid`: Base bid amount for the campaign.\n\n**Validation Rules**\n- When providing `spendRatio`, you must also provide `spendRatioTypeId` (`2 = Fixed`, `1 = Flexible`).\n- When providing `spendRatioTypeId`, you must also provide `spendRatio`.\n- When adding modeled entities (`entityTypeId = 1` or `2`), include at least one **Other** entity (`entityId = -1`, `entityTypeId = 3`). The **Other** entity is validated the same as any other ADD entity and must also include its own `priority`, `bidMultiplier`, `spendRatio`, and `spendRatioTypeId` -- omitting them produces the same \"Spend Ratio type is required\" / \"Bid Multiplier is required\" errors a real entity would.\n- For ADD: `spendRatio` must be `1\u2013100`; for UPDATE: `spendRatio` can be `0\u2013100`.\n- Refer to `#/components/schemas/BidModelManagement` for the detailed request structure.\n- Audience (dimensionId = 14) does not support `spendRatio` / `spendRatioTypeId` -- providing either returns a validation error. `spendRatioTypeId` is internally defaulted to Flexible (`1`) and is not client-configurable, which makes `priority` mandatory for Audience.\n- Audience does not support `inclusionExclusionEntityMap` (INCLUDE/EXCLUDE) -- providing it returns a validation error.\n- Only ID-Based audiences are eligible to be modelled or added to a bundle; Non-ID-Based audiences cannot be modelled.\n\n**Note**\n`actionWiseBidModelEntities` can be passed as either:\n- A dictionary object: `{ \"UPDATE\": [{ \"bidModelDataId\": 123, \"priority\": 3 }] }`\n- A JSON string: `\"{\"UPDATE\": [{\"bidModelDataId\": 123, \"priority\": 3}]}\"`\n",
+        "description": "This API allows advertisers to manage bid modelling configurations for campaigns, providing full Create, Update, and Delete operations on bid modelling attributes.\n\n**Campaign Criteria for Bid Modeling Eligibility**\n- A duration of at least 3 days\n- A daily budget of at least $100\n- Base bid and max bid price must be defined\n\nBid Modeling attributes control campaign prioritization and spending distribution across various dimensions such as:\n\n**Supported Dimensions**\n- Creative\n- Location: State, City, Zip Code\n- Inventory: Open Exchange, Publisher Category, Deal IDs\n- Device: Traffic Type, Device Type\n- AdExchange\n- Audience\n\n**Bid model attributes include:**\n- Priority: The priority of the bid model.\n- Bid Multiplier: The multiplier applied to the base bid.\n- Spend Ratio: The ratio of spend allocated to the bid model.\n- Spend Ratio Type: The type of spend ratio.\n\n**Bundle support details:**\n- Bundles can be created to group entities together for bid modelling.\n- Entities can be bundled or unbundled as needed.\n- Bundles can be added, updated, or deleted in the bid modelling configuration.\n- Bundle's bid modelling attributes are propagated to all entities present in the bundle.\n\n**The API supports the following actions:**\n- ADD: Add new bid model entities or bundles.\n- DELETE: Remove existing bid model entities or bundles.\n- UPDATE: Modify existing bid model entities or bundles.\n- INCLUDE/EXCLUDE: Set inclusion or exclusion for entities in the bid modelling configuration.\n- Base Bid: Update the base bid for the campaign.\n\n**Request Structure (BidModelManagement schema)**\n1. `actionWiseBidModelEntities`: Contains ADD / UPDATE / DELETE operations (accepts a dictionary or JSON string).\n2. `inclusionExclusionEntityMap`: Contains INCLUDE / EXCLUDE lists.\n3. `baseBid`: Base bid amount for the campaign. Optional -- omit it to leave the base bid unchanged. When updating other bid model attributes, resend the campaign's current `baseBid` value if you don't intend to change it (this is what the UI does on every save).\n\n**Validation Rules**\n- When providing `spendRatio`, you must also provide `spendRatioTypeId` (`2 = Fixed`, `1 = Flexible`).\n- When providing `spendRatioTypeId`, you must also provide `spendRatio`.\n- A dimension may have **exactly one** Others row (`entityId = -1`, `entityTypeId = 3`) at a time, representing the remainder of the dimension. This is checked against the *combination* of existing modelled entities plus this request, not just this request in isolation.\n- When ADDing the first modelled entities for a dimension (none modelled yet), include one Others row in the same request. When ADDing *more* entities to a dimension that's already modelled, **omit** the Others row entirely -- the existing one still applies. Sending a second Others row when one already exists returns a 422 (`\"Only one 'Other' entity allowed\"`). To change the existing Others row's own settings (e.g. its priority), use `UPDATE` with its `bidModelDataId` instead of `ADD`.\n- For ADD: `spendRatio` must be `1\u2013100`; for UPDATE: `spendRatio` can be `0\u2013100`.\n- Refer to `#/components/schemas/BidModelManagement` for the detailed request structure.\n- Audience (dimensionId = 14) does not support `spendRatio` / `spendRatioTypeId` -- providing either returns a validation error. `spendRatioTypeId` is internally defaulted to Flexible (`1`) and is not client-configurable, which makes `priority` mandatory for Audience.\n- Audience does not support `inclusionExclusionEntityMap` (INCLUDE/EXCLUDE) -- providing it returns a validation error.\n- Only ID-Based audiences are eligible to be modelled or added to a bundle; Non-ID-Based audiences cannot be modelled.\n\n**Note**\n`actionWiseBidModelEntities` can be passed as either:\n- A dictionary object: `{ \"UPDATE\": [{ \"bidModelDataId\": 123, \"priority\": 3 }] }`\n- A JSON string: `\"{\"UPDATE\": [{\"bidModelDataId\": 123, \"priority\": 3}]}\"`\n",
         "operationId": "manageBidModelling",
         "parameters": [
           {
@@ -253,6 +253,34 @@
                         ]
                       }
                     }
+                  }
+                },
+                "Add more entities to an already-modelled dimension - omit the Others row, it already exists": {
+                  "description": "Add more entities to an already-modelled dimension - omit the Others row, it already exists",
+                  "value": {
+                    "actionWiseBidModelEntities": {
+                      "ADD": {
+                        "bidModelEntityDetails": [
+                          {
+                            "entityId": 129953,
+                            "entityTypeId": 1,
+                            "priority": 1,
+                            "bidMultiplier": 1,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          },
+                          {
+                            "entityId": 5778263,
+                            "entityTypeId": 1,
+                            "priority": 1,
+                            "bidMultiplier": 1,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          }
+                        ]
+                      }
+                    },
+                    "baseBid": 35
                   }
                 },
                 "Update existing bid modelling": {
@@ -518,6 +546,17 @@
                       ]
                     }
                   },
+                  "Duplicate Others row -- a dimension may have only one Others row; omit it on ADD requests after the first": {
+                    "description": "Duplicate Others row -- a dimension may have only one Others row; omit it on ADD requests after the first",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Only one 'Other' entity allowed"
+                        }
+                      ]
+                    }
+                  },
                   "Invalid include/exclude entities": {
                     "description": "Invalid include/exclude entities",
                     "value": {
@@ -604,8 +643,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Fetch campaign metrics report by dimension Id",
-        "description": "Fetches and returns a detailed metrics report for a specified campaign and dimension,\nproviding granular insights such as impressions, clicks, eCPM, conversions, and additional breakdowns by the selected dimension.\nSupports advanced filtering, sorting, and pagination, and can return either downloadable report URLs or in-depth data tables depending on the request parameters.\n",
+        "summary": "List every entity (modelled or not) in a campaign's Bid Model dimension tab -- e.g. Open Exchange inventory, Creative, State",
+        "description": "This is the same data shown by the Bid Model UI's dimension tab (e.g. the Open Exchange tab): every entity serving on the campaign within the requested date window, whether or not it already has bid model settings. Use this endpoint -- not `getModelledItemsForCampaignAndDimensionId`, which only returns already-modelled rows -- to discover the entityIds you need before calling `manageBidModelling` to prioritize/model them.\n\nEach row's `modelled` flag and `bidModelData` object show whether that entity already has bid model settings (priority, spendRatio, etc.) applied. Use `searchField` for a single partial-match search (e.g. \".com\"), or `searchKeywords` to exact-match several target names/ids in one call (e.g. multiple publisher or app names).\n\n`startDate`/`endDate` determine which entities appear at all: an entity only shows up if it served within that window, so a narrow window (e.g. today only) may return far fewer entities than a wider one (e.g. the last 7 days).\n\nSupports advanced filtering, sorting, and pagination, and can return either downloadable report URLs or in-depth data tables depending on the request parameters.\nFor non-download requests, the response also includes a metricBaseline object with baseline values per metric for the requested date range, keyed by metric name.",
         "operationId": "fetchCampaignMetricsByDimension",
         "parameters": [
           {
@@ -621,11 +660,9 @@
           {
             "name": "dimensionId",
             "in": "path",
-            "description": "The dimension ID for which the report is being generated",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/DimensionId"
             }
           },
           {
@@ -2230,8 +2267,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "List modelled entities reporting with modelling data for a campaign",
-        "description": "Retrieves a list of modelled entities with reporting and their associated modelling data for the provided campaign ID.\nThe modelling data includes priority, spend ratio, spend ratio type, and bid multiplier for each dimension.\nAlso Bundle details are included if available with modelling data.\n",
+        "summary": "List only already-modelled entities and bundles for a campaign dimension -- returns empty until entities have been modelled",
+        "description": "Retrieves entities and bundles for the given campaign/dimension that already have bid model settings applied (priority, spend ratio, spend ratio type, bid multiplier), including the Others row and any bundle details.\n\nThis endpoint returns an empty result for any dimension that has not yet been modelled, regardless of the date range requested -- it does not discover un-modelled entities. To find entityIds to model (e.g. Open Exchange inventory that hasn't been prioritized yet), use the `fetchCampaignMetricsByDimension` operation instead, then call `manageBidModelling` to model them.",
         "operationId": "getModelledItemsForCampaignAndDimensionId",
         "parameters": [
           {
@@ -2248,12 +2285,9 @@
           {
             "name": "dimensionId",
             "in": "path",
-            "description": "The dimension ID for which the report is being generated",
             "required": true,
             "schema": {
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/DimensionId"
             }
           },
           {
@@ -3180,6 +3214,7 @@
     },
     "/api/v3/bm/bid-models/dimension/entity": {
       "post": {
+        "summary": "Look up which campaigns a set of entities are modelled in, for a given dimension",
         "tags": [
           "MCP"
         ],
@@ -3421,7 +3456,7 @@
                             "id": 4,
                             "label": "Open Exchange",
                             "order": 2,
-                            "modellingEnabled": false
+                            "modellingEnabled": true
                           },
                           {
                             "name": "publisher_category",
@@ -3514,7 +3549,7 @@
           "MCP"
         ],
         "summary": "Retrieves the total spent dimension-wise for a specified campaign",
-        "description": "Retrieves the total spent dimension-wise for a specified campaign, supporting filtering by dimension ID through a query parameter, For ",
+        "description": "Retrieves the total and dimension-wise spent for a specified campaign. Supports filtering by dimension ID through a query parameter; the response includes the spent for each entity in that dimension.",
         "operationId": "getDimensionWiseEntitySpentForCampaign_1",
         "parameters": [
           {
@@ -4109,7 +4144,7 @@
     "schemas": {
       "DimensionId": {
         "type": "integer",
-        "description": "Unique Identifier for Dimension. Valid values (per GET /api/v3/bm/static/dimensions): [1 - Creative, 3 - Deal, 4 - Open Exchange, 5 - Publisher Category, 7 - Traffic Type, 8 - Device Type, 9 - Location, 10 - State, 11 - City, 12 - Zip, 13 - Exchange, 14 - Audience]. Note: 2 (Inventory) and 6 (Device) are parent category IDs, not valid values for this parameter.",
+        "description": "Unique Identifier for Dimension. Valid values (per the `getDimensions` operation): [1 - Creative, 3 - Deal, 4 - Open Exchange, 5 - Publisher Category, 7 - Traffic Type, 8 - Device Type, 10 - State, 11 - City, 12 - Zip, 13 - Exchange, 14 - Audience]. Note: 2 (Inventory) and 6 (Device) are parent category IDs, not valid values for this parameter.",
         "format": "int32",
         "enum": [
           1,
@@ -4118,7 +4153,6 @@
           5,
           7,
           8,
-          9,
           10,
           11,
           12,
@@ -4242,7 +4276,8 @@
         "additionalProperties": false,
         "required": [
           "entityId",
-          "entityTypeId"
+          "entityTypeId",
+          "bidMultiplier"
         ],
         "properties": {
           "entityId": {
@@ -4260,21 +4295,24 @@
           "priority": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 10
+            "maximum": 10,
+            "description": "Priority (1\u201310). Required when `spendRatioTypeId = 1` (Flexible), or when the target dimension is Publisher Category (5) or Audience (14). Must be omitted when `spendRatioTypeId = 2` (Fixed)."
           },
           "bidMultiplier": {
             "type": "number",
             "minimum": 0.1,
-            "maximum": 100
+            "maximum": 100,
+            "description": "Bid Multiplier (0.1\u2013100). Always required for ADD."
           },
           "spendRatio": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 100
+            "maximum": 100,
+            "description": "Spend Ratio (1\u2013100). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely -- providing it returns a validation error."
           },
           "spendRatioTypeId": {
             "type": "integer",
-            "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
+            "description": "Spend Ratio Type Id (`1` = Flexible, `2` = Fixed). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely (it is defaulted internally to Flexible) -- providing it returns a validation error.",
             "format": "int32",
             "enum": [
               1,
@@ -4288,7 +4326,8 @@
         "additionalProperties": false,
         "required": [
           "entityId",
-          "entityTypeId"
+          "entityTypeId",
+          "bidMultiplier"
         ],
         "properties": {
           "entityId": {
@@ -4306,21 +4345,24 @@
           "priority": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 10
+            "maximum": 10,
+            "description": "Priority (1\u201310). Required when `spendRatioTypeId = 1` (Flexible), or when the target dimension is Publisher Category (5) or Audience (14). Must be omitted when `spendRatioTypeId = 2` (Fixed)."
           },
           "bidMultiplier": {
             "type": "number",
             "minimum": 0.1,
-            "maximum": 100
+            "maximum": 100,
+            "description": "Bid Multiplier (0.1\u2013100). Always required for ADD."
           },
           "spendRatio": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 100
+            "maximum": 100,
+            "description": "Spend Ratio (1\u2013100). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely -- providing it returns a validation error."
           },
           "spendRatioTypeId": {
             "type": "integer",
-            "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
+            "description": "Spend Ratio Type Id (`1` = Flexible, `2` = Fixed). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely (it is defaulted internally to Flexible) -- providing it returns a validation error.",
             "format": "int32",
             "enum": [
               1,
@@ -4573,15 +4615,21 @@
           },
           "startDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Start of the report window, epoch milliseconds (inclusive).",
+            "example": 1751001600000
           },
           "endDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "End of the report window, epoch milliseconds (inclusive).",
+            "example": 1753593599000
           },
-          "timezoneId": {
+          "timeZoneId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Timezone ID used to render the report's date boundaries. Note: report date-range bucketing is currently driven by the campaign's own configured timezone rather than this field.",
+            "example": 29
           },
           "isExcluded": {
             "type": "integer",
@@ -4591,7 +4639,12 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Filters results to the given Open Exchange inventory types. Allowed values: \"Site\", \"Android App\", \"IOS App\", \"Other App\". Can be empty or omitted if no filtering is required.",
+            "example": [
+              "Site",
+              "Android App"
+            ]
           },
           "download": {
             "$ref": "#/components/schemas/DownloadRequest"
@@ -4610,7 +4663,13 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Exact-match keywords checked against entity name/id columns in a single call (a row matches if it exactly matches, case-insensitively, ANY keyword in the list) -- use this instead of repeated single-keyword `searchField` calls when checking for several target names at once, e.g. multiple publisher/app names. Unlike `searchField`, this does not do partial/substring matching.",
+            "example": [
+              "Hulu",
+              "Peacock",
+              "Paramount+"
+            ]
           },
           "performanceFilters": {
             "$ref": "#/components/schemas/PerformanceFilterRequest"
