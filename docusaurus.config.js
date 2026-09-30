@@ -41,6 +41,28 @@ const config = {
     format: "detect",
   },
 
+  headTags: [
+    {
+      tagName: "link",
+      attributes: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
+      },
+    },
+  ],
+
+  stylesheets: [
+    {
+      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nata+Sans:wght@400;600;700;800&display=swap",
+      type: "text/css",
+    },
+  ],
+
   presets: [
     [
       "classic",
@@ -84,10 +106,9 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        gtag: {
-          trackingID: "G-9G69R8P56B",
-          anonymizeIP: true,
-        },
+        gtag: process.env.NODE_ENV === 'production'
+          ? { trackingID: "G-9G69R8P56B", anonymizeIP: true }
+          : false,
       }),
     ],
   ],
@@ -104,7 +125,7 @@ const config = {
       },
       algolia: {
         appId: "09FZUVDE53",
-        apiKey: "***REMOVED***",
+        apiKey: "3d384eeb507077016596ab0421e11ffb",
         indexName: "IQM API Docs",
         contextualSearch: true,
         replaceSearchResultPathname: {
@@ -178,23 +199,36 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "IQM",
+            title: "Resources",
             items: [
               {
-                label: "Website",
+                label: "IQM",
                 to: "https://iqm.com/",
               },
               {
-                label: "API Guidelines",
+                label: "API guidelines",
                 to: "/guidelines",
+              },
+              {
+                label: "Partnerships",
+                to: "/partnerships",
+              },
+              {
+                label: "GitHub",
+                to: "https://github.com/iqmcorp/docs"
+              },
+            ],
+          },
+          {
+            title: "Support",
+            items: [
+              {
+                label: "GitHub Discussions",
+                to: "https://github.com/iqmcorp/docs/discussions"
               },
               {
                 label: "Help Center",
                 to: "https://help.iqm.com/en/"
-              },
-              {
-                label: "Github",
-                to: "https://github.com/iqmcorp/docs"
               },
             ],
           },

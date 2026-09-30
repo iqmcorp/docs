@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Bid Model API Specification",
-    "version": "v0",
+    "version": "2.0.2",
     "description": "MCP Bid Model API Specification",
     "contact": {
       "name": "IQM Support",
@@ -29,7 +29,7 @@
           "MCP"
         ],
         "summary": "Manage bid modelling attributes for a campaign and dimension",
-        "description": "This API allows advertisers to manage bid modelling configurations for campaigns, providing full Create, Update, and Delete operations on bid modelling attributes.\n\n**Campaign Criteria for Bid Modeling Eligibility**\n- A duration of at least 3 days\n- A daily budget of at least $100\n- Base bid and max bid price must be defined\n\nBid Modeling attributes control campaign prioritization and spending distribution across various dimensions such as:\n\n**Supported Dimensions**\n- Creative\n- Location: State, City, Zip Code\n- Inventory: Open Exchange, Publisher Category, Deal IDs\n- Device: Traffic Type, Device Type\n- AdExchange\n\n**Bid model attributes include:**\n- Priority: The priority of the bid model.\n- Bid Multiplier: The multiplier applied to the base bid.\n- Spend Ratio: The ratio of spend allocated to the bid model.\n- Spend Ratio Type: The type of spend ratio.\n\n**Bundle support details:**\n- Bundles can be created to group entities together for bid modelling.\n- Entities can be bundled or unbundled as needed.\n- Bundles can be added, updated, or deleted in the bid modelling configuration.\n- Bundle's bid modelling attributes are propagated to all entities present in the bundle.\n\n**The API supports the following actions:**\n- ADD: Add new bid model entities or bundles.\n- DELETE: Remove existing bid model entities or bundles.\n- UPDATE: Modify existing bid model entities or bundles.\n- INCLUDE/EXCLUDE: Set inclusion or exclusion for entities in the bid modelling configuration.\n- Base Bid: Update the base bid for the campaign.\n\n**Request Structure (BidModelManagement schema)**\n1. `actionWiseBidModelEntities`: Contains ADD / UPDATE / DELETE operations (accepts a dictionary or JSON string).\n2. `inclusionExclusionEntityMap`: Contains INCLUDE / EXCLUDE lists.\n3. `baseBid`: Base bid amount for the campaign.\n\n**Validation Rules**\n- When providing `spendRatio`, you must also provide `spendRatioTypeId` (`2 = Fixed`, `1 = Flexible`).\n- When providing `spendRatioTypeId`, you must also provide `spendRatio`.\n- When adding modeled entities (`entityTypeId = 1` or `2`), include at least one **Other** entity (`entityId = -1`, `entityTypeId = 3`).\n- For ADD: `spendRatio` must be `1–100`; for UPDATE: `spendRatio` can be `0–100`.\n- Refer to `#/components/schemas/BidModelManagement` for the detailed request structure.\n\n**Note**\n`actionWiseBidModelEntities` can be passed as either:\n- A dictionary object: `{ \"UPDATE\": [{ \"bidModelDataId\": 123, \"priority\": 3 }] }`\n- A JSON string: `\"{\"UPDATE\": [{\"bidModelDataId\": 123, \"priority\": 3}]}\"`\n",
+        "description": "This API allows advertisers to manage bid modelling configurations for campaigns, providing full Create, Update, and Delete operations on bid modelling attributes.\n\n**Campaign Criteria for Bid Modeling Eligibility**\n- A duration of at least 3 days\n- A daily budget of at least $100\n- Base bid and max bid price must be defined\n\nBid Modeling attributes control campaign prioritization and spending distribution across various dimensions such as:\n\n**Supported Dimensions**\n- Creative\n- Location: State, City, Zip Code\n- Inventory: Open Exchange, Publisher Category, Deal IDs\n- Device: Traffic Type, Device Type\n- AdExchange\n- Audience\n\n**Bid model attributes include:**\n- Priority: The priority of the bid model.\n- Bid Multiplier: The multiplier applied to the base bid.\n- Spend Ratio: The ratio of spend allocated to the bid model.\n- Spend Ratio Type: The type of spend ratio.\n\n**Bundle support details:**\n- Bundles can be created to group entities together for bid modelling.\n- Entities can be bundled or unbundled as needed.\n- Bundles can be added, updated, or deleted in the bid modelling configuration.\n- Bundle's bid modelling attributes are propagated to all entities present in the bundle.\n\n**The API supports the following actions:**\n- ADD: Add new bid model entities or bundles.\n- DELETE: Remove existing bid model entities or bundles.\n- UPDATE: Modify existing bid model entities or bundles.\n- INCLUDE/EXCLUDE: Set inclusion or exclusion for entities in the bid modelling configuration.\n- Base Bid: Update the base bid for the campaign.\n\n**Request Structure (BidModelManagement schema)**\n1. `actionWiseBidModelEntities`: Contains ADD / UPDATE / DELETE operations (accepts a dictionary or JSON string).\n2. `inclusionExclusionEntityMap`: Contains INCLUDE / EXCLUDE lists.\n3. `baseBid`: Base bid amount for the campaign. Optional -- omit it to leave the base bid unchanged. When updating other bid model attributes, resend the campaign's current `baseBid` value if you don't intend to change it (this is what the UI does on every save).\n\n**Validation Rules**\n- When providing `spendRatio`, you must also provide `spendRatioTypeId` (`2 = Fixed`, `1 = Flexible`).\n- When providing `spendRatioTypeId`, you must also provide `spendRatio`.\n- A dimension may have **exactly one** Others row (`entityId = -1`, `entityTypeId = 3`) at a time, representing the remainder of the dimension. This is checked against the *combination* of existing modelled entities plus this request, not just this request in isolation.\n- When ADDing the first modelled entities for a dimension (none modelled yet), include one Others row in the same request. When ADDing *more* entities to a dimension that's already modelled, **omit** the Others row entirely -- the existing one still applies. Sending a second Others row when one already exists returns a 422 (`\"Only one 'Other' entity allowed\"`). To change the existing Others row's own settings (e.g. its priority), use `UPDATE` with its `bidModelDataId` instead of `ADD`.\n- For ADD: `spendRatio` must be `1\u2013100`; for UPDATE: `spendRatio` can be `0\u2013100`.\n- Refer to `#/components/schemas/BidModelManagement` for the detailed request structure.\n- Audience (dimensionId = 14) does not support `spendRatio` / `spendRatioTypeId` -- providing either returns a validation error. `spendRatioTypeId` is internally defaulted to Flexible (`1`) and is not client-configurable, which makes `priority` mandatory for Audience.\n- Audience does not support `inclusionExclusionEntityMap` (INCLUDE/EXCLUDE) -- providing it returns a validation error.\n- Only ID-Based audiences are eligible to be modelled or added to a bundle; Non-ID-Based audiences cannot be modelled.\n\n**Note**\n`actionWiseBidModelEntities` can be passed as either:\n- A dictionary object: `{ \"UPDATE\": [{ \"bidModelDataId\": 123, \"priority\": 3 }] }`\n- A JSON string: `\"{\"UPDATE\": [{\"bidModelDataId\": 123, \"priority\": 3}]}\"`\n",
         "operationId": "manageBidModelling",
         "parameters": [
           {
@@ -49,12 +49,11 @@
               "$ref": "#/components/schemas/DimensionId"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -65,13 +64,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -97,6 +94,14 @@
                             "spendRatioTypeId": 1
                           },
                           {
+                            "entityId": -1,
+                            "entityTypeId": 3,
+                            "priority": 1,
+                            "bidMultiplier": 2,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          },
+                          {
                             "entityId": -2,
                             "entityTypeId": 2,
                             "priority": 1,
@@ -104,7 +109,11 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "bundle-1",
-                            "entityIds": [1, 2, 3]
+                            "entityIds": [
+                              1,
+                              2,
+                              3
+                            ]
                           },
                           {
                             "entityId": 232,
@@ -114,13 +123,26 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "bundle-1",
-                            "entityIds": [1, 2, 3]
+                            "entityIds": [
+                              1,
+                              2,
+                              3
+                            ]
                           }
                         ]
                       },
                       "DELETE": {
-                        "bidModelDataId": [1, 2, 3, 4],
-                        "bundleIds": [1, 2, 3]
+                        "bidModelDataId": [
+                          1,
+                          2,
+                          3,
+                          4
+                        ],
+                        "bundleIds": [
+                          1,
+                          2,
+                          3
+                        ]
                       },
                       "UPDATE": {
                         "bidModelEntityDetails": [
@@ -131,7 +153,13 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "Bundle-1",
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           },
                           {
                             "bidModelDataId": 51,
@@ -148,14 +176,26 @@
                           {
                             "bidModelDataId": 53,
                             "bundleName": "Bundle-1",
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           }
                         ]
                       }
                     },
                     "inclusionExclusionEntityMap": {
-                      "INCLUDE": [1],
-                      "EXCLUDE": [2, 3, 4]
+                      "INCLUDE": [
+                        1
+                      ],
+                      "EXCLUDE": [
+                        2,
+                        3,
+                        4
+                      ]
                     },
                     "baseBid": 3
                   }
@@ -175,6 +215,14 @@
                             "spendRatioTypeId": 1
                           },
                           {
+                            "entityId": -1,
+                            "entityTypeId": 3,
+                            "priority": 1,
+                            "bidMultiplier": 2,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          },
+                          {
                             "entityId": -2,
                             "entityTypeId": 2,
                             "priority": 1,
@@ -182,7 +230,11 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "bundle-1",
-                            "entityIds": [1, 2, 3]
+                            "entityIds": [
+                              1,
+                              2,
+                              3
+                            ]
                           },
                           {
                             "entityId": 232,
@@ -192,11 +244,43 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "bundle-1",
-                            "entityIds": [1, 2, 3]
+                            "entityIds": [
+                              1,
+                              2,
+                              3
+                            ]
                           }
                         ]
                       }
                     }
+                  }
+                },
+                "Add more entities to an already-modelled dimension - omit the Others row, it already exists": {
+                  "description": "Add more entities to an already-modelled dimension - omit the Others row, it already exists",
+                  "value": {
+                    "actionWiseBidModelEntities": {
+                      "ADD": {
+                        "bidModelEntityDetails": [
+                          {
+                            "entityId": 129953,
+                            "entityTypeId": 1,
+                            "priority": 1,
+                            "bidMultiplier": 1,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          },
+                          {
+                            "entityId": 5778263,
+                            "entityTypeId": 1,
+                            "priority": 1,
+                            "bidMultiplier": 1,
+                            "spendRatio": 100,
+                            "spendRatioTypeId": 1
+                          }
+                        ]
+                      }
+                    },
+                    "baseBid": 35
                   }
                 },
                 "Update existing bid modelling": {
@@ -213,7 +297,13 @@
                             "spendRatioTypeId": 1,
                             "bundleName": "Bundle-1",
                             "bundleId": 52,
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           },
                           {
                             "bidModelDataId": 51,
@@ -230,7 +320,13 @@
                           {
                             "bidModelDataId": 53,
                             "bundleName": "Bundle-1",
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           }
                         ]
                       }
@@ -259,7 +355,13 @@
                           {
                             "bidModelDataId": 53,
                             "bundleName": "Bundle-1",
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           },
                           {
                             "bidModelDataId": 51,
@@ -275,7 +377,13 @@
                             "spendRatio": 100,
                             "spendRatioTypeId": 1,
                             "bundleName": "Bundle-1",
-                            "entityIds": [1, 2, 3, 4, 5]
+                            "entityIds": [
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
                           }
                         ]
                       }
@@ -287,7 +395,12 @@
                   "value": {
                     "actionWiseBidModelEntities": {
                       "DELETE": {
-                        "bidModelDataId": [1, 2, 3, 4]
+                        "bidModelDataId": [
+                          1,
+                          2,
+                          3,
+                          4
+                        ]
                       }
                     }
                   }
@@ -297,7 +410,12 @@
                   "value": {
                     "actionWiseBidModelEntities": {
                       "DELETE": {
-                        "bundleIds": [1, 2, 3, 4]
+                        "bundleIds": [
+                          1,
+                          2,
+                          3,
+                          4
+                        ]
                       }
                     }
                   }
@@ -335,7 +453,9 @@
                         ]
                       },
                       "DELETE": {
-                        "bundleIds": [1]
+                        "bundleIds": [
+                          1
+                        ]
                       }
                     }
                   }
@@ -344,8 +464,14 @@
                   "description": "Set include/exclude entities",
                   "value": {
                     "inclusionExclusionEntityMap": {
-                      "INCLUDE": [1],
-                      "EXCLUDE": [2, 3, 4]
+                      "INCLUDE": [
+                        1
+                      ],
+                      "EXCLUDE": [
+                        2,
+                        3,
+                        4
+                      ]
                     }
                   }
                 },
@@ -353,8 +479,14 @@
                   "description": "Update base bid with include/exclude entities",
                   "value": {
                     "inclusionExclusionEntityMap": {
-                      "INCLUDE": [1],
-                      "EXCLUDE": [2, 3, 4]
+                      "INCLUDE": [
+                        1
+                      ],
+                      "EXCLUDE": [
+                        2,
+                        3,
+                        4
+                      ]
                     },
                     "baseBid": 3
                   }
@@ -410,6 +542,17 @@
                       "errorObjects": [
                         {
                           "error": "At least one 'Other' entity is required if there are modelled entities"
+                        }
+                      ]
+                    }
+                  },
+                  "Duplicate Others row -- a dimension may have only one Others row; omit it on ADD requests after the first": {
+                    "description": "Duplicate Others row -- a dimension may have only one Others row; omit it on ADD requests after the first",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Only one 'Other' entity allowed"
                         }
                       ]
                     }
@@ -500,8 +643,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Fetch campaign metrics report by dimension Id",
-        "description": "Fetches and returns a detailed metrics report for a specified campaign and dimension,\nproviding granular insights such as impressions, clicks, eCPM, conversions, and additional breakdowns by the selected dimension.\nSupports advanced filtering, sorting, and pagination, and can return either downloadable report URLs or in-depth data tables depending on the request parameters.\n",
+        "summary": "List every entity (modelled or not) in a campaign's Bid Model dimension tab -- e.g. Open Exchange inventory, Creative, State",
+        "description": "This is the same data shown by the Bid Model UI's dimension tab (e.g. the Open Exchange tab): every entity serving on the campaign within the requested date window, whether or not it already has bid model settings. Use this endpoint -- not `getModelledItemsForCampaignAndDimensionId`, which only returns already-modelled rows -- to discover the entityIds you need before calling `manageBidModelling` to prioritize/model them.\n\nEach row's `modelled` flag and `bidModelData` object show whether that entity already has bid model settings (priority, spendRatio, etc.) applied. Use `searchField` for a single partial-match search (e.g. \".com\"), or `searchKeywords` to exact-match several target names/ids in one call (e.g. multiple publisher or app names).\n\n`startDate`/`endDate` determine which entities appear at all: an entity only shows up if it served within that window, so a narrow window (e.g. today only) may return far fewer entities than a wider one (e.g. the last 7 days).\n\nSupports advanced filtering, sorting, and pagination, and can return either downloadable report URLs or in-depth data tables depending on the request parameters.\nFor non-download requests, the response also includes a metricBaseline object with baseline values per metric for the requested date range, keyed by metric name.",
         "operationId": "fetchCampaignMetricsByDimension",
         "parameters": [
           {
@@ -517,19 +660,16 @@
           {
             "name": "dimensionId",
             "in": "path",
-            "description": "The dimension ID for which the report is being generated",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/DimensionId"
             }
           },
-    {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -540,13 +680,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -596,7 +734,10 @@
                     "timeZoneId": 29,
                     "pageNo": 1,
                     "sortBy": "-impressions",
-                    "bundleIds": [187, 186]
+                    "bundleIds": [
+                      187,
+                      186
+                    ]
                   }
                 },
                 "Advance Search": {
@@ -628,7 +769,7 @@
                       "conditions": [
                         {
                           "column": "impressions",
-                          "condition": "\u003C",
+                          "condition": "<",
                           "value": 1000
                         },
                         {
@@ -652,7 +793,7 @@
                       "conditions": [
                         {
                           "column": "impressions",
-                          "condition": "\u003C",
+                          "condition": "<",
                           "value": 1000
                         }
                       ]
@@ -761,6 +902,69 @@
                         {
                           "label": "Attributed Conversions Rate",
                           "value": "attributedConversionsRate"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Audience Listing Download file CSV": {
+                  "description": "Audience Listing Download file CSV",
+                  "value": {
+                    "startDate": 1751001600000,
+                    "endDate": 1753593599000,
+                    "timeZoneId": 29,
+                    "pageNo": 1,
+                    "sortBy": "-impressions",
+                    "download": {
+                      "fileType": "csv",
+                      "columns": [
+                        {
+                          "label": "ID",
+                          "value": "id"
+                        },
+                        {
+                          "label": "Audience Name",
+                          "value": "name"
+                        },
+                        {
+                          "label": "Audience Type",
+                          "value": "audienceType"
+                        },
+                        {
+                          "label": "Class Type",
+                          "value": "classType"
+                        },
+                        {
+                          "label": "Parent Audience ID",
+                          "value": "parentAudienceId"
+                        },
+                        {
+                          "label": "Status",
+                          "value": "audienceStatus"
+                        },
+                        {
+                          "label": "Modeling",
+                          "value": "modelled"
+                        },
+                        {
+                          "label": "Impressions",
+                          "value": "impressions"
+                        },
+                        {
+                          "label": "Clicks",
+                          "value": "clicks"
+                        },
+                        {
+                          "label": "Win Rate",
+                          "value": "winRate"
+                        },
+                        {
+                          "label": "CTR",
+                          "value": "CTR"
+                        },
+                        {
+                          "label": "Spend Distribution %",
+                          "value": "spentDistribution"
                         }
                       ]
                     }
@@ -919,6 +1123,107 @@
                       }
                     }
                   },
+                  "Case 2: Audience Listing": {
+                    "description": "Case 2: Audience Listing",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "recordsTotal": {
+                          "totalCount": 2,
+                          "impressions": 1000,
+                          "dataCost": 2.5,
+                          "winRate": 20.0,
+                          "clicks": 25,
+                          "eCPM": 12.0,
+                          "totalECPM": 15.0,
+                          "eCPC": 0.48,
+                          "totalECPC": 0.6,
+                          "mediaSpent": 12.0,
+                          "CTR": 2.5,
+                          "spent": 15.0,
+                          "conversionCount": 2,
+                          "conversionValue": 50,
+                          "attributedClickThroughConversions": 1,
+                          "attributedViewThroughConversions": 1,
+                          "costPerAttributedConversions": 7.5,
+                          "attributedConversionsRate": 8.0,
+                          "returnOnAdSpend": 333.33,
+                          "prebidCost": 1.0
+                        },
+                        "recordsList": [
+                          {
+                            "id": 54321,
+                            "name": "Political Voters - Segment A",
+                            "audienceStatus": "Active",
+                            "audienceType": "Matched Audience",
+                            "classType": "ID-Based",
+                            "parentAudienceId": null,
+                            "modelled": true,
+                            "targeted": true,
+                            "impressions": 1000,
+                            "clicks": 25,
+                            "winRate": 20.0,
+                            "CTR": 2.5,
+                            "eCPM": 12.0,
+                            "totalECPM": 15.0,
+                            "eCPC": 0.48,
+                            "totalECPC": 0.6,
+                            "mediaSpent": 12.0,
+                            "dataCost": 2.5,
+                            "prebidCost": 1.0,
+                            "spent": 15.0,
+                            "spentDistribution": 4.2,
+                            "conversionCount": 2,
+                            "conversionValue": 50,
+                            "attributedClickThroughConversions": 1,
+                            "attributedViewThroughConversions": 1,
+                            "costPerAttributedConversions": 7.5,
+                            "attributedConversionsRate": 8.0,
+                            "returnOnAdSpend": 333.33,
+                            "bidModelData": {
+                              "id": 19322,
+                              "priority": 3,
+                              "bidMultiplier": 1.5,
+                              "spendRatio": 100,
+                              "spendRatioTypeId": 1
+                            }
+                          },
+                          {
+                            "id": 65432,
+                            "name": "Lookalike - Household Income",
+                            "audienceStatus": "Active",
+                            "audienceType": "Lookalike Audience",
+                            "classType": "Non-ID-Based",
+                            "parentAudienceId": null,
+                            "modelled": false,
+                            "targeted": true,
+                            "impressions": 0,
+                            "clicks": 0,
+                            "winRate": 0.0,
+                            "CTR": 0.0,
+                            "eCPM": 0.0,
+                            "totalECPM": 0.0,
+                            "eCPC": 0.0,
+                            "totalECPC": 0.0,
+                            "mediaSpent": 0.0,
+                            "dataCost": 0.0,
+                            "prebidCost": 0.0,
+                            "spent": 0.0,
+                            "spentDistribution": 0.0,
+                            "conversionCount": 0,
+                            "conversionValue": 0,
+                            "attributedClickThroughConversions": 0,
+                            "attributedViewThroughConversions": 0,
+                            "costPerAttributedConversions": 0.0,
+                            "attributedConversionsRate": 0.0,
+                            "returnOnAdSpend": 0.0
+                          }
+                        ],
+                        "totalRecords": 2,
+                        "filteredRecords": 2
+                      }
+                    }
+                  },
                   "Bundle Listing": {
                     "description": "Bundle Listing",
                     "value": {
@@ -960,7 +1265,11 @@
                           {
                             "bundleId": 1,
                             "bundleName": "bundle1",
-                            "bundleEntityIds": [1, 2, 3],
+                            "bundleEntityIds": [
+                              1,
+                              2,
+                              3
+                            ],
                             "impressions": 25712,
                             "dataCost": 0,
                             "winRate": 99.4276875483372,
@@ -1264,12 +1573,11 @@
               "format": "int32"
             }
           },
-  {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1280,13 +1588,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1439,12 +1745,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1455,13 +1760,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1476,7 +1779,9 @@
                   "description": "Create bundle request body",
                   "value": {
                     "bundleName": "Bundle for campaign 1",
-                    "entityIds": [10895823]
+                    "entityIds": [
+                      10895823
+                    ]
                   }
                 }
               }
@@ -1622,12 +1927,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1638,13 +1942,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1658,13 +1960,21 @@
                 "Delete single bundle": {
                   "description": "Delete single bundle",
                   "value": {
-                    "bundleIds": [1]
+                    "bundleIds": [
+                      1
+                    ]
                   }
                 },
                 "Delete multiple bundle": {
                   "description": "Delete multiple bundle",
                   "value": {
-                    "bundleIds": [1, 2, 3, 4, 5]
+                    "bundleIds": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5
+                    ]
                   }
                 }
               }
@@ -1779,12 +2089,11 @@
               "format": "int32"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1795,13 +2104,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -1819,7 +2126,10 @@
                       {
                         "bundleId": 3,
                         "bundleName": "Bundle#3",
-                        "entityIds": [30, 31]
+                        "entityIds": [
+                          30,
+                          31
+                        ]
                       },
                       {
                         "bundleId": 4,
@@ -1827,7 +2137,10 @@
                       },
                       {
                         "bundleId": 5,
-                        "entityIds": [13, 14]
+                        "entityIds": [
+                          13,
+                          14
+                        ]
                       }
                     ]
                   }
@@ -1954,8 +2267,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "List modelled entities reporting with modelling data for a campaign",
-        "description": "Retrieves a list of modelled entities with reporting and their associated modelling data for the provided campaign ID.\nThe modelling data includes priority, spend ratio, spend ratio type, and bid multiplier for each dimension.\nAlso Bundle details are included if available with modelling data.\n",
+        "summary": "List only already-modelled entities and bundles for a campaign dimension -- returns empty until entities have been modelled",
+        "description": "Retrieves entities and bundles for the given campaign/dimension that already have bid model settings applied (priority, spend ratio, spend ratio type, bid multiplier), including the Others row and any bundle details.\n\nThis endpoint returns an empty result for any dimension that has not yet been modelled, regardless of the date range requested -- it does not discover un-modelled entities. To find entityIds to model (e.g. Open Exchange inventory that hasn't been prioritized yet), use the `fetchCampaignMetricsByDimension` operation instead, then call `manageBidModelling` to model them.",
         "operationId": "getModelledItemsForCampaignAndDimensionId",
         "parameters": [
           {
@@ -1972,20 +2285,16 @@
           {
             "name": "dimensionId",
             "in": "path",
-            "description": "The dimension ID for which the report is being generated",
             "required": true,
             "schema": {
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/DimensionId"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -1996,13 +2305,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -2052,7 +2359,10 @@
                     "timeZoneId": 29,
                     "pageNo": 1,
                     "sortBy": "-impressions",
-                    "bundleIds": [187, 186]
+                    "bundleIds": [
+                      187,
+                      186
+                    ]
                   }
                 },
                 "Advance Search": {
@@ -2191,7 +2501,7 @@
                       "conditions": [
                         {
                           "column": "impressions",
-                          "condition": "\u003C",
+                          "condition": "<",
                           "value": 1000
                         },
                         {
@@ -2215,11 +2525,21 @@
                       "conditions": [
                         {
                           "column": "impressions",
-                          "condition": "\u003C",
+                          "condition": "<",
                           "value": 1000
                         }
                       ]
                     }
+                  }
+                },
+                "Modeled Audiences Listing (dimensionId=14)": {
+                  "description": "Modeled Audiences Listing (dimensionId=14)",
+                  "value": {
+                    "startDate": 1751001600000,
+                    "endDate": 1753593599000,
+                    "timeZoneId": 29,
+                    "pageNo": 1,
+                    "sortBy": "+priority"
                   }
                 }
               }
@@ -2428,6 +2748,168 @@
                       }
                     }
                   },
+                  "Case 3: Modeled Audiences Listing (dimensionId=14)": {
+                    "description": "Case 3: Modeled Audiences Listing (dimensionId=14)",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "recordsTotal": {
+                          "totalCount": 5,
+                          "impressions": 9534,
+                          "winRate": 99.40569283703472,
+                          "clicks": 8573,
+                          "eCPM": 82.57879955947136,
+                          "totalECPM": 90.06778634361234,
+                          "eCPC": 0.0918355622302578,
+                          "totalECPC": 0.10016403534352035,
+                          "dataCost": 14.301,
+                          "mediaSpent": 787.306275,
+                          "CTR": 89.92028529473464,
+                          "spent": 858.706275,
+                          "conversionCount": 0,
+                          "conversionValue": 0,
+                          "returnOnAdSpend": 0.0,
+                          "bidImpressions": 9591,
+                          "prebidCost": 0.0,
+                          "spentDistribution": 0.0
+                        },
+                        "recordsList": [
+                          {
+                            "bundleId": 1627,
+                            "bundleName": "sample bundle",
+                            "bundleEntityIds": [
+                              1176057,
+                              1176058
+                            ],
+                            "entityRecordsList": [
+                              {
+                                "id": 1176058,
+                                "name": "Plan Failure Check 1_HCP_pl_Filtered",
+                                "modelled": false,
+                                "bundleId": 1627,
+                                "audienceStatus": "Ready",
+                                "audienceType": "Matched Audience",
+                                "classType": "ID-Based",
+                                "parentAudienceId": null,
+                                "targeted": true,
+                                "impressions": 4540,
+                                "clicks": 4534,
+                                "winRate": 99.30008748906387,
+                                "CTR": 99.86784140969164,
+                                "mediaSpent": 407.531,
+                                "spent": 446.121
+                              },
+                              {
+                                "id": 1176057,
+                                "name": "Plan Failure Check 1_HCP_data360_Filtered",
+                                "modelled": false,
+                                "bundleId": 1627,
+                                "audienceStatus": "Processing",
+                                "audienceType": "Matched Audience",
+                                "classType": "ID-Based",
+                                "parentAudienceId": null,
+                                "targeted": true,
+                                "impressions": 451,
+                                "clicks": 450,
+                                "winRate": 99.77876106194691,
+                                "CTR": 99.77827050997783,
+                                "mediaSpent": 40.139,
+                                "spent": 43.9725
+                              }
+                            ],
+                            "modelled": true,
+                            "bidModelData": {
+                              "id": 30544,
+                              "priority": 3,
+                              "bidMultiplier": 1.0,
+                              "spendRatio": 0
+                            },
+                            "impressions": 4991,
+                            "clicks": 4984,
+                            "winRate": 99.34315286624204,
+                            "CTR": 99.85974754558205,
+                            "mediaSpent": 447.67,
+                            "spent": 490.0935
+                          },
+                          {
+                            "id": 1176047,
+                            "name": "Plan Failure Check_HCP_pl_Filtered",
+                            "modelled": false,
+                            "bundleId": 0,
+                            "audienceStatus": "Ready",
+                            "audienceType": "Matched Audience",
+                            "classType": "ID-Based",
+                            "parentAudienceId": null,
+                            "targeted": true,
+                            "impressions": 3166,
+                            "clicks": 3158,
+                            "winRate": 99.24764890282131,
+                            "CTR": 99.74731522425773,
+                            "mediaSpent": 282.329,
+                            "spent": 309.24,
+                            "bidModelData": {
+                              "id": 30543,
+                              "priority": 2,
+                              "bidMultiplier": 1.0,
+                              "spendRatio": 0
+                            }
+                          },
+                          {
+                            "id": 1176059,
+                            "name": "Plan Failure Check 1_HCP_ro_Filtered",
+                            "modelled": false,
+                            "bundleId": 0,
+                            "audienceStatus": "Processing",
+                            "audienceType": "Matched Audience",
+                            "classType": "ID-Based",
+                            "parentAudienceId": null,
+                            "targeted": true,
+                            "impressions": 846,
+                            "clicks": 0,
+                            "winRate": 100.0,
+                            "CTR": 0.0,
+                            "mediaSpent": 35.1196875,
+                            "spent": 36.3886875,
+                            "bidModelData": {
+                              "id": 30542,
+                              "priority": 1,
+                              "bidMultiplier": 1.0,
+                              "spendRatio": 0
+                            }
+                          },
+                          {
+                            "id": -1,
+                            "name": "Others",
+                            "modelled": false,
+                            "bundleId": 0,
+                            "targeted": false,
+                            "impressions": 531,
+                            "clicks": 431,
+                            "winRate": 100.0,
+                            "CTR": 81.16760828625236,
+                            "mediaSpent": 22.1875875,
+                            "spent": 22.9840875,
+                            "bidModelData": {
+                              "id": 30545,
+                              "priority": 10,
+                              "bidMultiplier": 1.0,
+                              "spendRatio": 0
+                            }
+                          }
+                        ],
+                        "totalRecords": 5,
+                        "filteredRecords": 5,
+                        "campaignBidDetails": {
+                          "baseBid": null,
+                          "minBid": 1.0,
+                          "lastPerformanceCheck": null,
+                          "maxBid": 50.0,
+                          "currentPriority": null,
+                          "nextPerformanceCheck": null
+                        }
+                      }
+                    }
+                  },
                   "Bundle Listing": {
                     "description": "Bundle Listing",
                     "value": {
@@ -2469,7 +2951,11 @@
                           {
                             "bundleId": 1,
                             "bundleName": "bundle1",
-                            "bundleEntityIds": [1, 2, 3],
+                            "bundleEntityIds": [
+                              1,
+                              2,
+                              3
+                            ],
                             "impressions": 25712,
                             "dataCost": 0,
                             "winRate": 99.4276875483372,
@@ -2728,18 +3214,18 @@
     },
     "/api/v3/bm/bid-models/dimension/entity": {
       "post": {
+        "summary": "Look up which campaigns a set of entities are modelled in, for a given dimension",
         "tags": [
           "MCP"
         ],
         "description": "Retrieves the modelled entity for given dimension and entity ids with campaign data",
         "operationId": "getModelledEntityData",
         "parameters": [
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -2750,13 +3236,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -2771,14 +3255,24 @@
                   "description": "Request with valid dimensionId and entityIds for only getting modelled entity",
                   "value": {
                     "dimensionId": 10,
-                    "entityIds": [30200036, 30200031, 30200105, 4695]
+                    "entityIds": [
+                      30200036,
+                      30200031,
+                      30200105,
+                      4695
+                    ]
                   }
                 },
                 "Request with valid dimensionId and entityIds for getting modelled entity and campaign data": {
                   "description": "Request with valid dimensionId and entityIds for getting modelled entity and campaign data",
                   "value": {
                     "dimensionId": 10,
-                    "entityIds": [30200036, 30200031, 30200105, 4695],
+                    "entityIds": [
+                      30200036,
+                      30200031,
+                      30200105,
+                      4695
+                    ],
                     "includeCampaignInfo": true
                   }
                 },
@@ -2786,7 +3280,12 @@
                   "description": "Request with valid dimensionId and entityIds for getting modelled entity and campaign data and entityIds passed as groupIds",
                   "value": {
                     "dimensionId": 10,
-                    "entityIds": [30200036, 30200031, 30200105, 4695],
+                    "entityIds": [
+                      30200036,
+                      30200031,
+                      30200105,
+                      4695
+                    ],
                     "includeCampaignInfo": true,
                     "groupIdBased": true
                   }
@@ -2810,19 +3309,38 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "modelledEntityIds": [30200036, 30200031, 30200105],
+                        "modelledEntityIds": [
+                          30200036,
+                          30200031,
+                          30200105
+                        ],
                         "modelledCampaignDetails": [
                           {
                             "entityId": 30200036,
-                            "campaignIds": [555804, 556956, 556891, 557141, 560100]
+                            "campaignIds": [
+                              555804,
+                              556956,
+                              556891,
+                              557141,
+                              560100
+                            ]
                           },
                           {
                             "entityId": 30200031,
-                            "campaignIds": [556979, 555927, 555926, 560102, 555925, 555748]
+                            "campaignIds": [
+                              556979,
+                              555927,
+                              555926,
+                              560102,
+                              555925,
+                              555748
+                            ]
                           },
                           {
                             "entityId": 30200105,
-                            "campaignIds": [555787]
+                            "campaignIds": [
+                              555787
+                            ]
                           },
                           {
                             "entityId": 4695,
@@ -2909,8 +3427,8 @@
                 "example": {
                   "success": true,
                   "data": {
-                    "totalRecords": 5,
-                    "filteredRecords": 5,
+                    "totalRecords": 6,
+                    "filteredRecords": 6,
                     "dimensions": [
                       {
                         "name": "creative",
@@ -2938,7 +3456,7 @@
                             "id": 4,
                             "label": "Open Exchange",
                             "order": 2,
-                            "modellingEnabled": false
+                            "modellingEnabled": true
                           },
                           {
                             "name": "publisher_category",
@@ -3008,6 +3526,13 @@
                         "label": "Exchange",
                         "order": 5,
                         "modellingEnabled": false
+                      },
+                      {
+                        "name": "audience",
+                        "id": 14,
+                        "label": "Audience",
+                        "order": 6,
+                        "modellingEnabled": true
                       }
                     ]
                   }
@@ -3024,7 +3549,7 @@
           "MCP"
         ],
         "summary": "Retrieves the total spent dimension-wise for a specified campaign",
-        "description": "Retrieves the total spent dimension-wise for a specified campaign, supporting filtering by dimension ID through a query parameter, For ",
+        "description": "Retrieves the total and dimension-wise spent for a specified campaign. Supports filtering by dimension ID through a query parameter; the response includes the spent for each entity in that dimension.",
         "operationId": "getDimensionWiseEntitySpentForCampaign_1",
         "parameters": [
           {
@@ -3045,12 +3570,11 @@
               "type": "integer"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3061,13 +3585,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -3098,9 +3620,7 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "entityWiseSpent": {
-
-                        }
+                        "entityWiseSpent": {}
                       }
                     }
                   }
@@ -3191,7 +3711,7 @@
           "MCP"
         ],
         "summary": "This API fetches list of bundles linked to a specific campaign and dimension, along with their entities details and modelling status.\nIt supports optional filtering by bundle name, bundle ID, and dimension ID\n",
-        "description": "This API retrieves bundle details for a given campaign and dimension.\nIt returns a list of bundles, including their associated entities and modelling status.\nYou can optionally filter results by bundle name or ID using the search field.\nAdditionally, you can filter by dimension ID — if not provided, all bundles for the campaign are returned\n",
+        "description": "This API retrieves bundle details for a given campaign and dimension.\nIt returns a list of bundles, including their associated entities and modelling status.\nYou can optionally filter results by bundle name or ID using the search field.\nAdditionally, you can filter by dimension ID \u2014 if not provided, all bundles for the campaign are returned\n",
         "operationId": "getBundleDetailsList_1",
         "parameters": [
           {
@@ -3224,12 +3744,11 @@
               "type": "string"
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3240,13 +3759,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -3268,14 +3785,22 @@
                           "bundleId": 12,
                           "bundleName": "bundle#1",
                           "dimensionId": 1,
-                          "entityIds": [7, 8, 9],
+                          "entityIds": [
+                            7,
+                            8,
+                            9
+                          ],
                           "modellingApplied": false
                         },
                         {
                           "bundleId": 13,
                           "bundleName": "bundle#2",
                           "dimensionId": 2,
-                          "entityIds": [1, 2, 3],
+                          "entityIds": [
+                            1,
+                            2,
+                            3
+                          ],
                           "modellingApplied": true
                         }
                       ]
@@ -3290,14 +3815,22 @@
                           "bundleId": 12,
                           "bundleName": "bundle#1",
                           "dimensionId": 1,
-                          "entityIds": [7, 8, 9],
+                          "entityIds": [
+                            7,
+                            8,
+                            9
+                          ],
                           "modellingApplied": false
                         },
                         {
                           "bundleId": 13,
                           "bundleName": "bundle#2",
                           "dimensionId": 1,
-                          "entityIds": [1, 2, 3],
+                          "entityIds": [
+                            1,
+                            2,
+                            3
+                          ],
                           "modellingApplied": true
                         }
                       ]
@@ -3312,14 +3845,22 @@
                           "bundleId": 12,
                           "bundleName": "bundle#1",
                           "dimensionId": 1,
-                          "entityIds": [7, 8, 9],
+                          "entityIds": [
+                            7,
+                            8,
+                            9
+                          ],
                           "modellingApplied": false
                         },
                         {
                           "bundleId": 13,
                           "bundleName": "bundle#2",
                           "dimensionId": 1,
-                          "entityIds": [1, 2, 3],
+                          "entityIds": [
+                            1,
+                            2,
+                            3
+                          ],
                           "modellingApplied": true
                         }
                       ]
@@ -3429,24 +3970,29 @@
             "description": "List of attributes to be fetched, valid values are : [\"totalCount\",\"modelledCount\",\"modelledIds\"]",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
             "name": "dimensionIds",
             "in": "query",
-            "description": "List of comma separated dimension IDs to fetch statistics for, valid values are : [1 - Creative, 10 - State, 11 - City, 12 - Zip, 3 - Deal, 4 - Open Exchange, 5 - Publisher Category, 13 - Exchange, 7 - Traffic Type, 8 - Device Type]",
-            "required": true,
+            "description": "List of comma separated dimension IDs to fetch statistics for, valid values are : [1 - Creative, 10 - State, 11 - City, 12 - Zip, 3 - Deal, 4 - Open Exchange, 5 - Publisher Category, 13 - Exchange, 7 - Traffic Type, 8 - Device Type, 14 - Audience]",
+            "required": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
             }
           },
-           {
+          {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
             "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -3457,13 +4003,11 @@
             "name": "X-IAA-OW-ID",
             "in": "header",
             "description": "Organization Workspace Id",
-            "example": 1,
-            "required": true,
             "style": "simple",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "format": "int64",
-              "example": 1
+              "example": "1"
             }
           }
         ],
@@ -3489,7 +4033,11 @@
                         "1": {
                           "totalCount": 5,
                           "modelledCount": 3,
-                          "modelledIds": [1, 2, 3]
+                          "modelledIds": [
+                            1,
+                            2,
+                            3
+                          ]
                         },
                         "12": {
                           "totalCount": 0,
@@ -3509,7 +4057,13 @@
                         "4": {
                           "totalCount": 10,
                           "modelledCount": 5,
-                          "modelledIds": [1, 2, 3, 4, 5]
+                          "modelledIds": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                          ]
                         },
                         "5": {
                           "totalCount": 0,
@@ -3590,9 +4144,21 @@
     "schemas": {
       "DimensionId": {
         "type": "integer",
-        "description": "Supported dimensions: Creative=1; Location: State=2, City=3, ZipCode=4; Inventory: OpenExchange=5, PublisherCategory=6, DealIds=7; Device: TrafficType=8, DeviceType=9; AdExchange=10",
+        "description": "Unique Identifier for Dimension. Valid values (per the `getDimensions` operation): [1 - Creative, 3 - Deal, 4 - Open Exchange, 5 - Publisher Category, 7 - Traffic Type, 8 - Device Type, 10 - State, 11 - City, 12 - Zip, 13 - Exchange, 14 - Audience]. Note: 2 (Inventory) and 6 (Device) are parent category IDs, not valid values for this parameter.",
         "format": "int32",
-        "enum": [1,3,4,5,7,8,9,10,11,12,13]
+        "enum": [
+          1,
+          3,
+          4,
+          5,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
       },
       "CommonResponseString": {
         "type": "object",
@@ -3642,174 +4208,330 @@
           }
         }
       },
-  "BidModelManagement": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "actionWiseBidModelEntities": { "$ref": "#/components/schemas/BidModelActionWise" },
-      "inclusionExclusionEntityMap": { "$ref": "#/components/schemas/InclusionExclusionEntityMap" },
-      "baseBid": { "type": "number", "format": "double", "minimum": 0 }
-    },
-    "description": "Any combination of actions + optional include/exclude + optional baseBid."
-  },
-
-  "BidModelActionWise": {
-    "type": "object",
-    "description": "Supply one or more of ADD, UPDATE, DELETE in the same payload.",
-    "additionalProperties": false,
-    "minProperties": 1,
-    "properties": {
-      "ADD":    { "$ref": "#/components/schemas/BidModelAddActionDocs" },
-      "UPDATE": { "$ref": "#/components/schemas/BidModelUpdateActionDocs" },
-      "DELETE": { "$ref": "#/components/schemas/BidModelDeleteActionDocs" }
-    }
-  },
-
-  "BidModelAddActionDocs": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": ["bidModelEntityDetails"],
-    "properties": {
-      "bidModelEntityDetails": {
-        "type": "array",
-        "minItems": 1,
-        "items": { "$ref": "#/components/schemas/BidModelAddItem" },
-        "description": "List of items to add (single entities or bundles)."
-      }
-    }
-  },
-
-  "BidModelAddItem": {
-    "oneOf": [
-      { "$ref": "#/components/schemas/BidModelSingleEntityAdd" },
-      { "$ref": "#/components/schemas/BidModelBundleEntityAdd" }
-    ],
-    "description": "One added item: either a single entity (entityTypeId=1) or a bundle (entityTypeId=2)."
-  },
-
-"BidModelSingleEntityAdd": {
-  "type": "object",
-  "additionalProperties": false,
-  "required": ["entityId", "entityTypeId"],
-  "properties": {
-    "entityId": { "type": "integer", "format": "int32" },
-    "entityTypeId": {
-      "type": "integer",
-      "enum": [1, 3],
-      "description": "1 = single entity, 3 = other (unbundled sentinel)"
-    },
-    "priority": { "type": "integer", "minimum": 1, "maximum": 10 },
-    "bidMultiplier": { "type": "number", "minimum": 0.1, "maximum": 100 },
-    "spendRatio": { "type": "integer", "minimum": 1, "maximum": 100 },
-    "spendRatioTypeId": {
-      "type": "integer",
-      "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
-      "format": "int32",
-      "enum": [1, 2]
-    }
-  }
-},
-
-"BidModelBundleEntityAdd": {
-  "type": "object",
-  "additionalProperties": false,
-  "required": ["entityId", "entityTypeId"],
-  "properties": {
-    "entityId": { "type": "integer", "format": "int32", "description": "Negative => create; positive => reference existing." },
-    "entityTypeId": { "type": "integer", "enum": [2], "description": "2 = bundle" },
-    "priority": { "type": "integer", "minimum": 1, "maximum": 10 },
-    "bidMultiplier": { "type": "number", "minimum": 0.1, "maximum": 100 },
-    "spendRatio": { "type": "integer", "minimum": 1, "maximum": 100 },
-    "spendRatioTypeId": {
-      "type": "integer",
-      "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
-      "format": "int32",
-      "enum": [1, 2]
-    },
-    "bundleName": { "type": "string", "minLength": 1, "description": "Optional in examples; server may infer." },
-    "entityIds": {
-      "type": "array", "minItems": 1, "uniqueItems": true,
-      "items": { "type": "integer", "format": "int32", "minimum": 1 },
-      "description": "Optional in examples; required by server only when composing a new bundle."
-    }
-  }
-},
-
-  "BidModelUpdateActionDocs": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": ["bidModelEntityDetails"],
-    "properties": {
-      "bidModelEntityDetails": {
-        "type": "array",
-        "minItems": 1,
-        "items": { "$ref": "#/components/schemas/BidModelUpdateItem" }
-      }
-    },
-    "description": "UPDATE action payload: partial updates keyed by bidModelDataId."
-  },
-
-"BidModelUpdateItem": {
-  "type": "object",
-  "additionalProperties": false,
-  "required": ["bidModelDataId"],
-  "properties": {
-    "bidModelDataId": { "type": "integer", "minimum": 1 },
-    "priority": { "type": "integer", "minimum": 1, "maximum": 10 },
-    "bidMultiplier": { "type": "number", "minimum": 0.1, "maximum": 100 },
-    "spendRatio": { "type": "integer", "minimum": 0, "maximum": 100 },
-    "spendRatioTypeId": {
-      "type": "integer",
-      "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
-      "format": "int32",
-      "enum": [1, 2]
-    },
-    "bundleName": { "type": "string", "minLength": 1 },
-    "bundleId": { "type": "integer", "minimum": 1 },
-    "entityIds": {
-      "type": "array", "minItems": 1, "uniqueItems": true,
-      "items": { "type": "integer", "minimum": 1 }
-    }
-  }
-},
-
-  "BidModelDeleteActionDocs": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "bundleIds": {
-        "type": "array", "minItems": 1, "uniqueItems": true,
-        "items": { "type": "integer", "minimum": 1, "description": "Bundle IDs to delete" }
+      "BidModelManagement": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "actionWiseBidModelEntities": {
+            "$ref": "#/components/schemas/BidModelActionWise"
+          },
+          "inclusionExclusionEntityMap": {
+            "$ref": "#/components/schemas/InclusionExclusionEntityMap"
+          },
+          "baseBid": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          }
+        },
+        "description": "Any combination of actions + optional include/exclude + optional baseBid."
       },
-      "deleteDimensionId": { "$ref": "#/components/schemas/DimensionId" },
-      "bidModelDataId": {
-        "type": "array", "minItems": 1, "uniqueItems": true,
-        "items": { "type": "integer", "minimum": 1, "description": "Bid Model Data IDs to delete" }
-      }
-    },
-    "anyOf": [
-      { "required": ["bundleIds"] },
-      { "required": ["deleteDimensionId"] },
-      { "required": ["bidModelDataId"] }
-    ],
-    "description": "DELETE action payload (supply one or more targets)."
-  },
-
-  "InclusionExclusionEntityMap": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "INCLUDE": {
-        "type": "array", "minItems": 1, "uniqueItems": true,
-        "items": { "type": "integer", "minimum": 1, "format": "int32" }
+      "BidModelActionWise": {
+        "type": "object",
+        "description": "Supply one or more of ADD, UPDATE, DELETE in the same payload.",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "ADD": {
+            "$ref": "#/components/schemas/BidModelAddActionDocs"
+          },
+          "UPDATE": {
+            "$ref": "#/components/schemas/BidModelUpdateActionDocs"
+          },
+          "DELETE": {
+            "$ref": "#/components/schemas/BidModelDeleteActionDocs"
+          }
+        }
       },
-      "EXCLUDE": {
-        "type": "array", "minItems": 1, "uniqueItems": true,
-        "items": { "type": "integer", "minimum": 1, "format": "int32" }
-      }
-    },
-    "description": "Optional include/exclude lists."
-  },
+      "BidModelAddActionDocs": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bidModelEntityDetails"
+        ],
+        "properties": {
+          "bidModelEntityDetails": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/BidModelAddItem"
+            },
+            "description": "List of items to add (single entities or bundles)."
+          }
+        }
+      },
+      "BidModelAddItem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/BidModelSingleEntityAdd"
+          },
+          {
+            "$ref": "#/components/schemas/BidModelBundleEntityAdd"
+          }
+        ],
+        "description": "One added item: either a single entity (entityTypeId=1) or a bundle (entityTypeId=2)."
+      },
+      "BidModelSingleEntityAdd": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entityId",
+          "entityTypeId",
+          "bidMultiplier"
+        ],
+        "properties": {
+          "entityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "entityTypeId": {
+            "type": "integer",
+            "enum": [
+              1,
+              3
+            ],
+            "description": "1 = single entity, 3 = other (unbundled sentinel)"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Priority (1\u201310). Required when `spendRatioTypeId = 1` (Flexible), or when the target dimension is Publisher Category (5) or Audience (14). Must be omitted when `spendRatioTypeId = 2` (Fixed)."
+          },
+          "bidMultiplier": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 100,
+            "description": "Bid Multiplier (0.1\u2013100). Always required for ADD."
+          },
+          "spendRatio": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Spend Ratio (1\u2013100). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely -- providing it returns a validation error."
+          },
+          "spendRatioTypeId": {
+            "type": "integer",
+            "description": "Spend Ratio Type Id (`1` = Flexible, `2` = Fixed). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely (it is defaulted internally to Flexible) -- providing it returns a validation error.",
+            "format": "int32",
+            "enum": [
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "BidModelBundleEntityAdd": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entityId",
+          "entityTypeId",
+          "bidMultiplier"
+        ],
+        "properties": {
+          "entityId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Negative => create; positive => reference existing."
+          },
+          "entityTypeId": {
+            "type": "integer",
+            "enum": [
+              2
+            ],
+            "description": "2 = bundle"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Priority (1\u201310). Required when `spendRatioTypeId = 1` (Flexible), or when the target dimension is Publisher Category (5) or Audience (14). Must be omitted when `spendRatioTypeId = 2` (Fixed)."
+          },
+          "bidMultiplier": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 100,
+            "description": "Bid Multiplier (0.1\u2013100). Always required for ADD."
+          },
+          "spendRatio": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Spend Ratio (1\u2013100). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely -- providing it returns a validation error."
+          },
+          "spendRatioTypeId": {
+            "type": "integer",
+            "description": "Spend Ratio Type Id (`1` = Flexible, `2` = Fixed). Required for ADD on every dimension except Publisher Category (5) and Audience (14), where it must be omitted entirely (it is defaulted internally to Flexible) -- providing it returns a validation error.",
+            "format": "int32",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "bundleName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional in examples; server may infer."
+          },
+          "entityIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            },
+            "description": "Optional in examples; required by server only when composing a new bundle."
+          }
+        }
+      },
+      "BidModelUpdateActionDocs": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bidModelEntityDetails"
+        ],
+        "properties": {
+          "bidModelEntityDetails": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/BidModelUpdateItem"
+            }
+          }
+        },
+        "description": "UPDATE action payload: partial updates keyed by bidModelDataId."
+      },
+      "BidModelUpdateItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bidModelDataId"
+        ],
+        "properties": {
+          "bidModelDataId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "bidMultiplier": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 100
+          },
+          "spendRatio": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "spendRatioTypeId": {
+            "type": "integer",
+            "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
+            "format": "int32",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "bundleName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bundleId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "entityIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "BidModelDeleteActionDocs": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bundleIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Bundle IDs to delete"
+            }
+          },
+          "deleteDimensionId": {
+            "$ref": "#/components/schemas/DimensionId"
+          },
+          "bidModelDataId": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Bid Model Data IDs to delete"
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "bundleIds"
+            ]
+          },
+          {
+            "required": [
+              "deleteDimensionId"
+            ]
+          },
+          {
+            "required": [
+              "bidModelDataId"
+            ]
+          }
+        ],
+        "description": "DELETE action payload (supply one or more targets)."
+      },
+      "InclusionExclusionEntityMap": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "INCLUDE": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "format": "int32"
+            }
+          },
+          "EXCLUDE": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Optional include/exclude lists."
+      },
       "DownloadRequest": {
         "type": "object",
         "properties": {
@@ -3841,10 +4563,10 @@
             "enum": [
               "=",
               "!=",
-              "\u003C",
-              "\u003E",
-              "\u003C=",
-              "\u003E="
+              "<",
+              ">",
+              "<=",
+              ">="
             ]
           },
           "value": {
@@ -3893,15 +4615,21 @@
           },
           "startDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Start of the report window, epoch milliseconds (inclusive).",
+            "example": 1751001600000
           },
           "endDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "End of the report window, epoch milliseconds (inclusive).",
+            "example": 1753593599000
           },
-          "timezoneId": {
+          "timeZoneId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Timezone ID used to render the report's date boundaries. Note: report date-range bucketing is currently driven by the campaign's own configured timezone rather than this field.",
+            "example": 29
           },
           "isExcluded": {
             "type": "integer",
@@ -3911,7 +4639,12 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Filters results to the given Open Exchange inventory types. Allowed values: \"Site\", \"Android App\", \"IOS App\", \"Other App\". Can be empty or omitted if no filtering is required.",
+            "example": [
+              "Site",
+              "Android App"
+            ]
           },
           "download": {
             "$ref": "#/components/schemas/DownloadRequest"
@@ -3930,7 +4663,13 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Exact-match keywords checked against entity name/id columns in a single call (a row matches if it exactly matches, case-insensitively, ANY keyword in the list) -- use this instead of repeated single-keyword `searchField` calls when checking for several target names at once, e.g. multiple publisher/app names. Unlike `searchField`, this does not do partial/substring matching.",
+            "example": [
+              "Hulu",
+              "Peacock",
+              "Paramount+"
+            ]
           },
           "performanceFilters": {
             "$ref": "#/components/schemas/PerformanceFilterRequest"
@@ -4153,28 +4892,31 @@
             "maximum": 10,
             "minimum": 1,
             "type": "integer",
-            "description": "Priority (1–10)",
+            "description": "Priority (1\u201310)",
             "format": "int32"
           },
           "bidMultiplier": {
             "maximum": 100,
             "minimum": 0.1,
             "type": "number",
-            "description": "Bid multiplier (0.1–100)",
+            "description": "Bid multiplier (0.1\u2013100)",
             "format": "double"
           },
-        "spendRatio": {
+          "spendRatio": {
             "maximum": 100,
             "minimum": 1,
             "type": "integer",
-            "description": "Spend Ratio (1–100) (optional, requires spendRatioTypeId)",
+            "description": "Spend Ratio (1\u2013100) (optional, requires spendRatioTypeId)",
             "format": "int32"
           },
           "spendRatioTypeId": {
             "type": "integer",
             "description": "Spend Ratio Type Id, 2=Fixed or 1=Flexible (required if spendRatio provided)",
             "format": "int32",
-            "enum": [1, 2]
+            "enum": [
+              1,
+              2
+            ]
           }
         },
         "description": "Bid model values associated with a row"
@@ -4665,7 +5407,10 @@
             "description": "Indicates if the items are excluded (1) or included (0)",
             "format": "int32",
             "example": 0,
-            "enum": [0, 1]
+            "enum": [
+              0,
+              1
+            ]
           }
         },
         "description": "Request to include or exclude entities"
@@ -4780,7 +5525,11 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of entity IDs for which modelled data should be retrieved",
-            "example": [1001, 1002, 1003],
+            "example": [
+              1001,
+              1002,
+              1003
+            ],
             "items": {
               "type": "integer",
               "description": "Set of entity IDs for which modelled data should be retrieved",
@@ -4791,7 +5540,10 @@
             "uniqueItems": true,
             "type": "array",
             "description": "Set of entity IDs to be removed from the modelled data",
-            "example": [1004, 1005],
+            "example": [
+              1004,
+              1005
+            ],
             "items": {
               "type": "integer",
               "description": "Set of entity IDs to be removed from the modelled data",
@@ -4875,7 +5627,11 @@
           "bundleIds": {
             "type": "array",
             "description": "List of Bundle IDs to be deleted",
-            "example": [1, 2, 3],
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "description": "List of Bundle IDs to be deleted",
@@ -5011,34 +5767,20 @@
       },
       "DimensionsResponse": {
         "required": [
-          "dimensions",
-          "filteredRecords",
-          "totalRecords"
+          "data",
+          "success"
         ],
         "type": "object",
         "properties": {
-          "totalRecords": {
-            "minimum": 0,
-            "type": "integer",
-            "description": "Total number of dimensions available",
-            "format": "int32"
+          "success": {
+            "type": "boolean",
+            "description": "Operation success"
           },
-          "filteredRecords": {
-            "minimum": 0,
-            "type": "integer",
-            "description": "Number of dimensions returned after filtering",
-            "format": "int32"
-          },
-          "dimensions": {
-            "minItems": 1,
-            "type": "array",
-            "description": "Top-level dimensions",
-            "items": {
-              "$ref": "#/components/schemas/DimensionNode"
-            }
+          "data": {
+            "$ref": "#/components/schemas/DimensionsData"
           }
         },
-        "description": "Dimensions catalog with optional nested subdimensions"
+        "description": "CommonResponse wrapper for the dimensions catalog"
       },
       "EntityWiseSpentResponse": {
         "type": "object",
@@ -5187,6 +5929,37 @@
           }
         },
         "description": "Campaign Dimension Count Statistics"
+      },
+      "DimensionsData": {
+        "required": [
+          "dimensions",
+          "filteredRecords",
+          "totalRecords"
+        ],
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "Total number of dimensions available",
+            "format": "int32"
+          },
+          "filteredRecords": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "Number of dimensions returned after filtering",
+            "format": "int32"
+          },
+          "dimensions": {
+            "minItems": 1,
+            "type": "array",
+            "description": "Top-level dimensions",
+            "items": {
+              "$ref": "#/components/schemas/DimensionNode"
+            }
+          }
+        },
+        "description": "Dimensions catalog with optional nested subdimensions"
       }
     }
   }

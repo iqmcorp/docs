@@ -1,0 +1,5170 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "2.0.0",
+    "description": "MCP Finance API Specification",
+    "contact": {
+      "name": "IQM Support",
+      "url": "https://iqm.com/contact/",
+      "email": "support@iqm.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.iqm.com",
+      "description": "IQM API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MCP",
+      "description": "MCP API endpoints"
+    }
+  ],
+  "paths": {
+    "/api/v3/fa/pay-invoice": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Mark Invoice As Paid",
+        "description": "Records a payment against the specified invoice. Supports payment as funds or via configured payment methods.",
+        "operationId": "payInvoice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PayInvoiceMultipartRequest",
+                "required": [
+                  "invoiceId",
+                  "isCustomerRequest",
+                  "owId",
+                  "paymentAmount",
+                  "paymentType"
+                ]
+              },
+              "example": {
+                "owId": 200485,
+                "invoiceId": 32,
+                "paymentAmount": 100,
+                "paymentType": 1,
+                "isCustomerRequest": true,
+                "paymentDate": "2025-09-28",
+                "paymentMode": 2,
+                "transactionId": "TRX-12345",
+                "bankName": "JP Morgan",
+                "paymentProof": "<binary file>"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice status is not in Processing, Unpaid and Partially Paid state"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Payment added Successfully."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/organization/margin-settings": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API is used to get margin settings of the workspace",
+        "description": "This API can be used by workspace organization users to get margin related settings.\nFor example, workspace can view default margin which would be applied on newly onboarded advertiser.",
+        "operationId": "getMarginSettings",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarginSettingsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "totalRecords": 2,
+                    "data": [
+                      {
+                        "marginTypeId": 1,
+                        "marginType": "Gross Margin",
+                        "marginValue": 20
+                      }
+                    ],
+                    "filteredRecords": 1
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access this api"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API is used to update margin settings of the workspace",
+        "description": "This API can be used by workspace organization users to update margin related settings.\nFor example, workspace can set default margin and it will applied on newly onboarded advertiser.\n\n---\n\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| marginTypeId | Integer | Margin type id. 1 - Gross margin. |\n| marginValue | Integer | Margin value. It should be between 1 to 99. |\n",
+        "operationId": "updateMarginSettings",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarginDetailRequest",
+                "required": [
+                  "marginTypeId",
+                  "marginValue"
+                ]
+              },
+              "examples": {
+                "Update gross margin": {
+                  "description": "Update gross margin",
+                  "value": {
+                    "marginTypeId": 1,
+                    "marginValue": 10
+                  }
+                },
+                "Invalid margin type id": {
+                  "description": "Invalid margin type id",
+                  "value": {
+                    "marginTypeId": 2,
+                    "marginValue": 10
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Margin settings updated successfully."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access this api"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid marginTypeId : 2"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/email-invoice/{owId}/{invoiceId}": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Email Invoice",
+        "description": "Sends the specified invoice to the customer via email.",
+        "operationId": "emailInvoice_1",
+        "parameters": [
+          {
+            "name": "owId",
+            "in": "path",
+            "description": "Customer owId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "Invoice id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Invoice e-mail sent successfully."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/third-party-cost": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Add or Update Third Party Cost",
+        "description": "This API allows Workspace (WS) organization users to add or update third-party cost details. The API supports the following scenarios: 1) A WS user setting or updating the default third-party cost for their own workspace, and 2) A WS user setting or updating the third-party cost for an advertiser under the same workspace. If the WS user is setting or updating the cost for self, the owId can be passed as null and will be derived from the logged-in user context. For advertiser-level cost configuration, owId must be provided explicitly. The API validates user access and organization type before processing the request. If a third-party cost already exists for the given owId, the existing cost will be updated; otherwise, a new third-party cost record will be created. Upon successful add or update, the customer configuration is refreshed in Redis and an activity log is generated accordingly.| owId | Integer | OW ID of the workspace or advertiser for which the cost is being added or updated (optional for WS self, required for advertiser). || cost | Double | Third-party cost value to be added or updated (required, range >0 and <=999). |",
+        "operationId": "addThirdPartyCost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThirdPartyCostRequestVO",
+                "required": [
+                  "cost",
+                  "owId"
+                ]
+              },
+              "examples": {
+                "Add or Update Third Party Cost for Advertiser": {
+                  "description": "Add or Update Third Party Cost for Advertiser",
+                  "value": {
+                    "owId": 123456,
+                    "cost": 150
+                  }
+                },
+                "Add or Update Default Third Party Cost for Workspace Self": {
+                  "description": "Add or Update Default Third Party Cost for Workspace Self",
+                  "value": {
+                    "owId": null,
+                    "cost": 150
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Third-party cost added or updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "message": "3rd party cost added successfully."
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid or inaccessible customer ow id passed.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access provided customer details."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/edit-margin": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API is used to edit customer or bid shading margin details based on margin type id",
+        "description": "Edits customer or bid shading margin details based on the specified margin type ID. Updates the default margin and applies it to campaign-level margins.",
+        "operationId": "editCustomerMargin",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignMarginInternalRequestVO",
+                "required": [
+                  "marginTypeId",
+                  "marginValue",
+                  "owId"
+                ]
+              },
+              "example": {
+                "owId": 202318,
+                "marginTypeId": 1,
+                "marginValue": 15
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/ad-serving-cost": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Add Ad Serving Cost",
+        "description": "This API allows super organization users to add ad serving costs for a specific customer. The API validates the user's access and updates the customer configuration accordingly.| owId              | Integer | Customer's ow id for whom the cost is being added (required). || imageCreativeCost | Double  | Ad serving cost for iqm hosted image creatives (required).    || videoCreativeCost | Double  | Ad serving cost for iqm hosted video creatives (required).    || audioCreativeCost | Double  | Ad serving cost for iqm hosted audio creatives (required).    || html5CreativeCost | Double  | Ad serving cost for iqm hosted html5 creatives (required).    |",
+        "operationId": "addAdServingCost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdServingCostRequestVO"
+              },
+              "examples": {
+                "Add Ad Serving Cost Request": {
+                  "description": "Add Ad Serving Cost Request",
+                  "value": {
+                    "owId": 123456,
+                    "imageCreativeCost": 50,
+                    "videoCreativeCost": 100,
+                    "audioCreativeCost": 75,
+                    "html5CreativeCost": 85
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Ad serving cost added successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "message": "Ad serving cost added successfully."
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid/Inaccessible customer ow id passed.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access provided customer details."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-settings/{invoiceId}": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Save/Update Invoice Settings",
+        "description": "Updates the invoice settings for the logged-in organization workspace, including company details, payment terms, and payment methods. Note: the 'invoiceTaxData' field in the request body is accepted but not persisted by this endpoint.",
+        "operationId": "updateInvoiceSettingsDetailsForOrganization",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "Invoice template ID from the /ua/invoice API. This is not a billing invoice ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "isWhiteLabel",
+            "in": "query",
+            "description": "Default false. True when request is from organization white-label settings",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditInvoiceDetailVO",
+                "required": [
+                  "invoiceId",
+                  "owId"
+                ]
+              },
+              "example": {
+                "invoiceTitle": "The Alchemist",
+                "invoiceCompanyAddress": "42, 6th Avenue, New york, NY",
+                "email": "shraddha.p+alchemist@iqm.com",
+                "website": "www.alchemist.com",
+                "invoiceDescription": "Dear Customer, Greetings from The Alchemist, we are writing to provice you an electronic invoice for your use of services.",
+                "termsAndConditions": "Please make the payment in 30 days or your account might be put on hold",
+                "paymentTerm": "30",
+                "invoiceFooter": "The Alchemist | 12.234.56.789 | USA",
+                "paypalAccountId": "thealchemistfinance@paypal",
+                "chequeCompanyName": "The Alchemist Company",
+                "chequeCompanyAddress": "45, Fifth Avenue, NY, USA",
+                "wireTransferCompanyName": "The Alchemist",
+                "bankName": "JP Morgan Chase Bank",
+                "accountNumber": "670669295",
+                "bankAddress": "498 7th Avenue New York NY",
+                "companyTaxId": "202130INGST",
+                "companyTaxName": "GSTIN"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceUpdateResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "invoiceId": 1,
+                    "message": "Invoice details updated successfully"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice with the provided ID does not exists"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice does not belong to the logged in organization workspace"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-cancel/{invoiceId}": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Cancel Invoice",
+        "description": "Cancels or rejects a pending/unpaid invoice with an action note explaining the reason.",
+        "operationId": "cancelInvoice",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "Invoice id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceStatusUpdateVO",
+                "required": [
+                  "actionNote"
+                ]
+              },
+              "example": {
+                "actionNote": "cancelling invoice"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Only Pending or Un-Paid invoices can be rejected"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Invoice with the provided ID rejected successfully"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-approve/{invoiceId}": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Approve Invoice",
+        "description": "Approves a pending invoice, changing its status to unpaid and notifying the parent organization.",
+        "operationId": "approveInvoice",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "Invoice id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceStatusUpdateVO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Invoice with the provided ID approved successfully"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Only Pending status invoices can be approved"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/{customerOwId}/third-party-cost/disable": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Disable Third Party Cost",
+        "description": "This API allows Workspace (WS) organization users to disable an existing third-party cost configuration. The API supports the following scenarios: 1) A WS user disabling the default third-party cost configured for their own workspace, and 2) A WS user disabling the third-party cost configured for an advertiser under the same workspace. The customerOwId path parameter represents the workspace or advertiser for which the cost needs to be disabled. The API validates user access, workspace ownership, and ensures that a third-party cost configuration exists for the given customer before proceeding. If a valid configuration is found, the third-party cost is marked as inactive and cost is set as null in the database. Upon successful disablement, the updated configuration is refreshed in Redis and an activity log entry is generated accordingly.| customerOwId | Integer | OW ID of the workspace or advertiser for which the third-party cost is being disabled (required). |",
+        "operationId": "disableThirdPartyCost",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Third-party cost disabled successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "message": "3rd party cost disabled successfully."
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid or inaccessible customer ow id passed.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access provided customer details."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/{customerOwId}/pg-fees": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API will provide customer PG Fees details",
+        "description": "Fetches PG (Programmatic Guaranteed) fees details for a customer organization including campaign fees and workspace share.",
+        "operationId": "getPgFeesDetails",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Organization Workspace Id whose PG fees detail needs to be fetched",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PgFeesDetailsResponse"
+                },
+                "examples": {
+                  "Response for Workspace OwId": {
+                    "description": "Response for Workspace OwId",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "organizationPgFeesDetails": {
+                          "pgCampaignFees": 10,
+                          "pgWorkspaceShare": 15
+                        }
+                      }
+                    }
+                  },
+                  "Response for Advertiser OwId": {
+                    "description": "Response for Advertiser OwId",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "organizationPgFeesDetails": {
+                          "pgWorkspaceShare": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "PG Feed Details was not found for the given customer owId"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API is used to edit customer PG Fees details based on given customer owId",
+        "description": "Edits PG (Programmatic Guaranteed) fees details for a customer organization based on the given customer owId.",
+        "operationId": "editPgFeesDetails",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPgFeesRequestVO",
+                "required": [
+                  "customerOwId"
+                ]
+              },
+              "example": {
+                "owId": 202318,
+                "pgCampaignFees": 10,
+                "pgWorkspaceShare": 15
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "PG Fees details updated Successfully."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/{customerOwId}/insight-fees": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get insight fees details",
+        "description": "Fetches insight fees details for a customer. If 'type' is provided, fetches for that specific report type; otherwise, fetches for all types.\n\n**Available Categories and Verticals:**\n- **vld** (Voter Level Data): Available for POLITICAL vertical\n- **pld** (Publisher Level Data): Available for HEALTHCARE vertical\n- **sls** (Script Lift Study): Available for HEALTHCARE vertical\n- **aqs** (Ad Quality Suite): Available for HEALTHCARE vertical\n- **ict** (ICT): Available for HEALTHCARE vertical\n- **nld** (NLD): Available for both POLITICAL and HEALTHCARE verticals\n",
+        "operationId": "getInsightFees",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer OW ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Insight report type (optional). Valid values: vld, pld, sls, aqs, ict, nld. If not provided, returns all applicable types for the customer's vertical.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsightFeesResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "owId": 201427,
+                    "categories": {
+                      "nld": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      },
+                      "ict": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      },
+                      "pld": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      },
+                      "vld": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      },
+                      "sls": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      },
+                      "aqs": {
+                        "rate": 5.5,
+                        "enabled": true,
+                        "markupType": "Percentage",
+                        "markupTypeId": 2,
+                        "markupValue": 55.5
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update insight fees details",
+        "description": "Update insight fees for a specific category (aqs, pld, vld, ict, nld) for a customer.",
+        "operationId": "updateInsightFees",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer OW ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInsightFeesRequest"
+              },
+              "example": {
+                "category": "pld",
+                "rate": 11,
+                "enabled": true,
+                "markupType": "Percentage",
+                "markupTypeId": 2,
+                "markupValue": 55.5
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsightFeesUpdateResponse"
+                },
+                "examples": {
+                  "Rate updated successfully for workspace customer by super user": {
+                    "description": "Rate updated successfully for workspace customer by super user",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "message": "Rate updated successfully. The new rate applies only to newly created reports"
+                      }
+                    }
+                  },
+                  "Details enabled for advertiser customer by super user": {
+                    "description": "Details enabled for advertiser customer by super user",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 6,
+                        "message": "Insights enabled successfully."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Insights access is disabled from super for advertiser": {
+                    "description": "Insights access is disabled from super for advertiser",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "The insights report access is disabled and fees can't be updated"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/dv-ivt": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Fetch DV-IVT free segments enabled/disabled flag",
+        "description": "This API can be used by super organization users to fetch DV-IVT free segments enabled/disabled flag for customer organization ---#### Request Params Detail| **Field** | **Type** | **Description** || --- | --- | --- || customerOwId | Integer | ow id of the customer to update details (required) |",
+        "operationId": "getDvIvtFlag",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "query",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDVIVTResponse"
+                },
+                "examples": {
+                  "DV Fraud & IVT segments flag fetched": {
+                    "description": "DV Fraud & IVT segments flag fetched",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "customerOwId": 1,
+                        "isDvIvtSegmentsEnabled": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid/Inaccessible customer ow id passed": {
+                    "description": "Invalid/Inaccessible customer ow id passed",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "success": false,
+                        "errorObjects": [
+                          {
+                            "error": "User is not allowed to access provided customer details"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update DV-IVT free segments enabled/disabled flag",
+        "description": "This API can be used by super organization users to update DV-IVT free segments enabled/disabled flag for customer organization ---#### Request Params Detail| **Field** | **Type** | **Description** || --- | --- | --- || customerOwId | Integer | ow id of the customer to update details (required) || isDvIvtSegmentsEnabled | Boolean | boolean flag to enable and disable free DV-IVT segments for advertiser customer |",
+        "operationId": "updateDvIvtFlag",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "query",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "isDvIvtSegmentsEnabled",
+            "in": "query",
+            "description": "Whether DV IVT segments are enabled for the customer",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDVIVTResponse"
+                },
+                "examples": {
+                  "DV Fraud & IVT segments enabled for free successfully": {
+                    "description": "DV Fraud & IVT segments enabled for free successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "customerOwId": 1,
+                        "isDvIvtSegmentsEnabled": true,
+                        "message": "DV Fraud & IVT segments enabled for free successfully"
+                      }
+                    }
+                  },
+                  "DV Fraud & IVT segments will now be chargeable": {
+                    "description": "DV Fraud & IVT segments will now be chargeable",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "customerOwId": 1,
+                        "isDvIvtSegmentsEnabled": false,
+                        "message": "DV Fraud & IVT segments will now be chargeable"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid/Inaccessible customer ow id passed": {
+                    "description": "Invalid/Inaccessible customer ow id passed",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "success": false,
+                        "errorObjects": [
+                          {
+                            "error": "User is not allowed to access provided customer details"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/pg/payment-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get PG Payment Types",
+        "description": "Fetches the static list of payment gateway payment types from the database, sorted in ascending order by the default order column.",
+        "operationId": "getPgPaymentTypes",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PgPaymentTypeResponse"
+                },
+                "examples": {
+                  "Pg Payment Types": {
+                    "description": "Pg Payment Types",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "totalRecords": 2,
+                        "filteredRecords": 2,
+                        "pgPaymentTypes": [
+                          {
+                            "id": 1,
+                            "name": "publisher",
+                            "label": "Publisher",
+                            "order": 1
+                          },
+                          {
+                            "id": 2,
+                            "name": "platform",
+                            "label": "Platform",
+                            "order": 2
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/payment-type": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Payment Types",
+        "description": "Returns the static list of available payment types.",
+        "operationId": "getPaymentTypes",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "name": "as_fund",
+                      "id": 1,
+                      "label": "As Fund",
+                      "order": 1
+                    },
+                    {
+                      "name": "against_invoice",
+                      "id": 2,
+                      "label": "Against Invoice",
+                      "order": 2
+                    },
+                    {
+                      "name": "refund",
+                      "id": 3,
+                      "label": "Refund",
+                      "order": 3
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/payment-status": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Payment Status",
+        "description": "Returns the static list of available payment statuses.",
+        "operationId": "getPaymentStatuses",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "name": "processing",
+                      "id": 1,
+                      "label": "Processing",
+                      "order": 1
+                    },
+                    {
+                      "name": "paid",
+                      "id": 2,
+                      "label": "Paid",
+                      "order": 2
+                    },
+                    {
+                      "name": "rejected",
+                      "id": 3,
+                      "label": "Rejected",
+                      "order": 3
+                    },
+                    {
+                      "name": "cancelled",
+                      "id": 4,
+                      "label": "Cancelled",
+                      "order": 4
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/invoice-status": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Invoice Status",
+        "description": "Returns the static list of available invoice statuses.",
+        "operationId": "getInvoiceStatuses",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "name": "pending",
+                      "id": 1,
+                      "label": "Pending",
+                      "order": 1
+                    },
+                    {
+                      "name": "partially_paid",
+                      "id": 2,
+                      "label": "Partially Paid",
+                      "order": 2
+                    },
+                    {
+                      "name": "unpaid",
+                      "id": 3,
+                      "label": "Unpaid",
+                      "order": 3
+                    },
+                    {
+                      "name": "paid",
+                      "id": 4,
+                      "label": "Paid",
+                      "order": 4
+                    },
+                    {
+                      "name": "overdue",
+                      "id": 5,
+                      "label": "Overdue",
+                      "order": 5
+                    },
+                    {
+                      "name": "processing",
+                      "id": 7,
+                      "label": "Processing",
+                      "order": 7
+                    },
+                    {
+                      "name": "cancelled",
+                      "id": 8,
+                      "label": "Cancelled",
+                      "order": 8
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/invoice-payment-terms": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Invoice Payment Term",
+        "description": "Returns the static list of available invoice payment terms.",
+        "operationId": "getPaymentTerms",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "name": "7",
+                      "id": 1,
+                      "label": "Net 7",
+                      "order": 1
+                    },
+                    {
+                      "name": "15",
+                      "id": 2,
+                      "label": "Net 15",
+                      "order": 2
+                    },
+                    {
+                      "name": "30",
+                      "id": 3,
+                      "label": "Net 30",
+                      "order": 3
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/static/invoice-payment-modes": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Invoice Payment Modes",
+        "description": "Returns the static list of available invoice payment modes.",
+        "operationId": "getPaymentModes",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "name": "paypal",
+                      "id": 1,
+                      "label": "PayPal",
+                      "order": 1
+                    },
+                    {
+                      "name": "cheque",
+                      "id": 2,
+                      "label": "Cheque",
+                      "order": 2
+                    },
+                    {
+                      "name": "wire_transfer",
+                      "id": 3,
+                      "label": "Wire Transfer",
+                      "order": 3
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice/list/{owId}": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "List Invoice For Customer / Organization",
+        "description": "Returns a paginated list of invoices for the specified customer or organization workspace, filterable by status, payment mode, and search criteria.",
+        "operationId": "getInvoiceDetails",
+        "parameters": [
+          {
+            "name": "owId",
+            "in": "path",
+            "description": "Customer/organization owId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status ids obtained from /fa/static/invoice-status",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": ""
+            },
+            "example": "1,2,3,4,7"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "other allowed values issuedOn,invoiceAmount,status",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "-invoiceId"
+            },
+            "example": "-invoiceId"
+          },
+          {
+            "name": "isCustomerRequest",
+            "in": "query",
+            "description": "Whether the request is from customer perspective",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "example": false
+          },
+          {
+            "name": "paymentMode",
+            "in": "query",
+            "description": "Payment mode filter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search keyword to filter invoices",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of records per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User cannot access invoices"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-template-margin-details": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Invoice Template Margin Details",
+        "description": "Retrieves invoice template and margin configuration status for the specified organization workspace IDs.",
+        "operationId": "getInvoiceTemplateMarginDetails",
+        "parameters": [
+          {
+            "name": "owIds",
+            "in": "query",
+            "description": "Comma-separated list of organization workspace IDs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-template-margin-details/pre-requisite": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Margin not set  Pre-Requisite popup",
+        "description": "Retrieves pre-requisite details for the invoice template margin configuration, including customer margin status and app accessibility.",
+        "operationId": "getInvoiceTemplateMarginDetails_1",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoicePreRequisiteResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "isParentInvoiceTemplateSet": true,
+                    "invoiceTemplateRequired": true,
+                    "organizationAppAccessible": true,
+                    "customerAppAccessible": true,
+                    "customerMarginList": [
+                      {
+                        "owId": 100002,
+                        "customerName": "Darshan Khatri"
+                      },
+                      {
+                        "owId": 100001,
+                        "customerName": "Bhaumik Shukla"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-settings": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Invoice For Organization",
+        "description": "Retrieves the invoice settings configured for the logged-in organization workspace.",
+        "operationId": "getInvoiceDetails_1",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceDetailResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "invoiceId": 1,
+                    "owId": 334,
+                    "invoiceTitle": "The Alchemist",
+                    "invoiceCompanyName": "The Alchemist",
+                    "invoiceCompanyAddress": "42, 6th Avenue, New york, NY",
+                    "email": "shraddha.p+alchemist@iqm.com",
+                    "website": "www.alchemist.com",
+                    "invoiceDescription": "Dear Customer, Greetings from The Alchemist, we are writing to provice you an electronic invoice for your use of services.",
+                    "paypalId": 1,
+                    "chequeTransferId": 1,
+                    "wireTransferId": 2,
+                    "termsAndConditions": "Please make the payment in 30 days or your account might be put on hold",
+                    "paymentTerm": "30",
+                    "invoiceFooter": "The Alchemist | 12.234.56.789 | USA",
+                    "createdAt": "2021-08-27T07:33:14.000+00:00"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-settings-payment-details": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Invoice Payment Details",
+        "description": "Retrieves the payment method details (PayPal, cheque, wire transfer) configured for the specified invoice.",
+        "operationId": "getInvoicePaymentDetails",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "query",
+            "description": "Invoice template ID from the /ua/invoice API. This is not a billing invoice ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 1
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice with the provided ID does not exists"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoicePaymentDetailResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "paypalPaymentDetail": {
+                      "paypalId": 1,
+                      "paypalAccountId": "thealchemistfinance@paypal"
+                    },
+                    "chequePaymentDetail": {
+                      "chequeId": 1,
+                      "chequeCompanyName": "The Alchemist Company",
+                      "chequeCompanyAddress": "45, Fifth Avenue, NY, USA"
+                    },
+                    "wireTransferPaymentDetail": {
+                      "wireTransferId": 2,
+                      "wireTransferCompanyName": "The Alchemist",
+                      "bankName": "JP Morgan Chase Bank",
+                      "accountNumber": "670669295",
+                      "bankAddress": "498 7th Avenue New York NY",
+                      "swiftCode": "MGTCUS3G",
+                      "routing": "150098"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice does not belong to the logged in organization workspace"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/{customerOwId}/third-party-cost": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Third Party Cost",
+        "description": "This API retrieves the third-party cost details for a specific customer.\nThe API validates the user's access before fetching the details. This API is accessible only by WORKSPACE and SUPER organization types. The details include the owId and the associated third-party cost data.",
+        "operationId": "getThirdPartyCost_1",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer's ow id for whom the cost details are being fetched (required).",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Third-party cost details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdPartyCostResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/{customerOwId}/ad-serving-cost": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Ad Serving Cost",
+        "description": "This API retrieves the ad serving cost details for a specific customer. The API validates the user's access before fetching the details.| customerOwId | Integer | Customer's ow id for whom the cost details are being fetched (required). |",
+        "operationId": "getAdServingCost",
+        "parameters": [
+          {
+            "name": "customerOwId",
+            "in": "path",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ad serving cost details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdServingCostResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "owId": 201765,
+                    "adServingCostDetail": {
+                      "imageCreativeCost": 5,
+                      "videoCreativeCost": 5,
+                      "audioCreativeCost": 5,
+                      "html5CreativeCost": 5,
+                      "costConfigurationLevel": "WORKSPACE",
+                      "msaConfigurationDetail": {
+                        "msaConfiguredWith": "MWS1",
+                        "logoURL": "https://iqm-host.com/avatar/MS.png"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid/Inaccessible customer ow id passed.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "User is not allowed to access provided customer details."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/view-margin": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "This API will provide customer margin details",
+        "description": "Fetches customer margin details including gross margin and bid shading margin for a given customer organization workspace.",
+        "operationId": "getCustomerMargin",
+        "parameters": [
+          {
+            "name": "marginTypeIds",
+            "in": "query",
+            "description": "Comma separated margin type ids whose margin detail needs to be fetched",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "owId",
+            "in": "query",
+            "description": "Organization Workspace Id whose margin detail needs to be fetched",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarginDetailResponseDocs"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "totalRecords": 1,
+                    "data": [
+                      {
+                        "marginTypeId": 1,
+                        "marginType": "Gross Margin",
+                        "marginValue": 15
+                      }
+                    ],
+                    "filteredRecords": 1,
+                    "isBidShadingEnabled": false
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid Margin Type"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/financial-details": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Customer Overview",
+        "description": "Returns the financial overview for a specified customer organization including campaign counts, balance, and spending.",
+        "operationId": "getCustomerOverview",
+        "parameters": [
+          {
+            "name": "owId",
+            "in": "query",
+            "description": "ow id of selected customer organization",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 100129
+          },
+          {
+            "name": "isFinanceRequest",
+            "in": "query",
+            "description": "(Optional) default:- true\nFor Customer Management tab, isFinanceRequest: false\nFor Finance tab, isFinanceRequest: true",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "example": false
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "(Optional) Year for which data need to be fetch",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2021
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOverviewResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "pendingCampaigns": 15,
+                    "runningCampaigns": 10,
+                    "totalCampaigns": 48,
+                    "dataCost": 0,
+                    "actualSpent": 0,
+                    "credits": 0,
+                    "balance": 30430.75,
+                    "spent": 0,
+                    "earning": 0
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/customer/campaign-margin-list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get campaign wise margin list",
+        "description": "Provides a paginated list of campaign-wise margin details for a given customer. Supports search filtering and edit/non-edit view modes.",
+        "operationId": "getCampaignMarginList",
+        "parameters": [
+          {
+            "name": "owId",
+            "in": "query",
+            "description": "Customer organization workspace ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 1
+          },
+          {
+            "name": "searchField",
+            "in": "query",
+            "description": "Search keyword to filter results",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": ""
+            },
+            "example": "test"
+          },
+          {
+            "name": "isEdit",
+            "in": "query",
+            "description": "(Optional) default - false, \nfor non-edit mode isEdit: false,\nfor edit mode isEdit: true.",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": true
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Default 1",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Default 10",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignMarginListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "data": [
+                      {
+                        "default": false,
+                        "campaignId": 192476,
+                        "campaignName": "Start_Track_Reach2",
+                        "status": "running",
+                        "creativeTypeId": 13,
+                        "campaignMargin": 0,
+                        "isDefault": false
+                      }
+                    ],
+                    "totalRecords": 1,
+                    "filteredRecords": 1
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/basic/details": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Basic Finance Details",
+        "description": "Returns basic finance configuration details such as PayPal fees percentage.",
+        "operationId": "getBasicDetails",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasicFinanceDetailsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "paypalFeesPercentage": 3.5
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "ow id provided in header is not configured in redis."
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/available-balance": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get Available Balance",
+        "description": "Returns the available balance for the specified organization workspace.",
+        "operationId": "getAvailableBalance_1",
+        "parameters": [
+          {
+            "name": "owId",
+            "in": "query",
+            "description": "(Optional) provide owId in case viewing customer's balance.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 200001
+          },
+          {
+            "name": "isCustomerRequest",
+            "in": "query",
+            "description": "default :- true\nisCustomerRequest - true, if organization viewing customer's balance,\nisCustomerRequest - false, if organization viewing its balance.",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "example": false
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableBalanceResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": 5855904.72
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/fa/invoice-settings-tax-data": {
+      "delete": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Delete Invoice Tax data",
+        "description": "Deletes a tax data entry from the organization's invoice settings by tax ID.",
+        "operationId": "deleteTaxData",
+        "parameters": [
+          {
+            "name": "taxId",
+            "in": "query",
+            "description": "Tax data entry ID to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 2
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Tax ID is invalid"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Tax data deleted successfully"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PayInvoiceMultipartRequest": {
+        "type": "object",
+        "description": "Multipart form payload for the pay-invoice endpoint",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Customer or organization workspace ID for which payment is being made",
+            "example": 200485
+          },
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Invoice ID to pay against",
+            "example": 32
+          },
+          "paymentAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Payment amount",
+            "example": 100
+          },
+          "paymentType": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Payment type ID (from /api/v3/fa/static/payment-type)",
+            "example": 1
+          },
+          "isCustomerRequest": {
+            "type": "boolean",
+            "description": "Whether the request is from customer perspective",
+            "example": true
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Payment date in ISO format (yyyy-MM-dd)",
+            "example": "2025-09-28"
+          },
+          "paymentMode": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Payment mode identifier",
+            "example": 2
+          },
+          "transactionId": {
+            "type": "string",
+            "description": "Transaction reference ID",
+            "example": "TRX-12345"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank name for wire transfer or check payments",
+            "example": "JP Morgan"
+          },
+          "paymentProof": {
+            "type": "string",
+            "format": "binary",
+            "description": "Payment proof file. Required when isCustomerRequest=false and paymentMode is wire transfer or check"
+          }
+        }
+      },
+      "CommonResponseString": {
+        "type": "object",
+        "description": "Common response with data as message",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response",
+            "example": true
+          },
+          "data": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Operation completed successfully"
+          }
+        }
+      },
+      "MarginDetailRequest": {
+        "type": "object",
+        "properties": {
+          "marginTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "marginValue": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "ThirdPartyCostRequestVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "maximum": 999,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "cost"
+        ]
+      },
+      "CommonResponseMessage": {
+        "type": "object",
+        "description": "Common response with data as a message object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/MessageData",
+            "description": "Data containing message"
+          }
+        }
+      },
+      "MessageData": {
+        "type": "object",
+        "description": "Message data",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Operation completed successfully"
+          }
+        }
+      },
+      "UpdateCampaignMarginInternalRequestVO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workspaceMargin": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organizationMargin": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "marginTypeId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AdServingCostRequestVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imageCreativeCost": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          },
+          "videoCreativeCost": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          },
+          "audioCreativeCost": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          },
+          "html5CreativeCost": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "audioCreativeCost",
+          "html5CreativeCost",
+          "imageCreativeCost",
+          "videoCreativeCost"
+        ]
+      },
+      "EditInvoiceDetailVO": {
+        "type": "object",
+        "properties": {
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceTitle": {
+            "type": "string"
+          },
+          "invoiceCompanyAddress": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "invoiceDescription": {
+            "type": "string"
+          },
+          "termsAndConditions": {
+            "type": "string"
+          },
+          "paymentTerm": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceFooter": {
+            "type": "string"
+          },
+          "paypalAccountId": {
+            "type": "string"
+          },
+          "chequeCompanyName": {
+            "type": "string"
+          },
+          "chequeCompanyAddress": {
+            "type": "string"
+          },
+          "wireTransferCompanyName": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "bankAddress": {
+            "type": "string"
+          },
+          "swiftCode": {
+            "type": "string"
+          },
+          "routing": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taxType": {
+            "type": "string"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "companyTaxId": {
+            "type": "string"
+          },
+          "companyTaxName": {
+            "type": "string"
+          }
+        }
+      },
+      "InvoiceUpdateData": {
+        "type": "object",
+        "description": "Invoice update response data",
+        "properties": {
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Invoice ID",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Invoice details updated successfully"
+          }
+        }
+      },
+      "InvoiceUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InvoiceUpdateData"
+          }
+        }
+      },
+      "InvoiceStatusUpdateVO": {
+        "type": "object",
+        "properties": {
+          "actionNote": {
+            "type": "string"
+          }
+        }
+      },
+      "EditPgFeesRequestVO": {
+        "type": "object",
+        "properties": {
+          "customerOwId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pgCampaignFees": {
+            "type": "number",
+            "format": "double"
+          },
+          "pgWorkspaceShare": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "InsightFeesUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InsightsReportUpdateResponseVO"
+          }
+        }
+      },
+      "InsightsReportUpdateResponseVO": {
+        "type": "object",
+        "description": "Insight Fees Update Response",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Updated record ID",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Insight fees updated successfully"
+          }
+        }
+      },
+      "UpdateInsightFeesRequest": {
+        "type": "object",
+        "description": "Request DTO for updating insight fees details for a specific category",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Category (InsightReportType enum value, e.g. pld, vld, ict, sls, aqs, nld)",
+            "example": "pld",
+            "minLength": 1
+          },
+          "rate": {
+            "type": "number",
+            "format": "double",
+            "description": "Rate for the insight report (optional)",
+            "example": 11
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Enable or disable the report (optional)",
+            "example": true
+          },
+          "markupType": {
+            "type": "string",
+            "description": "Markup type (e.g. Percentage, Absolute) (optional)",
+            "example": "Percentage"
+          },
+          "markupTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Markup type ID (optional)",
+            "example": 2
+          },
+          "markupValue": {
+            "type": "number",
+            "format": "double",
+            "description": "Markup value (optional)",
+            "example": 55.5
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "CustomerDVIVTData": {
+        "type": "object",
+        "description": "Customer DV IVT Data",
+        "properties": {
+          "customerOwId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Customer Organization Workspace ID",
+            "example": 101
+          },
+          "message": {
+            "type": "string",
+            "description": "Message",
+            "example": "DV IVT segments updated successfully"
+          },
+          "isDvIvtSegmentsEnabled": {
+            "type": "boolean",
+            "description": "DV IVT Flag",
+            "example": true
+          }
+        }
+      },
+      "CustomerDVIVTResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerDVIVTData"
+          }
+        }
+      },
+      "PgPaymentTypeRecords": {
+        "type": "object",
+        "description": "PG Payment Type Records",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total number of records",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Filtered number of records",
+            "example": 2
+          },
+          "pgPaymentTypes": {
+            "type": "array",
+            "description": "PG Payment Types",
+            "items": {
+              "$ref": "#/components/schemas/StaticResponseVO"
+            }
+          }
+        }
+      },
+      "PgPaymentTypeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PgPaymentTypeRecords"
+          }
+        }
+      },
+      "StaticResponseVO": {
+        "type": "object",
+        "description": "Static response value object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name identifier",
+            "example": "credit_card"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Unique ID",
+            "example": 1
+          },
+          "label": {
+            "type": "string",
+            "description": "Display label",
+            "example": "Credit Card"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Sort order",
+            "example": 1
+          }
+        }
+      },
+      "StaticListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaticResponseVO"
+            }
+          }
+        }
+      },
+      "MarginSettingsRecords": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total number of records",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Filtered number of records",
+            "example": 2
+          }
+        }
+      },
+      "MarginSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/MarginSettingsRecords"
+          }
+        }
+      },
+      "InvoiceListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaginatedListOrganizationInvoiceDetailVO"
+          }
+        }
+      },
+      "OrganizationInvoiceDetailVO": {
+        "type": "object",
+        "properties": {
+          "invoiceToOWId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceFromOWId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdByUOWId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceStatusUpdatedByUOWId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceSubTotalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "invoiceAdditionalCharges": {
+            "type": "number",
+            "format": "double"
+          },
+          "invoiceTaxAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "invoiceFileURL": {
+            "type": "string"
+          },
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceFromDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "invoiceToDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "issuedOn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "invoiceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentTerm": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paidAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentMode": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "uniqueItems": true
+          },
+          "invoiceName": {
+            "type": "string"
+          },
+          "actionNote": {
+            "type": "string"
+          },
+          "invoiceStatusUpdatedBy": {
+            "type": "string"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentModeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "transactionId": {
+            "type": "string"
+          },
+          "paymentId": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedListOrganizationInvoiceDetailVO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationInvoiceDetailVO"
+            }
+          },
+          "totalRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recordsAggregation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "CommonResponseObject": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "CustomerBasicDetailVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          }
+        }
+      },
+      "InvoicePreRequisiteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InvoiceTemplateMarginPreRequisiteDetailVO"
+          }
+        }
+      },
+      "InvoiceTemplateMarginPreRequisiteDetailVO": {
+        "type": "object",
+        "properties": {
+          "invoiceTemplateRequired": {
+            "type": "boolean"
+          },
+          "customerMarginList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerBasicDetailVO"
+            }
+          },
+          "organizationAppAccessible": {
+            "type": "boolean"
+          },
+          "customerAppAccessible": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InvoiceDetailResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InvoiceDetailVO"
+          }
+        }
+      },
+      "InvoiceDetailVO": {
+        "type": "object",
+        "properties": {
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceTitle": {
+            "type": "string"
+          },
+          "invoiceCompanyName": {
+            "type": "string"
+          },
+          "invoiceCompanyAddress": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "invoiceDescription": {
+            "type": "string"
+          },
+          "invoiceTaxData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceTaxDetailVO"
+            }
+          },
+          "paypalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chequeTransferId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wireTransferId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "termsAndConditions": {
+            "type": "string"
+          },
+          "paymentTerm": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invoiceFooter": {
+            "type": "string"
+          },
+          "companyTaxId": {
+            "type": "string"
+          },
+          "companyTaxName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InvoiceTaxDetailVO": {
+        "type": "object",
+        "properties": {
+          "taxCharges": {
+            "type": "number",
+            "format": "double"
+          },
+          "currencyFormattedTaxCharges": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taxType": {
+            "type": "string"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ChequePaymentDetailVO": {
+        "type": "object",
+        "properties": {
+          "chequeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chequeCompanyName": {
+            "type": "string"
+          },
+          "chequeCompanyAddress": {
+            "type": "string"
+          }
+        }
+      },
+      "InvoicePaymentDetailResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InvoicePaymentDetailVO"
+          }
+        }
+      },
+      "InvoicePaymentDetailVO": {
+        "type": "object",
+        "properties": {
+          "paypalPaymentDetail": {
+            "$ref": "#/components/schemas/PayPalPaymentDetailVO"
+          },
+          "chequePaymentDetail": {
+            "$ref": "#/components/schemas/ChequePaymentDetailVO"
+          },
+          "wireTransferPaymentDetail": {
+            "$ref": "#/components/schemas/WireTransferPaymentDetailVO"
+          }
+        }
+      },
+      "PayPalPaymentDetailVO": {
+        "type": "object",
+        "properties": {
+          "paypalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paypalAccountId": {
+            "type": "string"
+          }
+        }
+      },
+      "WireTransferPaymentDetailVO": {
+        "type": "object",
+        "properties": {
+          "wireTransferId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wireTransferCompanyName": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "bankAddress": {
+            "type": "string"
+          },
+          "swiftCode": {
+            "type": "string"
+          },
+          "routing": {
+            "type": "string"
+          }
+        }
+      },
+      "ThirdPartyCostDetailVO": {
+        "type": "object",
+        "properties": {
+          "cost": {
+            "type": "number",
+            "format": "double"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ThirdPartyCostResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ThirdPartyCostResponseVO"
+          }
+        }
+      },
+      "ThirdPartyCostResponseVO": {
+        "type": "object",
+        "description": "Third Party Cost Response",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Organization Workspace ID",
+            "example": 123456
+          },
+          "thirdPartyCostDetails": {
+            "$ref": "#/components/schemas/ThirdPartyCostDetailVO",
+            "description": "Third party cost detail information"
+          }
+        }
+      },
+      "PgFeesDetails": {
+        "type": "object",
+        "description": "PG Fees Details",
+        "properties": {
+          "pgCampaignFees": {
+            "type": "integer",
+            "format": "int32",
+            "description": "PG Setup Fees",
+            "example": 100
+          },
+          "pgWorkspaceShare": {
+            "type": "integer",
+            "format": "int32",
+            "description": "PG Workspace Share",
+            "example": 50
+          }
+        }
+      },
+      "PgFeesDetailsRecords": {
+        "type": "object",
+        "description": "PG Fees Details Records",
+        "properties": {
+          "organizationPgFeesDetails": {
+            "$ref": "#/components/schemas/PgFeesDetails",
+            "description": "PG Fees Details"
+          }
+        }
+      },
+      "PgFeesDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PgFeesDetailsRecords"
+          }
+        }
+      },
+      "InsightCategoryDetails": {
+        "type": "object",
+        "description": "Insight Category Fee Details",
+        "properties": {
+          "rate": {
+            "type": "number",
+            "format": "double",
+            "description": "Rate for the insight report",
+            "example": 5.5
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the category is enabled",
+            "example": true
+          },
+          "markupType": {
+            "type": "string",
+            "description": "Markup type",
+            "example": "Percentage"
+          },
+          "markupTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Markup type ID",
+            "example": 2
+          },
+          "markupValue": {
+            "type": "number",
+            "format": "double",
+            "description": "Markup value",
+            "example": 55.5
+          }
+        }
+      },
+      "InsightFeesDocs": {
+        "type": "object",
+        "description": "Insight Fees Details",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Customer Organization Workspace ID",
+            "example": 201427
+          },
+          "categories": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/InsightCategoryDetails"
+            },
+            "description": "Map of insight category names to their fee details"
+          }
+        }
+      },
+      "InsightFeesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/InsightFeesDocs"
+          }
+        }
+      },
+      "AdServingCostDetailVO": {
+        "type": "object",
+        "properties": {
+          "imageCreativeCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "videoCreativeCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "audioCreativeCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "html5CreativeCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "costConfigurationLevel": {
+            "type": "string"
+          },
+          "msaConfigurationDetail": {
+            "$ref": "#/components/schemas/MsaConfigurationDetailVO"
+          }
+        }
+      },
+      "AdServingCostResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/AdServingCostResponseVO"
+          }
+        }
+      },
+      "AdServingCostResponseVO": {
+        "type": "object",
+        "description": "Ad Serving Cost Response",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Organization Workspace ID",
+            "example": 201765
+          },
+          "adServingCostDetail": {
+            "$ref": "#/components/schemas/AdServingCostDetailVO",
+            "description": "Ad serving cost detail information"
+          }
+        }
+      },
+      "MsaConfigurationDetailVO": {
+        "type": "object",
+        "properties": {
+          "msaConfiguredWith": {
+            "type": "string"
+          },
+          "logoURL": {
+            "type": "string"
+          }
+        }
+      },
+      "MarginDetailRecords": {
+        "type": "object",
+        "description": "Margin Detail Records",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total number of records",
+            "example": 120
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Filtered number of records",
+            "example": 2
+          },
+          "isBidShadingEnabled": {
+            "type": "boolean",
+            "description": "Bid Shading Flag",
+            "example": true
+          }
+        }
+      },
+      "MarginDetailResponseDocs": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/MarginDetailRecords"
+          }
+        }
+      },
+      "CustomerOverviewDocs": {
+        "type": "object",
+        "description": "Customer Financial Overview",
+        "properties": {
+          "pendingCampaigns": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of pending campaigns",
+            "example": 15
+          },
+          "runningCampaigns": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Number of running campaigns",
+            "example": 10
+          },
+          "totalCampaigns": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total number of campaigns",
+            "example": 48
+          },
+          "dataCost": {
+            "type": "number",
+            "format": "double",
+            "description": "Total data cost",
+            "example": 0
+          },
+          "actualSpent": {
+            "type": "number",
+            "format": "double",
+            "description": "Actual amount spent",
+            "example": 0
+          },
+          "credits": {
+            "type": "number",
+            "format": "double",
+            "description": "Total credits available",
+            "example": 0
+          },
+          "balance": {
+            "type": "number",
+            "format": "double",
+            "description": "Available balance",
+            "example": 30430.75
+          },
+          "spent": {
+            "type": "number",
+            "format": "double",
+            "description": "Total spent amount",
+            "example": 0
+          },
+          "earning": {
+            "type": "number",
+            "format": "double",
+            "description": "Total earning amount",
+            "example": 0
+          }
+        }
+      },
+      "CustomerOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerOverviewDocs"
+          }
+        }
+      },
+      "CampaignMarginDetailVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "campaignName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "creativeTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "campaignMargin": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CampaignMarginListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaginatedListCampaignMarginDetailVO"
+          }
+        }
+      },
+      "PaginatedListCampaignMarginDetailVO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignMarginDetailVO"
+            }
+          },
+          "totalRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recordsAggregation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "BasicFinanceDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/BasicFinanceDetailsVO"
+          }
+        }
+      },
+      "BasicFinanceDetailsVO": {
+        "type": "object",
+        "properties": {
+          "paypalFeesPercentage": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "AvailableBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    }
+  }
+}

@@ -42,7 +42,7 @@ export default function CommunitySection() {
             </svg>
           </div>
           <div className={styles.cardContent}>
-            <h3>Ask a Question</h3>
+            <h3>Ask a question</h3>
             <p>Get help from the community and IQM team</p>
           </div>
           <span className={styles.arrow}>→</span>
@@ -61,7 +61,7 @@ export default function CommunitySection() {
             </svg>
           </div>
           <div className={styles.cardContent}>
-            <h3>Feature Requests</h3>
+            <h3>Feature requests</h3>
             <p>Suggest improvements and vote on ideas</p>
           </div>
           <span className={styles.arrow}>→</span>
