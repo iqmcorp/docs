@@ -7638,7 +7638,121 @@ const sidebars = {
         },
       ]
     }
-  ]
+  ],
+  mcpSidebar: [
+    {
+      type: 'doc',
+      id: 'mcp/index',
+      label: 'IQM MCP',
+      className: 'sidebarCategory'
+    },
+    {
+      type: "category",
+      label: 'Getting started',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'mcp/mcp-getting-started/index'
+      },
+      items: [
+        {
+          type: `doc`,
+          label: 'Introduction',
+          id: `mcp/mcp-getting-started/introduction`,
+          className: 'sidebarItem'
+        },
+        {
+          type: `doc`,
+          label: 'Setup guide',
+          id: `mcp/mcp-getting-started/setup-guide`,
+          className: 'sidebarItem'
+        }
+      ],
+    },
+    {
+      type: "category",
+      label: 'MCP tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'mcp/mcp-tutorials/index'
+      },
+      items: [
+        {
+          type: 'doc',
+          label: 'Assets tutorial',
+          id: `mcp/mcp-tutorials/mcp-asset-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Audience tutorial',
+          id: `mcp/mcp-tutorials/mcp-audience-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Bid Model tutorial',
+          id: `mcp/mcp-tutorials/mcp-bid-model-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Campaign tutorial',
+          id: `mcp/mcp-tutorials/mcp-campaign-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Conversion tutorial',
+          id: `mcp/mcp-tutorials/mcp-conversion-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Creative tutorial',
+          id: `mcp/mcp-tutorials/mcp-creative-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Inventory tutorial',
+          id: `mcp/mcp-tutorials/mcp-inventory-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Reports tutorial',
+          id: `mcp/mcp-tutorials/mcp-reports-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Insights tutorial',
+          id: `mcp/mcp-tutorials/mcp-insights-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'User management tutorial',
+          id: `mcp/mcp-tutorials/mcp-user-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Workspace tutorial',
+          id: `mcp/mcp-tutorials/mcp-workspace-tutorial`,
+          className: 'sidebarItem'
+        },
+        {
+          type: 'doc',
+          label: 'Tools index',
+          id: `mcp/mcp-tutorials/mcp-tools-index`,
+          className: 'sidebarItem'
+        }
+      ]
+    }
+  ],
 }
 
 export default sidebars;

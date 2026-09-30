@@ -1,0 +1,291 @@
+---
+title: MCP Bid Model Tutorial
+pagination_prev: null
+---
+
+import ExternalLink from '@site/static/img/external-link2.svg';
+import ImageLightbox from '@site/src/components/ImageLightBox';
+import EligibleCampaigns from '@site/static/img/MCP/Tutorials/MCP-cmp-bm-list.png';
+import Dimensions from '@site/static/img/MCP/Tutorials/MCP-bm-dimensions.png';
+import BidModelOptions from '@site/static/img/MCP/Tutorials/MCP-bm-options.png';
+import BidModelOptions2 from '@site/static/img/MCP/Tutorials/MCP-bm-options-2.png';
+import BidModelCreative from '@site/static/img/MCP/Tutorials/MCP-bm-creative.png';
+import BidModelUpdate from '@site/static/img/MCP/Tutorials/MCP-bm-update.png';
+import BidModelDelete from '@site/static/img/MCP/Tutorials/MCP-bm-delete.png';
+import BidModelCheck from '@site/static/img/MCP/Tutorials/MCP-bm-check.png';
+import BidModelBundle from '@site/static/img/MCP/Tutorials/MCP-bm-bundle.png';
+import BidModelBundle2 from '@site/static/img/MCP/Tutorials/MCP-bm-bundle-update.png';
+import BidModelBundle3 from '@site/static/img/MCP/Tutorials/MCP-bm-bundle-del.png';
+import BidModelExclude from '@site/static/img/MCP/Tutorials/MCP-bm-exclude.png';
+import BidModelToolsIndex from '@site/docs/_partials/mcp/bid-model-index.mdx';
+
+# MCP Bid Model tutorial
+
+Use IQM Model Context Protocol (MCP) to interact with the Bid Model API.
+
+## Overview
+
+This tutorial guides you through using IQM MCP to interact with the Bid Model app. You'll learn how to create, update, and manage Bid Models using MCP prompts.
+
+## Before you begin 
+
+To create a Bid Model with IQM MCP, the following are required:
+
+1. An account on the IQM platform
+   *  See [Before you begin](/getting-started/before-you-begin) to create an account and request a Client ID and Client Secret
+1. IQM MCP set up on your computer
+   * See the MCP [Setup guide](/mcp/mcp-getting-started/setup-guide/) to set up the MCP with your authorization credentials
+1. A campaign that meets the following criteria:
+   *  Duration of at least 3 days
+   *  Daily budget of at least $100
+   *  Base bid and max bid price must be defined
+
+## About IQM Bid Model 
+
+The Bid Model API allows you to optimize advertising campaigns for better performance. You can fine-tune metrics such as where ads appear (Include/Exclude), manage campaign priority, and dimensions by which a campaign is subdivided.
+
+### Bid Model settings
+
+Bid Model settings include the following tools:
+
+  * **Spend Ratio**: determines how the campaign budget is distributed across various dimensions, expressed as a percentage in two types
+    1.  Strict: budget is allocated up to its specified percentage as able, but underspends if unable to meet that ratio
+    1.  Flexible: budget reallocates if unable to fulfill its specified percentage
+  * **Dimension Priority**: dictates the sequence of bidding for specified targeting dimensions, expressed as a range of 1-10
+  * **Bid Modifier**: adjusts the base bid of a campaign for the specified dimension that is modified, expressed as a multiplier in a range of 0.1-100
+
+### Bid Model criteria
+
+IQM currently supports Bid Model settings for the following dimensions: 
+
+* **Creative**: Creative ID
+* **Location**: State, City, ZIP code 
+* **Inventory**: Open Exchange, Publisher Category*, Deal ID** 
+
+:::warning[NOTE]
+*Spend Ratios are not supported for the publisher category dimension subcategory. Refer to [Spend Ratio Overview<ExternalLink />](https://help.iqm.com/en/articles/9298415-spend-ratio-overview) Help Center article for more information. 
+
+**Bid Modifiers are not supported for the deal ID dimension subcategory. Refer to the [Bid Modifier Overview<ExternalLink />](https://help.iqm.com/en/articles/9298560-bid-modifier-overview) Help Center article for more information. 
+:::
+
+### More resources
+  * [Advanced modeling<ExternalLink />](https://help.iqm.com/en/collections/11511670-advanced-modeling) Help Center article
+  * [Bid Model API](/guidelines/bid-model-api) guidelines
+  * [Create a Bid Model](/tutorials/create-a-bid-model/) API tutorial
+
+## Create a Bid Model
+
+### Step 1: Check campaign for eligibility
+
+Before you can create a Bid Model, check that you have an eligible campaign. You can prompt for a list of eligible campaigns, or check a single campaign ID. Try the following prompts:
+
+<table className='mcpTable' style={{maxWidth: "fit-content"}}>
+<th style={{ minWidth: "300px"}}>Prompt</th>
+<th>Response example</th>
+<th>Notes</th>
+<tr>
+  <td>Show me the list of campaigns eligible for bid modeling</td>
+  <td><ImageLightbox
+      thumb={EligibleCampaigns}
+      full={EligibleCampaigns}
+      alt="MCP Eligible Campaigns"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP returns a list of campaigns that meet the eligibility criteria for Bid Model settings.<p /><div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>tip</div><div class="admonitionContent_BuS1"><p>Prompt for the results to be returned "in a simple table, with reasons why any campaigns are not eligible".</p></div></div></td>
+</tr>
+<tr>
+  <td>Is campaign 53245 eligible for bid modeling?</td>
+  <td><ImageLightbox
+      thumb={BidModelCheck}
+      full={BidModelCheck}
+      alt="MCP Eligible Campaign Check"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP checks the specified campaign ID and confirms its eligibility status.</td>
+</tr>
+</table>
+
+### Step 2: Select dimension
+
+Choose the dimension you want to model for the campaign. You can select from creative, location, or inventory dimensions. Try the following prompt:
+
+<table className='mcpTable' style={{maxWidth: "fit-content"}}>
+<th style={{ minWidth: "300px"}}>Prompt</th>
+<th>Response example</th>
+<th>Notes</th>
+<tr>
+  <td>Show me a list of dimensions available for bid modeling</td>
+  <td><ImageLightbox
+      thumb={Dimensions}
+      full={Dimensions}
+      alt="MCP BM Dimensions"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>See the [Bid Model criteria](#bid-model-criteria) section above for more information on supported dimensions and modeling attributes.</td>
+  </tr>
+</table>
+
+### Step 3: Create Bid Model
+
+The Bid Model management tools allow you to add, update, and delete Bid Model settings for your chosen campaign and dimension. See [Manage Bid Model settings](/guidelines/bid-model-api/#manage-bid-model-settings) in the Bid Model API guidelines for complete documentation.
+
+Use the following prompts to manage your Bid Models:
+
+<table className='mcpTable' style={{maxWidth: "fit-content"}}>
+<th style={{ minWidth: "300px"}}>Prompt</th>
+<th>Response example</th>
+<th>Notes</th>
+<tr>
+  <td>I want to apply bid modeling to campaign [<var>name</var> or <var>id</var>]</td>
+  <td><ImageLightbox
+      thumb={BidModelOptions}
+      full={BidModelOptions}
+      alt="MCP Bid Model Options"
+      size={150}         
+      radius={8}     
+    /><ImageLightbox
+      thumb={BidModelOptions2}
+      full={BidModelOptions2}
+      alt="MCP Bid Model Options 2"
+      size={150}         
+      radius={8}     
+    /></td> 
+  <td>MCP returns the available dimensions for applying Bid Model settings to the declared campaign. It also details the modeling options and attributes possible for each dimension.</td>
+  </tr>
+<tr>
+  <td>Add modeling to the Creative. Bid Modifier: 20, Spend Ratio: 10, Base bid: 5</td>
+  <td><ImageLightbox
+      thumb={BidModelCreative}
+      full={BidModelCreative}
+      alt="MCP Bid Model Creative "
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP finds Creative ID and applies the specified modeling parameters to it.</td>
+</tr>
+<tr>
+  <td>Update the Creative modeling to have 15% Spend Ratio and 15 multiplier. Also add modeling for Deal ID MN_IQM_Disp70 to have 35% Spend Ratio</td>
+  <td><ImageLightbox
+      thumb={BidModelUpdate}
+      full={BidModelUpdate}
+      alt="MCP Bid Model Update "
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP can update existing Creative modeling parameters and add new modeling for Deal IDs with specified Spend Ratios. It notes any conflicts or errors in the update process.</td>
+</tr>
+<tr>
+  <td>Delete the Creative modeling</td>
+  <td><ImageLightbox
+      thumb={BidModelDelete}
+      full={BidModelDelete}
+      alt="MCP Bid Model Delete "
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP deletes the specified modeling and notes any remaining modeling for the campaign.</td>
+</tr>
+</table>
+
+## More Bid Model actions
+
+### Bundles
+
+Create a Bid Model Bundle for the specified campaign and dimension IDs. A Bid Model Bundle allows you to group multiple dimension entities and apply modeling attributes at the Bundle level. Try the following prompts:
+
+
+<table className='mcpTable' style={{maxWidth: "fit-content"}}>
+<th style={{ minWidth: "300px"}}>Prompt</th>
+<th>Response example</th>
+<th>Notes</th>
+<tr>
+  <td>Create a new Bundle with CMP0001's two creatives</td>
+  <td><ImageLightbox
+      thumb={BidModelBundle}
+      full={BidModelBundle}
+      alt="MCP BM Bundle"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP checks the campaign for creatives and bundles them.</td>
+  </tr>
+  <tr>
+  <td>Update Bundle 109 by adding Creative ID 232934</td>
+  <td><ImageLightbox
+      thumb={BidModelBundle2}
+      full={BidModelBundle2}
+      alt="MCP BM Bundle Update"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP updates the specified Bundle by adding the given Creative ID.</td>
+  </tr>
+    <tr>
+  <td>Delete CMP0001's Creative Bundle</td>
+  <td><ImageLightbox
+      thumb={BidModelBundle3}
+      full={BidModelBundle3}
+      alt="MCP BM Bundle Delete"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP deletes the specified Creative Bundle.</td>
+  </tr>
+</table>
+
+### Include/Exclude
+
+Use Include/Exclude modeling to specify where your ads appear based on location or inventory dimensions. Try the following prompts:
+
+
+<table className='mcpTable' style={{maxWidth: "fit-content"}}>
+<th style={{ minWidth: "300px"}}>Prompt</th>
+<th>Response example</th>
+<th>Notes</th>
+<tr>
+  <td>Apply bid modeling to Bundle 110. Set priority to 3 and Spend Ratio to 20. However, I would like to exclude Creative ID 232934</td>
+  <td><ImageLightbox
+      thumb={BidModelExclude}
+      full={BidModelExclude}
+      alt="MCP BM Exclude"
+      size={200}         
+      radius={8}     
+    /></td>  
+  <td>MCP applies modeling to the specified Bundle, setting the priority and Spend Ratio while excluding the specified Creative ID.</td>
+  </tr>
+</table>
+
+## Tools index
+
+In the tables below you can find the complete set of Bid Model tools available in the MCP, categorized by function.
+
+Each tool includes a brief description and a link to the corresponding API documentation for more details on its functionality and usage.
+
+Use this index as a reference to explore the various Bid Model capabilities of the MCP and how they relate to the Bid Model API endpoints.
+
+<BidModelToolsIndex />
+
+## Video demo
+
+Follow along with this video demo of the Bid Model tutorial:
+
+<div
+  style={{
+    position: 'relative',
+    width: '100%',
+    maxWidth: 960,
+    aspectRatio: '16 / 9',
+    margin: '0 auto'
+  }}
+>
+  <iframe
+    src="https://www.youtube.com/embed/IvOamV0C6xk?si=tJhjrDavSK8Ekx37"
+    title="MCP Bid Model Tutorial Demo"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+  />
+</div>
