@@ -7666,12 +7666,6 @@ const sidebars = {
           label: 'Setup guide',
           id: `mcp/mcp-getting-started/setup-guide`,
           className: 'sidebarItem'
-        },
-        {
-          type: `doc`,
-          label: 'Prompts and examples',
-          id: `mcp/mcp-getting-started/mcp-actions`,
-          className: 'sidebarItem'
         }
       ],
     },
@@ -7736,12 +7730,6 @@ const sidebars = {
           type: 'doc',
           label: 'Insights tutorial',
           id: `mcp/mcp-tutorials/mcp-insights-tutorial`,
-          className: 'sidebarItem'
-        },
-        {
-          type: 'doc',
-          label: 'Finance tutorial',
-          id: `mcp/mcp-tutorials/mcp-finance-tutorial`,
           className: 'sidebarItem'
         },
         {

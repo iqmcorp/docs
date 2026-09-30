@@ -6,6 +6,7 @@
 
 /*import { Redirect } from "@docusaurus/router";*/
 import { themes as prismThemes } from "prism-react-renderer";
+import { GlobExcludeDefault } from "@docusaurus/utils";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -71,6 +72,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: "./sidebars.js",
+          exclude: [...GlobExcludeDefault, "**/draft/**"],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           /*editUrl:
