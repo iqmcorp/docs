@@ -108,7 +108,11 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
-        gtag: process.env.NODE_ENV === 'production'
+        // `docusaurus build` always sets NODE_ENV=production, including for a
+        // local test build — which would send real analytics and throw
+        // "window.gtag is not a function" when a browser extension blocks
+        // googletagmanager.com. `CI` is only set by the GitHub Actions deploy.
+        gtag: process.env.CI
           ? { trackingID: "G-9G69R8P56B", anonymizeIP: true }
           : false,
       }),
