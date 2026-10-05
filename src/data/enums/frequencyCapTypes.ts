@@ -5,5 +5,5 @@ export const frequencyCapTypes: EnumValue[] = [
   { id: 1, label: 'Day(s)' },
   { id: 2, label: 'Week(s)' },
   { id: 3, label: 'Month(s)' },
-  { id: 4, label: 'Campaign Duration' },
+  { id: 4, label: 'Campaign duration' },
 ];

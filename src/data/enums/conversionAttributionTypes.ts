@@ -5,6 +5,6 @@ import type { EnumValue } from '@site/src/components/EnumWidget';
 // page's own display table had ids 2 and 3 swapped relative to the JSON example).
 export const conversionAttributionTypes: EnumValue[] = [
   { id: 1, label: 'Hybrid' },
-  { id: 2, label: 'Click Based' },
-  { id: 3, label: 'View Based' },
+  { id: 2, label: 'Click based' },
+  { id: 3, label: 'View based' },
 ];
