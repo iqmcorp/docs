@@ -1686,6 +1686,20 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Rename campaign template',
+              href: '/guidelines/campaign-api#rename-campaign-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete campaign templates',
+              href: '/guidelines/campaign-api#delete-campaign-templates',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3262,6 +3276,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Email AQ Insights report',
+              href: '/guidelines/insights-api#email-aq-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Delete AQ Insights report',
               href: '/guidelines/insights-api#delete-aq-insights-report',
               customProps: { method: 'DEL' },
@@ -3318,6 +3339,13 @@ const sidebars = {
               type: 'link',
               label: 'Download VLD Insights report',
               href: '/guidelines/insights-api#download-vld-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email VLD Insights report',
+              href: '/guidelines/insights-api#email-vld-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -3386,6 +3414,13 @@ const sidebars = {
               type: 'link',
               label: 'Download SLS Insights report',
               href: '/guidelines/insights-api#download-sls-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email SLS Insights report',
+              href: '/guidelines/insights-api#email-sls-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -3933,6 +3968,13 @@ const sidebars = {
               label: 'Remove Contextual inventories from group',
               href: '/guidelines/inventory-api#remove-contextual-inventories-from-group',
               customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual inventory group for campaign',
+              href: '/guidelines/inventory-api#add-contextual-inventory-group-for-campaign',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -6314,6 +6356,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Email VLD Insights report',
+              href: '/political-vertical/insights-vld/#email-vld-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Delete VLD Insights report',
               href: '/political-vertical/insights-vld/#delete-vld-insights-report',
               customProps: { method: 'DEL' },
@@ -7167,6 +7216,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Email AQ Insights report',
+              href: '/healthcare-vertical/insights-pld#email-aq-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
               label: 'Delete AQ Insights report',
               href: '/healthcare-vertical/insights-pld#delete-aq-insights-report',
               customProps: { method: 'DEL' },
@@ -7231,6 +7287,13 @@ const sidebars = {
               type: 'link',
               label: 'Download SLS Insights report',
               href: '/healthcare-vertical/insights-pld#download-sls-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email SLS Insights report',
+              href: '/healthcare-vertical/insights-pld#email-sls-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },
