@@ -6100,6 +6100,34 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Power Segment audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Power Segment audience details',
+              href: '/political-vertical/audience-segments#power-segment-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Power Segment audience',
+              href: '/political-vertical/audience-segments#create-power-segment-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Update Power Segment audience',
+              href: '/political-vertical/audience-segments#update-power-segment-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem',
+            }
+          ]
+        },
+        {
+          type: 'category',
           label: 'More audience details',
           className: 'sidebarItem',
           items: [
