@@ -112,7 +112,7 @@ Read more about these requirements in our [Help Center<ExternalLink />](https://
   <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
 </tr>
 <tr>
-  <td>`campaignVldTimezoneId` <br /><span class="type-text">integer</span></td>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
   <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
 </tr>
 <tr>
@@ -187,7 +187,7 @@ A <var>vldId</var> can be used in the [Generate VLD Insights report](#generate-v
         "vldName": "530667_VLD_Insights_7",
         "campaignName": "prod-campaign-21145",
         "campaignId": 21145,
-        "vldStatusId": 3,
+        "vldStatus": 3,
         "startDate": 1603152000,
         "endDate": 1603411200,
         "ioId": 5,
@@ -195,7 +195,7 @@ A <var>vldId</var> can be used in the [Generate VLD Insights report](#generate-v
         "isCampaignEligible": false,
         "vldCreatedOn": 1721253632,
         "creativeTypeId": 11,
-        "campaignVldTimezoneId": 29,
+        "timezoneId": 29,
         "ioTypeId": 1
       },
       {
@@ -203,7 +203,7 @@ A <var>vldId</var> can be used in the [Generate VLD Insights report](#generate-v
         "vldName": "530667_VLD_Insights_6",
         "campaignName": "Campaign-4949",
         "campaignId": 4949,
-        "vldStatusId": 3,
+        "vldStatus": 3,
         "startDate": 1603152000,
         "endDate": 1603411200,
         "ioId": 15,
@@ -211,7 +211,7 @@ A <var>vldId</var> can be used in the [Generate VLD Insights report](#generate-v
         "isCampaignEligible": false,
         "vldCreatedOn": 1720325578,
         "creativeTypeId": 14,
-        "campaignVldTimezoneId": 29,
+        "timezoneId": 29,
         "ioTypeId": 1
       }
     ],
@@ -244,7 +244,7 @@ interface Responses {
             vldName: string;
             campaignName: string;
             campaignId: number;
-            vldStatusId: number;
+            vldStatus: number;
             startDate: number;
             endDate: number;
             ioId: number;
@@ -252,7 +252,7 @@ interface Responses {
             isCampaignEligible: boolean;
             vldCreatedOn: number;
             creativeTypeId: number;
-            campaignVldTimezoneId: number;
+            timezoneId: number;
             ioTypeId: number;
           }[];
           filteredRecords: number;
@@ -707,6 +707,109 @@ function getVLDReportDownloadUrl(): Promise<Responses> {
     }
   };
   
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Email VLD Insights report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report/email" operationId="sendMailForVlDReport" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send a VLD Insights report as an email attachment to specified recipients.
+
+| Request schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [VLD Insights report ID](#get-list-of-vld-insights-reports) to email. |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID: <var>1</var> (XLSX), <var>2</var> (CSV), <var>3</var> (PDF), <var>4</var> (ZIP). |
+| `emailIds` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Recipient email addresses (1–15). |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message.</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample (XLSX file)"
+{
+  "fileTypeId": 1,
+  "emailIds": ["user1@email.com"],
+  "reportId": 50
+}
+```
+
+```json title="Request sample (CSV file)"
+{
+  "fileTypeId": 2,
+  "emailIds": ["user1@email.com"],
+  "reportId": 50
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "VLD report e-mail sent successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      }
+    };
+  };
+};
+
+function sendMailForVlDReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/vld-report/email',
+    data: {
+      fileTypeId: 1,
+      emailIds: ['user1@email.com'],
+      reportId: 50
+    }
+  };
+
   return axios.request(options).then(({ data }: { data: Responses }) => data);
 }
 ```

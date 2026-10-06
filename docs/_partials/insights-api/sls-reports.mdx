@@ -784,8 +784,8 @@ Get a download link for a SLS Insights report in CSV or XLSX format.
 
 | Request schema | |
 | --- | --- |
-| `fileType` <br /><span class="type-text">integer</span> | File type ID. <br />XLSX: <var>1</var>. <br />CSV: <var>2</var>.
-| `slsId` <br /><span class="type-text">integer</span> | [SLS Insights report ID](#get-list-of-sls-insights-reports).
+| `fileTypeId` <br /><span class="type-text">integer</span> | File type ID. <br />XLSX: <var>1</var>. <br />CSV: <var>2</var>.
+| `reportId` <br /><span class="type-text">integer</span> | [SLS Insights report ID](#get-list-of-sls-insights-reports).
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -806,8 +806,8 @@ Get a download link for a SLS Insights report in CSV or XLSX format.
 
 ```json title="Request sample"
 {
-  "fileType": 1,
-  "slsId": 50
+  "fileTypeId": 1,
+  "reportId": 50
 }
 ```
 
@@ -871,9 +871,112 @@ function getSLSReportDownloadUrl(): Promise<Responses> {
       content: {
         "application/json": {
           fileTypeId?: `number`,
-          slsId?: `number`,
+          reportId?: `number`,
         }
       }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Email SLS Insights report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/sls-reports/email" operationId="sendMailForSlsReport" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send an SLS Insights report as an email attachment to specified recipients.
+
+| Request schema |  |
+| ---- | --- |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [SLS Insights report ID](#get-list-of-sls-insights-reports) to email. |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID: <var>1</var> (XLSX), <var>2</var> (CSV), <var>3</var> (PDF), <var>4</var> (ZIP). |
+| `emailIds` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Recipient email addresses (1–15). |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message.</td>
+</tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample (XLSX file)"
+{
+  "fileTypeId": 1,
+  "emailIds": ["user1@email.com"],
+  "reportId": 50
+}
+```
+
+```json title="Request sample (PDF file)"
+{
+  "fileTypeId": 3,
+  "emailIds": ["user1@email.com", "user2@email.com"],
+  "reportId": 50
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "SLS report e-mail sent successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      }
+    };
+  };
+};
+
+function sendMailForSlsReport(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ins/sls-reports/email',
+    data: {
+      fileTypeId: 1,
+      emailIds: ['user1@email.com'],
+      reportId: 50
     }
   };
 
