@@ -6205,7 +6205,7 @@ const sidebars = {
               type: 'link',
               label: 'Remove Power Segment personality from favorites',
               href: '/political-vertical/audience-segments#remove-power-segment-personality-from-favorites',
-              customProps: { method: 'DELETE' },
+              customProps: { method: 'DEL' },
               className: 'sidebarItem',
             },
             {
