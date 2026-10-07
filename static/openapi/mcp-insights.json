@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Insights API Specification",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "MCP Insights API Specification",
     "contact": {
       "name": "IQM Support",
@@ -28,8 +28,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API computes the cost and impressions for creation of VLD reports",
-        "description": "This API appropriately calculates the cost for the impressions for the Voter Level Data Reports based on the impressions and the mark up charged on the organisation.",
+        "summary": "Get expected charges (cost estimate) for a VLD insights report",
+        "description": "Insights report cost routing: Use this to get the expected charges, estimated cost, or price quote for generating an insights report (ICT, PLD, NLD, VLD, SLS, AQS) for specific campaigns and a date range, before generating it. It returns the cost that would be charged (chargeable cost), chargeable vs. already-charged impressions, the effective insight rate per 1,000 impressions, and whether the account has enough funds. Read-only: it does not create a report or charge anything. For the organization's configured insight fee rate card (rate per report type, not tied to campaigns), use the finance insight fees operation instead.\n\nThis operation covers VLD (Voter Level Data) reports, which are available to political advertisers and are priced for a single campaign. For ICT, PLD or NLD reports use computeInsightsReports; for SLS or AQS reports use their type-specific computation operations.\n\nChargeable impressions are the impressions served by the campaign in the date range that have not already been paid for by an earlier VLD report. The chargeable cost is `vldChargeableImps` x `effectiveVldRate` / 1000. Impressions already covered by an earlier report are returned as `vldChargedImps` / `vldChargedCost` and are not billed again.\n\nThe request works in two modes:\n- New report: provide `campaignId`, `vldStartDate` and `vldEndDate`. The campaign must belong to the caller's advertiser and be running, paused or expired, and the date range must fall within the campaign's flight and end a few days before today (report data is delayed).\n- Regeneration of an existing report (for example a failed one): provide `vldId` only. Do not send dates.\n\nWhen `vldReportCreatable` is false, `message` explains why: an identical report already exists (its `vldId`, `vldName` and `vldStatus` are returned), a report for the same campaign with an overlapping date range is still processing, the campaign served no impressions in the range, or funds are insufficient (`fundsAvailable` is false).\n",
         "operationId": "getChargeableImpressionsDataForVLDReports",
         "parameters": [
           {
@@ -66,8 +66,8 @@
                   "description": "For new Campaign and date range",
                   "value": {
                     "campaignId": 1,
-                    "vldStartDate": 1722311000,
-                    "vldEndDate": 1722315000
+                    "vldStartDate": 1722312000000,
+                    "vldEndDate": 1722916799000
                   }
                 },
                 "For Generate Again": {
@@ -95,16 +95,17 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "vldReportCreated": true,
+                        "vldReportCreatable": true,
                         "campaignId": 1,
                         "campaignName": "Campaign Name",
                         "campaignStatus": "running",
-                        "vldStartDate": 1722311000,
-                        "vldEndDate": 1722315000,
-                        "vldChargeableImps": 1000,
-                        "vldChargedImps": 100,
-                        "vldChargeableCost": 1000,
-                        "vldChargedCost": 100,
+                        "vldStartDate": 1722312000000,
+                        "vldEndDate": 1722916799000,
+                        "vldChargeableImps": 10000,
+                        "vldChargedImps": 1000,
+                        "vldChargeableCost": 30.0,
+                        "vldChargedCost": 3.0,
+                        "effectiveVldRate": 3.0,
                         "fundsAvailable": true
                       }
                     }
@@ -114,14 +115,14 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "vldReportCreated": false,
+                        "vldReportCreatable": false,
                         "vldId": 1,
                         "vldName": "1_VLD_INSIGHTS_1",
-                        "vldStatusId": 1,
-                        "vldCreatedOn": 1722315234,
+                        "vldStatus": 1,
+                        "vldCreatedOn": 1722920000000,
                         "campaignId": 1,
                         "campaignName": "Campaign Name",
-                        "creativeTypeId": 1,
+                        "creativeTypeId": 11,
                         "ioId": 1,
                         "ioName": "Insertion Order Name",
                         "ioTypeId": 1
@@ -133,7 +134,7 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "vldReportCreated": false,
+                        "vldReportCreatable": false,
                         "message": "VLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
                       }
                     }
@@ -1381,8 +1382,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API computes the cost and impressions for creation of SLS reports",
-        "description": "This API appropriately calculates the cost for the impressions for the Script Lift Studies based on the impressions and the mark up charged on the organisation.",
+        "summary": "Get expected charges (cost estimate) for an SLS insights report",
+        "description": "Insights report cost routing: Use this to get the expected charges, estimated cost, or price quote for generating an insights report (ICT, PLD, NLD, VLD, SLS, AQS) for specific campaigns and a date range, before generating it. It returns the cost that would be charged (chargeable cost), chargeable vs. already-charged impressions, the effective insight rate per 1,000 impressions, and whether the account has enough funds. Read-only: it does not create a report or charge anything. For the organization's configured insight fee rate card (rate per report type, not tied to campaigns), use the finance insight fees operation instead.\n\nThis operation covers SLS (Script Lift Study) reports, which are available to healthcare advertisers. For ICT, PLD or NLD reports use computeInsightsReports; for VLD or AQS reports use their type-specific computation operations.\n\nChargeable impressions are the impressions served by the selected campaigns in the date range that have not already been paid for by an earlier SLS report. The chargeable cost is `slsChargeableImps` x `effectiveSlsRate` / 1000. Impressions already covered by an earlier report are returned as `slsChargedImps` / `slsChargedCost` and are not billed again.\n\nThe request works in two modes:\n- New report: provide `ioId`, `campaignIds`, `slsStartDate`, `slsEndDate`, `slsName`, `slsLookbackDuration`, `conceptGroupId` and `reportTypes` (plus `competitorConceptGroupIds` when `reportTypes` includes 3, competitive analysis). All campaigns must belong to the caller's advertiser and to the same insertion order, must be running, paused or expired, and the date range must fall within the campaigns' flight and end a few days before today (report data is delayed). `slsName` must not already be used by another SLS report.\n- Regeneration of an existing report (for example a failed one): provide `slsId` only and no other fields.\n\nWhen `slsReportCreatable` is false, `message` explains why: an identical report already exists (its `slsId`, `slsName` and `slsStatus` are returned), a report for overlapping campaigns and dates is still processing, the campaigns served no impressions in the range, or funds are insufficient (`fundsAvailable` is false).\n",
         "operationId": "getChargeableImpressionsDataForSLSReports",
         "parameters": [
           {
@@ -1424,8 +1425,8 @@
                       2,
                       3
                     ],
-                    "slsStartDate": 1722311000,
-                    "slsEndDate": 1722315000,
+                    "slsStartDate": 1722312000000,
+                    "slsEndDate": 1722916799000,
                     "slsName": "Dummy SLS Name",
                     "slsLookbackDuration": 3,
                     "conceptGroupId": "202335",
@@ -1444,8 +1445,8 @@
                       2,
                       3
                     ],
-                    "slsStartDate": 1722311000,
-                    "slsEndDate": 1722315000,
+                    "slsStartDate": 1722312000000,
+                    "slsEndDate": 1722916799000,
                     "slsName": "Dummy SLS Name",
                     "slsLookbackDuration": 3,
                     "conceptGroupId": "202335",
@@ -1486,18 +1487,19 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "slsReportCreated": true,
+                        "slsReportCreatable": true,
                         "campaignIds": [
                           1,
                           2,
                           3
                         ],
-                        "slsStartDate": 1722311000,
-                        "slsEndDate": 1722315000,
-                        "slsChargeableImps": 1000,
-                        "slsChargedImps": 100,
-                        "slsChargeableCost": 1000,
-                        "slsChargedCost": 100,
+                        "slsStartDate": 1722312000000,
+                        "slsEndDate": 1722916799000,
+                        "slsChargeableImps": 10000,
+                        "slsChargedImps": 1000,
+                        "slsChargeableCost": 30.0,
+                        "slsChargedCost": 3.0,
+                        "effectiveSlsRate": 3.0,
                         "slsName": "Dummy SLS Name",
                         "slsLookbackDuration": 3,
                         "conceptGroupId": "202335",
@@ -1520,12 +1522,12 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "slsReportCreated": false,
+                        "slsReportCreatable": false,
                         "slsId": 1,
                         "slsName": "SLS report 1",
-                        "slsStatusId": 1,
-                        "slsCreatedOn": 1722315234,
-                        "campaignId": [
+                        "slsStatus": 1,
+                        "slsCreatedOn": 1722920000000,
+                        "campaignIds": [
                           1,
                           2
                         ],
@@ -1552,7 +1554,7 @@
                     "value": {
                       "success": true,
                       "data": {
-                        "slsReportCreated": false,
+                        "slsReportCreatable": false,
                         "message": "SLS Insights can't be generated for this campaigns at the moment as another insight with overlapping date range is processing"
                       }
                     }
@@ -2907,8 +2909,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API computes insights reports for the provided campaigns",
-        "description": "This API triggers computation of insights reports based on the provided request parameters including report type, campaign IDs, and date windows.\nThe computation process is asynchronous and returns a computation response with status and details.\n\n---\n\n#### Request Body Detail\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| reportType | String | **Type of report** to compute (e.g., PLD, NLD, ICT). Currently, VLD, SLS and AQS are not supported |\n| campaignIds | List<Integer> | List of **campaign IDs** for which to compute insights reports. |\n| startDate | Long | **Start date** timestamp for the report date window (epoch milliseconds). |\n| endDate | Long | **End date** timestamp for the report date window (epoch milliseconds). |\n| additionalParams | Map<String, Object> | **Optional parameters** specific to the report type. |\n",
+        "summary": "Get expected charges (cost estimate) for an ICT, PLD or NLD insights report",
+        "description": "Insights report cost routing: Use this to get the expected charges, estimated cost, or price quote for generating an insights report (ICT, PLD, NLD, VLD, SLS, AQS) for specific campaigns and a date range, before generating it. It returns the cost that would be charged (chargeable cost), chargeable vs. already-charged impressions, the effective insight rate per 1,000 impressions, and whether the account has enough funds. Read-only: it does not create a report or charge anything. For the organization's configured insight fee rate card (rate per report type, not tied to campaigns), use the finance insight fees operation instead.\n\nThis operation covers ICT (Integrated Care Team), PLD (Practitioner Level Data) and NLD (Nurse Level Data) reports; set `category` to choose the report type. For VLD, SLS or AQS reports use their type-specific computation operations instead.\n\nChargeable impressions are the impressions served by the selected campaigns in the date range that have not already been paid for by an earlier report of the same type. The chargeable cost is `chargeableImps` x `effectiveRate` / 1000. Impressions already covered by an earlier report are returned as `chargedImps` / `chargedCost` and are not billed again.\n\nThe request works in two modes:\n- New report: provide `category`, `campaignIds`, `startDate` and `endDate`. All campaigns must belong to the caller's advertiser and to the same insertion order, must be running, paused or expired, and the date range must fall within the campaigns' flight and end a few days before today (report data is delayed). A per-type maximum number of campaigns applies.\n- Regeneration of an existing report (for example a failed one): provide `reportId` only. Do not send dates. If `category` is also sent it must match the report's type.\n\nThe report type must be enabled for the advertiser. When `reportCreatable` is false, `message` explains why: an identical report already exists (its `id`, `name` and `status` are returned), a report for overlapping campaigns and dates is still processing, the campaigns served no impressions in the range, or funds are insufficient (`fundsAvailable` is false).\n\nTypical flow: call this operation to show the expected charge and confirm `reportCreatable`, then generate the report.\n",
         "operationId": "computeInsightsReports",
         "parameters": [
           {
@@ -2952,6 +2954,24 @@
                     ],
                     "startDate": 1640995200000,
                     "endDate": 1643673599000
+                  }
+                },
+                "ICT computation request": {
+                  "description": "ICT computation request",
+                  "value": {
+                    "category": "ict",
+                    "campaignIds": [
+                      451351,
+                      451352
+                    ],
+                    "startDate": 1640995200000,
+                    "endDate": 1643673599000
+                  }
+                },
+                "Regeneration computation request": {
+                  "description": "Regeneration computation request",
+                  "value": {
+                    "reportId": 50
                   }
                 }
               }
@@ -3862,8 +3882,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API computes the cost and impressions for creation of AQS reports",
-        "description": "This API appropriately calculates the cost for the impressions for the Audience Quality Score based on the impressions and the mark up charged on the organisation.",
+        "summary": "Get expected charges (cost estimate) for an AQS insights report",
+        "description": "Insights report cost routing: Use this to get the expected charges, estimated cost, or price quote for generating an insights report (ICT, PLD, NLD, VLD, SLS, AQS) for specific campaigns and a date range, before generating it. It returns the cost that would be charged (chargeable cost), chargeable vs. already-charged impressions, the effective insight rate per 1,000 impressions, and whether the account has enough funds. Read-only: it does not create a report or charge anything. For the organization's configured insight fee rate card (rate per report type, not tied to campaigns), use the finance insight fees operation instead.\n\nThis operation covers AQS (Audience Quality Score) reports, which are available to healthcare advertisers and are priced for a single campaign. For ICT, PLD or NLD reports use computeInsightsReports; for VLD or SLS reports use their type-specific computation operations.\n\nChargeable impressions are the impressions served by the campaign in the date range that have not already been paid for by an earlier AQS report. The chargeable cost is `aqsChargeableImps` x `effectiveAqsRate` / 1000. Impressions already covered by an earlier report are returned as `aqsChargedImps` / `aqsChargedCost` and are not billed again.\n\nThe request works in two modes:\n- New report: provide `campaignId`, `aqsStartDate`, `aqsEndDate`, `aqsName`, `aqsReportTypeId` and `aqsAudienceConceptGroups`. The campaign must belong to the caller's advertiser and be running, paused or expired, and the date range must fall within the campaign's flight and end a few days before today (report data is delayed). `aqsName` must not already be used by another AQS report.\n- Regeneration of an existing report (for example a failed one): provide `aqsId` only. Do not send dates.\n\nWhen `aqsReportCreatable` is false, `message` explains why: an identical report already exists (its `aqsId`, `aqsName` and `aqsStatus` are returned), a report for the same campaign with an overlapping date range is still processing, the campaign served no impressions in the range, or funds are insufficient (`fundsAvailable` is false).\n",
         "operationId": "computeReports",
         "parameters": [
           {
@@ -3896,33 +3916,12 @@
                 "$ref": "#/components/schemas/AQReportComputationRequestVO"
               },
               "examples": {
-                "For generation of new report without competitive_analysis report type": {
-                  "description": "For generation of new report without competitive_analysis report type",
+                "For generation of new report": {
+                  "description": "For generation of new report",
                   "value": {
                     "campaignId": 1,
-                    "aqsStartDate": 1722311000,
-                    "aqsEndDate": 1722315000,
-                    "aqsName": "Dummy AQS Name",
-                    "aqsReportTypeId": 1,
-                    "aqsAudienceConceptGroups": [
-                      {
-                        "audienceId": 101,
-                        "conceptGroupId": 202335
-                      }
-                    ]
-                  }
-                },
-                "For generation of new report competitive_analysis report type": {
-                  "description": "For generation of new report competitive_analysis report type",
-                  "value": {
-                    "ioId": 1234,
-                    "campaignIds": [
-                      1,
-                      2,
-                      3
-                    ],
-                    "aqsStartDate": 1722311000,
-                    "aqsEndDate": 1722315000,
+                    "aqsStartDate": 1722312000000,
+                    "aqsEndDate": 1722916799000,
                     "aqsName": "Dummy AQS Name",
                     "aqsReportTypeId": 1,
                     "aqsAudienceConceptGroups": [
@@ -3960,12 +3959,13 @@
                       "data": {
                         "aqsReportCreatable": true,
                         "campaignId": 1,
-                        "aqsStartDate": 1722311000,
-                        "aqsEndDate": 1722315000,
-                        "aqsChargeableImps": 1000,
-                        "aqsChargedImps": 100,
-                        "aqsChargeableCost": 1000,
-                        "aqsChargedCost": 100,
+                        "aqsStartDate": 1722312000000,
+                        "aqsEndDate": 1722916799000,
+                        "aqsChargeableImps": 10000,
+                        "aqsChargedImps": 1000,
+                        "aqsChargeableCost": 30.0,
+                        "aqsChargedCost": 3.0,
+                        "effectiveAqsRate": 3.0,
                         "aqsName": "Dummy AQS Name",
                         "aqsReportTypeId": 1,
                         "aqsAudienceConceptGroups": [
@@ -3987,7 +3987,7 @@
                         "aqsId": 1,
                         "aqsName": "AQS report 1",
                         "aqsStatus": 1,
-                        "aqsCreatedOn": 1722315234,
+                        "aqsCreatedOn": 1722920000000,
                         "campaignId": 1,
                         "ioId": 1,
                         "ioName": "Insertion Order Name",
@@ -8684,110 +8684,158 @@
         "properties": {
           "conceptGroupId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Concept group ID",
+            "example": 101
           },
           "audienceId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Audience ID",
+            "example": 1234
           }
-        }
+        },
+        "description": "An audience and the concept group it is scored against in an AQS report"
       },
       "AQComputationResponseVO": {
         "type": "object",
         "properties": {
           "aqsReportCreatable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the report can be generated. False when an identical report already exists, a report for the same campaign with an overlapping date range is still processing, the campaign served no impressions in the range, or funds are insufficient; see message.",
+            "example": false
           },
           "aqsChargeableImps": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Impressions billed for the report: impressions served by the campaign in the date range that no earlier AQS report has already paid for.",
+            "example": 150000
           },
           "aqsChargedImps": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Impressions in the date range already paid for by an earlier AQS report. These are not billed again.",
+            "example": 120000
           },
           "aqsChargeableCost": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "Charge for the report: aqsChargeableImps x effectiveAqsRate / 1000. This is the amount generating the report charges.",
+            "example": 25.5
           },
           "aqsChargedCost": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "Cost already paid for aqsChargedImps by earlier AQS reports, shown for reference and not charged again. When the advertiser's insight rate is discounted to zero (the report is free), this holds the undiscounted price, for display as a struck-through price.",
+            "example": 20.0
           },
           "fundsAvailable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the account has enough available funds to cover aqsChargeableCost.",
+            "example": true
           },
           "effectiveAqsRate": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "Advertiser's AQS insight rate per 1,000 impressions (CPM), after markup.",
+            "example": 3.0
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Reason the report cannot be generated when aqsReportCreatable is false, or a status message after generation."
           },
           "timezoneId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Timezone ID for the campaign",
+            "example": 29
           },
           "aqsId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "AQS report ID",
+            "example": 10
           },
           "aqsName": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the AQS report",
+            "example": "530667_AQS_Insights_7"
           },
           "aqsStatus": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "AQS report status ID. See the report statuses operation for values.",
+            "example": 3
           },
           "ioId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Insertion order ID",
+            "example": 5
           },
           "ioName": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the insertion order",
+            "example": "Corporate, Inc."
           },
           "ioTypeId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Insertion Order type ID",
+            "example": 1
           },
           "aqsCreatedOn": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Report creation time in epoch milliseconds",
+            "example": 1721253632000
           },
           "aqsStartDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Start of the report date range in epoch milliseconds",
+            "example": 1603152000000
           },
           "aqsEndDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "End of the report date range in epoch milliseconds",
+            "example": 1603411199000
           },
           "campaignId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Campaign ID",
+            "example": 21145
           },
           "aqsReportTypeId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "AQS report type ID",
+            "example": 1
           },
           "creativeTypeId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Creative type ID",
+            "example": 11
           },
           "aqsAudienceConceptGroups": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AQAudienceConceptGroupVO"
-            }
+            },
+            "description": "List of audience concept groups associated with AQS"
           }
-        }
+        },
+        "description": "AQS (Audience Quality Score) report cost details: chargeable and already-charged impressions and cost, the effective rate and fund availability. When an identical report already exists, its details are returned instead."
       },
       "AQReportComputationRequestVO": {
         "type": "object",
         "properties": {
           "campaignId": {
             "type": "integer",
-            "description": "Unique identifier of the campaign",
+            "description": "Campaign to include in the report. Required for a new report. Must belong to the caller's advertiser and be running, paused or expired.",
             "format": "int32",
             "example": 21145
           },
@@ -8812,42 +8860,42 @@
           },
           "aqsId": {
             "type": "integer",
-            "description": "AQS ID",
+            "description": "ID of an existing AQS report (for example a failed one) to regenerate. When set, do not send dates. Leave unset or 0 for a new report.",
             "format": "int32",
-            "example": 21145
+            "example": 10
           },
           "aqsName": {
             "type": "string",
-            "description": "Name of the AQS",
-            "example": "Audience Quality Score"
+            "description": "Report name. Required for a new report and must not already be used by another AQS report of the advertiser.",
+            "example": "Q3 Audience Quality Score"
           },
           "aqsStartDate": {
             "type": "integer",
-            "description": "Start date of the AQS in epoch milliseconds",
+            "description": "Start of the report date range in epoch milliseconds. Required for a new report; must fall within the campaign's flight.",
             "format": "int64",
             "example": 1622505600000
           },
           "aqsEndDate": {
             "type": "integer",
-            "description": "End date of the AQS in epoch milliseconds",
+            "description": "End of the report date range in epoch milliseconds. Required for a new report; must be on or after aqsStartDate, within the campaign's flight and a few days before today (report data is delayed).",
             "format": "int64",
             "example": 1625097600000
           },
           "aqsReportTypeId": {
             "type": "integer",
-            "description": "Type ID of the AQS report",
+            "description": "AQS report type ID. See the AQS report types operation for values. Required for a new report.",
             "format": "int32",
             "example": 1
           },
           "aqsAudienceConceptGroups": {
             "type": "array",
-            "description": "List of Audience concept groups for the AQS",
+            "description": "Audiences to score, each paired with a concept group. Required for a new report.",
             "items": {
               "$ref": "#/components/schemas/AQAudienceConceptGroupVO"
             }
           }
         },
-        "description": "Request object for AQS report computation, containing campaign and audience details"
+        "description": "Request to price (cost estimate) or generate an AQS (Audience Quality Score) insights report for a single campaign. For a new report send campaignId, aqsStartDate, aqsEndDate, aqsName, aqsReportTypeId and aqsAudienceConceptGroups; for regeneration of an existing report send aqsId only."
       },
       "AQReportList": {
         "type": "object",
@@ -9684,94 +9732,94 @@
         "properties": {
           "reportCreatable": {
             "type": "boolean",
-            "description": "Whether the report can be created",
+            "description": "Whether the report can be generated now. False when an identical report already exists, a report for overlapping campaigns and dates is still processing, the campaigns served no impressions in the range, or funds are insufficient; see message.",
             "example": true
           },
           "chargeableImps": {
             "type": "integer",
-            "description": "Number of chargeable impressions",
+            "description": "Impressions that generating the report will bill: impressions served by the campaigns in the date range that no earlier report of the same type has already paid for.",
             "format": "int64",
             "example": 100
           },
           "chargedImps": {
             "type": "integer",
-            "description": "Number of already charged impressions",
+            "description": "Impressions in the date range already paid for by an earlier report of the same type. These are not billed again.",
             "format": "int64",
             "example": 25
           },
           "chargeableCost": {
             "type": "number",
-            "description": "Chargeable cost amount",
+            "description": "Expected charge for the report: chargeableImps x effectiveRate / 1000. This is the amount generating the report will charge.",
             "format": "double",
             "example": 345.23
           },
           "chargedCost": {
             "type": "number",
-            "description": "Already charged cost amount",
+            "description": "Cost already paid for chargedImps by earlier reports, shown for reference and not charged again. When the advertiser's insight rate is discounted to zero (the report is free), this holds the undiscounted price, for display as a struck-through price.",
             "format": "double",
             "example": 45.21
           },
           "fundsAvailable": {
             "type": "boolean",
-            "description": "Whether sufficient funds are available",
+            "description": "Whether the account has enough available funds to cover chargeableCost.",
             "example": true
           },
           "effectiveRate": {
             "type": "number",
-            "description": "Effective rate for the report",
+            "description": "Advertiser's insight rate for this report type, per 1,000 impressions (CPM), after markup.",
             "format": "double",
             "example": 3.45
           },
           "message": {
             "type": "string",
-            "description": "Response message"
+            "description": "Reason the report cannot be generated when reportCreatable is false."
           },
           "processingCampaignIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of campaign IDs currently being processed",
+            "description": "Campaign IDs that already have a report of this type processing for an overlapping date range.",
             "items": {
               "type": "integer",
-              "description": "Set of campaign IDs currently being processed",
+              "description": "Campaign IDs that already have a report of this type processing for an overlapping date range.",
               "format": "int32"
             }
           },
           "templateId": {
             "type": "integer",
-            "description": "Associated template ID",
+            "description": "Template ID of the existing report, if it was generated from a template.",
             "format": "int32",
             "example": 111
           },
           "idempotencyKey": {
             "type": "string",
-            "description": "Idempotency key for the computation request"
+            "description": "Idempotency key echoed from a scheduled generation request. Not set for cost estimates."
           },
           "id": {
             "type": "integer",
-            "description": "Report ID",
+            "description": "ID of the existing identical report when one already exists; otherwise 0 or absent.",
             "format": "int32",
             "example": 0
           },
           "name": {
             "type": "string",
-            "description": "Report name",
+            "description": "Name of the existing identical report, when one already exists.",
             "example": "Sample Report"
           },
           "status": {
             "type": "integer",
-            "description": "Report status ID",
+            "description": "Status ID of the existing identical report, when one already exists. See the report statuses operation for values.",
             "format": "int32",
             "example": 1
           },
           "ioId": {
             "type": "integer",
-            "description": "Insertion order ID",
+            "description": "Insertion order ID of the campaigns.",
             "format": "int32",
             "example": 101
           },
           "ioName": {
             "type": "string",
-            "description": "Insertion order name",
+            "description": "Insertion order name of the campaigns.",
             "example": "Test IO"
           },
           "ioTypeId": {
@@ -9788,30 +9836,30 @@
           },
           "startDate": {
             "type": "integer",
-            "description": "Report start date in epoch milliseconds",
+            "description": "Start of the report date range in epoch milliseconds.",
             "format": "int64",
             "example": 1742898000000
           },
           "endDate": {
             "type": "integer",
-            "description": "Report end date in epoch milliseconds",
+            "description": "End of the report date range in epoch milliseconds.",
             "format": "int64",
             "example": 1774238399000
           },
           "campaignIds": {
             "type": "array",
-            "description": "List of campaign IDs included in the report",
+            "description": "Campaign IDs included in the estimate.",
             "example": [
               11011
             ],
             "items": {
               "type": "integer",
-              "description": "List of campaign IDs included in the report",
+              "description": "Campaign IDs included in the estimate.",
               "format": "int32"
             }
           }
         },
-        "description": "Insights report computation response"
+        "description": "Expected charges (cost estimate) for an ICT, PLD or NLD insights report, with chargeable and already-charged impressions, the effective rate and fund availability. When an identical report already exists, its id, name and status are returned instead."
       },
       "InsightsDataWrapper": {
         "type": "object",
@@ -9935,13 +9983,13 @@
         "properties": {
           "ioId": {
             "type": "integer",
-            "description": "Insertion Order ID associated with the report",
+            "description": "Insertion order ID of the campaigns. Not required: the insertion order is derived from campaignIds.",
             "format": "int32",
             "example": 5
           },
           "campaignIds": {
             "type": "array",
-            "description": "List of campaign IDs for which the report needs to be generated",
+            "description": "Campaign IDs to include in the report. Required for a new report. All campaigns must belong to the caller's advertiser and the same insertion order, and be running, paused or expired.",
             "example": [
               101,
               102,
@@ -9949,53 +9997,53 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of campaign IDs for which the report needs to be generated",
+              "description": "Campaign IDs to include in the report. Required for a new report. All campaigns must belong to the caller's advertiser and the same insertion order, and be running, paused or expired.",
               "format": "int32"
             }
           },
           "reportId": {
             "type": "integer",
-            "description": "Report ID associated with the insights report",
+            "description": "ID of an existing insights report (for example a failed one) to price for regeneration. When set, do not send startDate or endDate. Leave unset or 0 for a new report.",
             "format": "int32",
             "example": 1
           },
           "startDate": {
             "type": "integer",
-            "description": "Start date for the report in epoch milliseconds",
+            "description": "Start of the report date range in epoch milliseconds. Required for a new report; must fall within the campaigns' flight.",
             "format": "int64",
             "example": 1622505600000
           },
           "endDate": {
             "type": "integer",
-            "description": "End date for the report in epoch milliseconds",
+            "description": "End of the report date range in epoch milliseconds. Required for a new report; must be on or after startDate and a few days before today (report data is delayed).",
             "format": "int64",
             "example": 1625097600000
           },
           "templateId": {
             "type": "integer",
-            "description": "Template ID for which report needs to be generated",
+            "description": "Report template ID. Used by the internal report scheduler; omit when requesting a cost estimate.",
             "format": "int32"
           },
           "triggerTime": {
             "type": "integer",
-            "description": "Trigger time in epoch milliseconds for which report is being generated",
+            "description": "Scheduled trigger time in epoch milliseconds. Used by the internal report scheduler; omit when requesting a cost estimate.",
             "format": "int64"
           },
           "idempotencyKey": {
             "type": "string",
-            "description": "Idempotency key to uniquely identify a report generation request"
+            "description": "Idempotency key for a scheduled report generation request. Used by the internal report scheduler; omit when requesting a cost estimate."
           },
           "category": {
             "type": "string",
-            "description": "Category of insights report to be generated (e.g., PLD, ICT, NLD)",
-            "example": "PLD"
+            "description": "Insights report type to price: ICT (Integrated Care Team), PLD (Practitioner Level Data) or NLD (Nurse Level Data). Case-insensitive. Required for a new report; when reportId is set it is optional but must match the report's type.",
+            "example": "ICT"
           },
           "id": {
             "type": "integer",
             "format": "int32"
           }
         },
-        "description": "Request object for computing insights report, containing campaign IDs, date range, template ID, and report category"
+        "description": "Request for the expected charges (cost estimate) of an ICT, PLD or NLD insights report. For a new report send category, campaignIds, startDate and endDate; to price the regeneration of an existing report send reportId only."
       },
       "InsightsRequestVO": {
         "type": "object",
@@ -10832,18 +10880,18 @@
         "properties": {
           "slsId": {
             "type": "integer",
-            "description": "SLS ID",
+            "description": "SLS report ID",
             "format": "int32",
             "example": 123
           },
           "slsName": {
             "type": "string",
-            "description": "SLS name",
+            "description": "SLS report name",
             "example": "SLS_Insights_1"
           },
           "slsStatus": {
             "type": "integer",
-            "description": "SLS status",
+            "description": "SLS report status ID. See the report statuses operation for values.",
             "format": "int32",
             "example": 2
           },
@@ -10866,19 +10914,19 @@
           },
           "slsCreatedOn": {
             "type": "integer",
-            "description": "SLS creation epoch",
+            "description": "Report creation time in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
           "slsStartDate": {
             "type": "integer",
-            "description": "SLS start date epoch",
+            "description": "Start of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
           "slsEndDate": {
             "type": "integer",
-            "description": "SLS end date epoch",
+            "description": "End of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
@@ -10922,7 +10970,7 @@
           },
           "reportTypes": {
             "type": "array",
-            "description": "List of Report Types",
+            "description": "Report types included: 1=pre vs post analysis, 2=NPI exposure, 3=competitive analysis",
             "example": [
               1,
               2,
@@ -10930,62 +10978,62 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of Report Types",
+              "description": "Report types included: 1=pre vs post analysis, 2=NPI exposure, 3=competitive analysis",
               "format": "int32"
             }
           },
           "slsReportCreatable": {
             "type": "boolean",
-            "description": "Indicates if the SLS report is creatable",
+            "description": "Whether the report can be generated. False when an identical report already exists, a report for overlapping campaigns and dates is still processing, the campaigns served no impressions in the range, or funds are insufficient; see message.",
             "example": true
           },
           "slsChargeableImps": {
             "type": "integer",
-            "description": "SLS Chargeable Impressions",
+            "description": "Impressions billed for the report: impressions served by the campaigns in the date range that no earlier SLS report has already paid for.",
             "format": "int64",
             "example": 1000
           },
           "slsChargedImps": {
             "type": "integer",
-            "description": "SLS Charged Impressions",
+            "description": "Impressions in the date range already paid for by an earlier SLS report. These are not billed again.",
             "format": "int64",
             "example": 950
           },
           "slsChargeableCost": {
             "type": "number",
-            "description": "SLS Chargeable Cost",
+            "description": "Charge for the report: slsChargeableImps x effectiveSlsRate / 1000. This is the amount generating the report charges.",
             "format": "double",
             "example": 150.75
           },
           "slsChargedCost": {
             "type": "number",
-            "description": "SLS Charged Cost",
+            "description": "Cost already paid for slsChargedImps by earlier SLS reports, shown for reference and not charged again. When the advertiser's insight rate is discounted to zero (the report is free), this holds the undiscounted price, for display as a struck-through price.",
             "format": "double",
             "example": 140.5
           },
           "fundsAvailable": {
             "type": "boolean",
-            "description": "Indicates if funds are available for SLS computation",
+            "description": "Whether the account has enough available funds to cover slsChargeableCost.",
             "example": true
           },
           "effectiveSlsRate": {
             "type": "number",
-            "description": "Effective SLS Rate",
+            "description": "Advertiser's SLS insight rate per 1,000 impressions (CPM), after markup.",
             "format": "double",
-            "example": 0.15
+            "example": 3.0
           },
           "message": {
             "type": "string",
-            "description": "Processing message",
-            "example": "SLS computation initiated successfully"
+            "description": "Reason the report cannot be generated when slsReportCreatable is false, or a status message after generation.",
+            "example": "SLS Insights can't be generated for this campaigns at the moment as another insight with overlapping date range is processing"
           },
           "processingCampaignIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of Campaign IDs being processed",
+            "description": "Campaign IDs that already have an SLS report processing for an overlapping date range.",
             "items": {
               "type": "integer",
-              "description": "Set of Campaign IDs being processed",
+              "description": "Campaign IDs that already have an SLS report processing for an overlapping date range.",
               "format": "int32"
             }
           },
@@ -11005,25 +11053,25 @@
             "format": "int32"
           }
         },
-        "description": "SLS Computation Response"
+        "description": "SLS (Script Lift Study) report cost details: chargeable and already-charged impressions and cost, the effective rate and fund availability. When an identical report already exists, its details are returned instead."
       },
       "SLSDetailsVO": {
         "type": "object",
         "properties": {
           "slsId": {
             "type": "integer",
-            "description": "SLS ID",
+            "description": "SLS report ID",
             "format": "int32",
             "example": 123
           },
           "slsName": {
             "type": "string",
-            "description": "SLS name",
+            "description": "SLS report name",
             "example": "SLS_Insights_1"
           },
           "slsStatus": {
             "type": "integer",
-            "description": "SLS status",
+            "description": "SLS report status ID. See the report statuses operation for values.",
             "format": "int32",
             "example": 2
           },
@@ -11046,19 +11094,19 @@
           },
           "slsCreatedOn": {
             "type": "integer",
-            "description": "SLS creation epoch",
+            "description": "Report creation time in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
           "slsStartDate": {
             "type": "integer",
-            "description": "SLS start date epoch",
+            "description": "Start of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
           "slsEndDate": {
             "type": "integer",
-            "description": "SLS end date epoch",
+            "description": "End of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1728366883518
           },
@@ -11102,7 +11150,7 @@
           },
           "reportTypes": {
             "type": "array",
-            "description": "List of Report Types",
+            "description": "Report types included: 1=pre vs post analysis, 2=NPI exposure, 3=competitive analysis",
             "example": [
               1,
               2,
@@ -11110,7 +11158,7 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of Report Types",
+              "description": "Report types included: 1=pre vs post analysis, 2=NPI exposure, 3=competitive analysis",
               "format": "int32"
             }
           },
@@ -11132,13 +11180,13 @@
         "properties": {
           "ioId": {
             "type": "integer",
-            "description": "IO ID",
+            "description": "Insertion order ID of the campaigns. Required for a new report.",
             "format": "int32",
             "example": 12345
           },
           "campaignIds": {
             "type": "array",
-            "description": "List of Campaign IDs",
+            "description": "Campaigns to include in the report. Required for a new report. All campaigns must belong to the caller's advertiser and the same insertion order, and be running, paused or expired.",
             "example": [
               123,
               456,
@@ -11151,41 +11199,41 @@
           },
           "slsId": {
             "type": "integer",
-            "description": "SLS ID (for regeneration only)",
+            "description": "ID of an existing SLS report (for example a failed one) to regenerate. When set, send no other fields. Leave unset or 0 for a new report.",
             "format": "int32",
             "example": 123
           },
           "slsStartDate": {
             "type": "integer",
-            "description": "SLS Start Date",
+            "description": "Start of the report date range in epoch milliseconds. Required for a new report; must fall within the campaigns' flight.",
             "format": "int64",
             "example": 1622505600000
           },
           "slsEndDate": {
             "type": "integer",
-            "description": "SLS End Date",
+            "description": "End of the report date range in epoch milliseconds. Required for a new report; must be on or after slsStartDate, within the campaigns' flight and a few days before today (report data is delayed).",
             "format": "int64",
             "example": 1625097600000
           },
           "slsName": {
             "type": "string",
-            "description": "SLS Name",
+            "description": "Report name, 3 to 100 characters. Required for a new report and must not already be used by another SLS report of the advertiser.",
             "example": "SLS Report - Q1 2021"
           },
           "slsLookbackDuration": {
             "type": "integer",
-            "description": "SLS Lookback Duration (in months)",
+            "description": "Lookback duration in months, 1 to 6. Required for a new report.",
             "format": "int32",
             "example": 3
           },
           "conceptGroupId": {
             "type": "string",
-            "description": "Concept Group ID",
+            "description": "Concept group ID the study measures. Required for a new report.",
             "example": "123"
           },
           "competitorConceptGroupIds": {
             "type": "array",
-            "description": "List of Competitor Concept Group IDs",
+            "description": "Competitor concept group IDs for competitive analysis. Required (1 to 3 unique IDs, not including conceptGroupId) when reportTypes contains 3; must be empty otherwise.",
             "example": [
               "456",
               "789"
@@ -11196,7 +11244,7 @@
           },
           "reportTypes": {
             "type": "array",
-            "description": "List of Report Types",
+            "description": "Report types to include: 1=pre vs post analysis, 2=NPI exposure, 3=competitive analysis. Required for a new report.",
             "example": [
               1,
               2,
@@ -11238,7 +11286,7 @@
             "type": "string"
           }
         },
-        "description": "SLS Report Computation Request"
+        "description": "Request to price (cost estimate) or generate an SLS (Script Lift Study) insights report. For a new report send ioId, campaignIds, slsStartDate, slsEndDate, slsName, slsLookbackDuration, conceptGroupId and reportTypes (plus competitorConceptGroupIds for competitive analysis); for regeneration of an existing report send slsId only."
       },
       "SLSReportsList": {
         "type": "object",
@@ -11619,18 +11667,18 @@
         "properties": {
           "vldId": {
             "type": "integer",
-            "description": "VLD ID",
+            "description": "VLD report ID",
             "format": "int32",
             "example": 111
           },
           "vldName": {
             "type": "string",
-            "description": "VLD Name",
+            "description": "VLD report name",
             "example": "VLD Campaign"
           },
           "vldStatus": {
             "type": "integer",
-            "description": "VLD Status",
+            "description": "VLD report status ID. See the report statuses operation for values.",
             "format": "int32",
             "example": 1
           },
@@ -11653,21 +11701,21 @@
           },
           "vldCreatedOn": {
             "type": "integer",
-            "description": "VLD Creation Epoch",
+            "description": "Report creation time in epoch milliseconds",
             "format": "int64",
             "example": 1755850851560
           },
           "vldStartDate": {
             "type": "integer",
-            "description": "VLD Start Date Epoch",
+            "description": "Start of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1755662400000
           },
           "vldEndDate": {
             "type": "integer",
-            "description": "VLD End Date Epoch",
+            "description": "End of the report date range in epoch milliseconds",
             "format": "int64",
-            "example": 1755662400000
+            "example": 1755748799000
           },
           "campaignId": {
             "type": "integer",
@@ -11693,48 +11741,48 @@
           },
           "vldReportCreatable": {
             "type": "boolean",
-            "description": "Indicates if the VLD report is creatable",
+            "description": "Whether the report can be generated. False when an identical report already exists, a report for the same campaign with an overlapping date range is still processing, the campaign served no impressions in the range, or funds are insufficient; see message.",
             "example": true
           },
           "vldChargeableImps": {
             "type": "integer",
-            "description": "VLD Chargeable Impressions",
+            "description": "Impressions billed for the report: impressions served by the campaign in the date range that no earlier VLD report has already paid for.",
             "format": "int64",
             "example": 1000
           },
           "vldChargedImps": {
             "type": "integer",
-            "description": "VLD Charged Impressions",
+            "description": "Impressions in the date range already paid for by an earlier VLD report. These are not billed again.",
             "format": "int64",
             "example": 950
           },
           "vldChargeableCost": {
             "type": "number",
-            "description": "VLD Chargeable Cost",
+            "description": "Charge for the report: vldChargeableImps x effectiveVldRate / 1000. This is the amount generating the report charges.",
             "format": "double",
             "example": 150.75
           },
           "vldChargedCost": {
             "type": "number",
-            "description": "VLD Charged Cost",
+            "description": "Cost already paid for vldChargedImps by earlier VLD reports, shown for reference and not charged again.",
             "format": "double",
             "example": 140.5
           },
           "fundsAvailable": {
             "type": "boolean",
-            "description": "Indicates if funds are available for VLD computation",
+            "description": "Whether the account has enough available funds to cover vldChargeableCost.",
             "example": true
           },
           "effectiveVldRate": {
             "type": "number",
-            "description": "Effective VLD Rate",
+            "description": "Advertiser's VLD insight rate per 1,000 impressions (CPM), after markup.",
             "format": "double",
-            "example": 0.15
+            "example": 3.0
           },
           "message": {
             "type": "string",
-            "description": "Processing message",
-            "example": "VLD computation initiated successfully"
+            "description": "Reason the report cannot be generated when vldReportCreatable is false, or a status message after generation.",
+            "example": "VLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
           },
           "chargedCost": {
             "type": "number",
@@ -11742,25 +11790,25 @@
             "writeOnly": true
           }
         },
-        "description": "VLD Computation Response"
+        "description": "VLD (Voter Level Data) report cost details: chargeable and already-charged impressions and cost, the effective rate and fund availability. When an identical report already exists, its details are returned instead."
       },
       "VLDDetailsVO": {
         "type": "object",
         "properties": {
           "vldId": {
             "type": "integer",
-            "description": "VLD ID",
+            "description": "VLD report ID",
             "format": "int32",
             "example": 111
           },
           "vldName": {
             "type": "string",
-            "description": "VLD Name",
+            "description": "VLD report name",
             "example": "VLD Campaign"
           },
           "vldStatus": {
             "type": "integer",
-            "description": "VLD Status",
+            "description": "VLD report status ID. See the report statuses operation for values.",
             "format": "int32",
             "example": 1
           },
@@ -11783,21 +11831,21 @@
           },
           "vldCreatedOn": {
             "type": "integer",
-            "description": "VLD Creation Epoch",
+            "description": "Report creation time in epoch milliseconds",
             "format": "int64",
             "example": 1755850851560
           },
           "vldStartDate": {
             "type": "integer",
-            "description": "VLD Start Date Epoch",
+            "description": "Start of the report date range in epoch milliseconds",
             "format": "int64",
             "example": 1755662400000
           },
           "vldEndDate": {
             "type": "integer",
-            "description": "VLD End Date Epoch",
+            "description": "End of the report date range in epoch milliseconds",
             "format": "int64",
-            "example": 1755662400000
+            "example": 1755748799000
           },
           "campaignId": {
             "type": "integer",
@@ -11847,27 +11895,29 @@
       },
       "VLDReportComputationRequestVO": {
         "type": "object",
-        "description": "VLD Report Computation Request",
+        "description": "Request to price (cost estimate) or generate a VLD (Voter Level Data) insights report for a single campaign. For a new report send campaignId, vldStartDate and vldEndDate; for regeneration of an existing report send vldId only.",
         "properties": {
           "campaignId": {
             "type": "integer",
-            "description": "Campaign ID for the VLD report",
-            "format": "int32"
+            "description": "Campaign to include in the report. Required for a new report. Must belong to the caller's advertiser and be running, paused or expired.",
+            "format": "int32",
+            "example": 21145
           },
           "vldId": {
             "type": "integer",
-            "description": "VLD ID",
-            "format": "int32"
+            "description": "ID of an existing VLD report (for example a failed one) to regenerate. When set, send no other fields. Leave unset or 0 for a new report.",
+            "format": "int32",
+            "example": 10
           },
           "vldStartDate": {
             "type": "integer",
-            "description": "VLD report start date in epoch milliseconds",
+            "description": "Start of the report date range in epoch milliseconds. Required for a new report; must fall within the campaign's flight.",
             "format": "int64",
             "example": 1622505600000
           },
           "vldEndDate": {
             "type": "integer",
-            "description": "VLD report end date in epoch milliseconds",
+            "description": "End of the report date range in epoch milliseconds. Required for a new report; must be on or after vldStartDate, within the campaign's flight and a few days before today (report data is delayed).",
             "format": "int64",
             "example": 1625097600000
           },
