@@ -130,6 +130,7 @@ Get a list of Power Segments and their available reports, based on search, sorti
 | `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data. |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>20</var>. |
 | `categories` <br /><span class="type-text">array of strings</span> | Filter Power Segments by [category name](#get-power-segment-insights-category-types), e.g. <var>CABINET_MEMBERS</var>. |
+| `visibilityScope` <br /><span class="type-text">array of strings</span> | Filter by visibility scope, allowed values: <var>public</var>, <var>private</var>. Default: <var>public</var>. |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -304,6 +305,7 @@ function getPowerSegmentInsightsList(): Promise<Responses> {
         pageNo?: `number`,
         noOfEntries?: `number`,
         categories?: `string[]`,
+        visibilityScope?: `string[]`,
       },
     },
   };
@@ -325,7 +327,7 @@ function getPowerSegmentInsightsList(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Get a presigned S3 URL for downloading the PSI report PDF for the given <var>taxonomyId</var>. The report must be in <var>Ready</var> status.
+Get a presigned S3 URL for downloading the PSI report PDF for the given <var>taxonomyId</var>. The report must be in <var>Ready</var> status. If the segment's personality is private, only the owning organization can download it.
 
 | Query parameters |  |
 | ---- | --- |
@@ -586,6 +588,232 @@ function getPsiCategoryTypes(): Promise<Responses> {
   const options = {
     method: 'GET',
     url: 'https://api.iqm.com/api/v3/ins/static/psi/category-types',
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights avatar URL
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/psi/avatar-url" operationId="getAvatarPresignedUrl" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a presigned S3 URL for the profile avatar image at the given <var>s3Path</var>, scoped to the given <var>taxonomyId</var>. The report must be in <var>Ready</var> status. If the segment's personality is private, only the owning organization can access it.
+
+| Query parameters |  |
+| ---- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#get-power-segment-insights-list) of the Power Segment. |
+| `s3Path` <br /><span class="type-text">string</span> <span class="required-text">required</span> | S3 URI of the profile avatar image, scoped under the segment's own taxonomy folder. |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`avatarURL` <br /><span class="type-text">string</span></td>
+    <td>Presigned URL for the profile avatar image.</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "avatarURL": "https://s3.amazonaws.com/..."
+  }
+}
+```
+
+```json title="Response 422 (avatar not found)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Avatar file not found for the provided taxonomyId: IQMADV0002606"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          avatarURL: string;
+        }
+      }
+    };
+  };
+};
+
+function getAvatarPresignedUrl(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/psi/avatar-url',
+    params: {
+      query: {
+        taxonomyId: `string`,
+        s3Path: `string`,
+      },
+    },
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights report data
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/psi/report-data" operationId="getReportData" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the PSI report JSON data from S3 for the given <var>taxonomyId</var>, used to render the Power Segment Insights report viewer. The report must be in <var>Ready</var> status. If the segment's personality is private, only the owning organization can access it.
+
+| Query parameters |  |
+| ---- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#get-power-segment-insights-list) of the Power Segment. |
+
+  <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+    <summary style={{fontSize: "16px"}}>Response properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`insightType` <br /><span class="type-text">string</span></td>
+    <td>Report type: <var>SPHERE</var> or <var>ORBIT</var>.</td>
+    </tr>
+    <tr>
+    <td>`data` <br /><span class="type-text">object</span></td>
+    <td>Report content used to render the report viewer. Its shape is generated by the backend's page-builder and may change as new block types are introduced.</td>
+    </tr>
+    </table>
+    </details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "insightType": "ORBIT",
+    "data": {
+      "id": "IQMADV0002606",
+      "pageData": [
+        {
+          "title": "Profile",
+          "id": 1,
+          "blocks": [
+            {
+              "type": "profileHeader",
+              "data": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "subjectTitle": "Senator",
+                "state": "Texas"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+```json title="Response 403 (private report, owner mismatch)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "This report is private and cannot be accessed"
+    }
+  ]
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Report is not ready. Current report status is: Processing"
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          insightType: string;
+          data: Record<string, unknown>;
+        }
+      }
+    };
+  };
+};
+
+function getReportData(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/ins/psi/report-data',
+    params: {
+      query: {
+        taxonomyId: `string`,
+      },
+    },
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
