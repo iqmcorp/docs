@@ -3206,6 +3206,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights avatar URL',
+              href: '/guidelines/insights-api#get-power-segment-insights-avatar-url',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights report data',
+              href: '/guidelines/insights-api#get-power-segment-insights-report-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
                 {
@@ -6165,6 +6179,41 @@ const sidebars = {
               href: '/political-vertical/audience-segments#update-power-segment-audience',
               customProps: { method: 'PUT' },
               className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'List/search Power Segments',
+              href: '/political-vertical/audience-segments#listsearch-power-segments',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Request a custom Power Segment',
+              href: '/political-vertical/audience-segments#request-a-custom-power-segment',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Add Power Segment personality to favorites',
+              href: '/political-vertical/audience-segments#add-power-segment-personality-to-favorites',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Remove Power Segment personality from favorites',
+              href: '/political-vertical/audience-segments#remove-power-segment-personality-from-favorites',
+              customProps: { method: 'DELETE' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Power Segment category type list',
+              href: '/political-vertical/audience-segments#power-segment-category-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
             }
           ]
         },
@@ -6297,6 +6346,20 @@ const sidebars = {
               type: 'link',
               label: 'Get Power Segment Insights category types',
               href: '/political-vertical/insights-vld/#get-power-segment-insights-category-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights avatar URL',
+              href: '/political-vertical/insights-vld/#get-power-segment-insights-avatar-url',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights report data',
+              href: '/political-vertical/insights-vld/#get-power-segment-insights-report-data',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
