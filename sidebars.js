@@ -1686,6 +1686,20 @@ const sidebars = {
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Rename campaign template',
+              href: '/guidelines/campaign-api#rename-campaign-template',
+              customProps: { method: 'PATCH' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Delete campaign templates',
+              href: '/guidelines/campaign-api#delete-campaign-templates',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -3192,6 +3206,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights avatar URL',
+              href: '/guidelines/insights-api#get-power-segment-insights-avatar-url',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights report data',
+              href: '/guidelines/insights-api#get-power-segment-insights-report-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
                 {
@@ -3262,6 +3290,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Email AQ Insights report',
+              href: '/guidelines/insights-api#email-aq-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Delete AQ Insights report',
               href: '/guidelines/insights-api#delete-aq-insights-report',
               customProps: { method: 'DEL' },
@@ -3318,6 +3353,13 @@ const sidebars = {
               type: 'link',
               label: 'Download VLD Insights report',
               href: '/guidelines/insights-api#download-vld-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email VLD Insights report',
+              href: '/guidelines/insights-api#email-vld-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -3386,6 +3428,13 @@ const sidebars = {
               type: 'link',
               label: 'Download SLS Insights report',
               href: '/guidelines/insights-api#download-sls-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email SLS Insights report',
+              href: '/guidelines/insights-api#email-sls-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -3933,6 +3982,13 @@ const sidebars = {
               label: 'Remove Contextual inventories from group',
               href: '/guidelines/inventory-api#remove-contextual-inventories-from-group',
               customProps: { method: 'DEL' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Add Contextual inventory group for campaign',
+              href: '/guidelines/inventory-api#add-contextual-inventory-group-for-campaign',
+              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -6100,6 +6156,69 @@ const sidebars = {
         },
         {
           type: 'category',
+          label: 'Power Segment audience',
+          className: 'sidebarItem',
+          items: [
+            {
+              type: 'link',
+              label: 'Power Segment audience details',
+              href: '/political-vertical/audience-segments#power-segment-audience-details',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Create Power Segment audience',
+              href: '/political-vertical/audience-segments#create-power-segment-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Update Power Segment audience',
+              href: '/political-vertical/audience-segments#update-power-segment-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'List/search Power Segments',
+              href: '/political-vertical/audience-segments#listsearch-power-segments',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Request a custom Power Segment',
+              href: '/political-vertical/audience-segments#request-a-custom-power-segment',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Add Power Segment personality to favorites',
+              href: '/political-vertical/audience-segments#add-power-segment-personality-to-favorites',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Remove Power Segment personality from favorites',
+              href: '/political-vertical/audience-segments#remove-power-segment-personality-from-favorites',
+              customProps: { method: 'DEL' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Power Segment category type list',
+              href: '/political-vertical/audience-segments#power-segment-category-type-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            }
+          ]
+        },
+        {
+          type: 'category',
           label: 'More audience details',
           className: 'sidebarItem',
           items: [
@@ -6230,6 +6349,20 @@ const sidebars = {
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights avatar URL',
+              href: '/political-vertical/insights-vld/#get-power-segment-insights-avatar-url',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights report data',
+              href: '/political-vertical/insights-vld/#get-power-segment-insights-report-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
           ]
         },
         {
@@ -6281,6 +6414,13 @@ const sidebars = {
               type: 'link',
               label: 'Download VLD Insights report',
               href: '/political-vertical/insights-vld/#download-vld-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Email VLD Insights report',
+              href: '/political-vertical/insights-vld/#email-vld-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -7139,6 +7279,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Email AQ Insights report',
+              href: '/healthcare-vertical/insights-pld#email-aq-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
               label: 'Delete AQ Insights report',
               href: '/healthcare-vertical/insights-pld#delete-aq-insights-report',
               customProps: { method: 'DEL' },
@@ -7203,6 +7350,13 @@ const sidebars = {
               type: 'link',
               label: 'Download SLS Insights report',
               href: '/healthcare-vertical/insights-pld#download-sls-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email SLS Insights report',
+              href: '/healthcare-vertical/insights-pld#email-sls-insights-report',
               customProps: { method: 'POST' },
               className: 'sidebarItem',
             },

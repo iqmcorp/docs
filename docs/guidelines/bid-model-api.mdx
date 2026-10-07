@@ -262,9 +262,10 @@ Get dimension statistics for a given campaign ID.
 
 | Query parameters | |
 | --- | --- |
-| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count.
-| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count.
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count. Required only when `attributes` includes <var>totalCount</var>.
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) for the total count. Required only when `attributes` includes <var>totalCount</var>.
 | `attributes` <br /><span class="type-text">string</span> | List of statistics to return. <br />Supported values: <var>totalCount</var>, <var>modelledCount</var>, <var>modelledIds</var>.
+| `dimensionIds` <br /><span class="type-text">array of integers</span> | List of dimension IDs to fetch statistics for. Allowed values: 1 (Creative), 10 (State), 11 (City), 12 (Zip), 3 (Deal), 4 (Open Exchange), 5 (Publisher Category), 13 (Exchange), 7 (Traffic Type), 8 (Device Type).
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1130,6 +1131,7 @@ See the request examples in the right-hand code block to see how to structure re
   * <var>priority</var> is required.
   * <var>bidMultiplier</var> is required.
   * Include/exclude map is not supported.
+  * Only ID-based audiences can be modelled. Providing a non-ID-based audience ID returns the error: "Bid modelling is not allowed for non-ID-based audiences. Please provide only ID-based audience IDs."
 
 | Path parameters |  |
 | --- | --- |
@@ -3215,6 +3217,9 @@ Create a downloadable Bid Model metrics report for the specified campaign and di
 </div>
 <div class="child2">
 
+<CodeDropdown label="Request examples">
+  <CodeOption label="Inventory Listing Download file CSV">
+
 ```json title="Request sample"
 {
   "startDate": 1751001600000,
@@ -3330,6 +3335,64 @@ Create a downloadable Bid Model metrics report for the specified campaign and di
   }
 }
 ```
+
+  </CodeOption>
+  <CodeOption label="Audience Listing Download file CSV">
+
+```json title="Request sample"
+{
+  "startDate": 1751001600000,
+  "endDate": 1753593599000,
+  "timeZoneId": 29,
+  "pageNo": 1,
+  "sortBy": "-impressions",
+  "download": {
+    "fileType": "csv",
+    "columns": [
+      {
+        "label": "Audience Name",
+        "value": "name"
+      },
+      {
+        "label": "Audience Type",
+        "value": "audienceType"
+      },
+      {
+        "label": "Class Type",
+        "value": "classType"
+      },
+      {
+        "label": "Parent Audience ID",
+        "value": "parentAudienceId"
+      },
+      {
+        "label": "Status",
+        "value": "audienceStatus"
+      },
+      {
+        "label": "Modeling",
+        "value": "modelled"
+      },
+      {
+        "label": "Spend Distribution %",
+        "value": "spentDistribution"
+      }
+    ]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "url": "DownloadURL"
+  }
+}
+```
+
+  </CodeOption>
+</CodeDropdown>
 
 </div></div>
 </details>
