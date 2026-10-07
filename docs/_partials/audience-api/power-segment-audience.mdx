@@ -93,7 +93,7 @@ Get Power Segment audience details by ID, including the resolved list of active 
     </tr>
     <tr>
       <td>`taxonomyId` <br /><span class="type-text">string</span></td>
-      <td>[Taxonomy ID](/guidelines/insights-api#get-power-segment-insights-list) of the segment.</td>
+      <td>[Taxonomy ID](/political-vertical/audience-segments/#listsearch-power-segments) of the segment.</td>
     </tr>
     <tr>
       <td>`insights` <br /><span class="type-text">object</span></td>
@@ -436,7 +436,7 @@ function updatePowerSegmentAudience(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Backs the Individual/Requested tabs of the Create Power Segment Audience modal. Returns one row per personality, with its Sphere and Orbit segment (if any) side by side, scoped to the caller's vertical (Political only).
+Search and filter Power Segments. 
 
 The <var>individual</var> tab shows active standard segments plus the caller's org's private active segments; the <var>requested</var> tab shows only the caller's org's private segments that are active, requested, or failed. Favorite status is resolved for the logged-in user.
 
@@ -472,6 +472,10 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
     <summary>`segmentsList` object properties</summary>
     <table className="objectProperties">
     <tr>
+      <td>`personalityId` <br /><span class="type-text">string</span></td>
+      <td>Personality ID, used to [favorite](#add-power-segment-personality-to-favorites)/[unfavorite](#remove-power-segment-personality-from-favorites) this personality. Shared by the personality's Sphere and Orbit segments.</td>
+    </tr>
+    <tr>
       <td>`personalityName` <br /><span class="type-text">string</span></td>
       <td>Name of the personality.</td>
     </tr>
@@ -506,7 +510,7 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
       <table className="objectProperties">
       <tr>
         <td>`taxonomyId` <br /><span class="type-text">string</span></td>
-        <td>[Taxonomy ID](/guidelines/insights-api#get-power-segment-insights-list) of the segment.</td>
+        <td>Taxonomy ID of the segment.</td>
       </tr>
       <tr>
         <td>`cpm` <br /><span class="type-text">number</span></td>
@@ -588,6 +592,7 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
     "filteredRecords": 12,
     "segmentsList": [
       {
+        "personalityId": "761d7017-857c-3074-adb2-4d74ad7702da",
         "personalityName": "Scott Bessent",
         "jobTitle": "Secretary of the Treasury",
         "category": "Cabinet Members",
@@ -642,6 +647,7 @@ interface Responses {
           totalRecords: number;
           filteredRecords: number;
           segmentsList: {
+            personalityId: string;
             personalityName: string;
             jobTitle: string;
             category: string;
@@ -717,7 +723,9 @@ function getPowerSegmentSearchList(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Submits a custom Power Segment request for a personality, private to the logged-in organization. One segment is created per requested `segmentType` with status <var>requested</var>. If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is also created for the personality; if only <var>sphere</var> is requested, no Orbit segment is created. Political vertical advertiser users only.
+Submits a custom Power Segment request for a personality, private to the logged-in organization. One segment is created per requested <var>segmentType</var> with status <var>requested</var>. 
+
+If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is also created for the personality; if only <var>sphere</var> is requested, no Orbit segment is created. Political vertical advertiser users only.
 
 | Request schema | |
 | --- | --- |
