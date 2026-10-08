@@ -669,8 +669,8 @@ See the quickstart guide on [Creating a report](/quickstart-guides/reporting-api
   <td>Gets data for these [Customer IDs](/guidelines/workspace-api#get-multi-level-customers-list).</td>
 </tr>
 <tr>
-  <td>`filters` <br /><span class="type-text">serialized JSON string</span></td>
-  <td>Serialized string. Supports: <var>campaignId</var>, <var>creativeTypeId</var>, and <var>campaignStatus</var>.</td>
+  <td>`filters` <br /><span class="type-text">object</span></td>
+  <td>Supports <var>campaignIds</var>, <var>creativeTypeIds</var>, and <var>campaignStatuses</var> arrays. <var>campaignStatuses</var> only applies when the report includes a campaign dimension.</td>
 </tr>
 <tr>
   <td>`searchField` <br /><span class="type-text">string</span></td>
@@ -705,10 +705,6 @@ See the quickstart guide on [Creating a report](/quickstart-guides/reporting-api
   <td>Timezone name.</td>
 </tr>
 <tr>
-  <td> `order` <br /><span class="type-text">string</span></td>
-  <td>Sorts by ascending (<var>asc</var>) or descending (<var>desc</var>).</td>
-</tr>
-<tr>
   <td> `sortBy` <br /><span class="type-text">string</span></td>
   <td>Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-impressions</var>.</td>
 </tr>
@@ -735,7 +731,9 @@ See the quickstart guide on [Creating a report](/quickstart-guides/reporting-api
 <div class="endpoint-container">
   <div class="child1">
 
-Create a new report based on given fields (see resource properties).
+Save a new report definition. This doesn't run the report; use the returned report ID with [Execute a report](#execute-a-report) or [Get URL for report download](#get-url-for-report-download).
+
+To schedule email delivery, create the report, then use [Schedule a report](#schedule-a-report).
 
 :::warning[NOTE]
 
@@ -773,7 +771,7 @@ The date range for a report cannot exceed one year.
   "reportName": "Campaign by Gender by Device type ",
   "startDate": 1650177200000,
   "endDate": 1666938296000,
-  "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+  "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
   "columns": [
     "gender",
     "deviceType",
@@ -791,48 +789,6 @@ The date range for a report cannot exceed one year.
   "reportAggregated": "0",
   "timezoneId": 29,
   "timezoneName": "US/Eastern"
-}
-```
-</CodeOption>
-<CodeOption value="Create Report with Scheduling" label="Create report with scheduling">
-```json
-{
-    "reportName": "Campaign by Gender by Device type with customer and filtering",
-    "customerIds": [
-        200,
-        201
-    ],
-    "startDate": 1650177200000,
-    "endDate": 1666938296000,
-    "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
-    "columns": [
-        "gender",
-        "deviceType",
-        "campaignId",
-        "campaignName",
-        "startTime",
-        "endTime",
-        "maxBid",
-        "budgetDay",
-        "budgetTotal",
-        "impressions",
-        "clicks"
-    ],
-    "requestType": 1,
-    "reportAggregated": "0",
-    "timezoneId": 29,
-    "timezoneName": "US/Eastern",
-    "reportSchedulingEventDetails": {
-        "runningTotalEnabled": 0,
-        "deliveryFrequency": 3,
-        "deliveryDay": "Friday",
-        "fileType": 2,
-        "subscriberEmails": [
-            "demoUser1@gmail.com",
-            "demoUser1@gmail.com"
-        ],
-        "eventEndDate": 1671148799999
-    }
 }
 ```
 </CodeOption>
@@ -936,7 +892,7 @@ function saveReport(): Promise < Responses > {
 <div class="endpoint-container">
   <div class="child1">
 
-Execute a report by ID or with new report data. 
+Execute a report by ID or with new report data. Returns report rows in the response; to get a file instead, use [Get URL for report download](#get-url-for-report-download).
 
 :::warning[NOTE]
 
@@ -950,15 +906,15 @@ The date range for a report cannot exceed one year.
 | `dimensions` <br /><span class="type-text">string</span> | Dimensions to filter by in serialized JSON format. |
 | `columns` <br /><span class="type-text">array of strings</span> | List of metrics for the report obtained from dimensions and metrics details API. |
 | `customerIds` <br /><span class="type-text">array of integers</span> | [Customer IDs](/guidelines/workspace-api#get-multi-level-customers-list) to report. |
-| `filters` <br /><span class="type-text">JSON string</span> | Supports <var>campaignId</var>, <var>campaignStatus</var>, and <var>creativeTypeId</var> filtering. |
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field. |
+| `filters` <br /><span class="type-text">object</span> | Supports <var>campaignIds</var>, <var>creativeTypeIds</var>, and <var>campaignStatuses</var> arrays. <var>campaignStatuses</var> only applies when the report includes a campaign dimension. |
+| `searchField` <br /><span class="type-text">string</span> | Filter rows by dimension value name or ID (partial match), e.g. campaign name. |
 | `requestType` <br /><span class="type-text">integer</span> | [Report request type ID](#get-report-request-types). <br /><EnumWidget values={reportRequestTypes} />
 | `reportAggregated` <br /><span class="type-text">string</span> | Identifies whether the report is aggregated or disaggregated. <br /><EnumWidget values={reportAggregated} /> |
-| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for report. |
-| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for report. |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date for report, in milliseconds. |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date for report, in milliseconds. |
 | `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones). |
-| `timezoneName` <br /><span class="type-text">string</span> | Timezone name. |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>+impressions</var>.
+| `timezoneName` <br /><span class="type-text">string</span> | Timezone name, e.g. <var>US/Eastern</var>. Required unless `id` is provided. |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-impressions</var>.
 | `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>. |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>. |
 
@@ -1768,7 +1724,7 @@ function DeleteReport(): Promise < Responses > {
 <div class="endpoint-container">
   <div class="child1">
 
-Edit a report's data based on given field.
+Update fields of a saved report. Only the fields you send are changed.
 
 | Path parameter | |
 | ---- | --- |
@@ -1815,45 +1771,8 @@ Edit a report's data based on given field.
   <td>[Report request type ID](#get-report-request-types). <br /><EnumWidget values={reportRequestTypes} /></td>
 </tr>
 <tr>
-  <td>`reportAggregated` <br /><span class="type-text">integer</span></td>
+  <td>`reportAggregated` <br /><span class="type-text">string</span></td>
   <td>Identifies whether the report is aggregated or disaggregated. <br /><EnumWidget values={reportAggregated} /></td>
-</tr>
-<tr>
-  <td>`reportSchedulingEventDetails` <br /><span class="type-text">object</span></td>
-  <td>Contains parameters for updating scheduling details.</td>
-</tr>
-<tr>
-    <td colSpan="2">
-      <details className='objectPropertiesDetails'>
-      <summary>`reportSchedulingEventDetails` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`eventId` <br /><span class="type-text">integer</span></td>
-      <td>ID for schedule event.</td>
-      </tr>
-        <tr>
-      <td>`deliveryFrequency` <br /><span class="type-text">integer</span></td>
-      <td>[Delivery frequency type ID](#get-report-delivery-frequency-types). <br /><EnumWidget values={reportDeliveryFrequency} /></td>
-      </tr>
-        <tr>
-      <td>`fileType` <br /><span class="type-text">integer</span></td>
-      <td>[Report file type ID](#get-report-file-types). <br /><EnumWidget values={reportFileTypes} /></td>
-      </tr>
-      <tr>
-        <td> `subscriberEmails` <br /><span class="type-text">array of strings</span></td>
-        <td>List of emails to which the report will be sent.</td>
-      </tr>
-      <tr>
-        <td>`eventEndDate` <br /><span class="type-text">integer</span></td>
-        <td> Unix epoch timestamp of report schedule event end date, in milliseconds.</td>
-      </tr>
-      <tr>
-        <td>`deliveryDay` <br /><span class="type-text">string</span></td>
-        <td>[Required, if <var>deliveryFrequency</var> is not "once"] Delivery day to specify the day-time when the report should be sent. <br />Weekly delivery day: [<var>sunday</var>, <var>monday</var>, ...]. <br />Monthly delivery day: [<var>first</var>, <var>last</var>, <var>2</var>,<var>3</var>, ... <var>29</var>].</td>
-      </tr>
-      </table></details>
-      </td>
-      <td></td>
 </tr>
 </table></details>
 
@@ -1963,15 +1882,7 @@ function UpdateReport(): Promise < Responses > {
           dimensions?: `string`,
           columns?: `array of strings`,
           requestType?: `number`,
-          reportAggregated?: `number`,
-          reportSchedulingEventDetails?: {
-            eventId?: `number`,
-            deliveryFrequency?: `number`,
-            fileType?: `number`,
-            subscriberEmails?: `array of strings`,
-            eventEndDate?: `number`,
-            deliveryDay?: `string`,
-          }
+          reportAggregated?: `string`,
         }
       }
     }
@@ -1989,17 +1900,17 @@ function UpdateReport(): Promise < Responses > {
 
 ### Duplicate a report
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/report/duplicate" operationId="duplicateReport" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ra/report/duplicate" operationId="duplicateReport" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Create a copy of a report with its ID.
+Create a copy of a saved report. Everything except the name is copied; email schedules are not copied.
 
 | Request schema |  |
 | ---- | --- |
-| `reportId` <br /><span class="type-text">integer</span> | [Report ID](#get-a-list-of-reports) to duplicate. |
-| `reportName` <br /><span class="type-text">string</span> | Name for duplicated report. |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report ID](#get-a-list-of-reports) to duplicate. |
+| `reportName` <br /><span class="type-text">string</span> | Name for the copy. Default: "Copy of *original name*". |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -2061,16 +1972,11 @@ interface Responses {
 function duplicateReport(): Promise < Responses > {
   const options = {
     method: 'POST',
-    url: 'https://api.iqm.com/api/v3/report/duplicate',
-    params: {
-     path: {
-      reportId: `number`
-     }
-    },
+    url: 'https://api.iqm.com/api/v3/ra/report/duplicate',
     requestBody: {
       content: {
         "application/json": {
-          id?: `number`,
+          id: `number`,
           reportName?: `string`,
         }
       }
@@ -2566,23 +2472,24 @@ This section covers more endpoints for getting various details about reports.
 <div class="endpoint-container">
   <div class="child1">
 
-Generate a URL for downloading a report based on [report ID](#get-a-list-of-reports) or report data. If using report data, the following parameters are required:
-- `fileType`
+Generate a temporary URL, valid for 3 hours, to download a report as a CSV or XLSX file based on [report ID](#get-a-list-of-reports) or report data. <var>fileType</var> is always required. If using report data, the following parameters are also required:
 - `dimensions`
 - `columns`
-- `customerIds`
 - `requestType`
 - `reportAggregated`
 - `startDate`
 - `endDate`
 - `timezoneId`
 - `timezoneName`
-- `sortBy`
 
 Refer to the [Resource properties](#resource-properties) table for request schema supported parameters.
 
 :::info
 If there is no data for the report, this endpoint will not return a URL.
+:::
+
+:::warning[note]
+Downloads include up to 20,000 rows; <var>pageNo</var> and <var>noOfEntries</var> don't apply.
 :::
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
