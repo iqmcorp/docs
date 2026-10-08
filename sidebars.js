@@ -4750,8 +4750,8 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Get more report details',
-              href: '/guidelines/reports-api#get-more-report-details',
+              label: 'Get URL for report download',
+              href: '/guidelines/reports-api#get-url-for-report-download',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },

@@ -162,7 +162,7 @@ function getEligibleCampaigns(): Promise<Responses> {
 
 Compute the cost and impressions for creation of PLD, ICT, or NLD Insights reports based on the provided campaign IDs and date range.
 
-The computation calculates the chargeable impressions and cost based on the markup charged to the Organization.
+The computation calculates the chargeable impressions and cost based on the markup charged to the Organization. This returns an estimate only; it doesn't create a report or charge the account.
 
 | Request schema |  |
 | ---- | --- |
@@ -170,6 +170,7 @@ The computation calculates the chargeable impressions and cost based on the mark
 | `campaignIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Campaign IDs](/guidelines/campaign-api#get-list-of-campaigns) for which to compute the report. |
 | `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of report start date, in milliseconds. |
 | `endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of report end date, in milliseconds. |
+| `reportId` <br /><span class="type-text">integer</span> | ID of an existing report (for example, a failed one) to price its regeneration. When set, the other fields aren't needed. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -205,7 +206,7 @@ The computation calculates the chargeable impressions and cost based on the mark
 </tr>
 <tr>
   <td>`chargedImps` <br /><span class="type-text">integer</span></td>
-  <td>Number of already charged impressions.</td>
+  <td>Impressions already paid for by an earlier report of the same type. These aren't billed again.</td>
 </tr>
 <tr>
   <td>`chargeableCost` <br /><span class="type-text">number</span></td>
@@ -213,7 +214,7 @@ The computation calculates the chargeable impressions and cost based on the mark
 </tr>
 <tr>
   <td>`chargedCost` <br /><span class="type-text">number</span></td>
-  <td>Already charged cost amount.</td>
+  <td>Cost of impressions already paid for by an earlier report of the same type. This isn't billed again.</td>
 </tr>
 <tr>
   <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
@@ -221,7 +222,7 @@ The computation calculates the chargeable impressions and cost based on the mark
 </tr>
 <tr>
   <td>`effectiveRate` <br /><span class="type-text">number</span></td>
-  <td>Effective rate for the report.</td>
+  <td>Rate per 1,000 impressions (CPM) for this report type.</td>
 </tr>
 <tr>
   <td>`templateId` <br /><span class="type-text">integer</span></td>
