@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Reports API Specification",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "description": "IQM Reports API for custom, ad-hoc, saved, and scheduled report construction and delivery. Use these tools to select dimensions, metrics, columns, filters, templates, reporting periods, and email schedules.",
     "contact": {
       "name": "IQM Support",
@@ -28,8 +28,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Execute report and fetch serving data",
-        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API runs a report and retrieves the corresponding served data.\n\n**Request Body Description:**\n\n| **Filed** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - Run a saved report by its ID. When supplied, none of dimensions/columns/startDate/endDate/timezoneId/requestType/reportAggregated below are needed. |\n| dimensions | JSON String | [Required, unless `id` is supplied] - JSON string representing dimension details. |\n| columns | Array of String | [Required, unless `id` is supplied] - Metrics for showing serving result. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects. No fuzzy or case-insensitive matching. |\n| customerIds | Array of Integer | [Optional] - Customer IDs, report data will be fetched for these customers. |\n| filters | Object | [Optional] - Additional filters, distinct from per-dimension value filtering. Known keys: campaignIds (array of Integer), creativeTypeIds (array of Integer), campaignStatuses (array of String, e.g. \"running\"/\"expired\"). |\n| searchField | String | [Optional] - Search field for report serving data. |\n| requestType | Integer | [Required, unless `id` is supplied; no default is applied if omitted] - ID to identify if report request is of Daily or Aggregate. <br>sample : [1 - Daily, 2 - Aggregated, 3 - Weekly, 4 - Monthly]  |\n| reportAggregated | String | [Required, unless `id` is supplied; no default is applied if omitted] - Field to identify if report dimension is Aggregated or not. <br>sample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Required, unless `id` is supplied] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is report start time.|\n| endDate | Long | [Required, unless `id` is supplied] - This should be a long, TIME EPOCH in UNIX format, in milliseconds. <br>This is report end time.|\n| timezoneId | Integer | [Required, unless `id` is supplied; no default is applied if omitted] - Timezone ID|\n| timezoneName | String | [Required when executing by parameters; no default is applied if omitted] - Timezone Name. May instead be supplied by the saved report loaded via `id` (see getBasicReportById) when executing a saved report.|\n| sortBy | String | [Optional] - Sort the result set by specific field. For ascending use plus(asc) and for descending use minus(desc) string. <br>Default value is '+impressions'|\n| pageNo | Integer | [Optional] - Page number for the required data. <br>Default value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. <br>Default value is 50|\n",
+        "summary": "Run (execute) a custom report and return its rows and totals",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods.\n\nRuns a saved or ad-hoc report and returns its rows and totals in the response; it does not save anything (to export a CSV or XLSX file use downloadReport). Run a saved report by `id`, or an ad-hoc report by sending `dimensions`, `columns`, `startDate`, `endDate`, `timezoneId`, `timezoneName`, `requestType` and `reportAggregated`.\n\nThe response `data` contains `data` (one row per dimension combination, only rows with impressions; omitted when there are no rows), `total` (a single totals row) and `totalRecords` (number of rows across all pages). Rows are paginated with `pageNo` and `noOfEntries` and sorted by `sortBy` (default `-impressions`). Daily rows include a `date` (MM/DD/YYYY); weekly and monthly rows include a `dateRange`.\n\nDates are epoch milliseconds (end after start; at most 365 days apart), and `timezoneName` controls how they are bucketed into days, weeks and months. Metrics that require the finance permission return 0 for users without it.\n\n**Request Body Description:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| id | Integer | [Optional] - Run a saved report by its ID. When supplied, the saved definition replaces dimensions, columns, customerIds, startDate, endDate, timezoneId, timezoneName, requestType and reportAggregated; only pageNo, noOfEntries, sortBy, searchField, filters and resultType are read from the request. |\n| dimensions | JSON String | [Required unless `id` is supplied] - JSON string representing dimension details. |\n| columns | Array of String | [Required unless `id` is supplied] - Metrics for showing serving result. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects. No fuzzy or case-insensitive matching. |\n| customerIds | Array of Integer | [Optional] - Workspace users: customers assigned to the user to include; omit to include all assigned customers. Ignored for advertiser users. |\n| filters | Object | [Optional] - Additional filters, distinct from per-dimension value filtering. Known keys: campaignIds (array of Integer), creativeTypeIds (array of Integer), campaignStatuses (array of String, e.g. \"running\"/\"expired\"; only applied when the report has a campaign or campaignStatus dimension). |\n| searchField | String | [Optional] - Text matched (case-insensitive, partial) against the names, and numeric IDs, of the report's dimension values, e.g. campaign names. |\n| requestType | Integer | [Required unless `id` is supplied; no default is applied if omitted] - Time breakdown of the rows. <br>sample : [1 - Daily, 2 - Aggregated (no time breakdown), 3 - Weekly, 4 - Monthly]  |\n| reportAggregated | String | [Required unless `id` is supplied; no default is applied if omitted] - \"1\" aggregates over the first dimension (it is left out of the grouping); \"0\" groups by every dimension. <br>sample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Required unless `id` is supplied] - Report start time as a Unix epoch timestamp in milliseconds.|\n| endDate | Long | [Required unless `id` is supplied] - Report end time as a Unix epoch timestamp in milliseconds. Must be after startDate and at most 365 days later.|\n| timezoneId | Integer | [Required unless `id` is supplied; no default is applied if omitted] - Timezone ID|\n| timezoneName | String | [Required unless `id` is supplied; no default is applied if omitted] - Timezone name used to bucket dates into days, weeks and months, e.g. US/Eastern. With `id`, the saved report's timezone is used.|\n| sortBy | String | [Optional] - Field to sort by. Prefix with minus(-) for descending or plus(+) for ascending; no prefix sorts descending. Only one field is used. <br>Default value is '-impressions'|\n| pageNo | Integer | [Optional] - Page number, 1 or greater. <br>Default value is 1|\n| noOfEntries | Integer | [Optional] - The maximum number of returned results per page. <br>Default value is 50|\n",
         "operationId": "executeReportData",
         "parameters": [
           {
@@ -116,10 +116,35 @@
                     "reportAggregated": "0",
                     "timezoneId": 11,
                     "timezoneName": "UTC",
-                    "order": "desc",
-                    "sortBy": "impressions",
+                    "sortBy": "-impressions",
                     "noOfEntries": 50,
                     "pageNo": 1
+                  }
+                },
+                "Execute Report (Weekly)": {
+                  "description": "Execute Report (Weekly)",
+                  "value": {
+                    "customerIds": [],
+                    "startDate": 1749614400000,
+                    "endDate": 1757649599000,
+                    "dimensions": "[{\"filter\":\"campaign\"}]",
+                    "columns": [
+                      "impressions",
+                      "clicks",
+                      "CTR",
+                      "VCR",
+                      "spent",
+                      "dataCost",
+                      "mediaSpent",
+                      "eCPM"
+                    ],
+                    "requestType": 3,
+                    "reportAggregated": "0",
+                    "timezoneName": "US/Eastern",
+                    "timezoneId": 29,
+                    "pageNo": 1,
+                    "noOfEntries": 20,
+                    "sortBy": "-impressions"
                   }
                 },
                 "Invalid input sample": {
@@ -128,7 +153,8 @@
                     "startDate": 1670410001000,
                     "endDate": 1675766802000,
                     "dimensions": "[{\"filter\":\"campaign\"}]",
-                    "requestType": 1
+                    "requestType": 1,
+                    "timezoneName": "US/Eastern"
                   }
                 }
               }
@@ -137,15 +163,18 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "Forbidden !"
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -156,6 +185,9 @@
             "description": "Un-Processable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "examples": {
                   "Invalid input": {
                     "description": "Invalid input",
@@ -173,6 +205,24 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -181,8 +231,8 @@
                   "$ref": "#/components/schemas/ExecuteResponse"
                 },
                 "examples": {
-                  "Execute Report": {
-                    "description": "Execute Report",
+                  "Execute Report (Daily)": {
+                    "description": "Execute Report (Daily)",
                     "value": {
                       "success": true,
                       "data": {
@@ -214,7 +264,9 @@
                           "completeCount": 180646,
                           "budgetTotal": null,
                           "maxBid": null,
+                          "minBid": null,
                           "clicks": 5052,
+                          "thirdPartyCost": 0.021,
                           "endTime": null,
                           "campaignName": null,
                           "status": null
@@ -222,7 +274,7 @@
                         "data": [
                           {
                             "CTR": 0.2796,
-                            "date": "2022-01-30",
+                            "date": "01/30/2022",
                             "deviceTypeId": 20300001,
                             "VCR": 0,
                             "budgetDay": 0.07,
@@ -248,14 +300,16 @@
                             "completeCount": 0,
                             "budgetTotal": 1549,
                             "maxBid": 3,
+                            "minBid": 2,
                             "clicks": 426,
+                            "thirdPartyCost": 0.021,
                             "endTime": 1644192000,
                             "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
                             "status": "expired"
                           },
                           {
                             "CTR": 0.2122,
-                            "date": "2022-01-30",
+                            "date": "01/30/2022",
                             "deviceTypeId": 20300001,
                             "VCR": 0,
                             "budgetDay": 0.21,
@@ -281,14 +335,16 @@
                             "completeCount": 0,
                             "budgetTotal": 1548,
                             "maxBid": 3,
+                            "minBid": 2,
                             "clicks": 296,
+                            "thirdPartyCost": 0.021,
                             "endTime": 1644192000,
                             "campaignName": "Costa Rica Universidad Latina Profile: All Gender: All Ages: 18 to 75 Geo: All Costa Rica",
                             "status": "expired"
                           },
                           {
                             "CTR": 0.1065,
-                            "date": "2022-01-30",
+                            "date": "01/30/2022",
                             "deviceTypeId": 20300001,
                             "VCR": 0,
                             "budgetDay": 0.43,
@@ -314,14 +370,16 @@
                             "completeCount": 0,
                             "budgetTotal": 1551,
                             "maxBid": 3,
+                            "minBid": 2,
                             "clicks": 128,
+                            "thirdPartyCost": 0.021,
                             "endTime": 1644192000,
                             "campaignName": "Costa Rica TICOS AL DIA 24-25 ENE Profile: All Gender: All Ages: 18 to 25 and 60+ and over Geo: Heredia, Alajuela, Cartago and San Jose",
                             "status": "expired"
                           },
                           {
                             "CTR": 0.3118,
-                            "date": "2022-01-31",
+                            "date": "01/31/2022",
                             "deviceTypeId": 20300001,
                             "VCR": 0,
                             "budgetDay": 0.07,
@@ -347,14 +405,16 @@
                             "completeCount": 0,
                             "budgetTotal": 1549,
                             "maxBid": 3,
+                            "minBid": 2,
                             "clicks": 228,
+                            "thirdPartyCost": 0.021,
                             "endTime": 1644192000,
                             "campaignName": "Costa Rica MEMES COMPILADOS Profile: All Gender: All Ages: 18 to 45 Geo: Heredia, Alajuela, Cartago and San Jose",
                             "status": "expired"
                           },
                           {
                             "CTR": 0.3154,
-                            "date": "2022-01-30",
+                            "date": "01/30/2022",
                             "deviceTypeId": 20300001,
                             "VCR": 0,
                             "budgetDay": 1,
@@ -380,7 +440,9 @@
                             "completeCount": 0,
                             "budgetTotal": 1749,
                             "maxBid": 3,
+                            "minBid": 1,
                             "clicks": 222,
+                            "thirdPartyCost": 0.021,
                             "endTime": 1644192000,
                             "campaignName": "Costa Rica MEMES COMPILADOS Profile: Undecided Gender: All Ages: 18 to 35 Geo: Heredia, Alajuela, Cartago, San Jose",
                             "status": "expired"
@@ -389,15 +451,316 @@
                         "totalRecords": 135
                       }
                     }
+                  },
+                  "Execute report response with dateRange field (weekly OR monthly)": {
+                    "description": "Execute report response with dateRange field (weekly OR monthly)",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "total": {
+                          "CTR": 0.042882,
+                          "baseBid": null,
+                          "totalRecords": 4,
+                          "VCR": 0,
+                          "budgetTypeId": 1,
+                          "totalBudget": 8200,
+                          "dateRange": null,
+                          "dataCost": 0,
+                          "budgetMappingDataCost": null,
+                          "totalECPM": 2.42881646655232,
+                          "campaignTimezone": null,
+                          "eCPM": 2.42881646655232,
+                          "bidImpressions": 2352,
+                          "preBidCost": 0,
+                          "mediaSpent": 5.664,
+                          "startCount": 0,
+                          "campaignId": null,
+                          "spent": 5.664,
+                          "impressions": 2332,
+                          "completeCount": 0,
+                          "budgetMappingSpent": null,
+                          "dailyBudget": 30.25,
+                          "maxBid": null,
+                          "minBid": null,
+                          "clicks": 1,
+                          "thirdPartyCost": 0.021,
+                          "campaign": null,
+                          "budgetCompletion": 0.0835853658536585,
+                          "status": null,
+                          "reach": 2332,
+                          "frequency": 1
+                        },
+                        "totalRecords": 4,
+                        "data": [
+                          {
+                            "CTR": 0,
+                            "baseBid": null,
+                            "totalRecords": null,
+                            "VCR": 0,
+                            "budgetTypeId": 1,
+                            "totalBudget": 5000,
+                            "dateRange": "08/31/2025 - 09/06/2025",
+                            "dataCost": 0,
+                            "budgetMappingDataCost": 0,
+                            "totalECPM": 2,
+                            "campaignTimezone": "US/Eastern",
+                            "eCPM": 2,
+                            "bidImpressions": 2214,
+                            "preBidCost": 0,
+                            "mediaSpent": 4.394,
+                            "startCount": 0,
+                            "campaignId": 562558,
+                            "spent": 4.394,
+                            "impressions": 2197,
+                            "completeCount": 0,
+                            "budgetMappingSpent": 4.394,
+                            "dailyBudget": 18.03,
+                            "maxBid": 2,
+                            "minBid": 1,
+                            "clicks": 0,
+                            "thirdPartyCost": 0.021,
+                            "campaign": "test campaign for aud vert 2",
+                            "budgetCompletion": 0.08788,
+                            "status": "running"
+                          },
+                          {
+                            "CTR": 0,
+                            "baseBid": null,
+                            "totalRecords": null,
+                            "VCR": 0,
+                            "budgetTypeId": 1,
+                            "totalBudget": 1000,
+                            "dateRange": "08/31/2025 - 09/06/2025",
+                            "dataCost": 0,
+                            "budgetMappingDataCost": 0,
+                            "totalECPM": 10,
+                            "campaignTimezone": "US/Eastern",
+                            "eCPM": 10,
+                            "bidImpressions": 119,
+                            "preBidCost": 0,
+                            "mediaSpent": 1.18,
+                            "startCount": 0,
+                            "campaignId": 562797,
+                            "spent": 1.18,
+                            "impressions": 118,
+                            "completeCount": 0,
+                            "budgetMappingSpent": 1.19,
+                            "dailyBudget": 3.81,
+                            "maxBid": 10,
+                            "minBid": 1,
+                            "clicks": 0,
+                            "thirdPartyCost": 0.021,
+                            "campaign": "test campaign for aud vert 6",
+                            "budgetCompletion": 0.119,
+                            "status": "running"
+                          },
+                          {
+                            "CTR": 6.25,
+                            "baseBid": null,
+                            "totalRecords": null,
+                            "VCR": 0,
+                            "budgetTypeId": 1,
+                            "totalBudget": 1200,
+                            "dateRange": "06/08/2025 - 06/14/2025",
+                            "dataCost": 0,
+                            "budgetMappingDataCost": 0,
+                            "totalECPM": 5,
+                            "campaignTimezone": "US/Eastern",
+                            "eCPM": 5,
+                            "bidImpressions": 16,
+                            "preBidCost": 0,
+                            "mediaSpent": 0.08,
+                            "startCount": 0,
+                            "campaignId": 562466,
+                            "spent": 0.08,
+                            "impressions": 16,
+                            "completeCount": 0,
+                            "budgetMappingSpent": 0.08,
+                            "dailyBudget": 4.6,
+                            "maxBid": 5,
+                            "minBid": 2,
+                            "clicks": 1,
+                            "thirdPartyCost": 0.021,
+                            "campaign": "test campaign for aud vert 1",
+                            "budgetCompletion": 0.00666666666666667,
+                            "status": "running"
+                          },
+                          {
+                            "CTR": 0,
+                            "baseBid": null,
+                            "totalRecords": null,
+                            "VCR": 0,
+                            "budgetTypeId": 1,
+                            "totalBudget": 1000,
+                            "dateRange": "09/07/2025 - 09/13/2025",
+                            "dataCost": 0,
+                            "budgetMappingDataCost": 0,
+                            "totalECPM": 10,
+                            "campaignTimezone": "US/Eastern",
+                            "eCPM": 10,
+                            "bidImpressions": 3,
+                            "preBidCost": 0,
+                            "mediaSpent": 0.01,
+                            "startCount": 0,
+                            "campaignId": 562797,
+                            "spent": 0.01,
+                            "impressions": 1,
+                            "completeCount": 0,
+                            "budgetMappingSpent": 1.19,
+                            "dailyBudget": 3.81,
+                            "maxBid": 10,
+                            "minBid": 3,
+                            "clicks": 0,
+                            "thirdPartyCost": 0.021,
+                            "campaign": "test campaign for aud vert 6",
+                            "budgetCompletion": 0.119,
+                            "status": "running"
+                          }
+                        ],
+                        "filteredRecords": 4
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/report/download": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Download (export) a custom report as a CSV or XLSX file",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods.\n\nRuns a saved or ad-hoc report and exports it as a CSV or XLSX file, returning a temporary download URL in `data.url`; it does not save anything (to get rows in the response use executeReportData). The URL is set to expire after 3 hours, and `url` is null if the file could not be uploaded.\n\nThe request body is the same as executeReportData: run a saved report by `id`, or define an ad-hoc report in the request (`dimensions`, `columns`, `startDate`, `endDate`, `timezoneId`, `timezoneName`, `requestType` and `reportAggregated`). `fileType` is always required: 1 = CSV, 2 = XLSX.\n\nThe file contains up to 20,000 rows in `sortBy` order; `pageNo` and `noOfEntries` do not limit the download. Columns for the report's dimensions are added to the file automatically, plus a `date` column for daily reports or a `dateRange` column for weekly and monthly reports (except when `reportAggregated` is \"1\" with a single dimension). When the report has a name, the file starts with the report name and time range. XLSX files end with a totals row; CSV files have no totals row.\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| fileType | Integer | [Required] - File format of the download. <br>sample : [1 - CSV, 2 - XLSX] |\n| id | Integer | [Optional] - Run a saved report by its ID. When supplied, the saved definition replaces dimensions, columns, customerIds, startDate, endDate, timezoneId, timezoneName, requestType and reportAggregated. |\n| dimensions | JSON String | [Required unless `id` is supplied] - JSON string representing dimension details. |\n| columns | Array of String | [Required unless `id` is supplied] - Metric keys to include in the file. |\n| customerIds | Array of Integer | [Optional] - Workspace users: customers assigned to the user to include; omit to include all assigned customers. Ignored for advertiser users. |\n| requestType | Integer | [Required unless `id` is supplied] - Time breakdown of the rows. <br>sample : [1 - Daily, 2 - Aggregated (no time breakdown), 3 - Weekly, 4 - Monthly]  |\n| reportAggregated | String | [Required unless `id` is supplied] - \"1\" aggregates over the first dimension (it is left out of the grouping); \"0\" groups by every dimension. <br>sample : [0- Not aggregated, 1- Aggregated]  |\n| startDate | Long | [Required unless `id` is supplied] - Report start time as a Unix epoch timestamp in milliseconds. |\n| endDate | Long | [Required unless `id` is supplied] - Report end time as a Unix epoch timestamp in milliseconds. Must be after startDate and at most 365 days later. |\n| timezoneId | Integer | [Required unless `id` is supplied] - Timezone ID|\n| timezoneName | String | [Required unless `id` is supplied] - Timezone name used to bucket dates, e.g. US/Eastern|\n| sortBy | String | [Optional] - Field to sort by. Prefix with minus(-) for descending or plus(+) for ascending; no prefix sorts descending. <br>Default value is '-impressions'|\n| pageNo | Integer | [Optional] - Must be 1 or greater. Does not limit the download. <br>Default value is 1|\n| noOfEntries | Integer | [Optional] - Does not limit the download, which contains up to 20,000 rows. <br>Default value is 50|\n",
+        "operationId": "downloadReport",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteRequestVO"
+              },
+              "examples": {
+                "Download Report (By Report ID)": {
+                  "description": "Download Report (By Report ID)",
+                  "value": {
+                    "id": 123,
+                    "fileType": 2
+                  }
+                },
+                "Download Report (By Report Data)": {
+                  "description": "Download Report (By Report Data)",
+                  "value": {
+                    "fileType": 2,
+                    "startDate": 1670410001000,
+                    "endDate": 1675766802000,
+                    "dimensions": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
+                    "columns": [
+                      "campaignId",
+                      "campaignName",
+                      "deviceType",
+                      "completeCount",
+                      "gender",
+                      "startTime",
+                      "endTime",
+                      "maxBid",
+                      "budgetDay",
+                      "VCR",
+                      "eCPC",
+                      "totalECPC",
+                      "budgetTotal",
+                      "impressions",
+                      "clicks",
+                      "winRate"
+                    ],
+                    "customerIds": [
+                      201353,
+                      201352
+                    ],
+                    "requestType": 1,
+                    "reportAggregated": "0",
+                    "timezoneId": 11,
+                    "timezoneName": "UTC",
+                    "sortBy": "-impressions",
+                    "noOfEntries": 50,
+                    "pageNo": 1
+                  }
+                },
+                "Download Report (Weekly)": {
+                  "description": "Download Report (Weekly)",
+                  "value": {
+                    "fileType": 1,
+                    "dimensions": "[{\"filter\":\"campaignId\"},{\"filter\":\"campaign\"}]",
+                    "columns": [
+                      "impressions",
+                      "clicks",
+                      "CTR",
+                      "VCR",
+                      "spent",
+                      "dataCost",
+                      "mediaSpent",
+                      "eCPM"
+                    ],
+                    "customerIds": [],
+                    "requestType": 3,
+                    "reportAggregated": "0",
+                    "startDate": 1749960000000,
+                    "endDate": 1757995199000,
+                    "timezoneId": 29,
+                    "timezoneName": "US/Eastern",
+                    "sortBy": "-impressions"
+                  }
+                },
+                "Invalid input sample": {
+                  "description": "Invalid input sample",
+                  "value": {
+                    "startDate": 1670410001000,
+                    "endDate": 1675766802000,
+                    "dimensions": "[{\"filter\":\"campaign\"}]",
+                    "requestType": 1,
+                    "timezoneName": "US/Eastern",
+                    "fileType": 2
                   }
                 }
               }
             }
           },
+          "required": true
+        },
+        "responses": {
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -405,6 +768,69 @@
                       "error": "server encountered an error !"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid input": {
+                    "description": "Invalid input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please select columns for report creation",
+                          "field": "columns"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadResponse"
+                },
+                "examples": {
+                  "Download Report": {
+                    "description": "Download Report",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "url": "https://www.sample.com/123.csv"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1164,8 +1590,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Create Report",
-        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API will create new Report based on given fields",
+        "summary": "Create (save) a custom report definition",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods.\n\nSaves a new report definition without running it and returns its ID in `data` (to copy an existing report use duplicateReport; to change one use updateReport). Run it afterwards with executeReportData or downloadReport using that `id`.\n\nRequired: `reportName` (up to 255 characters), `dimensions`, `columns`, `startDate` and `endDate` (epoch milliseconds; end after start; at most 365 days apart), `timezoneId`, `requestType` and `reportAggregated`. Dimension and column keys must exactly match keys from getDimensionAndMetricDetails for the caller's organization type.\n\nCustomers: for workspace users, `customerIds` must be customers assigned to the user; omit it to include all assigned customers. For advertiser users `customerIds` is ignored.\n\n`reportSchedulingEventDetails` is validated if sent but is not saved: no schedule or email is created. To schedule emails, create the report first and then call saveReportScheduleEvent with the new report ID. `timezoneName` is not stored; the saved report's timezone comes from `timezoneId`.\n",
         "operationId": "saveReport",
         "parameters": [
           {
@@ -1198,8 +1624,8 @@
                 "$ref": "#/components/schemas/ReportDetailsVO"
               },
               "examples": {
-                "Report with Scheduling": {
-                  "description": "Report with Scheduling",
+                "Create Report for specific customers (workspace)": {
+                  "description": "Create Report for specific customers (workspace)",
                   "value": {
                     "reportName": "Campaign by Gender by Device type with customer and filtering",
                     "customerIds": [
@@ -1208,7 +1634,7 @@
                     ],
                     "startDate": 1650177200000,
                     "endDate": 1666938296000,
-                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[123,234,345,456]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
                     "columns": [
                       "gender",
                       "deviceType",
@@ -1217,6 +1643,7 @@
                       "startTime",
                       "endTime",
                       "maxBid",
+                      "minBid",
                       "budgetDay",
                       "budgetTotal",
                       "impressions",
@@ -1225,18 +1652,7 @@
                     "requestType": 1,
                     "reportAggregated": "0",
                     "timezoneId": 29,
-                    "timezoneName": "US/Eastern",
-                    "reportSchedulingEventDetails": {
-                      "runningTotalEnabled": true,
-                      "deliveryFrequency": 3,
-                      "deliveryDay": "Friday",
-                      "fileType": 2,
-                      "subscriberEmails": [
-                        "demoUser1@gmail.com",
-                        "demoUser1@gmail.com"
-                      ],
-                      "eventEndDate": 1671148799999
-                    }
+                    "timezoneName": "US/Eastern"
                   }
                 },
                 "Create Report": {
@@ -1245,7 +1661,7 @@
                     "reportName": "Campaign by Gender by Device type ",
                     "startDate": 1650177200000,
                     "endDate": 1666938296000,
-                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"device_type\",\"value\":[20300001,20300003]}]",
+                    "dimensions": "[{\"filter\":\"campaign\",\"value\":[287846,287610,278417,270798]},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]",
                     "columns": [
                       "gender",
                       "deviceType",
@@ -1254,6 +1670,7 @@
                       "startTime",
                       "endTime",
                       "maxBid",
+                      "minBid",
                       "budgetDay",
                       "budgetTotal",
                       "impressions",
@@ -1271,6 +1688,24 @@
           "required": true
         },
         "responses": {
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -1279,8 +1714,8 @@
                   "$ref": "#/components/schemas/CommonResponseId"
                 },
                 "examples": {
-                  "Report with Scheduling": {
-                    "description": "Report with Scheduling",
+                  "Create Report for specific customers (workspace)": {
+                    "description": "Create Report for specific customers (workspace)",
                     "value": {
                       "success": true,
                       "data": 1001
@@ -1297,10 +1732,111 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/ra/report/duplicate": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Duplicate (copy) a saved custom report",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods.\n\nCopies an existing saved report (`id`, required) into a new saved report, optionally renamed, and returns a message containing the new report ID; it does not run the report (to define a new report from scratch use saveReport).\n\nEverything except the name is copied from the original: dimensions, columns, dates, customers, timezone, `requestType` and `reportAggregated`. The new report is named `reportName` if sent (up to 255 characters), otherwise \"Copy of <original name>\". Email schedules are not copied. All other request fields are ignored; to change the copy, call updateReport afterwards.\n\nThe original report must belong to the caller's organization, and for workspace users all of its customers must be assigned to the user.\n",
+        "operationId": "duplicateReport",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportDetailsVO"
+              },
+              "examples": {
+                "Duplicate report with ID and Name": {
+                  "description": "Duplicate report with ID and Name",
+                  "value": {
+                    "id": 123,
+                    "reportName": "Report name"
+                  }
+                },
+                "Duplicate report with just ID": {
+                  "description": "Duplicate report with just ID",
+                  "value": {
+                    "id": 123
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMessage"
+                },
+                "examples": {
+                  "Report Duplicated": {
+                    "description": "Report Duplicated",
+                    "value": {
+                      "success": true,
+                      "data": "Report duplicated successfully with id 124"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1312,10 +1848,36 @@
               }
             }
           },
+          "422": {
+            "description": "Un-Processable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Missing input": {
+                    "description": "Missing input",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Please pass Report ID for duplicating report"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1601,8 +2163,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Edit Report",
-        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods. This API will edit Report data based on given fields",
+        "summary": "Update (edit) fields of a saved custom report",
+        "description": "Report-builder routing: Use this IQM Reports API tool to create, configure, save, execute, schedule, email, list, or manage a custom report. Use it for report dimensions, metrics, columns, filters, templates, and reporting periods.\n\nChanges fields of an existing saved report: a partial update of the report identified by the `reportId` path parameter. It does not run the report (to create a new report use saveReport or duplicateReport).\n\nOnly fields sent with a meaningful value change: non-blank `reportName` (up to 255 characters) and `dimensions`, non-empty `columns` and `customerIds`, positive `startDate`, `endDate`, `timezoneId` and `requestType` (1-4), and `reportAggregated` (\"0\" or \"1\"). Omitted fields keep their saved values. An empty `dimensions` string or empty `columns` list is rejected.\n\nDates follow the same rules as create (epoch milliseconds; end after start; at most 365 days apart). If only one date is sent, it is checked against the saved value of the other. Unlike create, edit does not check dimension and column keys against the allowed list, so use the exact keys from getDimensionAndMetricDetails.\n\nCustomers: workspace users may send `customerIds` (customers assigned to them), or `[]` to use all assigned customers. Advertiser users must not send `customerIds`. Changing `timezoneId` also updates the timezone of the report's email schedule, if it has one. `reportSchedulingEventDetails` is ignored; manage schedules with the report email schedule operations. The report must belong to the caller's organization.\n",
         "operationId": "updateReport",
         "parameters": [
           {
@@ -1694,6 +2256,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1709,6 +2274,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2124,17 +2692,19 @@
         "properties": {
           "earliestCampaignStartDate": {
             "type": "integer",
-            "description": "Earliest start date from selected Campaigns (required when runningTotalEnabled = true)",
+            "description": "Earliest start date from selected campaigns (required when runningTotalEnabled = true)",
             "format": "int64",
             "example": 1704067200000
           },
           "reportId": {
             "type": "integer",
-            "format": "int32"
+            "description": "ID of the report to schedule. Used by the report email schedule operations; ignored when nested in a create-report request.",
+            "format": "int32",
+            "example": 1234
           },
           "deliveryFrequency": {
             "type": "integer",
-            "description": "Delivery Frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
+            "description": "Delivery frequency: 1 = once ; 2 = daily ; 3 = weekly ; 4 = monthly",
             "format": "int32",
             "example": 1,
             "enum": [
@@ -2146,7 +2716,7 @@
           },
           "fileType": {
             "type": "integer",
-            "description": "File Type: 1 = CSV ; 2 = XLS",
+            "description": "File type: 1 = CSV ; 2 = XLSX",
             "format": "int32",
             "example": 1,
             "enum": [
@@ -2156,65 +2726,65 @@
           },
           "subscriberEmails": {
             "type": "array",
-            "description": "List of Subscriber Emails",
+            "description": "Email addresses that receive the scheduled report. At least one is required.",
             "items": {
               "type": "string",
-              "description": "List of Subscriber Emails"
+              "description": "Email addresses that receive the scheduled report. At least one is required."
             }
           },
           "eventEndDate": {
             "type": "integer",
-            "description": "Unix epoch timestamp in milliseconds of event End Date (required if deliveryFrequency = 2,3,4)",
+            "description": "When the schedule stops, as a Unix epoch timestamp in milliseconds. Required for daily, weekly and monthly schedules (deliveryFrequency 2, 3 or 4) and must not be in the past; not used for one-time delivery.",
             "format": "int64",
-            "example": 1704067200000
+            "example": 1893456000000
           },
           "deliveryDay": {
             "type": "string",
-            "description": "Delivery Day (required if deliveryFrequency = 2,3,4)",
+            "description": "Day the report is sent. Required for weekly (a day name, e.g. \"Monday\") and monthly (\"FIRST\", \"LAST\" or a day of the month from 1 to 28) schedules; not used for once or daily.",
             "example": "Monday"
           },
           "runningTotalEnabled": {
             "type": "boolean",
-            "description": "Running Total Enabled",
-            "example": true
+            "description": "Running total: when true, the scheduled report period runs from earliestCampaignStartDate to the report end date. Supported only with the campaign dimension. Defaults to false.",
+            "example": false
           }
         },
-        "description": "Report Scheduling Event Details"
+        "description": "Email schedule settings. When creating a report these are validated but not saved: no schedule or email is created. Create the report first, then call saveReportScheduleEvent (POST /api/v3/ra/report/email/schedule) with the new report ID. Ignored by duplicate and edit."
       },
       "ExecuteRequestVO": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the report. If supplied, runs the saved report with this ID and none of dimensions/columns/startDate/endDate/timezoneId/requestType/reportAggregated below are needed (the saved report already has them). If omitted, all of those become required.",
+            "description": "Saved report ID. Execute and download: run the saved report with this ID; its saved definition replaces dimensions, columns, customerIds, startDate, endDate, timezoneId, timezoneName, requestType and reportAggregated, so none of those are needed. Duplicate: required; the report to copy. Ignored by create, and by edit (which takes the ID from the path).",
             "format": "int32",
             "example": 1
           },
           "reportName": {
             "type": "string",
-            "description": "Name of the report",
+            "description": "Report name, up to 255 characters. Required when creating a report. Optional on duplicate (defaults to \"Copy of <original name>\") and edit. Download uses it in the file name and header; execute ignores it.",
             "example": "Campaign Performance Report"
           },
           "startDate": {
             "type": "integer",
-            "description": "Start date of the report, unix epoch timestamp. Required unless `id` is supplied.",
+            "description": "Start of the report date range as a Unix epoch timestamp in milliseconds (not seconds). Required when creating a report, and when executing or downloading without `id`.",
             "format": "int64",
             "example": 1622505600000
           },
           "endDate": {
             "type": "integer",
-            "description": "End date of the report, unix epoch timestamp. Required unless `id` is supplied.",
+            "description": "End of the report date range as a Unix epoch timestamp in milliseconds (not seconds). Must be after startDate and at most 365 days later. Required when creating a report, and when executing or downloading without `id`.",
             "format": "int64",
             "example": 1625097600000
           },
           "dimensions": {
             "type": "string",
-            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array -- `filter` alone groups by that dimension; adding `value` restricts results to those specific values (only supported for dimensions where DimensionDetailsVO.isFilterSupported is true, per GET /api/v3/ra/report/dimension-metrics/detail). Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]. Required unless `id` is supplied.",
+            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array -- `filter` alone groups by that dimension; adding `value` restricts results to those specific values (only supported for dimensions where DimensionDetailsVO.isFilterSupported is true, per GET /api/v3/ra/report/dimension-metrics/detail; the server does not enforce this). `filter` must be an exact dimension `key` from that endpoint. Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]. Required when creating a report, and when executing or downloading without `id`.",
             "example": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]"
           },
           "customerIds": {
             "type": "array",
-            "description": "List of customer IDs associated with the report",
+            "description": "Customer (advertiser) organization IDs to include. Workspace users: must be customers assigned to the user; omit (or send [] on edit) to include all assigned customers. Advertiser users: ignored on create, execute and download, and must not be sent on edit.",
             "nullable": true,
             "example": [
               1,
@@ -2223,85 +2793,106 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of customer IDs associated with the report",
+              "description": "Customer (advertiser) organization IDs to include. Workspace users: must be customers assigned to the user; omit (or send [] on edit) to include all assigned customers. Advertiser users: ignored on create, execute and download, and must not be sent on edit.",
               "format": "int32",
               "nullable": true
             }
           },
           "columns": {
             "type": "array",
-            "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required unless `id` is supplied.",
-            "items": {
-              "type": "string",
-              "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required unless `id` is supplied."
-            },
+            "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required when creating a report, and when executing or downloading without `id`. Metrics that require the finance permission return 0 for users without it.",
             "example": [
               "impressions",
               "clicks"
-            ]
+            ],
+            "items": {
+              "type": "string",
+              "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required when creating a report, and when executing or downloading without `id`. Metrics that require the finance permission return 0 for users without it.",
+              "example": "[\"impressions\",\"clicks\"]"
+            }
           },
           "timezoneId": {
             "type": "integer",
-            "description": "ID of the timezone for the report: 29=eastern. No default is applied if omitted -- required unless `id` is supplied.",
+            "description": "ID of the timezone for the report, e.g. 29 = US/Eastern. This is the timezone stored with a saved report. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
             "format": "int32",
-            "example": 1
+            "example": 29
           },
           "requestType": {
             "type": "integer",
-            "description": "Report request type ID: 1=disaggregated(daily), 2=aggregated, 3=weekly, 4=monthly. No default is applied if omitted -- required unless `id` is supplied.",
+            "description": "Time breakdown of the report rows: 1=daily, 2=aggregated (no time breakdown), 3=weekly (Sunday-Saturday), 4=monthly. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
             "format": "int32",
             "example": 1
           },
           "reportAggregated": {
             "type": "string",
-            "description": "Aggregation level of the report: 0=not aggregated, 1=aggregated. No default is applied if omitted -- required unless `id` is supplied.",
-            "example": "1"
+            "description": "Aggregation of the report rows, as the string \"0\" or \"1\". \"0\" groups rows by every dimension. \"1\" aggregates over the first dimension: it is left out of the grouping and its columns are empty. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
+            "example": "0"
           },
           "owId": {
             "type": "integer",
-            "description": "Ow ID associated with the report",
+            "description": "Organization (OW) ID that owns the report. Set by the server from the caller's session.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "createdByUOWId": {
             "type": "integer",
-            "description": "Created by User ID",
+            "description": "User (UOW) ID that created the report. Set by the server.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "modifiedByUOWId": {
             "type": "integer",
-            "description": "Modified by User ID",
+            "description": "User (UOW) ID that last modified the report. Set by the server.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "timezoneName": {
             "type": "string",
-            "description": "Timezone name. Keep as \"US/Eastern\" if not specified otherwise.",
+            "description": "Timezone name used to bucket report dates into days, weeks and months, e.g. \"US/Eastern\". No default is applied: required when executing or downloading without `id` (with `id`, the saved report's timezone is used). Not stored by create or edit; set timezoneId instead.",
             "example": "US/Eastern"
           },
           "organizationName": {
             "type": "string",
-            "description": "Name of the organization",
+            "description": "Name of the organization. Set by the server; used in download file names.",
+            "readOnly": true,
             "example": "Acme Corp"
           },
           "resultType": {
             "type": "string",
-            "description": "Result type"
+            "description": "Which parts of the result to return: \"data\" (rows only) or \"total\" (totals row only). Omit to return both; leave unset for downloads.",
+            "example": "data"
           },
           "fileType": {
             "type": "integer",
-            "description": "File type: 1=CSV, 2=XLSX",
-            "format": "int32"
+            "description": "Download file format: 1=CSV, 2=XLSX. Required for downloadReport; ignored by executeReportData.",
+            "format": "int32",
+            "example": 2
           },
           "filters": {
             "type": "object",
             "additionalProperties": {
               "type": "array",
-              "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+              "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"; only applied when the report has a campaign or campaignStatus dimension). Other keys are ignored. Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+              "example": {
+                "campaignIds": [
+                  123,
+                  234,
+                  345
+                ],
+                "creativeTypeIds": [
+                  11
+                ],
+                "campaignStatuses": [
+                  "expired",
+                  "running"
+                ]
+              },
               "items": {
                 "type": "object",
-                "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+                "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"; only applied when the report has a campaign or campaignStatus dimension). Other keys are ignored. Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
                 "example": {
                   "campaignIds": [
                     123,
@@ -2316,23 +2907,9 @@
                     "running"
                   ]
                 }
-              },
-              "example": {
-                "campaignIds": [
-                  123,
-                  234,
-                  345
-                ],
-                "creativeTypeIds": [
-                  11
-                ],
-                "campaignStatuses": [
-                  "expired",
-                  "running"
-                ]
               }
             },
-            "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"). Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
+            "description": "Additional server-side filters, distinct from the value-based filtering available on individual `dimensions` entries. Known keys: `campaignIds` (List<Integer>), `creativeTypeIds` (List<Integer>), `campaignStatuses` (List<String>, e.g. \"running\"/\"expired\"; only applied when the report has a campaign or campaignStatus dimension). Other keys are ignored. Example: {\"campaignIds\": [123, 234], \"creativeTypeIds\": [11], \"campaignStatuses\": [\"running\"]}",
             "example": {
               "campaignIds": [
                 123,
@@ -2348,33 +2925,30 @@
               ]
             }
           },
-          "internalRequest": {
-            "type": "boolean"
-          },
           "pageNo": {
             "type": "integer",
-            "description": "Page number",
+            "description": "Page number, 1 or greater. Default 1. Does not limit downloads.",
             "format": "int32",
             "example": 1
           },
           "noOfEntries": {
             "type": "integer",
-            "description": "Number of entries",
+            "description": "Rows per page. Default 50. Does not limit downloads, which contain up to 20,000 rows.",
             "format": "int32",
             "example": 50
           },
           "sortBy": {
             "type": "string",
-            "description": "Sorting field",
+            "description": "Field to sort by: a dimension or metric key in the report, prefixed with \"-\" for descending or \"+\" for ascending (no prefix sorts descending). Only one field is used. Default \"-impressions\".",
             "example": "-impressions"
           },
           "searchField": {
             "type": "string",
-            "description": "Search field",
-            "example": "Report 1"
+            "description": "Text matched (case-insensitive, partial) against the names, and numeric IDs, of the report's dimension values, for example campaign names.",
+            "example": "Summer Sale"
           }
         },
-        "description": "Execute report request"
+        "description": "Request to run a custom report: either a saved report by `id`, or an ad-hoc report defined in the request. Used by executeReportData and downloadReport."
       },
       "ExecuteResponse": {
         "type": "object",
@@ -2398,50 +2972,51 @@
         "properties": {
           "owId": {
             "type": "integer",
-            "description": "Organization Workspace ID",
+            "description": "Organization workspace ID",
             "format": "int32",
             "example": 123321
           },
           "organizationName": {
             "type": "string",
-            "description": "Organization Name",
+            "description": "Organization name",
             "example": "IQM Corporation"
           },
           "organizationLogo": {
             "type": "string",
-            "description": "Organization Logo",
+            "description": "Organization logo",
             "example": "logo.png"
           },
           "statusId": {
             "type": "integer",
-            "description": "Organization Status ID",
+            "description": "Organization status ID",
             "format": "int32",
             "example": 1
           },
           "status": {
             "type": "string",
-            "description": "Organization Status",
+            "description": "Organization status",
             "example": "Active"
           },
           "supportEmail": {
             "type": "string",
-            "description": "Organization Support Email",
+            "description": "Organization support email",
             "example": "support@iqm.com"
           },
           "timezone": {
             "type": "integer",
-            "description": "Organization Timezone",
+            "description": "Organization timezone",
             "format": "int32",
             "example": 1
           },
           "organizationType": {
             "type": "string",
-            "description": "Organization Type",
+            "description": "Organization type",
             "example": "Customer"
           }
         },
-        "description": "Organization Basic Detail Object",
-        "nullable": true
+        "description": "Organization basic detail object",
+        "nullable": true,
+        "readOnly": true
       },
       "ReportData": {
         "type": "object",
@@ -2473,35 +3048,35 @@
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the report",
+            "description": "Saved report ID. Execute and download: run the saved report with this ID; its saved definition replaces dimensions, columns, customerIds, startDate, endDate, timezoneId, timezoneName, requestType and reportAggregated, so none of those are needed. Duplicate: required; the report to copy. Ignored by create, and by edit (which takes the ID from the path).",
             "format": "int32",
             "example": 1
           },
           "reportName": {
             "type": "string",
-            "description": "Name of the report",
+            "description": "Report name, up to 255 characters. Required when creating a report. Optional on duplicate (defaults to \"Copy of <original name>\") and edit. Download uses it in the file name and header; execute ignores it.",
             "example": "Campaign Performance Report"
           },
           "startDate": {
             "type": "integer",
-            "description": "Start date of the report",
+            "description": "Start of the report date range as a Unix epoch timestamp in milliseconds (not seconds). Required when creating a report, and when executing or downloading without `id`.",
             "format": "int64",
             "example": 1622505600000
           },
           "endDate": {
             "type": "integer",
-            "description": "End date of the report",
+            "description": "End of the report date range as a Unix epoch timestamp in milliseconds (not seconds). Must be after startDate and at most 365 days later. Required when creating a report, and when executing or downloading without `id`.",
             "format": "int64",
             "example": 1625097600000
           },
           "dimensions": {
             "type": "string",
-            "description": "Dimensions of the report",
-            "example": "['age', 'gender']"
+            "description": "Dimensions to filter by. JSON-serialized array of objects, each with a mandatory `filter` and optional `value` array -- `filter` alone groups by that dimension; adding `value` restricts results to those specific values (only supported for dimensions where DimensionDetailsVO.isFilterSupported is true, per GET /api/v3/ra/report/dimension-metrics/detail; the server does not enforce this). `filter` must be an exact dimension `key` from that endpoint. Example JSON (before stringifying): [{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]}]. Required when creating a report, and when executing or downloading without `id`.",
+            "example": "[{\"filter\":\"campaign\"},{\"filter\":\"gender\",\"value\":[10200002]},{\"filter\":\"deviceType\",\"value\":[20300001,20300003]}]"
           },
           "customerIds": {
             "type": "array",
-            "description": "List of customer IDs associated with the report",
+            "description": "Customer (advertiser) organization IDs to include. Workspace users: must be customers assigned to the user; omit (or send [] on edit) to include all assigned customers. Advertiser users: ignored on create, execute and download, and must not be sent on edit.",
             "nullable": true,
             "example": [
               1,
@@ -2510,70 +3085,78 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of customer IDs associated with the report",
+              "description": "Customer (advertiser) organization IDs to include. Workspace users: must be customers assigned to the user; omit (or send [] on edit) to include all assigned customers. Advertiser users: ignored on create, execute and download, and must not be sent on edit.",
               "format": "int32",
               "nullable": true
             }
           },
           "columns": {
             "type": "array",
-            "description": "List of columns to be included in the report",
-            "example": "['column1', 'column2']",
+            "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required when creating a report, and when executing or downloading without `id`. Metrics that require the finance permission return 0 for users without it.",
+            "example": [
+              "impressions",
+              "clicks"
+            ],
             "items": {
               "type": "string",
-              "description": "List of columns to be included in the report",
-              "example": "['column1', 'column2']"
+              "description": "List of columns to be included in the report. Must be exact `key` values from GET /api/v3/ra/report/dimension-metrics/detail's `metrics` -- each category in that array (e.g. \"Counts\") maps to a list of metric objects, and `key` is a field on each of those objects (e.g. \"impressions\", not \"Impressions\" or \"impression count\") -- there is no fuzzy or case-insensitive matching. Required when creating a report, and when executing or downloading without `id`. Metrics that require the finance permission return 0 for users without it.",
+              "example": "[\"impressions\",\"clicks\"]"
             }
           },
           "timezoneId": {
             "type": "integer",
-            "description": "ID of the timezone for the report",
+            "description": "ID of the timezone for the report, e.g. 29 = US/Eastern. This is the timezone stored with a saved report. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
             "format": "int32",
-            "example": 1
+            "example": 29
           },
           "requestType": {
             "type": "integer",
-            "description": "Type of the report request",
+            "description": "Time breakdown of the report rows: 1=daily, 2=aggregated (no time breakdown), 3=weekly (Sunday-Saturday), 4=monthly. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
             "format": "int32",
             "example": 1
           },
           "reportAggregated": {
             "type": "string",
-            "description": "Aggregation level of the report",
-            "example": "daily"
+            "description": "Aggregation of the report rows, as the string \"0\" or \"1\". \"0\" groups rows by every dimension. \"1\" aggregates over the first dimension: it is left out of the grouping and its columns are empty. No default is applied if omitted: required when creating a report, and when executing or downloading without `id`.",
+            "example": "0"
           },
           "owId": {
             "type": "integer",
-            "description": "Ow ID associated with the report",
+            "description": "Organization (OW) ID that owns the report. Set by the server from the caller's session.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "createdByUOWId": {
             "type": "integer",
-            "description": "Created by User ID",
+            "description": "User (UOW) ID that created the report. Set by the server.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "modifiedByUOWId": {
             "type": "integer",
-            "description": "Modified by User ID",
+            "description": "User (UOW) ID that last modified the report. Set by the server.",
             "format": "int32",
+            "readOnly": true,
             "example": 1
           },
           "timezoneName": {
             "type": "string",
-            "description": "Timezone Name",
-            "example": "America/New_York"
+            "description": "Timezone name of the saved report, e.g. \"US/Eastern\". Returned by the server; not stored by create or edit (set timezoneId instead).",
+            "example": "US/Eastern"
           },
           "organizationName": {
             "type": "string",
-            "description": "Name of the organization",
+            "description": "Name of the organization. Set by the server; used in download file names.",
+            "readOnly": true,
             "example": "Acme Corp"
           },
           "customerDetails": {
             "type": "array",
-            "description": "List of Customer Details",
+            "description": "Details of the report's customer organizations. Returned by the server; ignored in requests.",
             "nullable": true,
+            "readOnly": true,
             "items": {
               "$ref": "#/components/schemas/OrganizationBasicDetailVO"
             }
@@ -2581,7 +3164,8 @@
           "reportSchedulingEventDetails": {
             "$ref": "#/components/schemas/ReportSchedulingEventDetailsVO"
           }
-        }
+        },
+        "description": "Saved custom report definition. Request body for creating, duplicating and editing a report, and the report returned by get and list operations."
       },
       "ReportList": {
         "type": "object",
@@ -2668,6 +3252,108 @@
             "format": "int32",
             "example": 5052
           },
+          "winRate": {
+            "type": "number",
+            "description": "Win rate",
+            "format": "double",
+            "example": 99.4276875483372
+          },
+          "viewability": {
+            "type": "number",
+            "description": "Viewability",
+            "format": "double",
+            "example": 0.6534
+          },
+          "firstCount": {
+            "type": "integer",
+            "description": "First quartile completes",
+            "format": "int32",
+            "example": 245123
+          },
+          "midCount": {
+            "type": "integer",
+            "description": "Midpoint completes",
+            "format": "int32",
+            "example": 210456
+          },
+          "thirdCount": {
+            "type": "integer",
+            "description": "Third quartile completes",
+            "format": "int32",
+            "example": 195789
+          },
+          "hoursViewed": {
+            "type": "number",
+            "description": "Hours viewed",
+            "format": "double",
+            "example": 12.5
+          },
+          "conversionCount": {
+            "type": "integer",
+            "description": "Number of attributed conversions",
+            "format": "int32",
+            "example": 12
+          },
+          "conversionValue": {
+            "type": "integer",
+            "description": "Value of attributed conversions",
+            "format": "int32",
+            "example": 500
+          },
+          "attributedViewThroughConversions": {
+            "type": "integer",
+            "description": "Attributed view-through conversions",
+            "format": "int32",
+            "example": 5
+          },
+          "attributedClickThroughConversions": {
+            "type": "integer",
+            "description": "Attributed click-through conversions",
+            "format": "int32",
+            "example": 7
+          },
+          "costPerAttributedConversions": {
+            "type": "number",
+            "description": "Cost per attributed conversion",
+            "format": "double",
+            "example": 12.34
+          },
+          "attributedConversionsRate": {
+            "type": "number",
+            "description": "Attributed conversions rate",
+            "format": "double",
+            "example": 0.015
+          },
+          "returnOnAdSpend": {
+            "type": "number",
+            "description": "Return on ad spend",
+            "format": "double",
+            "example": 3.2
+          },
+          "preBidCost": {
+            "type": "number",
+            "description": "Pre-bid cost",
+            "format": "double",
+            "example": 0
+          },
+          "thirdPartyCost": {
+            "type": "number",
+            "description": "Third party cost",
+            "format": "double",
+            "example": 0.021
+          },
+          "reach": {
+            "type": "integer",
+            "description": "Reach",
+            "format": "int32",
+            "example": 2332
+          },
+          "frequency": {
+            "type": "number",
+            "description": "Frequency",
+            "format": "double",
+            "example": 1
+          },
           "date": {
             "type": "string",
             "description": "Date value",
@@ -2750,6 +3436,13 @@
             "format": "double",
             "example": 3
           },
+          "minBid": {
+            "type": "number",
+            "description": "Minimum bid",
+            "format": "double",
+            "nullable": true,
+            "example": 1
+          },
           "totalRecords": {
             "type": "integer",
             "description": "Total records (null in rows)",
@@ -2757,25 +3450,54 @@
             "nullable": true,
             "example": 12
           },
-          "ecpm": {
+          "baseBid": {
             "type": "number",
-            "format": "double"
+            "description": "Base bid",
+            "format": "double",
+            "nullable": true,
+            "example": 3
           },
-          "ecpc": {
-            "type": "number",
-            "format": "double"
+          "budgetTypeId": {
+            "type": "integer",
+            "description": "Budget type: 1 = daily, 2 = lifetime",
+            "format": "int32",
+            "example": 1
           },
-          "ecpcv": {
-            "type": "number",
-            "format": "double"
+          "dateRange": {
+            "type": "string",
+            "description": "Date range for the row (weekly/monthly reports)",
+            "nullable": true,
+            "example": "08/31/2025 - 09/06/2025"
           },
-          "vcr": {
+          "budgetMappingDataCost": {
             "type": "number",
-            "format": "double"
+            "description": "Budget-mapped data cost",
+            "format": "double",
+            "example": 0
           },
-          "ctr": {
+          "budgetMappingSpent": {
             "type": "number",
-            "format": "double"
+            "description": "Budget-mapped spend",
+            "format": "double",
+            "example": 4.394
+          },
+          "dailyBudget": {
+            "type": "number",
+            "description": "Daily budget",
+            "format": "double",
+            "example": 30.25
+          },
+          "campaign": {
+            "type": "string",
+            "description": "Campaign name (weekly/monthly reports)",
+            "nullable": true,
+            "example": "test campaign for aud vert 2"
+          },
+          "budgetCompletion": {
+            "type": "number",
+            "description": "Fraction of budget completed",
+            "format": "double",
+            "example": 0.0835853658536585
           },
           "CTR": {
             "type": "number",
@@ -2806,13 +3528,25 @@
             "description": "Effective cost per completed view",
             "format": "double",
             "example": 0.02156
+          },
+          "eCPV": {
+            "type": "number",
+            "description": "Effective cost per view",
+            "format": "double",
+            "example": 0.0187
+          },
+          "totalECPC": {
+            "type": "number",
+            "description": "Total effective CPC",
+            "format": "double",
+            "example": 1.6797
           }
         },
         "description": "Row item in the data array",
         "example": [
           {
             "CTR": 0.2796,
-            "date": "2022-01-30"
+            "date": "01/30/2022"
           }
         ]
       },
@@ -2821,7 +3555,13 @@
         "properties": {
           "totalRecords": {
             "type": "integer",
-            "description": "Total number of records",
+            "description": "Number of rows across all pages",
+            "format": "int32",
+            "example": 135
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "description": "Number of rows across all pages; currently always equal to totalRecords",
             "format": "int32",
             "example": 135
           },
@@ -2830,11 +3570,11 @@
           },
           "data": {
             "type": "array",
-            "description": "Array of row items",
+            "description": "Report rows for the requested page: one per dimension combination, only rows with impressions. Omitted when there are no rows.",
             "example": [
               {
                 "CTR": 0.2796,
-                "date": "2022-01-30"
+                "date": "01/30/2022"
               }
             ],
             "items": {
@@ -2894,6 +3634,108 @@
             "description": "Clicks",
             "format": "int32",
             "example": 5052
+          },
+          "winRate": {
+            "type": "number",
+            "description": "Win rate",
+            "format": "double",
+            "example": 99.4276875483372
+          },
+          "viewability": {
+            "type": "number",
+            "description": "Viewability",
+            "format": "double",
+            "example": 0.6534
+          },
+          "firstCount": {
+            "type": "integer",
+            "description": "First quartile completes",
+            "format": "int32",
+            "example": 245123
+          },
+          "midCount": {
+            "type": "integer",
+            "description": "Midpoint completes",
+            "format": "int32",
+            "example": 210456
+          },
+          "thirdCount": {
+            "type": "integer",
+            "description": "Third quartile completes",
+            "format": "int32",
+            "example": 195789
+          },
+          "hoursViewed": {
+            "type": "number",
+            "description": "Hours viewed",
+            "format": "double",
+            "example": 12.5
+          },
+          "conversionCount": {
+            "type": "integer",
+            "description": "Number of attributed conversions",
+            "format": "int32",
+            "example": 12
+          },
+          "conversionValue": {
+            "type": "integer",
+            "description": "Value of attributed conversions",
+            "format": "int32",
+            "example": 500
+          },
+          "attributedViewThroughConversions": {
+            "type": "integer",
+            "description": "Attributed view-through conversions",
+            "format": "int32",
+            "example": 5
+          },
+          "attributedClickThroughConversions": {
+            "type": "integer",
+            "description": "Attributed click-through conversions",
+            "format": "int32",
+            "example": 7
+          },
+          "costPerAttributedConversions": {
+            "type": "number",
+            "description": "Cost per attributed conversion",
+            "format": "double",
+            "example": 12.34
+          },
+          "attributedConversionsRate": {
+            "type": "number",
+            "description": "Attributed conversions rate",
+            "format": "double",
+            "example": 0.015
+          },
+          "returnOnAdSpend": {
+            "type": "number",
+            "description": "Return on ad spend",
+            "format": "double",
+            "example": 3.2
+          },
+          "preBidCost": {
+            "type": "number",
+            "description": "Pre-bid cost",
+            "format": "double",
+            "example": 0
+          },
+          "thirdPartyCost": {
+            "type": "number",
+            "description": "Third party cost",
+            "format": "double",
+            "example": 0.021
+          },
+          "reach": {
+            "type": "integer",
+            "description": "Reach",
+            "format": "int32",
+            "example": 2332
+          },
+          "frequency": {
+            "type": "number",
+            "description": "Frequency",
+            "format": "double",
+            "example": 1
           },
           "date": {
             "type": "string",
@@ -2992,31 +3834,72 @@
             "nullable": true,
             "example": 3
           },
+          "minBid": {
+            "type": "number",
+            "description": "Minimum bid",
+            "format": "double",
+            "nullable": true,
+            "example": 1
+          },
           "status": {
             "type": "string",
             "description": "Campaign status",
             "nullable": true,
             "example": "active"
           },
-          "ecpm": {
+          "baseBid": {
             "type": "number",
-            "format": "double"
+            "description": "Base bid",
+            "format": "double",
+            "nullable": true,
+            "example": 3
           },
-          "ecpc": {
-            "type": "number",
-            "format": "double"
+          "budgetTypeId": {
+            "type": "integer",
+            "description": "Budget type: 1 = daily, 2 = lifetime",
+            "format": "int32",
+            "nullable": true,
+            "example": 1
           },
-          "ecpcv": {
-            "type": "number",
-            "format": "double"
+          "dateRange": {
+            "type": "string",
+            "description": "Date range for the row (weekly/monthly reports)",
+            "nullable": true,
+            "example": "08/31/2025 - 09/06/2025"
           },
-          "vcr": {
+          "budgetMappingDataCost": {
             "type": "number",
-            "format": "double"
+            "description": "Budget-mapped data cost",
+            "format": "double",
+            "nullable": true,
+            "example": 0
           },
-          "ctr": {
+          "budgetMappingSpent": {
             "type": "number",
-            "format": "double"
+            "description": "Budget-mapped spend",
+            "format": "double",
+            "nullable": true,
+            "example": 4.394
+          },
+          "dailyBudget": {
+            "type": "number",
+            "description": "Daily budget",
+            "format": "double",
+            "nullable": true,
+            "example": 30.25
+          },
+          "campaign": {
+            "type": "string",
+            "description": "Campaign name (weekly/monthly reports)",
+            "nullable": true,
+            "example": "test campaign for aud vert 2"
+          },
+          "budgetCompletion": {
+            "type": "number",
+            "description": "Fraction of budget completed",
+            "format": "double",
+            "nullable": true,
+            "example": 0.0835853658536585
           },
           "CTR": {
             "type": "number",
@@ -3047,6 +3930,18 @@
             "description": "Effective cost per completed view",
             "format": "double",
             "example": 0.02156
+          },
+          "eCPV": {
+            "type": "number",
+            "description": "Effective cost per view",
+            "format": "double",
+            "example": 0.0187
+          },
+          "totalECPC": {
+            "type": "number",
+            "description": "Total effective CPC",
+            "format": "double",
+            "example": 1.6797
           }
         },
         "description": "Totals across the current filter",
@@ -3196,7 +4091,7 @@
             "format": "int32"
           }
         },
-        "description": "Common Response with ID"
+        "description": "Common response with ID"
       },
       "ReportSearchRequestVO": {
         "type": "object",
@@ -3238,6 +4133,34 @@
               "SortOrderEnum[id=1, name='asc', symbol='+']",
               "SortOrderEnum[id=2, name='desc', symbol='-']"
             ]
+          }
+        }
+      },
+      "DownloadData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL of the downloadable report file",
+            "example": "https://www.sample.com/123.csv"
+          }
+        },
+        "description": "Report download data wrapper"
+      },
+      "DownloadResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/DownloadData"
           }
         }
       }
