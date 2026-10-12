@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Planner API Specification",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "MCP Planner API Specification",
     "contact": {
       "name": "IQM Support",
@@ -2446,7 +2446,7 @@
           {
             "name": "sortBy",
             "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign.  Allowed values - id, name, createdOn, createdBy, startDate, endDate, reach, impressions, cpm, budget",
+            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign.  Allowed values - id, name, createdOn, createdBy, startDate, endDate, reach, impressions, cpm, budget, frequency",
             "required": false,
             "schema": {
               "type": "string",
@@ -3168,7 +3168,7 @@
           "MCP"
         ],
         "summary": "API to create a political plan (ready)",
-        "description": "Creates a new political plan in ready status. Name, details, and targeting are required. The\nprovided targeting.creative/targeting.device selection is sent to an external strategy-generation\nservice (DSI), which computes viable strategies from real-time inventory/forecast data -- there is\nno fixed, enumerable list of valid creative/device combinations within this API itself. If DSI\nfinds no viable strategy for the given combination (even one where every individual ID is valid),\nthe request is rejected with \"No strategies meet your criteria. Edit the plan to explore more\noptions.\" rather than a field-specific validation error.\n",
+        "description": "Creates a new political plan in ready status. Name, details, and targeting are required. The\nprovided targeting.creative/targeting.device selection is sent to an external strategy-generation\nservice (DSI), which computes viable strategies from real-time inventory/forecast data -- there is\nno fixed, enumerable list of valid creative/device combinations within this API itself. If DSI\nfinds no viable strategy for the given combination (even one where every individual ID is valid),\nthe request is rejected with \"No strategies meet your criteria. Edit the plan to explore more\noptions.\" rather than a field-specific validation error.",
         "operationId": "createReadyPlan",
         "parameters": [
           {
@@ -5397,7 +5397,7 @@
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "This file’s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
+                      "error": "This file\u2019s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
                       "field": "npi"
                     }
                   ]
@@ -8316,7 +8316,7 @@
           {
             "name": "sortBy",
             "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - id, Name, createdBy, createdOn, startDate, endDate, reach, impressions, budget",
+            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - id, name, createdBy, createdOn, startDate, endDate, reach, impression, budget",
             "required": false,
             "schema": {
               "type": "string",
@@ -9938,7 +9938,7 @@
           {
             "name": "sortBy",
             "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign.  Allowed values - id, name, createdOn, createdBy, startDate, endDate, objectiveId, linkedProposals",
+            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign.  Allowed values - id, name, createdOn, createdBy, startDate, endDate, objectiveId, totalProposals, duration",
             "required": false,
             "schema": {
               "type": "string",
@@ -11461,7 +11461,7 @@
           {
             "name": "sortBy",
             "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - id, name, createdBy, createdOn, startDate, reach, impression, budget",
+            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - id, name, createdBy, createdOn, startDate, endDate, reach, impressions, budget, duration",
             "required": false,
             "schema": {
               "type": "string",
@@ -11545,6 +11545,7 @@
                             "userAvatarUrl": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/avatar/HB.png",
                             "startDate": 1752838419000,
                             "endDate": 1753934400000,
+                            "timezoneId": 29,
                             "reach": 206567705,
                             "impression": 37182186900,
                             "budget": 334639683,
@@ -11860,7 +11861,7 @@
                         "campaigns": [
                           {
                             "id": 1,
-                            "name": "Filter‑Block1•Device1•Creative1",
+                            "name": "Filter\u2011Block1\u2022Device1\u2022Creative1",
                             "startDate": 1732707706666,
                             "endDate": 1733312506666,
                             "budget": 16000,
@@ -13417,7 +13418,7 @@
           "whitelistedAudiences": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Whitelisted audience targeting criteria for the campaign plan",
+            "description": "Whitelisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
             "items": {
               "type": "integer",
               "description": "Whitelisted audience targeting criteria for the campaign plan",
@@ -13427,7 +13428,7 @@
           "blacklistedAudiences": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Blacklisted audience targeting criteria for the campaign plan",
+            "description": "Blacklisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
             "items": {
               "type": "integer",
               "description": "Blacklisted audience targeting criteria for the campaign plan",
@@ -17562,6 +17563,13 @@
             "format": "int64",
             "example": 1625337600000
           },
+          "timezoneId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "Timezone ID of the proposal. May be null; not currently populated by this endpoint.",
+            "example": 29
+          },
           "reach": {
             "type": "integer",
             "description": "Reach of the proposal",
@@ -19054,6 +19062,12 @@
             "description": "End date of the proposal",
             "format": "int64",
             "example": 1625337600000
+          },
+          "timezoneId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Timezone ID of the plan. See the timezone list in the Master API.",
+            "example": 29
           },
           "reach": {
             "type": "integer",
