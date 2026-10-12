@@ -1,0 +1,1469 @@
+---
+title: Create an HCP proposal
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+import { npiTypes } from '@site/src/data/enums/npiTypes';
+
+# Create an HCP proposal
+
+Build, save, and publish a Healthcare Professional (HCP) proposal as an insertion order (IO) and campaigns with this in-depth tutorial using IQM's Planner API.
+
+The following endpoints are used to generate campaigns, save a proposal, and publish it:
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/generate-campaigns" operationId="generateHCPProposedCampaigns" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/proposal/add" operationId="createProposal_1" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/hcp/plans/{planId}" operationId="getHcpPlanById" />
+<br /><CopyUrl method="PUT" url="https://api.iqm.com/api/v3/plan/hcp/proposal/{planId}" operationId="editProposal_1" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/campaigns/publish" operationId="generateIOCampaigns_2" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/plan/download" operationId="downloadPlan" />
+
+## About HCP proposals
+
+An HCP proposal is a media plan that targets healthcare professionals by their National Provider Identifier (NPI) type, specialty, location, and data partner. Unlike Political proposals, HCP proposals have no separate plan and strategy stages: a proposal is created directly with its targeting and proposed campaigns.
+
+**Generate campaigns → Save proposal → Edit (optional) → Publish IO and campaigns**
+
+Two rules make HCP proposals harder than they look:
+  1. **Targeting consistency.** The split strategy must agree with the proposal's plan-level targeting, or the request is rejected. See [Step 2](#step-2-plan-the-audience-and-targeting).
+  1. **Status echo.** Every edit and publish request must include the proposal's *current* <var>statusId</var>. See [Step 6](#step-6-edit-the-proposal).
+
+An HCP proposal has one of the following statuses. See [Proposal status list](/guidelines/planner-api#proposal-status-list) and pass <var>plannerTypeId</var> <var>2</var> for HCP statuses.
+
+| Status ID | Status |
+| --- | --- |
+| <var>2</var> | Draft |
+| <var>6</var> | Ready |
+| <var>5</var> | Processing: IO and campaigns are being created |
+| <var>7</var> | IO Created: publishing finished and the IO exists |
+| <var>4</var> | Failed: publishing failed and can be retried |
+| <var>3</var> | Expired: the proposal's end date has passed |
+
+### More resources
+  * [Planner API](/healthcare-vertical/planner) guidelines
+  * [Audience API](/healthcare-vertical/audience-healthcare) guidelines
+  * [Create a Political proposal](/political-vertical/tutorials/create-a-political-proposal) tutorial
+  * [HCP Planner overview<ExternalLink />](https://help.iqm.com/en/articles/12238826-healthcare-professional-hcp-planner-overview) Help Center article
+
+## Before you begin
+
+To create and publish an HCP proposal, the following are required:
+
+  * An account on the IQM platform in a Healthcare workspace
+    * See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
+    * Planner API requests from a workspace outside the Healthcare vertical are rejected with <var>Request for forbidden vertical</var>
+  * An Advertiser workspace
+    * Publishing and downloading a proposal is only available to Advertiser Organizations
+
+## Create an HCP proposal using the IQM API
+
+This tutorial covers the following steps:
+
+1. Log in
+    * Optional if you have already logged in and have a token
+1. Plan the audience and targeting
+1. Generate campaigns
+1. Create a ready proposal
+1. Get proposal details
+1. Edit the proposal
+    * Optional
+1. Publish the IO and campaigns
+1. Download the proposal
+    * Optional
+
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+### Step 1: Log in
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+
+For further information see [OAuth token](/guidelines/user-api#oauth-token).
+
+| Headers |  |
+| ---- | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+
+| Request schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Plan the audience and targeting
+
+Before calling any endpoint, decide who the proposal targets and how its campaigns are split. These choices make up the body of every request in the following steps. See [HCP Planner resource properties](/healthcare-vertical/planner#hcp-planner-resource-properties) for all fields.
+
+#### NPI types
+
+`npiTypeIds` sets which professionals to reach. Get values from the [NPI type list](/healthcare-vertical/planner#npi-type-list).
+
+<EnumWidget values={npiTypes} />
+
+#### Audience blocks
+
+`audienceBlocks` defines the audience. Each block uses one audience selection method, set by <var>audienceSelectionMethodId</var>, and the fields a block needs depend on its method. Use at most one block per method. See [Get audience selection methods list](/healthcare-vertical/planner#get-audience-selection-methods-list).
+
+| Method | ID | Required block fields | Audience type |
+| --- | --- | --- | --- |
+| Filter based | <var>1</var> | <var>speciality</var>, <var>locations</var>, <var>dataPartners</var> | Matched (<var>1</var>) |
+| Upload NPI list | <var>2</var> | <var>speciality</var>, <var>locations</var>, <var>dataPartners</var>, and <var>storagePathId</var> from an uploaded NPI file | Matched (<var>1</var>) |
+| Existing audience | <var>3</var> | <var>includeAudienceIds</var> and/or <var>excludeAudienceIds</var>, up to 14 in total. Don't send specialty, location, or data partner fields. | Taken from the selected audiences |
+| Account based | <var>4</var> | <var>speciality</var>, <var>locations</var>, <var>account</var>, <var>accountType</var>, <var>healthSystem</var>, <var>title</var>, <var>dataPartners</var>. Requires NPI type <var>3</var>. | ABM (<var>9</var>) |
+
+For filter-based blocks:
+  * `locations.countryId` must be <var>30100001</var> (United States)
+  * `dataPartners` is a list of partners with at least one marked <var>selected: true</var>. See [Get data partners list](/healthcare-vertical/planner#get-data-partners-list); the active partners are <var>7</var>, <var>8</var>, <var>11</var>, and <var>12</var>.
+  * `speciality` uses the "select all" pattern described below. See [Get specialties list](/healthcare-vertical/planner#get-specialties-list).
+
+The audience type of each block is set by IQM from its method, as in the table above. Don't send <var>selectedAudienceTypeIds</var>; it is ignored.
+
+#### Plan-level targeting
+
+`planLevelTargeting` sets the creative types and devices for the whole proposal. Objects such as <var>creativeTypes</var>, <var>devices</var>, and <var>speciality</var> use a "select all" flag with an ID list:
+
+  * Select all: set the flag (for example <var>allCreativeTypesSelected</var>) to <var>true</var> and send an empty ID list
+  * Select specific values: set the flag to <var>false</var> and list the IDs
+
+Any other combination is rejected.
+
+#### Split strategy and the targeting consistency rule
+
+`splitStrategy` decides how the proposal is divided into campaigns. Each entry names a [split dimension](/healthcare-vertical/planner#get-split-strategy-list) and the values to split by. Each listed value becomes its own campaign slice, and campaigns are created for every combination of slices. A split strategy must include the creative type dimension, and the NPI type dimension unless the only audience block is an existing audience.
+
+The values in each split dimension must agree with the proposal's targeting. This is the most common cause of rejected HCP requests. See [Targeting consistency rule](/healthcare-vertical/planner#targeting-consistency-rule).
+
+| Split dimension | `splitDimensionTypeId` | `selectedValueIds` must agree with | Rule | Campaign field |
+| --- | --- | --- | --- | --- |
+| Creative type | <var>1</var> | `planLevelTargeting.creativeTypes.creativeTypeIds` | Exact match | `targeting.creativeTypeId` |
+| NPI type | <var>2</var> | `npiTypeIds` | Subset | `targeting.npiTypeId` |
+| Data partner | <var>3</var> | `dataPartners[].id` across all audience blocks | Subset | `targeting.dataPartnerIds` |
+| Device type | <var>4</var> | `planLevelTargeting.devices.deviceTypeIds` | Subset | `targeting.deviceTypeIds` |
+| Audience type | <var>5</var> | Audience types of all audience blocks | Subset | `targeting.audienceTypeIds` |
+
+When "select all" is used for creative types or devices, compare against the full list: creative types <var>11</var>, <var>13</var>, <var>14</var>, <var>15</var>, and <var>17</var>; devices <var>20300001</var> to <var>20300004</var>.
+
+:::caution
+
+Mismatches are reported with a general message, such as <var>Selected creative type IDs and split IDs do not match.</var> Check the dimension named in the message against the table above.
+
+:::
+
+Each proposed campaign's targeting uses singular fields for creative and NPI type (<var>creativeTypeId</var>, <var>npiTypeId</var>), unlike the plural fields at the plan level. Campaign targeting isn't checked against the split strategy, so let IQM build the campaigns in [Step 3](#step-3-generate-campaigns) rather than writing them yourself.
+
+### Step 3: Generate campaigns
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/generate-campaigns" operationId="generateHCPProposedCampaigns" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send the proposal details from Step 2 without campaigns. IQM builds the proposed campaigns from the split strategy, forecasts their reach, and calculates each campaign's CPM, impressions, and budget range, along with the proposal's totals. Nothing is saved.
+
+Use the response as the request body for Step 4. You can change budgets and impressions within each campaign's minimum and maximum before saving.
+
+| Request schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Proposal name; must be unique in the workspace |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start time in milliseconds; can't be in the past |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch end time in milliseconds; must be at least 30 minutes after <var>startTime</var> |
+| `timezoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Time zone ID](/guidelines/master-api#get-timezones) |
+| `budgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Budget type: <var>1</var> budget, <var>2</var> impressions |
+| `frequencyCap` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Frequency cap, <var>1</var> to <var>99</var> |
+| `frequencyCapTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Frequency cap period: <var>1</var> day, <var>2</var> week, <var>3</var> month, <var>4</var> campaign duration |
+| `npiTypeIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [NPI type IDs](/healthcare-vertical/planner#npi-type-list) |
+| `audienceBlocks` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Audience blocks; see [Step 2](#audience-blocks) |
+| `planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Creative type and device targeting; see [Step 2](#plan-level-targeting) |
+| `splitStrategy` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Split dimensions; see [Step 2](#split-strategy-and-the-targeting-consistency-rule) |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+The response contains every request field, plus:
+
+<table className="objectProperties">
+  <tr>
+    <td>`minBudget`, `budget`, `maxBudget` <br /><span class="type-text">number</span></td>
+    <td>Proposal budget range and suggested budget</td>
+  </tr>
+  <tr>
+    <td>`minImpressions`, `impressions`, `maxImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Proposal impressions range and suggested impressions</td>
+  </tr>
+  <tr>
+    <td>`reach`, `maxReach` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted reach</td>
+  </tr>
+  <tr>
+    <td>`campaigns` <br /><span class="type-text">array of objects</span></td>
+    <td>Proposed campaigns, sorted by reach</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`campaigns` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`name` <br /><span class="type-text">string</span></td>
+        <td>Campaign name</td>
+      </tr>
+      <tr>
+        <td>`startTime`, `endTime` <br /><span class="type-text">integer</span></td>
+        <td>Unix epoch start and end time in milliseconds</td>
+      </tr>
+      <tr>
+        <td>`minMediaCpm`, `mediaCpm`, `maxMediaCpm` <br /><span class="type-text">number</span></td>
+        <td>Media cost per mille (CPM) range</td>
+      </tr>
+      <tr>
+        <td>`dataCpm` <br /><span class="type-text">number</span></td>
+        <td>Data CPM, based on the selected data partners</td>
+      </tr>
+      <tr>
+        <td>`minBudget`, `budget`, `maxBudget` <br /><span class="type-text">number</span></td>
+        <td>Campaign budget range</td>
+      </tr>
+      <tr>
+        <td>`minReach`, `reach`, `maxReach` <br /><span class="type-text">integer</span></td>
+        <td>Campaign reach range</td>
+      </tr>
+      <tr>
+        <td>`minImpressions`, `impressions`, `maxImpressions` <br /><span class="type-text">integer</span></td>
+        <td>Campaign impressions range</td>
+      </tr>
+      <tr>
+        <td>`isAbm` <br /><span class="type-text">boolean</span></td>
+        <td>Whether the campaign targets an account-based audience</td>
+      </tr>
+      <tr>
+        <td>`targeting` <br /><span class="type-text">object</span></td>
+        <td>Campaign targeting: <var>creativeTypeId</var>, <var>npiTypeId</var>, <var>dataPartnerIds</var>, <var>deviceTypeIds</var>, <var>audienceTypeIds</var></td>
+      </tr>
+    </table>
+    </details>
+  </td>
+  <td></td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793628000000,
+  "endTime": 1796083199000,
+  "timezoneId": 29,
+  "budgetTypeId": 1,
+  "frequencyCap": 3,
+  "frequencyCapTypeId": 1,
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [
+    {
+      "audienceSelectionMethodId": 1,
+      "speciality": {
+        "specialityIds": [],
+        "allSpecialitiesSelected": true
+      },
+      "locations": {
+        "countryId": 30100001,
+        "whiteListedStateIds": [],
+        "blackListedStateIds": [],
+        "whiteListedCityIds": [],
+        "blackListedCityIds": [],
+        "whiteListedZipcodes": [],
+        "blackListedZipcodes": []
+      },
+      "dataPartners": [
+        { "id": 7, "selected": true, "priority": 1 },
+        { "id": 8, "selected": true, "priority": 2 }
+      ]
+    }
+  ],
+  "planLevelTargeting": {
+    "devices": {
+      "deviceTypeIds": [20300001, 20300004],
+      "allDeviceTypesSelected": false
+    },
+    "creativeTypes": {
+      "creativeTypeIds": [11, 14],
+      "allCreativeTypesSelected": false,
+      "isTvAutoBuying": false
+    }
+  },
+  "splitStrategy": [
+    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
+  ]
+}
+```
+
+```json title="Response 200 (abbreviated)"
+{
+  "success": true,
+  "data": {
+    "name": "Q4 Cardiology Awareness",
+    "startTime": 1793628000000,
+    "endTime": 1796083199000,
+    "timezoneId": 29,
+    "budgetTypeId": 1,
+    "minBudget": 98.00,
+    "budget": 8820.00,
+    "maxBudget": 8820.00,
+    "reach": 60000,
+    "maxReach": 60000,
+    "minImpressions": 4000,
+    "impressions": 360000,
+    "maxImpressions": 360000,
+    "frequencyCap": 3,
+    "frequencyCapTypeId": 1,
+    "npiTypeIds": [3, 4],
+    "audienceBlocks": [ ... ],
+    "planLevelTargeting": { ... },
+    "splitStrategy": [ ... ],
+    "campaigns": [
+      {
+        "id": null,
+        "name": "Video - Physicians",
+        "startTime": 1793628000000,
+        "endTime": 1796083199000,
+        "frequencyCap": 3,
+        "frequencyCapTypeId": 1,
+        "minMediaCpm": 18.00,
+        "mediaCpm": 18.00,
+        "maxMediaCpm": 18.00,
+        "dataCpm": 12.50,
+        "minBudget": 30.50,
+        "budget": 3843.00,
+        "maxBudget": 3843.00,
+        "minReach": 10,
+        "reach": 42000,
+        "maxReach": 42000,
+        "minImpressions": 1000,
+        "impressions": 126000,
+        "maxImpressions": 126000,
+        "isAbm": false,
+        "targeting": {
+          "dataPartnerIds": [7, 8],
+          "creativeTypeId": 14,
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3,
+          "audienceTypeIds": [1]
+        }
+      },
+      ...
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface HcpCampaign {
+  id: number | null;
+  name: string;
+  startTime: number;
+  endTime: number;
+  frequencyCap: number;
+  frequencyCapTypeId: number;
+  minMediaCpm: number;
+  mediaCpm: number;
+  maxMediaCpm: number;
+  dataCpm: number;
+  minBudget: number;
+  budget: number;
+  maxBudget: number;
+  minReach: number;
+  reach: number;
+  maxReach: number;
+  minImpressions: number;
+  impressions: number;
+  maxImpressions: number;
+  isAbm: boolean;
+  targeting: {
+    dataPartnerIds: number[];
+    creativeTypeId: number;
+    deviceTypeIds: number[];
+    npiTypeId: number;
+    audienceTypeIds: number[];
+  };
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          name: string;
+          startTime: number;
+          endTime: number;
+          timezoneId: number;
+          budgetTypeId: number;
+          minBudget: number;
+          budget: number;
+          maxBudget: number;
+          reach: number;
+          maxReach: number;
+          minImpressions: number;
+          impressions: number;
+          maxImpressions: number;
+          frequencyCap: number;
+          frequencyCapTypeId: number;
+          npiTypeIds: number[];
+          audienceBlocks: object[];
+          planLevelTargeting: object;
+          splitStrategy: {
+            splitDimensionTypeId: number;
+            selectedValueIds: number[];
+          }[];
+          campaigns: HcpCampaign[];
+        };
+      };
+    };
+  };
+}
+
+function generateHCPProposedCampaigns(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/generate-campaigns',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          startTime: `number`,
+          endTime: `number`,
+          timezoneId: `number`,
+          budgetTypeId: `number`,
+          frequencyCap: `number`,
+          frequencyCapTypeId: `number`,
+          npiTypeIds: `array of numbers`,
+          audienceBlocks: `array of objects`,
+          planLevelTargeting: `object`,
+          splitStrategy: `array of objects`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 4: Create a ready proposal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/proposal/add" operationId="createProposal_1" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Save the proposal in <var>Ready</var> (<var>6</var>) status. Send the full response <var>data</var> from Step 3 as the request body. Save the <var>id</var> from the response; it's the <var>planId</var> used in the following steps.
+
+To save an incomplete proposal instead, use <span class="code-text">POST /api/v3/plan/hcp/proposal/draft</span>, which saves it in <var>Draft</var> (<var>2</var>) status and skips the budget and campaign checks. See [Create HCP Planner](/healthcare-vertical/planner#create-hcp-planner).
+
+In addition to the fields from Step 3, a ready proposal requires:
+
+| Request schema |  |
+| ---- | --- |
+| `minBudget`, `budget`, `maxBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Proposal budget range; <var>budget</var> must be within the range |
+| `minImpressions`, `impressions`, `maxImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal impressions range; <var>impressions</var> must be within the range |
+| `campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Proposed campaigns from Step 3, up to 250. Each campaign's budget, impressions, reach, and media CPM must be within its own range. |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793628000000,
+  "endTime": 1796083199000,
+  "timezoneId": 29,
+  "budgetTypeId": 1,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "reach": 60000,
+  "maxReach": 60000,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 3,
+  "frequencyCapTypeId": 1,
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [
+    {
+      "audienceSelectionMethodId": 1,
+      "speciality": { "specialityIds": [], "allSpecialitiesSelected": true },
+      "locations": {
+        "countryId": 30100001,
+        "whiteListedStateIds": [],
+        "blackListedStateIds": [],
+        "whiteListedCityIds": [],
+        "blackListedCityIds": [],
+        "whiteListedZipcodes": [],
+        "blackListedZipcodes": []
+      },
+      "dataPartners": [
+        { "id": 7, "selected": true, "priority": 1, "reach": 120000, "incrementalReach": 120000 },
+        { "id": 8, "selected": true, "priority": 2, "reach": 90000, "incrementalReach": 30000 }
+      ]
+    }
+  ],
+  "planLevelTargeting": {
+    "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
+    "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false }
+  },
+  "splitStrategy": [
+    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
+  ],
+  "campaigns": [
+    {
+      "name": "Image - Physicians",
+      "startTime": 1793628000000, "endTime": 1796083199000,
+      "frequencyCap": 3, "frequencyCapTypeId": 1,
+      "minMediaCpm": 6.00, "mediaCpm": 6.00, "maxMediaCpm": 6.00, "dataCpm": 12.50,
+      "minBudget": 18.50, "budget": 2331.00, "maxBudget": 2331.00,
+      "minReach": 10, "reach": 42000, "maxReach": 42000,
+      "minImpressions": 1000, "impressions": 126000, "maxImpressions": 126000,
+      "isAbm": false,
+      "targeting": { "dataPartnerIds": [7, 8], "creativeTypeId": 11, "deviceTypeIds": [20300001, 20300004], "npiTypeId": 3, "audienceTypeIds": [1] }
+    },
+    {
+      "name": "Image - Nurses",
+      "startTime": 1793628000000, "endTime": 1796083199000,
+      "frequencyCap": 3, "frequencyCapTypeId": 1,
+      "minMediaCpm": 6.00, "mediaCpm": 6.00, "maxMediaCpm": 6.00, "dataCpm": 12.50,
+      "minBudget": 18.50, "budget": 999.00, "maxBudget": 999.00,
+      "minReach": 10, "reach": 18000, "maxReach": 18000,
+      "minImpressions": 1000, "impressions": 54000, "maxImpressions": 54000,
+      "isAbm": false,
+      "targeting": { "dataPartnerIds": [7, 8], "creativeTypeId": 11, "deviceTypeIds": [20300001, 20300004], "npiTypeId": 4, "audienceTypeIds": [1] }
+    },
+    {
+      "name": "Video - Physicians",
+      "startTime": 1793628000000, "endTime": 1796083199000,
+      "frequencyCap": 3, "frequencyCapTypeId": 1,
+      "minMediaCpm": 18.00, "mediaCpm": 18.00, "maxMediaCpm": 18.00, "dataCpm": 12.50,
+      "minBudget": 30.50, "budget": 3843.00, "maxBudget": 3843.00,
+      "minReach": 10, "reach": 42000, "maxReach": 42000,
+      "minImpressions": 1000, "impressions": 126000, "maxImpressions": 126000,
+      "isAbm": false,
+      "targeting": { "dataPartnerIds": [7, 8], "creativeTypeId": 14, "deviceTypeIds": [20300001, 20300004], "npiTypeId": 3, "audienceTypeIds": [1] }
+    },
+    {
+      "name": "Video - Nurses",
+      "startTime": 1793628000000, "endTime": 1796083199000,
+      "frequencyCap": 3, "frequencyCapTypeId": 1,
+      "minMediaCpm": 18.00, "mediaCpm": 18.00, "maxMediaCpm": 18.00, "dataCpm": 12.50,
+      "minBudget": 30.50, "budget": 1647.00, "maxBudget": 1647.00,
+      "minReach": 10, "reach": 18000, "maxReach": 18000,
+      "minImpressions": 1000, "impressions": 54000, "maxImpressions": 54000,
+      "isAbm": false,
+      "targeting": { "dataPartnerIds": [7, 8], "creativeTypeId": 14, "deviceTypeIds": [20300001, 20300004], "npiTypeId": 4, "audienceTypeIds": [1] }
+    }
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Q4 Cardiology Awareness generated successfully",
+    "id": 4512
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Selected creative type IDs and split IDs do not match."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+          id: number;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function createProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/proposal/add',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          startTime: `number`,
+          endTime: `number`,
+          timezoneId: `number`,
+          budgetTypeId: `number`,
+          minBudget: `number`,
+          budget: `number`,
+          maxBudget: `number`,
+          minImpressions: `number`,
+          impressions: `number`,
+          maxImpressions: `number`,
+          reach?: `number`,
+          maxReach?: `number`,
+          frequencyCap: `number`,
+          frequencyCapTypeId: `number`,
+          npiTypeIds: `array of numbers`,
+          audienceBlocks: `array of objects`,
+          planLevelTargeting: `object`,
+          splitStrategy: `array of objects`,
+          campaigns: `array of objects`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 5: Get proposal details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/hcp/plans/{planId}" operationId="getHcpPlanById" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Use the <var>id</var> from Step 4 to get the saved proposal. The response uses the same fields as the request in Step 4, plus the proposal's <var>statusId</var> and <var>ioId</var>.
+
+Use this endpoint to:
+  * Get the current <var>statusId</var> before editing or publishing the proposal
+  * Check the result of publishing in Step 7
+
+| Path parameters |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+The response contains the fields from Step 4, plus:
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Proposal ID</td>
+  </tr>
+  <tr>
+    <td>`statusId` <br /><span class="type-text">integer</span></td>
+    <td>Current [proposal status](#about-hcp-proposals) ID</td>
+  </tr>
+  <tr>
+    <td>`ioId` <br /><span class="type-text">integer</span></td>
+    <td>ID of the generated IO; <var>0</var> until the proposal is published</td>
+  </tr>
+  <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
+    <td>`createdAt`, `updatedAt` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch creation and update times in milliseconds</td>
+  </tr>
+</table>
+
+See [HCP Planner details by ID](/healthcare-vertical/planner#hcp-planner-details-by-id) for all response properties.
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200 (abbreviated)"
+{
+  "success": true,
+  "data": {
+    "id": 4512,
+    "name": "Q4 Cardiology Awareness",
+    "startTime": 1793628000000,
+    "endTime": 1796083199000,
+    "timezoneId": 29,
+    "budgetTypeId": 1,
+    "owId": 200001,
+    "createdAt": 1791800000000,
+    "updatedAt": 1791800000000,
+    "minBudget": null,
+    "budget": 8820.00,
+    "maxBudget": 8820.00,
+    "reach": 60000,
+    "maxReach": 60000,
+    "minImpressions": null,
+    "impressions": 360000,
+    "maxImpressions": 360000,
+    "frequencyCap": 3,
+    "frequencyCapTypeId": 1,
+    "statusId": 6,
+    "npiTypeIds": [3, 4],
+    "audienceBlocks": [ ... ],
+    "planLevelTargeting": {
+      "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
+      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false }
+    },
+    "splitStrategy": [
+      { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+      { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
+    ],
+    "campaigns": [
+      {
+        "id": 90001,
+        "name": "Image - Physicians",
+        "startTime": 1793628000000,
+        "endTime": 1796083199000,
+        "budget": 2331.00,
+        "impressions": 126000,
+        "reach": 42000,
+        "targeting": {
+          "dataPartnerIds": [7, 8],
+          "creativeTypeId": 11,
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3,
+          "audienceTypeIds": [1]
+        },
+        "campaignId": 0
+      },
+      ...
+    ],
+    "ioId": 0
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Plan with plan id 4512 does not exist"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          startTime: number;
+          endTime: number;
+          timezoneId: number;
+          budgetTypeId: number;
+          owId: number;
+          createdAt: number;
+          updatedAt: number;
+          minBudget: number | null;
+          budget: number;
+          maxBudget: number;
+          reach: number;
+          maxReach: number;
+          minImpressions: number | null;
+          impressions: number;
+          maxImpressions: number;
+          frequencyCap: number;
+          frequencyCapTypeId: number;
+          statusId: number;
+          npiTypeIds: number[];
+          audienceBlocks: object[];
+          planLevelTargeting: object;
+          splitStrategy: {
+            splitDimensionTypeId: number;
+            selectedValueIds: number[];
+          }[];
+          campaigns: object[];
+          ioId: number;
+        };
+      };
+    };
+  };
+}
+
+function getHcpPlanById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/plans/{planId}',
+    params: {
+      path: {
+        planId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 6: Edit the proposal
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/plan/hcp/proposal/{planId}" operationId="editProposal_1" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Optionally, update the proposal before publishing it. Send the full proposal; the saved proposal is replaced with the request body. Editing doesn't change the proposal's status.
+
+| Path parameters |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID |
+
+| Request schema |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID; must be the same as the <var>planId</var> path parameter |
+| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 5 |
+| `minBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Minimum proposal budget, from Step 3. Not returned in Step 5, so add it back before sending. |
+| `minImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Minimum proposal impressions, from Step 3. Not returned in Step 5, so add it back before sending. |
+
+All other fields are the same as [Step 4](#step-4-create-a-ready-proposal).
+
+:::warning
+
+The <var>statusId</var> in the request must equal the proposal's current status. If it doesn't, the request fails with <var>Proposal cannot be edited in its current status.</var>, even when the proposal's actual status can be edited. Always get the proposal in Step 5 and send back its <var>statusId</var> unchanged.
+
+Proposals in <var>Processing</var> (<var>5</var>) or <var>IO Created</var> (<var>7</var>) status can't be edited.
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample (abbreviated)"
+{
+  "id": 4512,
+  "statusId": 6,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793628000000,
+  "endTime": 1796083199000,
+  "timezoneId": 29,
+  "budgetTypeId": 1,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 5,
+  "frequencyCapTypeId": 2,
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [ ... ],
+  "planLevelTargeting": { ... },
+  "splitStrategy": [ ... ],
+  "campaigns": [ ... ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Q4 Cardiology Awareness updated successfully",
+    "id": 4512
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal cannot be edited in its current status."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+          id: number;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function editProposal(): Promise<Responses> {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/proposal/{planId}',
+    params: {
+      path: {
+        planId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          id: `number`,
+          statusId: `number`,
+          // ...all other fields from Step 4
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 7: Publish the IO and campaigns
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/campaigns/publish" operationId="generateIOCampaigns_2" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Publish the proposal to create an IO and campaigns. Send the full proposal with its <var>id</var> and current <var>statusId</var>, as in Step 6. Publishing saves the request body first using the same checks as an edit, so the [status echo rule](#step-6-edit-the-proposal) applies here too.
+
+The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the audiences, IO, and campaigns are created in the background. When publishing finishes, the proposal moves to <var>IO Created</var> (<var>7</var>) and its <var>ioId</var> is set. If publishing fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can publish it again. The response doesn't include the IO ID: use [Step 5](#step-5-get-proposal-details) to check the result.
+
+| Request schema |  |
+| ---- | --- |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 5 |
+
+All other fields are the same as [Step 6](#step-6-edit-the-proposal).
+
+:::danger
+
+Publishing is a one-way step. A published proposal can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> proposal, such as editing, no longer work for it. Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample (abbreviated)"
+{
+  "id": 4512,
+  "statusId": 6,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793628000000,
+  "endTime": 1796083199000,
+  "timezoneId": 29,
+  "budgetTypeId": 1,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 3,
+  "frequencyCapTypeId": 1,
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [ ... ],
+  "planLevelTargeting": { ... },
+  "splitStrategy": [ ... ],
+  "campaigns": [ ... ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Campaign generation is in progress"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal cannot be edited in its current status."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function publishCampaigns(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/campaigns/publish',
+    requestBody: {
+      content: {
+        "application/json": {
+          id: `number`,
+          statusId: `number`,
+          // ...all other fields from Step 4
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 8: Download the proposal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/plan/download" operationId="downloadPlan" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Optionally, download the proposal as a spreadsheet or PDF to share. The response contains a temporary download link.
+
+Proposals in <var>Ready</var> (<var>6</var>), <var>Processing</var> (<var>5</var>), <var>IO Created</var> (<var>7</var>), or <var>Failed</var> (<var>4</var>) status can be downloaded. Draft and expired proposals can't.
+
+| Request schema |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type: <var>1</var> XLSX or <var>3</var> PDF |
+
+:::info
+
+CSV (<var>2</var>) isn't supported for HCP proposals, unlike some other Planner download endpoints. Requests with any file type other than <var>1</var> or <var>3</var> fail with <var>Invalid file type to download HCP Plan</var>.
+
+:::
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`downloadUrl` <br /><span class="type-text">string</span></td>
+    <td>Temporary link to the generated file</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "planId": 4512,
+  "fileTypeId": 1
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "downloadUrl": "https://example-bucket.s3.amazonaws.com/Q4_Cardiology_Awareness_1791800000000.xlsx"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid file type to download HCP Plan"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          downloadUrl: string;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function downloadPlan(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/hcp/plan/download',
+    requestBody: {
+      content: {
+        "application/json": {
+          planId: `number`,
+          fileTypeId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>

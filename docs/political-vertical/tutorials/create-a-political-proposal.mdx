@@ -1,0 +1,1845 @@
+---
+title: Create a Political proposal
+hide_table_of_contents: true
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import ExternalLink from '@site/static/img/external-link2.svg';
+import CopyUrl from '@site/src/components/CopyUrl';
+import { proposalStatus } from '@site/src/data/enums/proposalStatus';
+import { planObjectives } from '@site/src/data/enums/planObjectives';
+
+# Create a Political proposal
+
+Plan, activate, and convert a Political proposal into an insertion order (IO) and campaigns with this in-depth tutorial using IQM's Planner API.
+
+The following endpoints are used to create a plan, activate a proposal, and generate an IO with campaigns:
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/ready" operationId="createReadyPlan" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/strategies" operationId="getPoliticalStrategyListing" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals" operationId="activateProposal" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/proposal/{proposalId}" operationId="getProposalDetailsById_1" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/io" operationId="generateIOCampaigns_1" />
+
+## About Political proposals
+
+A Political proposal is a forecast-backed media plan that IQM can turn into a live IO and campaigns. Proposals are built in stages, and each stage produces the ID that the next one needs:
+
+**Plan → Strategy → Proposal → Insertion order and campaigns**
+
+  * A **plan** holds the budget, flight dates, and targeting. A plan is saved as either a draft or ready plan. Only ready plans produce strategies.
+  * When a ready plan is created, IQM's forecasting service generates up to three **strategies** for it: Maximum Reach, Balanced, and Most Economical. Each strategy is a different trade-off between reach, impressions, and cost.
+  * **Activating** a strategy turns it into a **proposal**: an editable set of proposed campaigns with its own status.
+  * **Generating an IO** from a ready proposal creates a real insertion order and campaigns in your workspace. This is a one-way step.
+
+A proposal moves through the following statuses. See [Proposal status list](/guidelines/planner-api#proposal-status-list) for details.
+
+<EnumWidget values={proposalStatus} />
+
+### More resources
+  * [Planner API](/political-vertical/planner) guidelines
+  * [Audience API](/political-vertical/audience-segments) guidelines
+  * [Create an HCP proposal](/healthcare-vertical/tutorials/create-an-hcp-proposal) tutorial
+  * [Political Planner overview<ExternalLink />](https://help.iqm.com/en/articles/15265995-political-planner-overview) Help Center article
+
+## Before you begin
+
+To create a Political proposal and convert it into an IO, the following are required:
+
+  * An account on the IQM platform in a Political workspace
+    * See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
+    * Planner API requests from a workspace outside the Political vertical are rejected with <var>Request for forbidden vertical</var>
+  * A Political Advertiser profile
+    * See [Get list of Advertiser profile and details](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) to find an existing profile ID, or [Add Advertiser profile](/guidelines/workspace-api#add-advertiser-profile) to create one
+    * Required in [Step 6](#step-6-generate-an-io-and-campaigns) to generate an IO. Use a real profile ID; it is validated when the IO is created.
+
+## Create a Political proposal using the IQM API
+
+This tutorial covers the standard path for Reach forecasting and Budget estimation plans:
+
+1. Log in
+    * Optional if you have already logged in and have a token
+1. Create a ready plan
+1. Get the plan's strategies
+1. Activate a strategy into a proposal
+1. Check proposal details
+1. Generate an IO and campaigns
+
+Voter TV+ (cross-screen) plans follow a different path. See [Voter TV+ proposals](#voter-tv-proposals) after completing the standard path. To target a Custom Voter Audience, see [Target a Custom Voter Audience](#target-a-custom-voter-audience) before Step 2.
+
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+### Step 1: Log in
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+
+For further information see [OAuth token](/guidelines/user-api#oauth-token).
+
+| Headers |  |
+| ---- | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+
+| Request schema |  |
+| ---- | --- |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+   "grantType": "password",
+   "email": "pratik.t+ihp@iqm.com",
+   "password": "123456"
+}
+```
+
+```json title="Response 200"
+{
+   "success": true,
+   "data":
+   {
+      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
+      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+      "scope": "read write",
+      "token_type": "bearer",
+      "expires_in": 35999,
+      "owId": 200001
+   }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 400"
+{
+   "success": false,
+   "data":
+   {
+      "status": "On Hold",
+      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
+      "supportEmail": "support@iqm.com"
+   },
+   "errorObjects":
+   [
+      {
+         "error": "User is not allowed to access provided customer",
+         "reason": "User is not associated with any active organization."
+      }
+   ]
+}
+```
+
+```json title="Response 403"
+{
+   "success": false,
+   "errorObjects":
+   [
+      {
+         "error": "User doesn't exist or user is not allowed to provided workspace."
+      }
+   ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          access_token: string;
+          refresh_token: string;
+          scope: string;
+          token_type: string;
+          expires_in: number;
+          owId: number;
+        };
+      };
+    };
+  };
+  400: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          status: string;
+          reason: string;
+          supportEmail: string;
+        };
+        errorObjects: {
+          error: string;
+          reason: string;
+        }[];
+      };
+    };
+  };
+  403: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+};
+
+function Login(): Promise < Responses > {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/ua/login',
+    requestBody: {
+      content: {
+        "application/json": {
+          email: `string`,
+          password: `string`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 2: Create a ready plan
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/ready" operationId="createReadyPlan" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a ready plan with a budget, flight dates, and targeting. When a ready plan is created, IQM sends its details to the forecasting service, which generates the plan's strategies. Save the <var>planId</var> from the response for Step 3.
+
+To save an incomplete plan without generating strategies, use <span class="code-text">POST /api/v3/plan/political/plans/draft</span> instead. See [Create plan](/political-vertical/planner#create-plan).
+
+| Request schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Plan name, up to 255 characters |
+| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Plan objective ID](/political-vertical/planner#get-plan-objectives) <br /><EnumWidget values={planObjectives} /> <br />Use <var>1</var> or <var>2</var> for this tutorial. Voter TV+ (<var>3</var>) follows the [Voter TV+ path](#voter-tv-proposals). |
+| `totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Total plan budget |
+| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Flight dates, frequency cap, and margin |
+| `details.startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start date in milliseconds; can't be in the past |
+| `details.endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch end date in milliseconds; must be at least 30 minutes after <var>startDate</var> |
+| `details.frequencyCap` <br /><span class="type-text">integer</span> | Frequency cap, <var>1</var> to <var>999</var> |
+| `details.marginValue` <br /><span class="type-text">integer</span> | Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin. |
+| `targeting` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Plan targeting. See [Political Planner resource properties](/political-vertical/planner#political-planner-resource-properties) for all targeting fields. |
+| `targeting.whiteListedLocation.country` <br /><span class="type-text">integer</span> | [Country ID](/guidelines/master-api#get-country-segment) to target |
+| `targeting.device.deviceTypeIds` <br /><span class="type-text">array of integers</span> | [Device type IDs](/guidelines/master-api#get-device-type) to target |
+| `targeting.creative.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative type IDs](/guidelines/master-api#get-rtb-creative-types) to target |
+| `cva` <br /><span class="type-text">object</span> | Custom Voter Audience to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter Audience](#target-a-custom-voter-audience). |
+
+:::info
+
+The plan's time zone is always set to your Organization's time zone. Any <var>timezoneId</var> value in the request is ignored.
+
+:::
+
+:::caution
+
+The forecasting service decides which targeting and budget combinations can be planned, and there is no fixed list of valid combinations. A plausible request can still be rejected with <var>No strategies meet your criteria. Edit the plan to explore more options.</var> If this happens, nothing is created: widen the targeting or change the budget and try again.
+
+:::
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`planId` <br /><span class="type-text">integer</span></td>
+    <td>ID of the created plan</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "name": "Ohio GOTV Reach Plan",
+  "objectiveId": 1,
+  "totalBudget": 50000,
+  "details": {
+    "startDate": 1793595600000,
+    "endDate": 1796187600000,
+    "frequencyCap": 3
+  },
+  "targeting": {
+    "whiteListedLocation": {
+      "country": 30100001
+    },
+    "device": {
+      "deviceTypeIds": [20300001, 20300004]
+    },
+    "creative": {
+      "creativeTypeIds": [11, 14],
+      "isTvAutoBuying": false
+    }
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "planId": 123
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "No strategies meet your criteria. Edit the plan to explore more options."
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          planId: number;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function createReadyPlan(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/plans/ready',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          objectiveId: `number`,
+          totalBudget: `number`,
+          details: {
+            startDate: `number`,
+            endDate: `number`,
+            frequencyCap?: `number`,
+            marginValue?: `number`,
+          },
+          targeting: {
+            whiteListedLocation?: {
+              country?: `number`,
+            },
+            device?: {
+              deviceTypeIds?: `array of numbers`,
+            },
+            creative?: {
+              creativeTypeIds?: `array of numbers`,
+              isTvAutoBuying?: `boolean`,
+            },
+          },
+          cva?: {
+            id: `number`,
+          },
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 3: Get the plan's strategies
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/strategies" operationId="getPoliticalStrategyListing" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Use the <var>planId</var> from Step 2 to list the strategies generated for the plan. Compare the forecasted <var>reach</var>, <var>impressions</var>, <var>budget</var>, and <var>cpm</var> of each strategy and save the <var>id</var> of the one you want to activate in Step 4.
+
+| Query parameters |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 2 |
+
+:::caution
+
+If you create extra strategies with [Generate custom strategies](/political-vertical/planner#generate-custom-strategies), the <var>id</var> in that endpoint's response is the forecasting service's own ID, not an IQM strategy ID, and can't be activated. Always get strategy IDs from this endpoint.
+
+:::
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Strategy ID; use this to activate the strategy</td>
+  </tr>
+  <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Strategy name</td>
+  </tr>
+  <tr>
+    <td>`strategyTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Strategy type ID](/political-vertical/planner#get-strategy-types): <var>1</var> Maximum Reach, <var>3</var> Balanced, <var>4</var> Most Economical, <var>5</var> Custom</td>
+  </tr>
+  <tr>
+    <td>`proposalId` <br /><span class="type-text">integer</span></td>
+    <td>ID of the proposal created from this strategy, or <var>null</var> if it hasn't been activated</td>
+  </tr>
+  <tr>
+    <td>`startDate` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch start date in milliseconds</td>
+  </tr>
+  <tr>
+    <td>`endDate` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch end date in milliseconds</td>
+  </tr>
+  <tr>
+    <td>`duration` <br /><span class="type-text">integer</span></td>
+    <td>Flight duration in days</td>
+  </tr>
+  <tr>
+    <td>`campaignsCount` <br /><span class="type-text">integer</span></td>
+    <td>Number of proposed campaigns in the strategy</td>
+  </tr>
+  <tr>
+    <td>`budget` <br /><span class="type-text">number</span></td>
+    <td>Forecasted budget</td>
+  </tr>
+  <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted reach</td>
+  </tr>
+  <tr>
+    <td>`impressions` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted impressions</td>
+  </tr>
+  <tr>
+    <td>`cpm` <br /><span class="type-text">number</span></td>
+    <td>Forecasted cost per mille (CPM)</td>
+  </tr>
+  <tr>
+    <td>`frequency` <br /><span class="type-text">integer</span></td>
+    <td>Frequency cap</td>
+  </tr>
+  <tr>
+    <td>`creatives` <br /><span class="type-text">array of integers</span></td>
+    <td>Creative type IDs</td>
+  </tr>
+  <tr>
+    <td>`devices` <br /><span class="type-text">array of integers</span></td>
+    <td>Device type IDs</td>
+  </tr>
+  <tr>
+    <td>`channels` <br /><span class="type-text">array of integers</span></td>
+    <td>Channel type IDs</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "id": 3001,
+      "name": "Maximum Reach",
+      "startDate": 1793595600000,
+      "endDate": 1796187600000,
+      "timezoneId": 29,
+      "duration": 30,
+      "strategyTypeId": 1,
+      "campaignsCount": 4,
+      "proposalId": null,
+      "budget": 50000,
+      "frequency": 3,
+      "reach": 1250000,
+      "impressions": 2220000,
+      "cpm": 22.52,
+      "creatives": [11, 14],
+      "devices": [20300001, 20300004],
+      "channels": [11, 12, 13, 14],
+      "isTvAutoBuying": false
+    },
+    {
+      "id": 3002,
+      "name": "Most Economical",
+      "startDate": 1793595600000,
+      "endDate": 1796187600000,
+      "timezoneId": 29,
+      "duration": 30,
+      "strategyTypeId": 4,
+      "campaignsCount": 2,
+      "proposalId": null,
+      "budget": 38500,
+      "frequency": 3,
+      "reach": 980000,
+      "impressions": 2100000,
+      "cpm": 18.33,
+      "creatives": [11, 14],
+      "devices": [20300001, 20300004],
+      "channels": [11, 12],
+      "isTvAutoBuying": false
+    }
+  ]
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          startDate: number;
+          endDate: number;
+          timezoneId: number;
+          duration: number;
+          strategyTypeId: number;
+          campaignsCount: number;
+          proposalId: number | null;
+          budget: number;
+          frequency: number;
+          reach: number;
+          impressions: number;
+          cpm: number;
+          creatives: number[];
+          devices: number[];
+          channels: number[];
+          isTvAutoBuying: boolean;
+        }[];
+      };
+    };
+  };
+}
+
+function getPoliticalStrategyListing(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/plan/political/strategies',
+    params: {
+      query: {
+        planId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 4: Activate a strategy into a proposal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals" operationId="activateProposal" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Pass the strategy <var>id</var> from Step 3 as <var>strategyId</var> to activate it. Activation creates a proposal with its proposed campaigns, in <var>Ready</var> (<var>6</var>) status. Save the proposal <var>id</var> from the response for the next steps.
+
+| Request schema |  |
+| ---- | --- |
+| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Strategy ID from Step 3 |
+
+:::info
+
+Voter TV+ plans have no strategies, so they are activated with <var>planId</var> instead of <var>strategyId</var>. See [Voter TV+ proposals](#voter-tv-proposals).
+
+:::
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Proposal ID</td>
+  </tr>
+  <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "strategyId": 3001
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "message": "Ohio GOTV Reach Plan saved successfully."
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Strategy with strategy id 42 does not exist",
+      "field": "strategyId"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          field: string;
+        }[];
+      };
+    };
+  };
+}
+
+function activateProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposals',
+    requestBody: {
+      content: {
+        "application/json": {
+          strategyId?: `number`,
+          planId?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 5: Check proposal details
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/proposal/{proposalId}" operationId="getProposalDetailsById_1" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Use the proposal <var>id</var> from Step 4 to review the proposal and its proposed campaigns before generating an IO. The <var>statusId</var> must be <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) to continue to Step 6.
+
+To change the proposal's budget, dates, or campaigns first, see [Edit proposal](/political-vertical/planner#edit-proposal).
+
+| Path parameters |  |
+| ---- | --- |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Proposal ID</td>
+  </tr>
+  <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Proposal name</td>
+  </tr>
+  <tr>
+    <td>`planId` <br /><span class="type-text">integer</span></td>
+    <td>ID of the plan the proposal was created from</td>
+  </tr>
+  <tr>
+    <td>`objectiveId` <br /><span class="type-text">integer</span></td>
+    <td>[Plan objective ID](/political-vertical/planner#get-plan-objectives)</td>
+  </tr>
+  <tr>
+    <td>`statusId` <br /><span class="type-text">integer</span></td>
+    <td>[Proposal status ID](/guidelines/planner-api#proposal-status-list) <br /><EnumWidget values={proposalStatus} /></td>
+  </tr>
+  <tr>
+    <td>`ioId` <br /><span class="type-text">integer</span></td>
+    <td>ID of the generated IO, once the proposal is converted</td>
+  </tr>
+  <tr>
+    <td>`startTime` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch start time in milliseconds</td>
+  </tr>
+  <tr>
+    <td>`endTime` <br /><span class="type-text">integer</span></td>
+    <td>Unix epoch end time in milliseconds</td>
+  </tr>
+  <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted reach</td>
+  </tr>
+  <tr>
+    <td>`impressions` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted impressions</td>
+  </tr>
+  <tr>
+    <td>`budget` <br /><span class="type-text">number</span></td>
+    <td>Proposal budget</td>
+  </tr>
+  <tr>
+    <td>`campaignGeneratable` <br /><span class="type-text">boolean</span></td>
+    <td>Whether campaigns can be generated from the proposal</td>
+  </tr>
+  <tr>
+    <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
+    <td>Campaigns that will be created when the IO is generated</td>
+  </tr>
+</table>
+
+See [Get proposal details](/political-vertical/planner#get-proposal-details) for all response properties.
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "name": "Ohio GOTV Reach Plan",
+    "planId": 123,
+    "planName": "Ohio GOTV Reach Plan",
+    "objectiveId": 1,
+    "startTime": 1793595600000,
+    "endTime": 1796187600000,
+    "owId": 202500,
+    "statusId": 6,
+    "ioId": null,
+    "reach": 1250000,
+    "impressions": 2220000,
+    "budget": 50000,
+    "frequencyCap": 3,
+    "timeZoneId": 29,
+    "timeZoneName": "US/Eastern",
+    "campaignGeneratable": true,
+    "proposedCampaigns": [
+      {
+        "id": 101,
+        "name": "Ohio GOTV Reach Plan - CTV",
+        "startTime": 1793595600000,
+        "endTime": 1796187600000,
+        "creativeTypeId": 14,
+        "duration": 30,
+        "modelType": "CPM",
+        "targetedReach": 500000,
+        "frequencyCap": 3,
+        "targetedImpressions": 1500000,
+        "cpm": 25.5,
+        "budget": 38250,
+        "strategy": "Device + Channel"
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          planId: number;
+          planName: string;
+          objectiveId: number;
+          startTime: number;
+          endTime: number;
+          owId: number;
+          statusId: number;
+          ioId: number | null;
+          reach: number;
+          impressions: number;
+          budget: number;
+          frequencyCap: number;
+          timeZoneId: number;
+          timeZoneName: string;
+          campaignGeneratable: boolean;
+          proposedCampaigns: {
+            id: number;
+            name: string;
+            startTime: number;
+            endTime: number;
+            creativeTypeId: number;
+            duration: number;
+            modelType: string;
+            targetedReach: number;
+            frequencyCap: number;
+            targetedImpressions: number;
+            cpm: number;
+            budget: number;
+            strategy: string;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getProposalDetailsById(): Promise<Responses> {
+  const options = {
+    method: 'GET',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposal/{proposalId}',
+    params: {
+      path: {
+        proposalId: `number`,
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Step 6: Generate an IO and campaigns
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/io" operationId="generateIOCampaigns_1" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Convert the proposal into an IO and campaigns. The proposal must be in <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) status.
+
+The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created in the background. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can retry this step. Use [Step 5](#step-5-check-proposal-details) to check the result.
+
+| Path parameters |  |
+| ---- | --- |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+
+| Request schema |  |
+| ---- | --- |
+| `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Political Advertiser profile ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start time for the campaigns, in milliseconds; can't be in the past. Always required. |
+| `endTime` <br /><span class="type-text">integer</span> | Unix epoch end time in milliseconds. If omitted, the proposal's current duration is kept from the new <var>startTime</var>. If provided, it must keep the same duration in days. |
+
+:::danger
+
+Generating an IO is a one-way step. A converted proposal can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> proposal, such as editing, downloading, or restoring, no longer work for it. Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "politicalAdvertiserId": 789,
+  "startTime": 1793595600000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Campaign generation is in progress"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "proposal start and end date changes must preserve the existing duration"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+        }[];
+      };
+    };
+  };
+}
+
+function generateIOCampaigns(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/io',
+    params: {
+      path: {
+        proposalId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          politicalAdvertiserId: `number`,
+          startTime: `number`,
+          endTime?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Voter TV+ proposals
+
+Voter TV+ (objective <var>3</var>) plans forecast reach across linear TV and connected TV (CTV). They follow a different path from the standard steps above:
+
+1. Get a reach saturation graph
+1. Create a ready plan with the graph
+1. Activate the plan into a proposal
+1. (Optional) Split the proposal's CTV campaigns
+1. Generate an IO and campaigns, as in [Step 6](#step-6-generate-an-io-and-campaigns)
+
+Voter TV+ plans must have a flight of 7 to 31 days and a budget over <var>100</var>. When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns are not created.
+
+### Get a reach saturation graph
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/reach-saturation-graph" operationId="getCrossScreenGraph" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send the plan's budget, dates, and targeting with <var>objectiveId</var> <var>3</var> to get a reach forecast for linear TV and CTV. Save the <var>graphId</var> and <var>overview</var> from the response for the next step.
+
+To adjust the forecast, call this endpoint again with the same <var>graphId</var> and new <var>overview</var> values. See [Get reach saturation graph](/political-vertical/planner#get-reach-saturation-graph) for all request and response fields.
+
+| Request schema |  |
+| ---- | --- |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Plan name |
+| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan objective ID: <var>3</var> |
+| `totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Total plan budget |
+| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | <var>startDate</var>, <var>endDate</var>, and <var>frequencyCap</var>, as in [Step 2](#step-2-create-a-ready-plan). Flight must be 7 to 31 days. |
+| `targeting` <br /><span class="type-text">object</span> | Plan targeting, including demographic segments such as <var>ageGroupSegments</var> and <var>genderSegments</var> |
+| `graphId` <br /><span class="type-text">string</span> | Existing graph ID, to recalculate a graph you already created |
+| `overview` <br /><span class="type-text">object</span> | Linear TV and CTV assumptions, to recalculate a graph you already created |
+
+:::tip
+
+The first request for a new graph calls an external data service and can take more than 60 seconds. Set your client timeout to at least 60 seconds so the request isn't mistaken for a failure. Later requests with the same <var>graphId</var> are calculated without the external call.
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "name": "Voter TV+ Plan",
+  "objectiveId": 3,
+  "totalBudget": 100000,
+  "details": {
+    "startDate": 1793595600000,
+    "endDate": 1794805200000,
+    "frequencyCap": 3
+  },
+  "targeting": {
+    "whiteListedLocation": {
+      "country": 30100001
+    },
+    "ageGroupSegments": [6073147, 6073145],
+    "genderSegments": [6189394, 6189395]
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "graphId": "0f6c7400-a8f5-4a1b-ab65-af15372cc0ff",
+    "overview": {
+      "linearTvCpm": 20,
+      "ctvCpm": 7,
+      "grp": 180,
+      "linearTvPercentage": 50,
+      "ctvFrequency": 3
+    },
+    "audienceOverlap": {
+      "population": 16780000,
+      "totalReach": 6820000,
+      "linearTvReach": 4350000,
+      "ctvReach": 3120000,
+      "overlapReach": 650000,
+      "ctvIncrementalReach": 2470000
+    },
+    "maximumAudienceOverlap": {
+      "population": 16780000,
+      "totalReach": 7200000,
+      "linearTvReach": 4600000,
+      "ctvReach": 3400000,
+      "overlapReach": 800000,
+      "ctvIncrementalReach": 2600000
+    },
+    "reachSaturation": [
+      {
+        "day": 1,
+        "ctvReach": 12,
+        "linearTvReach": 14,
+        "overallReach": 20
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface AudienceOverlap {
+  population: number;
+  totalReach: number;
+  linearTvReach: number;
+  ctvReach: number;
+  overlapReach: number;
+  ctvIncrementalReach: number;
+}
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          graphId: string;
+          overview: {
+            linearTvCpm: number;
+            ctvCpm: number;
+            grp: number;
+            linearTvPercentage: number;
+            ctvFrequency: number;
+          };
+          audienceOverlap: AudienceOverlap;
+          maximumAudienceOverlap: AudienceOverlap;
+          reachSaturation: {
+            day: number;
+            ctvReach: number;
+            linearTvReach: number;
+            overallReach: number;
+          }[];
+        };
+      };
+    };
+  };
+}
+
+function getCrossScreenGraph(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/reach-saturation-graph',
+    timeout: 60000,
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          objectiveId: `number`,
+          totalBudget: `number`,
+          details: {
+            startDate: `number`,
+            endDate: `number`,
+            frequencyCap?: `number`,
+          },
+          targeting?: `object`,
+          graphId?: `string`,
+          overview?: `object`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Create a Voter TV+ plan
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/ready" operationId="createReadyPlan" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Create a ready plan as in [Step 2](#step-2-create-a-ready-plan), with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from the previous step. Save the <var>planId</var> from the response.
+
+| Request schema |  |
+| ---- | --- |
+| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan objective ID: <var>3</var> |
+| `graphId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Graph ID from the reach saturation graph |
+| `overview` <br /><span class="type-text">object</span> | Overview from the reach saturation graph. Defaults are used if omitted. |
+
+All other fields are the same as [Step 2](#step-2-create-a-ready-plan).
+
+:::info
+
+Voter TV+ plans always target Video creatives on CTV devices. Any <var>targeting.creative</var> or <var>targeting.device</var> values in the request are replaced.
+
+Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-3-get-the-plans-strategies) returns an empty list. Activate the plan directly in the next step.
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "name": "Voter TV+ Plan",
+  "objectiveId": 3,
+  "totalBudget": 100000,
+  "graphId": "0f6c7400-a8f5-4a1b-ab65-af15372cc0ff",
+  "overview": {
+    "linearTvCpm": 20,
+    "ctvCpm": 7,
+    "grp": 180,
+    "linearTvPercentage": 50,
+    "ctvFrequency": 3
+  },
+  "details": {
+    "startDate": 1793595600000,
+    "endDate": 1794805200000,
+    "frequencyCap": 3
+  },
+  "targeting": {
+    "whiteListedLocation": {
+      "country": 30100001
+    }
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "planId": 124
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Duration in days must be between 7 and 31"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          planId: number;
+        };
+      };
+    };
+  };
+}
+
+function createVoterTvPlan(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/plans/ready',
+    requestBody: {
+      content: {
+        "application/json": {
+          name: `string`,
+          objectiveId: `number`,
+          totalBudget: `number`,
+          graphId: `string`,
+          overview?: {
+            linearTvCpm: `number`,
+            ctvCpm: `number`,
+            grp: `number`,
+            linearTvPercentage: `number`,
+            ctvFrequency: `number`,
+          },
+          details: {
+            startDate: `number`,
+            endDate: `number`,
+            frequencyCap?: `number`,
+          },
+          targeting: `object`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Activate a Voter TV+ plan
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals" operationId="activateProposal" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Pass the <var>planId</var> from the previous step to create a proposal from the plan's graph. The budget is split between linear TV and CTV campaigns using the <var>linearTvPercentage</var> from the overview. The proposal is created in <var>Ready</var> (<var>6</var>) status.
+
+| Request schema |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Voter TV+ plan ID. Don't send <var>strategyId</var> in the same request. |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "planId": 124
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "message": "Voter TV+ Plan - Mix 1 saved successfully."
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          message: string;
+        };
+      };
+    };
+  };
+}
+
+function activateVoterTvProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposals',
+    requestBody: {
+      content: {
+        "application/json": {
+          planId: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+### Split a Voter TV+ proposal
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/split" operationId="splitProposal" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Optionally, split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per zip code. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign.
+
+This endpoint only works on Voter TV+ proposals.
+
+| Path parameters |  |
+| ---- | --- |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Voter TV+ proposal ID |
+
+| Request schema |  |
+| ---- | --- |
+| `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](/political-vertical/planner#get-targeting-types) to split by. Despite the field name, these are targeting dimension IDs, not location IDs. For example, <var>8</var> State, <var>12</var> DMA, <var>15</var> Zip code, <var>29</var> Device. |
+
+:::tip
+
+Splitting can take more than 60 seconds for large proposals. Set your client timeout to at least 60 seconds.
+
+:::
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "locations": [15]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "name": "Voter TV+ Plan - Mix 1",
+    "startTime": 1793595600000,
+    "endTime": 1794805200000,
+    "owId": 202500,
+    "statusId": 6,
+    "reach": 3120000,
+    "impressions": 7140000,
+    "budget": 50000,
+    "frequencyCap": 3,
+    "campaignGeneratable": true,
+    "proposedCampaigns": []
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+          name: string;
+          startTime: number;
+          endTime: number;
+          owId: number;
+          statusId: number;
+          reach: number;
+          impressions: number;
+          budget: number;
+          frequencyCap: number;
+          campaignGeneratable: boolean;
+          proposedCampaigns: object[];
+        };
+      };
+    };
+  };
+}
+
+function splitProposal(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/split',
+    timeout: 60000,
+    params: {
+      path: {
+        proposalId: `number`,
+      }
+    },
+    requestBody: {
+      content: {
+        "application/json": {
+          locations?: `array of numbers`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Target a Custom Voter Audience
+
+A Custom Voter Audience (CVA) combines voter segments into a single audience for a plan. Create the CVA first, then pass its <var>id</var> in the <var>cva</var> field when you [create a ready plan](#step-2-create-a-ready-plan).
+
+### Create CVA details
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/cva-details" operationId="createCvaDetails" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Define the CVA with an equation of voter segment IDs. Get segment IDs from [Get Custom Voter Audience segment details](/political-vertical/audience-segments#get-custom-voter-audience-segment-details) in the Audience API.
+
+Equation syntax:
+  * Wrap each segment ID in parentheses
+  * Separate segments with <var>|</var> to combine them (OR)
+  * Separate groups with <var>&</var> to intersect them (AND)
+
+For example, <span class="code-text">((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))</span> targets voters in either of the first two segments who are also in the third.
+
+| Request schema |  |
+| ---- | --- |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Segment equation |
+| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) to limit the audience to; leave empty for all states |
+| `reach` <br /><span class="type-text">integer</span> | Audience reach. This value is stored and passed to the forecasting service as provided; it isn't calculated. Use [Get CVA reach](/political-vertical/audience-segments#get-cva-reach) to get it. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>CVA ID; pass it as <var>cva.id</var> when creating a plan</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
+  "stateIds": [],
+  "reach": 125000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 12345
+  }
+}
+```
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          id: number;
+        };
+      };
+    };
+  };
+}
+
+function createCvaDetails(): Promise<Responses> {
+  const options = {
+    method: 'POST',
+    url: 'https://api.iqm.com/api/v3/plan/political/cva-details',
+    requestBody: {
+      content: {
+        "application/json": {
+          equation: `string`,
+          stateIds?: `array of numbers`,
+          reach?: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
+
+## Restore an expired proposal
+
+<CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/plan/political/proposals/restore" operationId="restoreProposals" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+A proposal that isn't converted becomes <var>Expired</var> (<var>3</var>) after its end date passes. This happens on a schedule; there's no API call to expire a proposal. To use an expired proposal again, restore it with new flight dates. Restored proposals return to <var>Ready</var> (<var>6</var>) status and can then be converted as in [Step 6](#step-6-generate-an-io-and-campaigns).
+
+Restoring only works on expired proposals. It isn't an undo for [Delete proposals](/political-vertical/planner#delete-proposals).
+
+| Request schema |  |
+| ---- | --- |
+| `proposalIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | IDs of expired proposals to restore |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch start time in milliseconds; can't be in the past |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch end time in milliseconds; must be at least 30 minutes after <var>startTime</var> |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "proposalIds": [7],
+  "startTime": 1793595600000,
+  "endTime": 1796187600000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Proposals restored successfully"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "One or more proposals are not in expired status",
+      "field": "proposalIds"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+<TabItem value="TypeScript" label="TypeScript">
+
+See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
+
+```ts
+import {
+  getInstance
+} from "prerequisites"
+
+const axios = getInstance();
+
+interface Responses {
+  200: {
+    content: {
+      "application/json": {
+        success: boolean;
+        data: {
+          message: string;
+        };
+      };
+    };
+  };
+  422: {
+    content: {
+      "application/json": {
+        success: boolean;
+        errorObjects: {
+          error: string;
+          field: string;
+        }[];
+      };
+    };
+  };
+}
+
+function restoreProposals(): Promise<Responses> {
+  const options = {
+    method: 'PATCH',
+    url: 'https://api.iqm.com/api/v3/plan/political/proposals/restore',
+    requestBody: {
+      content: {
+        "application/json": {
+          proposalIds: `array of numbers`,
+          startTime: `number`,
+          endTime: `number`,
+        }
+      }
+    }
+  };
+
+  return axios.request(options).then(({ data }: { data: Responses }) => data);
+}
+```
+
+</TabItem></Tabs>
+
+</div></div>
