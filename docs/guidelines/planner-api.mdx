@@ -1170,7 +1170,7 @@ Get summary of maximum reach and impressions for different targeting parameters 
   "success": false,
   "errorObjects": [
     {
-      "error": "Requested Proposal details is not accessible to logged-in user"
+      "error": "Requested proposal is not accessible for the user"
     }
   ]
 }
@@ -1181,8 +1181,7 @@ Get summary of maximum reach and impressions for different targeting parameters 
   "success": false,
   "errorObjects": [
     {
-      "error": "Proposal not found",
-      "field": "proposalId"
+      "error": "Requested proposal with id [id] does not exist"
     }
   ]
 }
@@ -1587,7 +1586,7 @@ Get summary of impressions distribution for different device types targeted in a
   "success": false,
   "errorObjects": [
     {
-      "error": "Requested Proposal details is not accessible to logged-in user"
+      "error": "Requested proposal is not accessible for the user"
     }
   ]
 }
@@ -1598,8 +1597,7 @@ Get summary of impressions distribution for different device types targeted in a
   "success": false,
   "errorObjects": [
     {
-      "error": "Proposal not found",
-      "field": "proposalId"
+      "error": "Requested proposal with id [id] does not exist"
     }
   ]
 }
@@ -2007,7 +2005,7 @@ Get summary of impressions distribution for different channel types targeted in 
   "success": false,
   "errorObjects": [
     {
-      "error": "Requested Proposal details is not accessible to logged-in user"
+      "error": "Requested proposal is not accessible for the user"
     }
   ]
 }
@@ -2018,8 +2016,7 @@ Get summary of impressions distribution for different channel types targeted in 
   "success": false,
   "errorObjects": [
     {
-      "error": "Proposal not found",
-      "field": "proposalId"
+      "error": "Requested proposal with id [id] does not exist"
     }
   ]
 }
@@ -2436,7 +2433,7 @@ Get summary of impressions distribution for different bid landscapes targeted in
   "success": false,
   "errorObjects": [
     {
-      "error": "Requested Proposal details is not accessible to logged-in user"
+      "error": "Requested proposal is not accessible for the user"
     }
   ]
 }
@@ -2447,8 +2444,7 @@ Get summary of impressions distribution for different bid landscapes targeted in
   "success": false,
   "errorObjects": [
     {
-      "error": "Proposal not found",
-      "field": "proposalId"
+      "error": "Requested proposal with id [id] does not exist"
     }
   ]
 }
@@ -3863,7 +3859,7 @@ Update draft proposal details.
 <td>Unix epoch timestamp (in milliseconds) of end time. </td>
 </tr>
 <tr>
-<td>`advertiserId` <br /><span class="type-text">integer</span></td>
+<td>`politicalAdvertiserId` <br /><span class="type-text">integer</span></td>
 <td>[Advertiser ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details).</td>
 </tr>
 <tr>
@@ -4061,7 +4057,7 @@ Update draft proposal details.
   "name": "sample_planner",
   "startTime": 1730658720000,
   "endTime": 1733250720000,
-  "advertiserId": 644,
+  "politicalAdvertiserId": 644,
   "margin": 10,
   "location": {
     "country": 30100001,
@@ -4721,6 +4717,10 @@ function softDeleteProposal(): Promise<Responses> {
 
 Get a list of proposal status IDs.
 
+| Query parameters | |
+| --- | --- |
+| `plannerTypeId` <br /><span class="type-text">integer</span> | Planner type, default: <var>1</var> (Generic Planner). Pass <var>2</var> for HCP Planner statuses, which include <var>7</var> (IO Created) instead of <var>1</var> (Converted). |
+
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 <table className="objectProperties">
@@ -4761,7 +4761,7 @@ Get a list of proposal status IDs.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Response 200"
+```json title="Response 200 (plannerTypeId=1, Generic Planner)"
 {
   "success": true,
   "data": {
@@ -4809,6 +4809,48 @@ Get a list of proposal status IDs.
 }
 ```
 
+```json title="Response 200 (plannerTypeId=2, HCP Planner)"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 5,
+    "filteredRecords": 5,
+    "proposalStatusList": [
+      {
+        "id": 2,
+        "name": "draft",
+        "order": 1,
+        "label": "Draft"
+      },
+      {
+        "id": 6,
+        "name": "ready",
+        "order": 2,
+        "label": "Ready"
+      },
+      {
+        "id": 5,
+        "name": "processing",
+        "order": 4,
+        "label": "Processing"
+      },
+      {
+        "id": 4,
+        "name": "failed",
+        "order": 6,
+        "label": "Failed"
+      },
+      {
+        "id": 7,
+        "name": "io_created",
+        "order": 7,
+        "label": "IO Created"
+      }
+    ]
+  }
+}
+```
+
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
@@ -4848,6 +4890,11 @@ function ProposalStatusList(): Promise<Responses> {
   const options = {
     method: 'GET',
     url: 'https://api.iqm.com/api/v3/plan/static/proposal/status',
+    params: {
+      query: {
+        plannerTypeId: `number`,
+      },
+    },
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
