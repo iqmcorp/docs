@@ -4717,6 +4717,10 @@ function softDeleteProposal(): Promise<Responses> {
 
 Get a list of proposal status IDs.
 
+| Query parameters | |
+| --- | --- |
+| `plannerTypeId` <br /><span class="type-text">integer</span> | Planner type, default: <var>1</var> (Generic Planner). Pass <var>2</var> for HCP Planner statuses, which include <var>7</var> (IO Created) instead of <var>1</var> (Converted). |
+
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 <table className="objectProperties">
@@ -4757,7 +4761,7 @@ Get a list of proposal status IDs.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Response 200"
+```json title="Response 200 (plannerTypeId=1, Generic Planner)"
 {
   "success": true,
   "data": {
@@ -4805,6 +4809,48 @@ Get a list of proposal status IDs.
 }
 ```
 
+```json title="Response 200 (plannerTypeId=2, HCP Planner)"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 5,
+    "filteredRecords": 5,
+    "proposalStatusList": [
+      {
+        "id": 2,
+        "name": "draft",
+        "order": 1,
+        "label": "Draft"
+      },
+      {
+        "id": 6,
+        "name": "ready",
+        "order": 2,
+        "label": "Ready"
+      },
+      {
+        "id": 5,
+        "name": "processing",
+        "order": 4,
+        "label": "Processing"
+      },
+      {
+        "id": 4,
+        "name": "failed",
+        "order": 6,
+        "label": "Failed"
+      },
+      {
+        "id": 7,
+        "name": "io_created",
+        "order": 7,
+        "label": "IO Created"
+      }
+    ]
+  }
+}
+```
+
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
 
@@ -4844,6 +4890,11 @@ function ProposalStatusList(): Promise<Responses> {
   const options = {
     method: 'GET',
     url: 'https://api.iqm.com/api/v3/plan/static/proposal/status',
+    params: {
+      query: {
+        plannerTypeId: `number`,
+      },
+    },
   };
 
   return axios.request(options).then(({ data }: { data: Responses }) => data);
