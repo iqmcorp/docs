@@ -1,5 +1,5 @@
 ---
-title: Create a Political proposal
+title: Political Planner
 hide_table_of_contents: true
 ---
 
@@ -10,7 +10,7 @@ import CopyUrl from '@site/src/components/CopyUrl';
 import { proposalStatus } from '@site/src/data/enums/proposalStatus';
 import { planObjectives } from '@site/src/data/enums/planObjectives';
 
-# Create a Political proposal
+# Political Planner
 
 Plan, activate, and convert a Political proposal into an insertion order (IO) and campaigns with this in-depth tutorial using IQM's Planner API.
 
@@ -53,36 +53,9 @@ To create a Political proposal and convert it into an IO, the following are requ
     * Planner API requests from a workspace outside the Political vertical are rejected with <var>Request for forbidden vertical</var>
   * A Political Advertiser profile
     * See [Get list of Advertiser profile and details](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) to find an existing profile ID, or [Add Advertiser profile](/guidelines/workspace-api#add-advertiser-profile) to create one
-    * Required in [Step 6](#step-6-generate-an-io-and-campaigns) to generate an IO. Use a real profile ID; it is validated when the IO is created.
+    * Required in [Step 5](#step-5-generate-an-io-and-campaigns) to generate an IO. Use a real profile ID; it is validated when the IO is created.
 
-## Create a Political proposal using the IQM API
-
-This tutorial covers the standard path for Reach forecasting and Budget estimation plans:
-
-1. Log in
-    * Optional if you have already logged in and have a token
-1. Create a ready plan
-1. Get the plan's strategies
-1. Activate a strategy into a proposal
-1. Check proposal details
-1. Generate an IO and campaigns
-
-Voter TV+ (cross-screen) plans follow a different path. See [Voter TV+ proposals](#voter-tv-proposals) after completing the standard path. To target a Custom Voter Audience, see [Target a Custom Voter Audience](#target-a-custom-voter-audience) before Step 2.
-
-### Authentication
-
-Use the following header parameters for all requests after logging in:
-
-  <div class="smallTable">
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-</div>
-
-### Step 1: Log in
+### Log in
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 
@@ -245,44 +218,176 @@ function Login(): Promise < Responses > {
 
 </div></div>
 
-### Step 2: Create a ready plan
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+## Create a Political proposal using the IQM API
+
+This tutorial covers the standard path for Reach forecasting and Budget estimation plans:
+
+1. Create a ready plan
+1. Get the plan's strategies
+1. Activate a strategy into a proposal
+1. Check proposal details
+1. Generate an IO and campaigns
+
+Voter TV+ (cross-screen) plans follow a different path. See [Voter TV+ proposals](#voter-tv-proposals) after completing the standard path. To target a Custom Voter audience, see [Target a Custom Voter audience](#target-a-custom-voter-audience) before Step 1.
+
+
+### Step 1: Create a ready plan
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/ready" operationId="createReadyPlan" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/draft" operationId="createDraftPlan" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Create a ready plan with a budget, flight dates, and targeting. When a ready plan is created, IQM sends its details to the forecasting service, which generates the plan's strategies. Save the <var>planId</var> from the response for Step 3.
+Create a ready (or draft) plan with a budget, flight dates, and targeting. When a ready plan is created, IQM sends its details to the forecasting service, which generates the plan's strategies. Save the <var>planId</var> from the response for Step 2.
 
-To save an incomplete plan without generating strategies, use <span class="code-text">POST /api/v3/plan/political/plans/draft</span> instead. See [Create plan](/political-vertical/planner#create-plan).
+See [Political Planner resource properties](/political-vertical/planner#political-planner-resource-properties) for the full list of fields and their descriptions.
 
-| Request schema |  |
-| ---- | --- |
-| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Plan name, up to 255 characters |
-| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Plan objective ID](/political-vertical/planner#get-plan-objectives) <br /><EnumWidget values={planObjectives} /> <br />Use <var>1</var> or <var>2</var> for this tutorial. Voter TV+ (<var>3</var>) follows the [Voter TV+ path](#voter-tv-proposals). |
-| `totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Total plan budget |
-| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Flight dates, frequency cap, and margin |
-| `details.startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start date in milliseconds; can't be in the past |
-| `details.endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch end date in milliseconds; must be at least 30 minutes after <var>startDate</var> |
-| `details.frequencyCap` <br /><span class="type-text">integer</span> | Frequency cap, <var>1</var> to <var>999</var> |
-| `details.marginValue` <br /><span class="type-text">integer</span> | Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin. |
-| `targeting` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Plan targeting. See [Political Planner resource properties](/political-vertical/planner#political-planner-resource-properties) for all targeting fields. |
-| `targeting.whiteListedLocation.country` <br /><span class="type-text">integer</span> | [Country ID](/guidelines/master-api#get-country-segment) to target |
-| `targeting.device.deviceTypeIds` <br /><span class="type-text">array of integers</span> | [Device type IDs](/guidelines/master-api#get-device-type) to target |
-| `targeting.creative.creativeTypeIds` <br /><span class="type-text">array of integers</span> | [Creative type IDs](/guidelines/master-api#get-rtb-creative-types) to target |
-| `cva` <br /><span class="type-text">object</span> | Custom Voter Audience to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter Audience](#target-a-custom-voter-audience). |
+:::caution[note]
 
-:::info
-
-The plan's time zone is always set to your Organization's time zone. Any <var>timezoneId</var> value in the request is ignored.
+The forecasting service decides which targeting and budget combinations can be planned, and there is no fixed list of valid combinations. A plausible request can still be rejected. If this happens, nothing is created: widen the targeting or change the budget and try again.
 
 :::
 
-:::caution
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+<td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+<td>Plan name, up to 255 characters</td>
+</tr>
+<tr>
+<td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>[Plan objective ID](/political-vertical/planner#get-plan-objectives). <br />Use <var>1</var> or <var>2</var> for this tutorial. Voter TV+ (<var>3</var>) follows the [Voter TV+ path](#voter-tv-proposals). <br /><EnumWidget values={planObjectives} /> </td>
+</tr>
+<tr>
+<td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+<td>Total plan budget</td>
+</tr>
+<tr>
+<td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Flight dates, frequency cap, and margin</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`details` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+    </tr>
+    <tr>
+      <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch end date in milliseconds; must be at least 30 minutes after <var>startDate</var></td>
+    </tr>
+    <tr>
+      <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+      <td>Frequency cap, <var>1</var> to <var>999</var></td>
+    </tr>
+    <tr>
+      <td>`marginValue` <br /><span class="type-text">integer</span></td>
+      <td>Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin.</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+<td>`targeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Plan targeting.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`targeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
+      <td>Locations to target</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`whiteListedLocation` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`country` <br /><span class="type-text">integer</span></td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`device` <br /><span class="type-text">object</span></td>
+      <td>Devices to target</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`device` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
+          <td>[Device type IDs](/guidelines/master-api#get-device-type) to target</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`creative` <br /><span class="type-text">object</span></td>
+      <td>Creative types to target</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`creative` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
+          <td>[Creative type IDs](/guidelines/master-api#get-rtb-creative-types) to target</td>
+        </tr>
+        <tr>
+          <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+          <td>Whether TV auto buying is enabled</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+<td>`cva` <br /><span class="type-text">object</span></td>
+<td>Custom Voter audience to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter audience](#target-a-custom-voter-audience).</td>
+</tr>
+</table>
 
-The forecasting service decides which targeting and budget combinations can be planned, and there is no fixed list of valid combinations. A plausible request can still be rejected with <var>No strategies meet your criteria. Edit the plan to explore more options.</var> If this happens, nothing is created: widen the targeting or change the budget and try again.
 
-:::
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -430,24 +535,25 @@ function createReadyPlan(): Promise<Responses> {
 
 </div></div>
 
-### Step 3: Get the plan's strategies
+### Step 2: Get the plan's strategies
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/strategies" operationId="getPoliticalStrategyListing" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Use the <var>planId</var> from Step 2 to list the strategies generated for the plan. Compare the forecasted <var>reach</var>, <var>impressions</var>, <var>budget</var>, and <var>cpm</var> of each strategy and save the <var>id</var> of the one you want to activate in Step 4.
-
-| Query parameters |  |
-| ---- | --- |
-| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 2 |
+Use the <var>planId</var> from Step 1 to list the strategies generated for the plan. Compare the forecasted <var>reach</var>, <var>impressions</var>, <var>budget</var>, and <var>cpm</var> of each strategy and save the <var>id</var> of the one you want to activate in Step 3.
 
 :::caution
 
 If you create extra strategies with [Generate custom strategies](/political-vertical/planner#generate-custom-strategies), the <var>id</var> in that endpoint's response is the forecasting service's own ID, not an IQM strategy ID, and can't be activated. Always get strategy IDs from this endpoint.
 
 :::
+
+| Query parameters |  |
+| ---- | --- |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 1 |
+
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -635,24 +741,25 @@ function getPoliticalStrategyListing(): Promise<Responses> {
 
 </div></div>
 
-### Step 4: Activate a strategy into a proposal
+### Step 3: Activate a strategy into a proposal
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals" operationId="activateProposal" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Pass the strategy <var>id</var> from Step 3 as <var>strategyId</var> to activate it. Activation creates a proposal with its proposed campaigns, in <var>Ready</var> (<var>6</var>) status. Save the proposal <var>id</var> from the response for the next steps.
-
-| Request schema |  |
-| ---- | --- |
-| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Strategy ID from Step 3 |
+Pass the strategy <var>id</var> from Step 2 as <var>strategyId</var> to activate it. Activation creates a proposal with its proposed campaigns, in <var>Ready</var> (<var>6</var>) status. Save the proposal <var>id</var> from the response for the next steps.
 
 :::info
 
 Voter TV+ plans have no strategies, so they are activated with <var>planId</var> instead of <var>strategyId</var>. See [Voter TV+ proposals](#voter-tv-proposals).
 
 :::
+
+| Request schema |  |
+| ---- | --- |
+| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Strategy ID from Step 2 |
+
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -767,20 +874,20 @@ function activateProposal(): Promise<Responses> {
 
 </div></div>
 
-### Step 5: Check proposal details
+### Step 4: Check proposal details
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/political/proposal/{proposalId}" operationId="getProposalDetailsById_1" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Use the proposal <var>id</var> from Step 4 to review the proposal and its proposed campaigns before generating an IO. The <var>statusId</var> must be <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) to continue to Step 6.
+Use the proposal <var>id</var> from Step 3 to review the proposal and its proposed campaigns before generating an IO. The <var>statusId</var> must be <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) to continue to Step 5.
 
 To change the proposal's budget, dates, or campaigns first, see [Edit proposal](/political-vertical/planner#edit-proposal).
 
 | Path parameters |  |
 | ---- | --- |
-| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -799,8 +906,12 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     <td>ID of the plan the proposal was created from</td>
   </tr>
   <tr>
+    <td>`planName` <br /><span class="type-text">string</span></td>
+    <td>Name of the plan the proposal was created from</td>
+  </tr>
+  <tr>
     <td>`objectiveId` <br /><span class="type-text">integer</span></td>
-    <td>[Plan objective ID](/political-vertical/planner#get-plan-objectives)</td>
+    <td>[Plan objective ID](/political-vertical/planner#get-plan-objectives) <br /><EnumWidget values={planObjectives} /></td>
   </tr>
   <tr>
     <td>`statusId` <br /><span class="type-text">integer</span></td>
@@ -811,6 +922,10 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     <td>ID of the generated IO, once the proposal is converted</td>
   </tr>
   <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
     <td>`startTime` <br /><span class="type-text">integer</span></td>
     <td>Unix epoch start time in milliseconds</td>
   </tr>
@@ -819,28 +934,168 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     <td>Unix epoch end time in milliseconds</td>
   </tr>
   <tr>
+    <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
+    <td>[Time zone ID](/guidelines/master-api#get-timezones)</td>
+  </tr>
+  <tr>
+    <td>`timeZoneName` <br /><span class="type-text">string</span></td>
+    <td>Time zone name</td>
+  </tr>
+  <tr>
+    <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+    <td>Frequency cap</td>
+  </tr>
+  <tr>
+    <td>`minReach` <br /><span class="type-text">integer</span></td>
+    <td>Minimum forecasted reach</td>
+  </tr>
+  <tr>
     <td>`reach` <br /><span class="type-text">integer</span></td>
     <td>Forecasted reach</td>
+  </tr>
+  <tr>
+    <td>`maxReach` <br /><span class="type-text">integer</span></td>
+    <td>Maximum forecasted reach</td>
+  </tr>
+  <tr>
+    <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Minimum forecasted impressions</td>
   </tr>
   <tr>
     <td>`impressions` <br /><span class="type-text">integer</span></td>
     <td>Forecasted impressions</td>
   </tr>
   <tr>
+    <td>`maxImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Maximum forecasted impressions</td>
+  </tr>
+  <tr>
+    <td>`minBudget` <br /><span class="type-text">number</span></td>
+    <td>Minimum budget</td>
+  </tr>
+  <tr>
     <td>`budget` <br /><span class="type-text">number</span></td>
     <td>Proposal budget</td>
   </tr>
   <tr>
+    <td>`maxBudget` <br /><span class="type-text">number</span></td>
+    <td>Maximum budget</td>
+  </tr>
+  <tr>
+    <td>`minCpm` <br /><span class="type-text">number</span></td>
+    <td>Minimum cost per mille (CPM)</td>
+  </tr>
+  <tr>
+    <td>`cpm` <br /><span class="type-text">number</span></td>
+    <td>CPM</td>
+  </tr>
+  <tr>
+    <td>`maxCpm` <br /><span class="type-text">number</span></td>
+    <td>Maximum CPM</td>
+  </tr>
+  <tr>
     <td>`campaignGeneratable` <br /><span class="type-text">boolean</span></td>
-    <td>Whether campaigns can be generated from the proposal</td>
+    <td>Whether an IO and campaigns can be generated from the proposal.</td>
   </tr>
   <tr>
     <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
     <td>Campaigns that will be created when the IO is generated</td>
   </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`proposedCampaigns` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Proposed campaign ID</td>
+      </tr>
+      <tr>
+        <td>`name` <br /><span class="type-text">string</span></td>
+        <td>Campaign name</td>
+      </tr>
+      <tr>
+        <td>`strategy` <br /><span class="type-text">string</span></td>
+        <td>Targeting dimensions the campaign was split by.</td>
+      </tr>
+      <tr>
+        <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
+        <td>[Creative type ID](/guidelines/master-api#get-rtb-creative-types)</td>
+      </tr>
+      <tr>
+        <td>`startTime` <br /><span class="type-text">integer</span></td>
+        <td>Unix epoch start time in milliseconds</td>
+      </tr>
+      <tr>
+        <td>`endTime` <br /><span class="type-text">integer</span></td>
+        <td>Unix epoch end time in milliseconds</td>
+      </tr>
+      <tr>
+        <td>`duration` <br /><span class="type-text">integer</span></td>
+        <td>Flight duration in days</td>
+      </tr>
+      <tr>
+        <td>`modelType` <br /><span class="type-text">string</span></td>
+        <td>Pricing model; always <var>CPM</var></td>
+      </tr>
+      <tr>
+        <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+        <td>Frequency cap</td>
+      </tr>
+      <tr>
+        <td>`minTargetedReach` <br /><span class="type-text">integer</span></td>
+        <td>Minimum targeted reach</td>
+      </tr>
+      <tr>
+        <td>`targetedReach` <br /><span class="type-text">integer</span></td>
+        <td>Targeted reach</td>
+      </tr>
+      <tr>
+        <td>`maxTargetedReach` <br /><span class="type-text">integer</span></td>
+        <td>Maximum targeted reach</td>
+      </tr>
+      <tr>
+        <td>`minTargetedImpressions` <br /><span class="type-text">integer</span></td>
+        <td>Minimum targeted impressions</td>
+      </tr>
+      <tr>
+        <td>`targetedImpressions` <br /><span class="type-text">integer</span></td>
+        <td>Targeted impressions</td>
+      </tr>
+      <tr>
+        <td>`maxTargetedImpressions` <br /><span class="type-text">integer</span></td>
+        <td>Maximum targeted impressions</td>
+      </tr>
+      <tr>
+        <td>`minCpm` <br /><span class="type-text">number</span></td>
+        <td>Minimum CPM</td>
+      </tr>
+      <tr>
+        <td>`cpm` <br /><span class="type-text">number</span></td>
+        <td>CPM</td>
+      </tr>
+      <tr>
+        <td>`maxCpm` <br /><span class="type-text">number</span></td>
+        <td>Maximum CPM</td>
+      </tr>
+      <tr>
+        <td>`minBudget` <br /><span class="type-text">number</span></td>
+        <td>Minimum budget</td>
+      </tr>
+      <tr>
+        <td>`budget` <br /><span class="type-text">number</span></td>
+        <td>Campaign budget</td>
+      </tr>
+      <tr>
+        <td>`maxBudget` <br /><span class="type-text">number</span></td>
+        <td>Maximum budget</td>
+      </tr>
+    </table>
+    </details>
+  </td>
+  <td></td>
+  </tr>
 </table>
-
-See [Get proposal details](/political-vertical/planner#get-proposal-details) for all response properties.
 
 </details>
 
@@ -966,7 +1221,7 @@ function getProposalDetailsById(): Promise<Responses> {
 
 </div></div>
 
-### Step 6: Generate an IO and campaigns
+### Step 5: Generate an IO and campaigns
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/io" operationId="generateIOCampaigns_1" />
 
@@ -975,11 +1230,11 @@ function getProposalDetailsById(): Promise<Responses> {
 
 Convert the proposal into an IO and campaigns. The proposal must be in <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) status.
 
-The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created in the background. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can retry this step. Use [Step 5](#step-5-check-proposal-details) to check the result.
+The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created in the background. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can retry this step. Use [Step 4](#step-4-check-proposal-details) to check the result.
 
 | Path parameters |  |
 | ---- | --- |
-| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
 
 | Request schema |  |
 | ---- | --- |
@@ -1101,11 +1356,11 @@ Voter TV+ (objective <var>3</var>) plans forecast reach across linear TV and con
 1. Create a ready plan with the graph
 1. Activate the plan into a proposal
 1. (Optional) Split the proposal's CTV campaigns
-1. Generate an IO and campaigns, as in [Step 6](#step-6-generate-an-io-and-campaigns)
+1. Generate an IO and campaigns, as in [Generate an IO and campaigns](#step-5-generate-an-io-and-campaigns)
 
 Voter TV+ plans must have a flight of 7 to 31 days and a budget over <var>100</var>. They can't target [Power Segment audiences](/political-vertical/audience-segments#power-segment-audience-details); requests that include one are rejected with <var>Power Segment audiences are not supported for Voter TV+</var>. When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns are not created.
 
-### Get a reach saturation graph
+### Step 1: Get a reach saturation graph
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/reach-saturation-graph" operationId="getCrossScreenGraph" />
 
@@ -1121,7 +1376,7 @@ To adjust the forecast, call this endpoint again with the same <var>graphId</var
 | `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Plan name |
 | `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan objective ID: <var>3</var> |
 | `totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Total plan budget |
-| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | <var>startDate</var>, <var>endDate</var>, and <var>frequencyCap</var>, as in [Step 2](#step-2-create-a-ready-plan). Flight must be 7 to 31 days. |
+| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | <var>startDate</var>, <var>endDate</var>, and <var>frequencyCap</var>, as in [Create a ready plan](#step-1-create-a-ready-plan). Flight must be 7 to 31 days. |
 | `targeting` <br /><span class="type-text">object</span> | Plan targeting, including demographic segments such as <var>ageGroupSegments</var> and <var>genderSegments</var> |
 | `graphId` <br /><span class="type-text">string</span> | Existing graph ID, to recalculate a graph you already created |
 | `overview` <br /><span class="type-text">object</span> | Linear TV and CTV assumptions, to recalculate a graph you already created |
@@ -1278,14 +1533,14 @@ function getCrossScreenGraph(): Promise<Responses> {
 
 </div></div>
 
-### Create a Voter TV+ plan
+### Step 2: Create a Voter TV+ plan
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/plans/ready" operationId="createReadyPlan" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Create a ready plan as in [Step 2](#step-2-create-a-ready-plan), with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from the previous step. Save the <var>planId</var> from the response.
+Create a ready plan as in [Create a ready plan](#step-1-create-a-ready-plan), with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from the previous step. Save the <var>planId</var> from the response.
 
 | Request schema |  |
 | ---- | --- |
@@ -1293,13 +1548,13 @@ Create a ready plan as in [Step 2](#step-2-create-a-ready-plan), with <var>objec
 | `graphId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Graph ID from the reach saturation graph |
 | `overview` <br /><span class="type-text">object</span> | Overview from the reach saturation graph. Defaults are used if omitted. |
 
-All other fields are the same as [Step 2](#step-2-create-a-ready-plan).
+All other fields are the same as [Create a ready plan](#step-1-create-a-ready-plan).
 
 :::info
 
 Voter TV+ plans always target Video creatives on CTV devices. Any <var>targeting.creative</var> or <var>targeting.device</var> values in the request are replaced.
 
-Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-3-get-the-plans-strategies) returns an empty list. Activate the plan directly in the next step.
+Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-2-get-the-plans-strategies) returns an empty list. Activate the plan directly in the next step.
 
 :::
 
@@ -1421,7 +1676,7 @@ function createVoterTvPlan(): Promise<Responses> {
 
 </div></div>
 
-### Activate a Voter TV+ plan
+### Step 3: Activate a Voter TV+ plan
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals" operationId="activateProposal" />
 
@@ -1502,7 +1757,7 @@ function activateVoterTvProposal(): Promise<Responses> {
 
 </div></div>
 
-### Split a Voter TV+ proposal
+### Step 4: Split a Voter TV+ proposal
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/proposals/{proposalId}/split" operationId="splitProposal" />
 
@@ -1621,9 +1876,9 @@ function splitProposal(): Promise<Responses> {
 
 </div></div>
 
-## Target a Custom Voter Audience
+## Target a Custom Voter audience
 
-A Custom Voter Audience (CVA) combines voter segments into a single audience for a plan. Create the CVA first, then pass its <var>id</var> in the <var>cva</var> field when you [create a ready plan](#step-2-create-a-ready-plan).
+A Custom Voter audience (CVA) combines voter segments into a single audience for a plan. Create the CVA first, then pass its <var>id</var> in the <var>cva</var> field when you [create a ready plan](#step-1-create-a-ready-plan).
 
 ### Create CVA details
 
@@ -1632,7 +1887,7 @@ A Custom Voter Audience (CVA) combines voter segments into a single audience for
 <div class="endpoint-container">
   <div class="child1">
 
-Define the CVA with an equation of voter segment IDs. Get segment IDs from [Get Custom Voter Audience segment details](/political-vertical/audience-segments#get-custom-voter-audience-segment-details) in the Audience API.
+Define the CVA with an equation of voter segment IDs. Get segment IDs from [Get Custom Voter audience segment details](/political-vertical/audience-segments#get-custom-voter-audience-segment-details) in the Audience API.
 
 Equation syntax:
   * Wrap each segment ID in parentheses
@@ -1736,7 +1991,7 @@ function createCvaDetails(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-A proposal that isn't converted becomes <var>Expired</var> (<var>3</var>) after its end date passes. This happens on a schedule; there's no API call to expire a proposal. To use an expired proposal again, restore it with new flight dates. Restored proposals return to <var>Ready</var> (<var>6</var>) status and can then be converted as in [Step 6](#step-6-generate-an-io-and-campaigns).
+A proposal that isn't converted becomes <var>Expired</var> (<var>3</var>) after its end date passes. This happens on a schedule; there's no API call to expire a proposal. To use an expired proposal again, restore it with new flight dates. Restored proposals return to <var>Ready</var> (<var>6</var>) status and can then be converted as in [Step 5](#step-5-generate-an-io-and-campaigns).
 
 Restoring only works on expired proposals. It isn't an undo for [Delete proposals](/political-vertical/planner#delete-proposals).
 

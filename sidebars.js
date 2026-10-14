@@ -6888,7 +6888,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Create a Political proposal',
+          label: 'Political Planner',
           className: 'sidebarItem',
           link: {
             type: 'doc',
@@ -6908,50 +6908,76 @@ const sidebars = {
               className: 'sidebarItemQS'
             },
             {
-              type: `link`,
-              label: 'Step 1: Log in',
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-1-log-in`,
-              className: 'sidebarItemQS'
+              type: 'category',
+              label: 'Create a Political proposal',
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Create a ready plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-create-a-ready-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: "Step 2: Get the plan's strategies",
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-get-the-plans-strategies`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Activate a strategy into a proposal',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-activate-a-strategy-into-a-proposal`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 4: Check proposal details',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-4-check-proposal-details`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 5: Generate an IO and campaigns',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-5-generate-an-io-and-campaigns`,
+                  className: 'sidebarItemQS'
+                }
+              ]
             },
             {
-              type: `link`,
-              label: 'Step 2: Create a ready plan',
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-2-create-a-ready-plan`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: "Step 3: Get the plan's strategies",
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-3-get-the-plans-strategies`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 4: Activate a strategy into a proposal',
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-4-activate-a-strategy-into-a-proposal`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 5: Check proposal details',
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-5-check-proposal-details`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 6: Generate an IO and campaigns',
-              href: `/political-vertical/tutorials/create-a-political-proposal#step-6-generate-an-io-and-campaigns`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
+              type: 'category',
               label: 'Voter TV+ proposals',
-              href: `/political-vertical/tutorials/create-a-political-proposal#voter-tv-proposals`,
-              className: 'sidebarItemQS'
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Get a reach saturation graph',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-get-a-reach-saturation-graph`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 2: Create a Voter TV+ plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-create-a-voter-tv-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Activate a Voter TV+ plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-activate-a-voter-tv-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 4: Split a Voter TV+ proposal',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-4-split-a-voter-tv-proposal`,
+                  className: 'sidebarItemQS'
+                }
+              ]
             },
             {
               type: `link`,
-              label: 'Target a Custom Voter Audience',
+              label: 'Target a Custom Voter audience',
               href: `/political-vertical/tutorials/create-a-political-proposal#target-a-custom-voter-audience`,
               className: 'sidebarItemQS'
             },
