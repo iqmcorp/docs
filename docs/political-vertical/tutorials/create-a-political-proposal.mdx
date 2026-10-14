@@ -34,10 +34,6 @@ A Political proposal is a forecast-backed media plan that IQM can turn into a li
   * **Activating** a strategy turns it into a **proposal**: an editable set of proposed campaigns with its own status.
   * **Generating an IO** from a ready proposal creates a real insertion order and campaigns in your workspace. This is a one-way step.
 
-A proposal moves through the following statuses. See [Proposal status list](/guidelines/planner-api#proposal-status-list) for details.
-
-<EnumWidget values={proposalStatus} />
-
 ### More resources
   * [Planner API](/political-vertical/planner) guidelines
   * [Audience API](/political-vertical/audience-segments) guidelines
@@ -258,7 +254,7 @@ See [Political Planner resource properties](/political-vertical/planner#politica
 
 :::caution[note]
 
-The forecasting service decides which targeting and budget combinations can be planned, and there is no fixed list of valid combinations. A plausible request can still be rejected. If this happens, nothing is created: widen the targeting or change the budget and try again.
+The forecasting service decides which targeting and budget combinations can be planned, and there is no fixed list of valid combinations. A plausible request can still be rejected (response 422). If this happens, nothing is created: widen the targeting or change the budget and try again.
 
 :::
 
@@ -440,9 +436,6 @@ The forecasting service decides which targeting and budget combinations can be p
 }
 ```
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More responses</summary>
-
 ```json title="Response 422"
 {
   "success": false,
@@ -453,8 +446,6 @@ The forecasting service decides which targeting and budget combinations can be p
   ]
 }
 ```
-
-</details>
 
 </TabItem>
 <TabItem value="TypeScript" label="TypeScript">
@@ -1232,6 +1223,14 @@ Convert the proposal into an IO and campaigns. The proposal must be in <var>Read
 
 The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created in the background. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can retry this step. Use [Step 4](#step-4-check-proposal-details) to check the result.
 
+Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
+
+:::danger
+
+Generating an IO is a one-way step. A converted proposal can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> proposal, such as editing, downloading, or restoring, no longer work for it.
+
+:::
+
 | Path parameters |  |
 | ---- | --- |
 | `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
@@ -1241,12 +1240,6 @@ The request returns immediately and the proposal moves to <var>Processing</var> 
 | `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Political Advertiser profile ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) |
 | `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start time for the campaigns, in milliseconds; can't be in the past. Always required. |
 | `endTime` <br /><span class="type-text">integer</span> | Unix epoch end time in milliseconds. If omitted, the proposal's current duration is kept from the new <var>startTime</var>. If provided, it must keep the same duration in days. |
-
-:::danger
-
-Generating an IO is a one-way step. A converted proposal can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> proposal, such as editing, downloading, or restoring, no longer work for it. Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
-
-:::
 
 </div><div class="child2">
 
@@ -1358,7 +1351,14 @@ Voter TV+ (objective <var>3</var>) plans forecast reach across linear TV and con
 1. (Optional) Split the proposal's CTV campaigns
 1. Generate an IO and campaigns, as in [Generate an IO and campaigns](#step-5-generate-an-io-and-campaigns)
 
-Voter TV+ plans must have a flight of 7 to 31 days and a budget over <var>100</var>. They can't target [Power Segment audiences](/political-vertical/audience-segments#power-segment-audience-details); requests that include one are rejected with <var>Power Segment audiences are not supported for Voter TV+</var>. When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns are not created.
+### Eligibility requirements
+
+Voter TV+ plans: 
+
+- Must have a flight of 7 to 31 days
+- Must have a budget over <var>100</var>
+- Cannot target [Power Segment audiences](/political-vertical/audience-segments#power-segment-audience-details)
+- When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns are not created.
 
 ### Step 1: Get a reach saturation graph
 
@@ -1369,23 +1369,160 @@ Voter TV+ plans must have a flight of 7 to 31 days and a budget over <var>100</v
 
 Send the plan's budget, dates, and targeting with <var>objectiveId</var> <var>3</var> to get a reach forecast for linear TV and CTV. Save the <var>graphId</var> and <var>overview</var> from the response for the next step.
 
-To adjust the forecast, call this endpoint again with the same <var>graphId</var> and new <var>overview</var> values. See [Get reach saturation graph](/political-vertical/planner#get-reach-saturation-graph) for all request and response fields.
+To adjust the forecast, call this endpoint again with the same <var>graphId</var> and new <var>overview</var> values. 
 
-| Request schema |  |
-| ---- | --- |
-| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Plan name |
-| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan objective ID: <var>3</var> |
-| `totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Total plan budget |
-| `details` <br /><span class="type-text">object</span> <span class="required-text">required</span> | <var>startDate</var>, <var>endDate</var>, and <var>frequencyCap</var>, as in [Create a ready plan](#step-1-create-a-ready-plan). Flight must be 7 to 31 days. |
-| `targeting` <br /><span class="type-text">object</span> | Plan targeting, including demographic segments such as <var>ageGroupSegments</var> and <var>genderSegments</var> |
-| `graphId` <br /><span class="type-text">string</span> | Existing graph ID, to recalculate a graph you already created |
-| `overview` <br /><span class="type-text">object</span> | Linear TV and CTV assumptions, to recalculate a graph you already created |
+See [Get reach saturation graph](/political-vertical/planner#get-reach-saturation-graph) for all request and response fields.
 
 :::tip
 
 The first request for a new graph calls an external data service and can take more than 60 seconds. Set your client timeout to at least 60 seconds so the request isn't mistaken for a failure. Later requests with the same <var>graphId</var> are calculated without the external call.
 
 :::
+
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Plan name</td>
+</tr>
+<tr>
+  <td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Plan objective ID: <var>3</var> (Voter TV+)</td>
+</tr>
+<tr>
+  <td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+  <td>Total plan budget; must be at least <var>100</var></td>
+</tr>
+<tr>
+  <td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Flight dates and frequency cap</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`details` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+    </tr>
+    <tr>
+      <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch end date in milliseconds. The flight must be 7 to 31 days.</td>
+    </tr>
+    <tr>
+      <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>)</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`targeting` <br /><span class="type-text">object</span></td>
+  <td>Locations, demographics, and audiences to forecast reach for</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`targeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
+      <td>Locations to target</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`whiteListedLocation` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`country` <br /><span class="type-text">integer</span></td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+        </tr>
+        <tr>
+          <td>`states` <br /><span class="type-text">array of integers</span></td>
+          <td>[State IDs](/guidelines/master-api#get-carriers-and-states-by-country-id) to target</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Age group [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Gender [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Income range [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Ethnicity [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`partyAffiliationSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Party affiliation [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`whitelistedAudiences` <br /><span class="type-text">array of integers</span></td>
+      <td>Audience IDs to target. Power Segment audiences aren't supported for Voter TV+.</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`graphId` <br /><span class="type-text">string</span></td>
+  <td>ID of a graph you already created, to recalculate it with new <var>overview</var> values. Omit to create a new graph.</td>
+</tr>
+<tr>
+  <td>`overview` <br /><span class="type-text">object</span></td>
+  <td>Linear TV and CTV assumptions for the forecast. Defaults are used if omitted.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`overview` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+      <td>Linear TV cost per mille (CPM); <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`ctvCpm` <br /><span class="type-text">number</span></td>
+      <td>CTV CPM; <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`grp` <br /><span class="type-text">number</span></td>
+      <td>Linear TV gross rating points (GRP); <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
+      <td>Percentage of the budget allocated to linear TV, <var>0</var> to <var>100</var>. The rest goes to CTV.</td>
+    </tr>
+    <tr>
+      <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
+      <td>Average CTV frequency, <var>1</var> to <var>99</var></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+
+
 
 </div><div class="child2">
 
@@ -1540,15 +1677,7 @@ function getCrossScreenGraph(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Create a ready plan as in [Create a ready plan](#step-1-create-a-ready-plan), with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from the previous step. Save the <var>planId</var> from the response.
-
-| Request schema |  |
-| ---- | --- |
-| `objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan objective ID: <var>3</var> |
-| `graphId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Graph ID from the reach saturation graph |
-| `overview` <br /><span class="type-text">object</span> | Overview from the reach saturation graph. Defaults are used if omitted. |
-
-All other fields are the same as [Create a ready plan](#step-1-create-a-ready-plan).
+Create a ready plan with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from Step 1. Use the same budget, dates, and targeting you sent in Step 1 so the plan matches the graph. Save the <var>planId</var> from the response.
 
 :::info
 
@@ -1557,6 +1686,153 @@ Voter TV+ plans always target Video creatives on CTV devices. Any <var>targeting
 Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-2-get-the-plans-strategies) returns an empty list. Activate the plan directly in the next step.
 
 :::
+
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Plan name, up to 255 characters</td>
+</tr>
+<tr>
+  <td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Plan objective ID: <var>3</var> (Voter TV+)</td>
+</tr>
+<tr>
+  <td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+  <td>Total plan budget; must be more than <var>100</var></td>
+</tr>
+<tr>
+  <td>`graphId` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td><var>graphId</var> from Step 1</td>
+</tr>
+<tr>
+  <td>`overview` <br /><span class="type-text">object</span></td>
+  <td><var>overview</var> from Step 1. Defaults are used if omitted.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`overview` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+      <td>Linear TV cost per mille (CPM); <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`ctvCpm` <br /><span class="type-text">number</span></td>
+      <td>CTV CPM; <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`grp` <br /><span class="type-text">number</span></td>
+      <td>Linear TV gross rating points (GRP); <var>0</var> or more</td>
+    </tr>
+    <tr>
+      <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
+      <td>Percentage of the budget allocated to linear TV, <var>0</var> to <var>100</var>. The rest goes to CTV.</td>
+    </tr>
+    <tr>
+      <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
+      <td>Average CTV frequency, <var>1</var> to <var>99</var></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Flight dates, frequency cap, and margin</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`details` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+    </tr>
+    <tr>
+      <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Unix epoch end date in milliseconds. The flight must be 7 to 31 days.</td>
+    </tr>
+    <tr>
+      <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>)</td>
+    </tr>
+    <tr>
+      <td>`marginValue` <br /><span class="type-text">integer</span></td>
+      <td>Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin.</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`targeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Locations, demographics, and audiences to target</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`targeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
+      <td>Locations to target</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`whiteListedLocation` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`country` <br /><span class="type-text">integer</span></td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+        </tr>
+        <tr>
+          <td>`states` <br /><span class="type-text">array of integers</span></td>
+          <td>[State IDs](/guidelines/master-api#get-carriers-and-states-by-country-id) to target</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Age group [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Gender [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Income range [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Ethnicity [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`partyAffiliationSegments` <br /><span class="type-text">array of integers</span></td>
+      <td>Party affiliation [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+    </tr>
+    <tr>
+      <td>`whitelistedAudiences` <br /><span class="type-text">array of integers</span></td>
+      <td>Audience IDs to target. Power Segment audiences aren't supported for Voter TV+.</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
 
 </div><div class="child2">
 
@@ -1768,6 +2044,12 @@ Optionally, split a Voter TV+ proposal's CTV campaigns into one campaign per val
 
 This endpoint only works on Voter TV+ proposals.
 
+:::tip
+
+Splitting can take more than 60 seconds for large proposals. Set your client timeout to at least 60 seconds.
+
+:::
+
 | Path parameters |  |
 | ---- | --- |
 | `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Voter TV+ proposal ID |
@@ -1776,11 +2058,7 @@ This endpoint only works on Voter TV+ proposals.
 | ---- | --- |
 | `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](/political-vertical/planner#get-targeting-types) to split by. Despite the field name, these are targeting dimension IDs, not location IDs. For example, <var>8</var> State, <var>12</var> DMA, <var>15</var> Zip code, <var>29</var> Device. |
 
-:::tip
 
-Splitting can take more than 60 seconds for large proposals. Set your client timeout to at least 60 seconds.
-
-:::
 
 </div><div class="child2">
 
