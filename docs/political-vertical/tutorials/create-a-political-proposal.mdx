@@ -32,7 +32,7 @@ A Political proposal is a forecast-backed media plan that IQM can turn into a li
   * A **plan** holds the budget, flight dates, and targeting. A plan is saved as either a draft or ready plan. Only ready plans produce strategies.
   * When a ready plan is created, IQM's forecasting service generates up to three **strategies** for it: Maximum Reach, Balanced, and Most Economical. Each strategy is a different trade-off between reach, impressions, and cost.
   * **Activating** a strategy turns it into a **proposal**: an editable set of proposed campaigns with its own status.
-  * **Generating an IO** from a ready proposal creates a real insertion order and campaigns in your workspace. This is a one-way step.
+  * **Generating an IO** from a ready proposal creates a real IO and campaigns in your Workspace. This is a one-way step.
 
 ### More resources
   * [Planner API](/political-vertical/planner) guidelines
@@ -44,11 +44,11 @@ A Political proposal is a forecast-backed media plan that IQM can turn into a li
 
 To create a Political proposal and convert it into an IO, the following are required:
 
-  * An account on the IQM platform in a Political workspace
-    * See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
-    * Planner API requests from a workspace outside the Political vertical are rejected with <var>Request for forbidden vertical</var>
+  * An account on the IQM platform in a Political Workspace
+    * See the [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret.
+    * Planner API requests from a Workspace outside the Political vertical are rejected.
   * A Political Advertiser profile
-    * See [Get list of Advertiser profile and details](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) to find an existing profile ID, or [Add Advertiser profile](/guidelines/workspace-api#add-advertiser-profile) to create one
+    * See [Get list of Advertiser profile and details](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) to find an existing profile ID, or [Add Advertiser profile](/guidelines/workspace-api#add-advertiser-profile) to create one.
     * Required in [Step 5](#step-5-generate-an-io-and-campaigns) to generate an IO. Use a real profile ID; it is validated when the IO is created.
 
 ### Log in
@@ -58,19 +58,19 @@ To create a Political proposal and convert it into an IO, the following are requ
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, the <var>Authentication: Basic</var> header is required. This endpoint returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
 
-For further information see [OAuth token](/guidelines/user-api#oauth-token).
+For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Headers |  |
 | ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide).<br /> |
 
 | Request schema |  |
 | ---- | --- |
-| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
 
@@ -222,12 +222,12 @@ Use the following header parameters for all requests after logging in:
 
 | Headers  |  |
 | ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
 
 </div>
 
-## Create a Political proposal using the IQM API
+## Create a Political proposal
 
 This tutorial covers the standard path for Reach forecasting and Budget estimation plans:
 
@@ -237,7 +237,7 @@ This tutorial covers the standard path for Reach forecasting and Budget estimati
 1. Check proposal details
 1. Generate an IO and campaigns
 
-Voter TV+ (cross-screen) plans follow a different path. See [Voter TV+ proposals](#voter-tv-proposals) after completing the standard path. To target a Custom Voter audience, see [Target a Custom Voter audience](#target-a-custom-voter-audience) before Step 1.
+Voter TV+ (cross-screen) plans follow a different path. See [Voter TV+ proposals](#voter-tv-proposals) after completing the standard path. To target a Custom Voter audience (CVA), see [Target a Custom Voter audience](#target-a-custom-voter-audience) before Step 1.
 
 
 ### Step 1: Create a ready plan
@@ -265,19 +265,19 @@ The forecasting service decides which targeting and budget combinations can be p
 </tr>
 <tr>
 <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-<td>Plan name, up to 255 characters</td>
+<td>Plan name, up to 255 characters.</td>
 </tr>
 <tr>
 <td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-<td>[Plan objective ID](/political-vertical/planner#get-plan-objectives). <br />Use <var>1</var> or <var>2</var> for this tutorial. Voter TV+ (<var>3</var>) follows the [Voter TV+ path](#voter-tv-proposals). <br /><EnumWidget values={planObjectives} /> </td>
+<td>[Plan objective ID](/political-vertical/planner#get-plan-objectives). <br />Use <var>1</var> or <var>2</var> for this tutorial. Voter TV+ (<var>3</var>) follows the [Voter TV+ path](#voter-tv-proposals). <br /><EnumWidget values={planObjectives} /></td>
 </tr>
 <tr>
 <td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
-<td>Total plan budget</td>
+<td>Total plan budget.</td>
 </tr>
 <tr>
 <td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-<td>Flight dates, frequency cap, and margin</td>
+<td>Flight dates, frequency cap, and margin.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -286,15 +286,15 @@ The forecasting service decides which targeting and budget combinations can be p
   <table className="objectProperties">
     <tr>
       <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+      <td>Unix epoch start date in milliseconds; can't be in the past.</td>
     </tr>
     <tr>
       <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-      <td>Unix epoch end date in milliseconds; must be at least 30 minutes after <var>startDate</var></td>
+      <td>Unix epoch end date in milliseconds; must be at least 30 minutes after <var>startDate</var>.</td>
     </tr>
     <tr>
       <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-      <td>Frequency cap, <var>1</var> to <var>999</var></td>
+      <td>Frequency cap, <var>1</var> to <var>999</var>.</td>
     </tr>
     <tr>
       <td>`marginValue` <br /><span class="type-text">integer</span></td>
@@ -316,7 +316,7 @@ The forecasting service decides which targeting and budget combinations can be p
   <table className="objectProperties">
     <tr>
       <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
-      <td>Locations to target</td>
+      <td>Locations to target.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -325,7 +325,7 @@ The forecasting service decides which targeting and budget combinations can be p
       <table className="objectProperties">
         <tr>
           <td>`country` <br /><span class="type-text">integer</span></td>
-          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target.</td>
         </tr>
       </table>
       </details>
@@ -334,7 +334,7 @@ The forecasting service decides which targeting and budget combinations can be p
     </tr>
     <tr>
       <td>`device` <br /><span class="type-text">object</span></td>
-      <td>Devices to target</td>
+      <td>Devices to target.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -343,7 +343,7 @@ The forecasting service decides which targeting and budget combinations can be p
       <table className="objectProperties">
         <tr>
           <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
-          <td>[Device type IDs](/guidelines/master-api#get-device-type) to target</td>
+          <td>[Device type IDs](/guidelines/master-api#get-device-type) to target.</td>
         </tr>
       </table>
       </details>
@@ -352,7 +352,7 @@ The forecasting service decides which targeting and budget combinations can be p
     </tr>
     <tr>
       <td>`creative` <br /><span class="type-text">object</span></td>
-      <td>Creative types to target</td>
+      <td>Creative types to target.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -361,11 +361,11 @@ The forecasting service decides which targeting and budget combinations can be p
       <table className="objectProperties">
         <tr>
           <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
-          <td>[Creative type IDs](/guidelines/master-api#get-rtb-creative-types) to target</td>
+          <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list) to target.</td>
         </tr>
         <tr>
           <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
-          <td>Whether TV auto buying is enabled</td>
+          <td>Whether TV auto buying is enabled.</td>
         </tr>
       </table>
       </details>
@@ -379,7 +379,7 @@ The forecasting service decides which targeting and budget combinations can be p
 </tr>
 <tr>
 <td>`cva` <br /><span class="type-text">object</span></td>
-<td>Custom Voter audience to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter audience](#target-a-custom-voter-audience).</td>
+<td>CVA to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter audience](#target-a-custom-voter-audience).</td>
 </tr>
 </table>
 
@@ -391,7 +391,7 @@ The forecasting service decides which targeting and budget combinations can be p
 <table className="objectProperties">
   <tr>
     <td>`planId` <br /><span class="type-text">integer</span></td>
-    <td>ID of the created plan</td>
+    <td>ID of the created plan.</td>
   </tr>
 </table>
 
@@ -543,7 +543,7 @@ If you create extra strategies with [Generate custom strategies](/political-vert
 
 | Query parameters |  |
 | ---- | --- |
-| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 1 |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 1. |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -552,67 +552,67 @@ If you create extra strategies with [Generate custom strategies](/political-vert
 <table className="objectProperties">
   <tr>
     <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Strategy ID; use this to activate the strategy</td>
+    <td>Strategy ID; use this to activate the strategy.</td>
   </tr>
   <tr>
     <td>`name` <br /><span class="type-text">string</span></td>
-    <td>Strategy name</td>
+    <td>Strategy name.</td>
   </tr>
   <tr>
     <td>`strategyTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[Strategy type ID](/political-vertical/planner#get-strategy-types): <var>1</var> Maximum Reach, <var>3</var> Balanced, <var>4</var> Most Economical, <var>5</var> Custom</td>
+    <td>[Strategy type ID](/political-vertical/planner#get-strategy-types): <var>1</var> Maximum Reach, <var>3</var> Balanced, <var>4</var> Most Economical, <var>5</var> Custom.</td>
   </tr>
   <tr>
     <td>`proposalId` <br /><span class="type-text">integer</span></td>
-    <td>ID of the proposal created from this strategy, or <var>null</var> if it hasn't been activated</td>
+    <td>ID of the proposal created from this strategy, or <var>null</var> if it hasn't been activated.</td>
   </tr>
   <tr>
     <td>`startDate` <br /><span class="type-text">integer</span></td>
-    <td>Unix epoch start date in milliseconds</td>
+    <td>Unix epoch start date in milliseconds.</td>
   </tr>
   <tr>
     <td>`endDate` <br /><span class="type-text">integer</span></td>
-    <td>Unix epoch end date in milliseconds</td>
+    <td>Unix epoch end date in milliseconds.</td>
   </tr>
   <tr>
     <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Flight duration in days</td>
+    <td>Flight duration in days.</td>
   </tr>
   <tr>
     <td>`campaignsCount` <br /><span class="type-text">integer</span></td>
-    <td>Number of proposed campaigns in the strategy</td>
+    <td>Number of proposed campaigns in the strategy.</td>
   </tr>
   <tr>
     <td>`budget` <br /><span class="type-text">number</span></td>
-    <td>Forecasted budget</td>
+    <td>Forecasted budget.</td>
   </tr>
   <tr>
     <td>`reach` <br /><span class="type-text">integer</span></td>
-    <td>Forecasted reach</td>
+    <td>Forecasted reach.</td>
   </tr>
   <tr>
     <td>`impressions` <br /><span class="type-text">integer</span></td>
-    <td>Forecasted impressions</td>
+    <td>Forecasted impressions.</td>
   </tr>
   <tr>
     <td>`cpm` <br /><span class="type-text">number</span></td>
-    <td>Forecasted cost per mille (CPM)</td>
+    <td>Forecasted cost per mille (CPM).</td>
   </tr>
   <tr>
     <td>`frequency` <br /><span class="type-text">integer</span></td>
-    <td>Frequency cap</td>
+    <td>Frequency cap.</td>
   </tr>
   <tr>
     <td>`creatives` <br /><span class="type-text">array of integers</span></td>
-    <td>Creative type IDs</td>
+    <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list).</td>
   </tr>
   <tr>
     <td>`devices` <br /><span class="type-text">array of integers</span></td>
-    <td>Device type IDs</td>
+    <td>[Device type IDs](/guidelines/master-api#get-device-type).</td>
   </tr>
   <tr>
     <td>`channels` <br /><span class="type-text">array of integers</span></td>
-    <td>Channel type IDs</td>
+    <td>Channel type IDs.</td>
   </tr>
 </table>
 
@@ -749,7 +749,7 @@ Voter TV+ plans have no strategies, so they are activated with <var>planId</var>
 
 | Request schema |  |
 | ---- | --- |
-| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Strategy ID from Step 2 |
+| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Strategy ID from Step 2. |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -758,11 +758,11 @@ Voter TV+ plans have no strategies, so they are activated with <var>planId</var>
 <table className="objectProperties">
   <tr>
     <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Proposal ID</td>
+    <td>Proposal ID.</td>
   </tr>
   <tr>
     <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>Success message.</td>
   </tr>
 </table>
 
@@ -878,7 +878,7 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
 
 | Path parameters |  |
 | ---- | --- |
-| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -886,103 +886,103 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
 <table className="objectProperties">
   <tr>
     <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>Proposal ID</td>
+    <td>Proposal ID.</td>
   </tr>
   <tr>
     <td>`name` <br /><span class="type-text">string</span></td>
-    <td>Proposal name</td>
+    <td>Proposal name.</td>
   </tr>
   <tr>
     <td>`planId` <br /><span class="type-text">integer</span></td>
-    <td>ID of the plan the proposal was created from</td>
+    <td>ID of the plan the proposal was created from.</td>
   </tr>
   <tr>
     <td>`planName` <br /><span class="type-text">string</span></td>
-    <td>Name of the plan the proposal was created from</td>
+    <td>Name of the plan the proposal was created from.</td>
   </tr>
   <tr>
     <td>`objectiveId` <br /><span class="type-text">integer</span></td>
-    <td>[Plan objective ID](/political-vertical/planner#get-plan-objectives) <br /><EnumWidget values={planObjectives} /></td>
+    <td>[Plan objective ID](/political-vertical/planner#get-plan-objectives). <br /><EnumWidget values={planObjectives} /></td>
   </tr>
   <tr>
     <td>`statusId` <br /><span class="type-text">integer</span></td>
-    <td>[Proposal status ID](/guidelines/planner-api#proposal-status-list) <br /><EnumWidget values={proposalStatus} /></td>
+    <td>[Proposal status ID](/guidelines/planner-api#proposal-status-list). <br /><EnumWidget values={proposalStatus} /></td>
   </tr>
   <tr>
     <td>`ioId` <br /><span class="type-text">integer</span></td>
-    <td>ID of the generated IO, once the proposal is converted</td>
+    <td>[IO ID](/guidelines/campaign-api#get-insertion-order-details) generated from the proposal, once it's converted.</td>
   </tr>
   <tr>
     <td>`owId` <br /><span class="type-text">integer</span></td>
-    <td>Organization Workspace ID</td>
+    <td>Organization Workspace ID.</td>
   </tr>
   <tr>
     <td>`startTime` <br /><span class="type-text">integer</span></td>
-    <td>Unix epoch start time in milliseconds</td>
+    <td>Unix epoch start time in milliseconds.</td>
   </tr>
   <tr>
     <td>`endTime` <br /><span class="type-text">integer</span></td>
-    <td>Unix epoch end time in milliseconds</td>
+    <td>Unix epoch end time in milliseconds.</td>
   </tr>
   <tr>
     <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
-    <td>[Time zone ID](/guidelines/master-api#get-timezones)</td>
+    <td>[Time zone ID](/guidelines/master-api#get-timezones).</td>
   </tr>
   <tr>
     <td>`timeZoneName` <br /><span class="type-text">string</span></td>
-    <td>Time zone name</td>
+    <td>Time zone name.</td>
   </tr>
   <tr>
     <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-    <td>Frequency cap</td>
+    <td>Frequency cap.</td>
   </tr>
   <tr>
     <td>`minReach` <br /><span class="type-text">integer</span></td>
-    <td>Minimum forecasted reach</td>
+    <td>Minimum forecasted reach.</td>
   </tr>
   <tr>
     <td>`reach` <br /><span class="type-text">integer</span></td>
-    <td>Forecasted reach</td>
+    <td>Forecasted reach.</td>
   </tr>
   <tr>
     <td>`maxReach` <br /><span class="type-text">integer</span></td>
-    <td>Maximum forecasted reach</td>
+    <td>Maximum forecasted reach.</td>
   </tr>
   <tr>
     <td>`minImpressions` <br /><span class="type-text">integer</span></td>
-    <td>Minimum forecasted impressions</td>
+    <td>Minimum forecasted impressions.</td>
   </tr>
   <tr>
     <td>`impressions` <br /><span class="type-text">integer</span></td>
-    <td>Forecasted impressions</td>
+    <td>Forecasted impressions.</td>
   </tr>
   <tr>
     <td>`maxImpressions` <br /><span class="type-text">integer</span></td>
-    <td>Maximum forecasted impressions</td>
+    <td>Maximum forecasted impressions.</td>
   </tr>
   <tr>
     <td>`minBudget` <br /><span class="type-text">number</span></td>
-    <td>Minimum budget</td>
+    <td>Minimum budget.</td>
   </tr>
   <tr>
     <td>`budget` <br /><span class="type-text">number</span></td>
-    <td>Proposal budget</td>
+    <td>Proposal budget.</td>
   </tr>
   <tr>
     <td>`maxBudget` <br /><span class="type-text">number</span></td>
-    <td>Maximum budget</td>
+    <td>Maximum budget.</td>
   </tr>
   <tr>
     <td>`minCpm` <br /><span class="type-text">number</span></td>
-    <td>Minimum cost per mille (CPM)</td>
+    <td>Minimum cost per mille (CPM).</td>
   </tr>
   <tr>
     <td>`cpm` <br /><span class="type-text">number</span></td>
-    <td>CPM</td>
+    <td>CPM.</td>
   </tr>
   <tr>
     <td>`maxCpm` <br /><span class="type-text">number</span></td>
-    <td>Maximum CPM</td>
+    <td>Maximum CPM.</td>
   </tr>
   <tr>
     <td>`campaignGeneratable` <br /><span class="type-text">boolean</span></td>
@@ -990,7 +990,7 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
   </tr>
   <tr>
     <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
-    <td>Campaigns that will be created when the IO is generated</td>
+    <td>Campaigns that are created when the IO is generated.</td>
   </tr>
   <tr>
   <td colSpan="2">
@@ -999,11 +999,11 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     <table className="objectProperties">
       <tr>
         <td>`id` <br /><span class="type-text">integer</span></td>
-        <td>Proposed campaign ID</td>
+        <td>Proposed campaign ID.</td>
       </tr>
       <tr>
         <td>`name` <br /><span class="type-text">string</span></td>
-        <td>Campaign name</td>
+        <td>Campaign name.</td>
       </tr>
       <tr>
         <td>`strategy` <br /><span class="type-text">string</span></td>
@@ -1011,75 +1011,75 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
       </tr>
       <tr>
         <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-        <td>[Creative type ID](/guidelines/master-api#get-rtb-creative-types)</td>
+        <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list).</td>
       </tr>
       <tr>
         <td>`startTime` <br /><span class="type-text">integer</span></td>
-        <td>Unix epoch start time in milliseconds</td>
+        <td>Unix epoch start time in milliseconds.</td>
       </tr>
       <tr>
         <td>`endTime` <br /><span class="type-text">integer</span></td>
-        <td>Unix epoch end time in milliseconds</td>
+        <td>Unix epoch end time in milliseconds.</td>
       </tr>
       <tr>
         <td>`duration` <br /><span class="type-text">integer</span></td>
-        <td>Flight duration in days</td>
+        <td>Flight duration in days.</td>
       </tr>
       <tr>
         <td>`modelType` <br /><span class="type-text">string</span></td>
-        <td>Pricing model; always <var>CPM</var></td>
+        <td>Pricing model; always <var>CPM</var>.</td>
       </tr>
       <tr>
         <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-        <td>Frequency cap</td>
+        <td>Frequency cap.</td>
       </tr>
       <tr>
         <td>`minTargetedReach` <br /><span class="type-text">integer</span></td>
-        <td>Minimum targeted reach</td>
+        <td>Minimum targeted reach.</td>
       </tr>
       <tr>
         <td>`targetedReach` <br /><span class="type-text">integer</span></td>
-        <td>Targeted reach</td>
+        <td>Targeted reach.</td>
       </tr>
       <tr>
         <td>`maxTargetedReach` <br /><span class="type-text">integer</span></td>
-        <td>Maximum targeted reach</td>
+        <td>Maximum targeted reach.</td>
       </tr>
       <tr>
         <td>`minTargetedImpressions` <br /><span class="type-text">integer</span></td>
-        <td>Minimum targeted impressions</td>
+        <td>Minimum targeted impressions.</td>
       </tr>
       <tr>
         <td>`targetedImpressions` <br /><span class="type-text">integer</span></td>
-        <td>Targeted impressions</td>
+        <td>Targeted impressions.</td>
       </tr>
       <tr>
         <td>`maxTargetedImpressions` <br /><span class="type-text">integer</span></td>
-        <td>Maximum targeted impressions</td>
+        <td>Maximum targeted impressions.</td>
       </tr>
       <tr>
         <td>`minCpm` <br /><span class="type-text">number</span></td>
-        <td>Minimum CPM</td>
+        <td>Minimum CPM.</td>
       </tr>
       <tr>
         <td>`cpm` <br /><span class="type-text">number</span></td>
-        <td>CPM</td>
+        <td>CPM.</td>
       </tr>
       <tr>
         <td>`maxCpm` <br /><span class="type-text">number</span></td>
-        <td>Maximum CPM</td>
+        <td>Maximum CPM.</td>
       </tr>
       <tr>
         <td>`minBudget` <br /><span class="type-text">number</span></td>
-        <td>Minimum budget</td>
+        <td>Minimum budget.</td>
       </tr>
       <tr>
         <td>`budget` <br /><span class="type-text">number</span></td>
-        <td>Campaign budget</td>
+        <td>Campaign budget.</td>
       </tr>
       <tr>
         <td>`maxBudget` <br /><span class="type-text">number</span></td>
-        <td>Maximum budget</td>
+        <td>Maximum budget.</td>
       </tr>
     </table>
     </details>
@@ -1233,11 +1233,11 @@ Generating an IO is a one-way step. A converted proposal can't be returned to <v
 
 | Path parameters |  |
 | ---- | --- |
-| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3. |
 
 | Request schema |  |
 | ---- | --- |
-| `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Political Advertiser profile ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details) |
+| `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Political Advertiser profile ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details). |
 | `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start time for the campaigns, in milliseconds; can't be in the past. Always required. |
 | `endTime` <br /><span class="type-text">integer</span> | Unix epoch end time in milliseconds. If omitted, the proposal's current duration is kept from the new <var>startTime</var>. If provided, it must keep the same duration in days. |
 
@@ -1348,8 +1348,10 @@ Voter TV+ (objective <var>3</var>) plans forecast reach across linear TV and con
 1. Get a reach saturation graph
 1. Create a ready plan with the graph
 1. Activate the plan into a proposal
-1. (Optional) Split the proposal's CTV campaigns
-1. Generate an IO and campaigns, as in [Generate an IO and campaigns](#step-5-generate-an-io-and-campaigns)
+1. Split the proposal's CTV campaigns (optional)
+1. Generate an IO and campaigns, as in [Step 5](#step-5-generate-an-io-and-campaigns) of the standard path
+
+When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns aren't created.
 
 ### Eligibility requirements
 
@@ -1358,7 +1360,6 @@ Voter TV+ plans:
 - Must have a flight of 7 to 31 days
 - Must have a budget over <var>100</var>
 - Cannot target [Power Segment audiences](/political-vertical/audience-segments#power-segment-audience-details)
-- When the IO is generated, only the CTV proposed campaigns become campaigns; linear TV campaigns are not created.
 
 ### Step 1: Get a reach saturation graph
 
@@ -1386,19 +1387,19 @@ The first request for a new graph calls an external data service and can take mo
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-  <td>Plan name</td>
+  <td>Plan name.</td>
 </tr>
 <tr>
   <td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-  <td>Plan objective ID: <var>3</var> (Voter TV+)</td>
+  <td>Plan objective ID: <var>3</var> (Voter TV+).</td>
 </tr>
 <tr>
   <td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
-  <td>Total plan budget; must be at least <var>100</var></td>
+  <td>Total plan budget; must be at least <var>100</var>.</td>
 </tr>
 <tr>
   <td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-  <td>Flight dates and frequency cap</td>
+  <td>Flight dates and frequency cap.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1407,7 +1408,7 @@ The first request for a new graph calls an external data service and can take mo
   <table className="objectProperties">
     <tr>
       <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+      <td>Unix epoch start date in milliseconds; can't be in the past.</td>
     </tr>
     <tr>
       <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
@@ -1415,7 +1416,7 @@ The first request for a new graph calls an external data service and can take mo
     </tr>
     <tr>
       <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>)</td>
+      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>).</td>
     </tr>
   </table>
   </details>
@@ -1424,7 +1425,7 @@ The first request for a new graph calls an external data service and can take mo
 </tr>
 <tr>
   <td>`targeting` <br /><span class="type-text">object</span></td>
-  <td>Locations, demographics, and audiences to forecast reach for</td>
+  <td>Locations, demographics, and audiences to forecast reach for.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1433,7 +1434,7 @@ The first request for a new graph calls an external data service and can take mo
   <table className="objectProperties">
     <tr>
       <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
-      <td>Locations to target</td>
+      <td>Locations to target.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -1442,11 +1443,11 @@ The first request for a new graph calls an external data service and can take mo
       <table className="objectProperties">
         <tr>
           <td>`country` <br /><span class="type-text">integer</span></td>
-          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target.</td>
         </tr>
         <tr>
           <td>`states` <br /><span class="type-text">array of integers</span></td>
-          <td>[State IDs](/guidelines/master-api#get-carriers-and-states-by-country-id) to target</td>
+          <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
         </tr>
       </table>
       </details>
@@ -1455,23 +1456,23 @@ The first request for a new graph calls an external data service and can take mo
     </tr>
     <tr>
       <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Age group [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Age group [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Gender [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Gender [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Income range [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Income range [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Ethnicity [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Ethnicity [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`partyAffiliationSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Party affiliation [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Party affiliation [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`whitelistedAudiences` <br /><span class="type-text">array of integers</span></td>
@@ -1497,15 +1498,15 @@ The first request for a new graph calls an external data service and can take mo
   <table className="objectProperties">
     <tr>
       <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
-      <td>Linear TV cost per mille (CPM); <var>0</var> or more</td>
+      <td>Linear TV cost per mille (CPM); <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`ctvCpm` <br /><span class="type-text">number</span></td>
-      <td>CTV CPM; <var>0</var> or more</td>
+      <td>CTV CPM; <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`grp` <br /><span class="type-text">number</span></td>
-      <td>Linear TV gross rating points (GRP); <var>0</var> or more</td>
+      <td>Linear TV gross rating points (GRP); <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
@@ -1513,7 +1514,7 @@ The first request for a new graph calls an external data service and can take mo
     </tr>
     <tr>
       <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
-      <td>Average CTV frequency, <var>1</var> to <var>99</var></td>
+      <td>Average CTV frequency, <var>1</var> to <var>99</var>.</td>
     </tr>
   </table>
   </details>
@@ -1681,7 +1682,7 @@ Create a ready plan with <var>objectiveId</var> <var>3</var> and the <var>graphI
 
 :::info
 
-Voter TV+ plans always target Video creatives on CTV devices. Any <var>targeting.creative</var> or <var>targeting.device</var> values in the request are replaced.
+Voter TV+ plans always target video creatives on CTV devices. Any <var>targeting.creative</var> or <var>targeting.device</var> values in the request are replaced.
 
 Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-2-get-the-plans-strategies) returns an empty list. Activate the plan directly in the next step.
 
@@ -1694,19 +1695,19 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-  <td>Plan name, up to 255 characters</td>
+  <td>Plan name, up to 255 characters.</td>
 </tr>
 <tr>
   <td>`objectiveId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-  <td>Plan objective ID: <var>3</var> (Voter TV+)</td>
+  <td>Plan objective ID: <var>3</var> (Voter TV+).</td>
 </tr>
 <tr>
   <td>`totalBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
-  <td>Total plan budget; must be more than <var>100</var></td>
+  <td>Total plan budget; must be more than <var>100</var>.</td>
 </tr>
 <tr>
   <td>`graphId` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-  <td><var>graphId</var> from Step 1</td>
+  <td><var>graphId</var> from Step 1.</td>
 </tr>
 <tr>
   <td>`overview` <br /><span class="type-text">object</span></td>
@@ -1719,15 +1720,15 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
   <table className="objectProperties">
     <tr>
       <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
-      <td>Linear TV cost per mille (CPM); <var>0</var> or more</td>
+      <td>Linear TV cost per mille (CPM); <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`ctvCpm` <br /><span class="type-text">number</span></td>
-      <td>CTV CPM; <var>0</var> or more</td>
+      <td>CTV CPM; <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`grp` <br /><span class="type-text">number</span></td>
-      <td>Linear TV gross rating points (GRP); <var>0</var> or more</td>
+      <td>Linear TV gross rating points (GRP); <var>0</var> or more.</td>
     </tr>
     <tr>
       <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
@@ -1735,7 +1736,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
     </tr>
     <tr>
       <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
-      <td>Average CTV frequency, <var>1</var> to <var>99</var></td>
+      <td>Average CTV frequency, <var>1</var> to <var>99</var>.</td>
     </tr>
   </table>
   </details>
@@ -1744,7 +1745,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
 </tr>
 <tr>
   <td>`details` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-  <td>Flight dates, frequency cap, and margin</td>
+  <td>Flight dates, frequency cap, and margin.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1753,7 +1754,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
   <table className="objectProperties">
     <tr>
       <td>`startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-      <td>Unix epoch start date in milliseconds; can't be in the past</td>
+      <td>Unix epoch start date in milliseconds; can't be in the past.</td>
     </tr>
     <tr>
       <td>`endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
@@ -1761,7 +1762,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
     </tr>
     <tr>
       <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>)</td>
+      <td>Frequency cap, <var>1</var> to <var>999</var> (default: <var>3</var>).</td>
     </tr>
     <tr>
       <td>`marginValue` <br /><span class="type-text">integer</span></td>
@@ -1774,7 +1775,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
 </tr>
 <tr>
   <td>`targeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-  <td>Locations, demographics, and audiences to target</td>
+  <td>Locations, demographics, and audiences to target.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1783,7 +1784,7 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
   <table className="objectProperties">
     <tr>
       <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
-      <td>Locations to target</td>
+      <td>Locations to target.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -1792,11 +1793,11 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
       <table className="objectProperties">
         <tr>
           <td>`country` <br /><span class="type-text">integer</span></td>
-          <td>[Country ID](/guidelines/master-api#get-country-segment) to target</td>
+          <td>[Country ID](/guidelines/master-api#get-country-segment) to target.</td>
         </tr>
         <tr>
           <td>`states` <br /><span class="type-text">array of integers</span></td>
-          <td>[State IDs](/guidelines/master-api#get-carriers-and-states-by-country-id) to target</td>
+          <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
         </tr>
       </table>
       </details>
@@ -1805,23 +1806,23 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
     </tr>
     <tr>
       <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Age group [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Age group [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Gender [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Gender [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Income range [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Income range [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Ethnicity [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Ethnicity [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`partyAffiliationSegments` <br /><span class="type-text">array of integers</span></td>
-      <td>Party affiliation [Demographic segment IDs](/political-vertical/planner#get-demographics-keys)</td>
+      <td>Party affiliation [demographic segment IDs](/political-vertical/planner#get-demographics-keys).</td>
     </tr>
     <tr>
       <td>`whitelistedAudiences` <br /><span class="type-text">array of integers</span></td>
@@ -2040,7 +2041,7 @@ function activateVoterTvProposal(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Optionally, split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per zip code. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign.
+Split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per ZIP code. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign. This step is optional.
 
 This endpoint only works on Voter TV+ proposals.
 
@@ -2052,11 +2053,11 @@ Splitting can take more than 60 seconds for large proposals. Set your client tim
 
 | Path parameters |  |
 | ---- | --- |
-| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Voter TV+ proposal ID |
+| `proposalId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Voter TV+ proposal ID. |
 
 | Request schema |  |
 | ---- | --- |
-| `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](/political-vertical/planner#get-targeting-types) to split by. Despite the field name, these are targeting dimension IDs, not location IDs. For example, <var>8</var> State, <var>12</var> DMA, <var>15</var> Zip code, <var>29</var> Device. |
+| `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](/political-vertical/planner#get-targeting-types) to split by. Despite the field name, these are targeting dimension IDs, not location IDs. For example, <var>8</var> (state), <var>12</var> (DMA), <var>15</var> (ZIP code), <var>29</var> (device). |
 
 
 
@@ -2176,8 +2177,8 @@ For example, <var>((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))</var> tar
 
 | Request schema |  |
 | ---- | --- |
-| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Segment equation |
-| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) to limit the audience to; leave empty for all states |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Segment equation. |
+| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) to limit the audience to; leave empty for all states. |
 | `reach` <br /><span class="type-text">integer</span> | Audience reach. This value is stored and passed to the forecasting service as provided; it isn't calculated. Use [Get CVA reach](/political-vertical/audience-segments#get-cva-reach) to get it. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -2186,7 +2187,7 @@ For example, <var>((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))</var> tar
 <table className="objectProperties">
   <tr>
     <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>CVA ID; pass it as <var>cva.id</var> when creating a plan</td>
+    <td>CVA ID; pass it as <var>cva.id</var> when creating a plan.</td>
   </tr>
 </table>
 
@@ -2275,9 +2276,9 @@ Restoring only works on expired proposals. It isn't an undo for [Delete proposal
 
 | Request schema |  |
 | ---- | --- |
-| `proposalIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | IDs of expired proposals to restore |
-| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch start time in milliseconds; can't be in the past |
-| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch end time in milliseconds; must be at least 30 minutes after <var>startTime</var> |
+| `proposalIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | IDs of expired proposals to restore. |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch start time in milliseconds; can't be in the past. |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch end time in milliseconds; must be at least 30 minutes after <var>startTime</var>. |
 
 </div><div class="child2">
 
