@@ -6,6 +6,7 @@ import { splitTypes } from '@site/src/data/enums/splitTypes';
 import { targetingTypes } from '@site/src/data/enums/targetingTypes';
 import { deviceType } from '@site/src/data/enums/deviceType';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
+import { channelTypes } from '@site/src/data/enums/channelTypes';
 
 ### Get reach saturation graph
 
@@ -20,14 +21,239 @@ Fetch cross-screen Planner graph data based on the targeting and budgeting crite
 Computation time for this endpoint may take more than 60 seconds depending on the complexity of the targeting criteria and the size of the proposal being split. Please allow for sufficient time for the request to complete.
 :::
 
-| Request schema |  |
-| ---- | --- |
-| `name` <br /><span class="type-text">string</span> | Plan name. |
-| `objectiveId` <br /><span class="type-text">integer</span> | [Plan objective ID](#get-plan-objectives). <br /><EnumWidget values={planObjectives} /> |
-| `totalBudget` <br /><span class="type-text">number</span> | Total plan budget. |
-| `lastVisitedScreen` <br /><span class="type-text">string</span> | Last visited screen in plan creation. |
-| `details` <br /><span class="type-text">object</span> | Plan details object (see [plan resource properties](#political-planner-resource-properties)). |
-| `targeting` <br /><span class="type-text">object</span> | Targeting object, including `whiteListedLocation`, `ageGroupSegments`, `genderSegments`, `incomeRangeSegments`, and `ethnicitySegments` (see [plan resource properties](#political-planner-resource-properties)). |
+<table>
+<th>Request schema</th>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Plan name.</td>
+</tr>
+<tr>
+  <td>`objectiveId` <br /><span class="type-text">integer</span></td>
+  <td>[Plan objective ID](#get-plan-objectives). <br /><EnumWidget values={planObjectives} /></td>
+</tr>
+<tr>
+  <td>`totalBudget` <br /><span class="type-text">number</span></td>
+  <td>Total plan budget.</td>
+</tr>
+<tr>
+  <td>`lastVisitedScreen` <br /><span class="type-text">string</span></td>
+  <td>Last visited screen in plan creation.</td>
+</tr>
+<tr>
+  <td>`details` <br /><span class="type-text">object</span></td>
+  <td>Plan details object.</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`details` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`startDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start date, in milliseconds.</td>
+  </tr>
+  <tr>
+  <td>`endDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end date, in milliseconds.</td>
+  </tr>
+  <tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time.</td>
+  </tr>
+  <tr>
+  <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+  <td>Frequency cap.</td>
+  </tr>
+  <tr>
+  <td>`marginValue` <br /><span class="type-text">integer</span></td>
+  <td>Margin percentage applied on top of base CPM, not a currency amount, valid range: 0-100.</td>
+  </tr>
+  </table></details>
+</td></tr>
+<tr>
+  <td>`targeting` <br /><span class="type-text">object</span></td>
+  <td>Targeting object.</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`targeting` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`whiteListedLocation` <br /><span class="type-text">object</span></td>
+  <td>Whitelisted location targeting.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`whiteListedLocation` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`country` <br /><span class="type-text">integer</span></td>
+    <td>[Country ID](/guidelines/master-api/#get-country-segment).</td>
+    </tr>
+    <tr>
+    <td>`states` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api/#get-state-segment).</td>
+    </tr>
+    <tr>
+    <td>`dma` <br /><span class="type-text">array of integers</span></td>
+    <td>[DMA IDs](/guidelines/master-api/#get-dma-code-segment).</td>
+    </tr>
+    <tr>
+    <td>`city` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api/#get-city-segment).</td>
+    </tr>
+    <tr>
+    <td>`county` <br /><span class="type-text">array of integers</span></td>
+    <td>[County IDs](/guidelines/master-api/#get-county-segment).</td>
+    </tr>
+    <tr>
+    <td>`congressionalDistrict` <br /><span class="type-text">array of integers</span></td>
+    <td>[Congressional district IDs](/guidelines/master-api/#get-congressional-district-segment).</td>
+    </tr>
+    <tr>
+    <td>`stateHouse` <br /><span class="type-text">array of integers</span></td>
+    <td>[State house IDs](/guidelines/master-api/#get-house-district-segment).</td>
+    </tr>
+    <tr>
+    <td>`stateSenate` <br /><span class="type-text">array of integers</span></td>
+    <td>[State senate IDs](/guidelines/master-api/#get-senate-district-segment).</td>
+    </tr>
+    <tr>
+    <td>`zipCodes` <br /><span class="type-text">array of integers</span></td>
+    <td>[Zip codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
+    </tr>
+    </table></details>
+  </td></tr>
+  <tr>
+  <td>`blackListedLocation` <br /><span class="type-text">object</span></td>
+  <td>Blacklisted location targeting (same structure as whitelisted).</td>
+  </tr>
+  <tr>
+  <td>`device` <br /><span class="type-text">object</span></td>
+  <td>Device targeting.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`device` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br /><EnumWidget values={deviceType} /></td>
+    </tr>
+    <tr>
+    <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    </tr>
+    </table></details>
+  </td></tr>
+  <tr>
+  <td>`inventory` <br /><span class="type-text">object</span></td>
+  <td>Inventory targeting.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`inventory` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`openExchange` <br /><span class="type-text">object</span></td>
+    <td>Open Exchange targeting.</td>
+    </tr>
+    <tr>
+    <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Inventory Group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups).</td>
+    </tr>
+    </table></details>
+  </td></tr>
+  <tr>
+  <td>`creative` <br /><span class="type-text">object</span></td>
+  <td>Creative targeting.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`creative` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
+    </tr>
+    <tr>
+    <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates CTV auto-buying is enabled.</td>
+    </tr>
+    </table></details>
+  </td></tr>
+  <tr>
+  <td>`whitelistedAudiences` <br /><span class="type-text">array of integers</span></td>
+  <td>Whitelisted [audience IDs](/guidelines/audience-api/#audience-details-list). [Power Segment audiences](/political-vertical/audience-segments/#power-segment-audience-details) are supported, except for Voter TV+ plans (<var>objectiveId: 3</var>).</td>
+  </tr>
+  <tr>
+  <td>`blacklistedAudiences` <br /><span class="type-text">array of integers</span></td>
+  <td>Blacklisted [audience IDs](/guidelines/audience-api/#audience-details-list). [Power Segment audiences](/political-vertical/audience-segments/#power-segment-audience-details) are supported, except for Voter TV+ plans (<var>objectiveId: 3</var>).</td>
+  </tr>
+  <tr>
+  <td>`prebidSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Prebid segment IDs.</td>
+  </tr>
+  <tr>
+  <td>`audienceSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>Audience segment IDs.</td>
+  </tr>
+  <tr>
+  <td>`ageGroupSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>[Age group segment IDs](#get-demographics-keys).</td>
+  </tr>
+  <tr>
+  <td>`genderSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>[Gender segment IDs](#get-demographics-keys).</td>
+  </tr>
+  <tr>
+  <td>`incomeRangeSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>[Income range segment IDs](#get-demographics-keys).</td>
+  </tr>
+  <tr>
+  <td>`ethnicitySegments` <br /><span class="type-text">array of integers</span></td>
+  <td>[Ethnicity segment IDs](#get-demographics-keys).</td>
+  </tr>
+  <tr>
+  <td>`partyAffiliationSegments` <br /><span class="type-text">array of integers</span></td>
+  <td>[Party affiliation segment IDs](#get-demographics-keys).</td>
+  </tr>
+  <tr>
+  <td>`advanced` <br /><span class="type-text">object</span></td>
+  <td>Advanced targeting.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`advanced` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`splitTypeId` <br /><span class="type-text">integer</span></td>
+    <td>[Split type ID](#get-split-types). <br /><EnumWidget values={splitTypes} /></td>
+    </tr>
+    <tr>
+    <td>`locations` <br /><span class="type-text">array of integers</span></td>
+    <td>[Targeting type IDs](#get-targeting-types) for locations. <br /><EnumWidget values={targetingTypes} /></td>
+    </tr>
+    <tr>
+    <td>`devices` <br /><span class="type-text">array of integers</span></td>
+    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br /><EnumWidget values={deviceType} /></td>
+    </tr>
+    <tr>
+    <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Inventory Group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups).</td>
+    </tr>
+    <tr>
+    <td>`audienceTypes` <br /><span class="type-text">array of integers</span></td>
+    <td>[Audience type IDs](/guidelines/audience-api/#audience-type-list). <br /><EnumWidget values={audienceTypes} /></td>
+    </tr>
+    <tr>
+    <td>`creatives` <br /><span class="type-text">array of integers</span></td>
+    <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
+    </tr>
+    </table></details>
+  </td></tr>
+  </table></details>
+</td></tr>
+</table>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
