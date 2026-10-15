@@ -7019,8 +7019,8 @@ const sidebars = {
           items: [
             {
               type: `link`,
-              label: 'About HCP proposals',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#about-hcp-proposals`,
+              label: 'About HCP plans',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#about-hcp-plans`,
               className: 'sidebarItemQS'
             },
             {
@@ -7043,20 +7043,20 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 3: Create a ready proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-3-create-a-ready-proposal`,
+              label: 'Step 3: Create a plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-3-create-a-plan`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 4: Get proposal details',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-4-get-proposal-details`,
+              label: 'Step 4: Get plan details',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-4-get-plan-details`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 5: Edit the proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-5-edit-the-proposal`,
+              label: 'Step 5: Edit the plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-5-edit-the-plan`,
               className: 'sidebarItemQS'
             },
             {
@@ -7067,8 +7067,8 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 7: Download the proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-7-download-the-proposal`,
+              label: 'Step 7: Download the plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-7-download-the-plan`,
               className: 'sidebarItemQS'
             }
           ]
