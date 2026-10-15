@@ -1,5 +1,5 @@
 ---
-title: Create an HCP proposal
+title: Healthcare Professional (HCP) Planner
 hide_table_of_contents: true
 ---
 
@@ -9,9 +9,9 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
 import { npiTypes } from '@site/src/data/enums/npiTypes';
 
-# Create an HCP proposal
+# Healthcare Professional (HCP) Planner
 
-Build, save, and publish a Healthcare Professional (HCP) proposal as an insertion order (IO) and campaigns with this in-depth tutorial using IQM's Planner API.
+Use the Healthcare Professional (HCP) Planner to build, save, and publish an HCP proposal as an insertion order (IO) and campaigns with this in-depth tutorial using IQM's Planner API.
 
 The following endpoints are used to generate campaigns, save a proposal, and publish it:
 
@@ -30,8 +30,8 @@ An HCP proposal is a media plan that targets healthcare professionals by their N
 **Generate campaigns → Save proposal → Edit (optional) → Publish IO and campaigns**
 
 Two rules make HCP proposals harder than they look:
-  1. **Targeting consistency.** The split strategy must agree with the proposal's plan-level targeting, or the request is rejected. See [Step 2](#step-2-plan-the-audience-and-targeting).
-  1. **Status echo.** Every edit and publish request must include the proposal's *current* <var>statusId</var>. See [Step 6](#step-6-edit-the-proposal).
+  1. **Targeting consistency.** The split strategy must agree with the proposal's plan-level targeting, or the request is rejected. See [Step 1](#step-1-plan-the-audience-and-targeting).
+  1. **Status echo.** Every edit and publish request must include the proposal's *current* <var>statusId</var>. See [Step 5](#step-5-edit-the-proposal).
 
 An HCP proposal has one of the following statuses. See [Proposal status list](/guidelines/planner-api#proposal-status-list) and pass <var>plannerTypeId</var> <var>2</var> for HCP statuses.
 
@@ -56,40 +56,11 @@ To create and publish an HCP proposal, the following are required:
 
   * An account on the IQM platform in a Healthcare workspace
     * See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
-    * Planner API requests from a workspace outside the Healthcare vertical are rejected with <var>Request for forbidden vertical</var>
+    * Planner API requests from a workspace outside the Healthcare vertical are rejected.
   * An Advertiser workspace
     * Publishing and downloading a proposal is only available to Advertiser Organizations
 
-## Create an HCP proposal using the IQM API
-
-This tutorial covers the following steps:
-
-1. Log in
-    * Optional if you have already logged in and have a token
-1. Plan the audience and targeting
-1. Generate campaigns
-1. Create a ready proposal
-1. Get proposal details
-1. Edit the proposal
-    * Optional
-1. Publish the IO and campaigns
-1. Download the proposal
-    * Optional
-
-### Authentication
-
-Use the following header parameters for all requests after logging in:
-
-  <div class="smallTable">
-
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
-
-</div>
-
-### Step 1: Log in
+### Log in
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 
@@ -252,7 +223,34 @@ function Login(): Promise < Responses > {
 
 </div></div>
 
-### Step 2: Plan the audience and targeting
+### Authentication
+
+Use the following header parameters for all requests after logging in:
+
+  <div class="smallTable">
+
+| Headers  |  |
+| ----  | --- |
+| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
+| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+
+</div>
+
+## Create an HCP proposal using the IQM API
+
+This tutorial covers the following steps:
+
+1. Plan the audience and targeting
+1. Generate campaigns
+1. Create a ready proposal
+1. Get proposal details
+1. Edit the proposal
+    * Optional
+1. Publish the IO and campaigns
+1. Download the proposal
+    * Optional
+
+### Step 1: Plan the audience and targeting
 
 Before calling any endpoint, decide who the proposal targets and how its campaigns are split. These choices make up the body of every request in the following steps. See [HCP Planner resource properties](/healthcare-vertical/planner#hcp-planner-resource-properties) for all fields.
 
@@ -311,18 +309,18 @@ Mismatches are reported with a general message, such as <var>Selected creative t
 
 :::
 
-Each proposed campaign's targeting uses singular fields for creative and NPI type (<var>creativeTypeId</var>, <var>npiTypeId</var>), unlike the plural fields at the plan level. Campaign targeting isn't checked against the split strategy, so let IQM build the campaigns in [Step 3](#step-3-generate-campaigns) rather than writing them yourself.
+Each proposed campaign's targeting uses singular fields for creative and NPI type (<var>creativeTypeId</var>, <var>npiTypeId</var>), unlike the plural fields at the plan level. Campaign targeting isn't checked against the split strategy, so let IQM build the campaigns in [Step 2](#step-2-generate-campaigns) rather than writing them yourself.
 
-### Step 3: Generate campaigns
+### Step 2: Generate campaigns
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/generate-campaigns" operationId="generateHCPProposedCampaigns" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Send the proposal details from Step 2 without campaigns. IQM builds the proposed campaigns from the split strategy, forecasts their reach, and calculates each campaign's CPM, impressions, and budget range, along with the proposal's totals. Nothing is saved.
+Send the proposal details from Step 1 without campaigns. IQM builds the proposed campaigns from the split strategy, forecasts their reach, and calculates each campaign's CPM, impressions, and budget range, along with the proposal's totals. Nothing is saved.
 
-Use the response as the request body for Step 4. You can change budgets and impressions within each campaign's minimum and maximum before saving.
+Use the response as the request body for Step 3. You can change budgets and impressions within each campaign's minimum and maximum before saving.
 
 | Request schema |  |
 | ---- | --- |
@@ -334,9 +332,9 @@ Use the response as the request body for Step 4. You can change budgets and impr
 | `frequencyCap` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Frequency cap, <var>1</var> to <var>99</var> |
 | `frequencyCapTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Frequency cap period: <var>1</var> day, <var>2</var> week, <var>3</var> month, <var>4</var> campaign duration |
 | `npiTypeIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [NPI type IDs](/healthcare-vertical/planner#npi-type-list) |
-| `audienceBlocks` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Audience blocks; see [Step 2](#audience-blocks) |
-| `planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Creative type and device targeting; see [Step 2](#plan-level-targeting) |
-| `splitStrategy` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Split dimensions; see [Step 2](#split-strategy-and-the-targeting-consistency-rule) |
+| `audienceBlocks` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Audience blocks; see [Step 1](#audience-blocks) |
+| `planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Creative type and device targeting; see [Step 1](#plan-level-targeting) |
+| `splitStrategy` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Split dimensions; see [Step 1](#split-strategy-and-the-targeting-consistency-rule) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -632,24 +630,24 @@ function generateHCPProposedCampaigns(): Promise<Responses> {
 
 </div></div>
 
-### Step 4: Create a ready proposal
+### Step 3: Create a ready proposal
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/proposal/add" operationId="createProposal_1" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Save the proposal in <var>Ready</var> (<var>6</var>) status. Send the full response <var>data</var> from Step 3 as the request body. Save the <var>id</var> from the response; it's the <var>planId</var> used in the following steps.
+Save the proposal in <var>Ready</var> (<var>6</var>) status. Send the full response <var>data</var> from Step 2 as the request body. Save the <var>id</var> from the response; it's the <var>planId</var> used in the following steps.
 
 To save an incomplete proposal instead, use <span class="code-text">POST /api/v3/plan/hcp/proposal/draft</span>, which saves it in <var>Draft</var> (<var>2</var>) status and skips the budget and campaign checks. See [Create HCP Planner](/healthcare-vertical/planner#create-hcp-planner).
 
-In addition to the fields from Step 3, a ready proposal requires:
+In addition to the fields from Step 2, a ready proposal requires:
 
 | Request schema |  |
 | ---- | --- |
 | `minBudget`, `budget`, `maxBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Proposal budget range; <var>budget</var> must be within the range |
 | `minImpressions`, `impressions`, `maxImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal impressions range; <var>impressions</var> must be within the range |
-| `campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Proposed campaigns from Step 3, up to 250. Each campaign's budget, impressions, reach, and media CPM must be within its own range. |
+| `campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span> | Proposed campaigns from Step 2, up to 250. Each campaign's budget, impressions, reach, and media CPM must be within its own range. |
 
 </div><div class="child2">
 
@@ -852,28 +850,28 @@ function createProposal(): Promise<Responses> {
 
 </div></div>
 
-### Step 5: Get proposal details
+### Step 4: Get proposal details
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/plan/hcp/plans/{planId}" operationId="getHcpPlanById" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Use the <var>id</var> from Step 4 to get the saved proposal. The response uses the same fields as the request in Step 4, plus the proposal's <var>statusId</var> and <var>ioId</var>.
+Use the <var>id</var> from Step 3 to get the saved proposal. The response uses the same fields as the request in Step 3, plus the proposal's <var>statusId</var> and <var>ioId</var>.
 
 Use this endpoint to:
   * Get the current <var>statusId</var> before editing or publishing the proposal
-  * Check the result of publishing in Step 7
+  * Check the result of publishing in Step 6
 
 | Path parameters |  |
 | ---- | --- |
-| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
+| `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
-The response contains the fields from Step 4, plus:
+The response contains the fields from Step 3, plus:
 
 <table className="objectProperties">
   <tr>
@@ -1066,7 +1064,7 @@ function getHcpPlanById(): Promise<Responses> {
 
 </div></div>
 
-### Step 6: Edit the proposal
+### Step 5: Edit the proposal
 
 <CopyUrl method="PUT" url="https://api.iqm.com/api/v3/plan/hcp/proposal/{planId}" operationId="editProposal_1" />
 
@@ -1082,15 +1080,15 @@ Optionally, update the proposal before publishing it. Send the full proposal; th
 | Request schema |  |
 | ---- | --- |
 | `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID; must be the same as the <var>planId</var> path parameter |
-| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 5 |
-| `minBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Minimum proposal budget, from Step 3. Not returned in Step 5, so add it back before sending. |
-| `minImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Minimum proposal impressions, from Step 3. Not returned in Step 5, so add it back before sending. |
+| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 4 |
+| `minBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Minimum proposal budget, from Step 2. Not returned in Step 4, so add it back before sending. |
+| `minImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Minimum proposal impressions, from Step 2. Not returned in Step 4, so add it back before sending. |
 
-All other fields are the same as [Step 4](#step-4-create-a-ready-proposal).
+All other fields are the same as [Step 3](#step-3-create-a-ready-proposal).
 
 :::warning
 
-The <var>statusId</var> in the request must equal the proposal's current status. If it doesn't, the request fails with <var>Proposal cannot be edited in its current status.</var>, even when the proposal's actual status can be edited. Always get the proposal in Step 5 and send back its <var>statusId</var> unchanged.
+The <var>statusId</var> in the request must equal the proposal's current status. If it doesn't, the request fails with <var>Proposal cannot be edited in its current status.</var>, even when the proposal's actual status can be edited. Always get the proposal in Step 4 and send back its <var>statusId</var> unchanged.
 
 Proposals in <var>Processing</var> (<var>5</var>) or <var>IO Created</var> (<var>7</var>) status can't be edited.
 
@@ -1202,7 +1200,7 @@ function editProposal(): Promise<Responses> {
         "application/json": {
           id: `number`,
           statusId: `number`,
-          // ...all other fields from Step 4
+          // ...all other fields from Step 3
         }
       }
     }
@@ -1216,23 +1214,23 @@ function editProposal(): Promise<Responses> {
 
 </div></div>
 
-### Step 7: Publish the IO and campaigns
+### Step 6: Publish the IO and campaigns
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/campaigns/publish" operationId="generateIOCampaigns_2" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Publish the proposal to create an IO and campaigns. Send the full proposal with its <var>id</var> and current <var>statusId</var>, as in Step 6. Publishing saves the request body first using the same checks as an edit, so the [status echo rule](#step-6-edit-the-proposal) applies here too.
+Publish the proposal to create an IO and campaigns. Send the full proposal with its <var>id</var> and current <var>statusId</var>, as in Step 5. Publishing saves the request body first using the same checks as an edit, so the [status echo rule](#step-5-edit-the-proposal) applies here too.
 
-The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the audiences, IO, and campaigns are created in the background. When publishing finishes, the proposal moves to <var>IO Created</var> (<var>7</var>) and its <var>ioId</var> is set. If publishing fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can publish it again. The response doesn't include the IO ID: use [Step 5](#step-5-get-proposal-details) to check the result.
+The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the audiences, IO, and campaigns are created in the background. When publishing finishes, the proposal moves to <var>IO Created</var> (<var>7</var>) and its <var>ioId</var> is set. If publishing fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can publish it again. The response doesn't include the IO ID: use [Step 4](#step-4-get-proposal-details) to check the result.
 
 | Request schema |  |
 | ---- | --- |
-| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 4 |
-| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 5 |
+| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Proposal ID from Step 3 |
+| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The proposal's current status ID from Step 4 |
 
-All other fields are the same as [Step 6](#step-6-edit-the-proposal).
+All other fields are the same as [Step 5](#step-5-edit-the-proposal).
 
 :::danger
 
@@ -1339,7 +1337,7 @@ function publishCampaigns(): Promise<Responses> {
         "application/json": {
           id: `number`,
           statusId: `number`,
-          // ...all other fields from Step 4
+          // ...all other fields from Step 3
         }
       }
     }
@@ -1353,7 +1351,7 @@ function publishCampaigns(): Promise<Responses> {
 
 </div></div>
 
-### Step 8: Download the proposal
+### Step 7: Download the proposal
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/hcp/plan/download" operationId="downloadPlan" />
 

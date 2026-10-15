@@ -7010,7 +7010,7 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Create an HCP proposal',
+          label: 'Healthcare Professional (HCP) Planner',
           className: 'sidebarItem',
           link: {
             type: 'doc',
@@ -7031,50 +7031,44 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 1: Log in',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-1-log-in`,
+              label: 'Step 1: Plan the audience and targeting',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-1-plan-the-audience-and-targeting`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 2: Plan the audience and targeting',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-2-plan-the-audience-and-targeting`,
+              label: 'Step 2: Generate campaigns',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-2-generate-campaigns`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 3: Generate campaigns',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-3-generate-campaigns`,
+              label: 'Step 3: Create a ready proposal',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-3-create-a-ready-proposal`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 4: Create a ready proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-4-create-a-ready-proposal`,
+              label: 'Step 4: Get proposal details',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-4-get-proposal-details`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 5: Get proposal details',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-5-get-proposal-details`,
+              label: 'Step 5: Edit the proposal',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-5-edit-the-proposal`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 6: Edit the proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-6-edit-the-proposal`,
+              label: 'Step 6: Publish the IO and campaigns',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-6-publish-the-io-and-campaigns`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
-              label: 'Step 7: Publish the IO and campaigns',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-7-publish-the-io-and-campaigns`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Step 8: Download the proposal',
-              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-8-download-the-proposal`,
+              label: 'Step 7: Download the proposal',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-7-download-the-proposal`,
               className: 'sidebarItemQS'
             }
           ]
