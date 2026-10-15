@@ -1656,6 +1656,8 @@ Create a new ready or draft Political plan. A ready plan requires name, details,
 
 A draft plan requires only a name; all other fields are optional but validated if present.
 
+For a ready plan, the <var>targeting.creative</var>/<var>targeting.device</var> selection is sent to an external strategy-generation service, which computes viable strategies from real-time inventory/forecast data -- there is no fixed, enumerable list of valid creative/device combinations within this API itself. If no viable strategy exists for the given combination (even one where every individual ID is valid), the request is rejected with "No strategies meet your criteria. Edit the plan to explore more options." rather than a field-specific validation error.
+
 See resource properties for request schema.
 
 <a href="#political-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Plan resource properties</button></a>
@@ -2315,6 +2317,8 @@ Estimate the reach for a Political plan based on optional CVA details and target
   <div class="child1">
 
 Generate custom strategies for an existing plan by calling the DSI API with the provided targeting and budget parameters. This endpoint persists the resulting strategies, proposals, and campaigns, then returns strategy summaries.
+
+Each returned summary's <var>id</var> is the external strategy-generation service's own identifier for that strategy, not the real, persisted planner-api strategy ID -- passing this <var>id</var> directly to [Activate proposal](#activate-proposal)'s <var>strategyId</var> will fail with "Strategy with strategy id X does not exist." To get the real, usable strategy ID, call [Get list of strategies](#get-list-of-strategies) for this <var>planId</var> after this completes and use the <var>id</var> it returns instead.
 
 | Request schema |  |
 | ----  | --- |
