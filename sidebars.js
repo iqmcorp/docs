@@ -4817,13 +4817,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'External login',
-              href: '/guidelines/user-api#external-login',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'OAuth token',
               href: '/guidelines/user-api#oauth-token',
               customProps: { method: 'POST' },
