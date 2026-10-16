@@ -97,8 +97,8 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema  |  |
 | ----  | --- |
-| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
 | `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
 
 </div><div class="child2">
@@ -106,12 +106,14 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-  "grantType": "password",
-  "email": "pratik.t+ihp@iqm.com",
-  "password": "123456"
-}
+```curl title="Request sample"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
 ```
 
 ```json title="Response 200"
@@ -165,80 +167,6 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 }
 ```
 </details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          access_token: string;
-          refresh_token: string;
-          scope: string;
-          token_type: string;
-          expires_in: number;
-          owId: number;
-        };
-      };
-    };
-  };
-  400: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          status: string;
-          reason: string;
-          supportEmail: string;
-        };
-        errorObjects: {
-          error: string;
-          reason: string;
-        }[];
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function Login(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/login',
-    requestBody: {
-      content: {
-        "application/json": {
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
 
 </TabItem></Tabs>
 
