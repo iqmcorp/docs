@@ -2303,7 +2303,11 @@ function GetWorkspaceChatBotAppIdByWorkspaceDomain(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Send an email to help a user locate their Workspace.
+Send an email listing the Workspace domain(s) associated with the given email address, for users who've forgotten which Workspace they belong to. No authentication is required.
+
+:::info
+This endpoint is rate limited to 100 requests per minute, per IP. Exceeding it returns a 429 (Too Many Requests) error. See [Rate limits](/getting-started/rest-api-reference#rate-limits).
+:::
 
 | Request schema |  |
 | ---- | --- |
@@ -2314,8 +2318,8 @@ Send an email to help a user locate their Workspace.
 
 <table className="objectProperties">
 <tr>
-<td>`data` <br /><span class="type-text">string</span></td>
-<td>Confirmation message indicating the email was sent.</td>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Generic confirmation message, always the same regardless of whether the email matches a Workspace.</td>
 </tr>
 </table>
 </details>
@@ -2334,7 +2338,9 @@ Send an email to help a user locate their Workspace.
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Email sent to user@example.com"
+  "data": {
+    "message": "If an account exists for this email address, an email has been sent."
+  }
 }
 ```
 
@@ -2355,7 +2361,9 @@ interface Responses {
     content: {
       "application/json": {
         success: boolean;
-        data: string;
+        data: {
+          message: string;
+        };
       };
     };
   };

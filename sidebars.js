@@ -4810,13 +4810,6 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Login',
-              href: '/guidelines/user-api#login',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'OAuth token',
               href: '/guidelines/user-api#oauth-token',
               customProps: { method: 'POST' },

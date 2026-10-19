@@ -13,7 +13,7 @@ export const audienceTypes: EnumValue[] = [
   { id: 7, label: 'Campaign audience' },
   { id: 8, label: 'Pre-bid audience' },
   { id: 9, label: 'Account Based Marketing (ABM) audience' },
-  { id: 10, label: 'Custom Voter Audience (CVA)' },
+  { id: 10, label: 'Custom Voter audience (CVA)' },
   { id: 11, label: 'Integrated Care Team (ICT) audience' },
   { id: 12, label: 'Power Segment audience' },
 ];

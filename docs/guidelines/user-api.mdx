@@ -31,199 +31,6 @@ Use the following header parameters for all requests:
 
 ## Authentication
 
-### Login
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/login" operationId="login" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Log in to the IQM platform with your email and password, and grant type set to <var>password</var>.
-
-| Request schema |  |
-| ---- | --- |
-| `grantType` <br /><span class="type-text">string</span> |  [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
-| `email` <br /><span class="type-text">string</span> | User's email. |
-| `password` <br /><span class="type-text">string</span> | User's password. |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response properties</summary>
-
-<table className="objectProperties">
-<tr>
-<td>`success` <br /><span class="type-text">boolean</span></td>
-<td>Indicates user successfully logged in: <var>true</var>.</td>
-</tr>
-<tr>
-<td>`access_token` <br /><span class="type-text">string</span></td>
-<td>Access token.</td>
-</tr>
-<tr>
-<td>`refresh_token` <br /><span class="type-text">string</span></td>
-<td>Refresh token.</td>
-</tr>
-<tr>
-<td>`scope` <br /><span class="type-text">string</span></td>
-<td>User access rights.</td>
-</tr>
-<tr>
-<td>`token_type` <br /><span class="type-text">string</span></td>
-<td>Token type.</td>
-</tr>
-<tr>
-<td>`expires_in` <br /><span class="type-text">integer</span></td>
-<td>Time until token expires.</td>
-</tr>
-<tr>
-<td>`owId` <br /><span class="type-text">integer</span></td>
-<td>Organization Workspace ID.</td>
-</tr>
-</table>
-</details>
-
-</div><div class="child2">
-
-<Tabs>
-  <TabItem value="JSON" label="JSON" default>
-
-```json title="Request sample"
-{
-  "grantType": "password",
-  "email": "pratik.t+ihp@iqm.com",
-  "password": "123456"
-}
-```
-
-```json title="Response 200"
-{
-  "success": true,
-  "data": {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More responses</summary>
-
-```json title="Response 400"
-{
-  "success": false,
-  "data": {
-    "status": "On Hold",
-    "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-    "supportEmail": "support@iqm.com"
-  },
-  "errorObjects": [
-    {
-      "error": "User is not allowed to access provided customer",
-      "reason": "User is not associated with any active organization."
-    }
-  ]
-}
-```
-
-```json title="Response 403"
-{
-  "success": false,
-  "errorObjects": [
-    {
-      "error": "User doesn't exist or user is not allowed to provided workspace."
-    }
-  ]
-}
-```
-
-</details>
-
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          access_token: string;
-          refresh_token: string;
-          scope: string;
-          token_type: string;
-
-          expires_in: number;
-
-          owId: number;
-        };
-      };
-    };
-  };
-  400: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          status: string;
-          reason: string;
-          supportEmail: string;
-        };
-        errorObjects: {
-          error: string;
-          reason: string;
-        }[];
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function Login(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/login',
-    requestBody: {
-      content: {
-        "application/json": {
-          grantType: `string`,
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
-
-</div></div>
-
----
-
 ### OAuth token
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" operationId="oauthToken" />
@@ -2975,6 +2782,10 @@ function GetRemainingApplications(params: {
 
 The invited user will receive an email with a link and a hash which can be validated.
 
+:::info
+This endpoint is rate limited to 50 requests per minute, per IP. Exceeding it returns a 429 (Too Many Requests) error. See [Rate limits](/getting-started/rest-api-reference#rate-limits).
+:::
+
 | Request schema|  |
 | ----  | --- |
 | `inviteHash` <br /><span class="type-text">string</span> | Unique invite hash sent to invited user.
@@ -3152,6 +2963,10 @@ Validate the password reset hash sent to a user's email.
   <div class="child1">
 
 Check if a user's email is already registered.
+
+:::info
+This endpoint is rate limited to 500 requests per minute, per IP. Exceeding it returns a 429 (Too Many Requests) error. See [Rate limits](/getting-started/rest-api-reference#rate-limits).
+:::
 
 | Request schema |  |
 | ---- | --- |
