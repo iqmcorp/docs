@@ -5938,6 +5938,145 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'political-vertical/tutorials/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Political Planner',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'political-vertical/tutorials/create-a-political-proposal'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About Political proposals',
+              href: `/political-vertical/tutorials/create-a-political-proposal#about-political-proposals`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before you begin',
+              href: `/political-vertical/tutorials/create-a-political-proposal#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: 'category',
+              label: 'Create a Political proposal',
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Create a ready plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-create-a-ready-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: "Step 2: Get the plan's strategies",
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-get-the-plans-strategies`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Activate a strategy into a proposal',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-activate-a-strategy-into-a-proposal`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 4: Check proposal details',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-4-check-proposal-details`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 5: Generate an IO and campaigns',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-5-generate-an-io-and-campaigns`,
+                  className: 'sidebarItemQS'
+                }
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Voter TV+ proposals',
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Get a reach saturation graph',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-get-a-reach-saturation-graph`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 2: Create a Voter TV+ plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-create-a-voter-tv-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Activate a Voter TV+ plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-activate-a-voter-tv-plan`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 4: Split a Voter TV+ proposal',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-4-split-a-voter-tv-proposal`,
+                  className: 'sidebarItemQS'
+                }
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Target a Custom Voter audience',
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Find segment IDs',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-find-segment-ids`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 2: Get the audience reach',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-get-the-audience-reach`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Create CVA details',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-create-cva-details`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Add the CVA to a plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#add-the-cva-to-a-plan`,
+                  className: 'sidebarItemQS'
+                }
+              ]
+            },
+            {
+              type: `link`,
+              label: 'Restore an expired proposal',
+              href: `/political-vertical/tutorials/create-a-political-proposal#restore-an-expired-proposal`,
+              className: 'sidebarItemQS'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      type: 'category',
       label: 'Audience API',
       className: 'sidebarCategory',
       link: {
@@ -6877,6 +7016,82 @@ const sidebars = {
       id: 'healthcare-vertical/index',
       label: 'Healthcare',
       className: 'sidebarCategory'
+    },
+    {
+      type: 'category',
+      label: 'Tutorials',
+      className: 'sidebarCategory',
+      link: {
+        type: 'doc',
+        id: 'healthcare-vertical/tutorials/index'
+      },
+      items: [
+        {
+          type: 'category',
+          label: 'Healthcare Professional (HCP) Planner',
+          className: 'sidebarItem',
+          link: {
+            type: 'doc',
+            id: 'healthcare-vertical/tutorials/create-an-hcp-proposal'
+          },
+          items: [
+            {
+              type: `link`,
+              label: 'About HCP plans',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#about-hcp-plans`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Before you begin',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#before-you-begin`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 1: Plan the audience and targeting',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-1-plan-the-audience-and-targeting`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 2: Generate campaigns',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-2-generate-campaigns`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Create a plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-3-create-a-plan`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 4: Get plan details',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-4-get-plan-details`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 5: Edit the plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-5-edit-the-plan`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 6: Publish the IO and campaigns',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-6-publish-the-io-and-campaigns`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 7: Download the plan',
+              href: `/healthcare-vertical/tutorials/create-an-hcp-proposal#step-7-download-the-plan`,
+              className: 'sidebarItemQS'
+            }
+          ]
+        }
+      ]
     },
     {
       type: 'category',

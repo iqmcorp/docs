@@ -6,7 +6,7 @@ import { splitTypes } from '@site/src/data/enums/splitTypes';
 import { targetingTypes } from '@site/src/data/enums/targetingTypes';
 import { deviceType } from '@site/src/data/enums/deviceType';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
-import { channelTypes } from '@site/src/data/enums/channelTypes';
+import { trafficTypes } from '@site/src/data/enums/trafficTypes';
 
 ### Get reach saturation graph
 
@@ -17,8 +17,12 @@ import { channelTypes } from '@site/src/data/enums/channelTypes';
 
 Fetch cross-screen Planner graph data based on the targeting and budgeting criteria provided, including a Venn-diagram audience overlap breakdown and a line graph of linear TV and CTV reach over time.
 
+To adjust the forecast, call this endpoint again with the same <var>graphId</var> and new <var>overview</var> values. Use the <var>graphId</var> and <var>overview</var> from the response to [create a Voter TV+ plan](#create-plan).
+
+If <var>audienceOverlap.totalReach</var> is <var>0</var>, a plan created from the graph produces a proposal with <var>0</var> budgets. Narrow the location targeting, for example to states or DMAs, and request a new graph.
+
 :::info
-Computation time for this endpoint may take more than 60 seconds depending on the complexity of the targeting criteria and the size of the proposal being split. Please allow for sufficient time for the request to complete.
+The first request for a new graph calls an external data service and can take more than 60 seconds. Allow sufficient time for the request to complete. Later requests with the same <var>graphId</var> are calculated without the external call.
 :::
 
 <table>
@@ -65,13 +69,13 @@ Computation time for this endpoint may take more than 60 seconds depending on th
   </tr>
   <tr>
   <td>`marginValue` <br /><span class="type-text">integer</span></td>
-  <td>Margin percentage applied on top of base CPM, not a currency amount, valid range: 0-100.</td>
+  <td>Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin.</td>
   </tr>
   </table></details>
 </td></tr>
 <tr>
   <td>`targeting` <br /><span class="type-text">object</span></td>
-  <td>Targeting object.</td>
+  <td>Locations, demographics, and audiences to forecast reach for.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -118,8 +122,8 @@ Computation time for this endpoint may take more than 60 seconds depending on th
     <td>[State senate IDs](/guidelines/master-api/#get-senate-district-segment).</td>
     </tr>
     <tr>
-    <td>`zipCodes` <br /><span class="type-text">array of integers</span></td>
-    <td>[Zip codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
+    <td>`zipCodes` <br /><span class="type-text">array of strings</span></td>
+    <td>[ZIP codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
     </tr>
     </table></details>
   </td></tr>
@@ -141,7 +145,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
     </tr>
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     </table></details>
   </td></tr>
@@ -253,6 +257,40 @@ Computation time for this endpoint may take more than 60 seconds depending on th
   </td></tr>
   </table></details>
 </td></tr>
+<tr>
+  <td>`graphId` <br /><span class="type-text">string</span></td>
+  <td>ID of a graph you already created, to recalculate it with new <var>overview</var> values. Omit to create a new graph.</td>
+</tr>
+<tr>
+  <td>`overview` <br /><span class="type-text">object</span></td>
+  <td>Linear TV and CTV assumptions for the forecast. Defaults are used if omitted.</td>
+</tr>
+<tr><td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`overview` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+  <td>Linear TV cost per thousand impressions; <var>0</var> or more.</td>
+  </tr>
+  <tr>
+  <td>`ctvCpm` <br /><span class="type-text">number</span></td>
+  <td>CTV cost per thousand impressions; <var>0</var> or more.</td>
+  </tr>
+  <tr>
+  <td>`grp` <br /><span class="type-text">number</span></td>
+  <td>Linear TV gross rating points (GRP); <var>0</var> or more.</td>
+  </tr>
+  <tr>
+  <td>`linearTvPercentage` <br /><span class="type-text">integer</span></td>
+  <td>Percentage of the budget allocated to linear TV, <var>0</var> to <var>100</var>. The rest goes to CTV.</td>
+  </tr>
+  <tr>
+  <td>`ctvFrequency` <br /><span class="type-text">integer</span></td>
+  <td>Average CTV frequency, <var>1</var> to <var>99</var>.</td>
+  </tr>
+  </table></details>
+</td></tr>
 </table>
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -261,7 +299,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 <table className="objectProperties">
 <tr>
   <td>`graphId` <br /><span class="type-text">string</span></td>
-  <td>Unique identifier for the generated graph.</td>
+  <td>Graph ID (UUID). Use it as the plan's <var>graphId</var> when you create a Voter TV+ plan.</td>
 </tr>
 <tr>
   <td>`overview` <br /><span class="type-text">object</span></td>
@@ -329,7 +367,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 </td></tr>
 <tr>
   <td>`maximumAudienceOverlap` <br /><span class="type-text">object</span></td>
-  <td>Same shape as `audienceOverlap`, representing the maximum achievable overlap for the requested targeting and budget.</td>
+  <td>Same shape as <var>audienceOverlap</var>, representing the maximum achievable overlap for the requested targeting and budget.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -395,25 +433,22 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 
 ```json title="Request sample"
 {
-  "name": "This is an example for request",
+  "name": "Voter TV+ Plan",
   "objectiveId": 3,
-  "totalBudget": 1000000,
+  "totalBudget": 100000,
   "lastVisitedScreen": "graph",
   "details": {
-    "startDate": 1781244151000,
-    "endDate": 1791244151000,
-    "timezoneId": 29,
+    "startDate": 1793595600000,
+    "endDate": 1794805200000,
     "frequencyCap": 3
   },
   "targeting": {
     "whiteListedLocation": {
-      "country": 3010001,
-      "states": [2]
+      "country": 30100001,
+      "states": [30200036, 30200039]
     },
-    "ageGroupSegments": [6073147, 6073145, 6073146, 6073141, 6073144, 6073143, 6073142],
-    "genderSegments": [6189394, 6189395],
-    "incomeRangeSegments": [5999450, 5999451, 5999443, 5999448, 5999442, 5999446, 5999447, 5999449, 5999444, 5999445, 5999452, 5999453],
-    "ethnicitySegments": [6189388, 6189390, 6189391, 6189389, 6189392]
+    "ageGroupSegments": [6073147, 6073145],
+    "genderSegments": [6189394, 6189395]
   }
 }
 ```
@@ -422,7 +457,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 {
   "success": true,
   "data": {
-    "graphId": "89c9639c44f05be2a3aaef9778fe6a24a04f441657172bba680ad66924a403fe",
+    "graphId": "0f6c7400-a8f5-4a1b-ab65-af15372cc0ff",
     "overview": {
       "linearTvCpm": 20,
       "ctvCpm": 7,
@@ -431,20 +466,20 @@ Computation time for this endpoint may take more than 60 seconds depending on th
       "ctvFrequency": 3
     },
     "audienceOverlap": {
-      "population": 16780000,
-      "totalReach": 6820000,
-      "linearTvReach": 4350000,
-      "ctvReach": 3120000,
-      "overlapReach": 650000,
-      "ctvIncrementalReach": 2470000
+      "population": 16100000,
+      "totalReach": 1470000,
+      "linearTvReach": 1020000,
+      "ctvReach": 778000,
+      "overlapReach": 328000,
+      "ctvIncrementalReach": 450000
     },
     "maximumAudienceOverlap": {
-      "population": 16780000,
-      "totalReach": 7200000,
-      "linearTvReach": 4600000,
-      "ctvReach": 3400000,
-      "overlapReach": 800000,
-      "ctvIncrementalReach": 2600000
+      "population": 16100000,
+      "totalReach": 2150000,
+      "linearTvReach": 1480000,
+      "ctvReach": 1150000,
+      "overlapReach": 480000,
+      "ctvIncrementalReach": 670000
     },
     "reachSaturation": [
       { "day": 1, "ctvReach": 12, "linearTvReach": 14, "overallReach": 20 },
@@ -470,7 +505,7 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 <div class="endpoint-container">
   <div class="child1">
 
-Get active demographics segment definitions used for cross-screen planning audience mapping (e.g. age, gender, income, and ethnicity groupings). Call without <var>parentIds</var> to get the top-level segment keys (categories like `Age Group`, `Income Level`). Call with <var>parentIds</var> set to one or more of those keys' <var>id</var>s to get the specific demographics values nested under them (e.g. `65+` under `Age Group`), each with its own <var>parentId</var>, <var>reach</var>, and display <var>order</var>.
+Get active demographics segment definitions used for cross-screen planning audience mapping (e.g. age, gender, income, and ethnicity groupings). Call without <var>parentIds</var> to get the top-level segment keys (categories like <var>Age Group</var>, <var>Income Level</var>). Call with <var>parentIds</var> set to one or more of those keys' <var>id</var>s to get the specific demographics values nested under them (e.g. <var>65+</var> under <var>Age Group</var>), each with its own <var>parentId</var>, <var>reach</var>, and display <var>order</var>.
 
 | Query parameters |  |
 | ---- | --- |
@@ -562,7 +597,9 @@ Get active demographics segment definitions used for cross-screen planning audie
 <div class="endpoint-container">
   <div class="child1">
 
-Split an existing proposal across linear TV and CTV using the provided advanced targeting criteria. Only works for cross-screen proposals with a [plan objective ID](#get-plan-objectives) of <var>3</var>.
+Split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per state. Only works for cross-screen proposals with a [plan objective ID](#get-plan-objectives) of <var>3</var>. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign.
+
+A split only has an effect for dimensions that the plan targets with more than one value. Split campaigns are named with a numbered suffix, such as <var>_Video + Loc_1</var> and <var>_Loc_2</var>.
 
 :::info
 Computation time for this endpoint may take more than 60 seconds depending on the complexity of the targeting criteria and the size of the proposal being split. Please allow for sufficient time for the request to complete.
@@ -575,13 +612,13 @@ Computation time for this endpoint may take more than 60 seconds depending on th
 | Request schema |  |
 | ---- | --- |
 | `splitTypeId` <br /><span class="type-text">integer</span> | [Split type ID](#get-split-types). <br /><EnumWidget values={splitTypes} /> |
-| `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](#get-targeting-types) for locations. <br /><EnumWidget values={targetingTypes} /> |
+| `locations` <br /><span class="type-text">array of integers</span> | [Targeting type IDs](#get-targeting-types) to split by. These are targeting dimension IDs, not location IDs, for example <var>8</var> (state), <var>12</var> (DMA), <var>15</var> (ZIP code), or <var>29</var> (device). <br /><EnumWidget values={targetingTypes} /> |
 | `devices` <br /><span class="type-text">array of integers</span> | [Device type IDs](/guidelines/master-api/#get-device-type). <br /><EnumWidget values={deviceType} /> |
-| `inventoryGroupIds` <br /><span class="type-text">array of integers</span> | [Inventory group IDs](/guidelines/inventory-api/#get-inventory-groups-list). |
+| `inventoryGroupIds` <br /><span class="type-text">array of integers</span> | [Inventory group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups). |
 | `audienceTypes` <br /><span class="type-text">array of integers</span> | [Audience type IDs](/guidelines/audience-api/#audience-type-list). <br /><EnumWidget values={audienceTypes} /> |
 | `creatives` <br /><span class="type-text">array of integers</span> | [Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /> |
 
-Returns the updated proposal, in the same shape as [Get proposal details](#get-proposal-details).
+Returns the proposal details as they were before the split. To see the new campaigns, call [Get proposal details](#get-proposal-details).
 
 <a href="#political-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Proposal resource properties</button></a>
 
@@ -590,26 +627,39 @@ Returns the updated proposal, in the same shape as [Get proposal details](#get-p
 
 ```json title="Request sample"
 {
-  "locations": [15]
+  "locations": [8]
 }
 ```
 
-```json title="Response 200"
+```json title="Response 200 (abbreviated)"
 {
   "success": true,
   "data": {
-    "id": 42,
-    "name": "sample",
-    "startTime": 1730658720000,
-    "endTime": 1733250720000,
+    "id": 8,
+    "name": "Voter TV+ Plan_Mix_01",
+    "startTime": 1793595600000,
+    "endTime": 1794805200000,
     "owId": 202500,
-    "statusId": 1,
-    "reach": 122344433,
-    "impressions": 12232323,
-    "budget": 1212233.2323,
+    "statusId": 6,
+    "reach": 778000,
+    "impressions": 7140000,
+    "budget": 100000,
     "frequencyCap": 3,
     "campaignGeneratable": true,
-    "proposedCampaigns": []
+    "proposedCampaigns": [
+      {
+        "id": 501,
+        "name": "Voter TV+ Plan_Mix_01_VTV + Video",
+        "type": "Linear TV",
+        "budget": 50000
+      },
+      {
+        "id": 502,
+        "name": "Voter TV+ Plan_Mix_01_Video",
+        "type": "CTV",
+        "budget": 50000
+      }
+    ]
   }
 }
 ```
