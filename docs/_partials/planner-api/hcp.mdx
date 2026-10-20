@@ -9,9 +9,10 @@ import { audienceSelectionMethods } from '@site/src/data/enums/audienceSelection
 import { hcpAccountTypes } from '@site/src/data/enums/hcpAccountTypes';
 import { splitStrategies } from '@site/src/data/enums/splitStrategies';
 import { proposalStatus } from '@site/src/data/enums/proposalStatus';
-import { channelTypes } from '@site/src/data/enums/channelTypes';
+import { trafficTypes } from '@site/src/data/enums/trafficTypes';
 import { plannerFileTypes } from '@site/src/data/enums/plannerFileTypes';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
+import { budgetTypes } from '@site/src/data/enums/budgetTypes';
 
 ## HCP Planner details
 
@@ -27,71 +28,91 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Plan name.</td>
-</tr>
-<tr>
-  <td>`startDate` / `startTime` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds. <br /><var>startTime</var> is the request parameter, <var>startDate</var> is the response property.</td>
-</tr>
-<tr>
-  <td>`endDate` / `endTime` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds. <br /><var>endTime</var> is the request parameter, <var>endDate</var> is the response property.</td>
-</tr>
-<tr>
-  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones) specifies the data collection start time.</td>
-</tr>
-<tr>
-  <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>Budget type ID: budget(<var>1</var>) or impression(<var>2</var>).</td>
-</tr>
-<tr>
-  <td>`budget` <br /><span class="type-text">integer</span></td>
-  <td>Planned budget.</td>
-</tr>
-<tr>
-  <td>`maxBudget` <br /><span class="type-text">integer</span></td>
-  <td>Maximum budget.</td>
-</tr>
-<tr>
-  <td>`workspaceMarginPercentage` <br /><span class="type-text">integer</span></td>
-  <td>Margin percentage applied on top of each campaign's media CPM when calculating <var>mediaCpm</var>. Automatically populated server-side from the Organization's configured margin, not a value the caller sets directly.</td>
-</tr>
-<tr>
-  <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>Reach.</td>
-</tr>
-<tr>
-  <td>`maxReach` <br /><span class="type-text">integer</span></td>
-  <td>Maximum reach.</td>
-</tr>
-<tr>
-  <td>`impressions` / `impression` <br /><span class="type-text">integer</span></td>
-  <td>Impressions. <br /><var>impression</var> is the request parameter, <var>impressions</var> is the response property.</td>
-</tr>
-<tr>
-  <td>`maxImpressions` <br /><span class="type-text">integer</span></td>
-  <td>Maximum impressions.</td>
-</tr>
-<tr>
-  <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-  <td>Frequency cap.</td>
-</tr>
-<tr>
-  <td>`frequencyCapTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Frequency cap type ID](/guidelines/campaign-api/#get-frequency-cap-types). <br /><EnumWidget values={frequencyCapTypes} /></td>
+  <td>Plan name; must be unique in the Workspace.</td>
 </tr>
 <tr>
   <td>`statusId` <br /><span class="type-text">integer</span></td>
-  <td>[Status ID](/guidelines/planner-api#proposal-status-list). <br />On edit requests and on [Publish campaigns plan](#publish-campaigns-plan), this value must exactly match the plan's current status in the database, or the request is rejected with "Proposal cannot be edited in its current status." <br /><EnumWidget values={proposalStatus} /></td>
+  <td>[Status ID](/guidelines/planner-api#proposal-status-list), with <var>plannerTypeId</var> set to <var>2</var>. Set by IQM when the plan is created. On edit and publish, must equal the plan's current status. <br /><EnumWidget values={proposalStatus.filter((v) => v.id !== 1)} /></td>
+</tr>
+<tr>
+  <td>`startTime` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start time in milliseconds; can't be in the past.</td>
+</tr>
+<tr>
+  <td>`endTime` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end time in milliseconds; must be at least 30 minutes after <var>startTime</var>.</td>
+</tr>
+<tr>
+  <td>`timezoneId` <br /><span class="type-text">integer</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
+</tr>
+<tr>
+  <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
+  <td>Budget type ID. <br /><EnumWidget values={budgetTypes} /></td>
+</tr>
+<tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum plan budget, from the generate campaigns response. Required for Ready plans; Draft plans accept <var>null</var>. Returned as <var>null</var> in plan details.</td>
+</tr>
+<tr>
+  <td>`budget` <br /><span class="type-text">number</span></td>
+  <td>Plan budget; must be between <var>minBudget</var> and <var>maxBudget</var>.</td>
+</tr>
+<tr>
+  <td>`maxBudget` <br /><span class="type-text">number</span></td>
+  <td>Maximum plan budget.</td>
+</tr>
+<tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Forecasted reach.</td>
+</tr>
+<tr>
+  <td>`maxReach` <br /><span class="type-text">integer</span></td>
+  <td>Maximum forecasted reach.</td>
+</tr>
+<tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum plan impressions, from the generate campaigns response. Required for Ready plans; Draft plans accept <var>null</var>. Returned as <var>null</var> in plan details.</td>
+</tr>
+<tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Plan impressions; must be between <var>minImpressions</var> and <var>maxImpressions</var>.</td>
+</tr>
+<tr>
+  <td>`maxImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Maximum plan impressions.</td>
+</tr>
+<tr>
+  <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
+  <td>Frequency cap, <var>1</var> to <var>99</var>. Applies to every campaign in the plan.</td>
+</tr>
+<tr>
+  <td>`frequencyCapTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Frequency cap type ID](/guidelines/campaign-api#get-frequency-cap-types). Applies to every campaign in the plan. <br /><EnumWidget values={frequencyCapTypes} /></td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID. Set by IQM.</td>
+</tr>
+<tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation time in milliseconds. Set by IQM.</td>
+</tr>
+<tr>
+  <td>`updatedAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch last update time in milliseconds. Set by IQM.</td>
+</tr>
+<tr>
+  <td>`ioId` <br /><span class="type-text">integer</span></td>
+  <td>ID of the [insertion order (IO)](/guidelines/campaign-api#get-insertion-order-details) created when the plan is published; <var>0</var> until then. Set by IQM.</td>
 </tr>
 <tr>
   <td>`npiTypeIds` <br /><span class="type-text">array of integers</span></td>
-  <td>[NPI type IDs](#npi-type-list). <br />Must match the NPI dimension's <var>splitStrategy[].selectedValueIds</var> and every <var>campaigns[].targeting.npiTypeId</var> used, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={npiTypes} /></td>
+  <td>[NPI type IDs](#npi-type-list). <br /><EnumWidget values={npiTypes} /></td>
 </tr>
 <tr>
   <td>`audienceBlocks` <br /><span class="type-text">array of objects</span></td>
-  <td>Audience blocks object.</td>
+  <td>Audience blocks, at most one per audience selection method. IQM sets each block's audience type from its method.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -102,133 +123,205 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
   <td>`audienceSelectionMethodId` <br /><span class="type-text">integer</span></td>
   <td>[Audience selection method ID](#get-audience-selection-methods-list). <br /><EnumWidget values={audienceSelectionMethods} /></td>
   </tr>
-    <tr>
+  <tr>
   <td>`speciality` <br /><span class="type-text">object</span></td>
-  <td>Specialty object.</td>
+  <td>Specialties to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`speciality` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Specialty IDs](#get-specialties-list).</td>
-      </tr>
-      <tr>
-      <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All specialties selected.</td>
-      </tr>
-      </table></details>
-    </td></tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`speciality` object properties</summary>
+    <table className="objectProperties">
     <tr>
-    <td>`accounts` <br /><span class="type-text">array of objects</span></td>
-    <td>Accounts object.</td>
+    <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Specialty IDs](#get-specialties-list) to target. Must be empty when <var>allSpecialitiesSelected</var> is <var>true</var>.</td>
     </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`accounts` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`accountTypeId` <br /><span class="type-text">integer</span></td>
-      <td>[Account type ID](#get-account-types). <br /><EnumWidget values={hcpAccountTypes} /></td>
-      </tr>
-      <tr>
-      <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Account IDs](#get-list-of-accounts).</td>
-      </tr>
-      <tr>
-      <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All accounts selected.</td>
-      </tr>
-      </table></details>
-    </td></tr>
-      <tr>
-    <td>`locations` <br /><span class="type-text">object</span></td>
-    <td>Locations object.</td>
-    </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`locations` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`countryId` <br /><span class="type-text">integer</span></td>
-      <td>[Country ID](/guidelines/master-api/#get-country-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Whitelisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-      </tr>
-      <tr>
-      <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Blacklisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Whitelisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-      </tr>
-      <tr>
-      <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Blacklisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-      <td>Whitelisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-      </tr>
-      <tr>
-      <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-      <td>Blacklisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-      </tr>
-      </table></details>
-    </td></tr>
-      <tr>
-    <td>`dataPartners` <br /><span class="type-text">array of objects</span></td>
-    <td>One entry per selected data partner, matching the partner dimension's <var>splitStrategy[].selectedValueIds</var> and every <var>campaigns[].targeting.dataPartnerIds</var> used, see [Targeting consistency rule](#targeting-consistency-rule).</td>
-    </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`dataPartners` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`id` <br /><span class="type-text">integer</span></td>
-      <td>[Data Partner ID](#get-data-partners-list). <br /><EnumWidget values={hcpDataPartners} /></td>
-      </tr>
-      <tr>
-      <td>`selected` <br /><span class="type-text">boolean</span></td>
-      <td>Data partner is selected.</td>
-      </tr>
-      </table></details>  
-    </td></tr>
     <tr>
+    <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all specialties, with an empty <var>specialityIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`account` <br /><span class="type-text">object</span></td>
+  <td>Accounts to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`account` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account IDs](#get-list-of-accounts) to target. Must be empty when <var>allAccountsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all accounts, with an empty <var>accountIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`accountType` <br /><span class="type-text">object</span></td>
+  <td>Account types to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`accountType` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account type IDs](#get-account-types) to target. Must be empty when <var>allAccountTypesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountTypesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all account types, with an empty <var>accountTypeIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`healthSystem` <br /><span class="type-text">object</span></td>
+  <td>Health systems to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`healthSystem` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthSystemIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Health system IDs to target. Must be empty when <var>allHealthSystemsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allHealthSystemsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all health systems, with an empty <var>healthSystemIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`title` <br /><span class="type-text">object</span></td>
+  <td>Titles to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`title` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`titleIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Title IDs to target. Must be empty when <var>allTitlesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allTitlesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all titles, with an empty <var>titleIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`locations` <br /><span class="type-text">object</span></td>
+  <td>Locations to target. Required for filter based, upload NPI list, and account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`locations` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`countryId` <br /><span class="type-text">integer</span></td>
+    <td>[Country ID](/guidelines/master-api#get-country-segment); must be <var>30100001</var> (United States).</td>
+    </tr>
+    <tr>
+    <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to exclude. Targeted and excluded locations can't overlap.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`dataPartners` <br /><span class="type-text">array of objects</span></td>
+  <td>Data partners to match the audience with. At least one must be selected. Required for filter based, upload NPI list, and account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`dataPartners` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>[Data partner ID](#get-data-partners-list). Account based blocks support only <var>7</var> and <var>12</var>. <br /><EnumWidget values={hcpDataPartners} /></td>
+    </tr>
+    <tr>
+    <td>`selected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to use this data partner.</td>
+    </tr>
+    <tr>
+    <td>`priority` <br /><span class="type-text">integer</span></td>
+    <td>Order of preference, starting at <var>1</var>; can't be higher than the number of data partners in the block.</td>
+    </tr>
+    <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Data partner reach.</td>
+    </tr>
+    <tr>
+    <td>`incrementalReach` <br /><span class="type-text">integer</span></td>
+    <td>Reach this data partner adds on top of higher-priority data partners; <var>0</var> to <var>reach</var>.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`storagePathId` <br /><span class="type-text">integer</span></td>
-  <td>Storage path ID.</td>
+  <td>Upload NPI list blocks only: file ID of the uploaded NPI list.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storagePath` <br /><span class="type-text">string</span></td>
-  <td>Storage path.</td>
+  <td>Upload NPI list blocks only: storage path of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileName` <br /><span class="type-text">string</span></td>
-  <td>Storage file name.</td>
+  <td>Upload NPI list blocks only: name of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
-  <td>Storage file size.</td>
+  <td>Upload NPI list blocks only: size of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
-  <td>Storage file rows.</td>
+  <td>Upload NPI list blocks only: number of rows in the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`includeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Included [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to include. Up to 14 included and excluded audiences in total.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`excludeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Excluded [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
-  </tr>
-    <tr>
-  <td>`selectedAudienceTypeIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Selected [audience type IDs](/guidelines/audience-api/#audience-type-list) for this block. <br />The union of this field across all <var>audienceBlocks</var> must match the audience type dimension's <var>splitStrategy[].selectedValueIds</var> and every <var>campaigns[].targeting.audienceTypeIds</var> used, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={audienceTypes} /></td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to exclude. Can't overlap with <var>includeAudienceIds</var>.</td>
   </tr>
   </table></details>
   </td>
@@ -236,7 +329,7 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 </tr>
 <tr>
   <td>`planLevelTargeting` <br /><span class="type-text">object</span></td>
-  <td>Plan level targeting object.</td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan. All four objects are required.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -244,7 +337,7 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
   <table className="objectProperties">
   <tr>
   <td>`devices` <br /><span class="type-text">object</span></td>
-  <td>Devices object.</td>
+  <td>Devices to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -252,17 +345,19 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
     <table className="objectProperties">
     <tr>
     <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br />When <var>allDeviceTypesSelected</var> is <var>false</var>, must match the device dimension's <var>splitStrategy[].selectedValueIds</var> and every <var>campaigns[].targeting.deviceTypeIds</var> used, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>  
+    <td>[Device type IDs](/guidelines/master-api#get-device-type) to target. Must be empty when <var>allDeviceTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
     </tr>
     <tr>
     <td>`allDeviceTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All device types selected.</td>
+    <td>Set to <var>true</var> to target all device types, with an empty <var>deviceTypeIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
-    <tr>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`channels` <br /><span class="type-text">object</span></td>
-  <td>Channels object.</td>
+  <td>Channels to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -270,18 +365,19 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
     <table className="objectProperties">
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types) to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     <tr>
     <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All channel types selected.</td>
+    <td>Set to <var>true</var> to target all channels, with an empty <var>channelTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
-    <tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`creativeTypes` <br /><span class="type-text">object</span></td>
-  <td>Creative types object.</td>
+  <td>Creative types to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -289,281 +385,314 @@ import { audienceTypes } from '@site/src/data/enums/audienceTypes';
     <table className="objectProperties">
     <tr>
     <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br />When <var>allCreativeTypesSelected</var> is <var>false</var>, must match the creative dimension's <var>splitStrategy[].selectedValueIds</var> and every <var>campaigns[].targeting.creativeTypeId</var> used, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
+    <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list) to target. Must be empty when <var>allCreativeTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
     </tr>
     <tr>
     <td>`allCreativeTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All creative types selected.</td>
+    <td>Set to <var>true</var> to target all creative types, with an empty <var>creativeTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
     <tr>
+    <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Whether TV auto buying is enabled; requires video creatives (<var>14</var>).</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`inventory` <br /><span class="type-text">object</span></td>
-  <td>Inventory object.</td>
+  <td>Inventory to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`inventory` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`openExchangeVO` <br /><span class="type-text">object</span></td>
-    <td>Open exchange VO object.</td>
+    <td>`openExchanges` <br /><span class="type-text">object</span></td>
+    <td>Open Exchange inventory to target.</td>
     </tr>
     <tr><td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`openExchangeVO` object properties</summary>
+      <summary>`openExchanges` object properties</summary>
       <table className="objectProperties">
       <tr>
       <td>`exchangeIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Exchange IDs](/guidelines/master-api/#get-exchanges).</td>
+      <td>[Exchange IDs](/guidelines/master-api#get-exchanges) to target. Must be empty when <var>allExchangesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allExchangesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All exchanges selected.</td>
+      <td>Set to <var>true</var> to target all exchanges, with an empty <var>exchangeIds</var> list.</td>
       </tr>
       <tr>
       <td>`iabCategoryIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[IAB category IDs](/guidelines/master-api/#get-publisher-ad-categories).</td>
+      <td>[IAB category IDs](/guidelines/master-api#get-publisher-ad-categories) to target. Must be empty when <var>allIabCategoriesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allIabCategoriesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All IAB categories selected.</td>
+      <td>Set to <var>true</var> to target all IAB categories, with an empty <var>iabCategoryIds</var> list.</td>
       </tr>
       </table></details>
-    </td></tr>
+    </td>
+    <td></td>
+    </tr>
     <tr>
-  <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
-  <td>Inventory group object.</td>
+    <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+    <td>Inventory groups to target. Send <var>null</var> unless you target inventory groups. Returned as an empty object in plan details when none are targeted.</td>
+    </tr>
+    <tr><td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventoryGroup` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
+      <td>[Inventory group IDs](/guidelines/inventory-api#get-list-of-inventory-groups) to target.</td>
+      </tr>
+      <tr>
+      <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
+      <td>Set to <var>true</var> to target all inventory groups, with an empty <var>inventoryGroupIds</var> list.</td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
   </tr>
-  <tr><td colSpan="2">
-    <details className="objectPropertiesDetails">
-    <summary>`inventoryGroup` object properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Inventory group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups).</td>
-    </tr>
-    <tr>
-    <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All inventory groups selected.</td>
-    </tr>
-    </table></details>
-  </td></tr>
-    </table></details>
-  </td></tr>
   </table></details>
 </td>
   <td></td>
 </tr>
 <tr>
   <td>`splitStrategy` <br /><span class="type-text">array of objects</span></td>
-  <td>Split strategy object.</td>
+  <td>Split dimensions used to divide the plan into campaigns. Must include the creative type dimension, and the NPI type dimension unless the only audience block is an existing audience block.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
   <summary>`splitStrategy` object properties</summary>
   <table className="objectProperties">
   <tr>
-  <td>`splitDimensionType` <br /><span class="type-text">object</span></td>
-  <td>Split dimension type object.</td>
+  <td>`splitDimensionTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Split dimension ID](#get-split-strategy-list). Each dimension can appear once. <br /><EnumWidget values={splitStrategies} /></td>
   </tr>
-  <tr><td colSpan="2">
-    <details className="objectPropertiesDetails">
-    <summary>`splitDimensionType` object properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>[Split dimension ID](#get-split-strategy-list). <br /><EnumWidget values={splitStrategies} /></td>
-    </tr>
-    <tr>
-    <td>`name` <br /><span class="type-text">string</span></td>
-    <td>Name.</td>
-    </tr>
-    <tr>
-    <td>`displayName` <br /><span class="type-text">string</span></td>
-    <td>Display name.</td>
-    </tr>
-    <tr>
-    <td>`order` <br /><span class="type-text">integer</span></td>
-    <td>Order.</td>
-    </tr>
-    </table></details>
-  </td></tr>
-    <tr>
+  <tr>
   <td>`selectedValueIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Selected Value IDs for this split dimension must exactly match both the plan-level selection and every value actually used in <var>campaigns[]</var> for the corresponding dimension, or the request is rejected. See the [Targeting consistency rule](#targeting-consistency-rule) for the exact mapping per <var>splitDimensionType.id</var>.</td>
+  <td>Values to split by. For creative type, must exactly match the plan-level creative types; for other dimensions, must be a subset of the matching targeting. Ignored when generating campaigns.</td>
   </tr>
   </table></details>
-</td></tr>
+</td>
+  <td></td>
+</tr>
 <tr>
   <td>`campaigns` <br /><span class="type-text">array of objects</span></td>
-  <td>Campaigns object.</td>
+  <td>Proposed campaigns, up to 250. Required for Ready plans, with every minimum and maximum field. Each campaign's media CPM, reach, and budget (or impressions, when <var>budgetTypeId</var> is <var>2</var>) must be within its own range.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`campaigns` object properties</summary>  
+  <summary>`campaigns` object properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign ID](/guidelines/campaign-api/#get-list-of-campaigns).</td>
+  <td>Proposed campaign ID. Set by IQM and re-created on each edit and publish.</td>
   </tr>
-    <tr>
+  <tr>
+  <td>`campaignId` <br /><span class="type-text">integer</span></td>
+  <td>[Campaign ID](/guidelines/campaign-api#get-list-of-campaigns) of the campaign created when the plan is published; <var>0</var> until then. Set by IQM.</td>
+  </tr>
+  <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Campaign name.</td>
   </tr>
-    <tr>
-  <td>`startDate` <br /><span class="type-text">integer</span ></td>
-  <td>Unix epoch start date, in milliseconds.</td>
+  <tr>
+  <td>`strategy` <br /><span class="type-text">string</span></td>
+  <td>Targeting values the campaign is split by. Set by IQM.</td>
   </tr>
-    <tr>
-  <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds.</td>
+  <tr>
+  <td>`startTime` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch start time in milliseconds.</td>
   </tr>
-    <tr>
-  <td>`budget` <br /><span class="type-text">integer</span></td>
-  <td>Campaign budget.</td>
-  </tr>
-    <tr>
-  <td>`maxBudget` <br /><span class="type-text">integer</span></td>
-  <td>Campaign maximum budget.</td>
-  </tr>
-    <tr>
-  <td>`mediaCpm` <br /><span class="type-text">number</span></td>
-  <td>Media CPM.</td>
-  </tr>
-    <tr>
-  <td>`dataCpm` <br /><span class="type-text">number</span></td>
-  <td>Data CPM.</td>
-  </tr>
-    <tr>
-  <td>`budgetPercentage` <br /><span class="type-text">number</span></td>
-  <td>Budget percentage.</td>
-  </tr>
-    <tr>
-  <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>Reach.</td>
-  </tr>
-    <tr>  
-  <td>`maxReach` <br /><span class="type-text">integer</span></td>
-  <td>Maximum reach.</td>
+  <tr>
+  <td>`endTime` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch end time in milliseconds.</td>
   </tr>
   <tr>
   <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
-  <td>Frequency cap.</td>
+  <td>Frequency cap. Taken from the plan; values sent here are ignored.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`frequencyCapTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Frequency cap type ID](/guidelines/campaign-api/#get-frequency-cap-types). <br /><EnumWidget values={frequencyCapTypes} /></td>
+  <td>[Frequency cap type ID](/guidelines/campaign-api#get-frequency-cap-types). Taken from the plan; values sent here are ignored. <br /><EnumWidget values={frequencyCapTypes} /></td>
   </tr>
-    <tr>
+  <tr>
+  <td>`minMediaCpm` <br /><span class="type-text">number</span></td>
+  <td>Minimum media cost per mille (CPM).</td>
+  </tr>
+  <tr>
+  <td>`mediaCpm` <br /><span class="type-text">number</span></td>
+  <td>Media CPM, based on the campaign's creative type; must be between <var>minMediaCpm</var> and <var>maxMediaCpm</var>.</td>
+  </tr>
+  <tr>
+  <td>`maxMediaCpm` <br /><span class="type-text">number</span></td>
+  <td>Maximum media CPM.</td>
+  </tr>
+  <tr>
+  <td>`dataCpm` <br /><span class="type-text">number</span></td>
+  <td>Data CPM: the average data cost of the campaign's selected data partners.</td>
+  </tr>
+  <tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum campaign budget.</td>
+  </tr>
+  <tr>
+  <td>`budget` <br /><span class="type-text">number</span></td>
+  <td>Campaign budget; must be between <var>minBudget</var> and <var>maxBudget</var>.</td>
+  </tr>
+  <tr>
+  <td>`maxBudget` <br /><span class="type-text">number</span></td>
+  <td>Maximum campaign budget.</td>
+  </tr>
+  <tr>
+  <td>`minReach` <br /><span class="type-text">integer</span></td>
+  <td>Minimum campaign reach.</td>
+  </tr>
+  <tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Campaign reach; must be between <var>minReach</var> and <var>maxReach</var>.</td>
+  </tr>
+  <tr>
+  <td>`maxReach` <br /><span class="type-text">integer</span></td>
+  <td>Maximum campaign reach.</td>
+  </tr>
+  <tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum campaign impressions.</td>
+  </tr>
+  <tr>
   <td>`impressions` <br /><span class="type-text">integer</span></td>
-  <td>Impressions.</td>
+  <td>Campaign impressions; must be between <var>minImpressions</var> and <var>maxImpressions</var>.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`maxImpressions` <br /><span class="type-text">integer</span></td>
-  <td>Maximum impressions.</td>
-</tr>
-    <tr>
-  <td>`isAbm` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates the audience associated with the campaign is Account-Based Marketing (ABM) type: <var>true</var>.</td>
+  <td>Maximum campaign impressions.</td>
   </tr>
-    <tr>
+  <tr>
+  <td>`isAbm` <br /><span class="type-text">boolean</span></td>
+  <td>Whether the campaign targets an Account Based Marketing (ABM) audience.</td>
+  </tr>
+  <tr>
   <td>`targeting` <br /><span class="type-text">object</span></td>
-  <td>Targeting object.</td>
+  <td>Campaign targeting: the values for this campaign's slice of the split strategy.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`targeting` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`dataPartnerIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Data partner IDs](#get-data-partners-list). <br />Must match the partner dimension's plan-level/split-strategy selection, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={hcpDataPartners} /></td>
-    </tr>
-    <tr>
     <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[Creative type ID](/guidelines/creative-api/#get-creative-types-list). <br />Singular: one creative type per campaign. Must match the creative dimension's plan-level/split-strategy selection, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
-    </tr>
-    <tr>
-    <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br />Must match the device dimension's plan-level/split-strategy selection, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
+    <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). One creative type per campaign. <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
     </tr>
     <tr>
     <td>`npiTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[NPI type ID](#npi-type-list). <br />Singular: one NPI type per campaign. Must match the NPI dimension's plan-level/split-strategy selection, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={npiTypes} /></td>
+    <td>[NPI type ID](#npi-type-list). One NPI type per campaign. <br /><EnumWidget values={npiTypes} /></td>
+    </tr>
+    <tr>
+    <td>`dataPartnerIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Data partner IDs](#get-data-partners-list). <br /><EnumWidget values={hcpDataPartners} /></td>
+    </tr>
+    <tr>
+    <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Device type IDs](/guidelines/master-api#get-device-type). <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
     </tr>
     <tr>
     <td>`audienceTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Audience type IDs](/guidelines/audience-api/#audience-type-list). <br />Must match the audience type dimension's plan-level/split-strategy selection, see [Targeting consistency rule](#targeting-consistency-rule). <br /><EnumWidget values={audienceTypes} /></td>
+    <td>[Audience type IDs](/guidelines/audience-api#audience-type-list). <br /><EnumWidget values={audienceTypes.filter((v) => [1, 2, 4, 5, 9].includes(v.id))} /></td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   </table></details>
-</td></tr>
+</td>
+  <td></td>
+</tr>
 </table>
 </details>
 
 ### Targeting consistency rule
 
-The values selected in <var>planLevelTargeting</var> and each <var>audienceBlocks</var> entry must agree with
-the corresponding <var>splitStrategy[].selectedValueIds</var> entry and with every <var>campaigns[].targeting</var>
-value actually used. This applies across 5 dimensions. A mismatch on any dimension is rejected
-with a generic error that does not say which field disagreed, so it's worth getting these
-right before submitting.
+The <var>selectedValueIds</var> in each <var>splitStrategy</var> entry must agree with the plan's targeting for that dimension. The creative type split must exactly match the plan-level creative types. The other dimensions must be a subset of the matching targeting.
 
-For each dimension you split on, the matching <var>splitStrategy[]</var> entry's <var>selectedValueIds</var>
-must exactly match both sides of the table above: the plan-level selection and every value
-actually used in <var>campaigns[]</var>.
+The rule is checked when you create a plan (ready or draft), edit it, or publish it. [Generate campaigns plan](#generate-campaigns-plan) doesn't check it: it ignores <var>selectedValueIds</var> and splits by every plan-level value of each listed dimension. Campaign targeting isn't checked against the split strategy, so use the campaigns that generate campaigns returns.
 
 <table className="targetingRuleTable">
 <tr>
-<td>Dimension: <var>splitDimensionType.id</var></td>
-<td>Must equal <var>planLevelTargeting</var> / <var>audienceBlocks</var>.</td>
-<td>Must equal <var>campaigns[].targeting</var></td>
+<td>Dimension</td>
+<td><var>splitDimensionTypeId</var></td>
+<td><var>selectedValueIds</var> must agree with</td>
+<td>Rule</td>
+<td>Campaign field</td>
 </tr>
 <tr>
-<td>Creative: <var>1</var></td>
-<td><var>planLevelTargeting.creativeTypes.creativeTypeIds</var> (all real creative type IDs when <var>allCreativeTypesSelected</var> is <var>true</var>, otherwise the explicit list).</td>
-<td><var>creativeTypeId</var> <span class="type-text">(singular)</span></td>
+<td>Creative type</td>
+<td><var>1</var></td>
+<td><var>creativeTypeIds</var> in <var>planLevelTargeting</var>.</td>
+<td>Exact match.</td>
+<td><var>creativeTypeId</var></td>
 </tr>
 <tr>
-<td>NPI: <var>2</var></td>
+<td>NPI type</td>
+<td><var>2</var></td>
 <td>Top-level <var>npiTypeIds</var>.</td>
-<td><var>npiTypeId</var> <span class="type-text">(singular)</span></td>
+<td>Subset.</td>
+<td><var>npiTypeId</var></td>
 </tr>
 <tr>
-<td>Partner: <var>3</var></td>
-<td>The set of <var>dataPartners[].id</var> across all <var>audienceBlocks</var>.</td>
+<td>Data partner</td>
+<td><var>3</var></td>
+<td>Data partner IDs across all audience blocks.</td>
+<td>Subset.</td>
 <td><var>dataPartnerIds</var></td>
 </tr>
 <tr>
-<td>Device: <var>4</var></td>
-<td><var>planLevelTargeting.devices.deviceTypeIds</var> (all real device type IDs when <var>allDeviceTypesSelected</var> is <var>true</var>, otherwise the explicit list).</td>
+<td>Device type</td>
+<td><var>4</var></td>
+<td><var>deviceTypeIds</var> in <var>planLevelTargeting</var>.</td>
+<td>Subset.</td>
 <td><var>deviceTypeIds</var></td>
 </tr>
 <tr>
-<td>Audience type: <var>5</var></td>
-<td>The union of <var>selectedAudienceTypeIds</var> across all <var>audienceBlocks</var>.</td>
+<td>Audience type</td>
+<td><var>5</var></td>
+<td>Audience types of all audience blocks, set by IQM from each block's selection method.</td>
+<td>Subset.</td>
 <td><var>audienceTypeIds</var></td>
 </tr>
 </table>
+
+When "select all" is used for creative types or devices, compare against the full list: creative types <var>11</var>, <var>13</var>, <var>14</var>, <var>15</var>, and <var>17</var>; devices <var>20300001</var> to <var>20300004</var>. Filter based and upload NPI list blocks have the Matched audience type (<var>1</var>), and account based blocks have the Account Based Marketing (ABM) audience type (<var>9</var>). Existing audience blocks take the types of their audiences.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>HCP example request with targeting consistency</summary>
 
 Highlighted lines show the same IDs recurring across the plan-level selection, the matching
-<var>splitStrategy</var> entry, and the campaign's own <var>targeting</var>. 
+<var>splitStrategy</var> entry, and the campaign's own <var>targeting</var>.
 
 ```json
 {
-  "name": "Q1 Diabetes Awareness",
-  "startTime": 1735124399000,
-  "endTime": 1757534400000,
-  "timezoneId": 4,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
+  "timezoneId": 29,
   "budgetTypeId": 1,
-  "budget": 75000,
-  "maxBudget": 80000,
-  "frequencyCap": 5,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "reach": 60000,
+  "maxReach": 60000,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 3,
   "frequencyCapTypeId": 1,
   //highlight-next-line
   "npiTypeIds": [3, 4],
@@ -571,17 +700,24 @@ Highlighted lines show the same IDs recurring across the plan-level selection, t
     {
       "audienceSelectionMethodId": 1,
       "speciality": {
-        "specialityIds": [101, 102],
-        "allSpecialitiesSelected": false
+        "specialityIds": [],
+        "allSpecialitiesSelected": true
+      },
+      "locations": {
+        "countryId": 30100001,
+        "whiteListedStateIds": [],
+        "blackListedStateIds": [],
+        "whiteListedCityIds": [],
+        "blackListedCityIds": [],
+        "whiteListedZipcodes": [],
+        "blackListedZipcodes": []
       },
       "dataPartners": [
         //highlight-next-line
-        { "id": 7, "selected": true },
+        { "id": 7, "selected": true, "priority": 1, "reach": 120000, "incrementalReach": 120000 },
         //highlight-next-line
-        { "id": 8, "selected": true }
-      ],
-      //highlight-next-line
-      "selectedAudienceTypeIds": [1, 2]
+        { "id": 8, "selected": true, "priority": 2, "reach": 90000, "incrementalReach": 30000 }
+      ]
     }
   ],
   "planLevelTargeting": {
@@ -594,7 +730,20 @@ Highlighted lines show the same IDs recurring across the plan-level selection, t
       //highlight-next-line
       "creativeTypeIds": [11, 14],
       "allCreativeTypesSelected": false,
-      "isTvAutoBuying": true
+      "isTvAutoBuying": false
+    },
+    "channels": {
+      "channelTypeIds": [],
+      "allChannelTypesSelected": true
+    },
+    "inventory": {
+      "openExchanges": {
+        "exchangeIds": [],
+        "allExchangesSelected": true,
+        "iabCategoryIds": [],
+        "allIabCategoriesSelected": true
+      },
+      "inventoryGroup": null
     }
   },
   "splitStrategy": [
@@ -621,28 +770,39 @@ Highlighted lines show the same IDs recurring across the plan-level selection, t
     {
       "splitDimensionTypeId": 5,
       //highlight-next-line
-      "selectedValueIds": [1, 2]
+      "selectedValueIds": [1]
     }
   ],
   "campaigns": [
     {
-      "name": "Campaign A",
-      "startTime": 1735124399000,
-      "endTime": 1757534400000,
-      "budget": 37500,
-      "maxBudget": 40000,
-      "frequencyCap": 5,
+      "name": "Image - Physicians - Healthlink - Mobile",
+      "startTime": 1793505600000,
+      "endTime": 1796101199000,
+      "frequencyCap": 3,
       "frequencyCapTypeId": 1,
+      "minMediaCpm": 6.00,
+      "mediaCpm": 6.00,
+      "maxMediaCpm": 6.00,
+      "dataCpm": 10.00,
+      "minBudget": 16.00,
+      "budget": 336.00,
+      "maxBudget": 336.00,
+      "minReach": 10,
+      "reach": 7000,
+      "maxReach": 7000,
+      "minImpressions": 1000,
+      "impressions": 21000,
+      "maxImpressions": 21000,
       "isAbm": false,
       "targeting": {
         //highlight-next-line
-        "dataPartnerIds": [7],
-        //highlight-next-line
         "creativeTypeId": 11,
         //highlight-next-line
-        "deviceTypeIds": [20300001],
-        //highlight-next-line
         "npiTypeId": 3,
+        //highlight-next-line
+        "dataPartnerIds": [7],
+        //highlight-next-line
+        "deviceTypeIds": [20300001],
         //highlight-next-line
         "audienceTypeIds": [1]
       }
@@ -660,11 +820,11 @@ Highlighted lines show the same IDs recurring across the plan-level selection, t
 <div class="endpoint-container">
   <div class="child1">
 
-Get HCP Planner details by ID.
+Get HCP plan details by ID. The response uses the same fields as the request body for [Create HCP Planner](#create-hcp-planner), plus the fields set by IQM.
 
 | Path parameters  |  |
 | ----  | --- |
-| `planId` <br /><span class="type-text">integer</span> | Plan ID. |
+| `planId` <br /><span class="type-text">integer</span> | [Plan ID](#get-list-of-hcp-planners). |
 
 <a href="#hcp-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
 
@@ -675,36 +835,34 @@ Get HCP Planner details by ID.
 {
   "success": true,
   "data": {
-    "id": 1,
-    "name": "Q4 Diabetes Awareness Campaign",
-    "statusId": 2,
-    "startTime": 1732707706666,
-    "endTime": 1733312506666,
-    "timezoneId": 3,
+    "id": 4512,
+    "name": "Q4 Cardiology Awareness",
+    "startTime": 1793505600000,
+    "endTime": 1796101199000,
+    "timezoneId": 29,
     "budgetTypeId": 1,
-    "budget": 100000,
-    "maxBudget": 120000,
-    "reach": 50000,
-    "maxReach": 70000,
-    "impressions": 200000,
-    "maxImpressions": 250000,
+    "owId": 200001,
+    "createdAt": 1791800000000,
+    "updatedAt": 1791800000000,
+    "minBudget": null,
+    "budget": 8820.00,
+    "maxBudget": 8820.00,
+    "reach": 60000,
+    "maxReach": 60000,
+    "minImpressions": null,
+    "impressions": 360000,
+    "maxImpressions": 360000,
     "frequencyCap": 3,
     "frequencyCapTypeId": 1,
+    "statusId": 6,
     "npiTypeIds": [3, 4],
     "audienceBlocks": [
       {
         "audienceSelectionMethodId": 1,
         "speciality": {
-          "specialityIds": [406000001, 406000002],
-          "allSpecialitiesSelected": false
+          "specialityIds": [],
+          "allSpecialitiesSelected": true
         },
-        "accounts": [
-          {
-            "accountTypeId": 403000007,
-            "accountIds": [440016, 440023],
-            "allAccountsSelected": false
-          }
-        ],
         "locations": {
           "countryId": 30100001,
           "whiteListedStateIds": [],
@@ -714,10 +872,10 @@ Get HCP Planner details by ID.
           "whiteListedZipcodes": [],
           "blackListedZipcodes": []
         },
-        "dataPartners": {
-          "dataPartnerIds": [7, 8],
-          "allDataPartnersSelected": null
-        },
+        "dataPartners": [
+          { "id": 7, "selected": true, "priority": 1, "reach": 120000, "incrementalReach": 120000 },
+          { "id": 8, "selected": true, "priority": 2, "reach": 90000, "incrementalReach": 30000 }
+        ],
         "storagePathId": null,
         "storagePath": null,
         "storageFileName": null,
@@ -725,105 +883,72 @@ Get HCP Planner details by ID.
         "storageFileRows": null,
         "includeAudienceIds": [],
         "excludeAudienceIds": []
-      },
-      {
-        "audienceSelectionMethodId": 2,
-        "speciality": null,
-        "accounts": [],
-        "locations": null,
-        "dataPartners": {
-          "dataPartnerIds": [8, 10],
-          "allDataPartnersSelected": null
-        },
-        "storagePath": "tmp/aud_uploads/upload_block2.csv",
-        "storagePathId": 1234,
-        "storageFileName": "upload_block2.csv",
-        "storageFileSize": 200,
-        "storageFileRows": 500,
-        "includeAudienceIds": [],
-        "excludeAudienceIds": []
-      },
-      {
-        "audienceSelectionMethodId": 3,
-        "speciality": null,
-        "accounts": [],
-        "locations": null,
-        "dataPartners": null,
-        "storagePath": null,
-        "includeAudienceIds": [1137702, 1101834, 1101831],
-        "excludeAudienceIds": [1102476]
       }
     ],
     "planLevelTargeting": {
       "devices": {
-        "deviceTypeIds": [20300001, 20300002],
-        "allDeviceTypesSelected": null
+        "deviceTypeIds": [20300001, 20300004],
+        "allDeviceTypesSelected": false
       },
       "channels": {
-        "channelTypeIds": [11, 12],
-        "allChannelTypesSelected": null
+        "channelTypeIds": [],
+        "allChannelTypesSelected": true
       },
       "creativeTypes": {
-        "creativeTypeIds": [11, 14, 15],
-        "allCreativeTypesSelected": null
+        "creativeTypeIds": [11, 14],
+        "allCreativeTypesSelected": false,
+        "isTvAutoBuying": false
       },
       "inventory": {
-        "openExchangeVO": {
-          "exchangeIds": [16, 19],
-          "allExchangesSelected": null,
-          "iabCategoryIds": [11, 21],
-          "allIabCategoriesSelected": null
+        "openExchanges": {
+          "exchangeIds": [],
+          "allExchangesSelected": true,
+          "iabCategoryIds": [],
+          "allIabCategoriesSelected": true
         },
-        "inventoryGroup": null
+        "inventoryGroup": {
+          "inventoryGroupIds": [],
+          "allInventoryGroupsSelected": false
+        }
       }
     },
     "splitStrategy": [
-      {
-        "splitDimensionType": {
-          "id": 1,
-          "name": "creative_type",
-          "displayName": "Creative Type",
-          "order": 1
-        },
-        "selectedValueIds": [1, 2]
-      },
-      {
-        "splitDimensionType": {
-          "id": 2,
-          "name": "npi_type",
-          "displayName": "NPI Type",
-          "order": 2
-        },
-        "selectedValueIds": [3, 4]
-      }
+      { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+      { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
     ],
     "campaigns": [
       {
-        "id": 1,
-        "name": "Filter-Block1•Device1•Creative1",
-        "startDate": 1732707706666,
-        "endDate": 1733312506666,
-        "budget": 16000,
-        "maxBudget": 18000,
-        "mediaCpm": 22.5,
-        "dataCpm": 5.0,
-        "budgetPercentage": 16.0,
-        "reach": 11000,
+        "id": 90001,
+        "name": "Image - Physicians",
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
         "frequencyCap": 3,
         "frequencyCapTypeId": 1,
-        "maxReach": 70000,
-        "impressions": 35000,
-        "maxImpressions": 250000,
+        "minMediaCpm": 6.00,
+        "mediaCpm": 6.00,
+        "maxMediaCpm": 6.00,
+        "dataCpm": 12.50,
+        "minBudget": 18.50,
+        "budget": 2331.00,
+        "maxBudget": 2331.00,
+        "minReach": 10,
+        "reach": 42000,
+        "maxReach": 42000,
+        "minImpressions": 1000,
+        "impressions": 126000,
+        "maxImpressions": 126000,
         "isAbm": false,
         "targeting": {
-          "dataPartnerIds": [5, 7],
-          "creativeTypeId": 1,
-          "deviceTypeIds": [1],
-          "npiTypeId": 1,
-          "audienceTypeIds": []
-        }
+          "dataPartnerIds": [7, 8],
+          "creativeTypeId": 11,
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3,
+          "audienceTypeIds": [1]
+        },
+        "campaignId": 0
       }
-    ]
+    ],
+    "ioId": 0
   }
 }
 ```
@@ -867,7 +992,7 @@ Get HCP Planner details by ID.
 <div class="endpoint-container">
   <div class="child1">
 
-Get a list of HCP Planners. 
+Get a list of HCP plans.
 
 A plan <var>id</var> can be used in the [HCP Planner details by ID](#hcp-planner-details-by-id) endpoint and to perform various actions in [HCP Planner management](#hcp-planner-management) endpoints.
 
@@ -877,8 +1002,8 @@ A plan <var>id</var> can be used in the [HCP Planner details by ID](#hcp-planner
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>.  |
 | `searchField` <br /><span class="type-text">string</span> | Filter results by search field: account name. |
 | `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-id</var>. <br />Supported values: <var>id</var>, <var>name</var>, <var>createdBy</var>, <var>createdOn</var>, <var>startDate</var>, <var>endDate</var>, <var>reach</var>, <var>impressions</var>, <var>budget</var>, <var>duration</var>. |
-| `statusIds` <br /><span class="type-text">string</span> | Comma separated status IDs. |
-| `budgetTypeIds` <br /><span class="type-text">string</span> | Comma separated budget type IDs: budget(<var>1</var>) or impression(<var>2</var>). |
+| `statusIds` <br /><span class="type-text">string</span> | Comma separated [status IDs](/guidelines/planner-api#proposal-status-list). <br /><EnumWidget values={proposalStatus.filter((v) => v.id !== 1)} /> |
+| `budgetTypeIds` <br /><span class="type-text">string</span> | Comma separated budget type IDs. <br /><EnumWidget values={budgetTypes} /> |
 | `startDate` <br /><span class="type-text">integer</span> | Epoch time in milliseconds. |
 | `endDate` <br /><span class="type-text">integer</span> | Epoch time in milliseconds. |
 
@@ -896,7 +1021,7 @@ A plan <var>id</var> can be used in the [HCP Planner details by ID](#hcp-planner
 </tr>
 <tr>
   <td>`statusId` <br /><span class="type-text">integer</span></td>
-  <td>Status ID.</td>
+  <td>Status ID. <br /><EnumWidget values={proposalStatus.filter((v) => v.id !== 1)} /></td>
 </tr>
 <tr>
   <td>`createdOn` <br /><span class="type-text">integer</span></td>
@@ -936,11 +1061,11 @@ A plan <var>id</var> can be used in the [HCP Planner details by ID](#hcp-planner
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>IO ID.</td>
+  <td>[IO ID](/guidelines/campaign-api#get-insertion-order-details); <var>0</var> until the plan is published.</td>
 </tr>
 <tr>
   <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>Budget type ID.</td>
+  <td>Budget type ID. <br /><EnumWidget values={budgetTypes} /></td>
 </tr>
 <tr>
   <td>`campaignCount` <br /><span class="type-text">integer</span></td>
@@ -1120,219 +1245,160 @@ Download the HCP Planner file.
 <div class="endpoint-container">
   <div class="child1">
 
-Create a new ready or draft HCP Planner. See resource properties for request schema. 
+Create an HCP plan from the [Generate campaigns plan](#generate-campaigns-plan) response. Send the generate campaigns response <var>data</var> unchanged, apart from any budgets and impressions you adjust within their ranges.
+
+<var>/proposal/add</var> saves the plan in <var>Ready</var> (<var>6</var>) status. <var>/proposal/draft</var> saves it in <var>Draft</var> (<var>2</var>) status and skips the budget and campaign checks.
+
+The response <var>id</var> is the plan ID used in later requests.
 
 <a href="#hcp-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message.</td>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Plan ID.</td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
 
 ```json title="Request sample"
 {
-  "id": 123,
-  "name": "Sample HCP Planner Request",
-  "startTime": 1735124399000,
-  "endTime": 1757534400000,
-  "timezoneId": 4,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
+  "timezoneId": 29,
   "budgetTypeId": 1,
-  "budget": 75000,
-  "maxBudget": 80000,
-  "reach": 250000,
-  "maxReach": 300000,
-  "impressions": 1000000,
-  "maxImpressions": 1200000,
-  "frequencyCap": 5,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "reach": 60000,
+  "maxReach": 60000,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 3,
   "frequencyCapTypeId": 1,
   "npiTypeIds": [3, 4],
   "audienceBlocks": [
     {
       "audienceSelectionMethodId": 1,
       "speciality": {
-        "specialityIds": [
-          101,
-          102
-        ],
-        "allSpecialitiesSelected": false
+        "specialityIds": [],
+        "allSpecialitiesSelected": true
       },
-      "accounts": [
-        {
-          "accountTypeId": 1,
-          "accountIds": [
-            201,
-            202
-          ],
-          "allAccountsSelected": false
-        },
-        {
-          "accountTypeId": 2,
-          "accountIds": [],
-          "allAccountsSelected": true
-        }
-      ],
       "locations": {
-        "countryId": 1,
-        "whiteListedStateIds": [
-          501,
-          502
-        ],
+        "countryId": 30100001,
+        "whiteListedStateIds": [],
         "blackListedStateIds": [],
         "whiteListedCityIds": [],
         "blackListedCityIds": [],
-        "whiteListedZipcodes": [
-          90210,
-          10001
-        ],
+        "whiteListedZipcodes": [],
         "blackListedZipcodes": []
       },
-      "dataPartners": {
-        "dataPartnerIds": [
-          1,
-          2
-        ],
-        "allDataPartnersSelected": false
-      },
-      "storagePathId": null,
-      "includeAudienceIds": null,
-      "excludeAudienceIds": null
-    },
-    {
-      "audienceSelectionMethodId": 2,
-      "speciality": {
-        "specialityIds": [
-          101,
-          102
-        ],
-        "allSpecialitiesSelected": false
-      },
-      "accounts": null,
-      "locations": {
-        "countryId": 1,
-        "whiteListedStateIds": [
-          501,
-          502
-        ],
-        "blackListedStateIds": [],
-        "whiteListedCityIds": [],
-        "blackListedCityIds": [],
-        "whiteListedZipcodes": [
-          90210,
-          10001
-        ],
-        "blackListedZipcodes": []
-      },
-      "dataPartners": {
-        "dataPartnerIds": [
-          1,
-          2
-        ],
-        "allDataPartnersSelected": false
-      },
-      "storagePathId": 1,
-      "includeAudienceIds": null,
-      "excludeAudienceIds": null
-    },
-    {
-      "audienceSelectionMethodId": 3,
-      "speciality": null,
-      "accounts": null,
-      "locations": null,
-      "dataPartners": null,
-      "storagePathId": null,
-      "includeAudienceIds": [
-        301,
-        302
-      ],
-      "excludeAudienceIds": [
-        401
+      "dataPartners": [
+        { "id": 7, "selected": true, "priority": 1, "reach": 120000, "incrementalReach": 120000 },
+        { "id": 8, "selected": true, "priority": 2, "reach": 90000, "incrementalReach": 30000 }
       ]
     }
   ],
   "planLevelTargeting": {
     "devices": {
-      "deviceTypeIds": [
-        1,
-        2
-      ],
+      "deviceTypeIds": [20300001, 20300004],
       "allDeviceTypesSelected": false
     },
-    "channels": {
-      "channelTypeIds": [
-        1,
-        2
-      ],
-      "allChannelTypesSelected": false
-    },
     "creativeTypes": {
-      "creativeTypeIds": [
-        10,
-        11
-      ],
+      "creativeTypeIds": [11, 14],
       "allCreativeTypesSelected": false,
-      "isTvAutoBuying": true
+      "isTvAutoBuying": false
+    },
+    "channels": {
+      "channelTypeIds": [],
+      "allChannelTypesSelected": true
     },
     "inventory": {
       "openExchanges": {
-        "exchangeIds": [
-          1,
-          2
-        ],
-        "allExchangesSelected": false,
-        "iabCategoryIds": [
-          1,
-          2
-        ],
-        "allIabCategoriesSelected": false
+        "exchangeIds": [],
+        "allExchangesSelected": true,
+        "iabCategoryIds": [],
+        "allIabCategoriesSelected": true
       },
-      "inventoryGroup": {
-        "inventoryGroupIds": [
-          1,
-          2
-        ],
-        "allInventoryGroupsSelected": false
-      }
+      "inventoryGroup": null
     }
   },
   "splitStrategy": [
-    {
-      "splitDimensionTypeId": 1,
-      "selectedValueIds": [
-        10,
-        11
-      ]
-    }
+    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
   ],
   "campaigns": [
     {
       "id": null,
-      "name": "Campaign A",
-      "startTime": 1754942400000,
-      "endTime": 1757534400000,
-      "budget": 37500,
-      "maxBudget": 40000,
-      "mediaCpm": 50,
-      "dataCpm": 15,
-      "reach": 125000,
-      "maxReach": 150000,
-      "impressions": 500000,
-      "maxImpressions": 600000,
+      "name": "Image - Physicians",
+      "startTime": 1793505600000,
+      "endTime": 1796101199000,
+      "frequencyCap": 3,
+      "frequencyCapTypeId": 1,
+      "minMediaCpm": 6.00,
+      "mediaCpm": 6.00,
+      "maxMediaCpm": 6.00,
+      "dataCpm": 12.50,
+      "minBudget": 18.50,
+      "budget": 2331.00,
+      "maxBudget": 2331.00,
+      "minReach": 10,
+      "reach": 42000,
+      "maxReach": 42000,
+      "minImpressions": 1000,
+      "impressions": 126000,
+      "maxImpressions": 126000,
       "isAbm": false,
       "targeting": {
-        "dataPartnerIds": [
-          1
-        ],
-        "creativeTypeId": 10,
-        "deviceTypeIds": [
-          1
-        ],
-        "npiTypeId": 1,
-        "audienceTypeIds": [
-          1
-        ]
+        "dataPartnerIds": [7, 8],
+        "creativeTypeId": 11,
+        "deviceTypeIds": [20300001, 20300004],
+        "npiTypeId": 3,
+        "audienceTypeIds": [1]
       }
+    },
+    ...
+  ]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Q4 Cardiology Awareness generated successfully",
+    "id": 4512
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Selected creative type IDs and split IDs do not match."
     }
   ]
 }
 ```
+
+</details>
 
 </div></div>
 
@@ -1345,23 +1411,117 @@ Create a new ready or draft HCP Planner. See resource properties for request sch
 <div class="endpoint-container">
   <div class="child1">
 
-Update an existing HCP Planner by ID. See resource properties for request schema.
+Update an HCP plan by ID. Send the full plan; the saved plan is replaced with the request body. Editing doesn't change the plan's status. Plans in <var>Processing</var> (<var>5</var>) or <var>IO Created</var> (<var>7</var>) status can't be edited.
+
+To edit a plan, get it with [HCP Planner details by ID](#hcp-planner-details-by-id), change the fields you need, and send it back. The request schema is the same as [Create HCP Planner](#create-hcp-planner), except for the fields in the following table.
 
 <a href="#hcp-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
 
 | Path parameters  |  |
 | ----  | --- |
-| `planId` <br /><span class="type-text">integer</span> | Plan ID. |
+| `planId` <br /><span class="type-text">integer</span> | [Plan ID](#get-list-of-hcp-planners). |
+
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Plan ID of the plan to update; must be the same as the <var>planId</var> path parameter.</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>The plan's current status ID. Send it back unchanged. <br /><EnumWidget values={proposalStatus.filter((v) => v.id !== 1)} /></td>
+</tr>
+<tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum plan budget, from the generate campaigns response. Required for Ready plans; Draft plans accept <var>null</var>.</td>
+</tr>
+<tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum plan impressions, from the generate campaigns response. Required for Ready plans; Draft plans accept <var>null</var>.</td>
+</tr>
+<tr>
+  <td>`planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`planLevelTargeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`inventory` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Inventory to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventory` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+          <td>Inventory groups to target. Send <var>null</var> unless you target inventory groups.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+  <td>Proposed campaigns. Each edit re-creates the campaigns with new <var>id</var> values. Each campaign's <var>frequencyCap</var> and <var>frequencyCapTypeId</var> are ignored; the plan's values apply.</td>
+</tr>
+</table>
 
 </div>
 <div class="child2">
+
+```json title="Request sample (abbreviated)"
+{
+  "id": 4512,
+  "statusId": 6,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
+  "timezoneId": 29,
+  "budgetTypeId": 1,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 5,
+  "frequencyCapTypeId": 2,
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [ ... ],
+  "planLevelTargeting": {
+    "devices": { ... },
+    "creativeTypes": { ... },
+    "channels": { ... },
+    "inventory": {
+      "openExchanges": { ... },
+      "inventoryGroup": null
+    }
+  },
+  "splitStrategy": [ ... ],
+  "campaigns": [ ... ]
+}
+```
 
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "message": "Sample proposal updated successfully",
-    "id": 123
+    "message": "Q4 Cardiology Awareness updated successfully",
+    "id": 4512
   }
 }
 ```
@@ -1392,6 +1552,17 @@ Update an existing HCP Planner by ID. See resource properties for request schema
 }
 ```
 
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal cannot be edited in its current status."
+    }
+  ]
+}
+```
+
 </details>
 
 </div></div>
@@ -1405,7 +1576,7 @@ Update an existing HCP Planner by ID. See resource properties for request schema
 <div class="endpoint-container">
   <div class="child1">
 
-Delete one or more HCP Planners by IDs.
+Delete one or more HCP plans by ID.
 
 | Query parameters  |  |
 | ----  | --- |
@@ -1445,12 +1616,12 @@ Delete one or more HCP Planners by IDs.
 <div class="endpoint-container">
   <div class="child1">
 
-Check if an HCP Planner name is available for use within the Organization. This endpoint also validates the name's character limit and vertical type.
+Check if an HCP plan name is available for use within the Organization. This endpoint also validates the name's character limit and vertical type.
 
 
 | Request schema  |  |
 | ----  | --- |
-| `name` <br /><span class="type-text">string</span> | Planner name to validate. |
+| `name` <br /><span class="type-text">string</span> | Plan name to validate. |
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1458,7 +1629,7 @@ Check if an HCP Planner name is available for use within the Organization. This 
 <table className="objectProperties">
 <tr>
   <td>`available` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if the Planner name is available.</td>
+  <td>Indicates if the plan name is available.</td>
 </tr>
 </table>
 </details>
@@ -1492,9 +1663,9 @@ Check if an HCP Planner name is available for use within the Organization. This 
 <div class="endpoint-container">
   <div class="child1">
 
-This API calculates distribution statistics for devices, creative types, and channels across the entire Planner configuration. The payload accepts multiple audience blocks and plan-level targeting and returns aggregated distribution data for each targeting dimension.
+This endpoint calculates distribution statistics for devices, creative types, and channels across the entire plan configuration. The payload accepts multiple audience blocks and plan-level targeting and returns aggregated distribution data for each targeting dimension.
 
-Use this API to visualize how different targeting dimensions are distributed across audience blocks and plan-level targeting in an HCP Planner.
+Use this endpoint to visualize how different targeting dimensions are distributed across audience blocks and plan-level targeting in an HCP plan.
 
 
 <table>
@@ -1516,129 +1687,205 @@ Use this API to visualize how different targeting dimensions are distributed acr
   <td>`audienceSelectionMethodId` <br /><span class="type-text">integer</span></td>
   <td>[Audience selection method ID](#get-audience-selection-methods-list). <br /><EnumWidget values={audienceSelectionMethods} /></td>
   </tr>
-    <tr>
+  <tr>
   <td>`speciality` <br /><span class="type-text">object</span></td>
-  <td>Specialty object.</td>
+  <td>Specialties to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`speciality` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Specialty IDs](#get-specialties-list).</td>
-      </tr>
-      <tr>
-      <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All specialties selected.</td>
-      </tr>
-      </table></details>
-    </td></tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`speciality` object properties</summary>
+    <table className="objectProperties">
     <tr>
-    <td>`accounts` <br /><span class="type-text">array of objects</span></td>
-    <td>Accounts.</td>
+    <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Specialty IDs](#get-specialties-list) to target. Must be empty when <var>allSpecialitiesSelected</var> is <var>true</var>.</td>
     </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`accounts` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`accountTypeId` <br /><span class="type-text">integer</span></td>
-      <td>[Account type ID](#get-account-types). <br /><EnumWidget values={hcpAccountTypes} /></td>
-      </tr>
-      <tr>
-      <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Account IDs](#get-list-of-accounts).</td>
-      </tr>
-      <tr>
-      <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All accounts selected.</td>
-      </tr>
-      </table></details>
-    </td></tr>
-      <tr>
-    <td>`locations` <br /><span class="type-text">object</span></td>
-    <td>Locations object.</td>
-    </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`locations` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`countryId` <br /><span class="type-text">integer</span></td>
-      <td>[Country ID](/guidelines/master-api/#get-country-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Whitelisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-      </tr>
-      <tr>
-      <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Blacklisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Whitelisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-      </tr>
-      <tr>
-      <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Blacklisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-      </tr>
-      <tr>
-      <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-      <td>Whitelisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-      </tr>
-      <tr>
-      <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-      <td>Blacklisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-      </tr>
-      </table></details>
-    </td></tr>
-      <tr>
-    <td>`dataPartners` <br /><span class="type-text">object</span></td>
-    <td>Data partners object.</td>
-    </tr>
-    <tr><td colSpan="2">
-      <details className="objectPropertiesDetails">
-      <summary>`dataPartners` object properties</summary>
-      <table className="objectProperties">
-      <tr>
-      <td>`dataPartnerIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Data partner IDs.</td>
-      </tr>
-      <tr>
-      <td>`allDataPartnersSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All data partners selected.</td>
-      </tr>
-      </table></details>  
-    </td></tr>
     <tr>
+    <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all specialties, with an empty <var>specialityIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`account` <br /><span class="type-text">object</span></td>
+  <td>Accounts to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`account` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account IDs](#get-list-of-accounts) to target. Must be empty when <var>allAccountsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all accounts, with an empty <var>accountIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`accountType` <br /><span class="type-text">object</span></td>
+  <td>Account types to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`accountType` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account type IDs](#get-account-types) to target. Must be empty when <var>allAccountTypesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountTypesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all account types, with an empty <var>accountTypeIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`healthSystem` <br /><span class="type-text">object</span></td>
+  <td>Health systems to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`healthSystem` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthSystemIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Health system IDs to target. Must be empty when <var>allHealthSystemsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allHealthSystemsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all health systems, with an empty <var>healthSystemIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`title` <br /><span class="type-text">object</span></td>
+  <td>Titles to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`title` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`titleIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Title IDs to target. Must be empty when <var>allTitlesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allTitlesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all titles, with an empty <var>titleIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`locations` <br /><span class="type-text">object</span></td>
+  <td>Locations to target. Required for filter based, upload NPI list, and account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`locations` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`countryId` <br /><span class="type-text">integer</span></td>
+    <td>[Country ID](/guidelines/master-api#get-country-segment); must be <var>30100001</var> (United States).</td>
+    </tr>
+    <tr>
+    <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to exclude. Targeted and excluded locations can't overlap.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`dataPartners` <br /><span class="type-text">array of objects</span></td>
+  <td>Data partners to match the audience with. At least one must be selected. Required for filter based, upload NPI list, and account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`dataPartners` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>[Data partner ID](#get-data-partners-list). Account based blocks support only <var>7</var> and <var>12</var>. <br /><EnumWidget values={hcpDataPartners} /></td>
+    </tr>
+    <tr>
+    <td>`selected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to use this data partner.</td>
+    </tr>
+    <tr>
+    <td>`priority` <br /><span class="type-text">integer</span></td>
+    <td>Order of preference, starting at <var>1</var>; can't be higher than the number of data partners in the block.</td>
+    </tr>
+    <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Data partner reach.</td>
+    </tr>
+    <tr>
+    <td>`incrementalReach` <br /><span class="type-text">integer</span></td>
+    <td>Reach this data partner adds on top of higher-priority data partners; <var>0</var> to <var>reach</var>.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`storagePathId` <br /><span class="type-text">integer</span></td>
-  <td>Storage path ID.</td>
+  <td>Upload NPI list blocks only: file ID of the uploaded NPI list.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storagePath` <br /><span class="type-text">string</span></td>
-  <td>Storage path.</td>
+  <td>Upload NPI list blocks only: storage path of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileName` <br /><span class="type-text">string</span></td>
-  <td>Storage file name.</td>
+  <td>Upload NPI list blocks only: name of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
-  <td>Storage file size.</td>
+  <td>Upload NPI list blocks only: size of the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
-  <td>Storage file rows.</td>
+  <td>Upload NPI list blocks only: number of rows in the uploaded NPI list file.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`includeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Included [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to include. Up to 14 included and excluded audiences in total.</td>
   </tr>
-    <tr>
+  <tr>
   <td>`excludeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Excluded [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to exclude. Can't overlap with <var>includeAudienceIds</var>.</td>
   </tr>
   </table></details>
   </td>
@@ -1654,7 +1901,7 @@ Use this API to visualize how different targeting dimensions are distributed acr
   <table className="objectProperties">
   <tr>
   <td>`devices` <br /><span class="type-text">object</span></td>
-  <td>Devices object.</td>
+  <td>Devices to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -1662,17 +1909,19 @@ Use this API to visualize how different targeting dimensions are distributed acr
     <table className="objectProperties">
     <tr>
     <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
+    <td>[Device type IDs](/guidelines/master-api#get-device-type) to target. Must be empty when <var>allDeviceTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
     </tr>
     <tr>
     <td>`allDeviceTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All device types selected.</td>
+    <td>Set to <var>true</var> to target all device types, with an empty <var>deviceTypeIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
-    <tr>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`channels` <br /><span class="type-text">object</span></td>
-  <td>Channels object.</td>
+  <td>Channels to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -1680,18 +1929,19 @@ Use this API to visualize how different targeting dimensions are distributed acr
     <table className="objectProperties">
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types) to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     <tr>
     <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All channel types selected.</td>
+    <td>Set to <var>true</var> to target all channels, with an empty <var>channelTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
-    <tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`creativeTypes` <br /><span class="type-text">object</span></td>
-  <td>Creative types object.</td>
+  <td>Creative types to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -1699,76 +1949,87 @@ Use this API to visualize how different targeting dimensions are distributed acr
     <table className="objectProperties">
     <tr>
     <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
+    <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list) to target. Must be empty when <var>allCreativeTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
     </tr>
     <tr>
     <td>`allCreativeTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All creative types selected.</td>
+    <td>Set to <var>true</var> to target all creative types, with an empty <var>creativeTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
     <tr>
+    <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Whether TV auto buying is enabled; requires video creatives (<var>14</var>).</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`inventory` <br /><span class="type-text">object</span></td>
-  <td>Inventory.</td>
+  <td>Inventory to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`inventory` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`openExchangeVO` <br /><span class="type-text">object</span></td>
-    <td>Open exchange VO object.</td>
+    <td>`openExchanges` <br /><span class="type-text">object</span></td>
+    <td>Open Exchange inventory to target.</td>
     </tr>
     <tr><td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`openExchangeVO` object properties</summary>
+      <summary>`openExchanges` object properties</summary>
       <table className="objectProperties">
       <tr>
       <td>`exchangeIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Exchange IDs](/guidelines/master-api/#get-exchanges).</td>
+      <td>[Exchange IDs](/guidelines/master-api#get-exchanges) to target. Must be empty when <var>allExchangesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allExchangesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All exchanges selected.</td>
+      <td>Set to <var>true</var> to target all exchanges, with an empty <var>exchangeIds</var> list.</td>
       </tr>
       <tr>
       <td>`iabCategoryIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[IAB category IDs](/guidelines/master-api/#get-publisher-ad-categories).</td>
+      <td>[IAB category IDs](/guidelines/master-api#get-publisher-ad-categories) to target. Must be empty when <var>allIabCategoriesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allIabCategoriesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All IAB categories selected.</td>
+      <td>Set to <var>true</var> to target all IAB categories, with an empty <var>iabCategoryIds</var> list.</td>
       </tr>
       </table></details>
-    </td></tr>
+    </td>
+    <td></td>
+    </tr>
     <tr>
-  <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
-  <td>Inventory group.</td>
+    <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+    <td>Inventory groups to target. Send <var>null</var> unless you target inventory groups. Returned as an empty object in plan details when none are targeted.</td>
+    </tr>
+    <tr><td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventoryGroup` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
+      <td>[Inventory group IDs](/guidelines/inventory-api#get-list-of-inventory-groups) to target.</td>
+      </tr>
+      <tr>
+      <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
+      <td>Set to <var>true</var> to target all inventory groups, with an empty <var>inventoryGroupIds</var> list.</td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
   </tr>
-  <tr><td colSpan="2">
-    <details className="objectPropertiesDetails">
-    <summary>`inventoryGroup` object properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Inventory group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups).</td>
-    </tr>
-    <tr>
-    <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All inventory groups selected.</td>
-    </tr>
-    </table></details>
-  </td></tr>
-    </table></details>
-  </td></tr>
   </table></details>
 </td>
   <td></td>
 </tr>
 <tr>
   <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization wrapper ID.</td>
+  <td>Organization Workspace ID.</td>
 </tr>
 </table>
 
@@ -1852,7 +2113,7 @@ Use this API to visualize how different targeting dimensions are distributed acr
     <table className="objectProperties">
     <tr>  
     <td>`channelTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[Channel type ID](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type ID](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     <tr>
     <td>`percentage` <br /><span class="type-text">number</span></td>
@@ -1879,13 +2140,6 @@ Use this API to visualize how different targeting dimensions are distributed acr
         "specialityIds": [406000001, 406000002],
         "allSpecialitiesSelected": false
       },
-      "accounts": [
-        {
-          "accountTypeId": 403000007,
-          "accountIds": [440016, 440023],
-          "allAccountsSelected": false
-        }
-      ],
       "locations": {
         "countryId": 30100001,
         "whiteListedStateIds": [],
@@ -1895,46 +2149,34 @@ Use this API to visualize how different targeting dimensions are distributed acr
         "whiteListedZipcodes": [],
         "blackListedZipcodes": []
       },
-      "dataPartners": {
-        "dataPartnerIds": [7, 8],
-        "allDataPartnersSelected": null
-      },
-      "storagePathId": 0,
-      "storagePath": "string",
-      "storageFileName": "string",
-      "storageFileSize": 0,
-      "storageFileRows": 0,
-      "includeAudienceIds": [
-        0
-      ],
-      "excludeAudienceIds": [
-        0
+      "dataPartners": [
+        { "id": 7, "selected": true, "priority": 1 },
+        { "id": 8, "selected": true, "priority": 2 }
       ]
     }
   ],
   "planLevelTargeting": {
     "devices": {
       "deviceTypeIds": [20300001, 20300002],
-      "allDeviceTypesSelected": null
+      "allDeviceTypesSelected": false
     },
     "channels": {
-      "channelTypeIds": [11, 12],
-      "allChannelTypesSelected": null
+      "channelTypeIds": [21100001, 21100003],
+      "allChannelTypesSelected": false
     },
     "creativeTypes": {
       "creativeTypeIds": [11, 14, 15],
-      "allCreativeTypesSelected": null
+      "allCreativeTypesSelected": false
     },
     "inventory": {
       "openExchanges": {
         "exchangeIds": [16, 19],
-        "allExchangesSelected": null,
+        "allExchangesSelected": false,
         "iabCategoryIds": [11, 21],
-        "allIabCategoriesSelected": null
+        "allIabCategoriesSelected": false
       }
     }
-  },
-  "owId": 0
+  }
 }
 ```
 
@@ -1945,20 +2187,20 @@ Use this API to visualize how different targeting dimensions are distributed acr
     "deviceTypeDistribution": {
       "totalNPIs": 2025510,
       "breakdown": [
-        { "deviceTypeId": 1, "percentage": 20 },
-        { "deviceTypeId": 2, "percentage": 35 },
-        { "deviceTypeId": 3, "percentage": 15 },
-        { "deviceTypeId": 4, "percentage": 30 }
+        { "deviceTypeId": 20300001, "percentage": 20 },
+        { "deviceTypeId": 20300002, "percentage": 35 },
+        { "deviceTypeId": 20300003, "percentage": 15 },
+        { "deviceTypeId": 20300004, "percentage": 30 }
       ]
     },
     "creativeTypeDistribution": [
       {
-        "creativeTypeId": 1,
+        "creativeTypeId": 11,
         "impressions": 1600000,
         "cpm": 72.0
       },
       {
-        "creativeTypeId": 2,
+        "creativeTypeId": 14,
         "impressions": 1200000,
         "cpm": 65.0
       }
@@ -1966,8 +2208,8 @@ Use this API to visualize how different targeting dimensions are distributed acr
     "channelTypeDistribution": {
       "totalNPIs": 2025510,
       "breakdown": [
-        { "channelTypeId": 1, "percentage": 60 },
-        { "channelTypeId": 2, "percentage": 40 }
+        { "channelTypeId": 21100001, "percentage": 60 },
+        { "channelTypeId": 21100003, "percentage": 40 }
       ]
     }
   }
@@ -1985,9 +2227,9 @@ Use this API to visualize how different targeting dimensions are distributed acr
 <div class="endpoint-container">
   <div class="child1">
 
-This API accepts audience block criteria and plan level targeting to return an audience graph for HCP Planners. The audience graph contains granular reach data broken down by NPI types, specialties, and data partner overlap.
+This endpoint accepts an audience block and NPI types and returns an audience graph for an HCP plan. The audience graph contains granular reach data broken down by NPI types, specialties, and data partner overlap.
 
-Use this API to get an audience composition analysis for a single targeting configuration, which is especially useful for understanding data partner overlap and incremental reach.
+Use this endpoint to get an audience composition analysis for a single targeting configuration, which is especially useful for understanding data partner overlap and incremental reach.
 
 <table>
 <th>Request schema</th>
@@ -2009,7 +2251,7 @@ Use this API to get an audience composition analysis for a single targeting conf
   </tr>
   <tr>
   <td>`speciality` <br /><span class="type-text">object</span></td>
-  <td>Specialty object.</td>
+  <td>Specialties to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -2017,122 +2259,200 @@ Use this API to get an audience composition analysis for a single targeting conf
     <table className="objectProperties">
     <tr>
     <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Specialty IDs](#get-specialties-list).</td>
+    <td>[Specialty IDs](#get-specialties-list) to target. Must be empty when <var>allSpecialitiesSelected</var> is <var>true</var>.</td>
     </tr>
     <tr>
     <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All specialties selected.</td>
+    <td>Set to <var>true</var> to target all specialties, with an empty <var>specialityIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   <tr>
-  <td>`accounts` <br /><span class="type-text">array of objects</span></td>
-  <td>Accounts.</td>
+  <td>`account` <br /><span class="type-text">object</span></td>
+  <td>Accounts to target. Required for account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
-    <summary>`accounts` object properties</summary>
+    <summary>`account` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`accountTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[Account type ID](#get-account-types). <br /><EnumWidget values={hcpAccountTypes} /></td>
-    </tr>
-    <tr>
     <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Account IDs](#get-list-of-accounts).</td>
+    <td>[Account IDs](#get-list-of-accounts) to target. Must be empty when <var>allAccountsSelected</var> is <var>true</var>.</td>
     </tr>
     <tr>
     <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All accounts selected.</td>
+    <td>Set to <var>true</var> to target all accounts, with an empty <var>accountIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`accountType` <br /><span class="type-text">object</span></td>
+  <td>Account types to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`accountType` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account type IDs](#get-account-types) to target. Must be empty when <var>allAccountTypesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountTypesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all account types, with an empty <var>accountTypeIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`healthSystem` <br /><span class="type-text">object</span></td>
+  <td>Health systems to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`healthSystem` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthSystemIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Health system IDs to target. Must be empty when <var>allHealthSystemsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allHealthSystemsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all health systems, with an empty <var>healthSystemIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`title` <br /><span class="type-text">object</span></td>
+  <td>Titles to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`title` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`titleIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Title IDs to target. Must be empty when <var>allTitlesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allTitlesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all titles, with an empty <var>titleIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
   <tr>
   <td>`locations` <br /><span class="type-text">object</span></td>
-  <td>Locations object.</td>
+  <td>Locations to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`locations` object properties</summary>
     <table className="objectProperties">
-        <tr>
-        <td>`countryId` <br /><span class="type-text">integer</span></td>
-        <td>[Country ID](/guidelines/master-api/#get-country-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Whitelisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-        </tr>
-        <tr>
-        <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Blacklisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Whitelisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-        </tr>
-        <tr>
-        <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Blacklisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-        <td>Whitelisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-        </tr>
-        <tr>
-        <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-        <td>Blacklisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-        </tr>
+    <tr>
+    <td>`countryId` <br /><span class="type-text">integer</span></td>
+    <td>[Country ID](/guidelines/master-api#get-country-segment); must be <var>30100001</var> (United States).</td>
+    </tr>
+    <tr>
+    <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to exclude. Targeted and excluded locations can't overlap.</td>
+    </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   <tr>
-  <td>`dataPartners` <br /><span class="type-text">object</span></td>
-  <td>Data partners object.</td>
+  <td>`dataPartners` <br /><span class="type-text">array of objects</span></td>
+  <td>Data partners to match the audience with. At least one must be selected. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`dataPartners` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`dataPartnerIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Data partner IDs](#get-data-partners-list). <br /><EnumWidget values={hcpDataPartners} /></td>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>[Data partner ID](#get-data-partners-list). Account based blocks support only <var>7</var> and <var>12</var>. <br /><EnumWidget values={hcpDataPartners} /></td>
     </tr>
     <tr>
-    <td>`allDataPartnersSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All data partners selected.</td>
+    <td>`selected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to use this data partner.</td>
+    </tr>
+    <tr>
+    <td>`priority` <br /><span class="type-text">integer</span></td>
+    <td>Order of preference, starting at <var>1</var>; can't be higher than the number of data partners in the block.</td>
+    </tr>
+    <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Data partner reach.</td>
+    </tr>
+    <tr>
+    <td>`incrementalReach` <br /><span class="type-text">integer</span></td>
+    <td>Reach this data partner adds on top of higher-priority data partners; <var>0</var> to <var>reach</var>.</td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   <tr>
   <td>`storagePathId` <br /><span class="type-text">integer</span></td>
-  <td>Storage path ID.</td>
+  <td>Upload NPI list blocks only: file ID of the uploaded NPI list.</td>
   </tr>
   <tr>
   <td>`storagePath` <br /><span class="type-text">string</span></td>
-  <td>Storage path.</td>
+  <td>Upload NPI list blocks only: storage path of the uploaded NPI list file.</td>
   </tr>
   <tr>
   <td>`storageFileName` <br /><span class="type-text">string</span></td>
-  <td>Storage file name.</td>
+  <td>Upload NPI list blocks only: name of the uploaded NPI list file.</td>
   </tr>
   <tr>
   <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
-  <td>Storage file size.</td>
+  <td>Upload NPI list blocks only: size of the uploaded NPI list file.</td>
   </tr>
   <tr>
   <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
-  <td>Storage file rows.</td>
+  <td>Upload NPI list blocks only: number of rows in the uploaded NPI list file.</td>
   </tr>
   <tr>
   <td>`includeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Included [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to include. Up to 14 included and excluded audiences in total.</td>
   </tr>
   <tr>
   <td>`excludeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Excluded [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to exclude. Can't overlap with <var>includeAudienceIds</var>.</td>
   </tr>
   </table></details>
-</td></tr>
+  </td>
+  <td></td>
+</tr>
 </table>
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -2281,25 +2601,20 @@ Use this API to get an audience composition analysis for a single targeting conf
 
 ```json title="Request sample"
 {
-  "npiTypeIds": [
-    3,
-    4
-  ],
+  "npiTypeIds": [3],
   "audienceBlock": {
-    "audienceSelectionMethodId": 1,
+    "audienceSelectionMethodId": 4,
     "speciality": {
-      "specialityIds": [
-        1,
-        2
-      ],
-      "allSpecialitiesSelected": false
+      "specialityIds": [],
+      "allSpecialitiesSelected": true
     },
     "account": {
-      "accountIds": [
-        1,
-        2
-      ],
+      "accountIds": [440016, 440023],
       "allAccountsSelected": false
+    },
+    "accountType": {
+      "accountTypeIds": [],
+      "allAccountTypesSelected": true
     },
     "healthSystem": {
       "healthSystemIds": [],
@@ -2309,12 +2624,8 @@ Use this API to get an audience composition analysis for a single targeting conf
       "titleIds": [],
       "allTitlesSelected": true
     },
-    "accountType": {
-      "accountTypeIds": [],
-      "allAccountTypesSelected": true
-    },
     "locations": {
-      "countryId": 1,
+      "countryId": 30100001,
       "whiteListedStateIds": [],
       "blackListedStateIds": [],
       "whiteListedCityIds": [],
@@ -2322,20 +2633,10 @@ Use this API to get an audience composition analysis for a single targeting conf
       "whiteListedZipcodes": [],
       "blackListedZipcodes": []
     },
-    "dataPartners": {
-      "dataPartnerIds": [
-        1,
-        2
-      ],
-      "allDataPartnersSelected": null
-    },
-    "storagePathId": null,
-    "storagePath": null,
-    "storageFileName": null,
-    "storageFileSize": null,
-    "storageFileRows": null,
-    "includeAudienceIds": [],
-    "excludeAudienceIds": []
+    "dataPartners": [
+      { "id": 7, "selected": true, "priority": 1 },
+      { "id": 12, "selected": true, "priority": 2 }
+    ]
   }
 }
 ```
@@ -2487,9 +2788,9 @@ Use this API to get an audience composition analysis for a single targeting conf
 <div class="endpoint-container">
   <div class="child1">
 
-This API retrieves aggregated audience reach and audience count per audience block based on the provided Planner configuration. It validates user access and the Healthcare vertical before processing.
+This endpoint retrieves aggregated audience reach and audience count per audience block based on the provided plan configuration. It validates user access and the Healthcare vertical before processing.
 
-Use this API to preview the size and composition of each audience block before generating campaigns.
+Use this endpoint to preview the size and composition of each audience block before generating campaigns.
 
 <table>
 <th>Request schema</th>
@@ -2511,92 +2812,208 @@ Use this API to preview the size and composition of each audience block before g
   </tr>
   <tr>
   <td>`speciality` <br /><span class="type-text">object</span></td>
-  <td>Specialty object.</td>
+  <td>Specialties to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
-   <tr><td colSpan="2">
+  <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`speciality` object properties</summary>
     <table className="objectProperties">
     <tr>
     <td>`specialityIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Specialty IDs](#get-specialties-list).</td>
+    <td>[Specialty IDs](#get-specialties-list) to target. Must be empty when <var>allSpecialitiesSelected</var> is <var>true</var>.</td>
     </tr>
     <tr>
     <td>`allSpecialitiesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All specialties selected.</td>
+    <td>Set to <var>true</var> to target all specialties, with an empty <var>specialityIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`account` <br /><span class="type-text">object</span></td>
+  <td>Accounts to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`account` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account IDs](#get-list-of-accounts) to target. Must be empty when <var>allAccountsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all accounts, with an empty <var>accountIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`accountType` <br /><span class="type-text">object</span></td>
+  <td>Account types to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`accountType` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`accountTypeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[Account type IDs](#get-account-types) to target. Must be empty when <var>allAccountTypesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allAccountTypesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all account types, with an empty <var>accountTypeIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`healthSystem` <br /><span class="type-text">object</span></td>
+  <td>Health systems to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`healthSystem` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`healthSystemIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Health system IDs to target. Must be empty when <var>allHealthSystemsSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allHealthSystemsSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all health systems, with an empty <var>healthSystemIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>`title` <br /><span class="type-text">object</span></td>
+  <td>Titles to target. Required for account based blocks.</td>
+  </tr>
+  <tr><td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`title` object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`titleIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Title IDs to target. Must be empty when <var>allTitlesSelected</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
+    <td>`allTitlesSelected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to target all titles, with an empty <var>titleIds</var> list.</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
   <tr>
   <td>`locations` <br /><span class="type-text">object</span></td>
-  <td>Locations object.</td>
+  <td>Locations to target. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`locations` object properties</summary>
     <table className="objectProperties">
-        <tr>
-        <td>`countryId` <br /><span class="type-text">integer</span></td>
-        <td>[Country ID](/guidelines/master-api/#get-country-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Whitelisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-        </tr>
-        <tr>
-        <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Blacklisted [State IDs](/guidelines/master-api/#get-state-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Whitelisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-        </tr>
-        <tr>
-        <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Blacklisted [City IDs](/guidelines/master-api/#get-city-segment).</td>
-        </tr>
-        <tr>
-        <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-        <td>Whitelisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-        </tr>
-        <tr>
-        <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
-        <td>Blacklisted [Zipcode IDs](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
-        </tr>
+    <tr>
+    <td>`countryId` <br /><span class="type-text">integer</span></td>
+    <td>[Country ID](/guidelines/master-api#get-country-segment); must be <var>30100001</var> (United States).</td>
+    </tr>
+    <tr>
+    <td>`whiteListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedStateIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[State IDs](/guidelines/master-api#get-state-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
+    <td>[City IDs](/guidelines/master-api#get-city-segment) to exclude.</td>
+    </tr>
+    <tr>
+    <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to target.</td>
+    </tr>
+    <tr>
+    <td>`blackListedZipcodes` <br /><span class="type-text">array of strings</span></td>
+    <td>ZIP codes to exclude. Targeted and excluded locations can't overlap.</td>
+    </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   <tr>
   <td>`dataPartners` <br /><span class="type-text">array of objects</span></td>
-  <td>Data partners array.</td>
+  <td>Data partners to match the audience with. At least one must be selected. Required for filter based, upload NPI list, and account based blocks.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`dataPartners` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`dataPartnerIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Data partner IDs](#get-data-partners-list). <br /><EnumWidget values={hcpDataPartners} /></td>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>[Data partner ID](#get-data-partners-list). Account based blocks support only <var>7</var> and <var>12</var>. <br /><EnumWidget values={hcpDataPartners} /></td>
     </tr>
     <tr>
-    <td>`allDataPartnersSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All data partners selected.</td>
+    <td>`selected` <br /><span class="type-text">boolean</span></td>
+    <td>Set to <var>true</var> to use this data partner.</td>
+    </tr>
+    <tr>
+    <td>`priority` <br /><span class="type-text">integer</span></td>
+    <td>Order of preference, starting at <var>1</var>; can't be higher than the number of data partners in the block.</td>
+    </tr>
+    <tr>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Data partner reach.</td>
+    </tr>
+    <tr>
+    <td>`incrementalReach` <br /><span class="type-text">integer</span></td>
+    <td>Reach this data partner adds on top of higher-priority data partners; <var>0</var> to <var>reach</var>.</td>
     </tr>
     </table></details>
-  </td></tr>
+  </td>
+  <td></td>
+  </tr>
   <tr>
   <td>`storagePathId` <br /><span class="type-text">integer</span></td>
-  <td>Storage path ID.</td>
+  <td>Upload NPI list blocks only: file ID of the uploaded NPI list.</td>
+  </tr>
+  <tr>
+  <td>`storagePath` <br /><span class="type-text">string</span></td>
+  <td>Upload NPI list blocks only: storage path of the uploaded NPI list file.</td>
+  </tr>
+  <tr>
+  <td>`storageFileName` <br /><span class="type-text">string</span></td>
+  <td>Upload NPI list blocks only: name of the uploaded NPI list file.</td>
+  </tr>
+  <tr>
+  <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
+  <td>Upload NPI list blocks only: size of the uploaded NPI list file.</td>
+  </tr>
+  <tr>
+  <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
+  <td>Upload NPI list blocks only: number of rows in the uploaded NPI list file.</td>
   </tr>
   <tr>
   <td>`includeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Included [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to include. Up to 14 included and excluded audiences in total.</td>
   </tr>
   <tr>
   <td>`excludeAudienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Excluded [Audience IDs](/guidelines/audience-api/#audience-details-list).</td>
+  <td>Existing audience blocks only: [audience IDs](/guidelines/audience-api#audience-details-list) to exclude. Can't overlap with <var>includeAudienceIds</var>.</td>
   </tr>
   </table></details>
-</td></tr>
+  </td>
+  <td></td>
+</tr>
 <tr>
   <td>`planLevelTargeting` <br /><span class="type-text">object</span></td>
   <td>Plan-level targeting object.</td>
@@ -2607,7 +3024,7 @@ Use this API to preview the size and composition of each audience block before g
   <table className="objectProperties">
   <tr>
   <td>`devices` <br /><span class="type-text">object</span></td>
-  <td>Devices object.</td>
+  <td>Devices to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -2615,17 +3032,19 @@ Use this API to preview the size and composition of each audience block before g
     <table className="objectProperties">
     <tr>
     <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Device type IDs](/guidelines/master-api/#get-device-type). <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
+    <td>[Device type IDs](/guidelines/master-api#get-device-type) to target. Must be empty when <var>allDeviceTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={deviceType.filter((v) => v.id !== 20399999)} /></td>
     </tr>
     <tr>
     <td>`allDeviceTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All device types selected.</td>
+    <td>Set to <var>true</var> to target all device types, with an empty <var>deviceTypeIds</var> list.</td>
     </tr>
     </table></details>
-  </td></tr>
-    <tr>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`channels` <br /><span class="type-text">object</span></td>
-  <td>Channels object.</td>
+  <td>Channels to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -2633,18 +3052,19 @@ Use this API to preview the size and composition of each audience block before g
     <table className="objectProperties">
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types) to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     <tr>
     <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All channel types selected.</td>
+    <td>Set to <var>true</var> to target all channels, with an empty <var>channelTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
-    <tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`creativeTypes` <br /><span class="type-text">object</span></td>
-  <td>Creative types object.</td>
+  <td>Creative types to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
@@ -2652,69 +3072,80 @@ Use this API to preview the size and composition of each audience block before g
     <table className="objectProperties">
     <tr>
     <td>`creativeTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
+    <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list) to target. Must be empty when <var>allCreativeTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={creativeTypes.filter((v) => v.id !== 0)} /></td>
     </tr>
     <tr>
     <td>`allCreativeTypesSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All creative types selected.</td>
+    <td>Set to <var>true</var> to target all creative types, with an empty <var>creativeTypeIds</var> list.</td>
     </tr>
-    </table>
-    </details>
-  </td></tr>
     <tr>
+    <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Whether TV auto buying is enabled; requires video creatives (<var>14</var>).</td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
   <td>`inventory` <br /><span class="type-text">object</span></td>
-  <td>Inventory.</td>
+  <td>Inventory to target.</td>
   </tr>
   <tr><td colSpan="2">
     <details className="objectPropertiesDetails">
     <summary>`inventory` object properties</summary>
     <table className="objectProperties">
     <tr>
-    <td>`openExchangeVO` <br /><span class="type-text">object</span></td>
-    <td>Open exchange VO object.</td>
+    <td>`openExchanges` <br /><span class="type-text">object</span></td>
+    <td>Open Exchange inventory to target.</td>
     </tr>
     <tr><td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`openExchangeVO` object properties</summary>
+      <summary>`openExchanges` object properties</summary>
       <table className="objectProperties">
       <tr>
       <td>`exchangeIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[Exchange IDs](/guidelines/master-api/#get-exchanges).</td>
+      <td>[Exchange IDs](/guidelines/master-api#get-exchanges) to target. Must be empty when <var>allExchangesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allExchangesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All exchanges selected.</td>
+      <td>Set to <var>true</var> to target all exchanges, with an empty <var>exchangeIds</var> list.</td>
       </tr>
       <tr>
       <td>`iabCategoryIds` <br /><span class="type-text">array of integers</span></td>
-      <td>[IAB category IDs](/guidelines/master-api/#get-publisher-ad-categories).</td>
+      <td>[IAB category IDs](/guidelines/master-api#get-publisher-ad-categories) to target. Must be empty when <var>allIabCategoriesSelected</var> is <var>true</var>.</td>
       </tr>
       <tr>
       <td>`allIabCategoriesSelected` <br /><span class="type-text">boolean</span></td>
-      <td>All IAB categories selected.</td>
+      <td>Set to <var>true</var> to target all IAB categories, with an empty <var>iabCategoryIds</var> list.</td>
       </tr>
       </table></details>
-    </td></tr>
+    </td>
+    <td></td>
+    </tr>
     <tr>
-  <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
-  <td>Inventory group.</td>
+    <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+    <td>Inventory groups to target. Send <var>null</var> unless you target inventory groups. Returned as an empty object in plan details when none are targeted.</td>
+    </tr>
+    <tr><td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventoryGroup` object properties</summary>
+      <table className="objectProperties">
+      <tr>
+      <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
+      <td>[Inventory group IDs](/guidelines/inventory-api#get-list-of-inventory-groups) to target.</td>
+      </tr>
+      <tr>
+      <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
+      <td>Set to <var>true</var> to target all inventory groups, with an empty <var>inventoryGroupIds</var> list.</td>
+      </tr>
+      </table></details>
+    </td>
+    <td></td>
+    </tr>
+    </table></details>
+  </td>
+  <td></td>
   </tr>
-  <tr><td colSpan="2">
-    <details className="objectPropertiesDetails">
-    <summary>`inventoryGroup` object properties</summary>
-    <table className="objectProperties">
-    <tr>
-    <td>`inventoryGroupIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Inventory group IDs](/guidelines/inventory-api/#get-list-of-inventory-groups).</td>
-    </tr>
-    <tr>
-    <td>`allInventoryGroupsSelected` <br /><span class="type-text">boolean</span></td>
-    <td>All inventory groups selected.</td>
-    </tr>
-    </table></details>
-  </td></tr>
-    </table></details>
-  </td></tr>
   </table></details>
 </td>
   <td></td>
@@ -2812,7 +3243,7 @@ Use this API to preview the size and composition of each audience block before g
       "isTvAutoBuying": false
     },
     "channels": {
-      "channelTypeIds": [11, 12],
+      "channelTypeIds": [21100001, 21100003],
       "allChannelTypesSelected": false
     },
     "inventory": {
@@ -2856,15 +3287,11 @@ Use this API to preview the size and composition of each audience block before g
 <div class="endpoint-container">
   <div class="child1">
 
-This API accepts a Planner configuration (audience blocks, plan-level targeting, and split strategy) and computes proposed campaigns from it — resolving real audience data via the audience API and real reach estimates via a separate data API for each generated campaign. It is a read-only computation: nothing is created or persisted by this call, so it's safe to call repeatedly while iterating on a plan's targeting.
+Generate proposed campaigns from a plan configuration. This is the first step in creating an HCP plan. IQM builds the campaigns from the split strategy, forecasts their reach, and calculates each campaign's CPM, impressions, and budget range, along with the plan's totals. Nothing is saved.
 
-It returns the same input data with the computed <var>campaigns</var> array added (sorted by reach, descending). That response can be submitted directly to [Publish campaigns plan](#publish-campaigns-plan) to create draft campaigns in IQM.
+Send the plan without totals or <var>campaigns</var>. The response <var>data</var> is the request body for [Create HCP Planner](#create-hcp-planner).
 
-If you call this endpoint without <var>id</var>, the response has none either, and publish will create a new proposal.
-
-If you call this endpoint with an existing proposal's <var>id</var> (to recompute campaigns for a proposal you already have), that ID is preserved, and the publish endpoint will instead edit that proposal.
-
-See the full resource properties for request schema and response properties.
+Each campaign's <var>dataCpm</var> is the average data cost of its selected data partners, and its <var>mediaCpm</var> depends on its creative type. The <var>selectedValueIds</var> in <var>splitStrategy</var> are ignored: campaigns are created for every plan-level value of each listed dimension.
 
 <a href="#hcp-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
 
@@ -2873,17 +3300,11 @@ See the full resource properties for request schema and response properties.
 
 ```json title="Request sample"
 {
-  "name": "Q4 Diabetes Awareness Campaign",
-  "startTime": 1732707706666,
-  "endTime": 1733312506666,
-  "timezoneId": 3,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
+  "timezoneId": 29,
   "budgetTypeId": 1,
-  "budget": 100000,
-  "maxBudget": 120000,
-  "reach": 50000,
-  "maxReach": 70000,
-  "impressions": 200000,
-  "maxImpressions": 250000,
   "frequencyCap": 3,
   "frequencyCapTypeId": 1,
   "npiTypeIds": [3, 4],
@@ -2891,230 +3312,111 @@ See the full resource properties for request schema and response properties.
     {
       "audienceSelectionMethodId": 1,
       "speciality": {
+        "specialityIds": [],
         "allSpecialitiesSelected": true
       },
-      "accounts": [
-        {
-          "allAccountsSelected": true
-        }
-      ],
       "locations": {
-        "countryId": 30100001
+        "countryId": 30100001,
+        "whiteListedStateIds": [],
+        "blackListedStateIds": [],
+        "whiteListedCityIds": [],
+        "blackListedCityIds": [],
+        "whiteListedZipcodes": [],
+        "blackListedZipcodes": []
       },
-      "dataPartners": {
-        "allDataPartnersSelected": true
-      },
-      "storagePath": null,
-      "includeAudienceIds": [],
-      "excludeAudienceIds": []
-    },
-    {
-      "audienceSelectionMethodId": 2,
-      "speciality": {
-        "allSpecialitiesSelected": true
-      },
-      "accounts": [
-        {
-          "allAccountsSelected": true
-        }
-      ],
-      "locations": {
-        "countryId": 30100001
-      },
-      "dataPartners": {
-        "allDataPartnersSelected": true
-      },
-      "storagePath": "tmp/aud_uploads/upload_block2.csv",
-      "includeAudienceIds": [],
-      "excludeAudienceIds": []
-    },
-    {
-      "audienceSelectionMethodId": 3,
-      "speciality": {
-        "allSpecialitiesSelected": true
-      },
-      "accounts": [
-        {
-          "allAccountsSelected": true
-        }
-      ],
-      "locations": {
-        "countryId": 30100001
-      },
-      "dataPartners": {
-        "allSpecialitiesSelected": true
-      },
-      "storagePath": null,
-      "includeAudienceIds": [1, 2, 3],
-      "excludeAudienceIds": [1, 2, 3]
+      "dataPartners": [
+        { "id": 7, "selected": true, "priority": 1 },
+        { "id": 8, "selected": true, "priority": 2 }
+      ]
     }
   ],
   "planLevelTargeting": {
     "devices": {
-      "allDeviceTypesSelected": true
-    },
-    "channels": {
-      "allChannelTypesSelected": true
+      "deviceTypeIds": [20300001, 20300004],
+      "allDeviceTypesSelected": false
     },
     "creativeTypes": {
-      "allCreativeTypesSelected": true
+      "creativeTypeIds": [11, 14],
+      "allCreativeTypesSelected": false,
+      "isTvAutoBuying": false
+    },
+    "channels": {
+      "channelTypeIds": [],
+      "allChannelTypesSelected": true
     },
     "inventory": {
-      "openExchangeVO": {
+      "openExchanges": {
+        "exchangeIds": [],
         "allExchangesSelected": true,
+        "iabCategoryIds": [],
         "allIabCategoriesSelected": true
       },
-      "inventoryGroup": {
-        "allInventoryGroupsSelected": true
-      }
+      "inventoryGroup": null
     }
   },
   "splitStrategy": [
-    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 13, 14, 15, 17] },
-    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] },
-    { "splitDimensionTypeId": 3, "selectedValueIds": [7] },
-    { "splitDimensionTypeId": 4, "selectedValueIds": [11] },
-    { "splitDimensionTypeId": 5, "selectedValueIds": [] }
+    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
+    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] }
   ]
 }
 ```
 
-```json title="Response 200"
+```json title="Response 200 (abbreviated)"
 {
-  "name": "Q4 Diabetes Awareness Campaign",
-  "startTime": 1732707706666,
-  "endTime": 1733312506666,
-  "timezoneId": 3,
-  "budgetTypeId": 1,
-  "budget": 100000,
-  "maxBudget": 120000,
-  "reach": 50000,
-  "maxReach": 70000,
-  "impressions": 200000,
-  "maxImpressions": 250000,
-  "workspaceMarginPercentage": 20.0,
-  "frequencyCap": 3,
-  "frequencyCapTypeId": 1,
-  "npiTypeIds": [3, 4],
-  "audienceBlocks": [
-    {
-      "audienceSelectionMethodId": 1,
-      "speciality": {
-        "allSpecialitiesSelected": true
-      },
-      "accounts": [
-        {
-          "allAccountsSelected": true
+  "success": true,
+  "data": {
+    "name": "Q4 Cardiology Awareness",
+    "startTime": 1793505600000,
+    "endTime": 1796101199000,
+    "timezoneId": 29,
+    "budgetTypeId": 1,
+    "minBudget": 98.00,
+    "budget": 8820.00,
+    "maxBudget": 8820.00,
+    "reach": 60000,
+    "maxReach": 60000,
+    "minImpressions": 4000,
+    "impressions": 360000,
+    "maxImpressions": 360000,
+    "frequencyCap": 3,
+    "frequencyCapTypeId": 1,
+    "npiTypeIds": [3, 4],
+    "audienceBlocks": [ ... ],
+    "planLevelTargeting": { ... },
+    "splitStrategy": [ ... ],
+    "campaigns": [
+      {
+        "id": null,
+        "name": "Video - Physicians",
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
+        "frequencyCap": 3,
+        "frequencyCapTypeId": 1,
+        "minMediaCpm": 18.00,
+        "mediaCpm": 18.00,
+        "maxMediaCpm": 18.00,
+        "dataCpm": 12.50,
+        "minBudget": 30.50,
+        "budget": 3843.00,
+        "maxBudget": 3843.00,
+        "minReach": 10,
+        "reach": 42000,
+        "maxReach": 42000,
+        "minImpressions": 1000,
+        "impressions": 126000,
+        "maxImpressions": 126000,
+        "isAbm": false,
+        "targeting": {
+          "dataPartnerIds": [7, 8],
+          "creativeTypeId": 14,
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3,
+          "audienceTypeIds": [1]
         }
-      ],
-      "locations": {
-        "countryId": 30100001
       },
-      "dataPartners": {
-        "allDataPartnersSelected": true
-      },
-      "storagePath": null,
-      "includeAudienceIds": [],
-      "excludeAudienceIds": []
-    },
-    {
-      "audienceSelectionMethodId": 2,
-      "speciality": {
-        "allSpecialitiesSelected": true
-      },
-      "accounts": [
-        {
-          "allAccountsSelected": true
-        }
-      ],
-      "locations": {
-        "countryId": 30100001
-      },
-      "dataPartners": {
-        "allDataPartnersSelected": true
-      },
-      "storagePath": "tmp/aud_uploads/upload_block2.csv",
-      "includeAudienceIds": [],
-      "excludeAudienceIds": []
-    },
-    {
-      "audienceSelectionMethodId": 3,
-      "speciality": {
-        "allSpecialitiesSelected": true
-      },
-      "accounts": [
-        {
-          "allAccountsSelected": true
-        }
-      ],
-      "locations": {
-        "countryId": 30100001
-      },
-      "dataPartners": {
-        "allSpecialitiesSelected": true
-      },
-      "storagePath": null,
-      "includeAudienceIds": [1, 2, 3],
-      "excludeAudienceIds": [1, 2, 3]
-    }
-  ],
-  "planLevelTargeting": {
-    "devices": {
-      "allDeviceTypesSelected": true
-    },
-    "channels": {
-      "allChannelTypesSelected": true
-    },
-    "creativeTypes": {
-      "allCreativeTypesSelected": true
-    },
-    "inventory": {
-      "openExchangeVO": {
-        "allExchangesSelected": true,
-        "allIabCategoriesSelected": true
-      },
-      "inventoryGroup": {
-        "allInventoryGroupsSelected": true
-      }
-    }
-  },
-  "splitStrategy": [
-    { "splitDimensionTypeId": 1, "selectedValueIds": [11, 13, 14, 15, 17] },
-    { "splitDimensionTypeId": 2, "selectedValueIds": [3, 4] },
-    { "splitDimensionTypeId": 3, "selectedValueIds": [7] },
-    { "splitDimensionTypeId": 4, "selectedValueIds": [11] },
-    { "splitDimensionTypeId": 5, "selectedValueIds": [] }
-  ],
-  "campaigns": [
-    {
-      "id": null,
-      "name": "Campaign_Image_HCP_Healthlink_Mobile",
-      "startTime": 1732707706666,
-      "endTime": 1733312506666,
-      "frequencyCap": 1,
-      "frequencyCapTypeId": 1,
-      "budget": null,
-      "maxBudget": 0.0,
-      "minMediaCpm": null,
-      "mediaCpm": null,
-      "maxMediaCpm": null,
-      "dataCpm": null,
-      "minReach": 0,
-      "reach": null,
-      "maxReach": 0,
-      "impressions": null,
-      "maxImpressions": 0,
-      "strategy": "Image + HCP + Healthlink + Mobile",
-      "targeting": {
-        "dataPartnerIds": [7],
-        "creativeTypeId": 11,
-        "deviceTypeIds": [11],
-        "npiTypeId": 3,
-        "audienceTypeIds": [1, 2]
-      },
-      "isAbm": false
-    }
-  ]
+      ...
+    ]
+  }
 }
 ```
 
@@ -3129,231 +3431,106 @@ See the full resource properties for request schema and response properties.
 <div class="endpoint-container">
   <div class="child1">
 
-Generate an insertion order and draft campaigns based on a provided Planner configuration. To generate the Planner configuration with campaigns data, use the [Generate campaigns plan](#generate-campaigns-plan) API.
+Publish an HCP plan to create an IO and campaigns. Send the full plan with its <var>id</var> and current <var>statusId</var>. Publishing first saves the request body with the same checks as [Update HCP Planner](#update-hcp-planner), so the same request rules apply. Only Advertiser Organizations can publish plans.
 
-This endpoint accepts an existing [HCP plan ID](#get-list-of-hcp-planners) (<var>id</var>) and updates it with the provided Planner configuration and campaigns data. The <var>statusId</var> must match the status of the existing plan, or the request will fail. 
+Publishing is asynchronous. The plan moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created, then to <var>IO Created</var> (<var>7</var>), with <var>ioId</var> and each campaign's <var>campaignId</var> set. If publishing fails, the plan moves to <var>Failed</var> (<var>4</var>). The response only confirms that publishing has started: use [HCP Planner details by ID](#hcp-planner-details-by-id) to check the result.
 
-If no existing HCP plan ID is provided, a new plan will be created.
-
-See the full resource properties for request schema and response properties.
+The campaigns are created as drafts. They don't run until creatives are attached and the campaigns are approved.
 
 <a href="#hcp-planner-resource-properties"><button className="responsePropertiesButton"><Caret />Resource properties</button></a>
+
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>[Plan ID](#get-list-of-hcp-planners) of the plan to publish. Without an <var>id</var>, a new plan is created and published.</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>The plan's current status ID. Send it back unchanged. <br /><EnumWidget values={proposalStatus.filter((v) => v.id !== 1)} /></td>
+</tr>
+<tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum plan budget, from the generate campaigns response. Required for Ready plans.</td>
+</tr>
+<tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum plan impressions, from the generate campaigns response. Required for Ready plans.</td>
+</tr>
+<tr>
+  <td>`planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`planLevelTargeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`inventory` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Inventory to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventory` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+          <td>Inventory groups to target. Send <var>null</var> unless you target inventory groups.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+  <td>Proposed campaigns. Publishing re-creates the campaigns with new <var>id</var> values.</td>
+</tr>
+</table>
 
 </div>
 <div class="child2">
 
-```json title="Request sample"
+```json title="Request sample (abbreviated)"
 {
-  "id": 123,
-  "name": "Sample HCP Planner Request",
+  "id": 4512,
   "statusId": 6,
-  "startTime": 1735124399000,
-  "endTime": 1757534400000,
-  "timezoneId": 4,
+  "name": "Q4 Cardiology Awareness",
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
+  "timezoneId": 29,
   "budgetTypeId": 1,
-  "budget": 75000.00,
-  "maxBudget": 80000.00,
-  "reach": 250000,
-  "maxReach": 300000,
-  "impressions": 1000000,
-  "maxImpressions": 1200000,
-  "frequencyCap": 5,
+  "minBudget": 98.00,
+  "budget": 8820.00,
+  "maxBudget": 8820.00,
+  "minImpressions": 4000,
+  "impressions": 360000,
+  "maxImpressions": 360000,
+  "frequencyCap": 3,
   "frequencyCapTypeId": 1,
-  "npiTypeIds": [1, 2],
-  "audienceBlocks": [
-    {
-      "audienceSelectionMethodId": 1,
-      "speciality": {
-        "specialityIds": [101, 102],
-        "allSpecialitiesSelected": false
-      },
-      "locations": {
-        "countryId": 1,
-        "whiteListedStateIds": [501, 502],
-        "blackListedStateIds": [],
-        "whiteListedCityIds": [],
-        "blackListedCityIds": [],
-        "whiteListedZipcodes": [90210, 10001],
-        "blackListedZipcodes": []
-      },
-      "dataPartners": [
-        {
-          "id": 7,
-          "reach": 10000,
-          "priority": 1,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 8,
-          "reach": 10000,
-          "priority": 2,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 10,
-          "reach": 10000,
-          "priority": 3,
-          "isSelected": true,
-          "incrementalReach": 5000
-        }
-      ]
-    },
-    {
-      "audienceSelectionMethodId": 2,
-      "speciality": {
-        "specialityIds": [101, 102],
-        "allSpecialitiesSelected": false
-      },
-      "locations": {
-        "countryId": 1,
-        "whiteListedStateIds": [501, 502],
-        "blackListedStateIds": [],
-        "whiteListedCityIds": [],
-        "blackListedCityIds": [],
-        "whiteListedZipcodes": [90210, 10001],
-        "blackListedZipcodes": []
-      },
-      "dataPartners": [
-        {
-          "id": 7,
-          "reach": 10000,
-          "priority": 1,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 8,
-          "reach": 10000,
-          "priority": 2,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 10,
-          "reach": 10000,
-          "priority": 3,
-          "isSelected": true,
-          "incrementalReach": 5000
-        }
-      ],
-      "storagePathId": 1
-    },
-    {
-      "audienceSelectionMethodId": 3,
-      "includeAudienceIds": [301, 302],
-      "excludeAudienceIds": [401]
-    },
-    {
-      "audienceSelectionMethodId": 4,
-      "speciality": {
-        "specialityIds": [101, 102],
-        "allSpecialitiesSelected": false
-      },
-      "accounts": [
-        {
-          "accountTypeId": 1,
-          "accountIds": [201, 202],
-          "allAccountsSelected": false
-        },
-        {
-          "accountTypeId": 2,
-          "accountIds": [],
-          "allAccountsSelected": true
-        }
-      ],
-      "locations": {
-        "countryId": 1,
-        "whiteListedStateIds": [501, 502],
-        "blackListedStateIds": [],
-        "whiteListedCityIds": [],
-        "blackListedCityIds": [],
-        "whiteListedZipcodes": [90210, 10001],
-        "blackListedZipcodes": []
-      },
-      "dataPartners": [
-        {
-          "id": 7,
-          "reach": 10000,
-          "priority": 1,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 8,
-          "reach": 10000,
-          "priority": 2,
-          "isSelected": true,
-          "incrementalReach": 5000
-        },
-        {
-          "id": 10,
-          "reach": 10000,
-          "priority": 3,
-          "isSelected": true,
-          "incrementalReach": 5000
-        }
-      ]
-    }
-  ],
+  "npiTypeIds": [3, 4],
+  "audienceBlocks": [ ... ],
   "planLevelTargeting": {
-    "devices": {
-      "deviceTypeIds": [1, 2],
-      "allDeviceTypesSelected": false
-    },
-    "channels": {
-      "channelTypeIds": [1, 2],
-      "allChannelTypesSelected": false
-    },
-    "creativeTypes": {
-      "creativeTypeIds": [10, 11],
-      "allCreativeTypesSelected": false,
-      "isTvAutoBuying": true
-    },
+    "devices": { ... },
+    "creativeTypes": { ... },
+    "channels": { ... },
     "inventory": {
-      "openExchanges": {
-        "exchangeIds": [1, 2],
-        "allExchangesSelected": false,
-        "iabCategoryIds": [1, 2],
-        "allIabCategoriesSelected": false
-      },
-      "inventoryGroup": {
-        "inventoryGroupIds": [1, 2],
-        "allInventoryGroupsSelected": false
-      }
+      "openExchanges": { ... },
+      "inventoryGroup": null
     }
   },
-  "splitStrategy": [
-    {
-      "splitDimensionTypeId": 1,
-      "selectedValueIds": [10, 11]
-    }
-  ],
-  "campaigns": [
-    {
-      "id": null,
-      "name": "Campaign A",
-      "startTime": 1754942400000,
-      "endTime": 1757534400000,
-      "budget": 37500.00,
-      "maxBudget": 40000.00,
-      "mediaCpm": 50.0,
-      "dataCpm": 15.0,
-      "reach": 125000,
-      "maxReach": 150000,
-      "impressions": 500000,
-      "maxImpressions": 600000,
-      "isAbm": false,
-      "targeting": {
-        "dataPartnerIds": [1],
-        "creativeTypeId": 10,
-        "deviceTypeIds": [1],
-        "npiTypeId": 1,
-        "audienceTypeIds": [1]
-      }
-    }
-  ]
+  "splitStrategy": [ ... ],
+  "campaigns": [ ... ]
 }
 ```
 
@@ -3365,6 +3542,22 @@ See the full resource properties for request schema and response properties.
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal cannot be edited in its current status."
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -3380,7 +3573,7 @@ See the full resource properties for request schema and response properties.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available split strategies for HCP Planners.
+Get the list of available split strategies for HCP plans.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -3457,7 +3650,7 @@ Get the list of available split strategies for HCP Planners.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available NPI types for HCP Planners.
+Get the list of available NPI types for HCP plans.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -3515,7 +3708,7 @@ Get the list of available NPI types for HCP Planners.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available geography segments for HCP Planners.
+Get the list of available geography segments for HCP plans.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -3574,7 +3767,7 @@ Get the list of available geography segments for HCP Planners.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available data partners for HCP Planners. For Account Based (ABM) audience blocks specifically, only Healthlink (<var>7</var>) and RevOptimal (<var>12</var>) can be selected.
+Get the list of available data partners for HCP Planners. Account based audience blocks support only Healthlink (<var>7</var>) and RevOptimal (<var>12</var>).
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -3660,7 +3853,7 @@ Get the list of available data partners for HCP Planners. For Account Based (ABM
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available audience selection methods for HCP Planners.
+Get the list of available audience selection methods for HCP plans.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -3730,15 +3923,15 @@ Get the list of available audience selection methods for HCP Planners.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available specialties for HCP Planners.
+Get the list of available specialties for HCP plans.
 
 | Query parameters ||
 | --- | --- |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>.
-| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>.
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field.
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>+displayName</var>. <br />Supported values: <var>name</var>, <var>id</var>, <var>createdOn</var>.
-| `specialityIds` <br /><span class="type-text">array of integers</span> | Filter by [specialty IDs](#get-specialties-list).
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>. |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by search field. |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>+displayName</var>. <br />Supported values: <var>name</var>, <var>id</var>, <var>createdOn</var>. |
+| `specialityIds` <br /><span class="type-text">array of integers</span> | Filter by [specialty IDs](#get-specialties-list). |
 
 </div>
 <div class="child2">
@@ -3777,14 +3970,14 @@ Get the list of available specialties for HCP Planners.
 <div class="endpoint-container">
   <div class="child1">
 
-Get the list of available account types for HCP Planners.
+Get the list of available account types for HCP plans.
 
 | Query parameters ||
 | --- | --- |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>.
-| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>.
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field.
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-reach</var>. <br />Supported values: <var>name</var>, <var>id</var>, <var>createdOn</var>.
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>50</var>. |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by search field. |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-reach</var>. <br />Supported values: <var>name</var>, <var>id</var>, <var>createdOn</var>. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>

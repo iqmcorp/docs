@@ -13,6 +13,7 @@ import { frequencyCapTypes } from '@site/src/data/enums/frequencyCapTypes';
 import { splitStrategies } from '@site/src/data/enums/splitStrategies';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 import { plannerFileTypes } from '@site/src/data/enums/plannerFileTypes';
+import { trafficTypes } from '@site/src/data/enums/trafficTypes';
 
 export const hcpAudienceSelectionMethods = [
   { id: 1, label: 'Filter based' },
@@ -69,7 +70,7 @@ An HCP plan targets healthcare professionals by their National Provider Identifi
 **Generate campaigns → Save plan → Edit (optional) → Publish IO and campaigns**
 
 There are two key rules to keep in mind when working with HCP plans:
-  1. **Targeting consistency:** The split strategy must agree with the plan-level targeting, or the request is rejected. See [Step 1](#step-1-plan-the-audience-and-targeting).
+  1. **Targeting consistency:** The split strategy must agree with the plan-level targeting when you save, edit, or publish the plan. See [Step 1](#step-1-plan-the-audience-and-targeting).
   2. **Status echo:** Every edit and publish request must include the plan's *current* <var>statusId</var>. See [Step 5](#step-5-edit-the-plan).
 
 ### More resources
@@ -238,7 +239,7 @@ The audience type of each block is set by IQM from its method, as in the table a
 
 #### Plan-level targeting
 
-<var>planLevelTargeting</var> sets the creative types, devices, channels, and inventory for the whole plan. All four objects are required: a request without <var>channels</var> or <var>inventory</var> fails with a generic <var>500</var> error. To target all channels and all Open Exchange inventory, send:
+<var>planLevelTargeting</var> sets the creative types, devices, channels, and inventory for the whole plan. All four objects are required: a request without <var>channels</var> or <var>inventory</var> returns a generic <var>500</var> error. To target all channels and all Open Exchange inventory, send:
 
 ```json title="Channels and inventory, all selected"
 "channels": {
@@ -255,7 +256,7 @@ The audience type of each block is set by IQM from its method, as in the table a
 }
 ```
 
-Objects such as <var>creativeTypes</var>, <var>devices</var>, and <var>speciality</var> use a "select all" flag with an ID list:
+Objects such as <var>creativeTypes</var>, <var>devices</var>, <var>channels</var>, and <var>speciality</var> use a "select all" flag with an ID list:
 
   * Select all: set the flag (for example <var>allCreativeTypesSelected</var>) to <var>true</var> and send an empty ID list.
   * Select specific values: set the flag to <var>false</var> and list the IDs.
@@ -318,7 +319,7 @@ Each campaign's <var>dataCpm</var> is the average data cost of its selected data
 </tr>
 <tr>
   <td>`timezoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-  <td>[Time zone ID](/guidelines/master-api#get-timezones).</td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
 </tr>
 <tr>
   <td>`budgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
@@ -536,7 +537,7 @@ Each campaign's <var>dataCpm</var> is the average data cost of its selected data
         </tr>
         <tr>
           <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-          <td>Channel type IDs to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>.</td>
+          <td>[Channel type IDs](/guidelines/master-api#get-traffic-types) to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={trafficTypes} /></td>
         </tr>
       </table>
       </details>
@@ -957,7 +958,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
 </tr>
 <tr>
   <td>`timezoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-  <td>[Time zone ID](/guidelines/master-api#get-timezones).</td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
 </tr>
 <tr>
   <td>`budgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
@@ -1207,7 +1208,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
         </tr>
         <tr>
           <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-          <td>Channel type IDs to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>.</td>
+          <td>[Channel type IDs](/guidelines/master-api#get-traffic-types) to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={trafficTypes} /></td>
         </tr>
       </table>
       </details>
@@ -1672,7 +1673,7 @@ Use this endpoint to:
   </tr>
   <tr>
     <td>`timezoneId` <br /><span class="type-text">integer</span></td>
-    <td>[Time zone ID](/guidelines/master-api#get-timezones).</td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
   </tr>
   <tr>
     <td>`createdAt` <br /><span class="type-text">integer</span></td>
@@ -1938,7 +1939,7 @@ Use this endpoint to:
           </tr>
           <tr>
             <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-            <td>Targeted channel type IDs; empty when all channels are targeted.</td>
+            <td>Targeted [channel type IDs](/guidelines/master-api#get-traffic-types); empty when all channels are targeted. <br /><EnumWidget values={trafficTypes} /></td>
           </tr>
         </table>
         </details>
@@ -2312,7 +2313,7 @@ function getHcpPlanById(): Promise<Responses> {
 
 Update the plan before publishing it. This step is optional. Send the full plan; the saved plan is replaced with the request body. Editing doesn't change the plan's status.
 
-To edit, get the plan with [Step 4](#step-4-get-the-plan), change the fields you need, and send it back.
+To edit, get the plan with [Step 4](#step-4-get-plan-details), change the fields you need, and send it back.
 
 The request schema is the same as [Step 3](#step-3-create-a-plan), except for the fields in the table below.
 
@@ -2343,11 +2344,11 @@ Plans in <var>Processing</var> (<var>5</var>) or <var>IO Created</var> (<var>7</
 </tr>
 <tr>
   <td>`minBudget` <br /><span class="type-text">number</span></td>
-  <td>Minimum plan budget, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value fails with a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
+  <td>Minimum plan budget, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value returns a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
 </tr>
 <tr>
   <td>`minImpressions` <br /><span class="type-text">integer</span></td>
-  <td>Minimum plan impressions, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value fails with a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
+  <td>Minimum plan impressions, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value returns a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
 </tr>
 <tr>
   <td>`frequencyCap` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>

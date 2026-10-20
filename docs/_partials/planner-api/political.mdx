@@ -8,7 +8,7 @@ import { planObjectives } from '@site/src/data/enums/planObjectives';
 import { strategyTypes } from '@site/src/data/enums/strategyTypes';
 import { splitTypes } from '@site/src/data/enums/splitTypes';
 import { targetingTypes } from '@site/src/data/enums/targetingTypes';
-import { channelTypes } from '@site/src/data/enums/channelTypes';
+import { trafficTypes } from '@site/src/data/enums/trafficTypes';
 import { plannerFileTypes } from '@site/src/data/enums/plannerFileTypes';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 import { deviceType } from '@site/src/data/enums/deviceType';
@@ -35,11 +35,11 @@ import { deviceType } from '@site/src/data/enums/deviceType';
 </tr>
 <tr>
   <td>`graphId` <br /><span class="type-text">string</span></td>
-  <td>Cross-screen graph ID (cross-screen plans only, see [Get reach saturation graph](#get-reach-saturation-graph)).</td>
+  <td>Cross-screen graph ID from [Get reach saturation graph](#get-reach-saturation-graph). Required for Voter TV+ plans.</td>
 </tr>
 <tr>
   <td>`overview` <br /><span class="type-text">object</span></td>
-  <td>Cross-screen overview metrics (cross-screen plans only).</td>
+  <td>Linear TV and CTV assumptions from [Get reach saturation graph](#get-reach-saturation-graph). Voter TV+ plans only; defaults are used if omitted.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -89,7 +89,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   </tr>
   <tr>
   <td>`timezoneId` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time.</td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones). Replaced with the Organization's timezone.</td>
   </tr>
   <tr>
   <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
@@ -97,7 +97,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   </tr>
   <tr>
   <td>`marginValue` <br /><span class="type-text">integer</span></td>
-  <td>Margin percentage applied on top of base CPM, not a currency amount, valid range: 0-100.</td>
+  <td>Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin.</td>
   </tr>
   </table></details>
 </td></tr>
@@ -107,7 +107,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
 </tr>
 <tr>
   <td>`cva` <br /><span class="type-text">object</span></td>
-  <td>Custom Voter audience (CVA) object.</td>
+  <td>Custom Voter audience (CVA) to target. All five properties are required.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -115,23 +115,23 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>[CVA ID](/political-vertical/planner/#create-cva-details).</td>
+  <td>CVA ID from [Create CVA details](/political-vertical/planner/#create-cva-details).</td>
   </tr>
   <tr>
   <td>`equation` <br /><span class="type-text">string</span></td>
-  <td>CVA segment equation, see [Create CVA details](/political-vertical/planner/#create-cva-details) for details.</td>
+  <td>Segment equation sent when the CVA was created.</td>
   </tr>
   <tr>
   <td>`stateIds` <br /><span class="type-text">array of integers</span></td>
-  <td>[State IDs](/guidelines/master-api/#get-state-segment).</td>
+  <td>[State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences) sent when the CVA was created.</td>
   </tr>
   <tr>
   <td>`segmentIds` <br /><span class="type-text">array of integers</span></td>
-  <td>CVA segment IDs, see [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) for details.</td>
+  <td>Numeric <var>segmentId</var> values of the segments in the equation, from [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details).</td>
   </tr>
   <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>CVA reach.</td>
+  <td>Audience reach: <var>segment_num_voters</var> from [Get CVA reach](/political-vertical/audience-segments/#get-cva-reach).</td>
   </tr>
   </table></details>
 </td></tr>
@@ -184,8 +184,8 @@ import { deviceType } from '@site/src/data/enums/deviceType';
     <td>[State senate IDs](/guidelines/master-api/#get-senate-district-segment).</td>
     </tr>
     <tr>
-    <td>`zipCodes` <br /><span class="type-text">array of integers</span></td>
-    <td>[Zip codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
+    <td>`zipCodes` <br /><span class="type-text">array of strings</span></td>
+    <td>[ZIP codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
     </tr>
     </table></details>
   </td></tr>
@@ -207,7 +207,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
     </tr>
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     </table></details>
   </td></tr>
@@ -340,7 +340,11 @@ import { deviceType } from '@site/src/data/enums/deviceType';
 </tr>
 <tr>
   <td>`planId` <br /><span class="type-text">integer</span></td>
-  <td>[Plan ID](#get-list-of-political-plans) (cross-screen proposals only).</td>
+  <td>[Plan ID](#get-list-of-political-plans) the proposal was created from.</td>
+</tr>
+<tr>
+  <td>`planName` <br /><span class="type-text">string</span></td>
+  <td>Plan name.</td>
 </tr>
 <tr>
   <td>`startTime` <br /><span class="type-text">integer</span></td>
@@ -356,7 +360,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
 </tr>
 <tr>
   <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion order ID.</td>
+  <td>[Insertion order (IO) ID](/guidelines/campaign-api#get-insertion-order-details), set when the proposal is converted.</td>
 </tr>
 <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
@@ -375,6 +379,18 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <td>Frequency cap.</td>
 </tr>
 <tr>
+  <td>`minReach` <br /><span class="type-text">integer</span></td>
+  <td>Minimum reach.</td>
+</tr>
+<tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum impressions.</td>
+</tr>
+<tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum budget.</td>
+</tr>
+<tr>
   <td>`maxReach` <br /><span class="type-text">integer</span></td>
   <td>Maximum reach.</td>
 </tr>
@@ -387,8 +403,20 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <td>Maximum budget.</td>
 </tr>
 <tr>
+  <td>`minCpm` <br /><span class="type-text">number</span></td>
+  <td>Minimum cost per thousand impressions; can be <var>null</var> at the proposal level.</td>
+</tr>
+<tr>
   <td>`cpm` <br /><span class="type-text">number</span></td>
-  <td>Cost per thousand impressions.</td>
+  <td>Cost per thousand impressions; can be <var>null</var> at the proposal level. Each proposed campaign has its own CPM.</td>
+</tr>
+<tr>
+  <td>`maxCpm` <br /><span class="type-text">number</span></td>
+  <td>Maximum cost per thousand impressions; can be <var>null</var> at the proposal level.</td>
+</tr>
+<tr>
+  <td>`campaignGeneratable` <br /><span class="type-text">boolean</span></td>
+  <td>Whether an IO and campaigns can be generated from the proposal. Only meaningful while the proposal is <var>Ready</var> or <var>Failed</var>; it isn't reset after the proposal is converted.</td>
 </tr>
 <tr>
   <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
@@ -423,6 +451,10 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <td>Maximum linear TV budget (cross-screen proposals only).</td>
 </tr>
 <tr>
+  <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+  <td>Linear TV cost per thousand impressions (cross-screen proposals only).</td>
+</tr>
+<tr>
   <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
   <td>Proposed campaigns.</td>
 </tr>
@@ -432,11 +464,15 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Campaign ID.</td>
+  <td>Proposed campaign ID.</td>
   </tr>
   <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Campaign name.</td>
+  </tr>
+  <tr>
+  <td>`type` <br /><span class="type-text">string</span></td>
+  <td>Voter TV+ proposals only: <var>CTV</var> or <var>Linear TV</var>. Only CTV campaigns are created when the IO is generated. <var>null</var> for other proposals.</td>
   </tr>
   <tr>
   <td>`startTime` <br /><span class="type-text">integer</span></td>
@@ -459,6 +495,10 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <td>Bidding model type (e.g., <var>CPM</var>).</td>
   </tr>
   <tr>
+  <td>`minTargetedReach` <br /><span class="type-text">integer</span></td>
+  <td>Minimum targeted reach.</td>
+  </tr>
+  <tr>
   <td>`targetedReach` <br /><span class="type-text">integer</span></td>
   <td>Targeted reach.</td>
   </tr>
@@ -469,6 +509,10 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <tr>
   <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
   <td>Campaign frequency cap.</td>
+  </tr>
+  <tr>
+  <td>`minTargetedImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum targeted impressions.</td>
   </tr>
   <tr>
   <td>`targetedImpressions` <br /><span class="type-text">integer</span></td>
@@ -491,6 +535,10 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   <td>Maximum CPM.</td>
   </tr>
   <tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum campaign budget.</td>
+  </tr>
+  <tr>
   <td>`budget` <br /><span class="type-text">number</span></td>
   <td>Campaign budget.</td>
   </tr>
@@ -500,7 +548,7 @@ import { deviceType } from '@site/src/data/enums/deviceType';
   </tr>
   <tr>
   <td>`strategy` <br /><span class="type-text">string</span></td>
-  <td>Campaign strategy description.</td>
+  <td>Targeting dimensions the campaign was split by.</td>
   </tr>
   </table></details>
 </td></tr>
@@ -1132,6 +1180,8 @@ Get the complete details of a Political proposal including budgeting metrics, ti
   "data": {
     "id": 14,
     "name": "sample",
+    "planId": 2,
+    "planName": "sample",
     "objectiveId": 1,
     "startTime": 1730658720000,
     "endTime": 1733250720000,
@@ -1145,12 +1195,17 @@ Get the complete details of a Political proposal including budgeting metrics, ti
     "maxReach": 200000000,
     "maxImpressions": 25000000,
     "maxBudget": 2500000,
+    "minCpm": null,
+    "cpm": null,
+    "maxCpm": null,
+    "campaignGeneratable": true,
     "timeZoneId": 29,
     "timeZoneName": "US/EASTERN",
     "proposedCampaigns": [
       {
         "id": 101,
         "name": "Sample Campaign",
+        "type": null,
         "startTime": 1747195200000,
         "endTime": 1777089600000,
         "creativeTypeId": 13,
@@ -1180,15 +1235,16 @@ Get the complete details of a Political proposal including budgeting metrics, ti
 {
   "success": true,
   "data": {
-    "id": 14,
-    "name": "sample",
+    "id": 15,
+    "name": "Voter TV+ Plan_Mix_01",
     "planId": 3,
+    "planName": "Voter TV+ Plan",
     "objectiveId": 3,
     "startTime": 1730658720000,
     "endTime": 1733250720000,
     "owId": 202500,
-    "statusId": 1,
-    "ioId": 1,
+    "statusId": 6,
+    "ioId": null,
     "reach": 122344433,
     "impressions": 12232323,
     "budget": 1212233.23,
@@ -1196,6 +1252,10 @@ Get the complete details of a Political proposal including budgeting metrics, ti
     "maxReach": 200000000,
     "maxImpressions": 25000000,
     "maxBudget": 2500000,
+    "minCpm": null,
+    "cpm": null,
+    "maxCpm": null,
+    "campaignGeneratable": true,
     "timeZoneId": 29,
     "timeZoneName": "US/EASTERN",
     "linearTvReach": 1000,
@@ -1207,10 +1267,11 @@ Get the complete details of a Political proposal including budgeting metrics, ti
     "proposedCampaigns": [
       {
         "id": 101,
-        "name": "Sample Campaign",
-        "startTime": 1747195200000,
-        "endTime": 1777089600000,
-        "creativeTypeId": 13,
+        "name": "Voter TV+ Plan_Mix_01_VTV + Video",
+        "type": "Linear TV",
+        "startTime": 1730658720000,
+        "endTime": 1733250720000,
+        "creativeTypeId": 14,
         "duration": 30,
         "modelType": "CPM",
         "targetedReach": 500000,
@@ -1218,12 +1279,33 @@ Get the complete details of a Political proposal including budgeting metrics, ti
         "frequencyCap": 3,
         "targetedImpressions": 1500000,
         "maxTargetedImpressions": 2000000,
-        "cpm": 2.5,
-        "minCpm": 1.5,
-        "maxCpm": 3.5,
+        "cpm": 20,
+        "minCpm": 15,
+        "maxCpm": 25,
         "budget": 10000,
         "maxBudget": 15000,
-        "strategy": "Device + Channel"
+        "strategy": "VTV + Video"
+      },
+      {
+        "id": 102,
+        "name": "Voter TV+ Plan_Mix_01_Video",
+        "type": "CTV",
+        "startTime": 1730658720000,
+        "endTime": 1733250720000,
+        "creativeTypeId": 14,
+        "duration": 30,
+        "modelType": "CPM",
+        "targetedReach": 500000,
+        "maxTargetedReach": 750000,
+        "frequencyCap": 3,
+        "targetedImpressions": 1500000,
+        "maxTargetedImpressions": 2000000,
+        "cpm": 7,
+        "minCpm": 5,
+        "maxCpm": 9,
+        "budget": 10000,
+        "maxBudget": 15000,
+        "strategy": "Video"
       }
     ]
   }
@@ -1425,6 +1507,8 @@ Get a proposal summary including reach/impressions, bid landscape, device graph,
 
 Get a list of strategies for a specific plan, including campaign metrics, budgeting data, and targeting arrays.
 
+The forecasting service generates up to three strategies for a ready plan, and can return fewer. Strategies created with [Generate custom strategies](#generate-custom-strategies) are also listed. Use the <var>id</var> from this endpoint as the <var>strategyId</var> in [Activate proposal](#activate-proposal).
+
 | Query parameters  |  |
 | ----  | --- |
 | `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The [plan ID](#get-list-of-political-plans) to retrieve strategies for. |
@@ -1463,15 +1547,15 @@ Get a list of strategies for a specific plan, including campaign metrics, budget
 </tr>
 <tr>
   <td>`proposalId` <br /><span class="type-text">integer</span></td>
-  <td>Linked [proposal ID](#get-list-of-proposals).</td>
+  <td>[Proposal ID](#get-list-of-proposals) created from this strategy, or <var>null</var> if it hasn't been activated.</td>
 </tr>
 <tr>
   <td>`budget` <br /><span class="type-text">number</span></td>
-  <td>Strategy budget.</td>
+  <td>Forecasted budget. Can differ from the plan's <var>totalBudget</var>.</td>
 </tr>
 <tr>
   <td>`frequency` <br /><span class="type-text">integer</span></td>
-  <td>Frequency cap.</td>
+  <td>Forecasted frequency cap. Can differ from the plan's <var>frequencyCap</var>.</td>
 </tr>
 <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
@@ -1487,7 +1571,7 @@ Get a list of strategies for a specific plan, including campaign metrics, budget
 </tr>
 <tr>
   <td>`creatives` <br /><span class="type-text">array of integers</span></td>
-  <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
+  <td>[Creative type IDs](/guidelines/creative-api/#get-creative-types-list) selected by the forecasting service. Can be a subset of the plan's creative types. <br /><EnumWidget values={creativeTypes} /></td>
 </tr>
 <tr>
   <td>`devices` <br /><span class="type-text">array of integers</span></td>
@@ -1495,7 +1579,11 @@ Get a list of strategies for a specific plan, including campaign metrics, budget
 </tr>
 <tr>
   <td>`channels` <br /><span class="type-text">array of integers</span></td>
-  <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+  <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
+</tr>
+<tr>
+  <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates CTV auto-buying is enabled.</td>
 </tr>
 </table>
 </details>
@@ -1509,21 +1597,22 @@ Get a list of strategies for a specific plan, including campaign metrics, budget
   "data": [
     {
       "id": 3001,
-      "name": "sample strategy",
-      "startDate": 1709654400000,
-      "endDate": 1717430400000,
-      "duration": 10,
+      "name": "Maximum Reach",
+      "startDate": 1793595600000,
+      "endDate": 1796187600000,
+      "duration": 30,
       "strategyTypeId": 1,
-      "campaignsCount": 5,
-      "proposalId": 1,
-      "budget": 50000.00,
+      "campaignsCount": 4,
+      "proposalId": null,
+      "budget": 50000,
       "frequency": 3,
-      "reach": 750000,
-      "impressions": 2250000,
-      "cpm": 22.22,
-      "creatives": [1, 2, 3],
-      "devices": [1, 2],
-      "channels": [5, 6, 7]
+      "reach": 1250000,
+      "impressions": 2220000,
+      "cpm": 22.52,
+      "creatives": [11, 14],
+      "devices": [20300001, 20300004],
+      "channels": [11, 12, 13, 14],
+      "isTvAutoBuying": false
     }
   ]
 }
@@ -1607,7 +1696,7 @@ Get the details of a single Political strategy by ID.
 </tr>
 <tr>
   <td>`channels` <br /><span class="type-text">array of integers</span></td>
-  <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+  <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
 </tr>
 </table>
 </details>
@@ -1631,9 +1720,9 @@ Get the details of a single Political strategy by ID.
     "reach": 750000,
     "impressions": 2250000,
     "cpm": 22.22,
-    "creatives": [1, 2, 3],
-    "devices": [1, 2],
-    "channels": [5, 6, 7]
+    "creatives": [11, 14],
+    "devices": [20300001, 20300004],
+    "channels": [11, 12, 13, 14]
   }
 }
 ```
@@ -1653,7 +1742,7 @@ Get the details of a single Political strategy by ID.
 <div class="endpoint-container">
   <div class="child1">
 
-Create a new ready or draft Political plan. A ready plan requires name, details, and targeting. A Voter TV+ (<var>objectiveId: 3</var>) plan requires <var>graphId</var> and <var>overview</var>.
+Create a new ready or draft Political plan. A ready plan requires name, details, and targeting. A Voter TV+ (<var>objectiveId: 3</var>) plan requires the <var>graphId</var> from [Get reach saturation graph](#get-reach-saturation-graph); <var>overview</var> is optional.
 
 A draft plan requires only a name; all other fields are optional but validated if present.
 
@@ -1678,7 +1767,6 @@ See resource properties for request schema.
   "details": {
     "startDate": 1747195200000,
     "endDate": 1777089600000,
-    "timezoneId": 29,
     "frequencyCap": 3
   },
   "targeting": {
@@ -1691,7 +1779,7 @@ See resource properties for request schema.
       "congressionalDistrict": [30617273],
       "stateHouse": [30803564],
       "stateSenate": [30718340],
-      "zipCodes": [10001]
+      "zipCodes": ["10001"]
     },
     "blackListedLocation": {
       "country": 30100001,
@@ -1702,7 +1790,7 @@ See resource properties for request schema.
       "congressionalDistrict": [30601009],
       "stateHouse": [30800263],
       "stateSenate": [30701056],
-      "zipCodes": [10002]
+      "zipCodes": ["10002"]
     },
     "device": {
       "deviceTypeIds": [20300004, 20300003],
@@ -1883,14 +1971,18 @@ Delete one or more Political plans by IDs. Associated strategies are also delete
 <div class="endpoint-container">
   <div class="child1">
 
-Activate a proposal and all of its proposed campaigns. Provide a <var>strategyId</var>; the system looks up the linked proposal.
+Activate a proposal and all of its proposed campaigns. Send <var>strategyId</var> for Reach forecasting (<var>objectiveId: 1</var>) and Budget estimation (<var>objectiveId: 2</var>) plans, or <var>planId</var> for Voter TV+ (<var>objectiveId: 3</var>) plans. Send one, not both. The proposal is created in <var>Ready</var> (<var>6</var>) status.
 
 | Request schema |  |
 | ----  | --- |
-| `strategyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Strategy ID](#get-list-of-strategies) to activate. |
+| `strategyId` <br /><span class="type-text">integer</span> | [Strategy ID](#get-list-of-strategies) to activate. Required for Reach forecasting and Budget estimation plans. |
+| `planId` <br /><span class="type-text">integer</span> | [Plan ID](#get-list-of-political-plans) to activate. Required for Voter TV+ plans. |
 
 </div>
 <div class="child2">
+
+<CodeDropdown label="Select vertical">
+<CodeOption label="Political proposal" default>
 
 ```json title="Request sample"
 {
@@ -1907,6 +1999,28 @@ Activate a proposal and all of its proposed campaigns. Provide a <var>strategyId
   }
 }
 ```
+
+</CodeOption>
+<CodeOption label="Cross-screen proposal">
+
+```json title="Request sample"
+{
+  "planId": 124
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "message": "Voter TV+ Plan_Mix_01 saved successfully."
+  }
+}
+```
+
+</CodeOption>
+</CodeDropdown>
 
 </div></div>
 
@@ -2179,7 +2293,11 @@ Update the name of an existing Political proposal.
 <div class="endpoint-container">
   <div class="child1">
 
-Convert a Political proposal into an insertion order (IO) with draft campaigns. The proposal status updates to <var>processing</var> and triggers async campaign generation; once completed the status becomes <var>converted</var>. The target proposal must be in <var>ready</var> or <var>failed</var> status.
+Convert a Political proposal into an insertion order (IO) with draft campaigns. The target proposal must be in <var>Ready</var> (<var>6</var>) or <var>Failed</var> (<var>4</var>) status.
+
+The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>). For Voter TV+ proposals, only the CTV proposed campaigns become campaigns.
+
+To find the created campaigns, call [Get basic details of campaigns](/guidelines/campaign-api#get-basic-details-of-campaigns) with the proposal's <var>ioId</var> in <var>ioIdsList</var>.
 
 | Path parameters  |  |
 | ----  | --- |
@@ -2187,9 +2305,9 @@ Convert a Political proposal into an insertion order (IO) with draft campaigns. 
 
 | Request schema |  |
 | ----  | --- |
-| `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Political Advertiser profile ID. |
-| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch start date override, in milliseconds. |
-| `endTime` <br /><span class="type-text">integer</span> | New Unix epoch end date override, in milliseconds. |
+| `politicalAdvertiserId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Political Advertiser profile ID](/guidelines/workspace-api#get-list-of-advertiser-profile-and-details). |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch start date for the campaigns, in milliseconds; can't be in the past. |
+| `endTime` <br /><span class="type-text">integer</span> | Unix epoch end date, in milliseconds. If omitted, the proposal's current duration is kept from the new <var>startTime</var>. Must keep the current duration in days. |
 
 </div>
 <div class="child2">
@@ -2251,13 +2369,13 @@ Delete one or more Political proposals by IDs. Associated proposed campaigns are
 <div class="endpoint-container">
   <div class="child1">
 
-Restore <var>expired</var> proposals back to <var>ready</var> status by recalculating their budgeting based on new start and end dates.
+Restore <var>Expired</var> (<var>3</var>) proposals to <var>Ready</var> (<var>6</var>) status with new flight dates. The new dates are applied to the proposals and their proposed campaigns. The new flight can be a different length from the original.
 
 | Request schema |  |
 | ----  | --- |
-| `proposalIds` <br /><span class="type-text">array of integers</span> | [Proposal IDs](#get-list-of-proposals) to restore. |
-| `startTime` <br /><span class="type-text">integer</span> | New Unix epoch start date, in milliseconds. |
-| `endTime` <br /><span class="type-text">integer</span> | New Unix epoch end date, in milliseconds. |
+| `proposalIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [Proposal IDs](#get-list-of-proposals) to restore. Each proposal must be in <var>Expired</var> (<var>3</var>) status. |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch start date, in milliseconds; can't be in the past. |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | New Unix epoch end date, in milliseconds; must be at least 30 minutes after <var>startTime</var>. |
 
 </div>
 <div class="child2">
@@ -2290,26 +2408,36 @@ Restore <var>expired</var> proposals back to <var>ready</var> status by recalcul
 <div class="endpoint-container">
   <div class="child1">
 
-Create a new Custom Voter audience (CVA) definition. This targeting equation is used to build an audience for a Political plan. The CVA details are stored in the database and can be referenced by ID in future requests. This API does not create an audience (see [Create Custom Voter audience](/political-vertical/audience-segments/#create-custom-voter-audience)), but it does validate the provided segment IDs and equation string.
+Create a new Custom Voter audience (CVA) definition. This targeting equation is used to build an audience for a Political plan. The CVA details are stored and can be referenced by ID in future requests. This endpoint doesn't create an audience (see [Create Custom Voter audience](/political-vertical/audience-segments/#create-custom-voter-audience)), but it does validate the equation.
 
-Using segment IDs (from [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details)), you can build a CVA definition with the <var>equation</var> field. Segment IDs in parentheses, separated by a vertical bar (|), will be in an 'or' relationship, which will combine the sets of segments; groups of segments in parentheses, separated by an ampersand (&), will be in an 'and' relationship, which will build an audience based on the intersection of those groups.
+Build the <var>equation</var> from the taxonomy IDs of segments from [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details). Taxonomy IDs in parentheses, separated by a vertical bar (<var>|</var>), are in an OR relationship, which combines the sets of segments. Groups of segments in parentheses, separated by an ampersand (<var>&</var>), are in an AND relationship, which builds an audience from the intersection of those groups.
 
-You can use the returned <var>id</var> to estimate reach for a Political plan with [Estimate plan reach](#estimate-plan-reach) or attach it as a Custom Voter audience (<var>cva</var>) when creating or updating a Political plan ([Create plan](/political-vertical/planner/#create-plan)).
+Use the returned <var>id</var> to estimate reach for a Political plan with [Estimate plan reach](#estimate-plan-reach), or as the <var>id</var> of the <var>cva</var> object when you [create a plan](/political-vertical/planner/#create-plan).
 
 | Request schema |  |
 | ----  | --- |
-| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences). |
-| `reach` <br /><span class="type-text">integer</span> | Your own pre-computed reach estimate for this equation (e.g. from the [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) catalogue). This API does not calculate or validate this number -- it's stored as given and later used as this CVA's known reach whenever a Political plan that references it generates strategies. |
-| `equation` <br /><span class="type-text">string</span> | CVA segment equation string, see [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) for segment IDs. |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Segment equation. |
+| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences) to limit the audience to. |
+| `reach` <br /><span class="type-text">integer</span> | Audience reach: <var>segment_num_voters</var> from [Get CVA reach](/political-vertical/audience-segments/#get-cva-reach). Stored and passed to the forecasting service as provided; it isn't calculated. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>CVA ID.</td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
 
 ```json title="Request sample"
 {
+  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
   "stateIds": [30200005],
-  "reach": 1629051,
-  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))"
+  "reach": 1629051
 }
 ```
 
@@ -2341,18 +2469,18 @@ Update an existing Custom Voter audience (CVA) detail record with new state IDs,
 
 | Request schema |  |
 | ----  | --- |
-| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences). |
-| `reach` <br /><span class="type-text">integer</span> | Your own pre-computed reach estimate for this equation (e.g. from the [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) catalogue). This API does not calculate or validate this number -- it's stored as given and later used as this CVA's known reach whenever a Political plan that references it generates strategies. |
-| `equation` <br /><span class="type-text">string</span> | CVA segment equation string, see [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) for segment IDs. |
+| `equation` <br /><span class="type-text">string</span> | Segment equation. |
+| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences) to limit the audience to. |
+| `reach` <br /><span class="type-text">integer</span> | Audience reach: <var>segment_num_voters</var> from [Get CVA reach](/political-vertical/audience-segments/#get-cva-reach). Stored and passed to the forecasting service as provided; it isn't calculated. |
 
 </div>
 <div class="child2">
 
 ```json title="Request sample"
 {
+  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
   "stateIds": [30200005],
-  "reach": 1629051,
-  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))"
+  "reach": 1629051
 }
 ```
 
@@ -2433,8 +2561,8 @@ Estimate the reach for a Political plan based on optional CVA details and target
     <td>[State senate IDs](/guidelines/master-api/#get-senate-district-segment).</td>
     </tr>
     <tr>
-    <td>`zipCodes` <br /><span class="type-text">array of integers</span></td>
-    <td>[Zip codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
+    <td>`zipCodes` <br /><span class="type-text">array of strings</span></td>
+    <td>[ZIP codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
     </tr>
     </table></details>
   </td></tr>
@@ -2456,7 +2584,7 @@ Estimate the reach for a Political plan based on optional CVA details and target
     </tr>
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     </table></details>
   </td></tr>
@@ -2578,7 +2706,7 @@ Estimate the reach for a Political plan based on optional CVA details and target
   "cvaId": 12234,
   "targeting": {
     "whiteListedLocation": {
-      "country": 1,
+      "country": 30100001,
       "states": [30200035],
       "dma": [30900026],
       "city": [30436781],
@@ -2586,10 +2714,10 @@ Estimate the reach for a Political plan based on optional CVA details and target
       "congressionalDistrict": [30617273],
       "stateHouse": [30803564],
       "stateSenate": [30718340],
-      "zipCodes": [10002]
+      "zipCodes": ["10002"]
     },
     "blackListedLocation": {
-      "country": 1,
+      "country": 30100001,
       "states": [30200003],
       "dma": [30900139],
       "city": [30442811],
@@ -2597,7 +2725,7 @@ Estimate the reach for a Political plan based on optional CVA details and target
       "congressionalDistrict": [30601009],
       "stateHouse": [30800263],
       "stateSenate": [30701056],
-      "zipCodes": [10001]
+      "zipCodes": ["10001"]
     },
     "whitelistedAudiences": [1101831, 1101829],
     "blacklistedAudiences": [1101826],
@@ -2642,9 +2770,9 @@ Estimate the reach for a Political plan based on optional CVA details and target
 <div class="endpoint-container">
   <div class="child1">
 
-Generate custom strategies for an existing plan by calling the DSI API with the provided targeting and budget parameters. This endpoint persists the resulting strategies, proposals, and campaigns, then returns strategy summaries.
+Generate custom strategies for an existing plan by calling the forecasting service with the provided targeting and budget parameters. This endpoint persists the resulting strategies, proposals, and campaigns, then returns strategy summaries.
 
-Each returned summary's <var>id</var> is the external strategy-generation service's own identifier for that strategy, not the real, persisted Planner API strategy ID. To get the real, usable strategy ID, call [Get list of strategies](#get-list-of-strategies) for this <var>planId</var> after this completes and use the <var>id</var> it returns instead.
+The <var>id</var> in the response is the forecasting service's own ID, not the saved strategy ID, and can't be activated. To get the saved strategy IDs, call [Get list of strategies](#get-list-of-strategies) for this <var>planId</var>.
 
 <table>
 <th>Request schema</th>
@@ -2686,7 +2814,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
   </tr>
   <tr>
   <td>`timezoneId` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time.</td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones). Replaced with the Organization's timezone.</td>
   </tr>
   <tr>
   <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
@@ -2694,7 +2822,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
   </tr>
   <tr>
   <td>`marginValue` <br /><span class="type-text">integer</span></td>
-  <td>Margin percentage applied on top of base CPM, not a currency amount, valid range: 0-100.</td>
+  <td>Margin applied on top of the base CPM, as a percentage from <var>0</var> to <var>100</var> (not a currency amount). Defaults to the Customer's margin.</td>
   </tr>
   </table></details>
 </td></tr>
@@ -2747,8 +2875,8 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
     <td>[State senate IDs](/guidelines/master-api/#get-senate-district-segment).</td>
     </tr>
     <tr>
-    <td>`zipCodes` <br /><span class="type-text">array of integers</span></td>
-    <td>[Zip codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
+    <td>`zipCodes` <br /><span class="type-text">array of strings</span></td>
+    <td>[ZIP codes](/guidelines/master-api/#get-zip-codes-and-state-ids).</td>
     </tr>
     </table></details>
   </td></tr>
@@ -2770,7 +2898,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
     </tr>
     <tr>
     <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
-    <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+    <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
     </tr>
     </table></details>
   </td></tr>
@@ -2884,7 +3012,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
 </td></tr>
 <tr>
   <td>`cva` <br /><span class="type-text">object</span></td>
-  <td>Custom Voter audience (CVA) object.</td>
+  <td>Custom Voter audience (CVA) to target. All five properties are required.</td>
 </tr>
 <tr><td colSpan="2">
   <details className="objectPropertiesDetails">
@@ -2892,23 +3020,23 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>[CVA ID](#create-cva-details).</td>
+  <td>CVA ID from [Create CVA details](#create-cva-details).</td>
   </tr>
   <tr>
   <td>`equation` <br /><span class="type-text">string</span></td>
-  <td>CVA segment equation, see [Create CVA details](#create-cva-details) for details.</td>
+  <td>Segment equation sent when the CVA was created.</td>
   </tr>
   <tr>
   <td>`stateIds` <br /><span class="type-text">array of integers</span></td>
-  <td>[State IDs](/guidelines/master-api/#get-state-segment).</td>
+  <td>[State IDs](/political-vertical/audience-segments/#get-available-states-for-custom-voter-audiences) sent when the CVA was created.</td>
   </tr>
   <tr>
   <td>`segmentIds` <br /><span class="type-text">array of integers</span></td>
-  <td>CVA segment IDs, see [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details) for details.</td>
+  <td>Numeric <var>segmentId</var> values of the segments in the equation, from [Get Custom Voter audience segment details](/political-vertical/audience-segments/#get-custom-voter-audience-segment-details).</td>
   </tr>
   <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>CVA reach.</td>
+  <td>Audience reach: <var>segment_num_voters</var> from [Get CVA reach](/political-vertical/audience-segments/#get-cva-reach).</td>
   </tr>
   </table></details>
 </td></tr>
@@ -2919,7 +3047,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
 <table className="objectProperties">
 <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Strategy ID.</td>
+  <td>The forecasting service's ID for the strategy, not the saved strategy ID.</td>
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
@@ -2979,7 +3107,7 @@ Each returned summary's <var>id</var> is the external strategy-generation servic
 </tr>
 <tr>
   <td>`channels` <br /><span class="type-text">array of integers</span></td>
-  <td>[Channel type IDs](/guidelines/master-api/#get-channels-for-inventory). <br /><EnumWidget values={channelTypes} /></td>
+  <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
 </tr>
 </table>
 </details>
