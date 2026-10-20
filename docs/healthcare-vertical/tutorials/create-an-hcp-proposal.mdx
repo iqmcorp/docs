@@ -88,6 +88,8 @@ To create and publish an HCP plan, the following are required:
   * An Advertiser Organization
     * Publishing and downloading a plan is only available to Advertiser Organizations.
 
+All Planner times are Unix epoch **milliseconds**, not seconds. For example, November 1, 2026 at 00:00 US/Eastern is <var>1793505600000</var>.
+
 ### Log in
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
@@ -95,18 +97,18 @@ To create and publish an HCP plan, the following are required:
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. This endpoint returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). This endpoint returns an OAuth-compliant response with an access token and an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
 
 For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Headers |  |
 | ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide).<br /> |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Basic</var> followed by your Base64-encoded <var>client_id:client_secret</var>.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
 
 | Request schema |  |
 | ---- | --- |
-| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
-| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> to log in. <br />See [OAuth grant types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
 | `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
@@ -114,12 +116,14 @@ For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-   "grantType": "password",
-   "email": "pratik.t+ihp@iqm.com",
-   "password": "123456"
-}
+```curl title="Request sample"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
 ```
 
 ```json title="Response 200"
@@ -173,80 +177,6 @@ For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
 </details>
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          access_token: string;
-          refresh_token: string;
-          scope: string;
-          token_type: string;
-          expires_in: number;
-          owId: number;
-        };
-      };
-    };
-  };
-  400: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          status: string;
-          reason: string;
-          supportEmail: string;
-        };
-        errorObjects: {
-          error: string;
-          reason: string;
-        }[];
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function Login(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/login',
-    requestBody: {
-      content: {
-        "application/json": {
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
 </TabItem></Tabs>
 
 </div></div>
@@ -259,7 +189,7 @@ Use the following header parameters for all requests after logging in:
 
 | Headers  |  |
 | ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Bearer</var> followed by the <var>access_token</var> from the login response. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
 
 </div>
@@ -308,7 +238,24 @@ The audience type of each block is set by IQM from its method, as in the table a
 
 #### Plan-level targeting
 
-<var>planLevelTargeting</var> sets the creative types and devices for the whole plan. Objects such as <var>creativeTypes</var>, <var>devices</var>, and <var>speciality</var> use a "select all" flag with an ID list:
+<var>planLevelTargeting</var> sets the creative types, devices, channels, and inventory for the whole plan. All four objects are required: a request without <var>channels</var> or <var>inventory</var> fails with a generic <var>500</var> error. To target all channels and all Open Exchange inventory, send:
+
+```json title="Channels and inventory, all selected"
+"channels": {
+  "channelTypeIds": [],
+  "allChannelTypesSelected": true
+},
+"inventory": {
+  "openExchanges": {
+    "exchangeIds": [],
+    "allExchangesSelected": true,
+    "iabCategoryIds": [],
+    "allIabCategoriesSelected": true
+  }
+}
+```
+
+Objects such as <var>creativeTypes</var>, <var>devices</var>, and <var>speciality</var> use a "select all" flag with an ID list:
 
   * Select all: set the flag (for example <var>allCreativeTypesSelected</var>) to <var>true</var> and send an empty ID list.
   * Select specific values: set the flag to <var>false</var> and list the IDs.
@@ -319,7 +266,7 @@ Any other combination is rejected.
 
 <var>splitStrategy</var> decides how the plan is divided into campaigns. Each entry names a [split dimension](/healthcare-vertical/planner#get-split-strategy-list) and the values to split by. Each listed value becomes its own campaign slice, and campaigns are created for every combination of slices. A split strategy must include the creative type dimension, and the NPI type dimension unless the only audience block is an existing audience.
 
-The values in each split dimension must agree with the plan's targeting. This is the most common cause of rejected HCP requests. See [Targeting consistency rule](/healthcare-vertical/planner#targeting-consistency-rule).
+The values in each split dimension must agree with the plan's targeting when you save, edit, or publish the plan (Steps 3, 5, and 6). This is the most common cause of rejected HCP requests. Generating campaigns (Step 2) doesn't check the rule: it ignores <var>selectedValueIds</var> and splits by every plan-level value of each listed dimension. For example, an NPI type split of <var>[3]</var> on a plan targeting NPI types <var>3</var> and <var>4</var> still creates campaigns for both. See [Targeting consistency rule](/healthcare-vertical/planner#targeting-consistency-rule).
 
 | Split dimension | <var>splitDimensionTypeId</var> | <var>selectedValueIds</var> must agree with | Rule | Campaign field |
 | --- | --- | --- | --- | --- |
@@ -349,6 +296,8 @@ Each proposed campaign's targeting uses singular fields for creative and NPI typ
 Send the plan details from Step 1 without campaigns. IQM builds the proposed campaigns from the split strategy, forecasts their reach, and calculates each campaign's CPM, impressions, and budget range, along with the plan's totals. Nothing is saved.
 
 Use the response as the request body for Step 3. You can change budgets and impressions within each campaign's minimum and maximum before saving.
+
+Each campaign's <var>dataCpm</var> is the average data cost of its selected data partners, and its <var>mediaCpm</var> depends on its creative type. For example, video campaigns have a higher media CPM than image campaigns.
 
 <table>
 <tr>
@@ -517,7 +466,7 @@ Use the response as the request body for Step 3. You can change budgets and impr
 </tr>
 <tr>
   <td>`planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-  <td>Creative type and device targeting for the whole plan.</td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -572,6 +521,76 @@ Use the response as the request body for Step 3. You can change budgets and impr
     </td>
     <td></td>
     </tr>
+    <tr>
+      <td>`channels` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Channels to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`channels` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+          <td>Set to <var>true</var> to target all channels, with an empty <var>channelTypeIds</var> list.</td>
+        </tr>
+        <tr>
+          <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
+          <td>Channel type IDs to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`inventory` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Inventory to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventory` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`openExchanges` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+          <td>Open Exchange inventory to target.</td>
+        </tr>
+        <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`openExchanges` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`allExchangesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+              <td>Set to <var>true</var> to target all exchanges, with an empty <var>exchangeIds</var> list.</td>
+            </tr>
+            <tr>
+              <td>`exchangeIds` <br /><span class="type-text">array of integers</span></td>
+              <td>Exchange IDs to target.</td>
+            </tr>
+            <tr>
+              <td>`allIabCategoriesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+              <td>Set to <var>true</var> to target all IAB categories, with an empty <var>iabCategoryIds</var> list.</td>
+            </tr>
+            <tr>
+              <td>`iabCategoryIds` <br /><span class="type-text">array of integers</span></td>
+              <td>IAB category IDs to target.</td>
+            </tr>
+          </table>
+          </details>
+        </td>
+        <td></td>
+        </tr>
+        <tr>
+          <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+          <td>Inventory groups to target. Send <var>null</var> or leave it out when you don't target inventory groups.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
   </table>
   </details>
 </td>
@@ -592,7 +611,7 @@ Use the response as the request body for Step 3. You can change budgets and impr
     </tr>
     <tr>
       <td>`selectedValueIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
-      <td>Values to split by; each value becomes its own campaign slice. For creative type, must exactly match the plan-level creative types. For other dimensions, must be a subset of the matching targeting.</td>
+      <td>Values to split by. Ignored when generating campaigns: every plan-level value of the dimension becomes its own campaign slice. Saving, editing, and publishing check them: creative type must exactly match the plan-level creative types, and other dimensions must be a subset of the matching targeting.</td>
     </tr>
   </table>
   </details>
@@ -681,8 +700,8 @@ The response contains every request field, plus:
 ```json title="Request sample"
 {
   "name": "Q4 Cardiology Awareness",
-  "startTime": 1793628000000,
-  "endTime": 1796083199000,
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
   "timezoneId": 29,
   "budgetTypeId": 1,
   "frequencyCap": 3,
@@ -719,6 +738,18 @@ The response contains every request field, plus:
       "creativeTypeIds": [11, 14],
       "allCreativeTypesSelected": false,
       "isTvAutoBuying": false
+    },
+    "channels": {
+      "channelTypeIds": [],
+      "allChannelTypesSelected": true
+    },
+    "inventory": {
+      "openExchanges": {
+        "exchangeIds": [],
+        "allExchangesSelected": true,
+        "iabCategoryIds": [],
+        "allIabCategoriesSelected": true
+      }
     }
   },
   "splitStrategy": [
@@ -733,8 +764,8 @@ The response contains every request field, plus:
   "success": true,
   "data": {
     "name": "Q4 Cardiology Awareness",
-    "startTime": 1793628000000,
-    "endTime": 1796083199000,
+    "startTime": 1793505600000,
+    "endTime": 1796101199000,
     "timezoneId": 29,
     "budgetTypeId": 1,
     "minBudget": 98.00,
@@ -755,8 +786,8 @@ The response contains every request field, plus:
       {
         "id": null,
         "name": "Video - Physicians",
-        "startTime": 1793628000000,
-        "endTime": 1796083199000,
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
         "frequencyCap": 3,
         "frequencyCapTypeId": 1,
         "minMediaCpm": 18.00,
@@ -903,7 +934,7 @@ function generateHCPProposedCampaigns(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Save the plan in <var>Ready</var> (<var>6</var>) status using the `/add` endpoint. Send the full response <var>data</var> from Step 2 as the request body. Save the <var>id</var> from the response; it's the <var>planId</var> used in the following steps.
+Save the plan in <var>Ready</var> (<var>6</var>) status using the `/add` endpoint. Send the full response <var>data</var> from Step 2 as the request body, unchanged apart from any budgets and impressions you adjust within their ranges. Saving doesn't check that the plan totals match the campaigns, so a modified body is saved as sent. Save the <var>id</var> from the response; it's the <var>planId</var> used in the following steps.
 
 To save an incomplete plan instead, use the `/draft` endpoint, which saves it in <var>Draft</var> (<var>2</var>) status and skips the budget and campaign checks. See [Create HCP Planner](/healthcare-vertical/planner#create-hcp-planner).
 
@@ -1106,7 +1137,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
 </tr>
 <tr>
   <td>`planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
-  <td>Creative type and device targeting for the whole plan.</td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1155,6 +1186,76 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
         <tr>
           <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
           <td>[Device type IDs](/guidelines/master-api#get-device-type) to target. Must be empty when <var>allDeviceTypesSelected</var> is <var>true</var>. <br /><EnumWidget values={hcpDeviceTypes} /></td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`channels` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Channels to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`channels` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+          <td>Set to <var>true</var> to target all channels, with an empty <var>channelTypeIds</var> list.</td>
+        </tr>
+        <tr>
+          <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
+          <td>Channel type IDs to target. Must be empty when <var>allChannelTypesSelected</var> is <var>true</var>.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>`inventory` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Inventory to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventory` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`openExchanges` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+          <td>Open Exchange inventory to target.</td>
+        </tr>
+        <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>`openExchanges` object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`allExchangesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+              <td>Set to <var>true</var> to target all exchanges, with an empty <var>exchangeIds</var> list.</td>
+            </tr>
+            <tr>
+              <td>`exchangeIds` <br /><span class="type-text">array of integers</span></td>
+              <td>Exchange IDs to target.</td>
+            </tr>
+            <tr>
+              <td>`allIabCategoriesSelected` <br /><span class="type-text">boolean</span> <span class="required-text">required</span></td>
+              <td>Set to <var>true</var> to target all IAB categories, with an empty <var>iabCategoryIds</var> list.</td>
+            </tr>
+            <tr>
+              <td>`iabCategoryIds` <br /><span class="type-text">array of integers</span></td>
+              <td>IAB category IDs to target.</td>
+            </tr>
+          </table>
+          </details>
+        </td>
+        <td></td>
+        </tr>
+        <tr>
+          <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+          <td>Inventory groups to target. Send <var>null</var> or leave it out when you don't target inventory groups.</td>
         </tr>
       </table>
       </details>
@@ -1322,8 +1423,8 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
 ```json title="Request sample"
 {
   "name": "Q4 Cardiology Awareness",
-  "startTime": 1793628000000,
-  "endTime": 1796083199000,
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
   "timezoneId": 29,
   "budgetTypeId": 1,
   "minBudget": 98.00,
@@ -1358,7 +1459,11 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
   ],
   "planLevelTargeting": {
     "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
-    "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false }
+    "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false },
+    "channels": { "channelTypeIds": [], "allChannelTypesSelected": true },
+    "inventory": {
+      "openExchanges": { "exchangeIds": [], "allExchangesSelected": true, "iabCategoryIds": [], "allIabCategoriesSelected": true }
+    }
   },
   "splitStrategy": [
     { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
@@ -1367,7 +1472,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
   "campaigns": [
     {
       "name": "Image - Physicians",
-      "startTime": 1793628000000, "endTime": 1796083199000,
+      "startTime": 1793505600000, "endTime": 1796101199000,
       "frequencyCap": 3, "frequencyCapTypeId": 1,
       "minMediaCpm": 6.00, "mediaCpm": 6.00, "maxMediaCpm": 6.00, "dataCpm": 12.50,
       "minBudget": 18.50, "budget": 2331.00, "maxBudget": 2331.00,
@@ -1378,7 +1483,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
     },
     {
       "name": "Image - Nurses",
-      "startTime": 1793628000000, "endTime": 1796083199000,
+      "startTime": 1793505600000, "endTime": 1796101199000,
       "frequencyCap": 3, "frequencyCapTypeId": 1,
       "minMediaCpm": 6.00, "mediaCpm": 6.00, "maxMediaCpm": 6.00, "dataCpm": 12.50,
       "minBudget": 18.50, "budget": 999.00, "maxBudget": 999.00,
@@ -1389,7 +1494,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
     },
     {
       "name": "Video - Physicians",
-      "startTime": 1793628000000, "endTime": 1796083199000,
+      "startTime": 1793505600000, "endTime": 1796101199000,
       "frequencyCap": 3, "frequencyCapTypeId": 1,
       "minMediaCpm": 18.00, "mediaCpm": 18.00, "maxMediaCpm": 18.00, "dataCpm": 12.50,
       "minBudget": 30.50, "budget": 3843.00, "maxBudget": 3843.00,
@@ -1400,7 +1505,7 @@ To save an incomplete plan instead, use the `/draft` endpoint, which saves it in
     },
     {
       "name": "Video - Nurses",
-      "startTime": 1793628000000, "endTime": 1796083199000,
+      "startTime": 1793505600000, "endTime": 1796101199000,
       "frequencyCap": 3, "frequencyCapTypeId": 1,
       "minMediaCpm": 18.00, "mediaCpm": 18.00, "maxMediaCpm": 18.00, "dataCpm": 12.50,
       "minBudget": 30.50, "budget": 1647.00, "maxBudget": 1647.00,
@@ -1763,7 +1868,7 @@ Use this endpoint to:
   </tr>
   <tr>
     <td>`planLevelTargeting` <br /><span class="type-text">object</span></td>
-    <td>Creative type and device targeting for the whole plan.</td>
+    <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
   </tr>
   <tr>
   <td colSpan="2">
@@ -1812,6 +1917,50 @@ Use this endpoint to:
           <tr>
             <td>`deviceTypeIds` <br /><span class="type-text">array of integers</span></td>
             <td>[Device type IDs](/guidelines/master-api#get-device-type); empty when all device types are targeted. <br /><EnumWidget values={hcpDeviceTypes} /></td>
+          </tr>
+        </table>
+        </details>
+      </td>
+      <td></td>
+      </tr>
+      <tr>
+        <td>`channels` <br /><span class="type-text">object</span></td>
+        <td>Targeted channels.</td>
+      </tr>
+      <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`channels` object properties</summary>
+        <table className="objectProperties">
+          <tr>
+            <td>`allChannelTypesSelected` <br /><span class="type-text">boolean</span></td>
+            <td>Whether all channels are targeted.</td>
+          </tr>
+          <tr>
+            <td>`channelTypeIds` <br /><span class="type-text">array of integers</span></td>
+            <td>Targeted channel type IDs; empty when all channels are targeted.</td>
+          </tr>
+        </table>
+        </details>
+      </td>
+      <td></td>
+      </tr>
+      <tr>
+        <td>`inventory` <br /><span class="type-text">object</span></td>
+        <td>Targeted inventory.</td>
+      </tr>
+      <tr>
+      <td colSpan="2">
+        <details className="objectPropertiesDetails">
+        <summary>`inventory` object properties</summary>
+        <table className="objectProperties">
+          <tr>
+            <td>`openExchanges` <br /><span class="type-text">object</span></td>
+            <td>Targeted Open Exchange inventory: <var>allExchangesSelected</var>, <var>exchangeIds</var>, <var>allIabCategoriesSelected</var>, and <var>iabCategoryIds</var>.</td>
+          </tr>
+          <tr>
+            <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+            <td>Targeted inventory groups. Returned as an empty object when none are targeted; set it to <var>null</var> before sending the plan back to edit or publish it.</td>
           </tr>
         </table>
         </details>
@@ -1996,8 +2145,8 @@ Use this endpoint to:
   "data": {
     "id": 4512,
     "name": "Q4 Cardiology Awareness",
-    "startTime": 1793628000000,
-    "endTime": 1796083199000,
+    "startTime": 1793505600000,
+    "endTime": 1796101199000,
     "timezoneId": 29,
     "budgetTypeId": 1,
     "owId": 200001,
@@ -2018,7 +2167,12 @@ Use this endpoint to:
     "audienceBlocks": [ ... ],
     "planLevelTargeting": {
       "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
-      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false }
+      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false },
+      "channels": { "channelTypeIds": [], "allChannelTypesSelected": true },
+      "inventory": {
+        "openExchanges": { "exchangeIds": [], "allExchangesSelected": true, "iabCategoryIds": [], "allIabCategoriesSelected": true },
+        "inventoryGroup": { "inventoryGroupIds": [], "allInventoryGroupsSelected": false }
+      }
     },
     "splitStrategy": [
       { "splitDimensionTypeId": 1, "selectedValueIds": [11, 14] },
@@ -2028,8 +2182,8 @@ Use this endpoint to:
       {
         "id": 90001,
         "name": "Image - Physicians",
-        "startTime": 1793628000000,
-        "endTime": 1796083199000,
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
         "budget": 2331.00,
         "impressions": 126000,
         "reach": 42000,
@@ -2158,6 +2312,10 @@ function getHcpPlanById(): Promise<Responses> {
 
 Update the plan before publishing it. This step is optional. Send the full plan; the saved plan is replaced with the request body. Editing doesn't change the plan's status.
 
+To edit, get the plan with [Step 4](#step-4-get-the-plan), change the fields you need, and send it back.
+
+The request schema is the same as [Step 3](#step-3-create-a-plan), except for the fields in the table below.
+
 :::warning
 
 The <var>statusId</var> in the request must equal the plan's current status.
@@ -2170,14 +2328,72 @@ Plans in <var>Processing</var> (<var>5</var>) or <var>IO Created</var> (<var>7</
 | ---- | --- |
 | `planId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID. |
 
-| Request schema |  |
-| ---- | --- |
-| `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID; must be the same as the <var>planId</var> path parameter. |
-| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The plan's current status ID from Step 4. |
-| `minBudget` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Minimum plan budget, from Step 2. Not returned in Step 4, so add it back before sending. |
-| `minImpressions` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Minimum plan impressions, from Step 2. Not returned in Step 4, so add it back before sending. |
-
-All other fields are the same as [Step 3](#step-3-create-a-plan).
+<table>
+<tr>
+<th>Request schema</th>
+<th></th>
+</tr>
+<tr>
+  <td>`id` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Plan ID; must be the same as the <var>planId</var> path parameter.</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>The plan's current status ID from Step 4. Send it back unchanged.</td>
+</tr>
+<tr>
+  <td>`minBudget` <br /><span class="type-text">number</span></td>
+  <td>Minimum plan budget, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value fails with a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
+</tr>
+<tr>
+  <td>`minImpressions` <br /><span class="type-text">integer</span></td>
+  <td>Minimum plan impressions, from Step 2. Required for Ready plans: Step 4 returns it as <var>null</var>, and a <var>null</var> value fails with a generic <var>500</var> error. Draft plans accept <var>null</var>.</td>
+</tr>
+<tr>
+  <td>`frequencyCap` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Frequency cap, <var>1</var> to <var>99</var>. Every campaign uses the plan's frequency cap, so change it here rather than in <var>campaigns</var>.</td>
+</tr>
+<tr>
+  <td>`frequencyCapTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Frequency cap type ID](/guidelines/campaign-api#get-frequency-cap-types). Every campaign uses the plan's frequency cap type, so change it here rather than in <var>campaigns</var>. <br /><EnumWidget values={frequencyCapTypes} /></td>
+</tr>
+<tr>
+  <td>`planLevelTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Creative type, device, channel, and inventory targeting for the whole plan.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`planLevelTargeting` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`inventory` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+      <td>Inventory to target.</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+      <details className="objectPropertiesDetails">
+      <summary>`inventory` object properties</summary>
+      <table className="objectProperties">
+        <tr>
+          <td>`inventoryGroup` <br /><span class="type-text">object</span></td>
+          <td>Send <var>null</var> unless you target inventory groups. Step 4 returns an empty inventory group object, which fails with <var>Invalid inventory groups selected</var>.</td>
+        </tr>
+      </table>
+      </details>
+    </td>
+    <td></td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+<tr>
+  <td>`campaigns` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+  <td>Proposed campaigns. Each edit re-creates the campaigns with new <var>id</var> values, so don't store those IDs; publishing does the same. The <var>frequencyCap</var> and <var>frequencyCapTypeId</var> values in each campaign are ignored.</td>
+</tr>
+</table>
 
 
 
@@ -2191,8 +2407,8 @@ All other fields are the same as [Step 3](#step-3-create-a-plan).
   "id": 4512,
   "statusId": 6,
   "name": "Q4 Cardiology Awareness",
-  "startTime": 1793628000000,
-  "endTime": 1796083199000,
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
   "timezoneId": 29,
   "budgetTypeId": 1,
   "minBudget": 98.00,
@@ -2205,7 +2421,15 @@ All other fields are the same as [Step 3](#step-3-create-a-plan).
   "frequencyCapTypeId": 2,
   "npiTypeIds": [3, 4],
   "audienceBlocks": [ ... ],
-  "planLevelTargeting": { ... },
+  "planLevelTargeting": {
+    "devices": { ... },
+    "creativeTypes": { ... },
+    "channels": { ... },
+    "inventory": {
+      "openExchanges": { ... },
+      "inventoryGroup": null
+    }
+  },
   "splitStrategy": [ ... ],
   "campaigns": [ ... ]
 }
@@ -2310,7 +2534,11 @@ function editProposal(): Promise<Responses> {
 
 Publish the plan to create an IO and campaigns. Send the full plan with its <var>id</var> and current <var>statusId</var>, as in Step 5. Publishing saves the request body first using the same checks as an edit, so the [status echo rule](#step-5-edit-the-plan) applies here too.
 
-The request returns immediately and the plan moves to <var>Processing</var> (<var>5</var>) while the audiences, IO, and campaigns are created in the background. When publishing finishes, the plan moves to <var>IO Created</var> (<var>7</var>) and its <var>ioId</var> is set. If publishing fails, the plan moves to <var>Failed</var> (<var>4</var>) and you can publish it again. The response doesn't include the IO ID: use [Step 4](#step-4-get-plan-details) to check the result.
+The request returns immediately and the plan moves to <var>Processing</var> (<var>5</var>) while the audiences, IO, and campaigns are created in the background. When publishing finishes, the plan moves to <var>IO Created</var> (<var>7</var>) and its <var>ioId</var> is set. If publishing fails, the plan moves to <var>Failed</var> (<var>4</var>) and you can publish it again. The response doesn't include the IO ID: use [Step 4](#step-4-get-plan-details) to check the result. Publishing can take more than a minute. It has finished successfully when <var>statusId</var> is <var>7</var>, <var>ioId</var> is greater than <var>0</var>, and every campaign's <var>campaignId</var> is greater than <var>0</var>.
+
+The campaigns are created as drafts. They don't run until creatives are attached and the campaigns are approved.
+
+The request schema is the same as [Step 5](#step-5-edit-the-plan), except for the fields in the table below.
 
 :::danger
 
@@ -2323,8 +2551,6 @@ Publishing is a one-way step. A published plan can't be returned to <var>Ready</
 | `id` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Plan ID from Step 3. |
 | `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The plan's current status ID from Step 4. |
 
-All other fields are the same as [Step 5](#step-5-edit-the-plan).
-
 </div><div class="child2">
 
 <Tabs>
@@ -2335,8 +2561,8 @@ All other fields are the same as [Step 5](#step-5-edit-the-plan).
   "id": 4512,
   "statusId": 6,
   "name": "Q4 Cardiology Awareness",
-  "startTime": 1793628000000,
-  "endTime": 1796083199000,
+  "startTime": 1793505600000,
+  "endTime": 1796101199000,
   "timezoneId": 29,
   "budgetTypeId": 1,
   "minBudget": 98.00,
@@ -2349,7 +2575,15 @@ All other fields are the same as [Step 5](#step-5-edit-the-plan).
   "frequencyCapTypeId": 1,
   "npiTypeIds": [3, 4],
   "audienceBlocks": [ ... ],
-  "planLevelTargeting": { ... },
+  "planLevelTargeting": {
+    "devices": { ... },
+    "creativeTypes": { ... },
+    "channels": { ... },
+    "inventory": {
+      "openExchanges": { ... },
+      "inventoryGroup": null
+    }
+  },
   "splitStrategy": [ ... ],
   "campaigns": [ ... ]
 }

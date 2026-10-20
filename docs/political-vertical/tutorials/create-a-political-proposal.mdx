@@ -58,18 +58,18 @@ To create a Political proposal and convert it into an IO, the following are requ
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. This endpoint returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). This endpoint returns an OAuth-compliant response with an access token and an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
 
 For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Headers |  |
 | ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide).<br /> |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Basic</var> followed by your Base64-encoded <var>client_id:client_secret</var>.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
 
 | Request schema |  |
 | ---- | --- |
-| `grantType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
-| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> to log in. <br />See [OAuth grant types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
 | `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
@@ -77,12 +77,14 @@ For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-   "grantType": "password",
-   "email": "pratik.t+ihp@iqm.com",
-   "password": "123456"
-}
+```curl title="Request sample"
+curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username=user@iqm.com' \
+--data-urlencode 'password=<your password>'
 ```
 
 ```json title="Response 200"
@@ -136,80 +138,6 @@ For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
 </details>
 
-</TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          access_token: string;
-          refresh_token: string;
-          scope: string;
-          token_type: string;
-          expires_in: number;
-          owId: number;
-        };
-      };
-    };
-  };
-  400: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          status: string;
-          reason: string;
-          supportEmail: string;
-        };
-        errorObjects: {
-          error: string;
-          reason: string;
-        }[];
-      };
-    };
-  };
-  403: {
-    content: {
-      "application/json": {
-        success: boolean;
-        errorObjects: {
-          error: string;
-        }[];
-      };
-    };
-  };
-};
-
-function Login(): Promise < Responses > {
-  const options = {
-    method: 'POST',
-    url: 'https://api.iqm.com/api/v3/ua/login',
-    requestBody: {
-      content: {
-        "application/json": {
-          email: `string`,
-          password: `string`,
-        }
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
 </TabItem></Tabs>
 
 </div></div>
@@ -222,7 +150,7 @@ Use the following header parameters for all requests after logging in:
 
 | Headers  |  |
 | ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
+| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Bearer</var> followed by the <var>access_token</var> from the login response. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
 | `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
 
 </div>
@@ -379,7 +307,37 @@ The forecasting service decides which targeting and budget combinations can be p
 </tr>
 <tr>
 <td>`cva` <br /><span class="type-text">object</span></td>
-<td>CVA to target, for example <var>&#123;"id": 12345&#125;</var>. See [Target a Custom Voter audience](#target-a-custom-voter-audience).</td>
+<td>CVA to target. Send all five fields; a <var>cva</var> object with only <var>id</var> returns a <var>500</var> error. See [Target a Custom Voter audience](#target-a-custom-voter-audience).</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`cva` object properties</summary>
+  <table className="objectProperties">
+    <tr>
+      <td>`id` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>CVA ID from [Create CVA details](#step-3-create-cva-details).</td>
+    </tr>
+    <tr>
+      <td>`equation` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+      <td>Segment equation sent when the CVA was created.</td>
+    </tr>
+    <tr>
+      <td>`stateIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
+      <td>State IDs sent when the CVA was created.</td>
+    </tr>
+    <tr>
+      <td>`segmentIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
+      <td>Numeric segment IDs of the segments in the equation, from [Find segment IDs](#step-1-find-segment-ids).</td>
+    </tr>
+    <tr>
+      <td>`reach` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+      <td>Audience reach, from [Get the audience reach](#step-2-get-the-audience-reach).</td>
+    </tr>
+  </table>
+  </details>
+</td>
+<td></td>
 </tr>
 </table>
 
@@ -535,6 +493,8 @@ function createReadyPlan(): Promise<Responses> {
 
 Use the <var>planId</var> from Step 1 to list the strategies generated for the plan. Compare the forecasted <var>reach</var>, <var>impressions</var>, <var>budget</var>, and <var>cpm</var> of each strategy and save the <var>id</var> of the one you want to activate in Step 3.
 
+A strategy's <var>budget</var>, <var>frequency</var>, creative types, and campaigns are the forecasting service's recommendation, not a copy of the plan. They can differ from what you sent in Step 1: for example, a lower budget, a lower frequency cap, or only some of the plan's creative types. The forecasting service can also return fewer than three strategies.
+
 :::caution
 
 If you create extra strategies with [Generate custom strategies](/political-vertical/planner#generate-custom-strategies), the <var>id</var> in that endpoint's response is the forecasting service's own ID, not an IQM strategy ID, and can't be activated. Always get strategy IDs from this endpoint.
@@ -632,7 +592,6 @@ If you create extra strategies with [Generate custom strategies](/political-vert
       "name": "Maximum Reach",
       "startDate": 1793595600000,
       "endDate": 1796187600000,
-      "timezoneId": 29,
       "duration": 30,
       "strategyTypeId": 1,
       "campaignsCount": 4,
@@ -652,7 +611,6 @@ If you create extra strategies with [Generate custom strategies](/political-vert
       "name": "Most Economical",
       "startDate": 1793595600000,
       "endDate": 1796187600000,
-      "timezoneId": 29,
       "duration": 30,
       "strategyTypeId": 4,
       "campaignsCount": 2,
@@ -693,7 +651,6 @@ interface Responses {
           name: string;
           startDate: number;
           endDate: number;
-          timezoneId: number;
           duration: number;
           strategyTypeId: number;
           campaignsCount: number;
@@ -974,19 +931,19 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
   </tr>
   <tr>
     <td>`minCpm` <br /><span class="type-text">number</span></td>
-    <td>Minimum cost per mille (CPM).</td>
+    <td>Minimum cost per mille (CPM); can be <var>null</var> at the proposal level.</td>
   </tr>
   <tr>
     <td>`cpm` <br /><span class="type-text">number</span></td>
-    <td>CPM.</td>
+    <td>CPM; can be <var>null</var> at the proposal level. Each proposed campaign has its own CPM.</td>
   </tr>
   <tr>
     <td>`maxCpm` <br /><span class="type-text">number</span></td>
-    <td>Maximum CPM.</td>
+    <td>Maximum CPM; can be <var>null</var> at the proposal level.</td>
   </tr>
   <tr>
     <td>`campaignGeneratable` <br /><span class="type-text">boolean</span></td>
-    <td>Whether an IO and campaigns can be generated from the proposal.</td>
+    <td>Whether an IO and campaigns can be generated from the proposal. Only meaningful while the proposal is <var>Ready</var> or <var>Failed</var>; it isn't reset after the proposal is converted.</td>
   </tr>
   <tr>
     <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
@@ -1004,6 +961,10 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
       <tr>
         <td>`name` <br /><span class="type-text">string</span></td>
         <td>Campaign name.</td>
+      </tr>
+      <tr>
+        <td>`type` <br /><span class="type-text">string</span></td>
+        <td>Voter TV+ proposals only: <var>CTV</var> or <var>Linear TV</var>. Only CTV campaigns are created when the IO is generated. <var>null</var> for other proposals.</td>
       </tr>
       <tr>
         <td>`strategy` <br /><span class="type-text">string</span></td>
@@ -1223,6 +1184,8 @@ Convert the proposal into an IO and campaigns. The proposal must be in <var>Read
 
 The request returns immediately and the proposal moves to <var>Processing</var> (<var>5</var>) while the IO and campaigns are created in the background. When generation finishes, the proposal moves to <var>Converted</var> (<var>1</var>) and its <var>ioId</var> is set. If generation fails, the proposal moves to <var>Failed</var> (<var>4</var>) and you can retry this step. Use [Step 4](#step-4-check-proposal-details) to check the result.
 
+The converted proposal doesn't link its proposed campaigns to the campaigns that were created. To find the new campaigns, call [Get basic details of campaigns](/guidelines/campaign-api#get-basic-details-of-campaigns) (<span class="code-text">POST /api/v3/cmp/basic/list</span>) with the proposal's <var>ioId</var> in <var>ioIdsList</var>, for example <var>&#123;"ioIdsList": [29046]&#125;</var>. The campaigns are created as drafts.
+
 Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
 
 :::danger
@@ -1369,6 +1332,8 @@ Voter TV+ plans:
   <div class="child1">
 
 Send the plan's budget, dates, and targeting with <var>objectiveId</var> <var>3</var> to get a reach forecast for linear TV and CTV. Save the <var>graphId</var> and <var>overview</var> from the response for the next step.
+
+Check <var>audienceOverlap.totalReach</var> in the response before continuing. If it's <var>0</var>, the targeting doesn't match any voters: a plan created from this graph produces a proposal with <var>0</var> budgets, and splitting it fails. Narrow the location targeting, for example to states or DMAs, and request a new graph. The sample targets Ohio (<var>30200036</var>) and Pennsylvania (<var>30200039</var>).
 
 To adjust the forecast, call this endpoint again with the same <var>graphId</var> and new <var>overview</var> values. 
 
@@ -1542,7 +1507,8 @@ The first request for a new graph calls an external data service and can take mo
   },
   "targeting": {
     "whiteListedLocation": {
-      "country": 30100001
+      "country": 30100001,
+      "states": [30200036, 30200039]
     },
     "ageGroupSegments": [6073147, 6073145],
     "genderSegments": [6189394, 6189395]
@@ -1563,20 +1529,20 @@ The first request for a new graph calls an external data service and can take mo
       "ctvFrequency": 3
     },
     "audienceOverlap": {
-      "population": 16780000,
-      "totalReach": 6820000,
-      "linearTvReach": 4350000,
-      "ctvReach": 3120000,
-      "overlapReach": 650000,
-      "ctvIncrementalReach": 2470000
+      "population": 16100000,
+      "totalReach": 1470000,
+      "linearTvReach": 1020000,
+      "ctvReach": 778000,
+      "overlapReach": 328000,
+      "ctvIncrementalReach": 450000
     },
     "maximumAudienceOverlap": {
-      "population": 16780000,
-      "totalReach": 7200000,
-      "linearTvReach": 4600000,
-      "ctvReach": 3400000,
-      "overlapReach": 800000,
-      "ctvIncrementalReach": 2600000
+      "population": 16100000,
+      "totalReach": 2150000,
+      "linearTvReach": 1480000,
+      "ctvReach": 1150000,
+      "overlapReach": 480000,
+      "ctvIncrementalReach": 670000
     },
     "reachSaturation": [
       {
@@ -1678,7 +1644,7 @@ function getCrossScreenGraph(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Create a ready plan with <var>objectiveId</var> <var>3</var> and the <var>graphId</var> and <var>overview</var> from Step 1. Use the same budget, dates, and targeting you sent in Step 1 so the plan matches the graph. Save the <var>planId</var> from the response.
+Create a ready plan with <var>objectiveId</var> <var>3</var>, and copy the <var>graphId</var> and <var>overview</var> from your Step 1 response. Use the same budget, dates, and targeting you sent in Step 1 so the plan matches the graph. Save the <var>planId</var> from the response.
 
 :::info
 
@@ -1860,8 +1826,11 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
   },
   "targeting": {
     "whiteListedLocation": {
-      "country": 30100001
-    }
+      "country": 30100001,
+      "states": [30200036, 30200039]
+    },
+    "ageGroupSegments": [6073147, 6073145],
+    "genderSegments": [6189394, 6189395]
   }
 }
 ```
@@ -1982,7 +1951,7 @@ Pass the <var>planId</var> from the previous step to create a proposal from the 
   "success": true,
   "data": {
     "id": 8,
-    "message": "Voter TV+ Plan - Mix 1 saved successfully."
+    "message": "Voter TV+ Plan_Mix_01 saved successfully."
   }
 }
 ```
@@ -2041,9 +2010,13 @@ function activateVoterTvProposal(): Promise<Responses> {
 <div class="endpoint-container">
   <div class="child1">
 
-Split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per ZIP code. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign. This step is optional.
+Split a Voter TV+ proposal's CTV campaigns into one campaign per value of a targeting dimension, such as one campaign per state. The existing CTV campaigns are replaced. Send an empty <var>locations</var> list to merge them back into a single CTV campaign. This step is optional.
 
-This endpoint only works on Voter TV+ proposals.
+A split only has an effect for dimensions that the plan targets with more than one value. The sample splits by state (<var>8</var>), because the sample plan targets two states; splitting it by ZIP code or device gives a single CTV campaign. Split campaigns are named with a numbered suffix, such as <var>_Video + Loc_1</var> and <var>_Loc_2</var>, not with the state name.
+
+The response shows the proposal as it was before the split. To see the new campaigns, get the proposal again with [Check proposal details](#step-4-check-proposal-details).
+
+This endpoint only works on Voter TV+ proposals. On a proposal with <var>0</var> budgets, such as one created from a graph with no reach, it returns a generic <var>500</var> error.
 
 :::tip
 
@@ -2068,26 +2041,39 @@ Splitting can take more than 60 seconds for large proposals. Set your client tim
 
 ```json title="Request sample"
 {
-  "locations": [15]
+  "locations": [8]
 }
 ```
 
-```json title="Response 200"
+```json title="Response 200 (abbreviated)"
 {
   "success": true,
   "data": {
     "id": 8,
-    "name": "Voter TV+ Plan - Mix 1",
+    "name": "Voter TV+ Plan_Mix_01",
     "startTime": 1793595600000,
     "endTime": 1794805200000,
     "owId": 202500,
     "statusId": 6,
-    "reach": 3120000,
+    "reach": 778000,
     "impressions": 7140000,
-    "budget": 50000,
+    "budget": 100000,
     "frequencyCap": 3,
     "campaignGeneratable": true,
-    "proposedCampaigns": []
+    "proposedCampaigns": [
+      {
+        "id": 501,
+        "name": "Voter TV+ Plan_Mix_01_VTV + Video",
+        "type": "Linear TV",
+        "budget": 50000
+      },
+      {
+        "id": 502,
+        "name": "Voter TV+ Plan_Mix_01_Video",
+        "type": "CTV",
+        "budget": 50000
+      }
+    ]
   }
 }
 ```
@@ -2157,16 +2143,167 @@ function splitProposal(): Promise<Responses> {
 
 ## Target a Custom Voter audience
 
-A Custom Voter audience (CVA) combines voter segments into a single audience for a plan. Create the CVA first, then pass its <var>id</var> in the <var>cva</var> field when you [create a ready plan](#step-1-create-a-ready-plan).
+A Custom Voter audience (CVA) combines voter segments into a single audience for a plan. To target a CVA:
 
-### Create CVA details
+1. Find the segment IDs
+1. Get the audience reach
+1. Create CVA details
+1. Pass the full <var>cva</var> object (<var>id</var>, <var>equation</var>, <var>stateIds</var>, <var>segmentIds</var>, and <var>reach</var>) when you [create a ready plan](#step-1-create-a-ready-plan)
+
+A plan request with only <var>cva.id</var> fails with a generic <var>500</var> error. All five fields are required, even though they're stored with the CVA ID.
+
+### Step 1: Find segment IDs
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/cva/segments" operationId="getSegmentDetails" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Look up the segments you want to combine. Each leaf segment has a <var>taxonomyId</var>, such as <var>IQMCVACA069112</var>, which is the token used in the CVA equation, and a numeric <var>segmentId</var>, which goes in the plan's <var>cva.segmentIds</var>. Save both.
+
+To browse the segment catalog instead of looking up known taxonomy IDs, see [Get Custom Voter audience segment details](/political-vertical/audience-segments#get-custom-voter-audience-segment-details).
+
+| Request schema |  |
+| ---- | --- |
+| `taxonomyIds` <br /><span class="type-text">array of strings</span> | Taxonomy IDs of the segments to look up. |
+| `validateTaxonomyIds` <br /><span class="type-text">boolean</span> | Set to <var>true</var> to return an error if any taxonomy ID doesn't exist (default: <var>false</var>). |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`cvaSegmentData` <br /><span class="type-text">array of objects</span></td>
+    <td>Matching segments.</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`cvaSegmentData` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`segmentId` <br /><span class="type-text">integer</span></td>
+        <td>Segment ID; use it in <var>cva.segmentIds</var>.</td>
+      </tr>
+      <tr>
+        <td>`taxonomyId` <br /><span class="type-text">string</span></td>
+        <td>Taxonomy ID; use it in the CVA <var>equation</var>.</td>
+      </tr>
+      <tr>
+        <td>`taxonomyValue` <br /><span class="type-text">string</span></td>
+        <td>Segment name.</td>
+      </tr>
+      <tr>
+        <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
+        <td>Whether the segment is a leaf segment. Only leaf segments can be used in an equation.</td>
+      </tr>
+    </table>
+    </details>
+  </td>
+  <td></td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Request sample"
+{
+  "taxonomyIds": ["IQMCVACA069112", "IQMCVACA080323", "IQMCVACA101616"],
+  "validateTaxonomyIds": true
+}
+```
+
+```json title="Response 200 (abbreviated)"
+{
+  "success": true,
+  "data": {
+    "totalRecords": 3,
+    "filteredRecords": 3,
+    "cvaSegmentData": [
+      { "segmentId": 4211, "taxonomyId": "IQMCVACA069112", "isLeaf": true },
+      { "segmentId": 4215, "taxonomyId": "IQMCVACA080323", "isLeaf": true },
+      { "segmentId": 4230, "taxonomyId": "IQMCVACA101616", "isLeaf": true }
+    ]
+  }
+}
+```
+
+</div></div>
+
+### Step 2: Get the audience reach
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cva/get-reach" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the number of voters that match the equation. Use <var>segment_num_voters</var> from the response as the CVA's <var>reach</var> in the next step; IQM stores the reach you send and passes it to the forecasting service without recalculating it.
+
+This endpoint uses snake_case <var>state_ids</var>, unlike the camelCase <var>stateIds</var> in the next step. If <var>state_ids</var> is empty, the response counts no voters, so send the states your segments belong to.
+
+| Request schema |  |
+| ---- | --- |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | CVA equation; see [Step 3](#step-3-create-cva-details) for the syntax. |
+| `state_ids` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) of the segments. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`segment_num_voters` <br /><span class="type-text">integer</span></td>
+    <td>Number of voters that match the equation; use it as the CVA's <var>reach</var>.</td>
+  </tr>
+  <tr>
+    <td>`total_num_voters` <br /><span class="type-text">integer</span></td>
+    <td>Total number of voters in the selected states.</td>
+  </tr>
+  <tr>
+    <td>`map_metrics` <br /><span class="type-text">object</span></td>
+    <td>Voter counts by party, keyed by location ID. Can include keys that aren't state IDs.</td>
+  </tr>
+</table>
+
+</details>
+
+</div><div class="child2">
+
+```json title="Request sample"
+{
+  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
+  "state_ids": [30200005]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "segment_num_voters": 1629051,
+    "total_num_voters": 23165810,
+    "map_metrics": {
+      "30200005": {
+        "Republican": 412870,
+        "Democrat": 761304,
+        "Other": 454877
+      }
+    }
+  }
+}
+```
+
+</div></div>
+
+### Step 3: Create CVA details
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/plan/political/cva-details" operationId="createCvaDetails" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Define the CVA with an equation of voter segment IDs. Get segment IDs from [Get Custom Voter audience segment details](/political-vertical/audience-segments#get-custom-voter-audience-segment-details) in the Audience API.
+Define the CVA with an equation of the taxonomy IDs from Step 1, and the reach from Step 2.
 
 Equation syntax:
   * Wrap each segment ID in parentheses
@@ -2175,11 +2312,13 @@ Equation syntax:
 
 For example, <var>((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))</var> targets voters in either of the first two segments who are also in the third.
 
+An equation with an unknown taxonomy ID or unbalanced parentheses returns a <var>500</var> error with the message <var>Invalid CVA details provided</var>. This is a validation error, not an outage: fix the equation and try again.
+
 | Request schema |  |
 | ---- | --- |
 | `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Segment equation. |
-| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) to limit the audience to; leave empty for all states. |
-| `reach` <br /><span class="type-text">integer</span> | Audience reach. This value is stored and passed to the forecasting service as provided; it isn't calculated. Use [Get CVA reach](/political-vertical/audience-segments#get-cva-reach) to get it. |
+| `stateIds` <br /><span class="type-text">array of integers</span> | [State IDs](/political-vertical/audience-segments#get-available-states-for-custom-voter-audiences) to limit the audience to. |
+| `reach` <br /><span class="type-text">integer</span> | Audience reach: <var>segment_num_voters</var> from Step 2. This value is stored and passed to the forecasting service as provided; it isn't calculated. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -2201,8 +2340,8 @@ For example, <var>((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))</var> tar
 ```json title="Request sample"
 {
   "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
-  "stateIds": [],
-  "reach": 125000
+  "stateIds": [30200005],
+  "reach": 1629051
 }
 ```
 
@@ -2263,6 +2402,20 @@ function createCvaDetails(): Promise<Responses> {
 
 </div></div>
 
+### Add the CVA to a plan
+
+Pass the full CVA in the <var>cva</var> field when you [create a ready plan](#step-1-create-a-ready-plan): the <var>id</var> from Step 3, the <var>equation</var> and <var>stateIds</var> from Step 3, the <var>segmentIds</var> from Step 1, and the <var>reach</var> from Step 2. To keep the forecast consistent, target the CVA's states in the plan's <var>whiteListedLocation</var> as well.
+
+```json title="cva object"
+"cva": {
+  "id": 12345,
+  "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
+  "stateIds": [30200005],
+  "segmentIds": [4211, 4215, 4230],
+  "reach": 1629051
+}
+```
+
 ## Restore an expired proposal
 
 <CopyUrl method="PATCH" url="https://api.iqm.com/api/v3/plan/political/proposals/restore" operationId="restoreProposals" />
@@ -2272,7 +2425,7 @@ function createCvaDetails(): Promise<Responses> {
 
 A proposal that isn't converted becomes <var>Expired</var> (<var>3</var>) after its end date passes. To use an expired proposal again, restore it with new flight dates. Restored proposals return to <var>Ready</var> (<var>6</var>) status and can then be converted as in [Step 5](#step-5-generate-an-io-and-campaigns).
 
-Restoring only works on expired proposals. It isn't an undo for [Delete proposals](/political-vertical/planner#delete-proposals).
+The new flight can be a different length from the original; unlike generating an IO, restoring doesn't require the duration to stay the same. Restoring only works on expired proposals. It isn't an undo for [Delete proposals](/political-vertical/planner#delete-proposals).
 
 | Request schema |  |
 | ---- | --- |

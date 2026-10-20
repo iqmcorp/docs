@@ -6035,10 +6035,35 @@ const sidebars = {
               ]
             },
             {
-              type: `link`,
+              type: 'category',
               label: 'Target a Custom Voter audience',
-              href: `/political-vertical/tutorials/create-a-political-proposal#target-a-custom-voter-audience`,
-              className: 'sidebarItemQS'
+              className: 'sidebarItemQS',
+              items: [
+                {
+                  type: `link`,
+                  label: 'Step 1: Find segment IDs',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-1-find-segment-ids`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 2: Get the audience reach',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-2-get-the-audience-reach`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Step 3: Create CVA details',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#step-3-create-cva-details`,
+                  className: 'sidebarItemQS'
+                },
+                {
+                  type: `link`,
+                  label: 'Add the CVA to a plan',
+                  href: `/political-vertical/tutorials/create-a-political-proposal#add-the-cva-to-a-plan`,
+                  className: 'sidebarItemQS'
+                }
+              ]
             },
             {
               type: `link`,
