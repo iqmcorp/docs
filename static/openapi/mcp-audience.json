@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Audience API Specification",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "MCP Audience API Specification",
     "contact": {
       "name": "IQM Support",
@@ -5576,7 +5576,7 @@
           "MCP"
         ],
         "summary": "List ABM account subtypes",
-        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (lookup) account subtypes and return account subtype IDs (accountSubTypeIds) with reach. Optionally narrow by healthcareSystemIds, accountIds, or accountTypeIds.\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows).",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (lookup) account subtypes and return account subtype IDs (accountSubTypeIds). Optionally narrow by healthcareSystemIds, accountIds, or accountTypeIds.\n\nEach row has id, displayName, and audienceSubtypeId; there is no reach, so sort by order only (sortBy reach returns 500).\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows).",
         "operationId": "getAccountSubTypeList",
         "parameters": [
           {
@@ -5611,7 +5611,6 @@
               "example": {
                 "pageNo": 1,
                 "noOfEntries": 50,
-                "sortBy": "-reach",
                 "dataProviderIds": [
                   12
                 ]
@@ -11138,6 +11137,30 @@
             }
           },
           {
+            "name": "audienceTypeId",
+            "in": "query",
+            "description": "Required with dataProviderIds, which this tool always sends: use 9 (Account Based Audience) for ABM. Omitting it returns 422.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 9
+          },
+          {
+            "name": "specialityIds",
+            "in": "query",
+            "description": "Speciality IDs to filter by. Comma-separated string also allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
             "name": "pageNo",
             "in": "query",
             "description": "Page number, starting at 1. Default 1. -1 returns every row; avoid it, these lists are very large. Search instead.",
@@ -15547,7 +15570,7 @@
           },
           "sortBy": {
             "type": "string",
-            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order).",
+            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order). getAccountSubTypeList rows have no reach: sort it by order only (reach returns 500).",
             "example": "-reach"
           },
           "searchField": {
