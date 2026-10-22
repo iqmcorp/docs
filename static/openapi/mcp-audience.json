@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Audience API Specification",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "MCP Audience API Specification",
     "contact": {
       "name": "IQM Support",
@@ -4355,8 +4355,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API gives the basic list of audiences.",
-        "description": "This API provides the basic list of audiences based on the search request parameters.\nIt supports filtering by audience IDs, type IDs, subtype IDs, OW IDs, and status IDs.\nThe request includes pagination and sorting options.\n",
+        "summary": "List audiences with basic details, or find one by name",
+        "description": "List (search) audiences with basic details: ID, name, type, status, and reach. Use it to find an audience by name or check whether one already exists: send searchFields with the name (case-insensitive substring match on name or ID) and audienceTypeIds, e.g. [9] for ABM. searchField (singular) is ignored here.\n\nsortBy: comma-separated, prefix - for descending; allowed audienceId, audienceName, createdAt, cpm, modifiedAt. Default -modifiedAt (newest first). Default page size 20.\n",
         "operationId": "getAudienceBasicList",
         "parameters": [
           {
@@ -4419,15 +4419,29 @@
                     "sortBy": "audienceName",
                     "searchFields": [
                       "test audience",
-                      123456
+                      "123456"
                     ]
                   }
                 },
                 "Minimal search request": {
                   "description": "Example request with no filters, only pagination",
                   "value": {
-                    "pageNumber": 1,
-                    "pageSize": 20
+                    "pageNo": 1,
+                    "noOfEntries": 20
+                  }
+                },
+                "Find an ABM audience by name": {
+                  "description": "Check whether an ABM audience with this name exists, e.g. after a createAbmAudience timeout",
+                  "value": {
+                    "searchFields": [
+                      "Cardiologists - Northeast Hospitals"
+                    ],
+                    "audienceTypeIds": [
+                      9
+                    ],
+                    "pageNo": 1,
+                    "noOfEntries": 20,
+                    "sortBy": "-createdAt"
                   }
                 }
               }
@@ -4729,8 +4743,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This method creates ABM audience.",
-        "description": "This method creates an ABM Audience with mapping of health care data ",
+        "summary": "Create an ABM (account based) audience",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nCreate (save) a new ABM (account based) audience of healthcare providers from filter IDs resolved with the ABM lookup tools. Only advertiser users in the healthcare vertical can create one.\n\nBefore calling:\n1. Get dataProviderId from getAudienceDataPartners (audienceTypeId 9).\n2. Resolve each name to IDs with the ABM lookup tools and confirm the mapping (input, matched name, ID, reach) with the user.\n3. Call getHealthcareDataStatistics with the same filters and check npiReach meets the minimum (currently 10, admin-configurable); otherwise this call returns 422 \"Minimum reach for creating a audience is N\".\n\nRequest:\n- filters: the resolved IDs (titleIds, specialityIds, accountIds, accountTypeIds, accountSubTypeIds, healthCareSystemIds, location IDs) and selectAll. filters.dataProviderIds and filters.audienceSubtypeIds are taken from the top-level dataProviderId and audienceSubtypeId.\n- All matching rows: filters.selectAll true and healthCareDataMappingIds [].\n- Specific rows: filters.selectAll false and healthCareDataMappingIds set to id values from getHealthcareData under the same filters. Title, account, and other filter IDs do not go in healthCareDataMappingIds.\n- audienceSubtypeId: omit to build from generic rows only, or send 3 (HCP) to build from HCP rows only.\n\nReturns the new audienceId. The audience starts in Processing status while it builds.\n\nThe call can time out after the audience is saved. After a timeout or 5xx error, call getAudienceBasicList with searchFields [audienceName] and audienceTypeIds [9] before retrying, to avoid a duplicate.",
         "operationId": "createAbmAudience",
         "parameters": [
           {
@@ -4763,49 +4777,18 @@
                 "$ref": "#/components/schemas/CreateAccountBasedAudienceRequest"
               },
               "example": {
-                "audienceName": "HealthCare Innovators",
-                "healthCareDataMappingIds": [
-                  1,
-                  2,
-                  3
-                ],
-                "dataProviderId": 1,
+                "audienceName": "Cardiologists - Northeast Hospitals",
+                "dataProviderId": 12,
+                "audienceSubtypeId": 3,
+                "healthCareDataMappingIds": [],
                 "filters": {
-                  "selectAll": false,
-                  "healthCareSystemIds": [
-                    40100004,
-                    40100007
+                  "selectAll": true,
+                  "titleIds": [
+                    40500099
                   ],
                   "accountIds": [
                     40208104,
                     40628423
-                  ],
-                  "accountTypeIds": [
-                    40300003
-                  ],
-                  "accountSubTypeIds": [
-                    40400001,
-                    40400010
-                  ],
-                  "countryIds": [
-                    30100001
-                  ],
-                  "stateIds": [
-                    30200028,
-                    30200043
-                  ],
-                  "cityIds": [
-                    30430356,
-                    30447825,
-                    30447952,
-                    30448122
-                  ],
-                  "titleIds": [
-                    40500099
-                  ],
-                  "specialityIds": [
-                    40500014,
-                    40500086
                   ]
                 }
               }
@@ -4913,8 +4896,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API fetches statistics based on the filters passed",
-        "description": "This API fetches different statistics like number of health care systems, accounts, account-types, specialities and total npi reach based on the filters passed \n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| selectAll `[optional]`  | Boolean | Flag to indicate whether to select all records or apply filters. Default is true. |\n| dataProviderIds `[required]`  | List of Integer | The list includes data provider IDs such as HealthLink, etc. to filter data. |\n| healthcareSystemIds `[optional]`  | List of Integer | The list includes healthcare system IDs to filter data. |\n| accountIds `[optional]`  | List of Integer | The list includes account IDs to filter data. |\n| accountTypeIds `[optional]`  | List of Integer | The list includes account type IDs to filter data. |\n| accountSubTypeIds `[optional]`  | List of Integer | The list includes account sub type IDs to filter data. |\n| countryIds `[optional]`  | List of Integer | The list includes country IDs to filter data. |\n| stateIds `[optional]`  | List of Integer | The list includes state IDs to filter data. |\n| cityIds `[optional]`  | List of Integer | The list includes city IDs to filter data. |\n| titleIds `[optional]`  | List of Integer | The list includes title IDs to filter data. |\n| specialtyIds `[optional]`  | List of Integer | The list includes specialty IDs to filter data. |\n| ids `[optional]`  | Array of Integer | The list includes health care data mapping Ids to filter data. |\n",
+        "summary": "Estimate ABM audience reach (npiReach) for filters",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nEstimate (preview) ABM audience size and statistics before creating it: returns npiReach (estimated NPI reach) and counts of matching health systems, accounts, account types, and specialities for a set of filters. Read-only: nothing is created or saved.\n\nUse it as the pre-flight check before createAbmAudience, with the same filters, and report npiReach to the user. createAbmAudience rejects an audience below the minimum npiReach (currently 10, admin-configurable). To get the number create will compute, send audienceSubtypeIds [3] when creating with audienceSubtypeId 3, otherwise send includeGenericAudience true; the defaults count all rows and can overstate reach. If npiReach is too low, suggest broader filters (fewer constraints, more accounts or titles).",
         "operationId": "getHealthcareDataStatistics",
         "parameters": [
           {
@@ -4947,55 +4930,23 @@
                 "$ref": "#/components/schemas/HealthcareDataRequest"
               },
               "examples": {
-                "Request Body containing all the filters": {
-                  "description": "Request Body containing all the filters",
+                "HCP audience pre-flight": {
+                  "description": "Same filters as the createAbmAudience request below, with audienceSubtypeIds matching audienceSubtypeId 3",
                   "value": {
                     "selectAll": true,
                     "dataProviderIds": [
-                      1
+                      12
                     ],
-                    "healthCareSystemIds": [
-                      40100004,
-                      40100007
-                    ],
-                    "accountIds": [
-                      40208104,
-                      40628423
-                    ],
-                    "accountTypeIds": [
-                      40300003
-                    ],
-                    "accountSubTypeIds": [
-                      40400001,
-                      40400010
-                    ],
-                    "countryIds": [
-                      30100001
-                    ],
-                    "stateIds": [
-                      30200028,
-                      30200043
-                    ],
-                    "cityIds": [
-                      30430356,
-                      30447825,
-                      30447952,
-                      30448122
+                    "audienceSubtypeIds": [
+                      3
                     ],
                     "titleIds": [
                       40500099
                     ],
-                    "specialityIds": [
-                      40500014,
-                      40500086
-                    ],
-                    "ids": [
-                      1,
-                      2,
-                      3
-                    ],
-                    "pageNo": 1,
-                    "noOfEntries": 2
+                    "accountIds": [
+                      40208104,
+                      40628423
+                    ]
                   }
                 }
               }
@@ -5075,8 +5026,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "List of health care data based on filters passed",
-        "description": "This API fetches the healthcare data list, filtered record count, and total record count based on the provided filters.\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pageNo `[optional]` | Number | Page number for the required data. The default value is 1. Setting the page number to -1 will disable pagination and return all data in a single page. |\n| noOfEntries `[optional]` | Number | The maximum number of returned results per page.  The default value is 50. |\n| selectAll `[optional]`  | Boolean | Flag to indicate whether to select all records or apply filters. Default is true. |\n| dataProviderIds `[required]`  | List of Integer | The list includes data provider IDs such as HealthLink, etc. to filter data. |\n| healthcareSystemIds `[optional]`  | List of Integer | The list includes healthcare system IDs to filter data. |\n| accountIds `[optional]`  | List of Integer | The list includes account IDs to filter data. |\n| accountTypeIds `[optional]`  | List of Integer | The list includes account type IDs to filter data. |\n| accountSubTypeIds `[optional]`  | List of Integer | The list includes account sub type IDs to filter data. |\n| countryIds `[optional]`  | List of Integer | The list includes country IDs to filter data. |\n| stateIds `[optional]`  | List of Integer | The list includes state IDs to filter data. |\n| cityIds `[optional]`  | List of Integer | The list includes city IDs to filter data. |\n| titleIds `[optional]`  | List of Integer | The list includes title IDs to filter data. |\n| specialtyIds `[optional]`  | List of Integer | The list includes specialty IDs to filter data. |\n| ids `[optional]`  | Array of Integer | The list includes health care data mapping Ids to filter data. |\n",
+        "summary": "List ABM healthcare data mapping rows",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (browse) ABM healthcare data mapping rows that match a set of filters. Each row is one combination of filter values (healthCareSystemId, accountId, titleId, specialityId, location IDs, dataProviderId) with reach and cost; its id is a mapping ID for createAbmAudience healthCareDataMappingIds when filters.selectAll is false.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows). pageNo -1 returns every row; avoid it on broad filters.",
         "operationId": "getHealthcareData",
         "parameters": [
           {
@@ -5492,8 +5443,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of account types based on the provided filters.",
-        "description": "This API fetches the account type list, filtered record count, and total record count based on the provided filters.\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pageNo `[optional]` | Number | Page number for the required data. The default value is 1. Setting the page number to -1 will disable pagination and return all data in a single page. |\n| noOfEntries `[optional]` | Number | The maximum number of returned results per page.  The default value is 50. |\n| searchField `[optional]` | String | Search the result by provided keyword in the searchField.  |\n| dataProviderIds `[required]`  | List of Integer | The list includes data provider IDs such as HealthLink, etc. to filter data. |\n| healthcareSystemIds `[optional]`  | List of Integer | The list includes healthcare system IDs to filter data. |\n| accountIds `[optional]`  | List of Integer | The list includes account IDs to filter data. |\n",
+        "summary": "List ABM account types",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (lookup) account types and return account type IDs (accountTypeIds) with reach. Optionally narrow by healthcareSystemIds or accountIds.\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows).",
         "operationId": "getAccountTypeList",
         "parameters": [
           {
@@ -5527,20 +5478,10 @@
               },
               "example": {
                 "pageNo": 1,
-                "noOfEntries": 20,
-                "searchField": "Sample text",
+                "noOfEntries": 50,
+                "sortBy": "-reach",
                 "dataProviderIds": [
-                  1
-                ],
-                "healthcareSystemIds": [
-                  1,
-                  2,
-                  3
-                ],
-                "accountIds": [
-                  4,
-                  5,
-                  6
+                  12
                 ]
               }
             }
@@ -5634,8 +5575,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of account subtypes based on the provided filters.",
-        "description": "This API fetches the account subtype list, filtered record count, and total record count based on the provided filters.\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pageNo `[optional]` | Number | Page number for the required data. The default value is 1. Setting the page number to -1 will disable pagination and return all data in a single page. |\n| noOfEntries `[optional]` | Number | The maximum number of returned results per page.  The default value is 50. |\n| searchField `[optional]` | String | Search the result by provided keyword in the searchField.  |\n| dataProviderIds `[required]`  | List of Integer | The list includes data provider IDs such as HealthLink, etc. to filter data. |\n| healthcareSystemIds `[optional]`  | List of Integer | The list includes healthcare system IDs to filter data. |\n| accountIds `[optional]`  | List of Integer | The list includes account IDs to filter data. |\n| accountTypeIds `[optional]`  | List of Integer | The list includes account type IDs to filter data. |\n",
+        "summary": "List ABM account subtypes",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (lookup) account subtypes and return account subtype IDs (accountSubTypeIds) with reach. Optionally narrow by healthcareSystemIds, accountIds, or accountTypeIds.\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows).",
         "operationId": "getAccountSubTypeList",
         "parameters": [
           {
@@ -5669,25 +5610,10 @@
               },
               "example": {
                 "pageNo": 1,
-                "noOfEntries": 20,
-                "searchField": "Sample text",
+                "noOfEntries": 50,
+                "sortBy": "-reach",
                 "dataProviderIds": [
-                  1
-                ],
-                "healthcareSystemIds": [
-                  1,
-                  2,
-                  3
-                ],
-                "accountIds": [
-                  4,
-                  5,
-                  6
-                ],
-                "accountTypeIds": [
-                  7,
-                  8,
-                  9
+                  12
                 ]
               }
             }
@@ -5781,8 +5707,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of account names based on the provided filters.",
-        "description": "This API fetches the account name list, filtered record count, and total record count based on the provided filters.\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| pageNo `[optional]` | Number | Page number for the required data. The default value is 1. Setting the page number to -1 will disable pagination and return all data in a single page. |\n| noOfEntries `[optional]` | Number | The maximum number of returned results per page.  The default value is 50. |\n| searchField `[optional]` | String | Search the result by provided keyword in the searchField.  |\n| dataProviderIds `[required]`  | List of Integer | The list includes data provider IDs such as HealthLink, etc. to filter data. |\n| healthcareSystemIds `[optional]`  | List of Integer | The list includes healthcare system IDs to filter data. |\n",
+        "summary": "Search ABM account names",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nSearch (lookup, list) account names: find an account, such as a hospital, clinic, or practice, by name and return account IDs (accountIds) with reach, e.g. resolve \"Massachusetts General Hospital\". Optionally narrow by healthcareSystemIds.\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows).",
         "operationId": "getAccountNameList",
         "parameters": [
           {
@@ -5817,14 +5743,10 @@
               "example": {
                 "pageNo": 1,
                 "noOfEntries": 20,
-                "searchField": "Sample text",
+                "searchField": "Massachusetts General",
+                "sortBy": "-reach",
                 "dataProviderIds": [
-                  1
-                ],
-                "healthcareSystemIds": [
-                  1,
-                  2,
-                  3
+                  12
                 ]
               }
             }
@@ -7353,13 +7275,13 @@
           "MCP"
         ],
         "summary": "Get matched audience data partners based on vertical and subtype",
-        "description": "Returns a list of data partners relevant for audience based on vertical and optional subtype.\n- For advertiser users, vertical is derived from the logged-in user's OWID.\n- For workspace/super users, a vertical ID should be passed explicitly.\n- type id is mandatory to fetch data partners.\n- If comma separated set of subtype IDs are passed, those must be valid for the vertical.\n- Data partners shown are based on active configurations.\n",
+        "description": "Returns a list of data partners relevant for audience based on vertical and optional subtype.\n- For advertiser users, vertical is derived from the logged-in user's OWID.\n- For workspace/super users, a vertical ID should be passed explicitly.\n- type id is mandatory to fetch data partners.\n- If comma separated set of subtype IDs are passed, those must be valid for the vertical.\n- Data partners shown are based on active configurations.\n- ABM: call this first with audienceTypeId 9 (Account Based Audience) to get the data provider IDs that every ABM tool requires (dataProviderIds, or dataProviderId when creating). Do not guess them.\n",
         "operationId": "getAudienceDataPartners",
         "parameters": [
           {
             "name": "audienceTypeId",
             "in": "query",
-            "description": "audience type ID for which the applicable data partners are resolved",
+            "description": "Audience type ID for which the applicable data partners are resolved; 9 = Account Based Audience (ABM).",
             "required": true,
             "schema": {
               "type": "integer",
@@ -11009,14 +10931,14 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of healthcare titles based on the provided filters.",
-        "description": "This API fetches the healthcare title list, filtered record count, and total record count based on the provided filters.",
+        "summary": "Search ABM healthcare job titles",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nSearch (lookup, list) healthcare job titles: find a job title by name and return title IDs (titleIds) with reach, e.g. resolve \"Cardiologist\" or \"Director of Nursing\".\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.",
         "operationId": "getHealthcareTitleList",
         "parameters": [
           {
             "name": "dataProviderIds",
             "in": "query",
-            "description": "List of data provider IDs to filter the healthcare data. Comma-separated String of IDs is also allowed.",
+            "description": "Required. ABM data provider IDs from getAudienceDataPartners with audienceTypeId 9 (Account Based Audience). Do not guess: an invalid ID returns 422. Comma-separated string also allowed.",
             "required": true,
             "schema": {
               "type": "array",
@@ -11029,7 +10951,7 @@
           {
             "name": "pageNo",
             "in": "query",
-            "description": "[optional] Page number for the required data. The default value is 1. ",
+            "description": "Page number, starting at 1. Default 1. -1 returns every row; avoid it, these lists are very large. Search instead.",
             "required": false,
             "schema": {
               "type": "integer",
@@ -11041,28 +10963,38 @@
           {
             "name": "noOfEntries",
             "in": "query",
-            "description": " [optional] The maximum number of returned results per page. The default value is 20 and the maximum value is 500.",
+            "description": "Rows per page. Default 50.",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32",
               "default": 50
             },
-            "example": 20
+            "example": 50
           },
           {
             "name": "searchField",
             "in": "query",
-            "description": "Search the result by provided keyword in the searchField.",
+            "description": "Text to find. Case-insensitive substring match on displayName: typos, abbreviations, and reordered words do not match. Fix spelling, expand abbreviations (CNO = Chief Nursing Officer, DON = Director of Nursing), and if nothing fits, retry with a shorter root (\"cardio\") or alternate phrasing before reporting no match.",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-reach"
+          },
+          {
             "name": "audienceSubtypeIds",
             "in": "query",
-            "description": "List of audience subtype IDs to filter the healthcare titles. Comma-separated String of IDs is also allowed.",
+            "description": "Comma-separated audience subtype IDs to filter the titles; 3 = HCP.",
             "required": false,
             "schema": {
               "type": "string"
@@ -11071,7 +11003,7 @@
           {
             "name": "includeGenericAudience",
             "in": "query",
-            "description": "Flag to control inclusion of generic audience (records with no audience subtype, i.e. subtype_id IS NULL) in the response. Behaviour depends on 'audienceSubtypeIds': (1) when 'audienceSubtypeIds' is empty and this flag is false, no subtype filtering is applied and all records are returned; (2) when 'audienceSubtypeIds' is empty and this flag is true, only generic audience records are returned; (3) when 'audienceSubtypeIds' is provided and this flag is false, only records matching the given subtype IDs are returned; (4) when 'audienceSubtypeIds' is provided and this flag is true, records matching the given subtype IDs along with generic audience records are returned. Default value is false.",
+            "description": "Include generic rows (audienceSubtypeId null). Without audienceSubtypeIds: false returns all rows, true returns only generic rows. With audienceSubtypeIds: false returns only those subtypes, true adds generic rows. Default false.",
             "required": false,
             "schema": {
               "type": "boolean",
@@ -11188,14 +11120,14 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of healthcare specialities based on the provided filters.",
-        "description": "This API fetches the healthcare speciality list, filtered record count, and total record count based on the provided filters.",
+        "summary": "Search ABM healthcare specialties",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nSearch (lookup, list) healthcare specialties: find a specialty (speciality) by name and return speciality IDs (specialityIds) with reach, e.g. resolve \"Cardiology\".\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.",
         "operationId": "getHealthcareSpecialityList",
         "parameters": [
           {
             "name": "dataProviderIds",
             "in": "query",
-            "description": "List of data provider IDs to filter the healthcare data. Comma-separated String of IDs is also allowed.",
+            "description": "Required. ABM data provider IDs from getAudienceDataPartners with audienceTypeId 9 (Account Based Audience). Do not guess: an invalid ID returns 422. Comma-separated string also allowed.",
             "required": true,
             "schema": {
               "type": "array",
@@ -11208,7 +11140,7 @@
           {
             "name": "pageNo",
             "in": "query",
-            "description": "[optional] Page number for the required data. The default value is 1. ",
+            "description": "Page number, starting at 1. Default 1. -1 returns every row; avoid it, these lists are very large. Search instead.",
             "required": false,
             "schema": {
               "type": "integer",
@@ -11220,28 +11152,38 @@
           {
             "name": "noOfEntries",
             "in": "query",
-            "description": " [optional] The maximum number of returned results per page. The default value is 20 and the maximum value is 500.",
+            "description": "Rows per page. Default 50.",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32",
               "default": 50
             },
-            "example": 20
+            "example": 50
           },
           {
             "name": "searchField",
             "in": "query",
-            "description": "Search the result by provided keyword in the searchField.",
+            "description": "Text to find. Case-insensitive substring match on displayName: typos, abbreviations, and reordered words do not match. Fix spelling, expand abbreviations, and if nothing fits, retry with a shorter root (\"cardio\") or alternate phrasing before reporting no match.",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-reach"
+          },
+          {
             "name": "audienceSubtypeIds",
             "in": "query",
-            "description": "List of audience subtype IDs to filter the healthcare specialities. Comma-separated String of IDs is also allowed.",
+            "description": "Comma-separated audience subtype IDs to filter the specialities; 3 = HCP.",
             "required": false,
             "schema": {
               "type": "string"
@@ -11250,7 +11192,7 @@
           {
             "name": "includeGenericAudience",
             "in": "query",
-            "description": "Flag to control inclusion of generic audience (records with no audience subtype, i.e. subtype_id IS NULL) in the response. Behaviour depends on 'audienceSubtypeIds': (1) when 'audienceSubtypeIds' is empty and this flag is false, no subtype filtering is applied and all records are returned; (2) when 'audienceSubtypeIds' is empty and this flag is true, only generic audience records are returned; (3) when 'audienceSubtypeIds' is provided and this flag is false, only records matching the given subtype IDs are returned; (4) when 'audienceSubtypeIds' is provided and this flag is true, records matching the given subtype IDs along with generic audience records are returned. Default value is false.",
+            "description": "Include generic rows (audienceSubtypeId null). Without audienceSubtypeIds: false returns all rows, true returns only generic rows. With audienceSubtypeIds: false returns only those subtypes, true adds generic rows. Default false.",
             "required": false,
             "schema": {
               "type": "boolean",
@@ -11351,14 +11293,14 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Retrieves a list of healthcare systems based on the provided filters.",
-        "description": "This API fetches the healthcare system list, filtered record count, and total record count based on the provided filters.",
+        "summary": "Search ABM health systems",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nSearch (lookup, list) health systems: find a health system (healthcare system, hospital network) by name and return health system IDs (healthCareSystemIds) with reach.\n\nEach row has id, displayName, reach, and audienceSubtypeId. The same displayName can appear twice, once for HCP (audienceSubtypeId 3) and once generic (null): pass both IDs, because createAbmAudience only uses rows that match its subtype.",
         "operationId": "getHealthcareSystemList",
         "parameters": [
           {
             "name": "dataProviderIds",
             "in": "query",
-            "description": "List of data provider IDs to filter the healthcare data. Comma-separated String of IDs is also allowed.",
+            "description": "Required. ABM data provider IDs from getAudienceDataPartners with audienceTypeId 9 (Account Based Audience). Do not guess: an invalid ID returns 422. Comma-separated string also allowed.",
             "required": true,
             "schema": {
               "type": "array",
@@ -11371,7 +11313,7 @@
           {
             "name": "pageNo",
             "in": "query",
-            "description": "[optional] Page number for the required data. The default value is 1. ",
+            "description": "Page number, starting at 1. Default 1. -1 returns every row; avoid it, these lists are very large. Search instead.",
             "required": false,
             "schema": {
               "type": "integer",
@@ -11383,28 +11325,38 @@
           {
             "name": "noOfEntries",
             "in": "query",
-            "description": " [optional] The maximum number of returned results per page. The default value is 20 and the maximum value is 500.",
+            "description": "Rows per page. Default 50.",
             "required": false,
             "schema": {
               "type": "integer",
               "format": "int32",
               "default": 50
             },
-            "example": 20
+            "example": 50
           },
           {
             "name": "searchField",
             "in": "query",
-            "description": "Search the result by provided keyword in the searchField.",
+            "description": "Text to find. Case-insensitive substring match on displayName: typos, abbreviations, and reordered words do not match. Fix spelling, expand abbreviations, and if nothing fits, retry with a shorter root or alternate phrasing before reporting no match.",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-reach"
+          },
+          {
             "name": "audienceSubtypeIds",
             "in": "query",
-            "description": "List of audience subtype IDs to filter the healthcare systems. Comma-separated String of IDs is also allowed.",
+            "description": "Comma-separated audience subtype IDs to filter the health systems; 3 = HCP.",
             "required": false,
             "schema": {
               "type": "string"
@@ -11413,7 +11365,7 @@
           {
             "name": "includeGenericAudience",
             "in": "query",
-            "description": "Flag to control inclusion of generic audience (records with no audience subtype, i.e. subtype_id IS NULL) in the response. Behaviour depends on 'audienceSubtypeIds': (1) when 'audienceSubtypeIds' is empty and this flag is false, no subtype filtering is applied and all records are returned; (2) when 'audienceSubtypeIds' is empty and this flag is true, only generic audience records are returned; (3) when 'audienceSubtypeIds' is provided and this flag is false, only records matching the given subtype IDs are returned; (4) when 'audienceSubtypeIds' is provided and this flag is true, records matching the given subtype IDs along with generic audience records are returned. Default value is false.",
+            "description": "Include generic rows (audienceSubtypeId null). Without audienceSubtypeIds: false returns all rows, true returns only generic rows. With audienceSubtypeIds: false returns only those subtypes, true adds generic rows. Default false.",
             "required": false,
             "schema": {
               "type": "boolean",
@@ -11997,86 +11949,86 @@
           },
           "selectAll": {
             "type": "boolean",
-            "description": "Flag to select all or specific IDs",
+            "description": "true (default): use every mapping row that matches the filters; ids must be empty. false: use only the mapping rows in ids, which must not be empty. Any other combination returns 422 \"Invalid Select All flow.\"",
             "example": true
           },
           "ids": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of IDs to filter by",
+            "description": "Healthcare data mapping row IDs (the id field of getHealthcareData rows). Only with selectAll false. When creating, this is taken from healthCareDataMappingIds.",
             "items": {
               "type": "integer",
-              "description": "Set of IDs to filter by",
+              "description": "Mapping row ID",
               "format": "int32"
             }
           },
           "dataProviderIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of data provider IDs to filter by",
+            "description": "Required. ABM data provider IDs from getAudienceDataPartners with audienceTypeId 9 (Account Based Audience). Do not guess: an invalid ID returns 422. When creating, this is taken from the top-level dataProviderId.",
             "items": {
               "type": "integer",
-              "description": "Set of data provider IDs to filter by",
+              "description": "ABM data provider ID",
               "format": "int32"
             }
           },
           "healthCareSystemIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of healthcare system IDs to filter by",
+            "description": "Health system IDs from getHealthcareSystemList (key spelled healthCareSystemIds here).",
             "items": {
               "type": "integer",
-              "description": "Set of healthcare system IDs to filter by",
+              "description": "Health system ID",
               "format": "int32"
             }
           },
           "accountIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of account IDs to filter by",
+            "description": "Account IDs from getAccountNameList.",
             "items": {
               "type": "integer",
-              "description": "Set of account IDs to filter by",
+              "description": "Account ID",
               "format": "int32"
             }
           },
           "accountTypeIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of account type IDs to filter by",
+            "description": "Account type IDs from getAccountTypeList.",
             "items": {
               "type": "integer",
-              "description": "Set of account type IDs to filter by",
+              "description": "Account type ID",
               "format": "int32"
             }
           },
           "accountSubTypeIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of account subtype IDs to filter by",
+            "description": "Account subtype IDs from getAccountSubTypeList.",
             "items": {
               "type": "integer",
-              "description": "Set of account subtype IDs to filter by",
+              "description": "Account subtype ID",
               "format": "int32"
             }
           },
           "titleIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of title IDs to filter by",
+            "description": "Job title IDs from getHealthcareTitleList.",
             "items": {
               "type": "integer",
-              "description": "Set of title IDs to filter by",
+              "description": "Title ID",
               "format": "int32"
             }
           },
           "specialityIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of speciality IDs to filter by",
+            "description": "Specialty IDs from getHealthcareSpecialityList (key spelled specialityIds).",
             "items": {
               "type": "integer",
-              "description": "Set of speciality IDs to filter by",
+              "description": "Speciality ID",
               "format": "int32"
             }
           },
@@ -12112,11 +12064,13 @@
           },
           "pageNo": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Page number for getHealthcareData, starting at 1. Send it: the body default is 0, which returns 422."
           },
           "noOfEntries": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Rows per page for getHealthcareData. Send it (e.g. 50): the body default is 0, which returns no rows."
           },
           "sortBy": {
             "type": "string"
@@ -12130,6 +12084,23 @@
               "SortOrderEnum[id=1, name='asc', symbol='+']",
               "SortOrderEnum[id=2, name='desc', symbol='-']"
             ]
+          },
+          "audienceSubtypeIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Audience subtype IDs to filter by; 3 = HCP. When creating, this is taken from audienceSubtypeId.",
+            "example": [
+              3
+            ],
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "includeGenericAudience": {
+            "type": "boolean",
+            "description": "Include generic rows (audienceSubtypeId null). Without audienceSubtypeIds: false returns all rows, true returns only generic rows. With audienceSubtypeIds: false returns only those subtypes, true adds generic rows. Default false. When creating without audienceSubtypeId, the server sets it to true.",
+            "example": false
           }
         },
         "description": "Request model for healthcare data filters",
@@ -14975,21 +14946,17 @@
             "maxLength": 255,
             "minLength": 0,
             "type": "string",
-            "description": "Name of the audience",
-            "example": "Spring Sale Audience"
+            "description": "Name of the new audience. Search it with getAudienceBasicList searchFields to check whether it was created.",
+            "example": "Cardiologists - Northeast Hospitals"
           },
           "healthCareDataMappingIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of healthcare data mapping IDs",
-            "example": [
-              1,
-              2,
-              3
-            ],
+            "description": "Mapping row IDs (the id field of getHealthcareData rows). Send [] with filters.selectAll true to use every row matching filters. Send IDs with filters.selectAll false to use only those rows; each must match the filters or the call returns 422 \"health care mapping Ids are not matching\". Max 10000.",
+            "example": [],
             "items": {
               "type": "integer",
-              "description": "Set of healthcare data mapping IDs",
+              "description": "Mapping row ID",
               "format": "int32"
             }
           },
@@ -14998,9 +14965,15 @@
           },
           "dataProviderId": {
             "type": "integer",
-            "description": "Data provider ID",
+            "description": "ABM data provider ID from getAudienceDataPartners with audienceTypeId 9. Do not guess.",
             "format": "int32",
-            "example": 1
+            "example": 12
+          },
+          "audienceSubtypeId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Optional. 3 (HCP) is the only accepted value. Omit to build from generic rows only; send 3 to build from HCP rows only. Use the same choice in the getHealthcareDataStatistics pre-flight.",
+            "example": 3
           }
         },
         "description": "Request model for creating account based audience"
@@ -15503,7 +15476,7 @@
           "dataProviderIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of data provider IDs to filter by",
+            "description": "Required. ABM data provider IDs from getAudienceDataPartners with audienceTypeId 9 (Account Based Audience). Do not guess: an invalid ID returns 422.",
             "example": [
               1,
               2,
@@ -15511,14 +15484,14 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Set of data provider IDs to filter by",
+              "description": "ABM data provider ID",
               "format": "int32"
             }
           },
           "healthcareSystemIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of healthcare system IDs to filter by",
+            "description": "Health system IDs from getHealthcareSystemList (key spelled healthcareSystemIds here).",
             "example": [
               10,
               20,
@@ -15526,14 +15499,14 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Set of healthcare system IDs to filter by",
+              "description": "Health system ID",
               "format": "int32"
             }
           },
           "accountIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of account IDs to filter by",
+            "description": "Account IDs from getAccountNameList.",
             "example": [
               100,
               200,
@@ -15541,14 +15514,14 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Set of account IDs to filter by",
+              "description": "Account ID",
               "format": "int32"
             }
           },
           "accountTypeIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Set of account type IDs to filter by",
+            "description": "Account type IDs from getAccountTypeList.",
             "example": [
               1,
               2,
@@ -15556,23 +15529,30 @@
             ],
             "items": {
               "type": "integer",
-              "description": "Set of account type IDs to filter by",
+              "description": "Account type ID",
               "format": "int32"
             }
           },
           "pageNo": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Page number, starting at 1. Send it: the body default is 0, which returns 422. -1 returns every row; avoid it, these lists are very large. Search instead.",
+            "example": 1
           },
           "noOfEntries": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Rows per page. Send it (e.g. 50): the body default is 0, which returns no rows.",
+            "example": 50
           },
           "sortBy": {
-            "type": "string"
+            "type": "string",
+            "description": "Comma-separated sort fields, prefix - for descending or + for ascending. Allowed: reach, order. Send -reach so the highest-reach (usually intended) match comes first; the default is the curated display order (+order).",
+            "example": "-reach"
           },
           "searchField": {
-            "type": "string"
+            "type": "string",
+            "description": "Text to find. Case-insensitive substring match on displayName: typos, abbreviations, and reordered words do not match. Fix spelling, expand abbreviations (MGH = Massachusetts General Hospital), and if nothing fits, retry with a shorter root or alternate phrasing before reporting no match."
           },
           "order": {
             "type": "string",
@@ -15580,6 +15560,23 @@
               "SortOrderEnum[id=1, name='asc', symbol='+']",
               "SortOrderEnum[id=2, name='desc', symbol='-']"
             ]
+          },
+          "audienceSubtypeIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Audience subtype IDs to filter by; 3 = HCP.",
+            "example": [
+              3
+            ],
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "includeGenericAudience": {
+            "type": "boolean",
+            "description": "Include generic rows (audienceSubtypeId null). Without audienceSubtypeIds: false returns all rows, true returns only generic rows. With audienceSubtypeIds: false returns only those subtypes, true adds generic rows. Default false.",
+            "example": false
           }
         },
         "description": "Common request model for ABM filters, extending base search parameters and including sets of IDs for various filter criteria",
