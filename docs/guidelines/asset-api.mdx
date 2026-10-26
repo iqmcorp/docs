@@ -147,57 +147,7 @@ An asset <var>id</var> can be used to [Get asset details](#get-asset-details) or
 ```
 
 </TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage.
-
-```ts 
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface AssetDimensions {
-  width: number;
-  height: number;
-}
-
-interface AssetDetail {
-  id: number;
-  storagePath: string;
-  cdnUrl: string;
-  created: number;
-  modifiedDate: string;
-  isDisposable: boolean;
-  isZipFile: boolean;
-  isHtml5Creative: boolean;
-  assetDimensions: AssetDimensions | null;
-  iframeHtml: string | null;
-}
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: AssetDetail[];
-      }
-    }
-  }
-}
-
-function getAllAssets(): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: 'https://api.iqm.com/api/v3/asset/list',
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
+</Tabs>
 
 </div></div>
 
@@ -330,57 +280,7 @@ Get properties of a single asset by ID. For HTML5 creative assets, the response 
 ```
 
 </TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface AssetDimensions {
-  width: number;
-  height: number;
-}
-
-interface AssetDetail {
-  id: number;
-  storagePath: string;
-  cdnUrl: string;
-  created: number;
-  modifiedDate: string;
-  isDisposable: boolean;
-  isZipFile: boolean;
-  isHtml5Creative: boolean;
-  assetDimensions: AssetDimensions | null;
-  iframeHtml: string | null;
-}
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: AssetDetail;
-      }
-    }
-  }
-}
-
-function getAssetDetails(assetId: number): Promise<Responses> {
-  const options = {
-    method: 'GET',
-    url: `https://api.iqm.com/api/v3/asset/${assetId}`,
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
+</Tabs>
 
 </div></div>
 
@@ -543,100 +443,7 @@ Content-Disposition: form-data; name="filesMetadata"
 ```
 
 </TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-```ts
-import axios from "axios";
-import * as fs from "fs";
-import * as path from "path";
-import FormData from "form-data";
-
-interface FileMetadata {
-  attachedFileName: string;
-  originalFileName: string;
-  disposable?: boolean;
-  zipFile?: boolean;
-  html5Creative?: boolean;
-}
-
-interface AssetResponse {
-  assetID: number;
-  assetCDNURL: string;
-  dimensions?: {
-    width: number;
-    height: number;
-  };
-  iframeHtml?: string;
-}
-
-async function addAssets(filesMetadata: FileMetadata[], filePaths: string[]): Promise<any> {
-  const form = new FormData();
-  form.append("filesMetadata", JSON.stringify(filesMetadata));
-
-  for (const filePath of filePaths) {
-    const stream = fs.createReadStream(filePath);
-    form.append("files", stream, path.basename(filePath));
-  }
-
-  const headers = {
-    ...form.getHeaders(),
-    Authorization: `Bearer [TOKEN]`, // replace with actual bearer token
-    "x-iaa-ow-id": '[OWID]', // replace with your actual ow id
-  };
-
-  const response = await axios.post(
-    "https://api.iqm.com/api/v3/asset",
-    form,
-    {
-      headers,
-      timeout: 10000,
-      timeoutErrorMessage: 'Request timed out after 10 seconds'
-    }
-  );
-  console.log(JSON.stringify(response.data));
-  return response.data;
-}
-
-// Example: Upload a regular image asset
-(async () => {
-  const metadata: FileMetadata[] = [
-    {
-      attachedFileName: "example.png",
-      originalFileName: "example.png",
-      disposable: false
-    }
-  ];
-
-  try {
-    const result = await addAssets(metadata, ["example.png"]);
-    console.log("Upload successful:", result);
-  } catch (error) {
-    console.error("Upload failed:", error);
-  }
-})();
-
-// Example: Upload an HTML5 creative asset
-(async () => {
-  const metadata: FileMetadata[] = [
-    {
-      attachedFileName: "300x250_creative.zip",
-      originalFileName: "300x250.zip",
-      disposable: false,
-      zipFile: true,
-      html5Creative: true
-    }
-  ];
-
-  try {
-    const result = await addAssets(metadata, ["300x250_creative.zip"]);
-    console.log("HTML5 Creative upload successful:", result);
-  } catch (error) {
-    console.error("Upload failed:", error);
-  }
-})();
-```
-
-</TabItem></Tabs>
+</Tabs>
 
 </div></div>
 
@@ -688,71 +495,7 @@ Update the details of an existing asset by ID.
 ```
 
 </TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: {
-          statusCode: number;
-          responseObject: {
-            message: string
-          }
-        }
-      }
-    }
-  };
-  401: {
-    content: {
-      "application/json": {
-        success?: boolean;
-        errorObjects?: {
-          error?: string;
-          reason?: string;
-          field?: string;
-        }[];
-        data?: Record<string, never>;
-      }
-    }
-  }
-}
-
-function updateAssetDetails(): Promise<Responses> {
-  const options = {
-    method: 'PATCH',
-    url: 'https://api.iqm.com/api/v3/asset/{assetId}',
-    params: {
-      path: {
-        assetId: `number`,
-      }
-    },
-    requestBody: {
-      content: {
-        "application/json": {
-          storagePath?: `string`,
-          cdnUrl?: `string`,
-          disposable?: `boolean`,
-        }
-      }
-    },
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
+</Tabs>
 
 </div></div>
 
@@ -785,52 +528,6 @@ Delete a single asset by ID.
 ```
 
 </TabItem>
-<TabItem value="TypeScript" label="TypeScript">
-
-See [TypeScript Prerequisites](/getting-started/typescript-prerequisites.mdx) page for usage. 
-
-```ts
-import {
-  getInstance
-} from "prerequisites"
-
-const axios = getInstance();
-
-interface Responses {
-  200: {
-    content: {
-      "application/json": {
-        success: boolean;
-        data: string
-      }
-    }
-  };
-  401: {
-    content: {
-      Authorization?: string;
-      "X-IAA-OW-ID"?: string;
-    };
-    path: {
-      assetId: number;
-    }
-  }
-}
-
-function deleteAsset(): Promise<Responses> {
-  const options = {
-    method: 'DELETE',
-    url: 'https://api.iqm.com/api/v3/asset/{assetId}',
-    params: {
-      path: {
-        assetId: `number`
-      }
-    }
-  };
-
-  return axios.request(options).then(({ data }: { data: Responses }) => data);
-}
-```
-
-</TabItem></Tabs>
+</Tabs>
 
 </div></div>
