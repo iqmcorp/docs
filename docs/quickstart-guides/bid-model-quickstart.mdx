@@ -19,7 +19,6 @@ The following endpoints are used to check a campaign's eligibility and create a 
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
-<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/advanced/list" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/bm/static/dimensions" />
 <br /><CopyUrl method="PUT" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}" />
 
@@ -48,8 +47,9 @@ To create a Bid Model the following are required:
    * See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) to learn how to log in and receive an authentication token
 1. A campaign that meets the following criteria:
    *  Duration of at least 3 days
-   *  Daily budget of at least $100
-   *  Base bid and max bid price must be defined
+   *  For a budget-based campaign, a daily budget of at least $100
+   *  For an impression-based campaign, at least 1,000 daily impressions
+   *  These are the default thresholds. Your workspace may be configured with different ones; the error message names the threshold the campaign misses.
 
 ## Create a Bid Model using the IQM API
 
@@ -58,7 +58,6 @@ This tutorial covers how to create a Bid Model.
 The minimum requirements to perform this task are: logging in with authentication credentials, checking a campaign's eligibility, and creating a Bid Model. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
 
 1. Check campaign for eligibility
-    * 1.1: Check insertion order (IO) for campaign eligibility
 1. Select a dimension
 1. Create a Bid Model
 
@@ -87,6 +86,7 @@ Before creating a Bid Model, check that you have an eligible campaign by using t
 
 The endpoint returns a JSON schema of campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
    * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration.
+   * <var>budgetTypeId</var> shows whether the campaign is budget-based (<var>1</var>) or impression-based (<var>2</var>).
    * The daily budget is shown by the <var>budgetDay</var> parameter. 
 
 | Path parameters |  |
@@ -161,174 +161,6 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
     }
 }
 ```
-
-</TabItem>
-</Tabs>
-
-</div></div>
-
-#### Step 1.1: Check insertion order for max bid and base bid
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/advanced/list" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Pass the <var>ioId</var> returned from Step 1 in the <var>searchField</var> query parameter. Then check the IO's advanced details to confirm that <var>baseBid</var> and <var>maxBid</var> are defined for the campaign's eligibility.
-
-| Query parameters | |
-| --- | --- |
-| `searchField` <br /><span class="type-text">string</span> | Search returned results for specified <var>ioId</var> |
-| `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of start date for report data, in milliseconds |
-| `endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of end date for report data, in milliseconds |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "totalRecords": 78,
-        "filteredRecords": 1,
-        "recordsTotal": {
-            "ioTotalBudget": 1000.0,
-            "ioTotalImpressions": 0,
-            "workspacePLDInsightsEarnings": 0.0,
-            "workspaceSLSInsightsEarnings": 0.0,
-            "workspaceVLDInsightsEarnings": 0.0,
-            "workspaceAQInsightsEarnings": 0.0,
-            "workspaceICTInsightsEarnings": 0.0,
-            "workspaceNLDInsightsEarnings": 0.0,
-            "platformPLDInsightsEarnings": 0.0,
-            "platformSLSInsightsEarnings": 0.0,
-            "platformVLDInsightsEarnings": 0.0,
-            "platformAQInsightsEarnings": 0.0,
-            "platformICTInsightsEarnings": 0.0,
-            "platformNLDInsightsEarnings": 0.0,
-            "CTR": 0.0,
-            "VCR": 0.0,
-            "adServingCost": 0.0,
-            "aqInsightsCost": 0.0,
-            "clicks": 0,
-            "costPerAttributedConversion": 0.0,
-            "dataCost": 0.0,
-            "ictInsightsCost": 0.0,
-            "impressions": 0,
-            "ivtClicks": 0,
-            "ivtImpressions": 0,
-            "mediaSpent": 0.0,
-            "nldInsightsCost": 0.0,
-            "organizationBidShadingSaving": 0.0,
-            "platformBidShadingEarning": 0.0,
-            "platformMediaEarning": 0.0,
-            "platformSpent": 0.0,
-            "platformTotalEarning": 0.0,
-            "pldInsightsCost": 0.0,
-            "prebidCost": 0.0,
-            "slsInsightsCost": 0.0,
-            "spent": 0.0,
-            "thirdPartyCost": 0.0,
-            "totalAttributedClickThroughConversion": 0,
-            "totalAttributedConversion": 0,
-            "totalAttributedConversionRate": 0.0,
-            "totalAttributedViewThroughConversion": 0,
-            "vldInsightsCost": 0.0,
-            "winRate": 0.0,
-            "workspaceBidShadingEarning": 0.0,
-            "workspaceMediaEarning": 0.0,
-            "workspaceSpent": 0.0,
-            "workspaceTotalEarning": 0.0
-        },
-        "recordsList": [
-            {
-                "ioId": 29311,
-                "ioName": "IO Name 1",
-                "owId": 204851,
-                "organizationName": "Example Organization",
-                "ioBudgetTypeId": 1,
-                "ioStatusId": 1,
-                "ioStartTime": 1793160000000,
-                "ioEndTime": 1796011200000,
-                "ioTimezone": 29,
-                "ioTimezoneName": "US/Eastern",
-                "isAutoSumIoTotalBudget": false,
-                "campaignsCount": 3,
-                "ioTotalBudget": 1000.0,
-                "ioTotalBudgetCombined": 1000.0,
-                "ioTotalImpressions": 0,
-                "targetImpression": 0,
-                "ioActualSpent": 0.0,
-                "ioExpectedSpent": 0.0,
-                "workspacePLDInsightsEarnings": 0.0,
-                "workspaceSLSInsightsEarnings": 0.0,
-                "workspaceVLDInsightsEarnings": 0.0,
-                "workspaceAQInsightsEarnings": 0.0,
-                "workspaceICTInsightsEarnings": 0.0,
-                "workspaceNLDInsightsEarnings": 0.0,
-                "platformPLDInsightsEarnings": 0.0,
-                "platformSLSInsightsEarnings": 0.0,
-                "platformVLDInsightsEarnings": 0.0,
-                "platformAQInsightsEarnings": 0.0,
-                "platformICTInsightsEarnings": 0.0,
-                "platformNLDInsightsEarnings": 0.0,
-                "CTR": 0.0,
-                "VCR": 0.0,
-                "aqInsightsCost": 0.0,
-                "clicks": 0,
-                "dataCost": 0.0,
-                "frequency": 0.0,
-                "ictInsightsCost": 0.0,
-                "impressions": 0,
-                "ivtClicks": 0,
-                "ivtImpressions": 0,
-                "mediaSpent": 0.0,
-                "nldInsightsCost": 0.0,
-                "organizationBidShadingSaving": 0.0,
-                "platformBidShadingEarning": 0.0,
-                "platformMediaEarning": 0.0,
-                "platformSpent": 0.0,
-                "platformTotalEarning": 0.0,
-                "pldInsightsCost": 0.0,
-                "prebidCost": 0.0,
-                "reach": 0,
-                "slsInsightsCost": 0.0,
-                "spent": 0.0,
-                "thirdPartyCost": 0.0,
-                "totalAttributedClickThroughConversion": 0,
-                "totalAttributedConversion": 0,
-                "totalAttributedConversionRate": 0.0,
-                "totalAttributedViewThroughConversion": 0,
-                "vldInsightsCost": 0.0,
-                "winRate": 0.0,
-                "workspaceBidShadingEarning": 0.0,
-                "workspaceMediaEarning": 0.0,
-                "workspaceSpent": 0.0,
-                "workspaceTotalEarning": 0.0
-            }
-        ]
-    }
-}
-```
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More responses</summary>
-
-```json title="Response 422"
-{
-    "success": false,
-    "errorObjects": [
-        {
-            "error": "startTimeEpochMillis and endTimeEpochMillis are required fields."
-        }
-    ]
-}
-```
-
-</details>
 
 </TabItem>
 </Tabs>

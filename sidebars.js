@@ -310,8 +310,14 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 2: Schedule a report',
-              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-2-schedule-a-report`,
+              label: 'Step 2: Save a report',
+              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-2-save-a-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Schedule a report',
+              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-3-schedule-a-report`,
               className: 'sidebarItemQS'
             },
           ]
@@ -5068,6 +5074,13 @@ const sidebars = {
               type: 'link',
               label: 'Get list of allowed Organizations',
               href: '/guidelines/workspace-api#get-list-of-allowed-organizations',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get list of accessible Organizations',
+              href: '/guidelines/workspace-api#get-list-of-accessible-organizations',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },

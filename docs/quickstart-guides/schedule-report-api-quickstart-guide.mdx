@@ -19,6 +19,7 @@ Create your first report schedule using IQM's API in this step-by-step quickstar
 Get started scheduling a report with the following endpoints:
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ra/report/add" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ra/report/email/schedule" />
 
 
@@ -28,7 +29,7 @@ The IQM APIs provide access to all dimensions and KPIs of ad-serving reporting d
 
 Reports can be either **daily** or **aggregated**. The daily report includes the date as a dimension and provides the data breakdown by date. Reports provide five top-level dimensions of filtering support, and can be filtered for multiple values in each dimension.
 
-A report can be run containing up to three months of data for any dimension combination or up to one year for the campaign dimension. Multiple reports must be run if more than that amount of data are needed.
+A report can cover up to 365 days of data for any dimension combination. Run multiple reports if you need more than that.
 
 ### More resources
   * [Generate, manage, or send a report<ExternalLink />](https://help.iqm.com/en/articles/10343879-generate-manage-or-send-a-report) Help Center article
@@ -42,6 +43,8 @@ The minimum requirements to perform this task are: logging in with authenticatio
 
 1. Log in
     * Optional if you have already logged in and have a token
+1. Save a report
+    * Skip this step if you already have a saved report and its ID
 1. Schedule a report
     * Execute scheduling event with frequency, day, and end date parameters
 
@@ -62,7 +65,9 @@ Use the following header parameters for all requests after logging in:
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 <OAuthHeaders />
 
@@ -122,14 +127,90 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 </div></div>
 
-### Step 2: Schedule a report
+### Step 2: Save a report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ra/report/add" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+A schedule is attached to a saved report, so save the report first. The response's <var>data</var> is the new report's ID; use it as <var>reportId</var> in the next step.
+
+For further information see [Create report](/guidelines/reports-api#create-report).
+
+| Request schema |  |
+|---|---|
+| `reportName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Name of the report |
+| `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of start date, in milliseconds |
+| `endDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of end date, in milliseconds. The range can be at most 365 days. |
+| `dimensions` <br /><span class="type-text">string</span> <span class="required-text">required</span> | JSON-encoded array of dimensions, for example <var>[\{"filter":"campaign"\}]</var>. Add a <var>value</var> array to a dimension to filter by its IDs. |
+| `columns` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Metrics to include, such as <var>impressions</var> and <var>clicks</var>. Dimensions go in <var>dimensions</var>, not here. |
+| `requestType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | <var>1</var>: daily, <var>2</var>: aggregated, <var>3</var>: weekly, <var>4</var>: monthly |
+| `reportAggregated` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>"0"</var> or <var>"1"</var>. See [Execute a report](/guidelines/reports-api#execute-a-report). |
+| `timezoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Timezone ID](/guidelines/master-api#get-timezones) |
+| `timezoneName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Timezone name, for example <var>US/Eastern</var> |
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "reportName": "Weekly campaign delivery",
+  "startDate": 1777262400000,
+  "endDate": 1779854400000,
+  "dimensions": "[{\"filter\":\"campaign\"}]",
+  "columns": [
+    "impressions",
+    "clicks",
+    "CTR",
+    "spent"
+  ],
+  "requestType": 1,
+  "reportAggregated": "0",
+  "timezoneId": 29,
+  "timezoneName": "US/Eastern"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": 9828
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please pass report name for report creation",
+      "field": "reportName"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+### Step 3: Schedule a report
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ra/report/email/schedule" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Decide the delivery frequency, day, and end date of scheduled reports. This API saves the delivery information and returns a success message.
+Use the <var>reportId</var> from Step 2 and decide the delivery frequency, day, and end date of scheduled reports. This API saves the delivery information and returns a success message.
 
 For further information see [Scheduling management](/guidelines/reports-api#scheduling-management).
 
@@ -138,7 +219,7 @@ For further information see [Scheduling management](/guidelines/reports-api#sche
 | `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The unique report ID, event is created on this report ID |
 | `subscriberEmails` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | List of emails to which the report is sent |
 | `fileType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Report file type ID](/guidelines/reports-api#get-report-file-types). The report is sent in the selected file format. <br /><EnumWidget values={reportFileTypes} /> |
-| `deliveryFrequency` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Delivery frequency type ID](/guidelines/reports-api#get-report-delivery-frequency-types) for the emails to be sent. <br /><EnumWidget values={reportDeliveryFrequency} /> |
+| `deliveryFrequency` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Delivery frequency type ID](/guidelines/reports-api#get-report-delivery-frequency-types) for the emails to be sent. <br /><EnumWidget values={reportDeliveryFrequency} /> <br /><var>1</var> (one time now) emails the report right away and removes any schedule already saved on the report. |
 | `deliveryDay` <br /><span class="type-text">string</span> | [<span class="required-text">Required</span> if <var>deliveryFrequency</var> is weekly or monthly] Day when the report is sent (not case-sensitive). <br />Weekly: <var>Sunday</var>, <var>Monday</var>, ... <br />Monthly: <var>First</var>, <var>Last</var>, or a day of the month <var>1</var> to <var>28</var> |
 | `eventEndDate` <br /><span class="type-text">integer</span> | [<span class="required-text">Required</span> if <var>deliveryFrequency</var> is daily, weekly, or monthly] Unix epoch timestamp in milliseconds; must be in the future. This is event's end date, the scheduled report is stopped after the <var>eventEndDate</var> is exceeded. |
 | `runningTotalEnabled` <br /><span class="type-text">boolean</span> <span class="required-text">optional</span> | Flag to indicate if the 'Total' Running is enabled for the report. This flag is supported only with 'Campaign' dimension. If this is true the start-date for the report duration should be the EARLIEST campaign start date, so the report-time-period will be from the earliest-campaign-start-date to the report-end-date. |

@@ -56,7 +56,9 @@ To generate an Insights report, you need an account on the IQM platform (see [Ge
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
@@ -132,6 +134,8 @@ Use the following header parameters for all requests after logging in:
 ### Eligibility requirements
 
 The table below outlines the eligibility requirements for each Insights report type and includes relevant resources. Click on a type to jump to the instructions for generating that Insights report. 
+
+You can also use [Get eligible campaigns](/guidelines/insights-api#get-eligible-campaigns) with <var>reportType</var> set to <var>VLD</var> or <var>PLD</var> to list the campaigns that meet the VLD or PLD requirements.
 
 <table>
 <th>Type</th>
@@ -1065,7 +1069,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 <div class="endpoint-container">
   <div class="child1">
 
-Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Insights report.
+Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Insights report. The dates are in Unix epoch milliseconds and must fall within the campaign's flight.
+
+VLD Insights reports are charged per impression. Before generating, send the same request body to [Get cost assessment for VLD Insights report](/guidelines/insights-api#get-cost-assessment-for-vld-insights-report) to see the chargeable impressions and cost. If your funds don't cover the cost, generating still returns <var>200</var>, but <var>vldReportCreatable</var> is <var>false</var> and no report is created.
 
 | Request schema |  |
 | ---- | --- |
@@ -1209,6 +1215,8 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
   <div class="child1">
 
 Get a download link for a VLD insight Report in CSV or XLSX format.
+
+The generate response doesn't include the new report's ID (<var>vldId</var> is <var>0</var>), and the report takes time to build. To find its ID, use [Get list of VLD Insights reports](/guidelines/insights-api#get-list-of-vld-insights-reports) and wait until the report's status is <var>Ready</var>. Send that ID as <var>reportId</var>.
 
 | Request schema |  |
 | ---- | --- |
@@ -1477,7 +1485,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 <div class="endpoint-container">
   <div class="child1">
 
-Once the desired campaign has been determined eligible, pass the <var>ioId</var> and <var>campaignIds</var> in the request schema (along with <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a PLD Insights report.
+Once the desired campaign has been determined eligible, pass the <var>ioId</var> and <var>campaignIds</var> in the request schema (along with <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a PLD Insights report. The dates are in Unix epoch milliseconds and must fall within the campaigns' flight.
+
+PLD Insights reports are charged per impression. Before generating, send the same request body to <var>POST /api/v3/ins/pld-reports/computation</var> to see the chargeable impressions and cost. If your funds don't cover the cost, generating still returns <var>200</var>, but <var>pldReportCreatable</var> is <var>false</var> and no report is created.
 
 | Request schema |  |
 | ---- | --- |
@@ -1635,6 +1645,8 @@ Once the desired campaign has been determined eligible, pass the <var>ioId</var>
   <div class="child1">
 
 Get a download link for a PLD insight Report in CSV or XLSX format.
+
+The generate response doesn't include the new report's ID (<var>pldId</var> is <var>0</var>), and the report takes time to build. To find its ID, list your reports with <var>GET /api/v3/ins/pld-reports</var> and wait until the report's <var>statusName</var> is <var>Ready</var>. Send its <var>reportId</var> in this request.
 
 | Request schema | |
 | --- | --- |
