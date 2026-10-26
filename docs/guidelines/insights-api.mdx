@@ -1040,7 +1040,7 @@ An audience must meet the following eligibility criteria to generate Insights re
 | Request schema |  |
 | ----  | --- |
 | `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](#get-list-of-insights-types). |
-| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs. <br />(E.g. [audience ID](/guidelines/audience-api#audience-details-list)s). |
+| `sourceIds` <br /><span class="type-text">array of integers</span> | Source IDs. <br />(E.g. [audience ID](/guidelines/audience-api#audience-details-list)s). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1147,14 +1147,11 @@ An audience must meet the following eligibility criteria to generate Insights re
 
 Download Insights report for audience (pdf or xlsx) by passing multipart/form-data format.
 
-| Query parameters |  |
+| Request schema (multipart/form-data) |  |
 | ---- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | [Insights report ID](#get-a-list-of-insights-reports). |
-| `fileType` <br /><span class="type-text">string</span> | File type of report: <var>pdf</var> or <var>xlsx</var>.
-
-| Request schema |  |
-| ---- | --- |
-| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format.
+| `insightsId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Insights report ID](#get-a-list-of-insights-reports). |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type of report: <var>pdf</var> or <var>xlsx</var>. |
+| `customLogoFile` <br /><span class="type-text">file</span> | Optional logo image to show on the report. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1172,10 +1169,13 @@ Download Insights report for audience (pdf or xlsx) by passing multipart/form-da
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-    "customLogoFile": "string"
-}
+```bash title="Request sample"
+curl -X POST https://api.iqm.com/api/v3/ins/insights/download \
+  -H "Authorization: Bearer <access_token>" \
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'insightsId=2098' \
+  -F 'fileType=pdf' \
+  -F 'customLogoFile=@/path/to/logo.png'
 ```
 
 ```json title="Response 200"

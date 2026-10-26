@@ -1207,7 +1207,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 | Request schema | |
 | --- | --- | 
-| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to creative metadata. Each ID corresponds to a single creative. |
+| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to creative metadata. Each ID corresponds to a single creative. All creatives in one request must have the same <var>platformCreativeTypeId</var>. |
 | `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of creative files to upload. Required only when creative source type is <var>FILE</var> in the creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding creative object. Supports multiple file uploads for batch creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
@@ -1236,7 +1236,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 </tr>
 <tr>
   <td>`clickUrl` <br /><span class="type-text">string</span></td>
-  <td>Click URL.</td>
+  <td>Click URL. Not allowed for HTML creatives (add click tracking inside the HTML instead).</td>
 </tr>
 <tr>
   <td>`subMediaType` <br /><span class="type-text">integer</span></td>
@@ -1535,7 +1535,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 
 <CodeDropdown label="Request Samples">
-<CodeOption label="Form data sample">
+<CodeOption label="Form data sample (image)">
 ```bash
 POST /api/v3/crt/creatives HTTP/1.1
 Host: https://api.iqm.com
@@ -1546,28 +1546,30 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeRequest"
 
-{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href='https://example.com'><img src='https://cdn.example.com/ad.jpg'></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}
+{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}}}
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeFiles"; filename="summer-banner.jpg"
 Content-Type: image/jpeg
 
 [Binary image data]
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="creativeFiles"; filename="product-demo.mp4"
-Content-Type: video/mp4
-
-[Binary video data]
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
 </CodeOption>
-<CodeOption label="cURL sample">
+<CodeOption label="cURL sample (image)">
 ```bash
 curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "X-IAA-OW-ID: 12345" \
-  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}' \
-  -F 'creativeFiles=@summer-banner.jpg' \
-  -F 'creativeFiles=@product-demo.mp4'
+  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}}}' \
+  -F 'creativeFiles=@summer-banner.jpg'
+```
+</CodeOption>
+<CodeOption label="cURL sample (HTML)">
+```bash
+curl -X POST https://api.iqm.com/api/v3/crt/creatives \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "X-IAA-OW-ID: 12345" \
+  -F 'creativeRequest={"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}'
 ```
 </CodeOption>
 </CodeDropdown>
@@ -1582,7 +1584,6 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
     "platformCreativeTypeId": 13,
     "creativeSourceType": "HTML",
     "creativeSource": "<a href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1><img src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg></a>",
-    "clickUrl": "www.example.com",
     "htmlDetails": {
       "pixelUrls": ["https://iqm.pixel.com"],
       "creativeWidth": 500,

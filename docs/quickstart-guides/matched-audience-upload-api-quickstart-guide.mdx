@@ -400,7 +400,7 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 </tr>
 <tr>
 <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
-<td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience) <br /><EnumWidget values={dataPartners} /></td>
+<td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Required for HCP audiences and for the Voter ID column combination; omit it for other combinations. <br /><EnumWidget values={dataPartners} /></td>
 </tr>
 <tr>
 <td>`columnCombinationId` <br /><span class="type-text">integer</span></td>
@@ -415,21 +415,15 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 {
   "audienceName": "matched-audience-example-fs",
   "fileRowCount": 5,
-  "fileColumnCount": 10,
+  "fileColumnCount": 1,
   "columnMappings": [
       {
-          "columnId": 5,
-          "fileColumnName": "l2-voter-id",
-          "dataFormatId": null
-      },
-      {
-          "columnId": 6,
-          "fileColumnName": "email",
-          "dataFormatId": 1
+          "columnId": 1,
+          "fileColumnName": "l2-voter-id"
       }
   ],
   "dataPartnerId": 2,
-  "columnCombinationId": 11
+  "columnCombinationId": 1
 }
 ```
 </details>
@@ -449,8 +443,7 @@ Create a Matched audience by uploading a file with user data. The metadata is se
   ],
   "fileRowCount": 19,
   "fileColumnCount": 1,
-  "columnCombinationId": 14,
-  "consentGiven": true
+  "columnCombinationId": 14
 }
 ```
 </details>
@@ -465,16 +458,16 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 POST /api/v3/audience/matched HTTP/1.1
 Host: api.iqm.com
 Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24
-X-IAA-OW-ID: 1
+X-IAA-OW-ID: <owId>
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="audienceRequest"
 Content-Type: application/json
 
-{"audienceName":"Healthcare Patient Audience 2025","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":3,"consentGiven":true,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"},{"columnId":19,"fileColumnName":"first_name"},{"columnId":20,"fileColumnName":"last_name"}]}
+{"audienceName":"HCP NPI Audience","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":1,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"}]}
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="patient-data.csv"
+Content-Disposition: form-data; name="file"; filename="hcp-npi-list.csv"
 Content-Type: text/csv
 
 [Binary CSV file data]
@@ -483,11 +476,15 @@ Content-Type: text/csv
 </CodeOption>
 <CodeOption label="cURL sample">
 ```bash
-curl -X POST https://api.example.com/api/v3/audience/matched \
+cat > audienceRequest.json <<'EOF'
+{"audienceName":"HCP NPI Audience","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":1,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"}]}
+EOF
+
+curl -X POST https://api.iqm.com/api/v3/audience/matched \
   -H "Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24" \
-  -H "X-IAA-OW-ID: 1" \
-  -F 'audienceRequest={"audienceName":"Healthcare Patient Audience 2025","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":3,"consentGiven":true,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"},{"columnId":19,"fileColumnName":"first_name"},{"columnId":20,"fileColumnName":"last_name"}]};type=application/json' \
-  -F 'file=@/path/to/patient-data.csv;type=text/csv'
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'audienceRequest=@audienceRequest.json;type=application/json' \
+  -F 'file=@/path/to/hcp-npi-list.csv;type=text/csv'
 ```
 </CodeOption>
 </CodeDropdown>

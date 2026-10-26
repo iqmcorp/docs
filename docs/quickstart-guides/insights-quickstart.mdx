@@ -710,8 +710,8 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
 
 | Request schema |  |
 | ----  | --- |
-| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](/guidelines/insights-api#get-list-of-insights-types) |
-| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
+| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](/guidelines/insights-api#get-list-of-insights-types): <var>1</var> for Audience Insights |
+| `sourceIds` <br /><span class="type-text">array of integers</span> | Audience IDs to generate insights for |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -814,16 +814,13 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
 <div class="endpoint-container">
   <div class="child1">
 
-Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> query, along with your desired file type, to generate a download link for your Audience Insights report.
+Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> form field, along with your desired file type, to generate a download link for your Audience Insights report.
 
-| Query parameters |  |
+| Request schema (multipart/form-data) |  |
 | ---- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
-| `fileType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var>
-
-| Request schema |  |
-| ---- | --- |
-| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
+| `insightsId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your Insights ID (<var>id</var> from step 2) |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type of report: <var>pdf</var> or <var>xlsx</var>. |
+| `customLogoFile` <br /><span class="type-text">file</span> | Optional logo image to show on the report. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -841,10 +838,13 @@ Pass the Insights <var>id</var> (from the response data in step 2) in the <var>i
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-    "customLogoFile": "string"
-}
+```bash title="Request sample"
+curl -X POST https://api.iqm.com/api/v3/ins/insights/download \
+  -H "Authorization: Bearer <access_token>" \
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'insightsId=2098' \
+  -F 'fileType=pdf' \
+  -F 'customLogoFile=@/path/to/logo.png'
 ```
 
 ```json title="Response 200"
@@ -1012,8 +1012,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 ```json title="Request sample"
 {
   "campaignIds": [
-    52241,
-    50322
+    543363,
+    553441,
+    553443
   ]
 }
 ```
@@ -1174,8 +1175,8 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 
 | Request schema |  |
 | ---- | --- |
-| `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your VLD Insights report ID |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1192,6 +1193,13 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "fileTypeId": 1,
+  "reportId": 6301
+}
+```
 
 ```json title="Response 200"
 {
@@ -1354,8 +1362,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 ```json title="Request sample"
 {
   "campaignIds": [
-    52241,
-    50322
+    543363,
+    553441,
+    553443
   ]
 }
 ```
@@ -1410,13 +1419,14 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 <div class="endpoint-container">
   <div class="child1">
 
-Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a PLD Insights report.
+Once the desired campaign has been determined eligible, pass the <var>ioId</var> and <var>campaignIds</var> in the request schema (along with <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a PLD Insights report.
 
 | Request schema |  |
 | ---- | --- |
-| `pldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
-| `pldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `ioId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your insertion order ID (the campaign's <var>ioId</var> from step 1) |
+| `campaignIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Your campaign IDs from that insertion order |
+| `pldStartDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of start date, in milliseconds |
+| `pldEndDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of end date, in milliseconds |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -1475,9 +1485,12 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 ```json title="Request sample"
 {
-  "campaignId": 12345,
-  "pldStartDate": 1726518001000,
-  "pldEndDate": 1727668800000
+  "ioId": 25016,
+  "campaignIds": [
+    590512
+  ],
+  "pldStartDate": 1777298401000,
+  "pldEndDate": 1779336000000
 }
 ```
 
@@ -1526,8 +1539,8 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 
 | Request schema | |
 | --- | --- |
-| `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
-| `pldId` <br /><span class="type-text">integer</span> | PLD Insights report ID
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your PLD Insights report ID |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1548,8 +1561,8 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 
 ```json title="Request sample"
 {
-  "fileType": 1,
-  "pldId": 50
+  "fileTypeId": 1,
+  "reportId": 6287
 }
 ```
 

@@ -883,8 +883,9 @@ Get a list of audience IDs and type for each campaign ID.
 ```json title="Request sample"
 {
   "campaignIds": [
-    52241,
-    50322
+    543363,
+    553441,
+    553443
   ]
 }
 ```
@@ -3363,7 +3364,7 @@ Create a new PG campaign for Advertiser.
   <td>Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign.</td>
   </tr>
       <tr>
-  <td>`budgetTotal` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
+  <td>`spendingBudget` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
   <td>Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign.</td>
   </tr>
       <tr>
@@ -3454,12 +3455,12 @@ Create a new PG campaign for Advertiser.
   <td></td>
 </tr>
 <tr>
-<td>`politicalAdvertiserClientId` <br /><span class="type-text">integer</span></td>
-<td>Advertiser client ID if user is political Advertiser.</td>
+<td>`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
+<td>Advertiser client ID if user is political Advertiser. Omit it otherwise.</td>
 </tr>
 <tr>
 <td>`countryId` <br /><span class="type-text">integer</span></td>
-<td>[Country ID](/guidelines/master-api#get-country-segment).</td>
+<td>[Country ID](/guidelines/master-api#get-country-segment), for example <var>30100001</var> for the US.</td>
 </tr>
 <tr>
 <td>`thirdPartyCost` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
@@ -3494,8 +3495,8 @@ Create a new PG campaign for Advertiser.
     "timeZoneId": 29,
     "totalImpressions": 12345,
     "maxBid": 8,
-    "startTime": 1715662337,
-    "endTime": 1717128000,
+    "startTime": 1803859200,
+    "endTime": 1806451200,
     "budgetTypeId": 2,
     "campaignTypeId": 2,
     "advertiserDomain": "https://www.xyz.com"
@@ -3520,8 +3521,7 @@ Create a new PG campaign for Advertiser.
       987
     ]
   },
-  "politicalAdvertiserClientId": 989898,
-  "countryId": 23
+  "countryId": 30100001
 }
 ```
 
@@ -3749,8 +3749,7 @@ Update properties of a created or draft PG campaign by campaign ID.
     "conversionTypeId": 1,
     "conversionIds": "[465,687,987]"
   },
-  "politicalAdvertiserClientId": 989898,
-  "countryId": 23
+  "countryId": 30100001
 }
 ```
 </CodeOption>
@@ -3777,8 +3776,7 @@ Update properties of a created or draft PG campaign by campaign ID.
     "conversionTypeId": 1,
     "conversionIds": "[465,687,987]"
   },
-  "politicalAdvertiserClientId": 989898,
-  "countryId": 23
+  "countryId": 30100001
 }
 ```
 </CodeOption>
@@ -4913,8 +4911,7 @@ The request body accepts the full set of campaign properties for targeting, crea
     "conversionTypeId": 1,
     "conversionIds": [465, 687, 987]
   },
-  "politicalAdvertiserClientId": 989898,
-  "countryId": 23
+  "countryId": 30100001
 }
 ```
 </CodeOption>
@@ -5268,12 +5265,12 @@ Assign or unassign creatives from campaigns.
 
 ### Inventory group targeting
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/{groupId}/includeExclude" operationId="includeExcludeInventoryGroup" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v2/cmp/inventorygroup/{groupId}/includeExclude" operationId="includeExcludeInventoryGroup" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Include or exclude specific campaigns from an inventory Group. Use this to manage which campaigns are targeted by the inventory Group by providing comma-separated lists of campaign IDs to include and/or exclude.
+Include or exclude specific campaigns from an inventory Group. Use this to manage which campaigns are targeted by the inventory Group by providing a comma-separated list of campaign IDs and whether to include or exclude them.
 
 See the Inventory API to [Create a new inventory group](/guidelines/inventory-api#create-a-new-inventory-group).
 
@@ -5283,8 +5280,8 @@ See the Inventory API to [Create a new inventory group](/guidelines/inventory-ap
 
 | Request schema | |
 | --- | --- |
-| `includedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [campaign IDs](#get-list-of-campaigns) to include in the inventory group. Use an empty string if no campaigns should be included. |
-| `excludedCampaignIds` <br /><span class="type-text">string</span> | Comma-separated [campaign IDs](#get-list-of-campaigns) to exclude from the inventory group. Use an empty string if no campaigns should be excluded. |
+| `campaignIds` <br /><span class="type-text">string</span> | Comma-separated [campaign IDs](#get-list-of-campaigns) to target with the inventory group. |
+| `isExcluded` <br /><span class="type-text">integer</span> | Include the campaigns: <var>0</var> <br />Exclude the campaigns: <var>1</var> |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -5305,8 +5302,8 @@ See the Inventory API to [Create a new inventory group](/guidelines/inventory-ap
 
 ```json title="Request sample"
 {
-  "includedCampaignIds": "101,102",
-  "excludedCampaignIds": "200"
+  "campaignIds": "101,102",
+  "isExcluded": 0
 }
 ```
 
@@ -8440,11 +8437,11 @@ Create an insertion order with the following minimum required fields:
 ```json 
 {
   "ioName": "IO Name 1",
-  "ioStartTime": 1690898148000,
-  "ioEndTime": 1690898888000,
+  "ioStartTime": 1803859200000,
+  "ioEndTime": 1806451200000,
   "ioTotalBudget": 1000,
   "ioTimeZoneId": 29,
-  "isAutoSumIoTotalBudget": true,
+  "isAutoSumIoTotalBudget": false,
   "ioBudgetTypeId": 1,
   "ioBudgetDistributionMethodId": 1
 }
@@ -8455,8 +8452,8 @@ Create an insertion order with the following minimum required fields:
 ```json
 {
   "ioName": "IO Name 2",
-  "ioStartTime": 1690898148000,
-  "ioEndTime": 1690898888000,
+  "ioStartTime": 1803859200000,
+  "ioEndTime": 1806451200000,
   "ioTimeZoneId": 29,
   "isAutoSumIoTotalBudget": true,
   "ioBudgetTypeId": 2,

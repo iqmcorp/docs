@@ -185,7 +185,7 @@ Upon invite, Customer status is <var>invited</var>. Once the invitation is accep
   <td>Customer password</td>
 </tr>
 <tr>
-  <td>`onwerUserName` <br /><span class="type-text">string</span></td>
+  <td>`ownerUserName` <br /><span class="type-text">string</span></td>
   <td>Customer owner</td>
 </tr>
 <tr>
@@ -491,7 +491,7 @@ Add Customer access to specified apps.
 | ----  | --- |
 | `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
 | `appIds`<br /><span class="type-text">string</span> | Comma separated [Application IDs](/guidelines/workspace-api#application-ids) to add or revoke Customer access to |
-| `accessLevel` <br /><span class="type-text">string</span>| Gives Customer <var>full</var> or <var>limited</var> access to added applications |
+| `accessLevel` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Gives Customer <var>Full</var> or <var>Limited</var> access to added applications. Default: <var>Full</var> |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -535,16 +535,16 @@ Add Customer access to specified apps.
 <div class="endpoint-container">
   <div class="child1">
 
-| Request schema |  |
+| Request schema (<var>multipart/form-data</var>) |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
-| `paymentMode` <br /><span class="type-text">integer</span> |  [Payment mode type ID](/guidelines/finance-api#invoice-payment-mode-types) <br /><EnumWidget values={invoicePaymentModeTypes} /> |
-| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
-| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
-| `paymentType` <br /><span class="type-text">integer</span> | [Payment type ID](/guidelines/finance-api#payment-types) <br /><EnumWidget values={paymentTypes} /> |
-| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID of the Customer |
+| `paymentAmount` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Payment amount |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |  [Payment mode type ID](/guidelines/finance-api#invoice-payment-mode-types) <br /><EnumWidget values={invoicePaymentModeTypes} /> |
+| `transactionId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Transaction ID |
+| `paymentProof` <br /><span class="type-text">file</span> <span class="required-text">optional</span> | Proof of payment image (JPEG or PNG) |
+| `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment type ID](/guidelines/finance-api#payment-types) <br /><EnumWidget values={paymentTypes} /> |
+| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Invoice ID (required only if <var>paymentType</var> is **Against Invoice**) |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -563,19 +563,20 @@ Add Customer access to specified apps.
 </div><div class="child2">
 
 <Tabs>
-<TabItem value="JSON" label="JSON" default>
+<TabItem value="cURL" label="cURL" default>
 
-```json title="Request sample"
-{
-    "owId": 123654,
-    "paymentAmount": 5000,
-    "paymentDate": "2025-12-01",
-    "paymentMode": 1,
-    "transactionId": 10,
-    "paymentProof": "image.png",
-    "paymentType": 2,
-    "invoiceId": 34
-}
+```curl title="Request sample"
+curl -X POST 'https://api.iqm.com/api/v3/fa/customer/payment/add' \
+  -H 'Authorization: Bearer <access token>' \
+  -H 'X-IAA-OW-ID: <your owId>' \
+  -F 'owId=123654' \
+  -F 'paymentAmount=5000' \
+  -F 'paymentDate=2027-03-01' \
+  -F 'paymentMode=1' \
+  -F 'transactionId=T-1234567' \
+  -F 'paymentType=2' \
+  -F 'invoiceId=34' \
+  -F 'paymentProof=@payment-receipt.png;type=image/png'
 ```
 
 ```json title="Response 200"

@@ -3018,16 +3018,16 @@ Add a payment for a Customer. This endpoint also accepts query parameters as mul
 | Query parameters |  |
 | ---- | --- |
 | `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID. |
-| `paymentAmount` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Payment amount. |
+| `paymentAmount` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Payment amount. |
 | `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format. |
 | `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment mode type ID](#invoice-payment-mode-types). <br /><EnumWidget values={invoicePaymentModeTypes} /> |
-| `transactionId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Transaction ID. |
+| `transactionId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Transaction ID. |
 | `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |[Payment type ID](#payment-types). <br /><EnumWidget values={paymentTypes} /> |
-| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**). |
+| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Invoice ID (required only if <var>paymentType</var> is **Against Invoice**). |
 
 | Request schema |  |
 | ---- | --- |
-| `paymentProof` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png). |
+| `paymentProof` <br /><span class="type-text">file</span> <span class="required-text">optional</span> | Proof of payment image (JPEG or PNG). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -3049,18 +3049,17 @@ Add a payment for a Customer. This endpoint also accepts query parameters as mul
 <TabItem value="JSON" label="JSON" default>
 
 ```curl title="Request sample"
-curl -X POST "https://api.example.com/api/v3/fa/customer/payment/add" \
+curl -X POST "https://api.iqm.com/api/v3/fa/customer/payment/add" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
   -H "X-IAA-OW-ID: 200001" \
-  -H "Content-Type: multipart/form-data" \
-  -F "invoiceId=12345" \
-  -F "owId=200001" \
+  -F "owId=200002" \
   -F "paymentAmount=1250.50" \
-  -F "paymentDate=2025-10-07T12:00:00Z" \
+  -F "paymentDate=2027-03-01" \
   -F "paymentMode=2" \
   -F "transactionId=TXN-987654321" \
-  -F "paymentType=1" \
-  -F "paymentProof=@/path/to/payment_receipt.pdf"
+  -F "paymentType=2" \
+  -F "invoiceId=12345" \
+  -F "paymentProof=@/path/to/payment_receipt.png;type=image/png"
 
 ```
 

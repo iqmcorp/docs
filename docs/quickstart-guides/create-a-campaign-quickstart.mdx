@@ -172,11 +172,11 @@ Read more: [Insertion orders (IO) overview<ExternalLink />](https://help.iqm.com
 | --- | --- |
 | `ioName` <br /><span class="type-text">string</span> | IO name |
 | `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time |
-| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time |
-| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget |
+| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time, at least 1 hour after <var>ioStartTime</var> |
+| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget (omit if <var>isAutoSumIoTotalBudget</var> is <var>true</var>) |
 | `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](/guidelines/campaign-api#get-io-status-list) <br /><EnumWidget values={ioStatus} /> |
 | `ioTimeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) for IO |
-| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included campaigns |
+| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included campaigns, and <var>ioTotalBudget</var> can't be sent |
 | `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [IO budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) <br /><EnumWidget values={budgetTypes} />
 | `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](/guidelines/campaign-api#get-list-of-budget-distribution-methods) <br /><EnumWidget values={budgetDistributionMethods} /> |
 
@@ -190,11 +190,11 @@ Read more: [Insertion orders (IO) overview<ExternalLink />](https://help.iqm.com
 ```json title="Request sample (budget based IO)" 
 {
     "ioName": "IO Name 1",
-    "ioStartTime": 1690898148000,
-    "ioEndTime": 1690898888000,
+    "ioStartTime": 1803859200000,
+    "ioEndTime": 1806451200000,
     "ioTotalBudget": 1000,
     "ioTimeZoneId": 29,
-    "isAutoSumIoTotalBudget": true,
+    "isAutoSumIoTotalBudget": false,
     "ioBudgetTypeId": 1,
     "ioBudgetDistributionMethodId": 1
 }
@@ -289,7 +289,7 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     </tr>
         <tr>
     <td>`budgetDay` <br /><span class="type-text">integer</span></td>
-    <td>Daily budget for campaign serving daily (not applicable if budget pacing is set to <var>true</var>)</td>
+    <td>Daily budget for campaign serving daily (not applicable if budget pacing is set to <var>true</var>). Use at least 100 if you plan to add a bid model.</td>
     </tr>
         <tr>
     <td>`budgetTotal` <br /><span class="type-text">integer</span></td>
@@ -309,7 +309,7 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     </tr>
         <tr>
     <td>`creativeIds` <br /><span class="type-text">string</span></td>
-    <td>Comma-separated creative IDs</td>
+    <td>Comma-separated IDs of your creatives</td>
     </tr>
        <tr>
     <td>`exchanges` <br /><span class="type-text">string</span> </td>
@@ -350,16 +350,16 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
 {
   "campaignName": "NewTest",
   "maxBid": 100,
-  "budgetTotal": 1500,
-  "startTime": 1748890201,
-  "endTime": 1749096000,
+  "budgetTotal": 1000,
+  "startTime": 1803859200,
+  "endTime": 1806451200,
   "timezone": 29,
-  "budgetDay": 50,
+  "budgetDay": 100,
   "creativeType": 11,
   "isAgreementChecked":true,
-  "ioId": 17994,
+  "ioId": 29316,
   "countryId": "30100001",
-  "creativeIds": "676384",
+  "creativeIds": "803406",
   "advertiserDomain": "https://iqm.com",
   "totalBudgetPacing": false,
   "publisherAdCategory":"",

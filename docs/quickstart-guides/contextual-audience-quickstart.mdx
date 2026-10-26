@@ -165,14 +165,14 @@ The request schema table below details the supported fields for creating a Conte
 | Request schema | |
 | --- | --- |
 | `audienceName` <br /><span class="type-text">string</span> | Audience name 
-| `keywords` <br /><span class="type-text">string</span> | Keywords to generate a Contextual audience 
+| `keywords` <br /><span class="type-text">array of strings</span> | Keywords to generate a Contextual audience. Send an empty array (<var>[]</var>) if you only use URLs 
 | `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
 | `endDate` <br /><span class="type-text">integer</span> | Unix epoch end date, in milliseconds (required if data collection method is **static**)
 | `frequency` <br /><span class="type-text">integer</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the Contextual audience. Integer between 1-10
-| `urls` <br /><span class="type-text">string</span> | The publisher sites visited by a user
+| `urls` <br /><span class="type-text">array of strings</span> | The publisher sites visited by a user. Each URL must include a scheme (<var>https://</var>). Send an empty array (<var>[]</var>) if you only use keywords
 | `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time
 | `dataCollectionMethodId` <br /><span class="type-text">integer</span> | **static** (<var>1</var>) collection period in a fixed set of dates <br />**dynamic** (<var>2</var>) data collection period over a rolling timeframe, with data refreshes every 24 hours
-| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>90</var>)
+| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>60</var>)
 </div>
 
 #### Step 2a: Contextual audience with keywords
@@ -206,11 +206,12 @@ Lastly, a timezone ID is required to determine the data collection timeframe. An
 {
   "audienceName": "California Politics",
   "frequency": 5,
-  "keywords": "politics, voters, california",
+  "keywords": ["politics", "voters", "california"],
+  "urls": [],
   "dataCollectionMethodId": 1,
-  "startDate": 1750737600000,
-  "endDate": 1753329599000,
-  "timezoneId": 29,
+  "startDate": 1797310800000,
+  "endDate": 1800507599000,
+  "timezoneId": 29
 }
 ```
 
@@ -250,10 +251,11 @@ In this example you can choose a **dynamic** data collection method by passing <
 {
   "audienceName": "California Politics",
   "frequency": 5,
-  "urls": "www.iqm.com",
+  "keywords": [],
+  "urls": ["https://www.iqm.com"],
   "dataCollectionMethodId": 2,
   "dataCollectionDays": 20,
-  "timezoneId": 29,
+  "timezoneId": 29
 }
 ```
 

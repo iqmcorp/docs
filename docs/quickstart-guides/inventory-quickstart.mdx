@@ -22,7 +22,7 @@ The following endpoints are used to search inventory, assign campaign targeting,
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/inventories/list" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/groups" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/group/addMappings" />
-<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/{groupId}/includeExclude" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/includeExclude" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/group/{groupId}/shared/campaign/list" />
 
 ## About IQM inventory
@@ -492,7 +492,15 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
     <th>Request schema</th>
     <tr>
     <td>`groupIds` <br /><span class="type-text">array of integers</span></td>
-    <td>Group IDs to add/remove mappings to/from</td>
+    <td>Group IDs to add mappings to (<var>addMappings</var> only)</td>
+    </tr>
+    <tr>
+    <td>`groupId` <br /><span class="type-text">integer</span></td>
+    <td>Group ID to remove mappings from (<var>removeMappings</var> only)</td>
+    </tr>
+    <tr>
+    <td>`groupTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+    <td>Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var></td>
     </tr>
     <tr>
     <td>`inventoryIds` <br /><span class="type-text">array of integers</span></td>
@@ -582,6 +590,29 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request sample: addMappings"
+{
+  "groupIds": [
+    176130
+  ],
+  "groupTypeId": 1,
+  "inventoryIds": [
+    11593184,
+    11840144
+  ]
+}
+```
+
+```json title="Request sample: removeMappings"
+{
+  "groupId": 176130,
+  "groupTypeId": 1,
+  "inventoryIds": [
+    11840144
+  ]
+}
+```
+
 ```json title="Response 200"
 {
     "success": true,
@@ -618,21 +649,18 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
 
 ### Step 5: Target campaigns with an inventory group
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/{groupId}/includeExclude" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/inventorygroup/includeExclude" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Once an inventory group has been created, you can attach it to a campaign for targeting. Pass the inventory <var>groupId</var> in the endpoint's path and the desired campaign ID in the <var>includedCampaigns</var> field. 
-
-| Path parameter | |
-| --- | --- |
-| `groupId` <br /><span class="type-text">integer</span> | Inventory group ID |
+Once an inventory group has been created, you can attach it to a campaign for targeting. Pass the inventory group ID in the <var>groupIds</var> array and the desired campaign ID in the <var>includedCampaignIds</var> field. 
 
 | Request schema | |
 | --- | --- |
-| `excludedCampaigns` <br /><span class="type-text">string</span> | Comma separated campaign IDs to exclude targeting
-| `includedCampaigns` <br /><span class="type-text">string</span> | Comma separated campaign IDs to include targeting
+| `groupIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | Inventory group IDs
+| `includedCampaignIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comma-separated campaign IDs to include targeting. Send an empty string if there are none
+| `excludedCampaignIds` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Comma-separated campaign IDs to exclude targeting. Send an empty string if there are none
 
 </div>
 <div class="child2">
@@ -642,8 +670,11 @@ Once an inventory group has been created, you can attach it to a campaign for ta
 
 ```json title="Request sample"
 {
-  "campaignIds": "168622",
-  "isExcluded": 0
+  "groupIds": [
+    176130
+  ],
+  "includedCampaignIds": "168622",
+  "excludedCampaignIds": ""
 }
 ```
 
