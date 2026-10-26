@@ -43,12 +43,6 @@ const sidebars = {
         },
         {
           type: 'doc',
-          id: 'getting-started/typescript-prerequisites',
-          label: 'TypeScript prerequisites',
-          className: 'sidebarItem',
-        },
-        {
-          type: 'doc',
           id: 'getting-started/api-pagination-guide',
           label: 'API filtering and pagination',
           className: 'sidebarItem',
