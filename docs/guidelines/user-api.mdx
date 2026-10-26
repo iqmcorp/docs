@@ -91,13 +91,34 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-  "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
   "scope": "read write",
   "token_type": "bearer",
-  "expires_in": 35999
+  "expires_in": 86399
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 401"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "error": "Client details are not provided."
+}
+```
+</details>
 
 </div></div>
 
@@ -1237,24 +1258,49 @@ A user/Customer can sign up and create a password to access the API.
 <td>Indicates user was successfully signed up: <var>true</var>.</td>
 </tr>
 <tr>
-<td>`access_token` <br /><span class="type-text">string</span></td>
-<td>Access token.</td>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Login details for the new user.</td>
 </tr>
 <tr>
-<td>`refresh_token` <br /><span class="type-text">string</span></td>
-<td>Refresh token.</td>
-</tr>
-<tr>
-<td>`scope` <br /><span class="type-text">string</span></td>
-<td>User access rights.</td>
-</tr>
-<tr>
-<td>`token_type` <br /><span class="type-text">string</span></td>
-<td>Token type.</td>
-</tr>
-<tr>
-<td>`expires_in` <br /><span class="type-text">integer</span></td>
-<td>Time until token expires.</td>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`access_token` <br /><span class="type-text">string</span></td>
+  <td>Access token (JWT). Send it as <var>Authorization: Bearer</var> in later requests.</td>
+  </tr>
+  <tr>
+  <td>`refresh_token` <br /><span class="type-text">string</span></td>
+  <td>Refresh token, used to get a new access token.</td>
+  </tr>
+  <tr>
+  <td>`scope` <br /><span class="type-text">string</span></td>
+  <td>User access rights.</td>
+  </tr>
+  <tr>
+  <td>`token_type` <br /><span class="type-text">string</span></td>
+  <td>Token type: <var>bearer</var>.</td>
+  </tr>
+  <tr>
+  <td>`expires_in` <br /><span class="type-text">integer</span></td>
+  <td>Seconds until the access token expires.</td>
+  </tr>
+  <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID of the user's active organization.</td>
+  </tr>
+  <tr>
+  <td>`mfa_required` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether multi-factor authentication is enabled for the user.</td>
+  </tr>
+  <tr>
+  <td>`redirectionUrl` <br /><span class="type-text">string</span></td>
+  <td>Workspace redirect URL with the tokens filled in. Returned only when the workspace has a redirect URL configured.</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
 </tr>
 </table>
 </details>
@@ -1276,17 +1322,35 @@ A user/Customer can sign up and create a password to access the API.
 {
   "success": true,
   "data": {
-    "access_token": "d90fa7de-534c-4652-ad8f-c4f6f70461ac",
-    "refresh_token": "2e379c6f-959d-498f-8319-ff13ebef6bfe",
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+    "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
     "scope": "read write",
     "token_type": "bearer",
-    "expires_in": 35999
+    "expires_in": 86399,
+    "owId": 200001,
+    "mfa_required": false
   }
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Password is required.",
+      "field": "password"
+    },
+    {
+      "error": "Email is required.",
+      "field": "email"
+    }
+  ]
+}
+```
 
 ```json title="Response 403"
 {

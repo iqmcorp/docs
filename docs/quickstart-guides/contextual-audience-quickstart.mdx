@@ -7,7 +7,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
-import { audienceTypes } from '@site/src/data/enums/audienceTypes';
+import { audienceStatuses } from '@site/src/data/enums/audienceStatuses';
 import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
@@ -101,50 +101,31 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
 </details>
@@ -219,8 +200,10 @@ Lastly, a timezone ID is required to determine the data collection timeframe. An
 {
   "success": true,
   "data": {
-    "id": 1078146,
-    "message": "Contextual Audience created successfully"
+    "message": "California Politics audience created successfully",
+    "audienceIds": [
+      1183879
+    ]
   }
 }
 ```
@@ -263,8 +246,10 @@ In this example you can choose a **dynamic** data collection method by passing <
 {
   "success": true,
   "data": {
-    "id": 1078146,
-    "message": "Contextual Audience created successfully"
+    "message": "California Politics audience created successfully",
+    "audienceIds": [
+      1183878
+    ]
   }
 }
 ```
@@ -281,92 +266,72 @@ In this example you can choose a **dynamic** data collection method by passing <
 <div class="endpoint-container">
   <div class="child1">
 
-You can check on the audience status after creation to see if it's "Ready" or still "Processing". This endpoint also returns various details about the audience as described in the Response properties table below.
+You can check on the audience status after creation to see if it's **Ready** (<var>audienceStatusId</var> <var>3</var>) or still processing. This endpoint also returns various details about the audience as described in the Response properties table below.
 
-Use the <var>id</var> from Steps 2a or 2b and pass it as the <var>audienceId</var> in the endpoint path to get the audience's details.
+Use the ID from the <var>audienceIds</var> array returned in Steps 2a or 2b and pass it as the <var>audienceId</var> in the endpoint path to get the audience's details.
 
 | Path parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">string</span> |  Audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> |  Audience ID |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response properties</summary>
  <table className="objectProperties">
 <tr>
-  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
   <td>Audience ID</td>
 </tr>
 <tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
   <td>Audience name</td>
 </tr>
 <tr>
-  <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Audience status</td>
+  <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience subtype ID](/guidelines/audience-api#audience-subtype-list). Returned only for Healthcare audiences created with <var>audienceSubtypes</var></td>
 </tr>
 <tr>
-  <td>`type` <br /><span class="type-text">integer</span></td>
-  <td>[Audience type ID](/guidelines/audience-api#audience-type-list). <br /><EnumWidget values={audienceTypes} /></td>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience status ID](/guidelines/audience-api#audience-status-list). <br /><EnumWidget values={audienceStatuses} /></td>
 </tr>
 <tr>
-  <td>`includedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of campaigns including this audience</td>
+  <td>`cpm` <br /><span class="type-text">number</span></td>
+  <td>Data cost (CPM) charged if the audience is used in a campaign. Not returned when no data cost applies</td>
 </tr>
 <tr>
-  <td>`excludedCount` <br /><span class="type-text">integer</span></td>
-  <td>Count of campaigns excluding this audience</td>
-</tr>
-<tr>
-  <td>`createdOn` <br /><span class="type-text">integer</span></td>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
   <td>Unix epoch creation date, in milliseconds</td>
 </tr>
 <tr>
-  <td>`organizationName` <br /><span class="type-text">string</span></td>
-  <td>Organization name</td>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Audience reach (unique users). <var>0</var> until the audience has data</td>
 </tr>
 <tr>
-  <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID</td>
+  <td>`keywords` <br /><span class="type-text">array of strings</span></td>
+  <td>Keywords. Not returned when the audience has no keywords</td>
 </tr>
 <tr>
-  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>Created by user Organization Workspace ID</td>
+  <td>`urls` <br /><span class="type-text">array of strings</span></td>
+  <td>URLs. Not returned when the audience has no URLs</td>
 </tr>
 <tr>
-  <td>`createdByUser` <br /><span class="type-text">string</span></td>
-  <td>Created by user name</td>
-</tr>
-<tr>
-  <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique audiences reached</td>
-</tr>
-<tr>
-  <td>`dataCost` <br /><span class="type-text">integer</span></td>
-  <td>Fees charged by the platform if the audience is used in any campaign</td>
-</tr>
-<tr>
-  <td>`keywords` <br /><span class="type-text">string</span></td>
-  <td>Keywords</td>
-</tr>
-<tr>
-  <td>`urls` <br /><span class="type-text">integer</span></td>
-  <td>URLs</td>
+  <td>`dataCollectionMethodId` <br /><span class="type-text">integer</span></td>
+  <td>Data collection method: **static** (<var>1</var>) or **dynamic** (<var>2</var>)</td>
 </tr>
 <tr>
   <td>`startDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds </td>
+  <td>Unix epoch start date, in milliseconds (**static** data collection only)</td>
 </tr>
 <tr>
   <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds</td>
+  <td>Unix epoch end date, in milliseconds (**static** data collection only)</td>
+</tr>
+<tr>
+  <td>`dataCollectionDays` <br /><span class="type-text">integer</span></td>
+  <td>Number of days in the rolling data collection timeframe (**dynamic** data collection only)</td>
 </tr>
 <tr>
   <td>`frequency` <br /><span class="type-text">integer</span></td>
-  <td>Frequency</td>
-</tr>
-<tr>
-  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if user has edit access for the requested resource</td>
+  <td>Number of times a user must visit a relevant site to be added to the audience</td>
 </tr>
 </table>
 </details>
@@ -381,27 +346,22 @@ Use the <var>id</var> from Steps 2a or 2b and pass it as the <var>audienceId</va
 {
   "success": true,
   "data": {
-    "id": 1078361,
-    "name": "USA",
+    "audienceId": 1183879,
+    "audienceName": "California Politics",
     //highlight-next-line
-    "status": "Processing",
-    "type": 5,
-    "includedCount": 0,
-    "excludedCount": 0,
-    "createdOn": 1719382932,
-    "organizationName": "IQM Corporation",
-    "owId": 202314,
-    "createdByUowId": 117790,
-    "createdByUser": "Neeraj Khatri",
-    "createdByUserEmail": null,
-    "uniques": 0,
-    "dataCost": 1.5,
-    "keywords": "law,act,actions",
-    "urls": "",
-    "startDate": 1718873084000,
-    "endDate": 1719229978000,
-    "frequency": 2,
-    "editAccess": true
+    "audienceStatusId": 1,
+    "cpm": 1.5,
+    "createdAt": 1793041090626,
+    "reach": 0,
+    "keywords": [
+      "politics",
+      "voters",
+      "california"
+    ],
+    "dataCollectionMethodId": 1,
+    "startDate": 1797310800000,
+    "endDate": 1800507599000,
+    "frequency": 5
   }
 }
 ```

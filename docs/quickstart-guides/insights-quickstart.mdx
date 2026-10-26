@@ -86,53 +86,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -212,17 +192,19 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "campaignName": "TestCampaign",
         "advertiserDomain": "https://iqm.com",
         "creativeType": 11,
-         //highlight-next-line
+        //highlight-next-line
         "campaignType": 1,
         "totalBudgetPacing": true,
         "isTvAd": false,
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
         "startTime": 1726518001,
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -233,11 +215,17 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
-          //highlight-next-line
+        //highlight-next-line
         "totalImpressions": 5,
         "totalClicks": 0,
         "totalConversions": 0,
@@ -247,11 +235,13 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
         "createDate": 1726517360,
@@ -260,12 +250,12 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -300,86 +290,50 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 
 <table className="objectProperties">
 <tr>
+  <td>`totalRequests` <br /><span class="type-text">integer</span></td>
+  <td>Total bid requests evaluated for the campaign in the date range</td>
+</tr>
+<tr>
   <td>`rejectionList`<br /><span class="type-text">object</span></td>
-  <td>List of bid rejection reasons</td>
+  <td>Bid rejection reasons, keyed by rejection category, e.g. <var>locationTargeting</var>, <var>creativeSettings</var>, <var>audienceTargeting</var>, <var>optimizationAndDelivery</var>, <var>campaignBudget</var>, <var>inventoryTargeting</var>, <var>deviceTargeting</var>, or <var>other</var>. Only categories with rejected bids are included.</td>
 </tr>
 <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`rejectionList` object properties</summary>
+      <summary>`rejectionList` category object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`campaignSettings` <br /><span class="type-text">object</span></td>
-        <td>Campaign settings</td>
+        <td>`title` <br /><span class="type-text">string</span></td>
+        <td>Category display name</td>
       </tr>
       <tr>
-        <td>`ioBudget` <br /><span class="type-text">object</span></td>
-        <td>IO budget</td>
+        <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
+        <td>Rejected bids count for the category</td>
       </tr>
       <tr>
-        <td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
-        <td>Inventory targeting</td>
+        <td>`description` <br /><span class="type-text">string</span></td>
+        <td>Rejection description. Only present when the category has no sub-reasons.</td>
       </tr>
       <tr>
-        <td>`campaignBidPrice` <br /><span class="type-text">object</span></td>
-        <td>Campaign bid price</td>
-      </tr>
-      <tr>
-        <td>`locationTargeting` <br /><span class="type-text">object</span></td>
-        <td>Location targeting</td>
-      </tr>
-         <tr>
-        <td>`deviceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Device targeting</td>
-      </tr>
-         <tr>
-        <td>`creativeSettings` <br /><span class="type-text">object</span></td>
-        <td>Creative settings</td>
-      </tr>
-         <tr>
-        <td>`advanceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Advanced targeting</td>
-      </tr>
-         <tr>
-        <td>`audienceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Audience targeting</td>
-      </tr>
-         <tr>
-        <td>`bidStrategy` <br /><span class="type-text">object</span></td>
-        <td>Bid strategy</td>
-      </tr>
-         <tr>
-        <td>`campaignBudget` <br /><span class="type-text">object</span></td>
-        <td>Campaign budget</td>
-      </tr>
-         <tr>
-        <td>`demographicsTargeting` <br /><span class="type-text">object</span></td>
-        <td>Demographics targeting</td>
-      </tr>
-            <tr>
-        <td>`undefined` <br /><span class="type-text">object</span></td>
-        <td>Undefined</td>
+        <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
+        <td>Sub-reasons for the category, keyed by sub-reason name (see <var>subReasonInfo</var> keys below); empty when the category has no sub-reasons</td>
       </tr>
       <tr>
         <td colSpan="2">
           <details className="objectPropertiesDetails">
-          <summary>`rejectionList` sub-objects properties</summary>
+          <summary>`subReasonInfo` object properties</summary>
           <table className="objectProperties">
           <tr>
           <td>`title` <br /><span class="type-text">string</span></td>
-          <td>Object title</td>
+          <td>Sub-reason display name</td>
           </tr>
-            <tr>
-          <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
-          <td>Rejected bids count</td>
+          <tr>
+          <td>`droppedRequests` <br /><span class="type-text">integer</span></td>
+          <td>Dropped bid requests count for the sub-reason</td>
           </tr>
-            <tr>
+          <tr>
           <td>`description` <br /><span class="type-text">string</span></td>
-          <td>description</td>
-          </tr>
-             <tr>
-          <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
-          <td>List of sub-reasons info</td>
+          <td>Sub-reason description</td>
           </tr>
           </table></details>
           </td>
@@ -391,11 +345,11 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 </tr>
 <tr>
   <td>`topMainReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> objects with the highest <var>rejectedBids</var> counts</td>
+  <td>Name-value pairs of <var>rejectionList</var> category and <var>rejectedBids</var> count, for the categories with the most rejected bids</td>
   </tr>
 <tr>
   <td>`topSubReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> sub-objects with the highest <var>droppedRequests</var> counts</td>
+  <td>Name-value pairs of sub-reason and <var>droppedRequests</var> count, for the sub-reasons with the most dropped requests</td>
   </tr>
 <tr>
   <td>`totalBids` <br /><span class="type-text">integer</span></td>
@@ -415,7 +369,7 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> object properties</summary>
+  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> keys</summary>
 
 <table className="objectProperties">
 <tr>
@@ -474,6 +428,22 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
   <td>`carrier`</td>
   <td>Bids dropped off because Carrier did not match the campaign's Carrier requirements</td>
 </tr>
+<tr>
+  <td>`state`</td>
+  <td>Bids dropped off because the state did not match the campaign's state requirements</td>
+</tr>
+<tr>
+  <td>`creativeType`</td>
+  <td>Bids dropped off because Creative Type did not match campaign's Creative Type requirements</td>
+</tr>
+<tr>
+  <td>`matchedAudience`</td>
+  <td>Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters</td>
+</tr>
+<tr>
+  <td>`budgetAllocationConsumed`</td>
+  <td>Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted</td>
+</tr>
 </table>
 </details>
 
@@ -488,112 +458,102 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 {
   "success": true,
   "data": {
-    "totalRequests": 100,
+    "totalRequests": 1628200,
     "rejectionList": {
-      "campaignSettings": {
-        "title": "Campaign Settings",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Campaign Settings set in the campaign.",
-        "subReasonInfo": {}
-      },
-      "ioBudget": {
-        "title": "IO Budget",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
-      },
-      "inventoryTargeting": {
-        "title": "Inventory Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Inventory Targeting.",
-        "subReasonInfo": {}
-      },
-      "campaignBidPrice": {
-        "title": "Campaign Bid Price",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the bid price is lower than the floor price received from the exchange.",
-        "subReasonInfo": {}
-      },
       "locationTargeting": {
         "title": "Location Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Location Targeting.",
-        "subReasonInfo": {}
-      },
-      "deviceTargeting": {
-        "title": "Device Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Device Targeting.",
-        "subReasonInfo": {}
-      },
-      "creativeSettings": {
-        "label": "Creative Settings",
-        "rejectedBids": 100,
-        "description": "Campaign is filtered due to non-matching creative dimensions found in the request",
+        "rejectedBids": 389204,
         "subReasonInfo": {
-          "creativeDimension": {
-            "label": "Creative Dimensions",
-            "droppedRequests": 100,
-            "description": "Campaign is filtered due to non-matching creative dimensions found in the request."
+          "state": {
+            "title": "State",
+            "droppedRequests": 389204,
+            "description": "Bids dropped off because the state did not match the campaign's state requirements"
           }
         }
       },
-      "advanceTargeting": {
-        "title": "Advanced Targeting",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
+      "creativeSettings": {
+        "title": "Creative Settings",
+        "rejectedBids": 62,
+        "subReasonInfo": {
+          "creativeType": {
+            "title": "Creative Type",
+            "droppedRequests": 62,
+            "description": "Bids dropped off because Creative Type did not match campaign's Creative Type requirements"
+          }
+        }
       },
       "audienceTargeting": {
         "title": "Audience Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Audience Targeting.",
-        "subReasonInfo": {}
+        "rejectedBids": 1113949,
+        "subReasonInfo": {
+          "matchedAudience": {
+            "title": "Matched Audience",
+            "droppedRequests": 1113949,
+            "description": "Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters"
+          }
+        }
       },
-      "bidStrategy": {
-        "title": "Bid Strategy",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to bid strategy setting applied in campaign.",
-        "subReasonInfo": {}
+      "optimizationAndDelivery": {
+        "title": "Optimization & Delivery",
+        "rejectedBids": 17895,
+        "subReasonInfo": {
+          "budgetAllocationConsumed": {
+            "title": "Budget Allocation Consumed (Pacing/Delivery)",
+            "droppedRequests": 17895,
+            "description": "Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted"
+          }
+        }
       },
       "campaignBudget": {
         "title": "Campaign Budget",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the campaign budget is now unavailable for further bidding.",
+        "rejectedBids": 9653,
+        "description": "Bids dropped off because the total or daily budget was fully consumed.",
         "subReasonInfo": {}
       },
-      "demographicsTargeting": {
-        "title": "Demographics Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Demographics Targeting.",
-        "subReasonInfo": {}
-      },
-      "undefined": {
-        "title": "Undefined",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Undefined reasons.",
+      "other": {
+        "title": "Other",
+        "rejectedBids": 96528,
+        "description": "Bids dropped off due to back-end bidder settings that are typically used for campaign efficiency.  Please see your account manager for more information.",
         "subReasonInfo": {}
       }
     },
     "topMainReasons": {
-      "creativeSettings": 100
+      "audienceTargeting": 1113949,
+      "optimizationAndDelivery": 17895,
+      "locationTargeting": 389204,
+      "creativeSettings": 62,
+      "campaignBudget": 9653
     },
     "topSubReasons": {
-      "creativeDimension": 100
+      "matchedAudience": 1113949,
+      "budgetAllocationConsumed": 17895,
+      "state": 389204,
+      "creativeType": 62
     },
-    "totalBids": 0,
-    "lostBids": 0,
-    "totalWins": 0
+    "totalBids": 909,
+    "lostBids": 535,
+    "totalWins": 374
   }
 }
 ```
 
-```json title="Response 422 (invalid start date)"
+```json title="Response 422 (end date before start date)"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Date Range End must be greater than Date Range Start"
+      "error": "Date Range End must be greater than Date Range Start."
+    }
+  ]
+}
+```
+
+```json title="Response 422 (date range over two weeks)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The difference between start and end date must not be greater than 2 weeks."
     }
   ]
 }
@@ -627,8 +587,16 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
 
 <table className="objectProperties">
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights data details</td>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of eligible audiences</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of eligible audiences matching <var>searchField</var></td>
+</tr>
+<tr>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Eligible audiences</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -644,12 +612,16 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
   <td>Audience name</td>
   </tr>
     <tr>
-  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>`matchRate` <br /><span class="type-text">number</span></td>
   <td>The percentage of matched records compared to a reference set</td>
   </tr>
       <tr>
   <td>`uniques` <br /><span class="type-text">integer</span></td>
   <td>Count of unique audiences reached</td>
+  </tr>
+  <tr>
+  <td>`insightsStatus` <br /><span class="type-text">integer</span></td>
+  <td>[Insights status ID](/guidelines/insights-api#get-list-of-insights-status-types) of the audience: <var>1</var> (Processing), <var>2</var> (Ready), or <var>3</var> (Failed)</td>
   </tr>
   </table></details>
   </td>
@@ -668,26 +640,29 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
 {
   "success": true,
   "data": {
-    "totalRecords": 10,
-    "filteredRecords": 3,
+    "totalRecords": 8,
+    "filteredRecords": 8,
     "insightsData": [
       {
-        "id": 12345,
+        "id": 1183286,
         "audienceName": "audience1",
-        "matchRate": 58.99,
-        "uniques": 52432
+        "matchRate": 74.74,
+        "uniques": 537354,
+        "insightsStatus": 3
       },
       {
-        "id": 12365,
+        "id": 1183283,
         "audienceName": "audience2",
-        "matchRate": 78.88,
-        "uniques": 72786
+        "matchRate": 69.23,
+        "uniques": 163629,
+        "insightsStatus": 3
       },
       {
-        "id": 12376,
+        "id": 1183002,
         "audienceName": "audience3",
-        "matchRate": 34.88,
-        "uniques": 31122
+        "matchRate": 73.04,
+        "uniques": 74729,
+        "insightsStatus": 3
       }
     ]
   }
@@ -722,8 +697,8 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
   <td>Invalid source IDs list</td>
 </tr>
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights data details</td>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Created Audience Insights reports, one per valid source ID</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -789,13 +764,13 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
     "invalidSourceIds": [],
     "insightsData": [
       {
-        "id": 1213,
+        "id": 2098,
         "typeId": 1,
-        "statusId": 2,
-        "sourceName": "Data Trust NY 4 Cols",
-        "name": "Data Trust NY 4 Cols_insights",
-        "sourceId": 1099461,
-        "createdAt": 1728366883518
+        "statusId": 1,
+        "sourceName": "audience1",
+        "name": "audience1_insights",
+        "sourceId": 1183285,
+        "createdAt": 1793036686825
       }
     ]
   }
@@ -849,10 +824,21 @@ curl -X POST https://api.iqm.com/api/v3/ins/insights/download \
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "insightsReportUrl": "https://domain.com/insights.pdf"
+  "success": true,
+  "data": {
+    "insightsReportUrl": "https://iqm-insights-stage.s3.amazonaws.com/audiences/client_id%3D204995/audience_id%3D1183285/default_insight.pdf?..."
+  }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
     }
+  ]
 }
 ```
 
@@ -904,12 +890,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-               //highlight-next-line
+        //highlight-next-line
         "startTime": 1726518001,
-               //highlight-next-line
+        //highlight-next-line
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -920,8 +908,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
         "totalImpressions": 5,
@@ -931,29 +925,31 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "trafficType": "11,12",
         "exchanges": "",
         "isLocationWithOrFilter": true,
-               //highlight-next-line
+        //highlight-next-line
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
-               //highlight-next-line
+        //highlight-next-line
         "createDate": 1726517360,
         "ioId": 15844,
         "ioName": "Test2",
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -980,13 +976,13 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
       <tr>
-  <td>`campaignId` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-value pairs of campaign ID and an array of the audience types and audiences the campaign targets (empty array if none)</td>
   </tr>
    <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`campaignId` object properties</summary>
+  <summary>Campaign ID array item properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
@@ -1080,21 +1076,13 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
-     <tr>
-      <td>`vldReportCreated` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates VLD Insights report was created: <var>true</var></td>
+      <tr>
+      <td>`vldId` <br /><span class="type-text">integer</span></td>
+      <td>VLD Insights report ID; <var>0</var> when no report was created</td>
       </tr>
       <tr>
-      <td>`campaignId` <br /><span class="type-text">integer</span></td>
-      <td>Campaign ID</td>
-      </tr>
-      <tr>
-      <td>`campaignName` <br /><span class="type-text">string</span></td>
-      <td>Campaign name</td>
-      </tr>
-      <tr>
-      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
-      <td>[Campaign status type](/guidelines/campaign-api#get-campaign-count-by-status)</td>
+      <td>`vldName` <br /><span class="type-text">string</span></td>
+      <td>VLD Insights report name</td>
       </tr>
       <tr>
       <td>`vldStartDate`<br /><span class="type-text">integer</span></td>
@@ -1105,24 +1093,48 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
       <td>Unix epoch timestamp of end date, in milliseconds</td>
       </tr>
       <tr>
-      <td> `vldChargeableImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of chargeable impressions for the requested VLD Insights report</td>
+      <td>`campaignId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign ID</td>
+      </tr>
+      <tr>
+      <td>`campaignName` <br /><span class="type-text">string</span></td>
+      <td>Campaign name</td>
+      </tr>
+      <tr>
+      <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign creative type ID</td>
+      </tr>
+      <tr>
+      <td>`vldReportCreatable` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates the VLD Insights report can be (and was) generated: <var>true</var>. <var>false</var> when an identical report exists, an overlapping report is still processing, the campaign served no impressions in the range, or funds are insufficient.</td>
+      </tr>
+      <tr>
+      <td>`vldChargeableImps` <br /><span class="type-text">integer</span></td>
+      <td>Impressions billed for the report: impressions in the date range not already paid for by an earlier VLD Insights report</td>
       </tr>
       <tr>
       <td>`vldChargedImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of impressions for which the VLD Insights report is already generated</td>
+      <td>Impressions in the date range already paid for by an earlier VLD Insights report</td>
       </tr>
       <tr>
-      <td>`vldChargeableCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost to generate the VLD Insights report</td>
+      <td>`vldChargeableCost` <br /><span class="type-text">number</span></td>
+      <td>Charge for the report, in USD: <var>vldChargeableImps</var> × <var>effectiveVldRate</var> / 1000</td>
       </tr>
       <tr>
-      <td>`vldChargedCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost of VLD Insights report that is already generated</td>
+      <td>`vldChargedCost` <br /><span class="type-text">number</span></td>
+      <td>Cost already paid for <var>vldChargedImps</var>, in USD (not charged again)</td>
       </tr>
       <tr>
       <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the VLD Insights report (<var>true</var>)</td>
+      <td>Indicates the account has enough available funds to cover <var>vldChargeableCost</var>: <var>true</var></td>
+      </tr>
+      <tr>
+      <td>`effectiveVldRate` <br /><span class="type-text">number</span></td>
+      <td>VLD Insights rate per 1,000 impressions (CPM), in USD</td>
+      </tr>
+      <tr>
+      <td>`message` <br /><span class="type-text">string</span></td>
+      <td>Reason the report can't be generated, or a status message. Only present when set.</td>
       </tr>
   </table>
   </details>
@@ -1134,9 +1146,9 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 ```json title="Request sample"
 {
-  "campaignId": 12345,
-  "vldStartDate": 1726518001000,
-  "vldEndDate": 1727668800000
+  "campaignId": 590511,
+  "vldStartDate": 1777297800000,
+  "vldEndDate": 1780286400000
 }
 ```
 
@@ -1144,17 +1156,42 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 {
   "success": true,
   "data": {
-    "vldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "vldStartDate": 1726518001000,
-    "vldEndDate": 1727668800000,
-    "vldChargeableImps": 1000,
-    "vldChargedImps": 100,
-    "vldChargeableCost": 1000,
-    "vldChargedCost": 100,
-    "fundsAvailable": true
+    "vldId": 6301,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": true,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": true,
+    "effectiveVldRate": 3.0
+  }
+}
+```
+
+```json title="Response 200 (report not creatable)"
+{
+  "success": true,
+  "data": {
+    "vldId": 0,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": false,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": false,
+    "effectiveVldRate": 3.0
   }
 }
 ```
@@ -1183,8 +1220,8 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 
 <table className="objectProperties">
 <tr>
-  <td>`vldReportUrl` <br /><span class="type-text">string</span></td>
-  <td>VLD Insights report file URL</td>
+  <td>`reportURL` <br /><span class="type-text">string</span></td>
+  <td>Presigned VLD Insights report file URL</td>
 </tr>
 </table>
 </details>
@@ -1205,8 +1242,19 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 {
   "success": true,
   "data": {
-    "vldReportUrl": "https://tem.domain.s3.amazonaws.com/vld-campaigns/ds/2024-08-20/503481_Insights_1.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240820T112818Z&X-Amz-"
+    "reportURL": "https://iqm-insights-stage.s3.amazonaws.com/vld-campaigns/ow_id%3D204851/report_id%3D6301/590511_VLD_Insights_1.xlsx?..."
   }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
+    }
+  ]
 }
 ```
 
@@ -1256,12 +1304,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-               //highlight-next-line
+        //highlight-next-line
         "startTime": 1726518001,
-               //highlight-next-line
+        //highlight-next-line
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -1272,8 +1322,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
         "totalImpressions": 5,
@@ -1285,11 +1341,13 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
         "createDate": 1726517360,
@@ -1298,12 +1356,12 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -1330,13 +1388,13 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
       <tr>
-  <td>`campaignId` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-value pairs of campaign ID and an array of the audience types and audiences the campaign targets (empty array if none)</td>
   </tr>
    <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`campaignId` object properties</summary>
+  <summary>Campaign ID array item properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
@@ -1431,21 +1489,21 @@ Once the desired campaign has been determined eligible, pass the <var>ioId</var>
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
-     <tr>
-      <td>`pldReportCreated` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates PLD Insights report was created: <var>true</var></td>
+      <tr>
+      <td>`pldId` <br /><span class="type-text">integer</span></td>
+      <td>PLD Insights report ID; <var>0</var> when no report was created</td>
       </tr>
       <tr>
-      <td>`campaignId` <br /><span class="type-text">integer</span></td>
-      <td>Campaign ID</td>
+      <td>`pldName` <br /><span class="type-text">string</span></td>
+      <td>PLD Insights report name</td>
       </tr>
       <tr>
-      <td>`campaignName` <br /><span class="type-text">string</span></td>
-      <td>Campaign name</td>
+      <td>`ioId` <br /><span class="type-text">integer</span></td>
+      <td>Insertion order ID</td>
       </tr>
       <tr>
-      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
-      <td>[Campaign status type](/guidelines/campaign-api#get-campaign-count-by-status)</td>
+      <td>`ioName` <br /><span class="type-text">string</span></td>
+      <td>Insertion order name</td>
       </tr>
       <tr>
       <td>`pldStartDate`<br /><span class="type-text">integer</span></td>
@@ -1456,24 +1514,44 @@ Once the desired campaign has been determined eligible, pass the <var>ioId</var>
       <td>Unix epoch timestamp of end date, in milliseconds</td>
       </tr>
       <tr>
-      <td> `pldChargeableImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of chargeable impressions for the requested PLD Insights report</td>
+      <td>`campaignIds` <br /><span class="type-text">array of integers</span></td>
+      <td>Campaign IDs in the report</td>
+      </tr>
+      <tr>
+      <td>`pldReportCreatable` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates the PLD Insights report can be (and was) generated: <var>true</var>. <var>false</var> when an identical report exists, an overlapping report is still processing, the campaigns served no impressions in the range, or funds are insufficient.</td>
+      </tr>
+      <tr>
+      <td>`pldChargeableImps` <br /><span class="type-text">integer</span></td>
+      <td>Impressions billed for the report: impressions in the date range not already paid for by an earlier PLD Insights report</td>
       </tr>
       <tr>
       <td>`pldChargedImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of impressions for which the PLD Insights report is already generated</td>
+      <td>Impressions in the date range already paid for by an earlier PLD Insights report</td>
       </tr>
       <tr>
-      <td>`pldChargeableCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost to generate the PLD Insights report</td>
+      <td>`pldChargeableCost` <br /><span class="type-text">number</span></td>
+      <td>Charge for the report, in USD</td>
       </tr>
       <tr>
-      <td>`pldChargedCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost of PLD Insights report that is already generated</td>
+      <td>`pldChargedCost` <br /><span class="type-text">number</span></td>
+      <td>Cost already paid for <var>pldChargedImps</var>, in USD (not charged again)</td>
       </tr>
       <tr>
       <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the PLD Insights report (<var>true</var>)</td>
+      <td>Indicates the account has enough available funds to cover <var>pldChargeableCost</var>: <var>true</var></td>
+      </tr>
+      <tr>
+      <td>`effectivePldRate` <br /><span class="type-text">number</span></td>
+      <td>PLD Insights rate per 1,000 impressions (CPM), in USD</td>
+      </tr>
+      <tr>
+      <td>`templateId` <br /><span class="type-text">integer</span></td>
+      <td>Insights template ID the report was created from; <var>0</var> if none</td>
+      </tr>
+      <tr>
+      <td>`message` <br /><span class="type-text">string</span></td>
+      <td>Reason the report can't be generated, or a status message. Only present when set.</td>
       </tr>
   </table>
   </details>
@@ -1498,27 +1576,48 @@ Once the desired campaign has been determined eligible, pass the <var>ioId</var>
 {
   "success": true,
   "data": {
-    "pldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "pldStartDate": 1726518001000,
-    "pldEndDate": 1727668800000,
-    "pldChargeableImps": 1000,
-    "pldChargedImps": 100,
-    "pldChargeableCost": 1000,
-    "pldChargedCost": 100,
-    "fundsAvailable": true
+    "pldId": 6288,
+    "pldName": "25016_PLD_Insights_5",
+    "ioId": 25016,
+    "ioName": "Test IO for Insights",
+    "pldStartDate": 1777298401000,
+    "pldEndDate": 1779336000000,
+    "campaignIds": [
+      590512
+    ],
+    "pldReportCreatable": true,
+    "pldChargeableImps": 30978,
+    "pldChargedImps": 0,
+    "pldChargeableCost": 92.934,
+    "pldChargedCost": 0.0,
+    "fundsAvailable": true,
+    "effectivePldRate": 3.0,
+    "templateId": 0
   }
 }
 ```
 
-```json title="Response 200 (failure)"
+```json title="Response 200 (report not creatable)"
 {
   "success": true,
   "data": {
-    "pldReportCreated": false,
-    "message": "PLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
+    "pldId": 0,
+    "pldName": "25016_PLD_Insights_5",
+    "ioId": 25016,
+    "ioName": "Test IO for Insights",
+    "pldStartDate": 1777298401000,
+    "pldEndDate": 1779336000000,
+    "campaignIds": [
+      590512
+    ],
+    "pldReportCreatable": false,
+    "pldChargeableImps": 0,
+    "pldChargedImps": 30978,
+    "pldChargeableCost": 0.0,
+    "pldChargedCost": 92.934,
+    "fundsAvailable": false,
+    "effectivePldRate": 3.0,
+    "templateId": 0
   }
 }
 ```
@@ -1547,8 +1646,8 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 
 <table className="objectProperties">
 <tr>
-  <td>`pldReportUrl` <br /><span class="type-text">string</span></td>
-  <td>PLD Insights report file URL</td>
+  <td>`reportURL` <br /><span class="type-text">string</span></td>
+  <td>Presigned PLD Insights report file URL</td>
 </tr>
 </table>
 </details>
@@ -1570,7 +1669,7 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 {
   "success": true,
   "data": {
-    "pldReportUrl": "https://dowload.domain.com/pld-reports/20220101/pld-report-1.xlsx"
+    "reportURL": "https://iqm-insights-stage.s3.amazonaws.com/pld-campaigns/ow_id%3D204995/report_id%3D6287/25016_PLD_Insights_1.xlsx?..."
   }
 }
 ```
@@ -1578,12 +1677,23 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 422"
+```json title="Response 422 (invalid report ID)"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Invalid sortBy value."
+      "error": "Please provide valid insights id value."
+    }
+  ]
+}
+```
+
+```json title="Response 422 (invalid file type)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Unsupported file type provided"
     }
   ]
 }

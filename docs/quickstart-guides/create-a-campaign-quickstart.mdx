@@ -103,50 +103,31 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
 </details>
@@ -204,16 +185,24 @@ Read more: [Insertion orders (IO) overview<ExternalLink />](https://help.iqm.com
 {
     "success": true,
     "data": {
-        "ioId": 123456,
+        "ioId": 29311,
         "ioName": "IO Name 1",
-        "ioStartTime": 1690898148000,
-        "ioEndTime": 1690898888000,
-        "ioTotalBudget": 0,
+        "owId": 204851,
+        "createdByUowId": 291477,
+        "modifiedByUowId": 291477,
+        "ioStartTime": 1803859200000,
+        "ioEndTime": 1806451200000,
+        "ioTotalBudget": 1000.0,
         "ioTimeZoneId": 29,
-        "ioBudgetTypeId": 1,
+        "isAutoSumIoTotalBudget": false,
         "ioBudgetDistributionMethodId": 1,
-        "isAutoSumIoTotalBudget": true,
-        "ioTotalImpressions": null
+        "ioBudgetTypeId": 1,
+        "ioTotalImpressions": null,
+        "ioStatusId": 1,
+        "ioNextPerformanceCheck": null,
+        "ioLastPriorityShift": null,
+        "ioCurrentPriority": null,
+        "isIoPrioritise": false
     }
 }
 ```
@@ -326,16 +315,34 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     <summary style={{fontSize: "16px"}}>Response properties</summary>
     <table className="objectProperties">
     <tr>
+    <td>`statusCode` <br /><span class="type-text">integer</span></td>
+    <td>HTTP status code: <var>201</var></td>
+    </tr>
+    <tr>
+    <td>`responseObject` <br /><span class="type-text">object</span></td>
+    <td>Response object</td>
+    </tr>
+    <tr>
+    <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`responseObject` object properties</summary>
+    <table className="objectProperties">
+    <tr>
     <td>`data` <br /><span class="type-text">integer</span></td>
     <td>campaign ID</td>
     </tr>
-        <tr>
+    <tr>
     <td>`message` <br /><span class="type-text">string</span></td>
     <td>Success message</td>
     </tr>
-        <tr>
+    <tr>
     <td>`status` <br /><span class="type-text">string</span></td>
-    <td>campaign status</td>
+    <td>campaign status: <var>pending</var></td>
+    </tr>
+    </table>
+    </details>
+    </td>
+    <td></td>
     </tr>
     </table>
     </details>
@@ -369,11 +376,11 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
 }
 ```
 
-```json title="Response 200"
+```json title="Response 201"
 {
   "statusCode": 201,
   "responseObject": {
-    "data": 123456,
+    "data": 625980,
     "message": "Campaign saved successfully.",
     "status": "pending"
   }
@@ -408,68 +415,63 @@ To run a campaign, it must be approved. Use the campaign ID returned in the <var
 {
     "statusCode": 200,
     "responseObject": {
-        "owId": 203578,
-        "parentOrganizationName": "Signup testing 1",
-        "id": 537599,
-        "uowId": 188494,
-        "campaignName": "TestCampaign",
+        "owId": 204851,
+        "parentOrganizationName": "Example Workspace",
+        "id": 625980,
+        "uowId": 291477,
+        "campaignName": "NewTest",
         "advertiserDomain": "https://iqm.com",
         "creativeType": 11,
         "campaignType": 1,
-        "totalBudgetPacing": true,
+        "totalBudgetPacing": false,
         "isTvAd": false,
-        "budgetDay": 1199.08,
-        "budgetTotal": 50000.0,
-        "maxBid": 15.0,
+        "budgetDay": 100.0,
+        "budgetTotal": 1000.0,
+        "maxBid": 100.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-        "startTime": 1726518001,
-        "endTime": 1727668800,
+        "startTime": 1803859200,
+        "endTime": 1806451200,
         //highlight-next-line
-        "status": "running",
+        "status": "pending",
         "dspMargin": 0,
         "platformMargin": 0,
         "userDealMargin": 0,
         "spentScale": false,
-        "creativeIds": "676384",
+        "creativeIds": "803406",
         "conversionType": "None",
-        "bidOptimization": true,
-        "bidPacing": true,
-        "isBidShading": false,
+        "bidOptimization": false,
+        "bidPacing": false,
+        "isBidShading": true,
         "impressionCapping": 0,
-        "maxDayImpressions": 0,
-        "maxDayClicks": 0,
-        "maxDayConversions": 0,
-        "totalImpressions": 0,
-        "totalClicks": 0,
-        "totalConversions": 0,
-        "deviceType": "13,15,11,12",
-        "trafficType": "11,12",
+        "frequencyCapEnabled": false,
         "exchanges": "",
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
         "isCampaignFromNewPlatform": true,
-        "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "organizationName": "Example Organization",
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
-        "createDate": 1726517360,
-        "ioId": 15844,
-        "ioName": "Test2",
+        "createDate": 1793041077,
+        "ioId": 29316,
+        "ioName": "IO Name 1",
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
+
 
 </TabItem>
 </Tabs>

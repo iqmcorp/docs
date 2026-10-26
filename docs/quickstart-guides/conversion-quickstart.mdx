@@ -103,53 +103,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -285,20 +265,16 @@ Create a Pixel type conversion. Refer to the Request schema table below for supp
 
 <table className="objectProperties">
 <tr>
-<td>`id` <br /><span class="type-text">integer</span></td>
-<td>Conversion ID</td>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Conversion ID</td>
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Conversion name</td>
 </tr>
 <tr>
-  <td>`postbackPartnerName` <br /><span class="type-text">string</span></td>
-  <td>Postback partner name</td>
-</tr>
-<tr>
   <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Conversion status</td>
+  <td>Conversion status. Always <var>Pending</var> for a new conversion</td>
 </tr>
 <tr>
   <td>`type` <br /><span class="type-text">string</span></td>
@@ -313,7 +289,7 @@ Create a Pixel type conversion. Refer to the Request schema table below for supp
   <td>Total conversions count</td>
 </tr>
 <tr>
-  <td>`owID` <br /><span class="type-text">integer</span></td>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
   <td>Organization Workspace ID</td>
 </tr>
 <tr>
@@ -325,32 +301,36 @@ Create a Pixel type conversion. Refer to the Request schema table below for supp
   <td>Modified by User Organization Workspace ID</td>
 </tr>
 <tr>
-  <td>`uuid` <br /><span class="type-text">integer</span></td>
-  <td>Universally Unique Identifier</td>
+  <td>`uuid` <br /><span class="type-text">string</span></td>
+  <td>Universally unique identifier of the conversion. Also used in the pixel script URL</td>
 </tr>
 <tr>
   <td>`pixelConversionScript` <br /><span class="type-text">string</span></td>
-  <td>Pixel conversion script</td>
-</tr>
-<tr>
-  <td>`attributedConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that are attributed to a specific campaign based on the Attribution model</td>
-</tr>
-<tr>
-  <td>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user viewed an ad but did not click on it</td>
-</tr>
-<tr>
-  <td>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user clicked on an ad</td>
+  <td>Pixel conversion script to place on the conversion page</td>
 </tr>
 <tr>
   <td>`pixelFinancialMetric` <br /><span class="type-text">string</span></td>
-  <td>Pixel financial metric</td>
+  <td>Custom field used as the financial metric (from <var>financialMetrics</var>). Not returned if none was set</td>
 </tr>
 <tr>
-  <td>`postbackPartnerLogoUrl` <br /><span class="type-text">string</span></td>
-  <td>Postback partner logo URL</td>
+  <td>`attributedConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that are attributed to a specific campaign based on the Attribution model</td>
+</tr>
+<tr>
+  <td>`attributedViewThroughConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that occurred after a user viewed an ad but did not click on it</td>
+</tr>
+<tr>
+  <td>`attributedClickThroughConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that occurred after a user clicked on an ad</td>
+</tr>
+<tr>
+  <td>`campaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns the conversion is assigned to</td>
+</tr>
+<tr>
+  <td>`aiBasedConversion` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the conversion is AI-based</td>
 </tr>
 </table>
 
@@ -394,24 +374,23 @@ Create a Pixel type conversion. Refer to the Request schema table below for supp
 {
     "success": true,
     "data": {
-        "id": 3213,
+        "id": 8073,
         "name": "PixelConversion",
-        "postbackPartnerName": null,
         "status": "Pending",
         "type": "Pixel",
-        "created": 1687459918,
+        "created": 1793036563,
         "totalConversions": 0,
-        "owId": 202017,
-        "createdByUowId": 108658,
-        "modifiedByUowId": 108658,
-        "uuid": "a574ca49cc244c3bb3089491a11aae43",
+        "owId": 204851,
+        "createdByUowId": 291477,
+        "modifiedByUowId": 291477,
+        "uuid": "63485822-6fb3-43ad-aad3-68a40c9a8001",
+        "pixelConversionScript": "<script src='https://iqm.com/d/c/conversion/63485822-6fb3-43ad-aad3-68a40c9a8001?cf1={FIELD_1}&cf2={FIELD_2}&cf3={FIELD_3}&cv={FIELD_4}' async></script>",
+        "pixelFinancialMetric": "field_4",
         "attributedConversions": 0,
         "attributedViewThroughConversions": 0,
         "attributedClickThroughConversions": 0,
-        "pixelFinancialMetric": "name",
-        "postbackPartnerLogoURL": null,
-        "pixelConversionScript": "<script src='https://pxl.stage.iqm.com/i/pixel/8f3165d0-b714-440e-bc1d-621127fa5fad?cv={CONVERSION_VALUE}' async></script>",
-        "partnerUrl": null
+        "campaignCount": 0,
+        "aiBasedConversion": false
     }
 }
 ```
@@ -438,10 +417,6 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 
 :::
 
-| Query parameters  |  |
-| ----  | --- |
-| `assignConversionToCampaign` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Map containing details list of campaign IDs which need to be added/removed
-
 | Request schema |  |
 | ---- | --- |
 | `conversionIdList` <br /><span class="type-text">array of integers</span> | Conversion IDs to assign |
@@ -453,7 +428,7 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 
 <table className="objectProperties">
 <tr>
-<td>`conversionIdsList` <br /><span class="type-text">integer</span></td>
+<td>`conversionIdsList` <br /><span class="type-text">array of integers</span></td>
 <td>Conversion IDs assigned to campaigns</td>
 </tr>
 <tr>
@@ -484,18 +459,13 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 ```json title="Request sample"
 {
   "conversionIdList": [
-    3925
+    8073
   ],
   "addCampaignsList": [
-    253396,
-    256374,
-    234567
+    625977,
+    999999999
   ],
-  "removeCampaignsList": [
-    256321,
-    256432,
-    256433
-  ]
+  "removeCampaignsList": []
 }
 ```
 
@@ -503,21 +473,17 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 {
   "success": true,
   "data": {
-    "conversionIdsList": 3925,
+    "conversionIdsList": [
+      8073
+    ],
     "validAddCampaignIdsList": [
-      253396,
-      256374
+      625977
     ],
     "invalidAddCampaignIdsList": [
-      234567
+      999999999
     ],
-    "validRemoveCampaignIdsList": [
-      256321,
-      256432
-    ],
-    "invalidRemoveCampaignIdsList": [
-      256433
-    ]
+    "validRemoveCampaignIdsList": [],
+    "invalidRemoveCampaignIdsList": []
   }
 }
 ```

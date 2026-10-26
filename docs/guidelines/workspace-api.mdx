@@ -3168,7 +3168,7 @@ This new Customer can be invited as a Workspace or an Advertiser with the follow
   </tr>
      <tr>
   <td>`message` <br /><span class="type-text">string</span></td>
-  <td>Success message.</td>
+  <td>Success message. Returned only when at least one invitation is sent.</td>
   </tr>
   </table></details>
 
@@ -3206,18 +3206,32 @@ This new Customer can be invited as a Workspace or an Advertiser with the follow
 
 ```json title="Response 200"
 {
-"success": true,
-"data": {
-  "successfulEmails": [
-    "user1.g@iqm.com"
-  ],
-  "failedEmails": [
-    "user2.p@iqm.com"
-  ],
-  "message": "1 invitations sent successfully."
+  "success": true,
+  "data": {
+    "successfulEmails": [
+      "user1@iqm.com"
+    ],
+    "failedEmails": [],
+    "message": "1 invitations sent successfully."
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to invite.",
+      "reason": "Only admin or IHB customers can invite."
+    }
+  ]
+}
+```
+</details>
 
 </TabItem>
 </Tabs>
@@ -3500,11 +3514,44 @@ Assign a Customer to an existing user.
 <summary style={{fontSize: "16px"}}>Response properties</summary>
 
 <table className="objectProperties">
-     <tr>
-  <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message.</td>
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates all requested changes were made: <var>true</var>. If any Customer can't be assigned, <var>success</var> is <var>false</var>, <var>errorObjects</var> explains why, and <var>data</var> still lists the changes that were made.</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Result of the assignment.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message. Returned only when at least one change was made.</td>
+  </tr>
+  <tr>
+  <td>`successfulCustomerIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs assigned to the user.</td>
+  </tr>
+  <tr>
+  <td>`successfulLogInAccessOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs the user was given login access to.</td>
+  </tr>
+  <tr>
+  <td>`successfulRemoveOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs removed from the user.</td>
+  </tr>
+  <tr>
+  <td>`successfulRemoveLogInAccessOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs the user's login access was removed from.</td>
   </tr>
   </table></details>
+  </td>
+  <td></td>
+</tr>
+</table></details>
 
 </div><div class="child2">
 
@@ -3521,7 +3568,18 @@ Assign a Customer to an existing user.
 ```json title="Response 200"
 {
     "success": true,
-    "data": "Added Customer association to User successfully."
+    "data": {
+        "message": "Access has been modified successfully.",
+        "successfulCustomerIds": [
+            170,
+            58,
+            167,
+            900
+        ],
+        "successfulLogInAccessOwIds": [],
+        "successfulRemoveOwIds": [],
+        "successfulRemoveLogInAccessOwIds": []
+    }
 }
 ```
 

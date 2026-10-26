@@ -115,52 +115,31 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
 </details>
@@ -189,34 +168,44 @@ For further information see [Get creative types list](/guidelines/creative-api#g
 {
   "success": true,
   "data": {
-    "data": [
+    "totalRecords": 5,
+    "creativeTypeList": [
       {
-        "id": 17,
-        "name": "Audio",
-        "rtbTypeId": 2
-      },
-      {
-        "id": 15,
-        "name": "Native",
-        "rtbTypeId": 4
-      },
-      {
-        "id": 14,
-        "name": "Video",
-        "rtbTypeId": 3
+        "id": 11,
+        "name": "Image",
+        "displayName": "Image",
+        "order": 95,
+        "rtbCreativeTypeId": 1
       },
       {
         "id": 13,
         "name": "HTML",
-        "rtbTypeId": 1
+        "displayName": "HTML",
+        "order": 96,
+        "rtbCreativeTypeId": 1
       },
       {
-        "id": 11,
-        "name": "Image",
-        "rtbTypeId": 1
+        "id": 14,
+        "name": "Video",
+        "displayName": "Video",
+        "order": 97,
+        "rtbCreativeTypeId": 3
+      },
+      {
+        "id": 17,
+        "name": "Audio",
+        "displayName": "Audio",
+        "order": 98,
+        "rtbCreativeTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "displayName": "Native",
+        "order": 99,
+        "rtbCreativeTypeId": 4
       }
     ],
-    "totalRecords": 5,
     "filteredRecords": 5
   }
 }
@@ -532,34 +521,25 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 
 <table className="objectProperties">
 <tr>
-  <td>`successData` <br /><span class="type-text">object</span></td>
-  <td>Success data</td>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td><var>true</var> when the request was processed, even if every creative in it failed. Check <var>failedData</var></td>
+</tr>
+<tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Upload results, keyed by the IDs you used in <var>creativeRequest</var> (for example, <var>I001</var>)</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`successData` object properties</summary>
+  <summary>`data` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`PS` <br /><span class="type-text">string</span></td>
-    <td>Partial success</td>
+    <td>`successData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that succeeded to the new creative ID, as a string (for example, <var>"I001": "803406"</var>). Empty if no creative was created</td>
   </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`failedData` <br /><span class="type-text">object</span></td>
-  <td>Failed data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`failedData` object properties</summary>
-  <table className="objectProperties">
   <tr>
-    <td>`PF` <br /><span class="type-text">string</span></td>
-    <td>Partial failure</td>
+    <td>`failedData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that failed to its error message. Empty if every creative was created</td>
   </tr>
   </table></details>
   </td>
@@ -616,14 +596,41 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   "success": true,
   "data": {
     "successData": {
-      "PS": "701388"
+      "I001": "803406"
     },
+    "failedData": {}
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 200 (creative failed)"
+{
+  "success": true,
+  "data": {
+    "successData": {},
     "failedData": {
-      "PF": "Creative file missing. Please attach the required file. : null"
+      "I001": "Creative file missing. Please attach the required file."
     }
   }
 }
 ```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "All entries in the request must have the same platformCreativeTypeId.",
+      "field": "creativeRequest"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -634,13 +641,13 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
 <div class="endpoint-container">
   <div class="child1">
 
-This API checks a creative's status. Use the <var>creativeId</var> (6 digit number under <var>data</var> parameter in response) retrieved from the previous step to get its details. 
+This API checks a creative's status. Use the creative ID returned in <var>successData</var> in the previous step (a string, keyed by the ID you gave the creative in <var>creativeRequest</var>) to get its details. 
 
-The creative details endpoint returns a status ID (highlighted in code sample). A status ID of <var>2</var> means the creative is <var>running</var>.
+The creative details endpoint returns a status ID (highlighted in code sample). A new creative starts with status ID <var>1</var> (<var>pending</var>) and changes to <var>2</var> (<var>running</var>) once it is approved.
 
 | Path parameter || 
 | --- | --- |
-| `creativeId` <br /><span class="type-text">array of integers</span> | Creative ID |
+| `creativeId` <br /><span class="type-text">integer</span> | Creative ID |
 
 </div><div class="child2">
 
@@ -651,34 +658,37 @@ The creative details endpoint returns a status ID (highlighted in code sample). 
 {
   "success": true,
   "data": {
-    "creativeId": 686855,
-    "creativeName": "300x600-w23-01",
-    "rtbCreativeTypeId": 1,
-    "platformCreativeTypeId": 11,
-    //highlight-next-line
-    "creativeStatusId": 2,
-    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
-    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
-    "clickUrl": "http://iqm.com",
-    "imageDetails": {
-      "pixelUrl": "http://pixel.com",
-      "creativeWidth": 300,
-      "creativeHeight": 600
-    },
-    "creativeSourceType": "file",
+    "clickUrl": "https://www.example.com/summer-sale",
+    "createdAt": 1793036350122,
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/204851/278x220/rvNRZ1A_1793036350122.jpg",
+    "creativeId": 803406,
+    "creativeName": "Summer Sale Banner",
     "creativePreviewFlag": 1,
-    "createdAt": 1730201855165,
-    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
-    "userDetails": {
-      "uowId": 175891,
-      "userName": "Hardik",
-      "userEmail": "hardik.v+iqmsuper@iqm.com",
-      "hasApprovalAccess": true,
-      "hasEditAccess": true
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/204851/rvNRZ1A_1793036350122.jpg",
+    "creativeSourceType": "file",
+    //highlight-next-line
+    "creativeStatusId": 1,
+    "externalCreativeId": "campaign-2024-001",
+    "imageDetails": {
+      "pixelUrls": [
+        "https://tracker.example.com/pixel"
+      ],
+      "pixelUrl": "https://tracker.example.com/pixel",
+      "creativeWidth": 728,
+      "creativeHeight": 90
     },
+    "isMetadataFaulty": false,
+    "modifiedAt": "2026-10-26T17:39:14.334Z",
     "organizationDetails": {
-      "owId": 202760,
-      "organizationName": "AdWing"
+      "owId": 204851,
+      "organizationName": "Example Organization"
+    },
+    "platformCreativeTypeId": 11,
+    "rtbCreativeTypeId": 1,
+    "userDetails": {
+      "uowId": 291477,
+      "userName": "Jane Smith",
+      "userEmail": "user@example.com"
     }
   }
 }

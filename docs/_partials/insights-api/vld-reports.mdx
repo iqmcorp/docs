@@ -118,7 +118,7 @@ Read more about these requirements in our [Help Center<ExternalLink />](https://
 </tr>
 <tr>
   <td>`vldReportCreatable` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if VLD Insights report can be generated for the given campaign and date range (<var>true</var>).</td>
+  <td>Indicates if VLD Insights report can be generated for the given campaign and date range (<var>true</var>). <var>false</var> when an identical report exists, an overlapping report is still processing, the campaign served no impressions in the range, or funds are insufficient.</td>
 </tr>
 <tr>
   <td> `vldChargeableImps` <br /><span class="type-text">integer</span></td>
@@ -129,20 +129,24 @@ Read more about these requirements in our [Help Center<ExternalLink />](https://
   <td>The number of impressions for which the VLD Insights report is already generated.</td>
 </tr>
 <tr>
-  <td>`vldChargeableCost` <br /><span class="type-text">integer</span></td>
-  <td>Cost to generate the VLD Insights report.</td>
+  <td>`vldChargeableCost` <br /><span class="type-text">number</span></td>
+  <td>Charge for the report, in USD: <var>vldChargeableImps</var> × <var>effectiveVldRate</var> / 1000.</td>
 </tr>
 <tr>
-  <td>`vldChargedCost` <br /><span class="type-text">integer</span></td>
-  <td>Cost of VLD Insights report that is already generated.</td>
+  <td>`vldChargedCost` <br /><span class="type-text">number</span></td>
+  <td>Cost already paid for <var>vldChargedImps</var> by an earlier VLD Insights report, in USD (not charged again).</td>
 </tr>
 <tr>
   <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
   <td>Indicates if sufficient funds are available in the Advertiser's account to generate the VLD Insights report (<var>true</var>).</td>
 </tr>
 <tr>
-  <td>`effectiveVldRate` <br /><span class="type-text">integer</span></td>
-  <td>Margin rate set by the admin and Workspace for generating VLD Insights report.</td>
+  <td>`effectiveVldRate` <br /><span class="type-text">number</span></td>
+  <td>VLD Insights rate per 1,000 impressions (CPM), in USD, including markups.</td>
+</tr>
+<tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Reason the report can't be generated, or a status message. Only present when set.</td>
 </tr>
 </table>
 
@@ -339,9 +343,9 @@ A campaign must meet the following eligibility criteria to generate VLD Insights
 
 ```json title="Request sample"
 {
-  "campaignId": 12345,
-  "vldStartDate": 1722311000,
-  "vldEndDate": 1722315000
+  "campaignId": 590511,
+  "vldStartDate": 1777297800000,
+  "vldEndDate": 1780286400000
 }
 ```
 
@@ -349,17 +353,42 @@ A campaign must meet the following eligibility criteria to generate VLD Insights
 {
   "success": true,
   "data": {
-    "vldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "vldStartDate": 1722311000,
-    "vldEndDate": 1722315000,
-    "vldChargeableImps": 1000,
-    "vldChargedImps": 100,
-    "vldChargeableCost": 1000,
-    "vldChargedCost": 100,
-    "fundsAvailable": true
+    "vldId": 6301,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": true,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": true,
+    "effectiveVldRate": 3.0
+  }
+}
+```
+
+```json title="Response 200 (report not creatable)"
+{
+  "success": true,
+  "data": {
+    "vldId": 0,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": false,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": false,
+    "effectiveVldRate": 3.0
   }
 }
 ```
@@ -395,9 +424,9 @@ Calculates the cost for the impressions for the VLD Insights report based on imp
 
 ```json title="Request sample"
 {
-  "campaignId": 1,
-  "vldStartDate": 1722311000,
-  "vldEndDate": 1722315000
+  "campaignId": 590511,
+  "vldStartDate": 1777297800000,
+  "vldEndDate": 1780286400000
 }
 ```
 
@@ -405,17 +434,20 @@ Calculates the cost for the impressions for the VLD Insights report based on imp
 {
   "success": true,
   "data": {
-    "vldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "vldStartDate": 1722311000,
-    "vldEndDate": 1722315000,
-    "vldChargeableImps": 1000,
-    "vldChargedImps": 100,
-    "vldChargeableCost": 1000,
-    "vldChargedCost": 100,
-    "fundsAvailable": true
+    "vldId": 0,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": false,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": false,
+    "effectiveVldRate": 3.0
   }
 }
 ```
@@ -446,8 +478,8 @@ Get a download link for a VLD Insights report in CSV or XLSX format.
 
 <table className="objectProperties">
 <tr>
-  <td>`vldReportUrl` <br /><span class="type-text">string</span></td>
-  <td>VLD Insights report file URL.</td>
+  <td>`reportURL` <br /><span class="type-text">string</span></td>
+  <td>Presigned VLD Insights report file URL.</td>
 </tr>
 </table>
 </details>
@@ -468,8 +500,19 @@ Get a download link for a VLD Insights report in CSV or XLSX format.
 {
   "success": true,
   "data": {
-    "vldReportUrl": "https://tem.domain.s3.amazonaws.com/vld-campaigns/ds/2024-08-20/503481_Insights_1.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240820T112818Z&X-Amz-"
+    "reportURL": "https://iqm-insights-stage.s3.amazonaws.com/vld-campaigns/ow_id%3D204851/report_id%3D6301/590511_VLD_Insights_1.xlsx?..."
   }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
+    }
+  ]
 }
 ```
 

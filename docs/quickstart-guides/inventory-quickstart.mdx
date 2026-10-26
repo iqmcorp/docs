@@ -104,53 +104,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>More Responses</summary>
+<summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -236,8 +216,8 @@ Using a number of query fields, you can search the inventory database. Try passi
 
 <table className="objectProperties">
 <tr>
-  <td>`inventoryDataList` <br /><span class="type-text">object</span></td>
-  <td>Inventory data details list</td>
+  <td>`inventoryDataList` <br /><span class="type-text">array of objects</span></td>
+  <td>Inventories matching the query</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -248,37 +228,44 @@ Using a number of query fields, you can search the inventory database. Try passi
   <td>`id` <br /><span class="type-text">integer</span></td>
   <td>Inventory ID</td>
   </tr>
-    <tr>
+  <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Inventory name</td>
   </tr>
-    <tr>
-  <td>`publisher` <br /><span class="type-text">string</span></td>
-  <td>Publisher</td>
-  </tr>
-      <tr>
+  <tr>
   <td>`appId` <br /><span class="type-text">string</span></td>
   <td>The bundle ID (for app request) or domain (for web request)</td>
   </tr>
-        <tr>
+  <tr>
   <td>`inventoryType` <br /><span class="type-text">string</span></td>
   <td>Inventory type</td>
   </tr>
-        <tr>
+  <tr>
   <td>`impressions` <br /><span class="type-text">integer</span></td>
   <td>Impressions count</td>
   </tr>
-        <tr>
+  <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>The number of unique individuals reached by an inventory, does not count repeat views </td>
+  <td>The number of unique individuals reached by an inventory, does not count repeat views</td>
   </tr>
-        <tr>
-  <td>`videoPercentage` <br /><span class="type-text">integer</span></td>
+  <tr>
+  <td>`videoPercentage` <br /><span class="type-text">number</span></td>
   <td>Percentage of total ad impressions that are video-based</td>
+  </tr>
+  <tr>
+  <td>`displayPercentage` <br /><span class="type-text">number</span></td>
+  <td>Percentage of total ad impressions that are display-based</td>
+  </tr>
+  <tr>
+  <td>`ctv` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the inventory is CTV inventory</td>
+  </tr>
+  <tr>
+  <td>`inventoryLogoUrl` <br /><span class="type-text">string</span></td>
+  <td>Inventory logo URL. Returned only when a logo is available</td>
   </tr>
   </table></details>
   </td>
-  <td></td>
 </tr>
 </table>
 
@@ -295,28 +282,27 @@ Using a number of query fields, you can search the inventory database. Try passi
   "data": {
     "inventoryDataList": [
       {
-        "id": 11593184,
-        "name": "Baseball Clash: Real-time game iOS",
-        "publisher": "UNKNOWN",
-        "appId": "1491129492",
-        "inventoryType": "IOS App",
-        "impressions": 3123,
-        "reach": 208,
-        "videoPercentage": 5.891771,
-        "displayPercentage": 94.108229
+        "id": 33317,
+        "name": "Text Free: Free Text Plus Call",
+        "appId": "com.pinger.textfree",
+        "inventoryType": "Android App",
+        "impressions": 1281921,
+        "reach": 17982,
+        "videoPercentage": 59.935909,
+        "displayPercentage": 36.034748,
+        "ctv": false
       },
       {
-        "id": 11840144,
-        "name": "Snake Clash.io",
-        "publisher": "UNKNOWN",
-        "appId": "6449243946",
+        "id": 12266326,
+        "name": "Car Sales Simulator 2023",
+        "appId": "6464597212",
         "inventoryType": "IOS App",
-        "impressions": 2022,
-        "reach": 133,
-        "videoPercentage": 45.499505,
-        "displayPercentage": 54.500495
-      },
-      ...
+        "impressions": 304045,
+        "reach": 3570,
+        "videoPercentage": 5.598513,
+        "displayPercentage": 94.401487,
+        "ctv": false
+      }
     ]
   }
 }
@@ -344,82 +330,150 @@ To review all the methods, see [Create a new inventory group](/guidelines/invent
 
 | Request schema |  |
 | ---- | --- |
-| `groupName` <br /><span class="type-text">integer</span> | Desired name for group |
-| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> |
+| `groupName` <br /><span class="type-text">string</span> | Desired name for group |
+| `groupTypeId` <br /><span class="type-text">integer</span>| Group type. Supported values: <br />Open Exchange: <var>1</var> <br />PMP: <var>2</var> <br />Contextual: <var>3</var> <br />CTV: <var>4</var> |
 | `inventoryIds` <br /><span class="type-text">array of integers</span> | Inventory IDs to include in group |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
-                 <tr>
-        <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
-        <td>[Inventory group type ID](/guidelines/inventory-api#get-inventory-group-types)</td>
-        </tr>
-              <tr>
-        <td>`created` <br /><span class="type-text">integer</span></td>
-        <td>Unix epoch creation date, in seconds</td>
-        </tr>
-              <tr>
-        <td>`modifiedDate` <br /><span class="type-text">string</span></td>
-        <td>Last modified date and time, as an ISO 8601 string in UTC</td>
-        </tr>
-              <tr>
-        <td>`owID` <br /><span class="type-text">integer</span></td>
-        <td>Organization Workspace ID</td>
-        </tr>
-              <tr>
-        <td>`impressions` <br /><span class="type-text">integer</span></td>
-        <td>Impressions count</td>
-        </tr>
-              <tr>
-        <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
-        <td>Indicates that account-level excluded group is included</td>
-        </tr>
-                <tr>
-        <td>`whiteListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Campaign IDs where this inventory group is whitelisted</td>
-        </tr>
-              <tr>
-        <td>`blackListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Campaign IDs where this inventory group is blacklisted</td>
-        </tr>
-              <tr>
-        <td>`publishers` <br /><span class="type-text">integer</span></td>
-        <td>Publishers count</td>
-        </tr>
-              <tr>
-        <td>`uniques` <br /><span class="type-text">integer</span></td>
-        <td>Total number of unique impressions of the inventories in a group</td>
-        </tr>
-        <tr>
-        <td>`reach` <br /><span class="type-text">integer</span></td>
-        <td>The number of unique individuals reached by an inventory group, does not count repeat views </td>
-        </tr>
-          <tr>
-        <td>`deals` <br /><span class="type-text">integer</span></td>
-        <td>Deals count</td>
-        </tr>
-             <tr>
-        <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
-        <td>Contextual inventories count</td>
-        </tr>
-             <tr>
-        <td>`count` <br /><span class="type-text">integer</span></td>
-        <td>Inventories count</td>
-        </tr>
-             <tr>
-        <td>`id` <br /><span class="type-text">integer</span></td>
-        <td>Inventory group ID</td>
-        </tr>
-             <tr>
-        <td>`name` <br /><span class="type-text">integer</span></td>
-        <td>Inventory group name</td>
-        </tr>
-                 <tr>
-        <td>`isShared` <br /><span class="type-text">boolean</span></td>
-        <td>Indicates the inventory group is shared from the Workspace: <var>true</var></td>
-        </tr>
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Inventory group ID</td>
+  </tr>
+  <tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Inventory group name</td>
+  </tr>
+  <tr>
+  <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Inventory group type ID](/guidelines/inventory-api#get-inventory-group-types)</td>
+  </tr>
+  <tr>
+  <td>`created` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in seconds</td>
+  </tr>
+  <tr>
+  <td>`modifiedDate` <br /><span class="type-text">string</span></td>
+  <td>Last modified date and time, as an ISO 8601 string in UTC</td>
+  </tr>
+  <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Impressions count</td>
+  </tr>
+  <tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>The number of unique individuals reached by an inventory group, does not count repeat views</td>
+  </tr>
+  <tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Total number of unique impressions of the inventories in a group</td>
+  </tr>
+  <tr>
+  <td>`count` <br /><span class="type-text">integer</span></td>
+  <td>Number of inventories (or deals, for PMP groups) in the group</td>
+  </tr>
+  <tr>
+  <td>`inventories` <br /><span class="type-text">integer</span></td>
+  <td>Inventories count</td>
+  </tr>
+  <tr>
+  <td>`publishers` <br /><span class="type-text">integer</span></td>
+  <td>Publishers count</td>
+  </tr>
+  <tr>
+  <td>`deals` <br /><span class="type-text">integer</span></td>
+  <td>Deals count</td>
+  </tr>
+  <tr>
+  <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
+  <td>Contextual inventories count</td>
+  </tr>
+  <tr>
+  <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates that account-level excluded group is included</td>
+  </tr>
+  <tr>
+  <td>`isShared` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the inventory group is shared from the Workspace: <var>true</var></td>
+  </tr>
+  <tr>
+  <td>`sharedCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of workspaces or advertisers the group is shared with</td>
+  </tr>
+  <tr>
+  <td>`dealIdModelled` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the group is modelled on deal IDs</td>
+  </tr>
+  <tr>
+  <td>`campaignWhitelistCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns that include this inventory group</td>
+  </tr>
+  <tr>
+  <td>`campaignBlacklistCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns that exclude this inventory group</td>
+  </tr>
+  <tr>
+  <td>`whiteListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>IDs of campaigns that include this inventory group (create response only)</td>
+  </tr>
+  <tr>
+  <td>`blackListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>IDs of campaigns that exclude this inventory group (create response only)</td>
+  </tr>
+  <tr>
+  <td>`distribution` <br /><span class="type-text">object</span></td>
+  <td>Distribution of the group's impressions by country and other dimensions. The dimensions returned depend on the group type</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`distribution` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`countries` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by country</td>
+      </tr>
+      <tr>
+        <td>`deviceTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by device type (Open Exchange groups)</td>
+      </tr>
+      <tr>
+        <td>`trafficTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by traffic type (Open Exchange groups)</td>
+      </tr>
+      <tr>
+        <td>`creativeTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by creative type</td>
+      </tr>
+      <tr>
+        <td>`streamingDevices` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by streaming device (CTV groups)</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>Distribution item object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`label` <br /><span class="type-text">string</span></td>
+              <td>Name of the country, device type, traffic type, creative type, or streaming device</td>
+            </tr>
+            <tr>
+              <td>`value` <br /><span class="type-text">number</span></td>
+              <td>Percentage of the group's impressions</td>
+            </tr>
+          </table></details>
+        </td>
+      </tr>
+    </table></details>
+  </td>
+  </tr>
   </table>
   </details>
 
@@ -433,8 +487,8 @@ To review all the methods, see [Create a new inventory group](/guidelines/invent
     "groupName": "Inventory Group - Open exchange",
     "groupTypeId": 1,
     "inventoryIds": [
-        11593184,
-        11840144
+        33317,
+        12266326
     ]
 }
 ```
@@ -443,27 +497,66 @@ To review all the methods, see [Create a new inventory group](/guidelines/invent
 {
     "success": true,
     "data": {
+        "id": 222533,
+        "name": "Inventory Group - Open exchange",
         "groupTypeId": 1,
-        "created": 1719836234,
-        "modifiedDate": "2024-07-01T12:17:20.295+0000",
-        "owId": 201427,
-        "impressions": 2334725782,
+        "created": 1793036631,
+        "modifiedDate": "2026-10-26T17:43:51.260Z",
+        "owId": 204851,
+        "impressions": 4240410,
+        "reach": 58495,
+        "uniques": 0,
+        "count": 2,
+        "inventories": 0,
+        "publishers": 0,
+        "deals": 0,
+        "contextualInventories": 0,
         "isAccountLevelExcluded": false,
+        "isShared": false,
+        "sharedCount": 0,
+        "dealIdModelled": false,
         "campaignWhitelistCount": 0,
         "campaignBlacklistCount": 0,
         "whiteListedCampaignIds": [],
         "blackListedCampaignIds": [],
-        "publishers": 56,
-        "sharedCount": 0,
-        "uniques": 0,
-        "reach": 154976228,
-        "inventories": 0,
-        "deals": 0,
-        "contextualInventories": 0,
-        "count": 2,
-        "id": 174594,
-        "name": "Inventory Group - Open exchange",
-        "isShared": false
+        "distribution": {
+            "countries": [
+                {
+                    "label": "United States",
+                    "value": 99.47
+                },
+                {
+                    "label": "Canada",
+                    "value": 0.41
+                }
+            ],
+            "deviceTypes": [
+                {
+                    "label": "Mobile",
+                    "value": 95.42
+                },
+                {
+                    "label": "Tablet",
+                    "value": 4.23
+                }
+            ],
+            "trafficTypes": [
+                {
+                    "label": "App",
+                    "value": 100.0
+                }
+            ],
+            "creativeTypes": [
+                {
+                    "label": "Video",
+                    "value": 63.01
+                },
+                {
+                    "label": "Banner",
+                    "value": 26.26
+                }
+            ]
+        }
     }
 }
 ```
@@ -513,75 +606,138 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
+<var>addMappings</var> returns <var>data</var> as an array with one object per updated group. <var>removeMappings</var> returns <var>data</var> as a single object for the updated group. Both objects have the properties below.
+
+
 <table className="objectProperties">
-                 <tr>
-        <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
-        <td>[Inventory group type ID](/guidelines/inventory-api#get-inventory-group-types)</td>
-        </tr>
-              <tr>
-        <td>`created` <br /><span class="type-text">integer</span></td>
-        <td>Unix epoch creation date, in seconds</td>
-        </tr>
-              <tr>
-        <td>`modifiedDate` <br /><span class="type-text">string</span></td>
-        <td>Last modified date and time, as an ISO 8601 string in UTC</td>
-        </tr>
-              <tr>
-        <td>`owID` <br /><span class="type-text">integer</span></td>
-        <td>Organization Workspace ID</td>
-        </tr>
-              <tr>
-        <td>`impressions` <br /><span class="type-text">integer</span></td>
-        <td>Impressions count</td>
-        </tr>
-              <tr>
-        <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
-        <td>Indicates that account-level excluded group is included</td>
-        </tr>
-             <tr>
-        <td>`whiteListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Campaign IDs where this inventory group is whitelisted</td>
-        </tr>
-              <tr>
-        <td>`blackListedCampaignIds` <br /><span class="type-text">array of integers</span></td>
-        <td>Campaign IDs where this inventory group is blacklisted</td>
-        </tr>
-              <tr>
-        <td>`publishers` <br /><span class="type-text">integer</span></td>
-        <td>Publishers count</td>
-        </tr>
-              <tr>
-        <td>`uniques` <br /><span class="type-text">integer</span></td>
-        <td>Total number of unique impressions of the inventories in a group</td>
-        </tr>
-        <tr>
-        <td>`reach` <br /><span class="type-text">integer</span></td>
-        <td>The number of unique individuals reached by an inventory group, does not count repeat views </td>
-        </tr>
-          <tr>
-        <td>`deals` <br /><span class="type-text">integer</span></td>
-        <td>Deals count</td>
-        </tr>
-             <tr>
-        <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
-        <td>Contextual inventories count</td>
-        </tr>
-             <tr>
-        <td>`count` <br /><span class="type-text">integer</span></td>
-        <td>Inventories count after add/remove mapping</td>
-        </tr>
-             <tr>
-        <td>`id` <br /><span class="type-text">integer</span></td>
-        <td>Inventory group ID</td>
-        </tr>
-             <tr>
-        <td>`name` <br /><span class="type-text">integer</span></td>
-        <td>Inventory group name</td>
-        </tr>
-                 <tr>
-        <td>`isShared` <br /><span class="type-text">boolean</span></td>
-        <td>Indicates the inventory group is shared from the Workspace: <var>true</var></td>
-        </tr>
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Inventory group ID</td>
+  </tr>
+  <tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Inventory group name</td>
+  </tr>
+  <tr>
+  <td>`groupTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Inventory group type ID](/guidelines/inventory-api#get-inventory-group-types)</td>
+  </tr>
+  <tr>
+  <td>`created` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in seconds</td>
+  </tr>
+  <tr>
+  <td>`modifiedDate` <br /><span class="type-text">string</span></td>
+  <td>Last modified date and time, as an ISO 8601 string in UTC</td>
+  </tr>
+  <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID</td>
+  </tr>
+  <tr>
+  <td>`impressions` <br /><span class="type-text">integer</span></td>
+  <td>Impressions count</td>
+  </tr>
+  <tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>The number of unique individuals reached by an inventory group, does not count repeat views</td>
+  </tr>
+  <tr>
+  <td>`uniques` <br /><span class="type-text">integer</span></td>
+  <td>Total number of unique impressions of the inventories in a group</td>
+  </tr>
+  <tr>
+  <td>`count` <br /><span class="type-text">integer</span></td>
+  <td>Number of inventories (or deals, for PMP groups) in the group</td>
+  </tr>
+  <tr>
+  <td>`inventories` <br /><span class="type-text">integer</span></td>
+  <td>Inventories count</td>
+  </tr>
+  <tr>
+  <td>`publishers` <br /><span class="type-text">integer</span></td>
+  <td>Publishers count</td>
+  </tr>
+  <tr>
+  <td>`deals` <br /><span class="type-text">integer</span></td>
+  <td>Deals count</td>
+  </tr>
+  <tr>
+  <td>`contextualInventories` <br /><span class="type-text">integer</span></td>
+  <td>Contextual inventories count</td>
+  </tr>
+  <tr>
+  <td>`isAccountLevelExcluded` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates that account-level excluded group is included</td>
+  </tr>
+  <tr>
+  <td>`isShared` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the inventory group is shared from the Workspace: <var>true</var></td>
+  </tr>
+  <tr>
+  <td>`sharedCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of workspaces or advertisers the group is shared with</td>
+  </tr>
+  <tr>
+  <td>`dealIdModelled` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the group is modelled on deal IDs</td>
+  </tr>
+  <tr>
+  <td>`campaignWhitelistCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns that include this inventory group</td>
+  </tr>
+  <tr>
+  <td>`campaignBlacklistCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns that exclude this inventory group</td>
+  </tr>
+  <tr>
+  <td>`distribution` <br /><span class="type-text">object</span></td>
+  <td>Distribution of the group's impressions by country and other dimensions. The dimensions returned depend on the group type</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`distribution` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`countries` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by country</td>
+      </tr>
+      <tr>
+        <td>`deviceTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by device type (Open Exchange groups)</td>
+      </tr>
+      <tr>
+        <td>`trafficTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by traffic type (Open Exchange groups)</td>
+      </tr>
+      <tr>
+        <td>`creativeTypes` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by creative type</td>
+      </tr>
+      <tr>
+        <td>`streamingDevices` <br /><span class="type-text">array of objects</span></td>
+        <td>Share of impressions by streaming device (CTV groups)</td>
+      </tr>
+      <tr>
+        <td colSpan="2">
+          <details className="objectPropertiesDetails">
+          <summary>Distribution item object properties</summary>
+          <table className="objectProperties">
+            <tr>
+              <td>`label` <br /><span class="type-text">string</span></td>
+              <td>Name of the country, device type, traffic type, creative type, or streaming device</td>
+            </tr>
+            <tr>
+              <td>`value` <br /><span class="type-text">number</span></td>
+              <td>Percentage of the group's impressions</td>
+            </tr>
+          </table></details>
+        </td>
+      </tr>
+    </table></details>
+  </td>
+  </tr>
   </table>
   </details>
 
@@ -593,52 +749,156 @@ Inventories can be added/removed by filtering for results, inputting <var>dealId
 ```json title="Request sample: addMappings"
 {
   "groupIds": [
-    176130
+    222533
   ],
   "groupTypeId": 1,
   "inventoryIds": [
-    11593184,
-    11840144
+    33012
   ]
 }
 ```
 
 ```json title="Request sample: removeMappings"
 {
-  "groupId": 176130,
+  "groupId": 222533,
   "groupTypeId": 1,
   "inventoryIds": [
-    11840144
+    33012
   ]
 }
 ```
 
-```json title="Response 200"
+```json title="Response 200: addMappings"
 {
     "success": true,
     "data": [
         {
+            "id": 222533,
+            "name": "Inventory Group - Open exchange",
             "groupTypeId": 1,
-            "created": 1719983099,
-            "modifiedDate": "2024-07-03T07:35:45.800+0000",
-            "owId": 202017,
-            "impressions": 7927783118,
-            "isAccountLevelExcluded": false,
-            "whiteListedCampaignIds": null,
-            "blackListedCampaignIds": null,
-            "publishers": 59,
-            "sharedCount": 1,
+            "created": 1793036631,
+            "modifiedDate": "2026-10-26T17:43:51.260Z",
+            "owId": 204851,
+            "impressions": 4845188,
+            "reach": 65917,
             "uniques": 0,
-            "reach": 558137549,
+            "count": 3,
             "inventories": 0,
+            "publishers": 0,
             "deals": 0,
             "contextualInventories": 0,
-            "count": 2,
-            "id": 176130,
-            "name": "Open Exchange Inventories Group",
-            "isShared": true
+            "isAccountLevelExcluded": false,
+            "isShared": false,
+            "sharedCount": 0,
+            "dealIdModelled": false,
+            "campaignWhitelistCount": 0,
+            "campaignBlacklistCount": 0,
+            "distribution": {
+                "countries": [
+                    {
+                        "label": "United States",
+                        "value": 99.47
+                    },
+                    {
+                        "label": "Canada",
+                        "value": 0.41
+                    }
+                ],
+                "deviceTypes": [
+                    {
+                        "label": "Mobile",
+                        "value": 95.42
+                    },
+                    {
+                        "label": "Tablet",
+                        "value": 4.23
+                    }
+                ],
+                "trafficTypes": [
+                    {
+                        "label": "App",
+                        "value": 100.0
+                    }
+                ],
+                "creativeTypes": [
+                    {
+                        "label": "Video",
+                        "value": 63.01
+                    },
+                    {
+                        "label": "Banner",
+                        "value": 26.26
+                    }
+                ]
+            }
         }
     ]
+}
+```
+
+```json title="Response 200: removeMappings"
+{
+    "success": true,
+    "data": {
+        "id": 222533,
+        "name": "Inventory Group - Open exchange",
+        "groupTypeId": 1,
+        "created": 1793036631,
+        "modifiedDate": "2026-10-26T17:43:51.260Z",
+        "owId": 204851,
+        "impressions": 3634283,
+        "reach": 50674,
+        "uniques": 0,
+        "count": 2,
+        "inventories": 0,
+        "publishers": 0,
+        "deals": 0,
+        "contextualInventories": 0,
+        "isAccountLevelExcluded": false,
+        "isShared": false,
+        "sharedCount": 0,
+        "dealIdModelled": false,
+        "campaignWhitelistCount": 0,
+        "campaignBlacklistCount": 0,
+        "distribution": {
+            "countries": [
+                {
+                    "label": "United States",
+                    "value": 99.47
+                },
+                {
+                    "label": "Canada",
+                    "value": 0.41
+                }
+            ],
+            "deviceTypes": [
+                {
+                    "label": "Mobile",
+                    "value": 95.42
+                },
+                {
+                    "label": "Tablet",
+                    "value": 4.23
+                }
+            ],
+            "trafficTypes": [
+                {
+                    "label": "App",
+                    "value": 100.0
+                }
+            ],
+            "creativeTypes": [
+                {
+                    "label": "Video",
+                    "value": 63.01
+                },
+                {
+                    "label": "Banner",
+                    "value": 26.26
+                }
+            ]
+        }
+    }
 }
 ```
 
@@ -671,19 +931,31 @@ Once an inventory group has been created, you can attach it to a campaign for ta
 ```json title="Request sample"
 {
   "groupIds": [
-    176130
+    222533
   ],
-  "includedCampaignIds": "168622",
+  "includedCampaignIds": "625977",
   "excludedCampaignIds": ""
 }
 ```
 
 ```json title="Response 200"
 {
-  "statusCode": 200,
-  "responseObject": {
-    "message": "Inventory Group excluded successfully."
+  "success": true,
+  "data": {
+    "message": "Changes have been saved successfully"
   }
+}
+```
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Excluded campaign id is required",
+      "field": "excludedCampaignIds"
+    }
+  ]
 }
 ```
 
@@ -703,7 +975,7 @@ Once you have attached an inventory group ID to a campaign for targeting you can
 
 | Path parameter | |
 | --- | --- |
-| `groupId` | Group ID |
+| `groupId` <br /><span class="type-text">integer</span> | Inventory group ID |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -726,11 +998,7 @@ Once you have attached an inventory group ID to a campaign for targeting you can
   "success": true,
   "data": [
     //highlight-next-line
-    168622,
-    286107,
-    284229,
-    287201,
-    287202
+    625977
   ]
 }
 ```

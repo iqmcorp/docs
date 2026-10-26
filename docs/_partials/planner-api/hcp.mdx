@@ -68,7 +68,7 @@ import { budgetTypes } from '@site/src/data/enums/budgetTypes';
 </tr>
 <tr>
   <td>`maxReach` <br /><span class="type-text">integer</span></td>
-  <td>Maximum forecasted reach.</td>
+  <td>Not calculated for the plan; returned as <var>0</var>.</td>
 </tr>
 <tr>
   <td>`minImpressions` <br /><span class="type-text">integer</span></td>
@@ -252,6 +252,14 @@ import { budgetTypes } from '@site/src/data/enums/budgetTypes';
     <td>[City IDs](/guidelines/master-api#get-city-segment) to exclude.</td>
     </tr>
     <tr>
+    <td>`whiteListedZipcodeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Response only: internal ZIP code IDs for <var>whiteListedZipcodes</var>. Ignored in requests.</td>
+    </tr>
+    <tr>
+    <td>`blackListedZipcodeIds` <br /><span class="type-text">array of integers</span></td>
+    <td>Response only: internal ZIP code IDs for <var>blackListedZipcodes</var>. Ignored in requests.</td>
+    </tr>
+    <tr>
     <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
     <td>ZIP codes to target.</td>
     </tr>
@@ -309,7 +317,7 @@ import { budgetTypes } from '@site/src/data/enums/budgetTypes';
   </tr>
   <tr>
   <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
-  <td>Upload NPI list blocks only: size of the uploaded NPI list file.</td>
+  <td>Upload NPI list blocks only: size of the uploaded NPI list file in bytes.</td>
   </tr>
   <tr>
   <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
@@ -394,6 +402,10 @@ import { budgetTypes } from '@site/src/data/enums/budgetTypes';
     <tr>
     <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
     <td>Whether TV auto buying is enabled; requires video creatives (<var>14</var>).</td>
+    </tr>
+    <tr>
+    <td>`tvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Response only: same value as <var>isTvAutoBuying</var>.</td>
     </tr>
     </table></details>
   </td>
@@ -578,6 +590,10 @@ import { budgetTypes } from '@site/src/data/enums/budgetTypes';
   <tr>
   <td>`isAbm` <br /><span class="type-text">boolean</span></td>
   <td>Whether the campaign targets an Account Based Marketing (ABM) audience.</td>
+  </tr>
+  <tr>
+  <td>`abm` <br /><span class="type-text">boolean</span></td>
+  <td>Response only: same value as <var>isAbm</var>.</td>
   </tr>
   <tr>
   <td>`targeting` <br /><span class="type-text">object</span></td>
@@ -842,16 +858,16 @@ Get HCP plan details by ID. The response uses the same fields as the request bod
     "timezoneId": 29,
     "budgetTypeId": 1,
     "owId": 200001,
-    "createdAt": 1791800000000,
-    "updatedAt": 1791800000000,
+    "createdAt": 1792533243047,
+    "updatedAt": 1792533243047,
     "minBudget": null,
-    "budget": 8820.00,
-    "maxBudget": 8820.00,
-    "reach": 60000,
-    "maxReach": 60000,
+    "budget": 4090019.985,
+    "maxBudget": 4090019.985,
+    "reach": 1666681,
+    "maxReach": 0,
     "minImpressions": null,
-    "impressions": 360000,
-    "maxImpressions": 360000,
+    "impressions": 151012170,
+    "maxImpressions": 151012170,
     "frequencyCap": 3,
     "frequencyCapTypeId": 1,
     "statusId": 6,
@@ -859,22 +875,25 @@ Get HCP plan details by ID. The response uses the same fields as the request bod
     "audienceBlocks": [
       {
         "audienceSelectionMethodId": 1,
-        "speciality": {
-          "specialityIds": [],
-          "allSpecialitiesSelected": true
-        },
+        "speciality": { "specialityIds": [], "allSpecialitiesSelected": true },
+        "account": { "accountIds": [], "allAccountsSelected": false },
+        "accountType": { "accountTypeIds": [], "allAccountTypesSelected": false },
+        "healthSystem": { "healthSystemIds": [], "allHealthSystemsSelected": false },
+        "title": { "titleIds": [], "allTitlesSelected": false },
         "locations": {
           "countryId": 30100001,
           "whiteListedStateIds": [],
           "blackListedStateIds": [],
           "whiteListedCityIds": [],
           "blackListedCityIds": [],
+          "whiteListedZipcodeIds": [],
+          "blackListedZipcodeIds": [],
           "whiteListedZipcodes": [],
           "blackListedZipcodes": []
         },
         "dataPartners": [
-          { "id": 7, "selected": true, "priority": 1, "reach": 120000, "incrementalReach": 120000 },
-          { "id": 8, "selected": true, "priority": 2, "reach": 90000, "incrementalReach": 30000 }
+          { "id": 7, "selected": true, "priority": 1, "reach": 6686411, "incrementalReach": 0 },
+          { "id": 8, "selected": true, "priority": 2, "reach": 4248087, "incrementalReach": 0 }
         ],
         "storagePathId": null,
         "storagePath": null,
@@ -886,30 +905,12 @@ Get HCP plan details by ID. The response uses the same fields as the request bod
       }
     ],
     "planLevelTargeting": {
-      "devices": {
-        "deviceTypeIds": [20300001, 20300004],
-        "allDeviceTypesSelected": false
-      },
-      "channels": {
-        "channelTypeIds": [],
-        "allChannelTypesSelected": true
-      },
-      "creativeTypes": {
-        "creativeTypeIds": [11, 14],
-        "allCreativeTypesSelected": false,
-        "isTvAutoBuying": false
-      },
+      "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
+      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false, "tvAutoBuying": false },
+      "channels": { "channelTypeIds": [], "allChannelTypesSelected": true },
       "inventory": {
-        "openExchanges": {
-          "exchangeIds": [],
-          "allExchangesSelected": true,
-          "iabCategoryIds": [],
-          "allIabCategoriesSelected": true
-        },
-        "inventoryGroup": {
-          "inventoryGroupIds": [],
-          "allInventoryGroupsSelected": false
-        }
+        "openExchanges": { "exchangeIds": [], "allExchangesSelected": true, "iabCategoryIds": [], "allIabCategoriesSelected": true },
+        "inventoryGroup": { "inventoryGroupIds": [], "allInventoryGroupsSelected": false }
       }
     },
     "splitStrategy": [
@@ -918,34 +919,36 @@ Get HCP plan details by ID. The response uses the same fields as the request bod
     ],
     "campaigns": [
       {
-        "id": 90001,
-        "name": "Image - Physicians",
+        "id": 53104,
+        "name": "Campaign_Video_HCP_Matched_Audience",
         "startTime": 1793505600000,
         "endTime": 1796101199000,
         "frequencyCap": 3,
         "frequencyCapTypeId": 1,
-        "minMediaCpm": 6.00,
-        "mediaCpm": 6.00,
-        "maxMediaCpm": 6.00,
-        "dataCpm": 12.50,
-        "minBudget": 18.50,
-        "budget": 2331.00,
-        "maxBudget": 2331.00,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 18.0,
+        "maxMediaCpm": 1000.0,
+        "dataCpm": 12.5,
+        "minBudget": 30.5,
+        "budget": 2909581.97,
+        "maxBudget": 2909581.97,
         "minReach": 10,
-        "reach": 42000,
-        "maxReach": 42000,
+        "reach": 1059957,
+        "maxReach": 1059957,
         "minImpressions": 1000,
-        "impressions": 126000,
-        "maxImpressions": 126000,
+        "impressions": 95396130,
+        "maxImpressions": 95396130,
+        "strategy": "Video + HCP + Matched Audience",
         "isAbm": false,
         "targeting": {
+          "audienceTypeIds": [1],
+          "creativeTypeId": 14,
           "dataPartnerIds": [7, 8],
-          "creativeTypeId": 11,
           "deviceTypeIds": [20300001, 20300004],
-          "npiTypeId": 3,
-          "audienceTypeIds": [1]
+          "npiTypeId": 3
         },
-        "campaignId": 0
+        "campaignId": 0,
+        "abm": false
       }
     ],
     "ioId": 0
@@ -1214,6 +1217,18 @@ Download the HCP Planner file.
 | `planId` <br /><span class="type-text">integer</span> | Plan ID. |
 | `fileTypeId` <br /><span class="type-text">integer</span> | File type ID. <br /><EnumWidget values={plannerFileTypes.filter((v) => [1, 3].includes(v.id))} /> |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+  <tr>
+    <td>`downloadUrl` <br /><span class="type-text">string</span></td>
+    <td>Temporary presigned link to the generated file. The link expires after about 60 seconds, so download the file right away or request a new link.</td>
+  </tr>
+</table>
+
+</details>
+
 </div>
 <div class="child2">
 
@@ -1228,10 +1243,48 @@ Download the HCP Planner file.
 {
   "success": true,
   "data": {
-    "downloadUrl": "https://iqm-web-assets-c92d6b6cbde1-stage.s3.amazonaws.com/plan_exports/hcp_planner_20240101120000.xlsx"
+    "downloadUrl": "https://iqm-planner-healthcare.s3.amazonaws.com/planner/proposal/report/download/200001/Q4%20Cardiology%20Awareness_1793036543120.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&..."
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid file type to download HCP Plan"
+    }
+  ]
+}
+```
+
+```json title="Response 422 (Draft or Expired plan)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal with proposal id 123 does not exist"
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Request for forbidden vertical"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -3365,21 +3418,26 @@ Each campaign's <var>dataCpm</var> is the average data cost of its selected data
 {
   "success": true,
   "data": {
+    "id": null,
     "name": "Q4 Cardiology Awareness",
     "startTime": 1793505600000,
     "endTime": 1796101199000,
     "timezoneId": 29,
     "budgetTypeId": 1,
-    "minBudget": 98.00,
-    "budget": 8820.00,
-    "maxBudget": 8820.00,
-    "reach": 60000,
-    "maxReach": 60000,
+    "owId": 200001,
+    "createdAt": 0,
+    "updatedAt": 0,
+    "minBudget": 98.0,
+    "budget": 4090019.985,
+    "maxBudget": 4090019.985,
+    "reach": 1666681,
+    "maxReach": 0,
     "minImpressions": 4000,
-    "impressions": 360000,
-    "maxImpressions": 360000,
+    "impressions": 151012170,
+    "maxImpressions": 151012170,
     "frequencyCap": 3,
     "frequencyCapTypeId": 1,
+    "statusId": null,
     "npiTypeIds": [3, 4],
     "audienceBlocks": [ ... ],
     "planLevelTargeting": { ... },
@@ -3387,35 +3445,71 @@ Each campaign's <var>dataCpm</var> is the average data cost of its selected data
     "campaigns": [
       {
         "id": null,
-        "name": "Video - Physicians",
+        "name": "Campaign_Video_HCP_Matched_Audience",
         "startTime": 1793505600000,
         "endTime": 1796101199000,
         "frequencyCap": 3,
         "frequencyCapTypeId": 1,
-        "minMediaCpm": 18.00,
-        "mediaCpm": 18.00,
-        "maxMediaCpm": 18.00,
-        "dataCpm": 12.50,
-        "minBudget": 30.50,
-        "budget": 3843.00,
-        "maxBudget": 3843.00,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 18.0,
+        "maxMediaCpm": 1000.0,
+        "dataCpm": 12.5,
+        "minBudget": 30.5,
+        "budget": 2909581.97,
+        "maxBudget": 2909581.97,
         "minReach": 10,
-        "reach": 42000,
-        "maxReach": 42000,
+        "reach": 1059957,
+        "maxReach": 1059957,
         "minImpressions": 1000,
-        "impressions": 126000,
-        "maxImpressions": 126000,
+        "impressions": 95396130,
+        "maxImpressions": 95396130,
+        "strategy": "Video + HCP + Matched Audience",
         "isAbm": false,
         "targeting": {
-          "dataPartnerIds": [7, 8],
+          "audienceTypeIds": [1],
           "creativeTypeId": 14,
+          "dataPartnerIds": [7, 8],
           "deviceTypeIds": [20300001, 20300004],
-          "npiTypeId": 3,
-          "audienceTypeIds": [1]
-        }
+          "npiTypeId": 3
+        },
+        "campaignId": null,
+        "abm": false
+      },
+      {
+        "id": null,
+        "name": "Campaign_Image_HCP_Matched_Audience",
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
+        "frequencyCap": 3,
+        "frequencyCapTypeId": 1,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 6.0,
+        "maxMediaCpm": 100.0,
+        "dataCpm": 12.5,
+        "minBudget": 18.5,
+        "budget": 702300.33,
+        "maxBudget": 702300.33,
+        "minReach": 10,
+        "reach": 421802,
+        "maxReach": 421802,
+        "minImpressions": 1000,
+        "impressions": 37962180,
+        "maxImpressions": 37962180,
+        "strategy": "Image + HCP + Matched Audience",
+        "isAbm": false,
+        "targeting": {
+          "audienceTypeIds": [1],
+          "creativeTypeId": 11,
+          "dataPartnerIds": [7, 8],
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3
+        },
+        "campaignId": null,
+        "abm": false
       },
       ...
-    ]
+    ],
+    "ioId": null
   }
 }
 ```

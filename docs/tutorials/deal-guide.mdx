@@ -75,53 +75,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -151,10 +131,67 @@ To create a PG or PMP deal, an exchange must be provided. Use the master exchang
 |---|---|
 | `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var> |
 | `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>300</var> |
-| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>+id</var> |
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>-id</var> |
 | `searchField` <br /><span class="type-text">string</span> | Search the result by provided keyword in the <var>searchField</var>, search country records by <var>name</var> |
 | `ids` <br /><span class="type-text">array of integers</span> | Selected country ID List, countries with provided IDs will be returned first compared to other records |
 | `exchangeIds` <br /><span class="type-text">array of integers</span> | Filters for exchange IDs |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates the request was successful: <var>true</var>.</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Exchange list and record counts.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`data` <br /><span class="type-text">array of objects</span></td>
+  <td>Exchanges, sorted by ID in descending order by default.</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`data` array object properties</summary>
+    <table className="objectProperties">
+    <tr>
+    <td>`id` <br /><span class="type-text">integer</span></td>
+    <td>Exchange ID. Pass it as <var>exchangeId</var> when you create a deal.</td>
+    </tr>
+    <tr>
+    <td>`name` <br /><span class="type-text">string</span></td>
+    <td>Exchange name.</td>
+    </tr>
+    <tr>
+    <td>`urlName` <br /><span class="type-text">string</span></td>
+    <td>Exchange URL name.</td>
+    </tr>
+    </table></details>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of exchanges.</td>
+  </tr>
+  <tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of exchanges that match the request filters.</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
 
 </div>
 <div class="child2">
@@ -168,104 +205,9 @@ To create a PG or PMP deal, an exchange must be provided. Use the master exchang
   "data": {
     "data": [
       {
-        "id": 90,
-        "name": "Aniview",
-        "urlName": "aniview"
-      },
-      {
-        "id": 89,
-        "name": "LoopMe",
-        "urlName": "loopme"
-      },
-      {
-        "id": 88,
-        "name": "One Tag",
-        "urlName": "onetag"
-      },
-      {
-        "id": 87,
-        "name": "Share Through",
-        "urlName": "sharethrough"
-      },
-      {
-        "id": 84,
-        "name": "Vidazoo",
-        "urlName": "vidazoo"
-      },
-      {
-        "id": 80,
-        "name": "Equativ",
-        "urlName": "equativ"
-      },
-      {
-        "id": 78,
-        "name": "Magnite",
-        "urlName": "magnite"
-      },
-      {
-        "id": 77,
-        "name": "Verve",
-        "urlName": "verve"
-      },
-      {
-        "id": 76,
-        "name": "Infolink",
-        "urlName": "infolink"
-      },
-      {
-        "id": 75,
-        "name": "Beachfront",
-        "urlName": "beachfront"
-      },
-      {
-        "id": 74,
-        "name": "Teads",
-        "urlName": "teads"
-      },
-      {
-        "id": 73,
-        "name": "Outbrain",
-        "urlName": "outbrain"
-      },
-      {
-        "id": 72,
-        "name": "Telaria",
-        "urlName": "telaria"
-      },
-      {
-        "id": 71,
-        "name": "33 Across",
-        "urlName": "ttacross"
-      },
-      {
-        "id": 69,
-        "name": "Media.net",
-        "urlName": "mnet"
-      },
-      {
-        "id": 66,
-        "name": "Unruly",
-        "urlName": "unruly"
-      },
-      {
-        "id": 47,
-        "name": "Index Exchange",
-        "urlName": "indexch"
-      },
-      {
-        "id": 46,
-        "name": "Triton Digital",
-        "urlName": "tdigital"
-      },
-      {
-        "id": 45,
-        "name": "Publisher Direct",
-        "urlName": "pbd"
-      },
-      {
-        "id": 41,
-        "name": "Column6",
-        "urlName": "adigital"
+        "id": 96,
+        "name": "Pine Lake",
+        "urlName": "pinelake"
       },
       {
         "id": 39,
@@ -273,33 +215,13 @@ To create a PG or PMP deal, an exchange must be provided. Use the master exchang
         "urlName": "adx"
       },
       {
-        "id": 37,
-        "name": "SpotXchange",
-        "urlName": "spotx"
-      },
-      {
-        "id": 19,
-        "name": "OpenX",
-        "urlName": "openx"
-      },
-      {
-        "id": 16,
-        "name": "Pubmatic",
-        "urlName": "pubmatic"
-      },
-      {
         "id": 11,
         "name": "Smaato",
         "urlName": "smaato"
-      },
-      {
-        "id": 1,
-        "name": "iQM",
-        "urlName": "test"
       }
     ],
-    "totalRecords": 26,
-    "filteredRecords": 26
+    "totalRecords": 30,
+    "filteredRecords": 30
   }
 }
 ```
@@ -329,6 +251,38 @@ Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var>
 | `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
 | `paymentTypeId` <br /><span class="type-text">integer</span> | [Payment type ID](/guidelines/finance-api/#pg-payment-type) <br />Only Platform (<var>2</var>) is supported, and it is the default. |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates the deal was created: <var>true</var>.</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Created deal details.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>PG deal ID assigned by IQM. Use this ID, not <var>dealId</var>, when you assign the deal to a campaign.</td>
+  </tr>
+  <tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message.</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
+</details>
+
 </div>
 <div class="child2">
 
@@ -346,15 +300,31 @@ Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var>
 }
 ```
 
-```json title="Response 200"
+```json title="Response 201"
 {
     "success": true,
     "data": {
-        "message": "Deal Test deal YT31 created successfully",
-        "id": 2
+        "id": 2681,
+        "message": "Deal Test deal YT31 created successfully"
     }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+    "success": false,
+    "errorObjects": [
+        {
+            "error": "Given payment type is not supported"
+        }
+    ]
+}
+```
+
+</details>
 
 </TabItem>
 </Tabs>
@@ -394,15 +364,32 @@ Consider creating a PMP inventory group if you plan to target or block the same 
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates the deal was created: <var>true</var>.</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Created deal details.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
   <tr>
-    <td>`id` <br /><span class="type-text">integer</span></td>
-    <td>PMP deal ID</td>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>PMP deal ID assigned by IQM. Use this ID, not <var>dealId</var>, when you assign the deal to a campaign.</td>
   </tr>
-    <tr>
-    <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+  <tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message.</td>
   </tr>
-  </table>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+</table>
   </details>
 
 </div><div class="child2">
@@ -425,12 +412,12 @@ Consider creating a PMP inventory group if you plan to target or block the same 
 }
 ```
 
-```json title="Response 200"
+```json title="Response 201"
 {
     "success": true,
     "data": {
-        "id": 461,
-        "message": "Deal test123 created successfully"
+        "id": 4161,
+        "message": "PMP Deal added successfully"
     }
 }
 ```
@@ -455,7 +442,7 @@ Consider creating a PMP inventory group if you plan to target or block the same 
     "success": false,
     "errorObjects": [
         {
-            "error": "Invalid exchange id/ids provided"
+            "error": "Invalid exchange id/s provided"
         }
     ]
 }
@@ -559,7 +546,7 @@ Deals can be assigned or removed to/from campaigns. PG deals may only be assigne
   "success": false,
   "errorObjects": [
     {
-      "error": "Forbidden!"
+      "error": "User is not allowed to perform campaign mapping operation"
     }
   ]
 }
@@ -571,6 +558,24 @@ Deals can be assigned or removed to/from campaigns. PG deals may only be assigne
   "errorObjects": [
     {
       "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+```json title="Response 200 (PG deals)"
+{
+  "success": true,
+  "data": "PG deal campaign mappings updated successfully"
+}
+```
+
+```json title="Response 422 (PG deals)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Provided PG deals are invalid"
     }
   ]
 }
@@ -599,9 +604,13 @@ Get a list of campaigns and their associated deal IDs by campaign type ID.
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
-      <tr>
+  <tr>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the request was successful: <var>true</var>.</td>
+  </tr>
+  <tr>
   <td>`data` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and an array of deal IDs</td>
+  <td>Map of campaign ID (key, as a string) to an array of the PG deal IDs assigned to that campaign. Only PG campaigns (<var>campaignTypeId</var> <var>2</var>) are supported.</td>
   </tr>
   </table>
   </details>
@@ -616,46 +625,32 @@ Get a list of campaigns and their associated deal IDs by campaign type ID.
 {
   "success": true,
   "data": {
-    "503584": [
-      468,
-      469,
-      23
+    "625975": [
+      2678,
+      2679
     ],
-    "503947": [
-      468,
-      469
-    ],
-    "504447": [
-      468,
-      469
-    ],
-    "504448": [
-      589,
-      588
-    ],
-    "505743": [
-      468,
-      469
-    ],
-    "505753": [
-      468,
-      469
-    ],
-    "505754": [
-      468,
-      469
-    ],
-    "505755": [
-      588,
-      589
-    ],
-    "505758": [
-      468,
-      469
+    "625976": [
+      2680
     ]
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Unsupported campaign type ID, PMP deals are not supported currently: [1]"
+    }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 </Tabs>

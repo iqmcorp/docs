@@ -75,6 +75,10 @@ Get creative details by ID.
   <td>Creative name.</td>
 </tr>
 <tr>
+  <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
+  <td>Your own reference ID for the creative, if one was set at upload.</td>
+</tr>
+<tr>
   <td>`rtbCreativeTypeId`<br /><span class="type-text">integer</span></td>
   <td>[RTB creative type ID](/guidelines/creative-api#get-creative-types-list).</td>
 </tr>
@@ -112,6 +116,10 @@ Get creative details by ID.
     <td>Pixel URLs, up to five supported per creative.</td>
   </tr>
     <tr>
+    <td>`pixelUrl` <br /><span class="type-text">string</span></td>
+    <td>First pixel URL (same as the first item in <var>pixelUrls</var>).</td>
+  </tr>
+    <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
     <td>Creative width (px).</td>
   </tr>
@@ -133,11 +141,15 @@ Get creative details by ID.
 </tr>
 <tr>
   <td>`createdAt` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch timestamp of campaign creation date, in milliseconds.</td>
+  <td>Unix epoch timestamp of creative creation date, in milliseconds.</td>
 </tr>
 <tr>
   <td>`modifiedAt` <br /><span class="type-text">string</span></td>
-  <td>Last modified date.</td>
+  <td>Last modified date (ISO 8601).</td>
+</tr>
+<tr>
+  <td>`isMetadataFaulty` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the creative's metadata is flagged as faulty: <var>true</var>.</td>
 </tr>
   <tr>
   <td>`userDetails` <br /><span class="type-text">object</span></td>
@@ -162,11 +174,11 @@ Get creative details by ID.
   </tr>
      <tr>
     <td>`hasApprovalAccess` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if user has access to approve.</td>
+    <td>Indicates if user has access to approve. Omitted when not set.</td>
   </tr>
      <tr>
     <td>`hasEditAccess` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if user has edit access for the requested resources.</td>
+    <td>Indicates if user has edit access for the requested resources. Omitted when not set.</td>
   </tr>
   </table></details>
   </td>
@@ -206,33 +218,36 @@ Get creative details by ID.
 {
   "success": true,
   "data": {
-    "creativeId": 686855,
-    "creativeName": "300x600-w23-01",
-    "rtbCreativeTypeId": 1,
-    "platformCreativeTypeId": 11,
-    "creativeStatusId": 2,
-    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
-    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
-    "clickUrl": "http://iqm.com",
-    "imageDetails": {
-      "pixelUrls": ["http://pixel.com"],
-      "creativeWidth": 300,
-      "creativeHeight": 600
-    },
-    "creativeSourceType": "file",
+    "clickUrl": "https://www.example.com/summer-sale",
+    "createdAt": 1793036350122,
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/204851/278x220/rvNRZ1A_1793036350122.jpg",
+    "creativeId": 803406,
+    "creativeName": "Summer Sale Banner",
     "creativePreviewFlag": 1,
-    "createdAt": 1730201855165,
-    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
-    "userDetails": {
-      "uowId": 175891,
-      "userName": "Hardik",
-      "userEmail": "hardik.v+iqmsuper@iqm.com",
-      "hasApprovalAccess": true,
-      "hasEditAccess": true
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/204851/rvNRZ1A_1793036350122.jpg",
+    "creativeSourceType": "file",
+    "creativeStatusId": 1,
+    "externalCreativeId": "campaign-2024-001",
+    "imageDetails": {
+      "pixelUrls": [
+        "https://tracker.example.com/pixel"
+      ],
+      "pixelUrl": "https://tracker.example.com/pixel",
+      "creativeWidth": 728,
+      "creativeHeight": 90
     },
+    "isMetadataFaulty": false,
+    "modifiedAt": "2026-10-26T17:39:14.334Z",
     "organizationDetails": {
-      "owId": 202760,
-      "organizationName": "AdWing"
+      "owId": 204851,
+      "organizationName": "Example Organization"
+    },
+    "platformCreativeTypeId": 11,
+    "rtbCreativeTypeId": 1,
+    "userDetails": {
+      "uowId": 291477,
+      "userName": "Jane Smith",
+      "userEmail": "user@example.com"
     }
   }
 }
@@ -1494,34 +1509,25 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 <table className="objectProperties">
 <tr>
-  <td>`successData` <br /><span class="type-text">object</span></td>
-  <td>Success data.</td>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td><var>true</var> when the request was processed, even if every creative in it failed. Check <var>failedData</var>.</td>
+</tr>
+<tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Upload results, keyed by the IDs you used in <var>creativeRequest</var> (for example, <var>I001</var>).</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`successData` object properties</summary>
+  <summary>`data` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`PS` <br /><span class="type-text">string</span></td>
-    <td>Partial success.</td>
+    <td>`successData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that succeeded to the new creative ID, as a string (for example, <var>"I001": "803406"</var>). Empty if no creative was created.</td>
   </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`failedData` <br /><span class="type-text">object</span></td>
-  <td>Success data.</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`failedData` object properties</summary>
-  <table className="objectProperties">
   <tr>
-    <td>`PF` <br /><span class="type-text">string</span></td>
-    <td>Partial failure.</td>
+    <td>`failedData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that failed to its error message. Empty if every creative was created.</td>
   </tr>
   </table></details>
   </td>
@@ -2025,14 +2031,41 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   "success": true,
   "data": {
     "successData": {
-      "PS": "701388"
+      "I001": "803406"
     },
+    "failedData": {}
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 200 (creative failed)"
+{
+  "success": true,
+  "data": {
+    "successData": {},
     "failedData": {
-      "PF": "Creative file missing. Please attach the required file. : null"
+      "I001": "Creative file missing. Please attach the required file."
     }
   }
 }
 ```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "All entries in the request must have the same platformCreativeTypeId.",
+      "field": "creativeRequest"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -3131,6 +3164,14 @@ Get a list of creative types.
 
 <table className="objectProperties">
 <tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of creative types.</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of creative types after filters are applied.</td>
+</tr>
+<tr>
   <td>`creativeTypeList` <br /><span class="type-text">array of objects</span></td>
   <td>Creative type list details.</td>
 </tr>
@@ -3149,15 +3190,15 @@ Get a list of creative types.
   </tr>
     <tr>
     <td>`order` <br /><span class="type-text">integer</span></td>
-    <td>Order.</td>
+    <td>Display order.</td>
   </tr>
     <tr>
-    <td>`displayName` <br /><span class="type-text">integer</span></td>
-    <td>Creative type name.</td>
+    <td>`displayName` <br /><span class="type-text">string</span></td>
+    <td>Creative type display name.</td>
   </tr>
       <tr>
     <td>`rtbCreativeTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[RTB creative type ID](/guidelines/creative-api#get-creative-types-list). </td>
+    <td>[RTB creative type ID](/guidelines/creative-api#get-creative-types-list). Not returned for the <var>All</var> entry added by <var>displayAllType</var>.</td>
   </tr>
   </table></details>
   </td>
@@ -3176,52 +3217,45 @@ Get a list of creative types.
 {
   "success": true,
   "data": {
-    "totalRecords": 6,
+    "totalRecords": 5,
     "creativeTypeList": [
-      {
-        "id": 0,
-        "name": "all",
-        "order": 0,
-        "displayName": "All",
-        "rtbCreativeTypeId": null
-      },
       {
         "id": 11,
         "name": "Image",
-        "order": 100,
         "displayName": "Image",
+        "order": 95,
         "rtbCreativeTypeId": 1
       },
       {
         "id": 13,
         "name": "HTML",
-        "order": 100,
         "displayName": "HTML",
+        "order": 96,
         "rtbCreativeTypeId": 1
       },
       {
         "id": 14,
         "name": "Video",
-        "order": 100,
         "displayName": "Video",
+        "order": 97,
         "rtbCreativeTypeId": 3
-      },
-      {
-        "id": 15,
-        "name": "Native",
-        "order": 100,
-        "displayName": "Native",
-        "rtbCreativeTypeId": 4
       },
       {
         "id": 17,
         "name": "Audio",
-        "order": 100,
         "displayName": "Audio",
+        "order": 98,
         "rtbCreativeTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "displayName": "Native",
+        "order": 99,
+        "rtbCreativeTypeId": 4
       }
     ],
-    "filteredRecords": 6
+    "filteredRecords": 5
   }
 }
 ```
