@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "5.1.2",
+    "version": "5.2.0",
     "description": "MCP Campaign API Specification",
     "contact": {
       "name": "IQM Support",
@@ -4918,6 +4918,164 @@
                     "errorMsg": "Internal server error",
                     "errorCode": 500
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/cmp/campaign/estimation/reach": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Estimate audience reach for campaign targeting",
+        "description": "Audience reach estimation for campaign targeting: estimate (forecast) how many unique users, or estimated audience size, a combination of location and demographic targeting can reach. Use it to size a planned campaign before it is created, or to compare targeting options.\n\nRead-only: no campaign is created or changed. Send at least one targeting field; an empty body is rejected with 422. Each field is a comma-separated string of IDs (ZIP codes are sent as codes). Location fields are added together as a union, so a state plus cities in that state gives the state's reach; demographic and device fields narrow it. The body is forwarded as-is to IQM's reach estimator, so the estimate does not use the workspace's campaigns, audiences, or creatives.\n\nThe response gives estimatedReachMin, estimatedReachMax and estimatedReachAvg (unique users) and a targetingType of Broad, Moderate, or Specific. A body with no recognized field or an unknown device type ID returns HTTP 200 with success false. A value sent as an array or number, or an estimator slower than its timeout (12 seconds by default), returns 408 with \"Server request timed out!\".",
+        "operationId": "getAudienceReachEstimation",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AudienceReachEstimationRequest"
+              },
+              "examples": {
+                "Reach for a state narrowed by age, ethnicity group and device": {
+                  "value": {
+                    "stateIds": "30200032",
+                    "ageIds": "10100006,10100007",
+                    "ethnicityIds": "10700002",
+                    "deviceTypeIds": "11,13"
+                  }
+                },
+                "Reach for cities and ZIP codes": {
+                  "value": {
+                    "cityIdsIncluded": "30434428,30434491,30434474",
+                    "zipCodesIncluded": "08016,08048,08036"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AudienceReachEstimationVO"
+                    }
+                  }
+                },
+                "examples": {
+                  "Reach estimate": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "targetingType": "Specific",
+                        "estimatedReachMin": 131728,
+                        "estimatedReachMax": 161001,
+                        "estimatedReachAvg": 146365
+                      }
+                    }
+                  },
+                  "No recognized targeting field": {
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid or empty input data."
+                        }
+                      ]
+                    }
+                  },
+                  "Unknown device type ID": {
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Server encountered an error!"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout: the reach estimator timed out, or a value was sent as an array or number instead of a string",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Server request timed out!"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity: empty request body",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Request body is empty."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
                 }
               }
             }
@@ -10051,6 +10209,84 @@
           }
         },
         "description": "Response body for getCostDetails, wrapped in the standard `data` envelope."
+      },
+      "AudienceReachEstimationRequest": {
+        "type": "object",
+        "description": "Targeting to estimate reach for. Every field is optional, but send at least one. Each value is a comma-separated string, not an array or number. Location fields (country, state, county, city, ZIP) are combined as a union; demographic and device fields narrow that location reach.",
+        "properties": {
+          "countryIds": {
+            "type": "string",
+            "description": "Country IDs to target, comma-separated. IDs from getMasterSegmentCountry."
+          },
+          "stateIds": {
+            "type": "string",
+            "description": "State IDs to target, comma-separated. IDs from getStatesSegmentDetails.",
+            "example": "30200032"
+          },
+          "countyIdsIncluded": {
+            "type": "string",
+            "description": "County IDs to include, comma-separated. IDs from getCountySegmentDetails."
+          },
+          "cityIdsIncluded": {
+            "type": "string",
+            "description": "City IDs to include, comma-separated. IDs from getCitySegmentDetails.",
+            "example": "30434428,30434491,30434474"
+          },
+          "zipCodesIncluded": {
+            "type": "string",
+            "description": "ZIP codes to include, comma-separated 5-digit codes. ZIP segment IDs return zero reach.",
+            "example": "08016,08048,08036"
+          },
+          "ageIds": {
+            "type": "string",
+            "description": "Age range IDs, comma-separated. IDs from getMasterSegmentAge.",
+            "example": "10100006,10100007"
+          },
+          "genderIds": {
+            "type": "string",
+            "description": "Gender IDs, comma-separated. IDs from getMasterSegmentGender."
+          },
+          "ethnicityIds": {
+            "type": "string",
+            "description": "Ethnicity group IDs, comma-separated. IDs from getMasterSegmentEthnicityGroup; individual ethnicity IDs return zero reach.",
+            "example": "10700002"
+          },
+          "incomeIds": {
+            "type": "string",
+            "description": "Income range IDs, comma-separated. IDs from getMasterSegmentIncome.",
+            "example": "10300001,10300002"
+          },
+          "deviceTypeIds": {
+            "type": "string",
+            "description": "Device type IDs, comma-separated: 11 Mobile, 12 Tablet, 13 Connected TV, 15 Desktop (from DeviceTypes). Other IDs return an error."
+          }
+        }
+      },
+      "AudienceReachEstimationVO": {
+        "type": "object",
+        "properties": {
+          "targetingType": {
+            "type": "string",
+            "enum": [
+              "Broad",
+              "Moderate",
+              "Specific"
+            ],
+            "description": "How broad the targeting is, from the estimator's reach percentage: Broad is 70% or more, Moderate is 30% to under 70%, Specific is under 30%."
+          },
+          "estimatedReachMin": {
+            "type": "integer",
+            "description": "Low end of the estimated reach (unique users)."
+          },
+          "estimatedReachMax": {
+            "type": "integer",
+            "description": "High end of the estimated reach (unique users)."
+          },
+          "estimatedReachAvg": {
+            "type": "integer",
+            "description": "Midpoint estimated reach (unique users)."
+          }
+        }
       }
     }
   }
