@@ -23,7 +23,7 @@ Upload a Matched audience with this in-depth tutorial using IQM's API.
 Get started uploading a Matched audience with the following endpoints:
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
-<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/static/column-list" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/column-list" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/matched" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}" />
 
@@ -57,6 +57,7 @@ To upload a Matched audience, the following are required:
   * With Voter ID / Email / Phone / Address in the file
     * Only one of these fields is required - Voter ID or Email or Phone, or Address. The preferred format for full address is Street, City, Zip, and State
     * Other fields are optional and can be added along with one of the above fields
+  * Healthcare audiences match on other identifiers, such as NPI, phone, or email. To see the column combinations available for your audience type, use [Matched column combinations](/guidelines/audience-api/#matched-column-combinations)
 
 :::
 </div>
@@ -103,9 +104,9 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema |  |
 | ---- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
 
@@ -115,7 +116,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -176,7 +177,7 @@ To upload a Matched audience, you need to gather some information about your aud
 | Column IDs for matching | A list of [Column IDs](/guidelines/audience-api/#matched-column-list) for matching which correspond to the columns in the file being uploaded. |
 | Data format ID | The [Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) corresponds to the type of identifiers being uploaded. <br /><EnumWidget values={dataFormats} /> |
 | Data partner ID | The [Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience) corresponds to the source of the data being uploaded and is used for reporting purposes. <br /><EnumWidget values={dataPartners} /> |
-| Column combination ID <br /><span class="type-text">Political vertical</span> | The [Column combination ID](/guidelines/audience-api/#matched-column-combinations) corresponds to the combination of columns being used for matching. |
+| Column combination ID <br /><span class="type-text">All verticals</span> | The [Column combination ID](/guidelines/audience-api/#matched-column-combinations) corresponds to the combination of columns being used for matching. |
 
 The <var>column-list</var>, <var>data-partners</var>, and <var>column-combinations</var> endpoints require the <var>audienceTypeId</var> query parameter (<var>1</var> for Matched audiences), and accept an optional <var>audienceSubtypeId</var> for Healthcare subtypes. For example, <var>GET /api/v3/audience/static/column-list?audienceTypeId=1</var> returns the columns shown in the response sample. Each column's <var>dataFormatIds</var> lists the data formats it accepts; columns without <var>dataFormatIds</var> don't take a <var>dataFormatId</var>.
 
@@ -236,24 +237,28 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 
 <table className="objectProperties">
 <tr>
-<td>`audienceName` <br /><span class="type-text">string</span></td>
-<td>Audience name</td>
+<td>`audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+<td>Audience name.</td>
 </tr>
 <tr>
-<td>`fileRowCount` <br /><span class="type-text">integer</span></td>
-<td>Number of rows in the file</td>
+<td>`fileRowCount` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>Number of rows in the file.</td>
 </tr>
 <tr>
-<td>`fileColumnCount` <br /><span class="type-text">integer</span></td>
-<td>Number of columns in the file</td>
+<td>`fileColumnCount` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>Number of columns in the file.</td>
 </tr>
 <tr>
 <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
-<td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list) <br /><EnumWidget values={audienceSubtypes} /></td>
+<td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Healthcare audiences only. Omit it for Political audiences, which don't support subtypes. <br /><EnumWidget values={audienceSubtypes} /></td>
 </tr>
 <tr>
-<td>`columnMappings` <br /><span class="type-text">array</span></td>
-<td>Array of column mapping objects</td>
+<td>`consentGiven` <br /><span class="type-text">boolean</span></td>
+<td>Confirms that patients consented to the use of their data. Must be <var>true</var> for the Healthcare Patient subtype (<var>6</var>). Omit it for every other subtype.</td>
+</tr>
+<tr>
+<td>`columnMappings` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+<td>Array of column mapping objects.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -262,15 +267,15 @@ Create a Matched audience by uploading a file with user data. The metadata is se
   <table className="objectProperties">
   <tr>
   <td>`columnId` <br /><span class="type-text">integer</span></td>
-  <td>[Column ID](/guidelines/audience-api/#matched-column-list)</td>
+  <td>[Column ID](/guidelines/audience-api/#matched-column-list).</td>
   </tr>
     <tr>
   <td>`fileColumnName` <br /><span class="type-text">string</span></td>
-  <td>File column name</td>
+  <td>File column name.</td>
   </tr>
     <tr>
   <td>`dataFormatId` <br /><span class="type-text">integer</span></td>
-  <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) <br /><EnumWidget values={dataFormats} /></td>
+  <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience). <br /><EnumWidget values={dataFormats} /></td>
   </tr>
   </table></details>
   </td>
@@ -281,8 +286,8 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 <td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Required for HCP audiences and for the Voter ID column combination; omit it for other combinations. <br /><EnumWidget values={dataPartners} /></td>
 </tr>
 <tr>
-<td>`columnCombinationId` <br /><span class="type-text">integer</span></td>
-<td>[Column combination ID](/guidelines/audience-api/#matched-column-combinations)</td>
+<td>`columnCombinationId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>[Column combination ID](/guidelines/audience-api/#matched-column-combinations).</td>
 </tr>
 </table>
 </details>
@@ -392,54 +397,54 @@ For further information see [Matched audience details](/guidelines/audience-api#
 
 | Path parameters |  |
 | ----  | --- |
-| `audienceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Matched audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Matched audience ID. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response properties</summary>
  <table className="objectProperties">
 <tr>
   <td>`audienceId` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
+  <td>Audience ID.</td>
 </tr>
 <tr>
   <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
+  <td>Audience name.</td>
 </tr>
 <tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience type ID](/guidelines/audience-api/#audience-type-list). Always <var>1</var> (Matched audience)</td>
+  <td>[Audience type ID](/guidelines/audience-api/#audience-type-list). Always <var>1</var> (Matched audience).</td>
 </tr>
 <tr>
   <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Returned only for Healthcare audiences <br /><EnumWidget values={audienceSubtypes} /></td>
+  <td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Returned only for Healthcare audiences. <br /><EnumWidget values={audienceSubtypes} /></td>
 </tr>
 <tr>
   <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience status ID](/guidelines/audience-api#audience-status-list) <br /><EnumWidget values={audienceStatuses} /></td>
+  <td>[Audience status ID](/guidelines/audience-api#audience-status-list). <br /><EnumWidget values={audienceStatuses} /></td>
 </tr>
 <tr>
   <td>`cpm` <br /><span class="type-text">number</span></td>
-  <td>Data cost (CPM) charged if the audience is used in a campaign</td>
+  <td>Data cost (CPM) charged if the audience is used in a campaign.</td>
 </tr>
 <tr>
   <td>`owId` <br /><span class="type-text">integer</span></td>
-  <td>Organization Workspace ID of the audience owner</td>
+  <td>Organization Workspace ID of the audience owner.</td>
 </tr>
 <tr>
   <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
-  <td>User Organization Workspace ID of the user who created the audience</td>
+  <td>User Organization Workspace ID of the user who created the audience.</td>
 </tr>
 <tr>
   <td>`createdAt` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
+  <td>Unix epoch creation date, in milliseconds.</td>
 </tr>
 <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>Audience reach (matched unique users). <var>0</var> until the file is matched</td>
+  <td>Audience reach (matched unique users). <var>0</var> until the file is matched.</td>
 </tr>
 <tr>
   <td>`columnMappings` <br /><span class="type-text">array of objects</span></td>
-  <td>Mappings between the file's columns and matching columns</td>
+  <td>Mappings between the file's columns and matching columns.</td>
 </tr>
 <tr>
   <td colSpan="2">
@@ -448,50 +453,50 @@ For further information see [Matched audience details](/guidelines/audience-api#
     <table className="objectProperties">
       <tr>
         <td>`columnId` <br /><span class="type-text">integer</span></td>
-        <td>[Column ID](/guidelines/audience-api/#matched-column-list)</td>
+        <td>[Column ID](/guidelines/audience-api/#matched-column-list).</td>
       </tr>
       <tr>
         <td>`fileColumnName` <br /><span class="type-text">string</span></td>
-        <td>Column name in the uploaded file</td>
+        <td>Column name in the uploaded file.</td>
       </tr>
       <tr>
         <td>`dataFormatId` <br /><span class="type-text">integer</span></td>
-        <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) of the column values. <var>null</var> for columns that don't take a data format</td>
+        <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) of the column values. <var>null</var> for columns that don't take a data format.</td>
       </tr>
     </table></details>
   </td>
 </tr>
 <tr>
   <td>`s3FileName` <br /><span class="type-text">string</span></td>
-  <td>Stored name of the uploaded file</td>
+  <td>Stored name of the uploaded file.</td>
 </tr>
 <tr>
   <td>`s3Url` <br /><span class="type-text">string</span></td>
-  <td>S3 location of the uploaded file</td>
+  <td>S3 location of the uploaded file.</td>
 </tr>
 <tr>
   <td>`fileRowCount` <br /><span class="type-text">integer</span></td>
-  <td>Number of rows in the uploaded file</td>
+  <td>Number of rows in the uploaded file.</td>
 </tr>
 <tr>
   <td>`matchRate` <br /><span class="type-text">number</span></td>
-  <td>Percentage of file records that were matched. Returned once the file is matched</td>
+  <td>Percentage of file records that were matched. Returned once the file is matched.</td>
 </tr>
 <tr>
   <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
-  <td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Returned only when a data partner was set <br /><EnumWidget values={dataPartners} /></td>
+  <td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Returned only when a data partner was set. <br /><EnumWidget values={dataPartners} /></td>
 </tr>
 <tr>
   <td>`modifiedAt` <br /><span class="type-text">string</span></td>
-  <td>Last modified date (ISO 8601 format)</td>
+  <td>Last modified date (ISO 8601 format).</td>
 </tr>
 <tr>
   <td>`approvalAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if the user can approve or reject the audience</td>
+  <td>Indicates if the user can approve or reject the audience.</td>
 </tr>
 <tr>
   <td>`editAccess` <br /><span class="type-text">boolean</span></td>
-  <td>Indicates if the user has edit access for the audience</td>
+  <td>Indicates if the user has edit access for the audience.</td>
 </tr>
 </table>
 </details>
