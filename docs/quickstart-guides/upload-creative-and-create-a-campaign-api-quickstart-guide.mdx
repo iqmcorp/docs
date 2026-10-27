@@ -40,11 +40,11 @@ To create a PG campaign, the following are required:
 
 1. An account on the IQM platform
    *  See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
-1. An approved and running creative 
+1. An uploaded creative
    * See [Upload a creative](/quickstart-guides/upload-a-creative-quickstart) quickstart guide
 1. An insertion order
    * See [Create a campaign](/quickstart-guides/create-a-campaign-quickstart) quickstart guide to create a new insertion order
-1. A conversion
+1. A conversion (optional)
    * See [Create a conversion](/tutorials/create-a-conversion) tutorial
 1. An active PG deal
    * See [Create a deal](/tutorials/deal-guide) tutorial
@@ -53,9 +53,9 @@ To create a PG campaign, the following are required:
 
 ## Create a PG campaign using the IQM API
 
-This tutorial covers how to create a campaign and upload a creative. 
+This tutorial covers how to create a PG campaign and check its status.
 
-The minimum requirements to perform this task are: logging in with authentication credentials, uploading a creative, and creating a campaign. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
+The minimum requirements to perform this task are: logging in with authentication credentials and creating a PG campaign. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
 
 1. Log in
     * Optional if you have already logged in and have a token
@@ -90,9 +90,9 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -155,7 +155,7 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 <div class="endpoint-container">
   <div class="child1">
 
-Once you are logged in and have met the prerequisite conditions (see [Before you begin](#before-you-begin)), you can create a PG campaign. You need a creative, an insertion order, a conversion, and a PG deal to create a PG campaign. Review the request schema table below for all the other parameters required for this endpoint.  
+Once you are logged in and have met the prerequisite conditions (see [Before you begin](#before-you-begin)), you can create a PG campaign. You need a creative, an insertion order, and an active PG deal to create a PG campaign. A conversion is optional. Review the request schema table below for all the other parameters required for this endpoint.  
 
 :::info
 
@@ -168,8 +168,8 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
 <th>Request schema</th>
 <th></th>
 <tr>
-<td>`pgCampaignInfo` <br /><span class="type-text">object</span></td>
-<td>Object containing campaign information</td>
+<td>`pgCampaignInfo` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing campaign information.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -177,56 +177,56 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <summary>`pgCampaignInfo` object properties</summary>
   <table className="objectProperties">
   <tr>
-  <td>`campaignName` <br /><span class="type-text">string</span></td>
-  <td>Name of campaign</td>
+  <td>`campaignName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Name of campaign.</td>
   </tr>
     <tr>
-  <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>`ioId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Insertion Order ID.</td>
   </tr>
     <tr>
-  <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+  <td>`timeZoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
   </tr>
       <tr>
   <td>`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
-  <td>Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign</td>
+  <td>Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign.</td>
   </tr>
       <tr>
   <td>`spendingBudget` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
-  <td>Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign</td>
+  <td>Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign.</td>
   </tr>
       <tr>
-  <td>`maxBid` <br /><span class="type-text">integer</span></td>
-  <td>Maximum allowed bid price for campaign</td>
+  <td>`maxBid` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+  <td>Maximum allowed bid price for campaign.</td>
   </tr>
       <tr>
-  <td>`startTime` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start time of campaign, in seconds</td>
+  <td>`startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Unix epoch start time of campaign, in seconds.</td>
   </tr>
         <tr>
   <td>`endTime`  <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end time of campaign, in seconds</td>
+  <td>Unix epoch end time of campaign, in seconds.</td>
   </tr>
         <tr>
-  <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based) <br /><EnumWidget values={budgetTypes} /></td>
+  <td>`budgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based). <br /><EnumWidget values={budgetTypes} /></td>
   </tr>
         <tr>
   <td>`campaignTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type) <br /><EnumWidget values={campaignTypes} /></td>
+  <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type). <br /><EnumWidget values={campaignTypes} /></td>
   </tr>
         <tr>
-  <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
-  <td>Domain of the Advertiser user</td>
+  <td>`advertiserDomain` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Domain of the Advertiser user.</td>
   </tr>
   </table></details>
   </td>
   <td></td>
 </tr>
 <tr>
-<td>`creativeTargeting` <br /><span class="type-text">object</span></td>
-<td>Object containing creative targeting details</td>
+<td>`creativeTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing creative targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -235,19 +235,19 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <table className="objectProperties">
   <tr>
   <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list) <br /><EnumWidget values={creativeTypes} /></td>
+  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
   </tr>
     <tr>
   <td>`creativeIds` <br /><span class="type-text">array of integers</span></td>
-  <td>IDs of creatives attached to this campaign</td>
+  <td>IDs of creatives attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
   <td></td>
 </tr>
 <tr>
-<td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
-<td>Object containing inventory targeting details</td>
+<td>`inventoryTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing inventory targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -256,7 +256,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <table className="objectProperties">
   <tr>
   <td>`pgDealIds` <br /><span class="type-text">array of integers</span></td>
-  <td>PG deal IDs attached to this campaign</td>
+  <td>PG deal IDs attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
@@ -264,7 +264,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
 </tr>
 <tr>
 <td>`conversionTargeting`  <br /><span class="type-text">object</span></td>
-<td>Object containing campaign conversion targeting details</td>
+<td>Object containing campaign conversion targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -277,7 +277,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   </tr>
     <tr>
   <td>`conversionIds` <br /><span class="type-text">array of integers</span></td>
-  <td>IDs of conversions attached to this campaign</td>
+  <td>IDs of conversions attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
@@ -289,7 +289,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
 </tr>
 <tr>
 <td>`countryId` <br /><span class="type-text">integer</span></td>
-<td>ID of targeted country (for example, <var>30100001</var> for the US)</td>
+<td>ID of targeted country (for example, <var>30100001</var> for the US).</td>
 </tr>
 </table>
 
