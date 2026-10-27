@@ -48,12 +48,12 @@ The endpoint will return an OAuth compliant response, as seen in the example <va
 
 | Request parameters | |
 | --- | --- |
-| `grant_type` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/):. <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret. <br /><var>password</var>: log in with username and password. <br /><var>refresh_token</var>: obtain a new access token.|
+| `grant_type` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/): <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret. <br /><var>password</var>: log in with username and password. <br /><var>refresh_token</var>: obtain a new access token.|
 | `refresh_token` <br /><span class="type-text">string</span> | Refresh token to obtain new access token. |
-| `email` <br /><span class="type-text">string</span> | User's email. |
+| `username` <br /><span class="type-text">string</span> | User's email. Required with the <var>password</var> grant. |
 | `password` <br /><span class="type-text">string</span> | User's password. |
-| `client_id` <br /><span class="type-text">string</span> | Client ID. |
-| `client_secret` <br /><span class="type-text">string</span> | Client secret. |
+| `client_id` <br /><span class="type-text">string</span> | Client ID. Send it with <var>client_secret</var> instead of the <var>Authorization</var> header. |
+| `client_secret` <br /><span class="type-text">string</span> | Client secret. Send it with <var>client_id</var> instead of the <var>Authorization</var> header. |
 
 
 </div>
@@ -116,6 +116,16 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 ```json title="Response 403"
 {
   "error": "Client details are not provided."
+}
+```
+
+```json title="Response 415"
+{
+  "type": "about:blank",
+  "title": "Unsupported Media Type",
+  "status": 415,
+  "detail": "Content-Type 'application/json;charset=UTF-8' is not supported.",
+  "instance": "/api/v3/ua/oauth/token"
 }
 ```
 </details>
@@ -1364,6 +1374,28 @@ An invited user or Customer completes their invitation by setting a password. Th
 }
 ```
 
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please pass invitation hash"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User does not exists in the system."
+    }
+  ]
+}
+```
 </details>
 
 </TabItem>

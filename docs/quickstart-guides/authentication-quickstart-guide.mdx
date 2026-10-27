@@ -22,7 +22,7 @@ The IQM platform uses [bearer authentication<ExternalLink />](https://swagger.io
 
 ## Client ID and Client Secret
 
-Before you can sign up or log in with the IQM API, you need to request a Client ID and Client Secret by emailing [support@iqm.com<ExternalLink />](mailto:support@iqm.com). Once you have obtained these credentials, they are used as the header authorization for signing up and logging in. Send them in the <var>Authorization</var> header as <var>Basic</var> followed by the Base64 encoding of <var>client_id:client_secret</var>.
+Before you can sign up or log in with the IQM API, you need to request a Client ID and Client Secret by emailing [support@iqm.com<ExternalLink />](mailto:support@iqm.com). Once you have obtained these credentials, they are used as the header authorization for signing up and logging in. Send them in the <var>Authorization</var> header as <var>Basic</var> followed by the Base64 encoding of <var>client_id:client_secret</var>. To log in or refresh a token, you can instead send <var>client_id</var> and <var>client_secret</var> as form fields in the request body.
 
 Read more about Client ID and Secret at [OAuth<ExternalLink />](https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/).
 
@@ -35,16 +35,18 @@ Read more about Client ID and Secret at [OAuth<ExternalLink />](https://www.oaut
 
 Complete an invitation by setting the invited user's password. This endpoint doesn't create new accounts. A user must first be invited to a workspace, and the link in the invitation email carries the <var>inviteHash</var>. To get an account, ask your workspace owner to invite you or contact [support@iqm.com<ExternalLink />](mailto:support@iqm.com).
 
+The response logs the user in, with the same tokens as [Log in](#log-in) plus the user's <var>owId</var>. If the workspace has a redirect URL configured, the response also includes <var>redirectionUrl</var>, that URL with the user's tokens filled in.
+
 | Headers |  |
 | ---- | --- |
 | `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Basic</var> followed by your Base64-encoded <var>client_id:client_secret</var>. |
-| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>application/json</var> |
+| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>application/json</var>. |
 
 | Request Schema |  |
 | ---- | --- |
-| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Email address of user |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Desired password of user |
-| `inviteHash` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Invitation hash from the link in the user's invitation email |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Email address of user. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Desired password of user. |
+| `inviteHash` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Invitation hash from the link in the user's invitation email. |
 
 </div><div class="child2">
 
@@ -92,6 +94,28 @@ Complete an invitation by setting the invited user's password. This endpoint doe
   ]
 }
 ```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please pass invitation hash"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User does not exists in the system."
+    }
+  ]
+}
+```
 </details>
 
 </TabItem>
@@ -106,18 +130,20 @@ Complete an invitation by setting the invited user's password. This endpoint doe
 <div class="endpoint-container">
   <div class="child1">
 
-Once you have created an account, you can log in. This API accepts a URL encoded form with the user's email and password. Using your Client ID and Client Secret in the header, you can authenticate and log in.
+Once your account is set up, you can log in. This API accepts a URL encoded form with the user's email and password. Using your Client ID and Client Secret in the header, you can authenticate and log in.
 
-The response includes an access token, refresh token, and the Organization Workspace ID. These credentials are used to maintain your session and authenticate your access to the IQM platform.
+The response includes an access token and a refresh token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 
 <OAuthHeaders />
 
 | Request Schema |  |
 | ---- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -127,7 +153,7 @@ The response includes an access token, refresh token, and the Organization Works
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -163,6 +189,16 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
   "error": "Client details are not provided."
 }
 ```
+
+```json title="Response 415"
+{
+  "type": "about:blank",
+  "title": "Unsupported Media Type",
+  "status": 415,
+  "detail": "Content-Type 'application/json;charset=UTF-8' is not supported.",
+  "instance": "/api/v3/ua/oauth/token"
+}
+```
 </details>
 
 </TabItem></Tabs>
@@ -182,8 +218,8 @@ Use a refresh token to get a new access token. This endpoint accepts a URL encod
 
 | Request Schema | |
 | --- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>refresh_token</var> to get a new access token<br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `refresh_token` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Refresh token |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>refresh_token</var> to get a new access token. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `refresh_token` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Refresh token from the login response. |
 
 </div>
 <div class="child2">
@@ -191,10 +227,10 @@ Use a refresh token to get a new access token. This endpoint accepts a URL encod
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=refresh_token' \
---data-urlencode 'refresh_token=eac4c1f6-781e-4b04-baff-9c2e415d1f64'
+--data-urlencode 'refresh_token=<your refresh token>'
 ```
 
 ```json title="Response 200"
@@ -224,6 +260,16 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 ```json title="Response 403"
 {
   "error": "Client details are not provided."
+}
+```
+
+```json title="Response 415"
+{
+  "type": "about:blank",
+  "title": "Unsupported Media Type",
+  "status": 415,
+  "detail": "Content-Type 'application/json;charset=UTF-8' is not supported.",
+  "instance": "/api/v3/ua/oauth/token"
 }
 ```
 </details>
