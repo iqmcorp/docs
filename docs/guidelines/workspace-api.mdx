@@ -3250,6 +3250,8 @@ This new Customer can be invited as a Workspace or an Advertiser with the follow
   * `logoUrl`
   * `customerOperationsDetails` (Workspace only)
 
+<var>email</var>, <var>name</var>, and <var>ownerUserName</var> are required for each invite, and up to 10 invites are allowed per request. If you send <var>password</var>, the Customer's password is set directly, the account is activated right away, and no invitation email is sent.
+
 <a href="#customer-operations-resource-properties"><button className="responsePropertiesButton"><Caret />Customer operations resource properties</button></a>
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
@@ -3427,66 +3429,6 @@ Resend Customer invite.
 
 ---
 
-### Customer Signup
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/customer/signup" operationId="Customersignup" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-A Customer Organization can register itself using this endpoint. This will trigger the parent Organization to approve the new Customer signup. Once approved, an invitation email will be sent to complete the registration process. 
-
-| Request schema |  |
-| ---- | --- |
-| `email` <br /><span class="type-text">string</span> | Customer email. |
-| `organizationName` <br /><span class="type-text">string</span> | Customer Organization name.
-| `userName` <br /><span class="type-text">string</span> | Customer user name. |
-| `industry` <br /><span class="type-text">integer</span> | [Industry type ID](#industries). |
-| `companySize` <br /><span class="type-text">integer</span> | [Company size type ID](#company-size). <br /><EnumWidget values={companySize} /> |
-| `mediaBudget` <br /><span class="type-text">integer</span> | [Media budget ID](#media-budget). <br /><EnumWidget values={mediaBudget} />
-| `budgetSpent` <br /><span class="type-text">integer</span> | Budget spent. |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response properties</summary>
-
-<table className="objectProperties">
-     <tr>
-  <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message.</td>
-  </tr>
-  </table></details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request sample"
-{
-    "email": "email@domain.com",
-    "organizationName": "Organisation Name",
-    "userName": "User Name",
-    "industry": 1,
-    "companySize": 2,
-    "mediaBudget": 3,
-    "budgetSpent": 2000
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": "Customer sign up requested successfully."
-}
-```
-
-</TabItem>
-</Tabs>
-
-</div></div>
-
----
-
 ### Get Customer signup form
 
 <CopyUrl method="GET" url="https://api.iqm.com/api/v3/ua/customer/signup-form" operationId="getCustomerSignUpForm" />
@@ -3601,12 +3543,12 @@ Get a Customer sign-up form.
 <div class="endpoint-container">
   <div class="child1">
 
-Assign a Customer to an existing user.
+Assign a Customer to an existing user. <var>uowIds</var> must contain exactly one user; more than one returns a <var>422</var>. You can't assign Customers to yourself or to the Organization owner (<var>403</var>).
 
 | Request schema  |  |
 | ---- | --- |
-| `owIds` <br /><span class="type-text">string</span> | Comma separated OW IDs to assign to user. |
-| `uowIds` <br /><span class="type-text">string</span>| Comma separated user IDs to assign Customers to. |
+| `owIds` <br /><span class="type-text">string</span> | Comma-separated Customer Organization Workspace IDs to assign to the user. |
+| `uowIds` <br /><span class="type-text">string</span> | ID of the user to assign the Customers to. Only one user per request. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>

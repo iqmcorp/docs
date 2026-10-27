@@ -629,7 +629,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Sign up a new Customer',
+          label: 'Onboard a new Customer',
           className: 'sidebarItem',
           link: {
             type: 'doc',
@@ -650,20 +650,14 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Sign up a new Customer using the IQM API',
-              href: `/tutorials/customer-guide#sign-up-a-new-customer-using-the-iqm-api`,
+              label: 'Onboard a new Customer using the IQM API',
+              href: `/tutorials/customer-guide#onboard-a-new-customer-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Invite a Customer',
               href: `/tutorials/customer-guide#invite-a-customer`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Sign up a Customer',
-              href: `/tutorials/customer-guide#sign-up-a-customer`,
               className: 'sidebarItemQS'
             },
             {
@@ -5430,13 +5424,6 @@ const sidebars = {
               label: 'Cancel Customer invite',
               href: '/guidelines/workspace-api#cancel-customer-invite',
               customProps: { method: 'DEL' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer Signup',
-              href: '/guidelines/workspace-api#customer-signup',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
