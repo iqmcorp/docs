@@ -82,9 +82,9 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -94,7 +94,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -147,15 +147,16 @@ The request schema table below details the supported fields for creating a Conte
 <div style={{ maxWidth: "750px"}}>
 | Request schema | |
 | --- | --- |
-| `audienceName` <br /><span class="type-text">string</span> | Audience name 
-| `keywords` <br /><span class="type-text">array of strings</span> | Keywords to generate a Contextual audience. Send an empty array (<var>[]</var>) if you only use URLs 
-| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds (required if data collection method is **static**)
-| `endDate` <br /><span class="type-text">integer</span> | Unix epoch end date, in milliseconds (required if data collection method is **static**)
-| `frequency` <br /><span class="type-text">integer</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the Contextual audience. Integer between 1-10
-| `urls` <br /><span class="type-text">array of strings</span> | The publisher sites visited by a user. Each URL must include a scheme (<var>https://</var>). Send an empty array (<var>[]</var>) if you only use keywords
-| `timezoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) specifies data collection start time
-| `dataCollectionMethodId` <br /><span class="type-text">integer</span> | **static** (<var>1</var>) collection period in a fixed set of dates <br />**dynamic** (<var>2</var>) data collection period over a rolling timeframe, with data refreshes every 24 hours
-| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days for data collection timeframe when data collection method is **dynamic** (maximum value: <var>60</var>)
+| `audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Audience name, up to 255 characters. |
+| `keywords` <br /><span class="type-text">array of strings</span> | Keywords to generate a Contextual audience. Send an empty array (<var>[]</var>) if you only use URLs. |
+| `urls` <br /><span class="type-text">array of strings</span> | The publisher sites visited by a user. Each URL must include a scheme (<var>https://</var>). Send an empty array (<var>[]</var>) if you only use keywords. |
+| `frequency` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | The number of times a user visits the publisher(s) relevant to one or more keywords or URLs added to the Contextual audience, from <var>1</var> to <var>10</var>. |
+| `timezoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Timezone ID](/guidelines/master-api#get-timezones) that sets the data collection start time. |
+| `dataCollectionMethodId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | **static** (<var>1</var>): data collection over a fixed set of dates. <br />**dynamic** (<var>2</var>): data collection over a rolling timeframe, with data refreshes every 24 hours. |
+| `startDate` <br /><span class="type-text">integer</span> | Unix epoch start date, in milliseconds. Required if the data collection method is **static**. |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch end date, in milliseconds. Required if the data collection method is **static**. |
+| `dataCollectionDays` <br /><span class="type-text">integer</span> | Number of days in the rolling data collection timeframe, up to <var>60</var>. Required if the data collection method is **dynamic**. |
+| `audienceSubtypes` <br /><span class="type-text">array of integers</span> | Healthcare workspaces only. Audience subtype IDs: <var>3</var> (HCP), <var>4</var> (Nurse), <var>5</var> (Non-NPI Nurse). One audience is created per subtype. |
 </div>
 
 #### Step 2a: Contextual audience with keywords
@@ -177,7 +178,7 @@ Contextual audiences support a static or dynamic data collection period of up to
 
 :::
 
-Lastly, a timezone ID is required to determine the data collection timeframe. An ID of <var>29</var> designates EST timezone. 
+Lastly, a timezone ID is required to determine the data collection timeframe. An ID of <var>29</var> designates the US/Eastern time zone. 
 
 </div>
 <div class="child2">
@@ -220,7 +221,7 @@ Lastly, a timezone ID is required to determine the data collection timeframe. An
 <div class="endpoint-container">
   <div class="child1">
 
-You can also create a Contextual audience with URLs. You need to pass the desired websites as a string in the <var>urls</var> field.
+You can also create a Contextual audience with URLs. You need to pass the desired websites as an array of strings in the <var>urls</var> field.
 
 As in Step 2a, you need to pass integers for <var>frequency</var> and <var>timezoneId</var>.
 
@@ -274,22 +275,22 @@ Use the ID from the <var>audienceIds</var> array returned in Steps 2a or 2b and 
 
 | Path parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> |  Audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> |  Audience ID. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
  <summary style={{ fontSize: "16px" }}>Response properties</summary>
  <table className="objectProperties">
 <tr>
   <td>`audienceId` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
+  <td>Audience ID.</td>
 </tr>
 <tr>
   <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
+  <td>Audience name.</td>
 </tr>
 <tr>
   <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience subtype ID](/guidelines/audience-api#audience-subtype-list). Returned only for Healthcare audiences created with <var>audienceSubtypes</var></td>
+  <td>[Audience subtype ID](/guidelines/audience-api#audience-subtype-list). Returned only for Healthcare audiences created with <var>audienceSubtypes</var>.</td>
 </tr>
 <tr>
   <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
@@ -297,43 +298,43 @@ Use the ID from the <var>audienceIds</var> array returned in Steps 2a or 2b and 
 </tr>
 <tr>
   <td>`cpm` <br /><span class="type-text">number</span></td>
-  <td>Data cost (CPM) charged if the audience is used in a campaign. Not returned when no data cost applies</td>
+  <td>Data cost (CPM) charged if the audience is used in a campaign. Not returned when no data cost applies.</td>
 </tr>
 <tr>
   <td>`createdAt` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds</td>
+  <td>Unix epoch creation date, in milliseconds.</td>
 </tr>
 <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>Audience reach (unique users). <var>0</var> until the audience has data</td>
+  <td>Audience reach (unique users). <var>0</var> until the audience has data.</td>
 </tr>
 <tr>
   <td>`keywords` <br /><span class="type-text">array of strings</span></td>
-  <td>Keywords. Not returned when the audience has no keywords</td>
+  <td>Keywords. Not returned when the audience has no keywords.</td>
 </tr>
 <tr>
   <td>`urls` <br /><span class="type-text">array of strings</span></td>
-  <td>URLs. Not returned when the audience has no URLs</td>
+  <td>URLs. Not returned when the audience has no URLs.</td>
 </tr>
 <tr>
   <td>`dataCollectionMethodId` <br /><span class="type-text">integer</span></td>
-  <td>Data collection method: **static** (<var>1</var>) or **dynamic** (<var>2</var>)</td>
+  <td>Data collection method: **static** (<var>1</var>) or **dynamic** (<var>2</var>).</td>
 </tr>
 <tr>
   <td>`startDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start date, in milliseconds (**static** data collection only)</td>
+  <td>Unix epoch start date, in milliseconds (**static** data collection only).</td>
 </tr>
 <tr>
   <td>`endDate` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end date, in milliseconds (**static** data collection only)</td>
+  <td>Unix epoch end date, in milliseconds (**static** data collection only).</td>
 </tr>
 <tr>
   <td>`dataCollectionDays` <br /><span class="type-text">integer</span></td>
-  <td>Number of days in the rolling data collection timeframe (**dynamic** data collection only)</td>
+  <td>Number of days in the rolling data collection timeframe (**dynamic** data collection only).</td>
 </tr>
 <tr>
   <td>`frequency` <br /><span class="type-text">integer</span></td>
-  <td>Number of times a user must visit a relevant site to be added to the audience</td>
+  <td>Number of times a user must visit a relevant site to be added to the audience.</td>
 </tr>
 </table>
 </details>
