@@ -7,7 +7,6 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
-import { campaignTypes } from '@site/src/data/enums/campaignTypes';
 import { pgPaymentTypes } from '@site/src/data/enums/pgPaymentTypes';
 import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
@@ -55,9 +54,9 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema |  |
 | ---- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
 
@@ -67,7 +66,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -130,12 +129,13 @@ To create a PG or PMP deal, an exchange must be provided. Use the master exchang
 
 | Query parameters |  |
 |---|---|
-| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var> |
-| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>300</var> |
-| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>-id</var> |
-| `searchField` <br /><span class="type-text">string</span> | Search the result by provided keyword in the <var>searchField</var>, search country records by <var>name</var> |
-| `ids` <br /><span class="type-text">array of integers</span> | Selected country ID List, countries with provided IDs will be returned first compared to other records |
-| `exchangeIds` <br /><span class="type-text">array of integers</span> | Filters for exchange IDs |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data, default: <var>1</var>. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>300</var>. |
+| `sortBy` <br /><span class="type-text">string</span> | Sort the result set by specific field. For ascending use plus(+) sign and for descending use minus(-) sign, default: <var>-id</var>. |
+| `searchField` <br /><span class="type-text">string</span> | Search exchanges by name. |
+| `ids` <br /><span class="type-text">string</span> | Comma-separated exchange IDs to return first, ahead of the other exchanges. |
+| `exchangeIds` <br /><span class="type-text">string</span> | Comma-separated exchange IDs to return. Other exchanges are left out. |
+| `exchangeIds` <br /><span class="type-text">array of integers</span> | Filters for exchange IDs. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -244,12 +244,11 @@ Once an exchange <var>id</var> is selected, pass it in the <var>exchangeId</var>
 
 | Request schema  |  |
 | ---- | --- |
-| `dealId` <br /><span class="type-text">string</span> | PG deal ID |
-| `dealName` <br /><span class="type-text">string</span>| PG deal name |
-| `exchangeId` <br /><span class="type-text">integer</span> | Exchange ID associated with PG deal | 
-| `cpm` <br /><span class="type-text">integer</span> | Cost Per Mille (CPM) value |
-| `statusId` <br /><span class="type-text">integer</span> | Status ID of PG deal <br />Active: <var>1</var> <br />Inactive: <var>2</var> <br />Only active deals can be assigned to a campaign. |
-| `description` <br /><span class="type-text">string</span> | Description or notes about the deal |
+| `dealId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PG deal ID, up to 500 characters. |
+| `dealName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PG deal name, up to 500 characters. |
+| `exchangeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Exchange ID associated with PG deal. |
+| `statusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Status ID of PG deal <br />Active: <var>1</var> <br />Inactive: <var>2</var> <br />Only active deals can be assigned to a campaign. |
+| `description` <br /><span class="type-text">string</span> | Description or notes about the deal, up to 1,000 characters. |
 | `paymentTypeId` <br /><span class="type-text">integer</span> | [Payment type ID](/guidelines/finance-api/#pg-payment-type) <br />Only Platform (<var>2</var>) is supported, and it is the default. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -350,15 +349,15 @@ Consider creating a PMP inventory group if you plan to target or block the same 
 
 | Properties |  |
 | ---- | --- |
-| `dealId` <br /><span class="type-text">string</span> | PMP deal ID |
-| `dealName` <br /><span class="type-text">string</span> | PMP deal name |
-| `description` <br /><span class="type-text">string</span> | PMP deal description |
-| `cpm` <br /><span class="type-text">integer</span> | PMP deal Cost Per Mille (CPM) value |
-| `dealCurationTypeId` <br /><span class="type-text">integer</span> | [Curation type ID](/guidelines/master-api#get-deal-curation-types) |
-| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs |
-| `exchangeId` <br /><span class="type-text">integer</span> | Exchange associated with PMP deal |
-| `assignToCustomers` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs |
-| `active` <br /><span class="type-text">boolean</span> | Deal status, active (<var>true</var>) or inactive (<var>false</var>) |
+| `dealId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PMP deal ID. |
+| `dealName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | PMP deal name. |
+| `description` <br /><span class="type-text">string</span> | PMP deal description. |
+| `cpm` <br /><span class="type-text">number</span> | PMP deal Cost Per Mille (CPM) value. |
+| `dealCurationTypeId` <br /><span class="type-text">integer</span> | [Curation type ID](/guidelines/master-api#get-deal-curation-types). |
+| `creativeTypes` <br /><span class="type-text">array of integers</span> | Creative type IDs. |
+| `exchangeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Exchange associated with PMP deal. |
+| `assignToCustomers` <br /><span class="type-text">array of integers</span> | Customer Organization Workspace IDs. Workspace organizations only; Advertiser organizations get a <var>422</var>. |
+| `active` <br /><span class="type-text">boolean</span> <span class="required-text">required</span> | Deal status, active (<var>true</var>) or inactive (<var>false</var>). |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -475,26 +474,28 @@ Consider creating a PMP inventory group if you plan to target or block the same 
 <div class="endpoint-container">
   <div class="child1">
 
-Deals can be assigned or removed to/from campaigns. PG deals may only be assigned to PG campaigns; and PMP deals may only be assigned to Advanced campaigns. 
+Deals can be assigned or removed to/from campaigns. PG deals may only be assigned to PG campaigns; and PMP deals may only be assigned to Advanced campaigns.
+
+Both endpoints require an Advertiser organization. A request can't list the same campaign and deal pair in both an <var>assign</var> and a <var>deassign</var> operation.
 
 | Request schema | |
 | --- | --- |
-| `operations` <br /><span class="type-text">array</span> | Operations specifying the action, campaign IDs and PMP deal IDs |
-| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var> |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from |
-| `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/remove to/from campaigns |
-| `pgDealIds` <br /><span class="type-text">array of integers</span> | PG deal IDs to assign/remove to/from campaigns |
+| `operations` <br /><span class="type-text">array</span> | Operations specifying the action, campaign IDs and PMP deal IDs. |
+| `action` <br /><span class="type-text">string</span> | Action to perform: <var>assign</var> or <var>deassign</var>. |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs to assign deals or remove deals from. |
+| `pmpDealIds` <br /><span class="type-text">array of integers</span> | PMP deal IDs to assign/remove to/from campaigns. |
+| `pgDealIds` <br /><span class="type-text">array of integers</span> | PG deal IDs to assign/remove to/from campaigns. |
 
   <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
     <table className="objectProperties">
         <tr>
     <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates deals were assigned successfully: <var>true</var></td>
+    <td>Indicates deals were assigned successfully: <var>true</var>.</td>
     </tr>
     <tr>
     <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>Success message.</td>
     </tr>
     </table>
     </details>
@@ -600,7 +601,7 @@ Get a list of campaigns and their associated deal IDs by campaign type ID.
 
 | Path parameter | |
 | --- | --- |
-| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type) <br /><EnumWidget values={campaignTypes} /> |
+| `campaignTypeId` <br /><span class="type-text">integer</span> | [Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type). Only <var>2</var> (PG) is supported. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
