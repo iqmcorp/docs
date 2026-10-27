@@ -10,7 +10,6 @@ import CopyUrl from '@site/src/components/CopyUrl';
 import { creativeTypes } from '@site/src/data/enums/creativeTypes';
 import { campaignTypes } from '@site/src/data/enums/campaignTypes';
 import { budgetTypes } from '@site/src/data/enums/budgetTypes';
-import { ioStatus } from '@site/src/data/enums/ioStatus';
 import { budgetDistributionMethods } from '@site/src/data/enums/budgetDistributionMethods';
 import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
@@ -84,9 +83,9 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -153,15 +152,14 @@ Read more: [Insertion orders (IO) overview<ExternalLink />](https://help.iqm.com
 
 | Request schema | |
 | --- | --- |
-| `ioName` <br /><span class="type-text">string</span> | IO name |
-| `ioStartTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO start time |
-| `ioEndTime`  <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time, at least 1 hour after <var>ioStartTime</var> |
-| `ioTotalBudget` <br /><span class="type-text">integer</span> | IO budget (omit if <var>isAutoSumIoTotalBudget</var> is <var>true</var>) |
-| `ioStatusID` <br /><span class="type-text">integer</span> | [Status ID](/guidelines/campaign-api#get-io-status-list) <br /><EnumWidget values={ioStatus} /> |
-| `ioTimeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) for IO |
-| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var> Keeps IO budget same as total budget of all included campaigns, and <var>ioTotalBudget</var> can't be sent |
-| `ioBudgetTypeId` <br /><span class="type-text">integer</span> | [IO budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) <br /><EnumWidget values={budgetTypes} />
-| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](/guidelines/campaign-api#get-list-of-budget-distribution-methods) <br /><EnumWidget values={budgetDistributionMethods} /> |
+| `ioName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | IO name, up to 255 characters. |
+| `ioStartTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp (in milliseconds) of IO start time. Can't be in the past. |
+| `ioEndTime` <br /><span class="type-text">integer</span> | Unix epoch timestamp (in milliseconds) of IO end time, at least 1 hour after <var>ioStartTime</var>. |
+| `ioTotalBudget` <br /><span class="type-text">number</span> | IO budget. Omit it if <var>isAutoSumIoTotalBudget</var> is <var>true</var>. |
+| `ioTimeZoneId` <br /><span class="type-text">integer</span> | [Timezone ID](/guidelines/master-api#get-timezones) for IO (default: US/Eastern). |
+| `isAutoSumIoTotalBudget` <br /><span class="type-text">boolean</span> | If <var>true</var>, keeps the IO budget equal to the total budget of all included campaigns, and <var>ioTotalBudget</var> can't be sent (default: <var>true</var>). |
+| `ioBudgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [IO budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types). <br /><EnumWidget values={budgetTypes} /> |
+| `ioBudgetDistributionMethodId` <br /><span class="type-text">integer</span> | [Budget distribution method ID](/guidelines/campaign-api#get-list-of-budget-distribution-methods) (default: <var>1</var>, manual). <br /><EnumWidget values={budgetDistributionMethods} /> |
 
 
 </div>
@@ -240,31 +238,31 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     <table className="objectProperties">
     <tr>
     <td>`campaignName` <br /><span class="type-text">string</span></td>
-    <td>campaign name</td>
+    <td>Campaign name.</td>
     </tr>
             <tr>
     <td>`isAgreementChecked` <br /><span class="type-text">boolean</span></td>
-    <td>Check to proceed: <var>true</var></td>
+    <td>Check to proceed: <var>true</var>.</td>
     </tr>
        <tr>
     <td>`ioId` <br /><span class="type-text">string</span></td>
-    <td>IO ID that campaign belongs to</td>
+    <td>IO ID that campaign belongs to.</td>
     </tr>
            <tr>
     <td>`countryId` <br /><span class="type-text">string</span></td>
-    <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+    <td>[Country ID](/guidelines/master-api#get-country-segment).</td>
     </tr>
         <tr>
     <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
-    <td>Advertiser domain</td>
+    <td>Advertiser domain.</td>
     </tr>
         <tr>
     <td>`creativeType` <br /><span class="type-text">integer</span></td>
-    <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list) <br /><EnumWidget values={creativeTypes} /></td>
+    <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
     </tr>
         <tr>
     <td>`campaignType` <br /><span class="type-text">integer</span></td>
-    <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type) <br /><EnumWidget values={campaignTypes} /></td>
+    <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type). <br /><EnumWidget values={campaignTypes} /></td>
     </tr>
             <tr>
     <td>`startTime` <br /><span class="type-text">integer</span></td>
@@ -272,11 +270,11 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     </tr>
                    <tr>
     <td>`endTime` <br /><span class="type-text">integer</span></td>
-    <td>Unix epoch end time of the campaign, in seconds (required if total budget pacing is enabled)</td>
+    <td>Unix epoch end time of the campaign, in seconds (required if total budget pacing is enabled).</td>
     </tr>
         <tr>
     <td>`totalBudgetPacing` <br /><span class="type-text">boolean</span></td>
-    <td>Budget is spent equally every hour: <var>true</var></td>
+    <td>Budget is spent equally every hour: <var>true</var>.</td>
     </tr>
         <tr>
     <td>`budgetDay` <br /><span class="type-text">integer</span></td>
@@ -284,31 +282,31 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     </tr>
         <tr>
     <td>`budgetTotal` <br /><span class="type-text">integer</span></td>
-    <td>Total budget for campaign serving period</td>
+    <td>Total budget for campaign serving period.</td>
     </tr>
         <tr>
     <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) <br /><EnumWidget values={budgetTypes} /></td>
+    <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types). <br /><EnumWidget values={budgetTypes} /></td>
     </tr>
         <tr>
     <td>`maxBid` <br /><span class="type-text">integer</span></td>
-    <td>Max bid for each bid request</td>
+    <td>Max bid for each bid request.</td>
     </tr>
         <tr>
     <td>`timezone` <br /><span class="type-text">integer</span></td>
-    <td>[Timezone ID](/guidelines/master-api#get-timezones) for campaign</td>
+    <td>[Timezone ID](/guidelines/master-api#get-timezones) for campaign.</td>
     </tr>
         <tr>
     <td>`creativeIds` <br /><span class="type-text">string</span></td>
-    <td>Comma-separated IDs of your creatives</td>
+    <td>Comma-separated IDs of your creatives.</td>
     </tr>
        <tr>
     <td>`exchanges` <br /><span class="type-text">string</span> </td>
-    <td>Comma-separated [exchange IDs](/guidelines/master-api#get-exchanges) for targeting (leave string empty to select all)</td>
+    <td>Comma-separated [exchange IDs](/guidelines/master-api#get-exchanges) for targeting (leave string empty to select all).</td>
     </tr>
            <tr>
     <td>`publisherAdCategory` <br /><span class="type-text">string</span> </td>
-    <td>Comma-separated [publisher ad category IDs](/guidelines/master-api#get-publisher-ad-categories) for targeting (leave string empty to select all)</td>
+    <td>Comma-separated [publisher ad category IDs](/guidelines/master-api#get-publisher-ad-categories) for targeting (leave string empty to select all).</td>
     </tr>
     </table>
     </details>
@@ -318,11 +316,11 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     <table className="objectProperties">
     <tr>
     <td>`statusCode` <br /><span class="type-text">integer</span></td>
-    <td>HTTP status code: <var>201</var></td>
+    <td>HTTP status code: <var>201</var>.</td>
     </tr>
     <tr>
     <td>`responseObject` <br /><span class="type-text">object</span></td>
-    <td>Response object</td>
+    <td>Response object.</td>
     </tr>
     <tr>
     <td colSpan="2">
@@ -331,15 +329,15 @@ Make sure that the <var>budgetTypeId</var> of your campaign matches the <var>ioB
     <table className="objectProperties">
     <tr>
     <td>`data` <br /><span class="type-text">integer</span></td>
-    <td>campaign ID</td>
+    <td>Campaign ID.</td>
     </tr>
     <tr>
     <td>`message` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>Success message.</td>
     </tr>
     <tr>
     <td>`status` <br /><span class="type-text">string</span></td>
-    <td>campaign status: <var>pending</var></td>
+    <td>Campaign status: <var>pending</var>.</td>
     </tr>
     </table>
     </details>
