@@ -1,6 +1,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CopyUrl from '@site/src/components/CopyUrl';
+import ExternalLink from '@site/static/img/external-link2.svg';
 
 ### Power Segment audience details
 
@@ -11,9 +12,15 @@ import CopyUrl from '@site/src/components/CopyUrl';
 
 Get Power Segment audience details by ID, including the resolved list of active segments (Sphere/Orbit) selected by its equation, ordered by segment ID. Segments that are no longer active are left out.
 
+When <var>includeInsight</var> is <var>true</var>, each standard (public) segment includes its Insights status. <var>Ready</var> and <var>NotRequested</var> are returned as stored; <var>Processing</var> and <var>Failed</var> are returned as <var>NotRequested</var> unless the audience's Organization has requested the Insights report for that segment. Private segments don't include Insights.
+
 | Path parameter | |
 | --- | --- |
 | `audienceId` <br /><span class="type-text">integer</span> | [Audience ID](/guidelines/audience-api/#audience-details-list). |
+
+| Query parameter | |
+| --- | --- |
+| `includeInsight` <br /><span class="type-text">boolean</span> | When <var>true</var>, includes the Insights status for each standard segment. When <var>false</var>, <var>insights</var> is omitted. Default: <var>false</var>. |
 
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
@@ -93,21 +100,17 @@ Get Power Segment audience details by ID, including the resolved list of active 
       <td>[Taxonomy ID](/political-vertical/audience-segments/#listsearch-power-segments) of the segment.</td>
     </tr>
     <tr>
+      <td>`insights` <br /><span class="type-text">object</span></td>
+      <td>Insights status for the segment. Returned only for standard segments when <var>includeInsight</var> is <var>true</var>.</td>
+    </tr>
+    <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
       <summary>`insights` object properties</summary>
       <table className="objectProperties">
       <tr>
         <td>`status` <br /><span class="type-text">string</span></td>
-        <td>Status of the insight.</td>
-      </tr>
-      <tr>
-        <td>`generationTime` <br /><span class="type-text">integer</span></td>
-        <td>Timestamp when the insight was generated.</td>
-      </tr>
-      <tr>
-        <td>`sizeInBytes` <br /><span class="type-text">integer</span></td>
-        <td>Size of the insight, in bytes.</td>
+        <td>Insights status: <var>NotRequested</var>, <var>Processing</var>, <var>Ready</var>, or <var>Failed</var>.</td>
       </tr>
       </table></details>
     </td>
@@ -143,10 +146,24 @@ Get Power Segment audience details by ID, including the resolved list of active 
         "segmentType": "Orbit",
         "reach": 184500,
         "cpm": 12.5,
-        "dataUpdatedAt": 1718796428
+        "dataUpdatedAt": 1718796428,
+        "segmentStatus": "active",
+        "taxonomyId": "IQMADV-1004",
+        "insights": {
+          "status": "Ready"
+        }
       }
     ]
   }
+}
+```
+
+```json title="Response 422 (invalid audience ID)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "No active audience found with the given Id." }
+  ]
 }
 ```
 
@@ -164,12 +181,16 @@ Get Power Segment audience details by ID, including the resolved list of active 
 <div class="endpoint-container">
   <div class="child1">
 
-Create a Power Segment audience. Only available to advertisers under the Political vertical.
+Create a Power Segment audience.
+
+Using taxonomy IDs ([List/search Power Segments](#listsearch-power-segments)), you can build an audience with the <var>equation</var> field. Taxonomy IDs separated by a vertical bar (|) are in an 'or' relationship, which combines the sets of Power Segments. Wrap the group of taxonomy IDs in a double set of parentheses. Every taxonomy ID must belong to an active segment that is either a standard segment or private to the logged-in Organization.
+
+You can see an example of this format in the Request sample code block on the right-hand side of the page, or you can read more in our Help Center article on [Segments Groups and relationships<ExternalLink />](https://help.iqm.com/en/articles/5651486-segmented-audience-overview#h_31da47f45c).
 
 | Request schema | |
 | --- | --- |
 | `audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Audience name. |
-| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation representing the combination of [Power Segment taxonomy IDs](#listsearch-power-segments), using taxonomy IDs and the OR operator (`\|`), wrapped in a double set of parentheses. Every taxonomy ID must belong to an active segment that is either a standard segment or private to the logged-in organization. |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation string representing the taxonomy ID group in an OR relationship. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -222,7 +243,11 @@ Create a Power Segment audience. Only available to advertisers under the Politic
 <div class="endpoint-container">
   <div class="child1">
 
-Update the name and equation of an existing Power Segment audience. Only available to advertisers under the Political vertical.
+Update the name and equation of an existing Power Segment audience.
+
+Using taxonomy IDs ([List/search Power Segments](#listsearch-power-segments)), you can build an audience with the <var>equation</var> field. Taxonomy IDs separated by a vertical bar (|) are in an 'or' relationship, which combines the sets of Power Segments. Wrap the group of taxonomy IDs in a double set of parentheses. Every taxonomy ID must belong to an active segment that is either a standard segment or private to the logged-in Organization.
+
+You can see an example of this format in the Request sample code block on the right-hand side of the page, or you can read more in our Help Center article on [Segments Groups and relationships<ExternalLink />](https://help.iqm.com/en/articles/5651486-segmented-audience-overview#h_31da47f45c).
 
 | Path parameter | |
 | --- | --- |
@@ -231,7 +256,7 @@ Update the name and equation of an existing Power Segment audience. Only availab
 | Request schema | |
 | --- | --- |
 | `audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Audience name. |
-| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation representing the combination of [Power Segment taxonomy IDs](#listsearch-power-segments), using taxonomy IDs and the OR operator (`\|`), wrapped in a double set of parentheses. Every taxonomy ID must belong to an active segment that is either a standard segment or private to the logged-in organization. |
+| `equation` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Equation string representing the taxonomy ID group in an OR relationship. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -286,7 +311,9 @@ Update the name and equation of an existing Power Segment audience. Only availab
 
 Search and filter Power Segments. 
 
-The <var>individual</var> tab shows active standard segments plus the caller's org's private active segments; the <var>requested</var> tab shows only the caller's org's private segments that are active, requested, or failed. Favorite status is resolved for the logged-in user.
+The <var>individual</var> tab shows active standard segments plus the logged-in Organization's private active segments; the <var>requested</var> tab shows only the logged-in Organization's private segments that are active, requested, or failed. Favorite status is resolved for the logged-in user.
+
+Each Sphere/Orbit segment of a standard segment includes its Insights status. It's returned only to users whose profile has the Power Segment Insights feature; for other users, <var>insights</var> is omitted.
 
 | Request schema | |
 | --- | --- |
@@ -298,6 +325,7 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
 | `favorite` <br /><span class="type-text">boolean</span> | When <var>true</var>, restricts results to personalities favorited by the logged-in user. |
 | `categories` <br /><span class="type-text">array of strings</span> | [Power Segment category type](#power-segment-category-type-list) names to filter by, e.g. <var>CABINET_MEMBERS</var>. |
 | `taxonomyIds` <br /><span class="type-text">array of strings</span> | When provided, restricts results to personalities owning any of these Sphere or Orbit taxonomy IDs. Max 100. |
+| `visibilityScope` <br /><span class="type-text">string</span> | Restricts results by visibility: <var>public</var> returns only standard (public) segments, and <var>private</var> returns only the logged-in Organization's private segments. When omitted or empty, no visibility filter is applied. Doesn't affect <var>totalRecords</var>. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -324,6 +352,10 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
       <td>Personality ID, used to [favorite](#add-power-segment-personality-to-favorites)/[unfavorite](#remove-power-segment-personality-from-favorites) this personality. Shared by the personality's Sphere and Orbit segments.</td>
     </tr>
     <tr>
+      <td>`personalityIdInt` <br /><span class="type-text">integer</span></td>
+      <td>Integer ID of the personality, shared by its Sphere and Orbit segments. Omitted if not yet assigned.</td>
+    </tr>
+    <tr>
       <td>`personalityName` <br /><span class="type-text">string</span></td>
       <td>Name of the personality.</td>
     </tr>
@@ -334,10 +366,6 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
     <tr>
       <td>`category` <br /><span class="type-text">string</span></td>
       <td>[Power Segment category type](#power-segment-category-type-list) display name.</td>
-    </tr>
-    <tr>
-      <td>`description` <br /><span class="type-text">string</span></td>
-      <td>Description of the personality.</td>
     </tr>
     <tr>
       <td>`favorite` <br /><span class="type-text">boolean</span></td>
@@ -361,6 +389,10 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
         <td>Taxonomy ID of the segment.</td>
       </tr>
       <tr>
+        <td>`description` <br /><span class="type-text">string</span></td>
+        <td>Description of the segment.</td>
+      </tr>
+      <tr>
         <td>`cpm` <br /><span class="type-text">number</span></td>
         <td>Cost per mille.</td>
       </tr>
@@ -382,7 +414,7 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
       </tr>
       <tr>
         <td>`insights` <br /><span class="type-text">object</span></td>
-        <td>Insight generation status for the segment.</td>
+        <td>Insights status for the segment. Returned only for standard segments, to users with the Power Segment Insights feature.</td>
       </tr>
       <tr>
       <td colSpan="2">
@@ -391,15 +423,7 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
         <table className="objectProperties">
         <tr>
           <td>`status` <br /><span class="type-text">string</span></td>
-          <td>Status of the insight.</td>
-        </tr>
-        <tr>
-          <td>`generationTime` <br /><span class="type-text">integer</span></td>
-          <td>Timestamp when the insight was generated.</td>
-        </tr>
-        <tr>
-          <td>`sizeInBytes` <br /><span class="type-text">integer</span></td>
-          <td>Size of the insight, in bytes.</td>
+          <td>Insights status: <var>NotRequested</var>, <var>Processing</var>, <var>Ready</var>, or <var>Failed</var>. <var>Processing</var> and <var>Failed</var> are returned as <var>NotRequested</var> unless the logged-in Organization has requested the report.</td>
         </tr>
         </table></details>
       </td>
@@ -428,7 +452,8 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
   "tab": "individual",
   "favorite": false,
   "categories": ["CABINET_MEMBERS"],
-  "taxonomyIds": ["IQMADV-1004"]
+  "taxonomyIds": ["IQMADV-1004"],
+  "visibilityScope": "public"
 }
 ```
 
@@ -441,22 +466,21 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
     "segmentsList": [
       {
         "personalityId": "761d7017-857c-3074-adb2-4d74ad7702da",
+        "personalityIdInt": 101,
         "personalityName": "Scott Bessent",
         "jobTitle": "Secretary of the Treasury",
         "category": "Cabinet Members",
-        "description": "Scott Bessent",
         "favorite": true,
         "sphere": {
           "taxonomyId": "IQMADV-1004",
+          "description": "Scott Bessent",
           "cpm": 12.5,
           "totalReach": 184500,
           "dataUpdatedAt": 1780272000000,
           "status": "active",
           "dataAvailable": true,
           "insights": {
-            "status": "Ready",
-            "generationTime": 2592002592002,
-            "sizeInBytes": 499851
+            "status": "Ready"
           }
         }
       }
@@ -464,6 +488,9 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
   }
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
 
 ```json title="Response 422 (missing/invalid tab)"
 {
@@ -473,6 +500,17 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
   ]
 }
 ```
+
+```json title="Response 422 (invalid visibilityScope)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "visibilityScope must be either \"public\" or \"private\"." }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 </Tabs>
@@ -488,9 +526,9 @@ The <var>individual</var> tab shows active standard segments plus the caller's o
 <div class="endpoint-container">
   <div class="child1">
 
-Submits a custom Power Segment request for a personality, private to the logged-in organization. One segment is created per requested <var>segmentType</var> with status <var>requested</var>. 
+Submits a custom Power Segment request for a personality, private to the logged-in Organization. One segment is created per requested <var>segmentType</var> with status <var>requested</var>. 
 
-If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is also created for the personality; if only <var>sphere</var> is requested, no Orbit segment is created. Political vertical advertiser users only.
+If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is also created for the personality; if only <var>sphere</var> is requested, no Orbit segment is created.
 
 | Request schema | |
 | --- | --- |
@@ -531,6 +569,9 @@ If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is al
 }
 ```
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
 ```json title="Response 400 (missing personalityName)"
 {
   "success": false,
@@ -551,6 +592,8 @@ If only <var>orbit</var> is requested, a <var>deleted</var> Sphere segment is al
   ]
 }
 ```
+
+</details>
 
 </TabItem>
 </Tabs>
@@ -650,6 +693,420 @@ Idempotent: removing a personality that isn't currently favorited still returns 
   "data": {
     "message": "Personality removed from favorites"
   }
+}
+```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Count public Power Segments
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/power-segment/segments/public/count" operationId="getPublicPowerSegmentCount" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the number of public Power Segments. The count isn't scoped to the logged-in Organization.
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`publicSegmentsCount` <br /><span class="type-text">integer</span></td>
+    <td>Number of public Power Segments.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "publicSegmentsCount": 340
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Generate Power Segment Insights
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/power-segment/segments/generate-insights" operationId="generatePowerSegmentInsights" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Initiate Power Segment Insights (PSI) report generation for a Power Segment, identified by its <var>taxonomyId</var>. The request is forwarded for processing after the segment's current Insights status is validated.
+
+Only segments with an Insights status of <var>NotRequested</var> or <var>Failed</var> can be triggered. If generation is already in progress, the logged-in user is recorded as an additional requester.
+
+| Request schema | |
+| --- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#listsearch-power-segments) of the Power Segment. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "taxonomyId": "IQMADV0002606"
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "Insights generation initiated successfully."
+  }
+}
+```
+
+```json title="Response 422 (Insights already in progress or ready)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Insights generation cannot be initiated. Current report status is: Ready" }
+  ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Download Power Segment Insights report
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/power-segment/segments/download-report" operationId="downloadReport" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a presigned URL for downloading the PSI report PDF for the given <var>taxonomyId</var>. The report must have a <var>Ready</var> status. The white-label or non-white-label version is chosen automatically based on the logged-in user's session. If the segment is private, only the Organization that owns it can download it.
+
+| Query parameter | |
+| --- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#listsearch-power-segments) of the Power Segment. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`reportURL` <br /><span class="type-text">string</span></td>
+    <td>Presigned URL for downloading the PSI report PDF.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "reportURL": "https://s3.amazonaws.com/..."
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Report is not ready. Current report status is: Processing" }
+  ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights report data
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/power-segment/segments/{taxonomyId}/report-data" operationId="getPowerSegmentReportData" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get the PSI report data for the given <var>taxonomyId</var>, used to render the Power Segment Insights report viewer. The report must have a <var>Ready</var> status. If the segment is private, only the Organizations that requested it can access it.
+
+| Path parameter | |
+| --- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> | [Taxonomy ID](#listsearch-power-segments) of the Power Segment. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`insightType` <br /><span class="type-text">string</span></td>
+    <td>Report type: <var>SPHERE</var> or <var>ORBIT</var>.</td>
+  </tr>
+  <tr>
+    <td>`data` <br /><span class="type-text">object</span></td>
+    <td>Report content used to render the report viewer. Its shape may change as new block types are introduced.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "insightType": "ORBIT",
+    "data": {
+      "id": "IQMADV0002606",
+      "pageData": [
+        {
+          "title": "Profile",
+          "id": 1,
+          "blocks": [
+            {
+              "type": "profileHeader",
+              "data": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "subjectTitle": "Senator",
+                "state": "Texas"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403 (private report of a different Organization)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "This report is private and cannot be accessed" }
+  ]
+}
+```
+
+```json title="Response 422 (segment not found)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "No power segment found for the provided taxonomyId." }
+  ]
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Report is not ready. Current report status is: Processing" }
+  ]
+}
+```
+
+```json title="Response 422 (report data not found)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Report data file not found for the provided personality: John Doe" }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Get Power Segment Insights avatar URL
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/power-segment/segments/{taxonomyId}/avatar-url" operationId="getPowerSegmentAvatarPresignedUrl" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a presigned URL for the profile avatar image at the given <var>s3Path</var>, scoped to the given <var>taxonomyId</var>. The report must have a <var>Ready</var> status. If the segment is private, only the Organizations that requested it can access it.
+
+| Path parameter | |
+| --- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> | [Taxonomy ID](#listsearch-power-segments) of the Power Segment. |
+
+| Query parameter | |
+| --- | --- |
+| `s3Path` <br /><span class="type-text">string</span> <span class="required-text">required</span> | S3 URI of the profile avatar image. Must be within the segment's own taxonomy folder. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`avatarURL` <br /><span class="type-text">string</span></td>
+    <td>Presigned URL for the profile avatar image.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "avatarURL": "https://s3.amazonaws.com/..."
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403 (private report of a different Organization)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "This report is private and cannot be accessed" }
+  ]
+}
+```
+
+```json title="Response 403 (s3Path doesn't belong to taxonomyId)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Provided path does not belong to the requested taxonomyId: IQMADV0002606" }
+  ]
+}
+```
+
+```json title="Response 422 (avatar not found)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Avatar file not found for the provided taxonomyId: IQMADV0002606" }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Email Power Segment Insights report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/power-segment/segments/email" operationId="sendReportEmail" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Send the PSI report for the given <var>taxonomyId</var> to the specified email addresses. The report must have a <var>Ready</var> status. If the segment is private, only the Organization that owns it can request the email.
+
+If the PDF is 10 MB or smaller, it's attached to the email; otherwise the email includes a download link only. The white-label or non-white-label version is chosen automatically based on the logged-in user's session.
+
+| Query parameter | |
+| --- | --- |
+| `taxonomyId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | [Taxonomy ID](#listsearch-power-segments) of the Power Segment. |
+
+| Request schema | |
+| --- | --- |
+| `emailIds` <br /><span class="type-text">array of strings</span> <span class="required-text">required</span> | Email addresses to send the report to: 1-15 addresses, each 1-320 characters. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`message` <br /><span class="type-text">string</span></td>
+    <td>Success message.</td>
+  </tr>
+  </table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample"
+{
+  "emailIds": ["analyst@example.com"]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "message": "e-mail sent successfully"
+  }
+}
+```
+
+```json title="Response 422 (report not ready)"
+{
+  "success": false,
+  "errorObjects": [
+    { "error": "Report is not ready. Current report status is: Processing" }
+  ]
 }
 ```
 
