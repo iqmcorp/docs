@@ -9,6 +9,7 @@ import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
 import SupportedDimensionsNote from '@site/docs/_partials/bid-model-api/supported-dimensions-note.mdx';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 
 # Create a Bid Model
 
@@ -18,7 +19,6 @@ The following endpoints are used to check a campaign's eligibility and create a 
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
-<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/advanced/list" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/bm/static/dimensions" />
 <br /><CopyUrl method="PUT" url="https://api.iqm.com/api/v3/bm/campaigns/{campaignId}/bid-models/{dimensionId}" />
 
@@ -47,8 +47,9 @@ To create a Bid Model the following are required:
    * See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) to learn how to log in and receive an authentication token
 1. A campaign that meets the following criteria:
    *  Duration of at least 3 days
-   *  Daily budget of at least $100
-   *  Base bid and max bid price must be defined
+   *  For a budget-based campaign, a daily budget of at least $100
+   *  For an impression-based campaign, at least 1,000 daily impressions
+   *  These are the default thresholds. Your workspace may be configured with different ones; the error message names the threshold the campaign misses.
 
 ## Create a Bid Model using the IQM API
 
@@ -57,7 +58,6 @@ This tutorial covers how to create a Bid Model.
 The minimum requirements to perform this task are: logging in with authentication credentials, checking a campaign's eligibility, and creating a Bid Model. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
 
 1. Check campaign for eligibility
-    * 1.1: Check insertion order (IO) for campaign eligibility
 1. Select a dimension
 1. Create a Bid Model
 
@@ -67,10 +67,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header |
+<ApiHeaders />
 
 </div>
 
@@ -89,6 +86,7 @@ Before creating a Bid Model, check that you have an eligible campaign by using t
 
 The endpoint returns a JSON schema of campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
    * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration.
+   * <var>budgetTypeId</var> shows whether the campaign is budget-based (<var>1</var>) or impression-based (<var>2</var>).
    * The daily budget is shown by the <var>budgetDay</var> parameter. 
 
 | Path parameters |  |
@@ -104,227 +102,62 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
 {
     "statusCode": 200,
     "responseObject": {
-        "owId": 203578,
-        "parentOrganizationName": "Signup testing 1",
-        "id": 537599,
-        "uowId": 188494,
-        "campaignName": "TestCampaign",
+        "owId": 204851,
+        "parentOrganizationName": "Example Workspace",
+        "id": 625979,
+        "uowId": 291477,
+        "campaignName": "Bid model campaign",
         "advertiserDomain": "https://iqm.com",
         "creativeType": 11,
         "campaignType": 1,
-        "totalBudgetPacing": true,
+        "totalBudgetPacing": false,
         "isTvAd": false,
-                 //highlight-next-line
-        "budgetDay": 1199.08,
-        "budgetTotal": 50000.0,
-        "maxBid": 15.0,
+        //highlight-next-line
+        "budgetDay": 100.0,
+        "budgetTotal": 1500.0,
+        "maxBid": 10.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-                 //highlight-next-line
-        "startTime": 1726518001,
-                 //highlight-next-line
-        "endTime": 1727668800,
-        "status": "running",
+        //highlight-next-line
+        "startTime": 1793160000,
+        //highlight-next-line
+        "endTime": 1796011200,
+        "status": "pending",
         "dspMargin": 0,
         "platformMargin": 0,
         "userDealMargin": 0,
         "spentScale": false,
-        "creativeIds": "676384",
+        "creativeIds": "803406",
         "conversionType": "None",
-        "bidOptimization": true,
-        "bidPacing": true,
-        "isBidShading": false,
+        "bidOptimization": false,
+        "bidPacing": false,
+        "isBidShading": true,
         "impressionCapping": 0,
-        "maxDayImpressions": 0,
-        "maxDayClicks": 0,
-        "maxDayConversions": 0,
-        "totalImpressions": 5,
-        "totalClicks": 0,
-        "totalConversions": 0,
-        "deviceType": "13,15,11,12",
-        "trafficType": "11,12",
+        "frequencyCapEnabled": false,
         "exchanges": "",
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
         "isCampaignFromNewPlatform": true,
-        "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "organizationName": "Example Organization",
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
-        "createDate": 1726517360,
-                 //highlight-next-line
-        "ioId": 15844,
-        "ioName": "Test2",
+        "createDate": 1793036616,
+        //highlight-next-line
+        "ioId": 29311,
+        "ioName": "IO Name 1",
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
-    }
-}
-```
-
-</TabItem>
-</Tabs>
-
-</div></div>
-
-#### Step 1.1: Check insertion order for max bid and base bid
-
-<CopyUrl method="GET" url="https://api.iqm.com/api/v3/cmp/io/advanced/list" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Pass the <var>ioId</var> returned from Step 1 in the <var>searchField</var> query parameter. Then check the IO's advanced details to confirm that <var>baseBid</var> and <var>maxBid</var> are defined for the campaign's eligibility.
-
-| Query parameters | |
-| --- | --- |
-| `searchField` <br /><span class="type-text">string</span> | Search returned results for specified <var>ioId</var> |
-
-</div>
-<div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "totalRecords": 2,
-        "filteredRecords": 2,
-        "recordsTotal": {
-          ...
-        },
-        "recordsList": [
-            {
-                "prebidCost": 0.0,
-                "clicks": 0,
-                "totalCount": 0,
-                "winRate": 0.0,
-                "logoURL": null,
-                "avatarURL": null,
-                "budgetDay": 0.0,
-                "budgetSpent": 0.0,
-                "budgetTotal": 0.0,
-                "dataCost": 0.0,
-                "mediaBudget": 0.0,
-                "owId": 203578,
-                "orgId": 0,
-                "impressions": 0,
-                "industry": 0,
-                "mediaSpent": 0.0,
-                "spent": 0.0,
-                "organizationBidShadingSaving": null,
-                "workspaceSpent": 0.0,
-                "platformSpent": 0.0,
-                "customerSpent": 0.0,
-                "platformMediaEarning": 0.0,
-                "platformBidShadingEarning": 0.0,
-                "platformTotalEarning": 0.0,
-                "workspaceMediaEarning": 0.0,
-                "workspaceBidShadingEarning": 0.0,
-                "workspaceTotalEarning": 0.0,
-                "organizationName": "Conor's Org",
-                "companySize": 0,
-                "workspaceName": null,
-                "workspaceId": 0,
-                "workspaceDomain": null,
-                "workspaceOrganizationName": null,
-                "bidImpressions": 0,
-                "startCount": 0,
-                "firstCount": 0,
-                "midCount": 0,
-                "thirdCount": 0,
-                "completeCount": 0,
-                "audioVideoActualBids": 0,
-                "audioVideoActualImpressions": 0,
-                "eCPC": 0.0,
-                "eCPM": 0.0,
-                "eCPI": 0.0,
-                "eCPCV": 0.0,
-                "eCPV": 0.0,
-                "totalAttributedConversion": null,
-                "totalAttributedViewThroughConversion": null,
-                "totalAttributedClickThroughConversion": null,
-                "costPerAttributedConversion": null,
-                "totalAttributedConversionRate": null,
-                "reach": 0,
-                "frequency": 0.0,
-                "date": null,
-                "campaignId": 0,
-                "campaignName": null,
-                             //highlight-next-line
-                "maxBid": 40.0,
-                "startTime": 0,
-                "endTime": 0,
-                "campaignType": null,
-                "status": null,
-                "mappingDataCost": 0.0,
-                "mappingSpent": 0.0,
-                "campaignTimezone": null,
-                "creativeType": null,
-                "budgetPacing": false,
-                "isCampaignFromNewPlatform": false,
-                "percentageOfTotalSpent": 0.0,
-                "uowId": 0,
-                "audioVideoViewed": 0.0,
-                "ioId": 15844,
-                "ioName": "Test2",
-                "ioTimezone": 29,
-                "ioBudgetDistributionMethod": 1,
-                "ioStartTime": 1726517280000,
-                "ioEndTime": 0,
-                "ioTotalBudget": 50000.0,
-                "isAutoSumIoTotalBudget": true,
-                "ioBudgetTypeId": 1,
-                "ioTotalImpressions": null,
-                "ioStatusId": 1,
-                "exchangeId": 0,
-                "exchangeName": null,
-                "budgetTypeId": 1,
-                "targetImpression": null,
-                "dailyImpression": null,
-                "creativesCount": null,
-                "campaignsCount": 1,
-                "pacingPercentage": null,
-                "actualSpent": null,
-                "expectedSpent": null,
-                "campaignDuration": null,
-                "remainingDuration": null,
-                "dailyPacingPercentage": null,
-                "expectedDailySpent": null,
-                "actualDailySpent": null,
-                "ioPacingPercentage": 0.0,
-                "ioActualSpent": 0.0,
-                "ioExpectedSpent": 0.0,
-                "ioDuration": null,
-                "ioRemainingDuration": 0,
-                "budgetTotalCombined": null,
-                "budgetDayCombined": null,
-                "ioTotalBudgetCombined": 50000.0,
-                "campaignPriority": null,
-                "bidModelDataId": null,
-                             //highlight-next-line
-                "baseBid": 20.0,
-                "campaignTypeId": null,
-                "workspaceVLDInsightsEarnings": null,
-                "platformVLDInsightsEarnings": null,
-                "isEligibleForVLDInsightsReport": null,
-                "vldInsightsCost": null,
-                "ioTimeZoneName": "US/Eastern",
-                "CTR": 0.0,
-                "VCR": 0.0,
-                "CVR": 0.0
-            }
-        ]
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -356,7 +189,7 @@ This API provides values of Bid Model dimensions and sub-dimensions. Select the 
 | `9` | Location |
 | `10` | State |
 | `11` | City |
-| `12` | Zip |
+| `12` | Zip Codes |
 | `13` | Exchange |
 | `14` | Audience |
 
@@ -445,21 +278,21 @@ This API provides values of Bid Model dimensions and sub-dimensions. Select the 
             "id": 10,
             "label": "State",
             "order": 1,
-            "modellingEnabled": false
+            "modellingEnabled": true
           },
           {
             "name": "city",
             "id": 11,
             "label": "City",
             "order": 2,
-            "modellingEnabled": false
+            "modellingEnabled": true
           },
           {
             "name": "zip",
             "id": 12,
-            "label": "Zip",
+            "label": "Zip Codes",
             "order": 3,
-            "modellingEnabled": false
+            "modellingEnabled": true
           }
         ]
       },
@@ -516,15 +349,15 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
 
 | Path parameters | |
 | --- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
-| `dimensionId` <br /><span class="type-text">integer</span> | Dimension ID |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID. |
+| `dimensionId` <br /><span class="type-text">integer</span> | Dimension ID. |
 
 
 <table>
 <th>Request schema</th>
 <tr>
 <td>`actionWiseBidModelEntities` <br /><span class="type-text">object</span></td>
-<td>Object containing Bid Model entity details mapped to operations <var>ADD</var>, <var>UPDATE</var>, <var>DELETE</var></td>
+<td>Object containing Bid Model entity details mapped to operations <var>ADD</var>, <var>UPDATE</var>, <var>DELETE</var>.</td>
 </tr>
     <tr>
     <td colSpan="2">
@@ -533,7 +366,7 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
       <table className="objectProperties">
       <tr>
       <td>`bidModelEntityDetails` <br /><span class="type-text">object</span></td>
-      <td>Object containing Bid Model entity details for <var>ADD</var> operation </td>
+      <td>Object containing Bid Model entity details for <var>ADD</var> operation.</td>
       </tr>
        <tr>
           <td colSpan="2">
@@ -542,38 +375,39 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
               <table className="objectProperties">
               <tr>
               <td>`entityId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-              <td>Bid Model entity ID</td>
+              <td>Bid Model entity ID, such as the ID of your creative for the Creative dimension. Use <var>-1</var> for the Other entity.</td>
               </tr>
               <tr>
               <td>`entityTypeId`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
               <td>Bid Model entity type ID 
               <br /><var>1</var>: Individual entity 
               <br /><var>2</var>: Bundle entity 
-              <br /><var>3</var>: Other entity</td>
+              <br /><var>3</var>: Other entity
+              <br />When you add modelled entities, include exactly one Other entity (<var>entityId</var> <var>-1</var>).</td>
               </tr>
                 <tr>
-              <td>`priority` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-              <td>Assigned priority:<br /> [ <var>1</var> .. <var>10</var> ]</td>
+              <td>`priority` <br /><span class="type-text">integer</span></td>
+              <td>Assigned priority: [ <var>1</var> .. <var>10</var> ]. Required when <var>spendRatioTypeId</var> is <var>1</var> (Flexible). Omit it when <var>spendRatioTypeId</var> is <var>2</var> (Strict).</td>
               </tr>
                 <tr>
-              <td>`bidMultiplier` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-              <td>Bid Modifier<br /> [ <var>0.1</var> .. <var>100</var> ]</td>
+              <td>`bidMultiplier` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+              <td>Bid Modifier: [ <var>0.1</var> .. <var>100</var> ].</td>
               </tr>
               <tr>
-              <td>`spendRatio` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-              <td>Spend Ratio<br /> [ <var>0</var> .. <var>100</var> ]</td>
+              <td>`spendRatio` <br /><span class="type-text">integer</span></td>
+              <td>Spend Ratio: [ <var>0</var> .. <var>100</var> ]. Required for every dimension except Publisher Category and Audience, which don't support spend ratios. Omit it for those.</td>
               </tr>
               <tr>
-              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
-              <td>Spend Ratio type ID<br />Flexible: <var>1</var> <br />Strict: <var>2</var></td>
+              <td>`spendRatioTypeId` <br /><span class="type-text">integer</span></td>
+              <td>Spend Ratio type ID. Flexible: <var>1</var>. Strict: <var>2</var>. Required for every dimension except Publisher Category and Audience, which don't support spend ratios. Omit it for those.</td>
               </tr>
                    <tr>
               <td>`bundleName`<br /><span class="type-text">string</span> <span class="required-text">required</span></td>
-              <td>Bundle name, required when <var>entityTypeId</var> is set to bundle entity</td>
+              <td>Bundle name, required when <var>entityTypeId</var> is set to bundle entity. Each bundle needs its own name.</td>
               </tr>
                    <tr>
               <td>`entityIds`<br /><span class="type-text">array of integers</span> <span class="required-text">required</span></td>
-              <td>Entity IDs, required when <var>entityTypeId</var> is set to bundle entity</td>
+              <td>Entity IDs, required when <var>entityTypeId</var> is set to bundle entity.</td>
               </tr>
               </table></details>
             </td>
@@ -589,8 +423,12 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
     <summary style={{fontSize: "16px"}}>Response properties</summary>
     <table className="objectProperties">
     <tr>
+    <td>`success` <br /><span class="type-text">boolean</span></td>
+    <td>Indicates the Bid Model was updated: <var>true</var>.</td>
+    </tr>
+    <tr>
     <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>Success message.</td>
     </tr>
     </table>
     </details>
@@ -607,40 +445,20 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
     "ADD": {
       "bidModelEntityDetails": [
         {
-          "entityId": 50,
+          "entityId": 803406,
           "entityTypeId": 1,
           "priority": 1,
           "bidMultiplier": 2,
-          "spendRatio": 100,
+          "spendRatio": 50,
           "spendRatioTypeId": 1
         },
         {
-          "entityId": -2,
-          "entityTypeId": 2,
-          "priority": 1,
-          "bidMultiplier": 2,
-          "spendRatio": 100,
-          "spendRatioTypeId": 1,
-          "bundleName": "bundle-1",
-          "entityIds": [
-            1,
-            2,
-            3
-          ]
-        },
-        {
-          "entityId": 232,
-          "entityTypeId": 2,
-          "priority": 1,
-          "bidMultiplier": 2,
-          "spendRatio": 100,
-          "spendRatioTypeId": 1,
-          "bundleName": "bundle-1",
-          "entityIds": [
-            1,
-            2,
-            3
-          ]
+          "entityId": -1,
+          "entityTypeId": 3,
+          "priority": 2,
+          "bidMultiplier": 1,
+          "spendRatio": 50,
+          "spendRatioTypeId": 1
         }
       ]
     }
@@ -651,9 +469,25 @@ See the [Create Bid Model bundle](/guidelines/bid-model-api/#create-bid-model-bu
 ```json title="Response 200"
 {
   "success": true,
-  "data": "Bid Model updated successfully"
+  "data": "Bid modeling updated successfully"
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "At least one 'Other' entity is required if there are modelled entities"
+    }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 </Tabs>

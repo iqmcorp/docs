@@ -17,6 +17,7 @@ import { conversionPartnerTypes } from '@site/src/data/enums/conversionPartnerTy
 import { conversionStatus } from '@site/src/data/enums/conversionStatus';
 import { conversionPiggybackTypes } from '@site/src/data/enums/conversionPiggybackTypes';
 import { conversionAttributionTypes } from '@site/src/data/enums/conversionAttributionTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 
 # Conversions API
 
@@ -37,10 +38,7 @@ Use the following header parameters for all requests:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -145,18 +143,18 @@ Use the following header parameters for all requests:
 </tr>
 <tr>
 <td>`created` <br /><span class="type-text">integer</span></td>
-<td>Unix epoch timestamp of Pixel conversion creation, in milliseconds.</td>
+<td>Unix epoch timestamp of Pixel conversion creation, in seconds.</td>
 </tr>
 <tr>
 <td>`name` <br /><span class="type-text">string</span></td>
 <td>Name for Pixel conversion.</td>
 </tr>
 <tr>
-<td>`attributionId` <br /><span class="type-text">string</span></td>
+<td>`attributionId` <br /><span class="type-text">integer</span></td>
 <td>[Attribution type ID](#get-list-of-conversion-property-types). <br /><EnumWidget values={conversionAttributionTypes} /></td>
 </tr>
 <tr>
-<td>`customFields` <br /><span class="type-text">string</span></td>
+<td>`customFields` <br /><span class="type-text">array of strings</span></td>
 <td>Allows user to pass additional data along with conversion details, which can be used for more detailed Insights.</td>
 </tr>
 <tr>
@@ -403,7 +401,7 @@ A conversion <var>id</var> can be used to [Get conversion details by ID](#get-co
 </tr>
 <tr>
   <td>`created` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds.</td>
+  <td>Unix epoch creation date, in seconds.</td>
 </tr>
 <tr>
   <td>`totalConversions` <br /><span class="type-text">integer</span></td>
@@ -887,20 +885,16 @@ Minimum required properties:
 
 <table className="objectProperties">
 <tr>
-<td>`id` <br /><span class="type-text">integer</span></td>
-<td>Conversion ID.</td>
+  <td>`id` <br /><span class="type-text">integer</span></td>
+  <td>Conversion ID.</td>
 </tr>
 <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
   <td>Conversion name.</td>
 </tr>
 <tr>
-  <td>`postbackPartnerName` <br /><span class="type-text">string</span></td>
-  <td>Postback partner name.</td>
-</tr>
-<tr>
   <td>`status` <br /><span class="type-text">string</span></td>
-  <td>Conversion status.</td>
+  <td>Conversion status. Always <var>Pending</var> for a new conversion.</td>
 </tr>
 <tr>
   <td>`type` <br /><span class="type-text">string</span></td>
@@ -908,14 +902,14 @@ Minimum required properties:
 </tr>
 <tr>
   <td>`created` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds.</td>
+  <td>Unix epoch creation date, in seconds.</td>
 </tr>
 <tr>
   <td>`totalConversions` <br /><span class="type-text">integer</span></td>
   <td>Total conversions count.</td>
 </tr>
 <tr>
-  <td>`owID` <br /><span class="type-text">integer</span></td>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
   <td>Organization Workspace ID.</td>
 </tr>
 <tr>
@@ -927,32 +921,36 @@ Minimum required properties:
   <td>Modified by User Organization Workspace ID.</td>
 </tr>
 <tr>
-  <td>`uuid` <br /><span class="type-text">integer</span></td>
-  <td>Universally unique identifier.</td>
+  <td>`uuid` <br /><span class="type-text">string</span></td>
+  <td>Universally unique identifier of the conversion. Also used in the pixel script URL.</td>
 </tr>
 <tr>
   <td>`pixelConversionScript` <br /><span class="type-text">string</span></td>
-  <td>Pixel conversion script.</td>
-</tr>
-<tr>
-  <td>`attributedConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that are attributed to a specific campaign based on the Attribution model.</td>
-</tr>
-<tr>
-  <td style={{ fontSize: "85%" }}>`attributedViewThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user viewed an ad but did not click on it</td>
-</tr>
-<tr>
-  <td style={{ fontSize: "85%" }}>`attributedClickThroughConversion` <br /><span class="type-text">integer</span></td>
-  <td>The number of conversions that occurred after a user clicked on an ad</td>
+  <td>Pixel conversion script to place on the conversion page.</td>
 </tr>
 <tr>
   <td>`pixelFinancialMetric` <br /><span class="type-text">string</span></td>
-  <td>Pixel financial metric.</td>
+  <td>Custom field used as the financial metric (from <var>financialMetrics</var>). Not returned if none was set.</td>
 </tr>
 <tr>
-  <td>`postbackPartnerLogoUrl` <br /><span class="type-text">string</span></td>
-  <td>Postback partner logo URL.</td>
+  <td>`attributedConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that are attributed to a specific campaign based on the Attribution model.</td>
+</tr>
+<tr>
+  <td>`attributedViewThroughConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that occurred after a user viewed an ad but did not click on it.</td>
+</tr>
+<tr>
+  <td>`attributedClickThroughConversions` <br /><span class="type-text">integer</span></td>
+  <td>The number of conversions that occurred after a user clicked on an ad.</td>
+</tr>
+<tr>
+  <td>`campaignCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of campaigns the conversion is assigned to.</td>
+</tr>
+<tr>
+  <td>`aiBasedConversion` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the conversion is AI-based.</td>
 </tr>
 </table>
 
@@ -966,7 +964,7 @@ Minimum required properties:
 ```json title="Request sample"
 {
     "name": "PixelConversion",
-    "attributionId": "1",
+    "attributionId": 1,
     "customFields": [
         "field_1",
         "field_2",
@@ -996,24 +994,23 @@ Minimum required properties:
 {
     "success": true,
     "data": {
-        "id": 3213,
+        "id": 8073,
         "name": "PixelConversion",
-        "postbackPartnerName": null,
         "status": "Pending",
         "type": "Pixel",
-        "created": 1687459918,
+        "created": 1793036563,
         "totalConversions": 0,
-        "owId": 202017,
-        "createdByUowId": 108658,
-        "modifiedByUowId": 108658,
-        "uuid": "a574ca49cc244c3bb3089491a11aae43",
+        "owId": 204851,
+        "createdByUowId": 291477,
+        "modifiedByUowId": 291477,
+        "uuid": "63485822-6fb3-43ad-aad3-68a40c9a8001",
+        "pixelConversionScript": "<script src='https://iqm.com/d/c/conversion/63485822-6fb3-43ad-aad3-68a40c9a8001?cf1={FIELD_1}&cf2={FIELD_2}&cf3={FIELD_3}&cv={FIELD_4}' async></script>",
+        "pixelFinancialMetric": "field_4",
         "attributedConversions": 0,
         "attributedViewThroughConversions": 0,
         "attributedClickThroughConversions": 0,
-        "pixelFinancialMetric": "name",
-        "postbackPartnerLogoURL": null,
-        "pixelConversionScript": "<script src='https://pxl.stage.iqm.com/i/pixel/8f3165d0-b714-440e-bc1d-621127fa5fad?cv={CONVERSION_VALUE}' async></script>",
-        "partnerUrl": null
+        "campaignCount": 0,
+        "aiBasedConversion": false
     }
 }
 ```
@@ -1156,7 +1153,7 @@ Create Postback type conversion records.
 </tr>
 <tr>
   <td>`created` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch creation date, in milliseconds.</td>
+  <td>Unix epoch creation date, in seconds.</td>
 </tr>
 <tr>
   <td>`totalConversions` <br /><span class="type-text">integer</span></td>
@@ -1647,10 +1644,6 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 
 :::
 
-| Query parameters |  |
-| ----  | --- |
-| `assignConversionToCampaign` <br /><span class="type-text">string</span> | Map containing details list of campaign IDs which need to be added/removed.
-
 | Request schema |  |
 | ---- | --- |
 | `conversionIdList` <br /><span class="type-text">array of integers</span> | [Conversion IDs](#get-list-of-conversions) to assign. |
@@ -1662,7 +1655,7 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 
 <table className="objectProperties">
 <tr>
-<td>`conversionIdsList` <br /><span class="type-text">integer</span></td>
+<td>`conversionIdsList` <br /><span class="type-text">array of integers</span></td>
 <td>Conversion IDs assigned to campaigns.</td>
 </tr>
 <tr>
@@ -1693,18 +1686,13 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 ```json title="Request sample"
 {
   "conversionIdList": [
-    3925
+    8073
   ],
   "addCampaignsList": [
-    25396,
-    256374,
-    234567
+    625977,
+    999999999
   ],
-  "removeCampaignsList": [
-    256321,
-    256432,
-    256433
-  ]
+  "removeCampaignsList": []
 }
 ```
 
@@ -1712,21 +1700,17 @@ Conversions can be assigned, updated, or removed from a campaign only before the
 {
   "success": true,
   "data": {
-    "conversionIdsList": 3925,
+    "conversionIdsList": [
+      8073
+    ],
     "validAddCampaignIdsList": [
-      253396,
-      256374
+      625977
     ],
     "invalidAddCampaignIdsList": [
-      234567
+      999999999
     ],
-    "validRemoveCampaignIdsList": [
-      256321,
-      256432
-    ],
-    "invalidRemoveCampaignIdsList": [
-      256433
-    ]
+    "validRemoveCampaignIdsList": [],
+    "invalidRemoveCampaignIdsList": []
   }
 }
 ```

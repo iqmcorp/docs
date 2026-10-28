@@ -14,6 +14,8 @@ import { splitStrategies } from '@site/src/data/enums/splitStrategies';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 import { plannerFileTypes } from '@site/src/data/enums/plannerFileTypes';
 import { trafficTypes } from '@site/src/data/enums/trafficTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 export const hcpAudienceSelectionMethods = [
   { id: 1, label: 'Filter based' },
@@ -98,13 +100,13 @@ All Planner times are Unix epoch **milliseconds**, not seconds. For example, Nov
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). This endpoint returns an OAuth-compliant response with an access token and an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers |  |
-| ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Basic</var> followed by your Base64-encoded <var>client_id:client_secret</var>.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
+<OAuthHeaders />
 
 | Request schema |  |
 | ---- | --- |
@@ -129,53 +131,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -188,10 +170,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Bearer</var> followed by the <var>access_token</var> from the login response. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -636,8 +615,24 @@ The response contains every request field, plus:
     <td>Plan impressions range and suggested impressions.</td>
   </tr>
   <tr>
-    <td>`reach`, `maxReach` <br /><span class="type-text">integer</span></td>
-    <td>Forecasted reach.</td>
+    <td>`reach` <br /><span class="type-text">integer</span></td>
+    <td>Forecasted plan reach (unique users across all campaigns).</td>
+  </tr>
+  <tr>
+    <td>`maxReach` <br /><span class="type-text">integer</span></td>
+    <td>Not calculated for the plan; returned as <var>0</var>.</td>
+  </tr>
+  <tr>
+    <td>`owId` <br /><span class="type-text">integer</span></td>
+    <td>Organization Workspace ID.</td>
+  </tr>
+  <tr>
+    <td>`id`, `statusId`, `ioId` <br /><span class="type-text">integer</span></td>
+    <td><var>null</var>, because the plan isn't saved yet.</td>
+  </tr>
+  <tr>
+    <td>`createdAt`, `updatedAt` <br /><span class="type-text">integer</span></td>
+    <td><var>0</var>, because the plan isn't saved yet.</td>
   </tr>
   <tr>
     <td>`campaigns` <br /><span class="type-text">array of objects</span></td>
@@ -649,16 +644,28 @@ The response contains every request field, plus:
     <summary>`campaigns` object properties</summary>
     <table className="objectProperties">
       <tr>
+        <td>`id` <br /><span class="type-text">integer</span></td>
+        <td>Proposed campaign ID; <var>null</var> until the plan is saved.</td>
+      </tr>
+      <tr>
         <td>`name` <br /><span class="type-text">string</span></td>
-        <td>Campaign name.</td>
+        <td>Campaign name, generated from the strategy, for example <var>Campaign_Video_HCP_Matched_Audience</var>.</td>
+      </tr>
+      <tr>
+        <td>`strategy` <br /><span class="type-text">string</span></td>
+        <td>Targeting values the campaign was split by, for example <var>Video + HCP + Matched Audience</var>.</td>
       </tr>
       <tr>
         <td>`startTime`, `endTime` <br /><span class="type-text">integer</span></td>
-        <td>Unix epoch start and end time in milliseconds.</td>
+        <td>Unix epoch start and end time in milliseconds, copied from the plan.</td>
+      </tr>
+      <tr>
+        <td>`frequencyCap`, `frequencyCapTypeId` <br /><span class="type-text">integer</span></td>
+        <td>Frequency cap and frequency cap type ID, copied from the plan.</td>
       </tr>
       <tr>
         <td>`minMediaCpm`, `mediaCpm`, `maxMediaCpm` <br /><span class="type-text">number</span></td>
-        <td>Media cost per mille (CPM) range.</td>
+        <td>Media cost per mille (CPM): the allowed range and the suggested value. The range depends on the creative type, for example <var>1.2</var> to <var>1000</var> for video and <var>1.2</var> to <var>100</var> for image.</td>
       </tr>
       <tr>
         <td>`dataCpm` <br /><span class="type-text">number</span></td>
@@ -677,12 +684,16 @@ The response contains every request field, plus:
         <td>Campaign impressions range.</td>
       </tr>
       <tr>
-        <td>`isAbm` <br /><span class="type-text">boolean</span></td>
-        <td>Whether the campaign targets an ABM audience.</td>
+        <td>`isAbm`, `abm` <br /><span class="type-text">boolean</span></td>
+        <td>Whether the campaign targets an ABM audience. Both fields have the same value.</td>
       </tr>
       <tr>
         <td>`targeting` <br /><span class="type-text">object</span></td>
         <td>Campaign targeting: <var>creativeTypeId</var>, <var>npiTypeId</var>, <var>dataPartnerIds</var>, <var>deviceTypeIds</var>, <var>audienceTypeIds</var>.</td>
+      </tr>
+      <tr>
+        <td>`campaignId` <br /><span class="type-text">integer</span></td>
+        <td>ID of the campaign created when the plan is published; <var>null</var> in this response.</td>
       </tr>
     </table>
     </details>
@@ -764,21 +775,26 @@ The response contains every request field, plus:
 {
   "success": true,
   "data": {
+    "id": null,
     "name": "Q4 Cardiology Awareness",
     "startTime": 1793505600000,
     "endTime": 1796101199000,
     "timezoneId": 29,
     "budgetTypeId": 1,
-    "minBudget": 98.00,
-    "budget": 8820.00,
-    "maxBudget": 8820.00,
-    "reach": 60000,
-    "maxReach": 60000,
+    "owId": 200001,
+    "createdAt": 0,
+    "updatedAt": 0,
+    "minBudget": 98.0,
+    "budget": 4090019.985,
+    "maxBudget": 4090019.985,
+    "reach": 1666681,
+    "maxReach": 0,
     "minImpressions": 4000,
-    "impressions": 360000,
-    "maxImpressions": 360000,
+    "impressions": 151012170,
+    "maxImpressions": 151012170,
     "frequencyCap": 3,
     "frequencyCapTypeId": 1,
+    "statusId": null,
     "npiTypeIds": [3, 4],
     "audienceBlocks": [ ... ],
     "planLevelTargeting": { ... },
@@ -786,35 +802,71 @@ The response contains every request field, plus:
     "campaigns": [
       {
         "id": null,
-        "name": "Video - Physicians",
+        "name": "Campaign_Video_HCP_Matched_Audience",
         "startTime": 1793505600000,
         "endTime": 1796101199000,
         "frequencyCap": 3,
         "frequencyCapTypeId": 1,
-        "minMediaCpm": 18.00,
-        "mediaCpm": 18.00,
-        "maxMediaCpm": 18.00,
-        "dataCpm": 12.50,
-        "minBudget": 30.50,
-        "budget": 3843.00,
-        "maxBudget": 3843.00,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 18.0,
+        "maxMediaCpm": 1000.0,
+        "dataCpm": 12.5,
+        "minBudget": 30.5,
+        "budget": 2909581.97,
+        "maxBudget": 2909581.97,
         "minReach": 10,
-        "reach": 42000,
-        "maxReach": 42000,
+        "reach": 1059957,
+        "maxReach": 1059957,
         "minImpressions": 1000,
-        "impressions": 126000,
-        "maxImpressions": 126000,
+        "impressions": 95396130,
+        "maxImpressions": 95396130,
+        "strategy": "Video + HCP + Matched Audience",
         "isAbm": false,
         "targeting": {
-          "dataPartnerIds": [7, 8],
+          "audienceTypeIds": [1],
           "creativeTypeId": 14,
+          "dataPartnerIds": [7, 8],
           "deviceTypeIds": [20300001, 20300004],
-          "npiTypeId": 3,
-          "audienceTypeIds": [1]
-        }
+          "npiTypeId": 3
+        },
+        "campaignId": null,
+        "abm": false
+      },
+      {
+        "id": null,
+        "name": "Campaign_Image_HCP_Matched_Audience",
+        "startTime": 1793505600000,
+        "endTime": 1796101199000,
+        "frequencyCap": 3,
+        "frequencyCapTypeId": 1,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 6.0,
+        "maxMediaCpm": 100.0,
+        "dataCpm": 12.5,
+        "minBudget": 18.5,
+        "budget": 702300.33,
+        "maxBudget": 702300.33,
+        "minReach": 10,
+        "reach": 421802,
+        "maxReach": 421802,
+        "minImpressions": 1000,
+        "impressions": 37962180,
+        "maxImpressions": 37962180,
+        "strategy": "Image + HCP + Matched Audience",
+        "isAbm": false,
+        "targeting": {
+          "audienceTypeIds": [1],
+          "creativeTypeId": 11,
+          "dataPartnerIds": [7, 8],
+          "deviceTypeIds": [20300001, 20300004],
+          "npiTypeId": 3
+        },
+        "campaignId": null,
+        "abm": false
       },
       ...
-    ]
+    ],
+    "ioId": null
   }
 }
 ```
@@ -1543,7 +1595,7 @@ Use this endpoint to:
   </tr>
   <tr>
     <td>`maxReach` <br /><span class="type-text">integer</span></td>
-    <td>Maximum forecasted reach.</td>
+    <td>Not calculated for the plan; returned as <var>0</var>.</td>
   </tr>
   <tr>
     <td>`frequencyCap` <br /><span class="type-text">integer</span></td>
@@ -1593,6 +1645,22 @@ Use this endpoint to:
       <td></td>
       </tr>
       <tr>
+        <td>`account` <br /><span class="type-text">object</span></td>
+        <td>ABM account selection: <var>accountIds</var> (array of integers) and <var>allAccountsSelected</var> (boolean). Returned for every block; empty with <var>allAccountsSelected</var> <var>false</var> when the block doesn't target accounts.</td>
+      </tr>
+      <tr>
+        <td>`accountType` <br /><span class="type-text">object</span></td>
+        <td>ABM account type selection: <var>accountTypeIds</var> (array of integers) and <var>allAccountTypesSelected</var> (boolean). Returned for every block.</td>
+      </tr>
+      <tr>
+        <td>`healthSystem` <br /><span class="type-text">object</span></td>
+        <td>Health system selection: <var>healthSystemIds</var> (array of integers) and <var>allHealthSystemsSelected</var> (boolean). Returned for every block.</td>
+      </tr>
+      <tr>
+        <td>`title` <br /><span class="type-text">object</span></td>
+        <td>Title selection: <var>titleIds</var> (array of integers) and <var>allTitlesSelected</var> (boolean). Returned for every block.</td>
+      </tr>
+      <tr>
         <td>`locations` <br /><span class="type-text">object</span></td>
         <td>Targeted and excluded locations; <var>null</var> for existing audience blocks.</td>
       </tr>
@@ -1620,6 +1688,14 @@ Use this endpoint to:
           <tr>
             <td>`blackListedCityIds` <br /><span class="type-text">array of integers</span></td>
             <td>Excluded [city IDs](/guidelines/master-api#get-city-segment).</td>
+          </tr>
+          <tr>
+            <td>`whiteListedZipcodeIds` <br /><span class="type-text">array of integers</span></td>
+            <td>Internal ZIP code IDs for <var>whiteListedZipcodes</var>. Ignored on edit.</td>
+          </tr>
+          <tr>
+            <td>`blackListedZipcodeIds` <br /><span class="type-text">array of integers</span></td>
+            <td>Internal ZIP code IDs for <var>blackListedZipcodes</var>. Ignored on edit.</td>
           </tr>
           <tr>
             <td>`whiteListedZipcodes` <br /><span class="type-text">array of strings</span></td>
@@ -1673,8 +1749,16 @@ Use this endpoint to:
         <td>Upload NPI list blocks only: file ID of the uploaded NPI list.</td>
       </tr>
       <tr>
+        <td>`storagePath` <br /><span class="type-text">string</span></td>
+        <td>Upload NPI list blocks only: storage path of the uploaded NPI list file.</td>
+      </tr>
+      <tr>
         <td>`storageFileName` <br /><span class="type-text">string</span></td>
         <td>Upload NPI list blocks only: name of the uploaded NPI list file.</td>
+      </tr>
+      <tr>
+        <td>`storageFileSize` <br /><span class="type-text">integer</span></td>
+        <td>Upload NPI list blocks only: size of the uploaded NPI list file in bytes.</td>
       </tr>
       <tr>
         <td>`storageFileRows` <br /><span class="type-text">integer</span></td>
@@ -1722,6 +1806,10 @@ Use this endpoint to:
           <tr>
             <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
             <td>Whether TV auto buying is enabled.</td>
+          </tr>
+          <tr>
+            <td>`tvAutoBuying` <br /><span class="type-text">boolean</span></td>
+            <td>Same value as <var>isTvAutoBuying</var>.</td>
           </tr>
         </table>
         </details>
@@ -1919,6 +2007,10 @@ Use this endpoint to:
         <td>Whether the campaign targets an ABM audience.</td>
       </tr>
       <tr>
+        <td>`abm` <br /><span class="type-text">boolean</span></td>
+        <td>Same value as <var>isAbm</var>.</td>
+      </tr>
+      <tr>
         <td>`targeting` <br /><span class="type-text">object</span></td>
         <td>Campaign targeting.</td>
       </tr>
@@ -1977,24 +2069,55 @@ Use this endpoint to:
     "timezoneId": 29,
     "budgetTypeId": 1,
     "owId": 200001,
-    "createdAt": 1791800000000,
-    "updatedAt": 1791800000000,
+    "createdAt": 1792533243047,
+    "updatedAt": 1792533243047,
     "minBudget": null,
-    "budget": 8820.00,
-    "maxBudget": 8820.00,
-    "reach": 60000,
-    "maxReach": 60000,
+    "budget": 4090019.985,
+    "maxBudget": 4090019.985,
+    "reach": 1666681,
+    "maxReach": 0,
     "minImpressions": null,
-    "impressions": 360000,
-    "maxImpressions": 360000,
+    "impressions": 151012170,
+    "maxImpressions": 151012170,
     "frequencyCap": 3,
     "frequencyCapTypeId": 1,
     "statusId": 6,
     "npiTypeIds": [3, 4],
-    "audienceBlocks": [ ... ],
+    "audienceBlocks": [
+      {
+        "audienceSelectionMethodId": 1,
+        "speciality": { "specialityIds": [], "allSpecialitiesSelected": true },
+        "account": { "accountIds": [], "allAccountsSelected": false },
+        "accountType": { "accountTypeIds": [], "allAccountTypesSelected": false },
+        "healthSystem": { "healthSystemIds": [], "allHealthSystemsSelected": false },
+        "title": { "titleIds": [], "allTitlesSelected": false },
+        "locations": {
+          "countryId": 30100001,
+          "whiteListedStateIds": [],
+          "blackListedStateIds": [],
+          "whiteListedCityIds": [],
+          "blackListedCityIds": [],
+          "whiteListedZipcodeIds": [],
+          "blackListedZipcodeIds": [],
+          "whiteListedZipcodes": [],
+          "blackListedZipcodes": []
+        },
+        "dataPartners": [
+          { "id": 7, "selected": true, "priority": 1, "reach": 6686411, "incrementalReach": 0 },
+          { "id": 8, "selected": true, "priority": 2, "reach": 4248087, "incrementalReach": 0 }
+        ],
+        "storagePathId": null,
+        "storagePath": null,
+        "storageFileName": null,
+        "storageFileSize": null,
+        "storageFileRows": null,
+        "includeAudienceIds": [],
+        "excludeAudienceIds": []
+      }
+    ],
     "planLevelTargeting": {
       "devices": { "deviceTypeIds": [20300001, 20300004], "allDeviceTypesSelected": false },
-      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false },
+      "creativeTypes": { "creativeTypeIds": [11, 14], "allCreativeTypesSelected": false, "isTvAutoBuying": false, "tvAutoBuying": false },
       "channels": { "channelTypeIds": [], "allChannelTypesSelected": true },
       "inventory": {
         "openExchanges": { "exchangeIds": [], "allExchangesSelected": true, "iabCategoryIds": [], "allIabCategoriesSelected": true },
@@ -2007,21 +2130,36 @@ Use this endpoint to:
     ],
     "campaigns": [
       {
-        "id": 90001,
-        "name": "Image - Physicians",
+        "id": 53104,
+        "name": "Campaign_Video_HCP_Matched_Audience",
         "startTime": 1793505600000,
         "endTime": 1796101199000,
-        "budget": 2331.00,
-        "impressions": 126000,
-        "reach": 42000,
+        "frequencyCap": 3,
+        "frequencyCapTypeId": 1,
+        "minMediaCpm": 1.2,
+        "mediaCpm": 18.0,
+        "maxMediaCpm": 1000.0,
+        "dataCpm": 12.5,
+        "minBudget": 30.5,
+        "budget": 2909581.97,
+        "maxBudget": 2909581.97,
+        "minReach": 10,
+        "reach": 1059957,
+        "maxReach": 1059957,
+        "minImpressions": 1000,
+        "impressions": 95396130,
+        "maxImpressions": 95396130,
+        "strategy": "Video + HCP + Matched Audience",
+        "isAbm": false,
         "targeting": {
+          "audienceTypeIds": [1],
+          "creativeTypeId": 14,
           "dataPartnerIds": [7, 8],
-          "creativeTypeId": 11,
           "deviceTypeIds": [20300001, 20300004],
-          "npiTypeId": 3,
-          "audienceTypeIds": [1]
+          "npiTypeId": 3
         },
-        "campaignId": 0
+        "campaignId": 0,
+        "abm": false
       },
       ...
     ],
@@ -2243,7 +2381,7 @@ The request schema is the same as [Step 5](#step-5-edit-the-plan), except for th
 
 :::danger
 
-Publishing is a one-way step. A published plan can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> plan, such as editing, no longer work for it. Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api).
+Publishing is a one-way step. A published plan can't be returned to <var>Ready</var>, and calls that require a <var>Ready</var>, <var>Failed</var>, or <var>Expired</var> plan, such as editing, no longer work for it. Manage the generated IO and campaigns with the [Campaign API](/guidelines/campaign-api). The Campaign API returns campaign <var>startTime</var> and <var>endTime</var> in Unix epoch seconds, while the planner uses milliseconds.
 
 :::
 
@@ -2342,7 +2480,7 @@ Plans in <var>Ready</var> (<var>6</var>), <var>Processing</var> (<var>5</var>), 
 <table className="objectProperties">
   <tr>
     <td>`downloadUrl` <br /><span class="type-text">string</span></td>
-    <td>Temporary link to the generated file.</td>
+    <td>Temporary presigned link to the generated file. The link expires after about 60 seconds, so download the file right away or request a new link.</td>
   </tr>
 </table>
 
@@ -2364,7 +2502,7 @@ Plans in <var>Ready</var> (<var>6</var>), <var>Processing</var> (<var>5</var>), 
 {
   "success": true,
   "data": {
-    "downloadUrl": "https://example-bucket.s3.amazonaws.com/Q4_Cardiology_Awareness_1791800000000.xlsx"
+    "downloadUrl": "https://iqm-planner-healthcare.s3.amazonaws.com/planner/proposal/report/download/200001/Q4%20Cardiology%20Awareness_1793036543120.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&..."
   }
 }
 ```
@@ -2378,6 +2516,28 @@ Plans in <var>Ready</var> (<var>6</var>), <var>Processing</var> (<var>5</var>), 
   "errorObjects": [
     {
       "error": "Invalid file type to download HCP Plan"
+    }
+  ]
+}
+```
+
+```json title="Response 422 (Draft or Expired plan)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Proposal with proposal id 4512 does not exist"
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Request for forbidden vertical"
     }
   ]
 }

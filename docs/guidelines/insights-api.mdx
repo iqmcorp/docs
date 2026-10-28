@@ -15,6 +15,7 @@ import InsTemplate from '@site/docs/_partials/insights-api/ins-template.mdx';
 import InsManagement from '@site/docs/_partials/insights-api/ins-management.mdx';
 import InsDetails from '@site/docs/_partials/insights-api/ins-details.mdx';
 import CopyUrl from '@site/src/components/CopyUrl';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 
 # Insights API
 
@@ -91,10 +92,7 @@ Use the following header parameters for all requests:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -215,86 +213,50 @@ A campaign must meet the following eligibility criteria to generate Campaign Bid
 
 <table className="objectProperties">
 <tr>
+  <td>`totalRequests` <br /><span class="type-text">integer</span></td>
+  <td>Total bid requests evaluated for the campaign in the date range.</td>
+</tr>
+<tr>
   <td>`rejectionList`<br /><span class="type-text">object</span></td>
-  <td>List of bid rejection reasons.</td>
+  <td>Bid rejection reasons, keyed by rejection category, e.g. <var>locationTargeting</var>, <var>creativeSettings</var>, <var>audienceTargeting</var>, <var>optimizationAndDelivery</var>, <var>campaignBudget</var>, <var>inventoryTargeting</var>, <var>deviceTargeting</var>, or <var>other</var>. Only categories with rejected bids are included.</td>
 </tr>
 <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`rejectionList` object properties</summary>
+      <summary>`rejectionList` category object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`campaignSettings` <br /><span class="type-text">object</span></td>
-        <td>Campaign settings.</td>
+        <td>`title` <br /><span class="type-text">string</span></td>
+        <td>Category display name.</td>
       </tr>
       <tr>
-        <td>`ioBudget` <br /><span class="type-text">object</span></td>
-        <td>IO Budget.</td>
+        <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
+        <td>Rejected bids count for the category.</td>
       </tr>
       <tr>
-        <td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
-        <td>Inventory targeting.</td>
+        <td>`description` <br /><span class="type-text">string</span></td>
+        <td>Rejection description. Only present when the category has no sub-reasons.</td>
       </tr>
       <tr>
-        <td>`campaignBidPrice` <br /><span class="type-text">object</span></td>
-        <td>Campaign bid price.</td>
-      </tr>
-      <tr>
-        <td>`locationTargeting` <br /><span class="type-text">object</span></td>
-        <td>Location targeting.</td>
-      </tr>
-         <tr>
-        <td>`deviceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Device targeting.</td>
-      </tr>
-         <tr>
-        <td>`creativeSettings` <br /><span class="type-text">object</span></td>
-        <td>Creative settings.</td>
-      </tr>
-         <tr>
-        <td>`advanceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Advanced targeting.</td>
-      </tr>
-         <tr>
-        <td>`audienceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Audience targeting.</td>
-      </tr>
-         <tr>
-        <td>`bidStrategy` <br /><span class="type-text">object</span></td>
-        <td>Bid strategy.</td>
-      </tr>
-         <tr>
-        <td>`campaignBudget` <br /><span class="type-text">object</span></td>
-        <td>Campaign budget.</td>
-      </tr>
-         <tr>
-        <td>`demographicsTargeting` <br /><span class="type-text">object</span></td>
-        <td>Demographics targeting.</td>
-      </tr>
-            <tr>
-        <td>`undefined` <br /><span class="type-text">object</span></td>
-        <td>Undefined.</td>
+        <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
+        <td>Sub-reasons for the category, keyed by sub-reason name (see Bid rejection descriptions below); empty when the category has no sub-reasons.</td>
       </tr>
       <tr>
         <td colSpan="2">
           <details className="objectPropertiesDetails">
-          <summary>`rejectionList` sub-objects properties</summary>
+          <summary>`subReasonInfo` object properties</summary>
           <table className="objectProperties">
           <tr>
           <td>`title` <br /><span class="type-text">string</span></td>
-          <td>Object title.</td>
+          <td>Sub-reason display name.</td>
           </tr>
-            <tr>
-          <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
-          <td>Rejected bids count.</td>
+          <tr>
+          <td>`droppedRequests` <br /><span class="type-text">integer</span></td>
+          <td>Dropped bid requests count for the sub-reason.</td>
           </tr>
-            <tr>
+          <tr>
           <td>`description` <br /><span class="type-text">string</span></td>
-          <td>description.</td>
-          </tr>
-             <tr>
-          <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
-          <td>List of sub-reasons info.</td>
+          <td>Sub-reason description.</td>
           </tr>
           </table></details>
           </td>
@@ -306,11 +268,11 @@ A campaign must meet the following eligibility criteria to generate Campaign Bid
 </tr>
 <tr>
   <td>`topMainReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> objects with the highest <var>rejectedBids</var> counts.</td>
+  <td>Name-value pairs of <var>rejectionList</var> category and <var>rejectedBids</var> count, for the categories with the most rejected bids.</td>
   </tr>
 <tr>
   <td>`topSubReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> sub-objects with the highest <var>droppedRequests</var> counts.</td>
+  <td>Name-value pairs of sub-reason and <var>droppedRequests</var> count, for the sub-reasons with the most dropped requests.</td>
   </tr>
 <tr>
   <td>`totalBids` <br /><span class="type-text">integer</span></td>
@@ -371,6 +333,10 @@ A campaign must meet the following eligibility criteria to generate Campaign Bid
   <td>`creativeUnavailable`</td>
   <td>Bids dropped off due to the campaign's creative settings, such as creative type, dimensions, duration and others.</td>
 </tr>
+    <tr>
+      <td>`creativeType`</td>
+      <td>Bids dropped off because Creative Type did not match campaign's Creative Type requirements.</td>
+    </tr>
     </table></details>
   </td>
   <td></td>
@@ -420,6 +386,45 @@ A campaign must meet the following eligibility criteria to generate Campaign Bid
   </td>
   <td></td>
 </tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`locationTargeting` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+      <tr>
+        <td>`state`</td>
+        <td>Bids dropped off because the state did not match the campaign's state requirements.</td>
+      </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`audienceTargeting` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+      <tr>
+        <td>`matchedAudience`</td>
+        <td>Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters.</td>
+      </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`optimizationAndDelivery` <var>subReasonInfo</var> object properties</summary>
+  <table className="objectProperties">
+      <tr>
+        <td>`budgetAllocationConsumed`</td>
+        <td>Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted.</td>
+      </tr>
+  </table></details>
+  </td>
+  <td></td>
+</tr>
 </table>
 </details>
 
@@ -434,114 +439,104 @@ A campaign must meet the following eligibility criteria to generate Campaign Bid
 {
   "success": true,
   "data": {
-    "totalRequests": 100,
+    "totalRequests": 1628200,
     "rejectionList": {
-      "campaignSettings": {
-        "title": "Campaign Settings",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Campaign Settings set in the campaign.",
-        "subReasonInfo": {}
-      },
-      "ioBudget": {
-        "title": "IO Budget",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
-      },
-      "inventoryTargeting": {
-        "title": "Inventory Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Inventory Targeting.",
-        "subReasonInfo": {}
-      },
-      "campaignBidPrice": {
-        "title": "Campaign Bid Price",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the bid price is lower than the floor price received from the exchange.",
-        "subReasonInfo": {}
-      },
       "locationTargeting": {
         "title": "Location Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Location Targeting.",
-        "subReasonInfo": {}
-      },
-      "deviceTargeting": {
-        "title": "Device Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Device Targeting.",
-        "subReasonInfo": {}
-      },
-      "creativeSettings": {
-        "label": "Creative Settings",
-        "rejectedBids": 100,
-        "description": "Campaign is filtered due to non-matching creative dimensions found in the request",
+        "rejectedBids": 389204,
         "subReasonInfo": {
-          "creativeDimension": {
-            "label": "Creative Dimensions",
-            "droppedRequests": 100,
-            "description": "Campaign is filtered due to non-matching creative dimensions found in the request."
+          "state": {
+            "title": "State",
+            "droppedRequests": 389204,
+            "description": "Bids dropped off because the state did not match the campaign's state requirements"
           }
         }
       },
-      "advanceTargeting": {
-        "title": "Advanced Targeting",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
+      "creativeSettings": {
+        "title": "Creative Settings",
+        "rejectedBids": 62,
+        "subReasonInfo": {
+          "creativeType": {
+            "title": "Creative Type",
+            "droppedRequests": 62,
+            "description": "Bids dropped off because Creative Type did not match campaign's Creative Type requirements"
+          }
+        }
       },
       "audienceTargeting": {
         "title": "Audience Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Audience Targeting.",
-        "subReasonInfo": {}
+        "rejectedBids": 1113949,
+        "subReasonInfo": {
+          "matchedAudience": {
+            "title": "Matched Audience",
+            "droppedRequests": 1113949,
+            "description": "Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters"
+          }
+        }
       },
-      "bidStrategy": {
-        "title": "Bid Strategy",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to bid strategy setting applied in campaign.",
-        "subReasonInfo": {}
+      "optimizationAndDelivery": {
+        "title": "Optimization & Delivery",
+        "rejectedBids": 17895,
+        "subReasonInfo": {
+          "budgetAllocationConsumed": {
+            "title": "Budget Allocation Consumed (Pacing/Delivery)",
+            "droppedRequests": 17895,
+            "description": "Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted"
+          }
+        }
       },
       "campaignBudget": {
         "title": "Campaign Budget",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the campaign budget is now unavailable for further bidding.",
+        "rejectedBids": 9653,
+        "description": "Bids dropped off because the total or daily budget was fully consumed.",
         "subReasonInfo": {}
       },
-      "demographicsTargeting": {
-        "title": "Demographics Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Demographics Targeting.",
-        "subReasonInfo": {}
-      },
-      "undefined": {
-        "title": "Undefined",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Undefined reasons.",
+      "other": {
+        "title": "Other",
+        "rejectedBids": 96528,
+        "description": "Bids dropped off due to back-end bidder settings that are typically used for campaign efficiency.  Please see your account manager for more information.",
         "subReasonInfo": {}
       }
     },
     "topMainReasons": {
-      "creativeSettings": 100
+      "audienceTargeting": 1113949,
+      "optimizationAndDelivery": 17895,
+      "locationTargeting": 389204,
+      "creativeSettings": 62,
+      "campaignBudget": 9653
     },
     "topSubReasons": {
-      "creativeDimension": 100
+      "matchedAudience": 1113949,
+      "budgetAllocationConsumed": 17895,
+      "state": 389204,
+      "creativeType": 62
     },
-    "totalBids": 0,
-    "lostBids": 0,
-    "totalWins": 0
+    "totalBids": 909,
+    "lostBids": 535,
+    "totalWins": 374
   }
 }
 ```
 
 
 
-```json title="Response 422 (invalid start date)"
+```json title="Response 422 (end date before start date)"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Date Range End must be greater than Date Range Start"
+      "error": "Date Range End must be greater than Date Range Start."
+    }
+  ]
+}
+```
+
+```json title="Response 422 (date range over two weeks)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The difference between start and end date must not be greater than 2 weeks."
     }
   ]
 }
@@ -801,8 +796,16 @@ Audiences must have a minimum of 10,000 uniques to be eligible for Insights repo
 
 <table className="objectProperties">
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights report data details.</td>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of eligible audiences.</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of eligible audiences matching <var>searchField</var>.</td>
+</tr>
+<tr>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Eligible audiences.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -818,12 +821,16 @@ Audiences must have a minimum of 10,000 uniques to be eligible for Insights repo
   <td>Audience name.</td>
   </tr>
     <tr>
-  <td>`matchRate` <br /><span class="type-text">integer</span></td>
+  <td>`matchRate` <br /><span class="type-text">number</span></td>
   <td>The percentage of matched records compared to a reference set.</td>
   </tr>
       <tr>
   <td>`uniques` <br /><span class="type-text">integer</span></td>
   <td>Count of unique audiences reached.</td>
+  </tr>
+  <tr>
+  <td>`insightsStatus` <br /><span class="type-text">integer</span></td>
+  <td>[Insights status ID](#get-list-of-insights-status-types) of the audience: <var>1</var> (Processing), <var>2</var> (Ready), or <var>3</var> (Failed).</td>
   </tr>
   </table></details>
   </td>
@@ -842,26 +849,29 @@ Audiences must have a minimum of 10,000 uniques to be eligible for Insights repo
 {
   "success": true,
   "data": {
-    "totalRecords": 10,
-    "filteredRecords": 3,
+    "totalRecords": 8,
+    "filteredRecords": 8,
     "insightsData": [
       {
-        "id": 12345,
+        "id": 1183286,
         "audienceName": "audience1",
-        "matchRate": 58.99,
-        "uniques": 52432
+        "matchRate": 74.74,
+        "uniques": 537354,
+        "insightsStatus": 3
       },
       {
-        "id": 12365,
+        "id": 1183283,
         "audienceName": "audience2",
-        "matchRate": 78.88,
-        "uniques": 72786
+        "matchRate": 69.23,
+        "uniques": 163629,
+        "insightsStatus": 3
       },
       {
-        "id": 12376,
+        "id": 1183002,
         "audienceName": "audience3",
-        "matchRate": 34.88,
-        "uniques": 31122
+        "matchRate": 73.04,
+        "uniques": 74729,
+        "insightsStatus": 3
       }
     ]
   }
@@ -1042,7 +1052,7 @@ An audience must meet the following eligibility criteria to generate Insights re
 | Request schema |  |
 | ----  | --- |
 | `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](#get-list-of-insights-types). |
-| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs. <br />(E.g. [audience ID](/guidelines/audience-api#audience-details-list)s). |
+| `sourceIds` <br /><span class="type-text">array of integers</span> | Source IDs. <br />(E.g. [audience ID](/guidelines/audience-api#audience-details-list)s). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1053,8 +1063,8 @@ An audience must meet the following eligibility criteria to generate Insights re
   <td>Invalid source IDs list.</td>
 </tr>
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights data details.</td>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Created Audience Insights reports, one per valid source ID.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -1120,13 +1130,13 @@ An audience must meet the following eligibility criteria to generate Insights re
     "invalidSourceIds": [],
     "insightsData": [
       {
-        "id": 1213,
+        "id": 2098,
         "typeId": 1,
-        "statusId": 2,
-        "sourceName": "Data Trust NY 4 Cols",
-        "name": "Data Trust NY 4 Cols_insights",
-        "sourceId": 1099461,
-        "createdAt": 1728366883518
+        "statusId": 1,
+        "sourceName": "audience1",
+        "name": "audience1_insights",
+        "sourceId": 1183285,
+        "createdAt": 1793036686825
       }
     ]
   }
@@ -1149,14 +1159,11 @@ An audience must meet the following eligibility criteria to generate Insights re
 
 Download Insights report for audience (pdf or xlsx) by passing multipart/form-data format.
 
-| Query parameters |  |
+| Request schema (multipart/form-data) |  |
 | ---- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | [Insights report ID](#get-a-list-of-insights-reports). |
-| `fileType` <br /><span class="type-text">string</span> | File type of report: <var>pdf</var> or <var>xlsx</var>.
-
-| Request schema |  |
-| ---- | --- |
-| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format.
+| `insightsId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Insights report ID](#get-a-list-of-insights-reports). |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type of report: <var>pdf</var> or <var>xlsx</var>. |
+| `customLogoFile` <br /><span class="type-text">file</span> | Optional logo image to show on the report. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -1174,18 +1181,32 @@ Download Insights report for audience (pdf or xlsx) by passing multipart/form-da
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-    "customLogoFile": "string"
-}
+```bash title="Request sample"
+curl -X POST https://api.iqm.com/api/v3/ins/insights/download \
+  -H "Authorization: Bearer <access_token>" \
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'insightsId=2098' \
+  -F 'fileType=pdf' \
+  -F 'customLogoFile=@/path/to/logo.png'
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "insightsReportUrl": "https://domain.com/insights.pdf"
+  "success": true,
+  "data": {
+    "insightsReportUrl": "https://iqm-insights-stage.s3.amazonaws.com/audiences/client_id%3D204995/audience_id%3D1183285/default_insight.pdf?..."
+  }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
     }
+  ]
 }
 ```
 

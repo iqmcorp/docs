@@ -9,6 +9,8 @@ import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
 import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import { creativeTypes } from '@site/src/data/enums/creativeTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # Upload a creative
 
@@ -32,7 +34,7 @@ The IQM APIs provide access to upload a creative in image, video, audio, HTML, X
 
 ## Before you begin
 
-To upload a creative and create a campaign, the following are required:
+To upload a creative, the following are required:
 
 1. An account on the IQM platform
    *  See [Before you begin](/getting-started/before-you-begin) to create an account and request a Client ID and Client Secret
@@ -60,18 +62,15 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+<ApiHeaders />
 
 </div>
 
 ## Upload a creative using the IQM API
 
-This quickstart guide covers how to create a campaign and upload a creative. 
+This quickstart guide covers how to upload a creative and check its status.
 
-The minimum requirements to perform this task are: logging in with authentication credentials, uploading a creative, and creating a campaign. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
+The minimum requirements to perform this task are: logging in with authentication credentials and uploading a creative. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
 
 1. Log in
     * Optional if you have already logged in and have a token
@@ -87,19 +86,19 @@ The minimum requirements to perform this task are: logging in with authenticatio
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+<OAuthHeaders />
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -118,52 +117,31 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
 </details>
@@ -192,34 +170,44 @@ For further information see [Get creative types list](/guidelines/creative-api#g
 {
   "success": true,
   "data": {
-    "data": [
+    "totalRecords": 5,
+    "creativeTypeList": [
       {
-        "id": 17,
-        "name": "Audio",
-        "rtbTypeId": 2
-      },
-      {
-        "id": 15,
-        "name": "Native",
-        "rtbTypeId": 4
-      },
-      {
-        "id": 14,
-        "name": "Video",
-        "rtbTypeId": 3
+        "id": 11,
+        "name": "Image",
+        "displayName": "Image",
+        "order": 95,
+        "rtbCreativeTypeId": 1
       },
       {
         "id": 13,
         "name": "HTML",
-        "rtbTypeId": 1
+        "displayName": "HTML",
+        "order": 96,
+        "rtbCreativeTypeId": 1
       },
       {
-        "id": 11,
-        "name": "Image",
-        "rtbTypeId": 1
+        "id": 14,
+        "name": "Video",
+        "displayName": "Video",
+        "order": 97,
+        "rtbCreativeTypeId": 3
+      },
+      {
+        "id": 17,
+        "name": "Audio",
+        "displayName": "Audio",
+        "order": 98,
+        "rtbCreativeTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "displayName": "Native",
+        "order": 99,
+        "rtbCreativeTypeId": 4
       }
     ],
-    "totalRecords": 5,
     "filteredRecords": 5
   }
 }
@@ -260,7 +248,7 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 
 | Request schema | |
 | --- | --- | 
-| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a map of IDs to creative metadata. Each ID corresponds to a single creative. |
+| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a map of IDs to creative metadata. Each ID corresponds to a single creative. All creatives in one request must have the same <var>platformCreativeTypeId</var>. |
 | `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of creative files to upload. Required only when creative source type is <var>FILE</var> in the creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding creative object. Supports multiple file uploads for batch creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
@@ -269,35 +257,35 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 <table className="objectProperties">
 <tr>
   <td>`creativeName` <br /><span class="type-text">string</span></td>
-  <td>Creative name</td>
+  <td>Creative name.</td>
 </tr>
 <tr>
   <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
-  <td>External creative ID</td>
+  <td>External creative ID.</td>
 </tr>
 <tr>
   <td>`platformCreativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list) <br /><EnumWidget values={creativeTypes} /></td>
+  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
 </tr>
 <tr>
   <td>`creativeSourceType` <br /><span class="type-text">string</span></td>
-  <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, <var>DAAST_URL</var>, <var>DAAST_XML</var></td>
+  <td>Creative source type <br />Supported values: <var>HTML</var>, <var>FILE</var>, <var>URL</var>, <var>VAST_URL</var>, <var>VAST_XML</var>, <var>DAAST_URL</var>, <var>DAAST_XML</var>.</td>
 </tr>
 <tr>
   <td>`creativeSource` <br /><span class="type-text">string</span></td>
-  <td>Creative source</td>
+  <td>Creative source.</td>
 </tr>
 <tr>
   <td>`clickUrl` <br /><span class="type-text">string</span></td>
-  <td>Click URL</td>
+  <td>Click URL. Not allowed for HTML creatives (add click tracking inside the HTML instead).</td>
 </tr>
 <tr>
   <td>`subMediaType` <br /><span class="type-text">integer</span></td>
-  <td>Subcategory of media type (for native video creatives)</td>
+  <td>Subcategory of media type (for native video creatives).</td>
 </tr>
 <tr>
   <td>`htmlDetails` <br /><span class="type-text">object</span></td>
-  <td>HTML creative details</td>
+  <td>HTML creative details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -306,18 +294,18 @@ Once you have the desired creative type ID, you can upload a creative. With the 
   <table className="objectProperties">
   <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-    <td>Creative width (px)</td>
+    <td>Creative width (px).</td>
   </tr>
   <tr>
     <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-    <td>Creative height (px)</td>
+    <td>Creative height (px).</td>
   </tr>
   </table></details>
   </td>
 </tr>
 <tr>
   <td>`imageDetails` <br /><span class="type-text">object</span></td>
-  <td>Image creative details</td>
+  <td>Image creative details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -326,22 +314,22 @@ Once you have the desired creative type ID, you can upload a creative. With the 
   <table className="objectProperties">
   <tr>
     <td>`pixelUrl` <br /><span class="type-text">string</span></td>
-    <td>Pixel URL</td>
+    <td>Pixel URL.</td>
   </tr>
   <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-    <td>Creative width (px)</td>
+    <td>Creative width (px).</td>
   </tr>
   <tr>
     <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-    <td>Creative height (px)</td>
+    <td>Creative height (px).</td>
   </tr>
   </table></details>
   </td>
 </tr>
 <tr>
   <td>`audioDetails` <br /><span class="type-text">object</span></td>
-  <td>Audio creative details</td>
+  <td>Audio creative details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -350,11 +338,11 @@ Once you have the desired creative type ID, you can upload a creative. With the 
   <table className="objectProperties">
   <tr>
     <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Audio duration (s)</td>
+    <td>Audio duration (s).</td>
   </tr>
   <tr>
     <td>`customTracking` <br /><span class="type-text">object</span></td>
-    <td>Custom tracking details</td>
+    <td>Custom tracking details.</td>
   </tr>
   <tr>
   <td colSpan="2">
@@ -363,41 +351,41 @@ Once you have the desired creative type ID, you can upload a creative. With the 
     <table className="objectProperties">
     <tr>
       <td>`startUrl` <br /><span class="type-text">string</span></td>
-      <td>Start URL</td>
+      <td>Start URL.</td>
     </tr>
     <tr>
       <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
-      <td>First quartile URL</td>
+      <td>First quartile URL.</td>
     </tr>
     <tr>
       <td>`midPointUrl` <br /><span class="type-text">string</span></td>
-      <td>Midpoint URL</td>
+      <td>Midpoint URL.</td>
     </tr>
     <tr>
       <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
-      <td>Third quartile URL</td>
+      <td>Third quartile URL.</td>
     </tr>
     <tr>
       <td>`completeUrl` <br /><span class="type-text">string</span></td>
-      <td>Complete URL</td>
+      <td>Complete URL.</td>
     </tr>
     <tr>
       <td>`impressionUrl` <br /><span class="type-text">string</span></td>
-      <td>Impression URL</td>
+      <td>Impression URL.</td>
     </tr>
     </table></details>
     </td>
   </tr>
   <tr>
     <td>`logoSource` <br /><span class="type-text">string</span></td>
-    <td>Logo source</td>
+    <td>Logo source.</td>
   </tr>
   </table></details>
   </td>
 </tr>
 <tr>
   <td>`videoDetails` <br /><span class="type-text">object</span></td>
-  <td>Video creative details</td>
+  <td>Video creative details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -406,19 +394,19 @@ Once you have the desired creative type ID, you can upload a creative. With the 
   <table className="objectProperties">
   <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
-    <td>Creative width (px)</td>
+    <td>Creative width (px).</td>
   </tr>
   <tr>
     <td>`creativeHeight` <br /><span class="type-text">integer</span></td>
-    <td>Creative height (px)</td>
+    <td>Creative height (px).</td>
   </tr>
   <tr>
     <td>`duration` <br /><span class="type-text">integer</span></td>
-    <td>Video duration (s)</td>
+    <td>Video duration (s).</td>
   </tr>
   <tr>
     <td>`customTracking` <br /><span class="type-text">object</span></td>
-    <td>Custom tracking details</td>
+    <td>Custom tracking details.</td>
   </tr>
   <tr>
   <td colSpan="2">
@@ -427,27 +415,27 @@ Once you have the desired creative type ID, you can upload a creative. With the 
     <table className="objectProperties">
     <tr>
       <td>`startUrl` <br /><span class="type-text">string</span></td>
-      <td>Start URL</td>
+      <td>Start URL.</td>
     </tr>
     <tr>
       <td>`firstQuartileUrl` <br /><span class="type-text">string</span></td>
-      <td>First quartile URL</td>
+      <td>First quartile URL.</td>
     </tr>
     <tr>
       <td>`midPointUrl` <br /><span class="type-text">string</span></td>
-      <td>Midpoint URL</td>
+      <td>Midpoint URL.</td>
     </tr>
     <tr>
       <td>`thirdQuartileUrl` <br /><span class="type-text">string</span></td>
-      <td>Third quartile URL</td>
+      <td>Third quartile URL.</td>
     </tr>
     <tr>
       <td>`completeUrl` <br /><span class="type-text">string</span></td>
-      <td>Complete URL</td>
+      <td>Complete URL.</td>
     </tr>
     <tr>
       <td>`impressionUrl` <br /><span class="type-text">string</span></td>
-      <td>Impression URL</td>
+      <td>Impression URL.</td>
     </tr>
     </table></details>
     </td>
@@ -457,7 +445,7 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 </tr>
 <tr>
   <td>`nativeDetails` <br /><span class="type-text">object</span></td>
-  <td>Native creative details</td>
+  <td>Native creative details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -466,15 +454,15 @@ Once you have the desired creative type ID, you can upload a creative. With the 
   <table className="objectProperties">
   <tr>
     <td>`title` <br /><span class="type-text">string</span></td>
-    <td>Title</td>
+    <td>Title.</td>
   </tr>
   <tr>
     <td>`description` <br /><span class="type-text">string</span></td>
-    <td>Description</td>
+    <td>Description.</td>
   </tr>
   <tr>
     <td>`cta` <br /><span class="type-text">object</span></td>
-    <td>Call-to-Action object details (for native video)</td>
+    <td>Call-to-Action object details (for native video).</td>
   </tr>
   <tr>
   <td colSpan="2">
@@ -483,46 +471,46 @@ Once you have the desired creative type ID, you can upload a creative. With the 
     <table className="objectProperties">
     <tr>
       <td>`id` <br /><span class="type-text">integer</span></td>
-      <td>[CTA ID](/guidelines/creative-api#add-new-creative)</td>
+      <td>[CTA ID](/guidelines/creative-api#add-new-creative).</td>
     </tr>
     <tr>
       <td>`ctaText` <br /><span class="type-text">string</span></td>
-      <td>CTA display text</td>
+      <td>CTA display text.</td>
     </tr>
     <tr>
       <td>`defaultCta` <br /><span class="type-text">boolean</span></td>
-      <td>Default CTA for associated creative</td>
+      <td>Default CTA for associated creative.</td>
     </tr>
     </table></details>
     </td>
   </tr>
   <tr>
     <td>`brandName` <br /><span class="type-text">string</span></td>
-    <td>Brand name</td>
+    <td>Brand name.</td>
   </tr>
   <tr>
     <td>`brandIconSourceUrl` <br /><span class="type-text">string</span></td>
-    <td>Brand icon source URL</td>
+    <td>Brand icon source URL.</td>
   </tr>
   <tr>
     <td>`brandIconHeight` <br /><span class="type-text">integer</span></td>
-    <td>Brand icon height (px)</td>
+    <td>Brand icon height (px).</td>
   </tr>
   <tr>
     <td>`brandIconWidth` <br /><span class="type-text">integer</span></td>
-    <td>Brand icon width (px)</td>
+    <td>Brand icon width (px).</td>
   </tr>
   <tr>
     <td>`thumbnailSourceUrl` <br /><span class="type-text">string</span></td>
-    <td>Thumbnail source URL (for native video)</td>
+    <td>Thumbnail source URL (for native video).</td>
   </tr>
   <tr>
     <td>`thumbnailHeight` <br /><span class="type-text">integer</span></td>
-    <td>Thumbnail height (px, for native video)</td>
+    <td>Thumbnail height (px, for native video).</td>
   </tr>
   <tr>
     <td>`thumbnailWidth` <br /><span class="type-text">integer</span></td>
-    <td>Thumbnail width (px, for native video)</td>
+    <td>Thumbnail width (px, for native video).</td>
   </tr>
   </table></details>
   </td>
@@ -535,34 +523,25 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 
 <table className="objectProperties">
 <tr>
-  <td>`successData` <br /><span class="type-text">object</span></td>
-  <td>Success data</td>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td><var>true</var> when the request was processed, even if every creative in it failed. Check <var>failedData</var>.</td>
+</tr>
+<tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Upload results, keyed by the IDs you used in <var>creativeRequest</var> (for example, <var>I001</var>).</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`successData` object properties</summary>
+  <summary>`data` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`PS` <br /><span class="type-text">string</span></td>
-    <td>Partial success</td>
+    <td>`successData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that succeeded to the new creative ID, as a string (for example, <var>"I001": "803406"</var>). Empty if no creative was created.</td>
   </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`failedData` <br /><span class="type-text">object</span></td>
-  <td>Failed data</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`failedData` object properties</summary>
-  <table className="objectProperties">
   <tr>
-    <td>`PF` <br /><span class="type-text">string</span></td>
-    <td>Partial failure</td>
+    <td>`failedData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that failed to its error message. Empty if every creative was created.</td>
   </tr>
   </table></details>
   </td>
@@ -575,7 +554,7 @@ Once you have the desired creative type ID, you can upload a creative. With the 
 <div class="child2">
 
 <CodeDropdown label="Request samples">
-<CodeOption label="Form data sample">
+<CodeOption label="Form data sample (image)">
 ```bash
 POST /api/v3/crt/creatives HTTP/1.1
 Host: https://api.iqm.com
@@ -586,28 +565,30 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeRequest"
 
-{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrl":"https://tracker.example.com/pixel","creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href='https://example.com'><img src='https://cdn.example.com/ad.jpg'></a>","clickUrl":"https://www.example.com","htmlDetails":{"creativeWidth":300,"creativeHeight":250}}}
+{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrl":"https://tracker.example.com/pixel","creativeWidth":728,"creativeHeight":90}}}
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeFiles"; filename="summer-banner.jpg"
 Content-Type: image/jpeg
 
 [Binary image data]
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="creativeFiles"; filename="product-demo.mp4"
-Content-Type: video/mp4
-
-[Binary video data]
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
 </CodeOption>
-<CodeOption label="cURL sample">
+<CodeOption label="cURL sample (image)">
 ```bash
 curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "X-IAA-OW-ID: 12345" \
-  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrl":"https://tracker.example.com/pixel","creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","clickUrl":"https://www.example.com","htmlDetails":{"creativeWidth":300,"creativeHeight":250}}}' \
-  -F 'creativeFiles=@summer-banner.jpg' \
-  -F 'creativeFiles=@product-demo.mp4'
+  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrl":"https://tracker.example.com/pixel","creativeWidth":728,"creativeHeight":90}}}' \
+  -F 'creativeFiles=@summer-banner.jpg'
+```
+</CodeOption>
+<CodeOption label="cURL sample (HTML)">
+```bash
+curl -X POST https://api.iqm.com/api/v3/crt/creatives \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "X-IAA-OW-ID: 12345" \
+  -F 'creativeRequest={"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","htmlDetails":{"creativeWidth":300,"creativeHeight":250}}}'
 ```
 </CodeOption>
 </CodeDropdown>
@@ -617,14 +598,41 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   "success": true,
   "data": {
     "successData": {
-      "PS": "701388"
+      "I001": "803406"
     },
+    "failedData": {}
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 200 (creative failed)"
+{
+  "success": true,
+  "data": {
+    "successData": {},
     "failedData": {
-      "PF": "Creative file missing. Please attach the required file. : null"
+      "I001": "Creative file missing. Please attach the required file."
     }
   }
 }
 ```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "All entries in the request must have the same platformCreativeTypeId.",
+      "field": "creativeRequest"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -635,13 +643,13 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
 <div class="endpoint-container">
   <div class="child1">
 
-This API checks a creative's status. Use the <var>creativeId</var> (6 digit number under <var>data</var> parameter in response) retrieved from the previous step to get its details. 
+This API checks a creative's status. Use the creative ID returned in <var>successData</var> in the previous step (a string, keyed by the ID you gave the creative in <var>creativeRequest</var>) to get its details. 
 
-The creative details endpoint returns a status ID (highlighted in code sample). A status ID of <var>2</var> means the creative is <var>running</var>.
+The creative details endpoint returns a status ID (highlighted in code sample). A new creative starts with status ID <var>1</var> (<var>pending</var>) and changes to <var>2</var> (<var>running</var>) once it is approved.
 
 | Path parameter || 
 | --- | --- |
-| `creativeId` <br /><span class="type-text">array of integers</span> | Creative ID |
+| `creativeId` <br /><span class="type-text">integer</span> | Creative ID. |
 
 </div><div class="child2">
 
@@ -652,34 +660,37 @@ The creative details endpoint returns a status ID (highlighted in code sample). 
 {
   "success": true,
   "data": {
-    "creativeId": 686855,
-    "creativeName": "300x600-w23-01",
-    "rtbCreativeTypeId": 1,
-    "platformCreativeTypeId": 11,
-    //highlight-next-line
-    "creativeStatusId": 2,
-    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
-    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
-    "clickUrl": "http://iqm.com",
-    "imageDetails": {
-      "pixelUrl": "http://pixel.com",
-      "creativeWidth": 300,
-      "creativeHeight": 600
-    },
-    "creativeSourceType": "file",
+    "clickUrl": "https://www.example.com/summer-sale",
+    "createdAt": 1793036350122,
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/204851/278x220/rvNRZ1A_1793036350122.jpg",
+    "creativeId": 803406,
+    "creativeName": "Summer Sale Banner",
     "creativePreviewFlag": 1,
-    "createdAt": 1730201855165,
-    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
-    "userDetails": {
-      "uowId": 175891,
-      "userName": "Hardik",
-      "userEmail": "hardik.v+iqmsuper@iqm.com",
-      "hasApprovalAccess": true,
-      "hasEditAccess": true
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/204851/rvNRZ1A_1793036350122.jpg",
+    "creativeSourceType": "file",
+    //highlight-next-line
+    "creativeStatusId": 1,
+    "externalCreativeId": "campaign-2024-001",
+    "imageDetails": {
+      "pixelUrls": [
+        "https://tracker.example.com/pixel"
+      ],
+      "pixelUrl": "https://tracker.example.com/pixel",
+      "creativeWidth": 728,
+      "creativeHeight": 90
     },
+    "isMetadataFaulty": false,
+    "modifiedAt": "2026-10-26T17:39:14.334Z",
     "organizationDetails": {
-      "owId": 202760,
-      "organizationName": "AdWing"
+      "owId": 204851,
+      "organizationName": "Example Organization"
+    },
+    "platformCreativeTypeId": 11,
+    "rtbCreativeTypeId": 1,
+    "userDetails": {
+      "uowId": 291477,
+      "userName": "Jane Smith",
+      "userEmail": "user@example.com"
     }
   }
 }

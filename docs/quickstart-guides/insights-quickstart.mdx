@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import { audienceTypes } from '@site/src/data/enums/audienceTypes';
 import CopyUrl from '@site/src/components/CopyUrl';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # Create an Insights report
 
@@ -20,13 +22,15 @@ The following endpoints are used to check campaigns for eligibility and create d
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v2/cmp/campaign/{campaignId}" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/campaign/bid-insights/{campaignId}" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/audiences/list" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/add" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/insights/download" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/cmp/audience/targeting" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/vld-report/download" />
-<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report" />
-<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report/download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/templates" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/templates/{templateId}/report" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/report/download" />
 
 ## About IQM Insights
 
@@ -54,20 +58,20 @@ To generate an Insights report, you need an account on the IQM platform (see [Ge
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
+<OAuthHeaders />
 
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -77,7 +81,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -86,53 +90,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -145,10 +129,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+<ApiHeaders />
 
 </div>
 
@@ -156,13 +137,15 @@ Use the following header parameters for all requests after logging in:
 
 The table below outlines the eligibility requirements for each Insights report type and includes relevant resources. Click on a type to jump to the instructions for generating that Insights report. 
 
+You can also use [Get eligible campaigns](/guidelines/insights-api#get-eligible-campaigns) with <var>reportType</var> set to <var>VLD</var> or <var>PLD</var> to list the campaigns that meet the VLD or PLD requirements.
+
 <table>
 <th>Type</th>
 <th>Requirements</th>
 <th>Resources</th>
 <tr>
 <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**Campaign Bidding Insights report**](#campaign-bidding-insights-report)</td>
-<td>Campaign requirements:<ul><li>More than 1 impression</li><li>Status: "running", "paused", or  "expired" (within last two weeks)</li><li>Type: "advanced"</li></ul></td>
+<td>Campaign requirements:<ul><li>More than 1 impression</li><li>Status: "running", "paused", or "expired". The report covers at most 14 days, so choose dates when the campaign was delivering</li><li>Type: "advanced"</li></ul></td>
 <td>[Campaign API](/guidelines/campaign-api) guidelines<br />[Create new campaign](/guidelines/campaign-api#create-new-campaign)<br />[Campaign status type ID](/guidelines/campaign-api#get-campaign-count-by-status)<br />[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type)</td>
 </tr>
 <tr>
@@ -177,7 +160,7 @@ The table below outlines the eligibility requirements for each Insights report t
 </tr>
 <tr>
   <td style={{ textAlign: "left", textWrap: "nowrap" }}>[**PLD Insights report**](#pld-insights-report)</td>
-  <td>Campaign requirements:<ul><li>Must be healthcare campaign</li><li>"running", "expired" (within last 90 days), "paused" (within last 90 days) status</li><li>Must have duration of 3 or more days</li><li>Audience type: **Matched audience** from NPI IDs</li></ul></td>
+  <td>Campaign requirements:<ul><li>Must be healthcare campaign</li><li>Status: "running", "expired" (within the past 90 days), or "paused" (within the past 90 days)</li><li>Must have duration of 7 or more days</li><li>Up to 50 eligible campaigns from the same insertion order (IO) per report</li><li>Audience type: **Matched audience** created from NPI IDs or from raw data. Patient Matched audiences aren't eligible</li></ul></td>
   <td>[ABM audience details](/healthcare-vertical/audience-healthcare/#abm-audience-details)</td>
 </tr>
 </table>
@@ -215,17 +198,19 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "campaignName": "TestCampaign",
         "advertiserDomain": "https://iqm.com",
         "creativeType": 11,
-         //highlight-next-line
+        //highlight-next-line
         "campaignType": 1,
         "totalBudgetPacing": true,
         "isTvAd": false,
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
         "startTime": 1726518001,
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -236,11 +221,17 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
-          //highlight-next-line
+        //highlight-next-line
         "totalImpressions": 5,
         "totalClicks": 0,
         "totalConversions": 0,
@@ -250,11 +241,13 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
         "createDate": 1726517360,
@@ -263,12 +256,12 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -285,104 +278,68 @@ The endpoint returns a JSON schema of campaign details; the relevant parameters 
 <div class="endpoint-container">
   <div class="child1">
 
-Once a campaign is determined eligible, you can generate a Campaign Bidding Insights report. Pass the <var>campaignId</var> in the endpoint's path and use the query parameters to specify the date range of the report (maximum two weeks). 
+Once a campaign is determined eligible, you can generate a Campaign Bidding Insights report. Pass the <var>campaignId</var> in the endpoint's path and use the query parameters to specify the date range of the report (maximum two weeks). The response can take up to about two minutes for campaigns with a lot of bid traffic.
 
 This endpoint returns a list of rejection reasons for why the campaign's bid requests were dropped. The number of bids won is also returned.
 
 | Path parameters |  |
 | ---- | --- |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID. |
 
 | Query parameters |  |
 | ----| --- |
-| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
-| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds |
+| `dateRangeStart` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds. |
+| `dateRangeEnd` <br /><span class="type-text">integer</span> | Unix epoch timestamp, in milliseconds. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
 <tr>
+  <td>`totalRequests` <br /><span class="type-text">integer</span></td>
+  <td>Total bid requests evaluated for the campaign in the date range.</td>
+</tr>
+<tr>
   <td>`rejectionList`<br /><span class="type-text">object</span></td>
-  <td>List of bid rejection reasons</td>
+  <td>Bid rejection reasons, keyed by rejection category, e.g. <var>locationTargeting</var>, <var>creativeSettings</var>, <var>audienceTargeting</var>, <var>optimizationAndDelivery</var>, <var>campaignBudget</var>, <var>inventoryTargeting</var>, <var>deviceTargeting</var>, or <var>other</var>. Only categories with rejected bids are included.</td>
 </tr>
 <tr>
     <td colSpan="2">
       <details className="objectPropertiesDetails">
-      <summary>`rejectionList` object properties</summary>
+      <summary>`rejectionList` category object properties</summary>
       <table className="objectProperties">
       <tr>
-        <td>`campaignSettings` <br /><span class="type-text">object</span></td>
-        <td>Campaign settings</td>
+        <td>`title` <br /><span class="type-text">string</span></td>
+        <td>Category display name.</td>
       </tr>
       <tr>
-        <td>`ioBudget` <br /><span class="type-text">object</span></td>
-        <td>IO budget</td>
+        <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
+        <td>Rejected bids count for the category.</td>
       </tr>
       <tr>
-        <td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
-        <td>Inventory targeting</td>
+        <td>`description` <br /><span class="type-text">string</span></td>
+        <td>Rejection description. Only present when the category has no sub-reasons.</td>
       </tr>
       <tr>
-        <td>`campaignBidPrice` <br /><span class="type-text">object</span></td>
-        <td>Campaign bid price</td>
-      </tr>
-      <tr>
-        <td>`locationTargeting` <br /><span class="type-text">object</span></td>
-        <td>Location targeting</td>
-      </tr>
-         <tr>
-        <td>`deviceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Device targeting</td>
-      </tr>
-         <tr>
-        <td>`creativeSettings` <br /><span class="type-text">object</span></td>
-        <td>Creative settings</td>
-      </tr>
-         <tr>
-        <td>`advanceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Advanced targeting</td>
-      </tr>
-         <tr>
-        <td>`audienceTargeting` <br /><span class="type-text">object</span></td>
-        <td>Audience targeting</td>
-      </tr>
-         <tr>
-        <td>`bidStrategy` <br /><span class="type-text">object</span></td>
-        <td>Bid strategy</td>
-      </tr>
-         <tr>
-        <td>`campaignBudget` <br /><span class="type-text">object</span></td>
-        <td>Campaign budget</td>
-      </tr>
-         <tr>
-        <td>`demographicsTargeting` <br /><span class="type-text">object</span></td>
-        <td>Demographics targeting</td>
-      </tr>
-            <tr>
-        <td>`undefined` <br /><span class="type-text">object</span></td>
-        <td>Undefined</td>
+        <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
+        <td>Sub-reasons for the category, keyed by sub-reason name (see <var>subReasonInfo</var> keys below); empty when the category has no sub-reasons.</td>
       </tr>
       <tr>
         <td colSpan="2">
           <details className="objectPropertiesDetails">
-          <summary>`rejectionList` sub-objects properties</summary>
+          <summary>`subReasonInfo` object properties</summary>
           <table className="objectProperties">
           <tr>
           <td>`title` <br /><span class="type-text">string</span></td>
-          <td>Object title</td>
+          <td>Sub-reason display name.</td>
           </tr>
-            <tr>
-          <td>`rejectedBids` <br /><span class="type-text">integer</span></td>
-          <td>Rejected bids count</td>
+          <tr>
+          <td>`droppedRequests` <br /><span class="type-text">integer</span></td>
+          <td>Dropped bid requests count for the sub-reason.</td>
           </tr>
-            <tr>
+          <tr>
           <td>`description` <br /><span class="type-text">string</span></td>
-          <td>description</td>
-          </tr>
-             <tr>
-          <td>`subReasonInfo` <br /><span class="type-text">object</span></td>
-          <td>List of sub-reasons info</td>
+          <td>Sub-reason description.</td>
           </tr>
           </table></details>
           </td>
@@ -394,23 +351,23 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 </tr>
 <tr>
   <td>`topMainReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> objects with the highest <var>rejectedBids</var> counts</td>
+  <td>Name-value pairs of <var>rejectionList</var> category and <var>rejectedBids</var> count, for the categories with the most rejected bids.</td>
   </tr>
 <tr>
   <td>`topSubReasons` <br /><span class="type-text">object</span></td>
-  <td><var>rejectionList</var> sub-objects with the highest <var>droppedRequests</var> counts</td>
+  <td>Name-value pairs of sub-reason and <var>droppedRequests</var> count, for the sub-reasons with the most dropped requests.</td>
   </tr>
 <tr>
   <td>`totalBids` <br /><span class="type-text">integer</span></td>
-  <td>Total bids count</td>
+  <td>Total bids count.</td>
   </tr>
 <tr>
   <td>`lostBids` <br /><span class="type-text">integer</span></td>
-  <td>Lost bids count</td>
+  <td>Lost bids count.</td>
   </tr>
 <tr>
   <td>`totalWins` <br /><span class="type-text">integer</span></td>
-  <td>Total won bids count</td>
+  <td>Total won bids count.</td>
   </tr>
 </table>
 
@@ -418,64 +375,80 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 
 
 <p /><details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> object properties</summary>
+  <summary style={{ fontSize: "16px" }}><var>subReasonInfo</var> keys</summary>
 
 <table className="objectProperties">
 <tr>
   <td>`inactiveAccount`</td>
-  <td>Bids dropped off because Advertiser's account with IQM is inactive</td>
+  <td>Bids dropped off because Advertiser's account with IQM is inactive.</td>
 </tr>
 <tr>
   <td>`insufficientBalance`</td>
-  <td>Bids dropped off because there is an insufficient balance in your account </td>
+  <td>Bids dropped off because there is an insufficient balance in your account. </td>
 </tr>
 <tr>
   <td>`creativeRollPosition`</td>
-  <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the campaign's required roll position </td>
+  <td>Bids dropped off because the roll position (pre-, mid-, post-roll) didn't match the campaign's required roll position. </td>
 </tr>
 <tr>
   <td>`creativePlayerSize`</td>
-  <td>Bids dropped off because player size did not match campaign's required player size  </td>
+  <td>Bids dropped off because player size did not match campaign's required player size.  </td>
 </tr>
 <tr>
   <td>`ioBudget`</td>
-  <td>Bids dropped off because budget on the campaign's associated IO has spent in full</td>
+  <td>Bids dropped off because budget on the campaign's associated IO has spent in full.</td>
 </tr>
 <tr>
   <td>`audienceUnavailable`</td>
-  <td>Bids dropped off because audience did not match campaign's Audience targeting parameters </td>
+  <td>Bids dropped off because audience did not match campaign's Audience targeting parameters. </td>
 </tr>
 <tr>
   <td>`creativeUnavailable`</td>
-  <td>Bids dropped off due to the campaign's creative settings, such as creative type, dimensions, duration and others</td>
+  <td>Bids dropped off due to the campaign's creative settings, such as creative type, dimensions, duration and others.</td>
 </tr>
 <tr>
   <td>`campaignBidPrice`</td>
-  <td>Bids dropped off because the bid price is lower than the floor price recived from the exchange </td>
+  <td>Bids dropped off because the bid price is lower than the floor price recived from the exchange. </td>
 </tr>
 <tr>
   <td>`operatingSystem`</td>
-  <td>Bids dropped off because Operating System did not match the campaign's Operating System requirements</td>
+  <td>Bids dropped off because Operating System did not match the campaign's Operating System requirements.</td>
 </tr>
 <tr>
   <td>`manufacturer`</td>
-  <td>Bids dropped off because the Manufacturer did not match the campaign's Manufacturer parameters</td>
+  <td>Bids dropped off because the Manufacturer did not match the campaign's Manufacturer parameters.</td>
 </tr>
 <tr>
   <td>`deviceType`</td>
-  <td>Bids dropped off because the Device Type did not match the campaign's Device Type targeting parameters </td>
+  <td>Bids dropped off because the Device Type did not match the campaign's Device Type targeting parameters. </td>
 </tr>
 <tr>
   <td>`channels`</td>
-  <td>Bids dropped off because Channels did not match the campaign's Channel Targeting Parameters</td>
+  <td>Bids dropped off because Channels did not match the campaign's Channel Targeting Parameters.</td>
 </tr>
 <tr>
   <td>`networkTypes`</td>
-  <td>Bids dropped off because Network Type did not match the campaign's Network Type requirements</td>
+  <td>Bids dropped off because Network Type did not match the campaign's Network Type requirements.</td>
 </tr>
 <tr>
   <td>`carrier`</td>
-  <td>Bids dropped off because Carrier did not match the campaign's Carrier requirements</td>
+  <td>Bids dropped off because Carrier did not match the campaign's Carrier requirements.</td>
+</tr>
+<tr>
+  <td>`state`</td>
+  <td>Bids dropped off because the state did not match the campaign's state requirements.</td>
+</tr>
+<tr>
+  <td>`creativeType`</td>
+  <td>Bids dropped off because Creative Type did not match campaign's Creative Type requirements.</td>
+</tr>
+<tr>
+  <td>`matchedAudience`</td>
+  <td>Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters.</td>
+</tr>
+<tr>
+  <td>`budgetAllocationConsumed`</td>
+  <td>Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted.</td>
 </tr>
 </table>
 </details>
@@ -491,112 +464,102 @@ This endpoint returns a list of rejection reasons for why the campaign's bid req
 {
   "success": true,
   "data": {
-    "totalRequests": 100,
+    "totalRequests": 1628200,
     "rejectionList": {
-      "campaignSettings": {
-        "title": "Campaign Settings",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Campaign Settings set in the campaign.",
-        "subReasonInfo": {}
-      },
-      "ioBudget": {
-        "title": "IO Budget",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
-      },
-      "inventoryTargeting": {
-        "title": "Inventory Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Inventory Targeting.",
-        "subReasonInfo": {}
-      },
-      "campaignBidPrice": {
-        "title": "Campaign Bid Price",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the bid price is lower than the floor price received from the exchange.",
-        "subReasonInfo": {}
-      },
       "locationTargeting": {
         "title": "Location Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Location Targeting.",
-        "subReasonInfo": {}
-      },
-      "deviceTargeting": {
-        "title": "Device Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Device Targeting.",
-        "subReasonInfo": {}
-      },
-      "creativeSettings": {
-        "label": "Creative Settings",
-        "rejectedBids": 100,
-        "description": "Campaign is filtered due to non-matching creative dimensions found in the request",
+        "rejectedBids": 389204,
         "subReasonInfo": {
-          "creativeDimension": {
-            "label": "Creative Dimensions",
-            "droppedRequests": 100,
-            "description": "Campaign is filtered due to non-matching creative dimensions found in the request."
+          "state": {
+            "title": "State",
+            "droppedRequests": 389204,
+            "description": "Bids dropped off because the state did not match the campaign's state requirements"
           }
         }
       },
-      "advanceTargeting": {
-        "title": "Advanced Targeting",
-        "rejectedBids": 0,
-        "description": null,
-        "subReasonInfo": {}
+      "creativeSettings": {
+        "title": "Creative Settings",
+        "rejectedBids": 62,
+        "subReasonInfo": {
+          "creativeType": {
+            "title": "Creative Type",
+            "droppedRequests": 62,
+            "description": "Bids dropped off because Creative Type did not match campaign's Creative Type requirements"
+          }
+        }
       },
       "audienceTargeting": {
         "title": "Audience Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Audience Targeting.",
-        "subReasonInfo": {}
+        "rejectedBids": 1113949,
+        "subReasonInfo": {
+          "matchedAudience": {
+            "title": "Matched Audience",
+            "droppedRequests": 1113949,
+            "description": "Bids dropped off because Audience did not match campaign's Matched Audience targeting parameters"
+          }
+        }
       },
-      "bidStrategy": {
-        "title": "Bid Strategy",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to bid strategy setting applied in campaign.",
-        "subReasonInfo": {}
+      "optimizationAndDelivery": {
+        "title": "Optimization & Delivery",
+        "rejectedBids": 17895,
+        "subReasonInfo": {
+          "budgetAllocationConsumed": {
+            "title": "Budget Allocation Consumed (Pacing/Delivery)",
+            "droppedRequests": 17895,
+            "description": "Bids dropped off because the allocated budget, based on pacing guidelines, has been exhausted"
+          }
+        }
       },
       "campaignBudget": {
         "title": "Campaign Budget",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered because the campaign budget is now unavailable for further bidding.",
+        "rejectedBids": 9653,
+        "description": "Bids dropped off because the total or daily budget was fully consumed.",
         "subReasonInfo": {}
       },
-      "demographicsTargeting": {
-        "title": "Demographics Targeting",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Demographics Targeting.",
-        "subReasonInfo": {}
-      },
-      "undefined": {
-        "title": "Undefined",
-        "rejectedBids": 0,
-        "description": "Campaign is filtered due to Undefined reasons.",
+      "other": {
+        "title": "Other",
+        "rejectedBids": 96528,
+        "description": "Bids dropped off due to back-end bidder settings that are typically used for campaign efficiency.  Please see your account manager for more information.",
         "subReasonInfo": {}
       }
     },
     "topMainReasons": {
-      "creativeSettings": 100
+      "audienceTargeting": 1113949,
+      "optimizationAndDelivery": 17895,
+      "locationTargeting": 389204,
+      "creativeSettings": 62,
+      "campaignBudget": 9653
     },
     "topSubReasons": {
-      "creativeDimension": 100
+      "matchedAudience": 1113949,
+      "budgetAllocationConsumed": 17895,
+      "state": 389204,
+      "creativeType": 62
     },
-    "totalBids": 0,
-    "lostBids": 0,
-    "totalWins": 0
+    "totalBids": 909,
+    "lostBids": 535,
+    "totalWins": 374
   }
 }
 ```
 
-```json title="Response 422 (invalid start date)"
+```json title="Response 422 (end date before start date)"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Date Range End must be greater than Date Range Start"
+      "error": "Date Range End must be greater than Date Range Start."
+    }
+  ]
+}
+```
+
+```json title="Response 422 (date range over two weeks)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "The difference between start and end date must not be greater than 2 weeks."
     }
   ]
 }
@@ -620,18 +583,26 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
 
 | Query parameters |  |
 | ---- | --- |
-| `searchField` <br /><span class="type-text">string</span> | Filter results by search field |
-| `pageSize` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>20</var> |
-| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data |
-| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-id</var> |
+| `searchField` <br /><span class="type-text">string</span> | Filter results by search field. |
+| `pageSize` <br /><span class="type-text">integer</span> | Number of entries returned per page, default: <var>20</var>. |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number of retrieved data. |
+| `sortBy` <br /><span class="type-text">string</span> | Sorts by ascending (<var>+</var>) or descending (<var>-</var>), default: <var>-id</var>. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights data details</td>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of eligible audiences.</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of eligible audiences matching <var>searchField</var>.</td>
+</tr>
+<tr>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Eligible audiences.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -640,19 +611,23 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience ID</td>
+  <td>Audience ID.</td>
   </tr>
     <tr>
   <td>`audienceName` <br /><span class="type-text">string</span></td>
-  <td>Audience name</td>
+  <td>Audience name.</td>
   </tr>
     <tr>
-  <td>`matchRate` <br /><span class="type-text">integer</span></td>
-  <td>The percentage of matched records compared to a reference set</td>
+  <td>`matchRate` <br /><span class="type-text">number</span></td>
+  <td>The percentage of matched records compared to a reference set.</td>
   </tr>
       <tr>
   <td>`uniques` <br /><span class="type-text">integer</span></td>
-  <td>Count of unique audiences reached</td>
+  <td>Count of unique audiences reached.</td>
+  </tr>
+  <tr>
+  <td>`insightsStatus` <br /><span class="type-text">integer</span></td>
+  <td>[Insights status ID](/guidelines/insights-api#get-list-of-insights-status-types) of the audience: <var>1</var> (Processing), <var>2</var> (Ready), or <var>3</var> (Failed).</td>
   </tr>
   </table></details>
   </td>
@@ -671,26 +646,29 @@ To generate an Audience Insights report, first use this endpoint to retrieve a l
 {
   "success": true,
   "data": {
-    "totalRecords": 10,
-    "filteredRecords": 3,
+    "totalRecords": 8,
+    "filteredRecords": 8,
     "insightsData": [
       {
-        "id": 12345,
+        "id": 1183286,
         "audienceName": "audience1",
-        "matchRate": 58.99,
-        "uniques": 52432
+        "matchRate": 74.74,
+        "uniques": 537354,
+        "insightsStatus": 3
       },
       {
-        "id": 12365,
+        "id": 1183283,
         "audienceName": "audience2",
-        "matchRate": 78.88,
-        "uniques": 72786
+        "matchRate": 69.23,
+        "uniques": 163629,
+        "insightsStatus": 3
       },
       {
-        "id": 12376,
+        "id": 1183002,
         "audienceName": "audience3",
-        "matchRate": 34.88,
-        "uniques": 31122
+        "matchRate": 73.04,
+        "uniques": 74729,
+        "insightsStatus": 3
       }
     ]
   }
@@ -713,8 +691,8 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
 
 | Request schema |  |
 | ----  | --- |
-| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](/guidelines/insights-api#get-list-of-insights-types) |
-| `sourceIds` <br /><span class="type-text">integer</span> | Source IDs |
+| `insightsTypeId` <br /><span class="type-text">integer</span> | [Insights type ID](/guidelines/insights-api#get-list-of-insights-types): <var>1</var> for Audience Insights. |
+| `sourceIds` <br /><span class="type-text">array of integers</span> | Audience IDs to generate insights for. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -722,11 +700,11 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
 <table className="objectProperties">
 <tr>
   <td>`invalidSourceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Invalid source IDs list</td>
+  <td>Invalid source IDs list.</td>
 </tr>
 <tr>
-  <td>`insightsData` <br /><span class="type-text">object</span></td>
-  <td>Insights data details</td>
+  <td>`insightsData` <br /><span class="type-text">array of objects</span></td>
+  <td>Created Audience Insights reports, one per valid source ID.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -735,31 +713,31 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
   <table className="objectProperties">
   <tr>
   <td>`id` <br /><span class="type-text">integer</span></td>
-  <td>Audience Insights ID</td>
+  <td>Audience Insights ID.</td>
   </tr>
     <tr>
   <td>`typeId` <br /><span class="type-text">integer</span></td>
-  <td>Insights type ID</td>
+  <td>Insights type ID.</td>
   </tr>
     <tr>
   <td>`statusId` <br /><span class="type-text">integer</span></td>
-  <td>[Insights status ID](/guidelines/insights-api#get-list-of-insights-status-types)</td>
+  <td>[Insights status ID](/guidelines/insights-api#get-list-of-insights-status-types).</td>
   </tr>
     <tr>
   <td>`sourceName` <br /><span class="type-text">string</span></td>
-  <td>Source name</td>
+  <td>Source name.</td>
   </tr>
       <tr>
   <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Insights name</td>
+  <td>Insights name.</td>
   </tr>
       <tr>
   <td>`sourceId` <br /><span class="type-text">integer</span></td>
-  <td>Source ID</td>
+  <td>Source ID.</td>
   </tr>
   <tr>
   <td>`createdAt`<br /><span class="type-text">integer</span></td>
-  <td>Unix epoch timestamp of Insights creation date, in milliseconds</td>
+  <td>Unix epoch timestamp of Insights creation date, in milliseconds.</td>
 </tr>
   </table></details>
   </td>
@@ -792,13 +770,13 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
     "invalidSourceIds": [],
     "insightsData": [
       {
-        "id": 1213,
+        "id": 2098,
         "typeId": 1,
-        "statusId": 2,
-        "sourceName": "Data Trust NY 4 Cols",
-        "name": "Data Trust NY 4 Cols_insights",
-        "sourceId": 1099461,
-        "createdAt": 1728366883518
+        "statusId": 1,
+        "sourceName": "audience1",
+        "name": "audience1_insights",
+        "sourceId": 1183285,
+        "createdAt": 1793036686825
       }
     ]
   }
@@ -817,16 +795,13 @@ Pass the audience <var>id</var> (from the response data in step 1) in the Source
 <div class="endpoint-container">
   <div class="child1">
 
-Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> query, along with your desired file type, to generate a download link for your Audience Insights report.
+Pass the Insights <var>id</var> (from the response data in step 2) in the <var>insightsId</var> form field, along with your desired file type, to generate a download link for your Audience Insights report.
 
-| Query parameters |  |
+| Request schema (multipart/form-data) |  |
 | ---- | --- |
-| `insightsId` <br /><span class="type-text">integer</span> | Insights ID |
-| `fileType` <br /><span class="type-text">string</span> | File type of Report: <var>pdf</var> or <var>xlsx</var>
-
-| Request schema |  |
-| ---- | --- |
-| `customLogoFile` <br /><span class="type-text">string</span> | Multipart/form-data format
+| `insightsId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your Insights ID (<var>id</var> from step 2). |
+| `fileType` <br /><span class="type-text">string</span> <span class="required-text">required</span> | File type of report: <var>pdf</var> or <var>xlsx</var>. |
+| `customLogoFile` <br /><span class="type-text">file</span> | Optional logo image to show on the report. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
@@ -834,7 +809,7 @@ Pass the Insights <var>id</var> (from the response data in step 2) in the <var>i
 <table className="objectProperties">
 <tr>
   <td>`insightsReportUrl` <br /><span class="type-text">string</span></td>
-  <td>Audience Insights report URL</td>
+  <td>Audience Insights report URL.</td>
 </tr>
 </table>
 </details>
@@ -844,18 +819,32 @@ Pass the Insights <var>id</var> (from the response data in step 2) in the <var>i
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Request sample"
-{
-    "customLogoFile": "string"
-}
+```bash title="Request sample"
+curl -X POST https://api.iqm.com/api/v3/ins/insights/download \
+  -H "Authorization: Bearer <access_token>" \
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'insightsId=2098' \
+  -F 'fileType=pdf' \
+  -F 'customLogoFile=@/path/to/logo.png'
 ```
 
 ```json title="Response 200"
 {
-    "success": true,
-    "data": {
-        "insightsReportUrl": "https://domain.com/insights.pdf"
+  "success": true,
+  "data": {
+    "insightsReportUrl": "https://iqm-insights-stage.s3.amazonaws.com/audiences/client_id%3D204995/audience_id%3D1183285/default_insight.pdf?..."
+  }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
     }
+  ]
 }
 ```
 
@@ -877,8 +866,8 @@ To generate a VLD Insights report, first use the <var>campaignId</var> and the G
 
 The endpoint returns a JSON schema of campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
    * The status is <var>running</var>.
-   * <var>createDate</var> indicates when the campaign was created (in Unix epoch milliseconds).
-   * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration. 
+   * <var>createDate</var> indicates when the campaign was created (in Unix epoch seconds).
+   * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration, in Unix epoch seconds. 
    * A Country ID of <var>30100001</var> indicates the targeted audience is in the US.
 
 | Path parameters |  |
@@ -907,12 +896,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-               //highlight-next-line
+        //highlight-next-line
         "startTime": 1726518001,
-               //highlight-next-line
+        //highlight-next-line
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -923,8 +914,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
         "totalImpressions": 5,
@@ -934,29 +931,31 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "trafficType": "11,12",
         "exchanges": "",
         "isLocationWithOrFilter": true,
-               //highlight-next-line
+        //highlight-next-line
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
-               //highlight-next-line
+        //highlight-next-line
         "createDate": 1726517360,
         "ioId": 15844,
         "ioName": "Test2",
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -977,19 +976,19 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 
 | Request schema | |
 | --- | --- |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
       <tr>
-  <td>`campaignId` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-value pairs of campaign ID and an array of the audience types and audiences the campaign targets (empty array if none).</td>
   </tr>
    <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`campaignId` object properties</summary>
+  <summary>Campaign ID array item properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
@@ -997,7 +996,7 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
   </tr>
     <tr>
   <td>`audienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Audience IDs</td>
+  <td>Audience IDs.</td>
   </tr>
   </table></details>
   </td>
@@ -1015,8 +1014,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 ```json title="Request sample"
 {
   "campaignIds": [
-    52241,
-    50322
+    543363,
+    553441,
+    553443
   ]
 }
 ```
@@ -1071,60 +1071,78 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 <div class="endpoint-container">
   <div class="child1">
 
-Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Insights report.
+Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>vldStartDate</var> and <var>vldEndDate</var>) to generate a VLD Insights report. The dates are in Unix epoch milliseconds and must fall within the campaign's flight.
+
+VLD Insights reports are charged per impression. Before generating, send the same request body to [Get cost assessment for VLD Insights report](/guidelines/insights-api#get-cost-assessment-for-vld-insights-report) to see the chargeable impressions and cost. If your funds don't cover the cost, generating still returns <var>200</var>, but <var>vldReportCreatable</var> is <var>false</var> and no report is created.
 
 | Request schema |  |
 | ---- | --- |
-| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
-| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+| `vldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds. |
+| `vldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds. |
+| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
-     <tr>
-      <td>`vldReportCreated` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates VLD Insights report was created: <var>true</var></td>
+      <tr>
+      <td>`vldId` <br /><span class="type-text">integer</span></td>
+      <td>VLD Insights report ID; <var>0</var> when no report was created.</td>
       </tr>
       <tr>
-      <td>`campaignId` <br /><span class="type-text">integer</span></td>
-      <td>Campaign ID</td>
-      </tr>
-      <tr>
-      <td>`campaignName` <br /><span class="type-text">string</span></td>
-      <td>Campaign name</td>
-      </tr>
-      <tr>
-      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
-      <td>[Campaign status type](/guidelines/campaign-api#get-campaign-count-by-status)</td>
+      <td>`vldName` <br /><span class="type-text">string</span></td>
+      <td>VLD Insights report name.</td>
       </tr>
       <tr>
       <td>`vldStartDate`<br /><span class="type-text">integer</span></td>
-      <td>Unix epoch timestamp of start date, in milliseconds</td>
+      <td>Unix epoch timestamp of start date, in milliseconds.</td>
       </tr>
       <tr>
       <td>`vldEndDate`<br /><span class="type-text">integer</span></td>
-      <td>Unix epoch timestamp of end date, in milliseconds</td>
+      <td>Unix epoch timestamp of end date, in milliseconds.</td>
       </tr>
       <tr>
-      <td> `vldChargeableImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of chargeable impressions for the requested VLD Insights report</td>
+      <td>`campaignId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign ID.</td>
+      </tr>
+      <tr>
+      <td>`campaignName` <br /><span class="type-text">string</span></td>
+      <td>Campaign name.</td>
+      </tr>
+      <tr>
+      <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
+      <td>Campaign creative type ID.</td>
+      </tr>
+      <tr>
+      <td>`vldReportCreatable` <br /><span class="type-text">boolean</span></td>
+      <td>Indicates the VLD Insights report can be (and was) generated: <var>true</var>. <var>false</var> when an identical report exists, an overlapping report is still processing, the campaign served no impressions in the range, or funds are insufficient.</td>
+      </tr>
+      <tr>
+      <td>`vldChargeableImps` <br /><span class="type-text">integer</span></td>
+      <td>Impressions billed for the report: impressions in the date range not already paid for by an earlier VLD Insights report.</td>
       </tr>
       <tr>
       <td>`vldChargedImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of impressions for which the VLD Insights report is already generated</td>
+      <td>Impressions in the date range already paid for by an earlier VLD Insights report.</td>
       </tr>
       <tr>
-      <td>`vldChargeableCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost to generate the VLD Insights report</td>
+      <td>`vldChargeableCost` <br /><span class="type-text">number</span></td>
+      <td>Charge for the report, in USD: <var>vldChargeableImps</var> × <var>effectiveVldRate</var> / 1000.</td>
       </tr>
       <tr>
-      <td>`vldChargedCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost of VLD Insights report that is already generated</td>
+      <td>`vldChargedCost` <br /><span class="type-text">number</span></td>
+      <td>Cost already paid for <var>vldChargedImps</var>, in USD (not charged again).</td>
       </tr>
       <tr>
       <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the VLD Insights report (<var>true</var>)</td>
+      <td>Indicates the account has enough available funds to cover <var>vldChargeableCost</var>: <var>true</var>.</td>
+      </tr>
+      <tr>
+      <td>`effectiveVldRate` <br /><span class="type-text">number</span></td>
+      <td>VLD Insights rate per 1,000 impressions (CPM), in USD.</td>
+      </tr>
+      <tr>
+      <td>`message` <br /><span class="type-text">string</span></td>
+      <td>Reason the report can't be generated, or a status message. Only present when set.</td>
       </tr>
   </table>
   </details>
@@ -1136,9 +1154,9 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 ```json title="Request sample"
 {
-  "campaignId": 12345,
-  "vldStartDate": 1722311000,
-  "vldEndDate": 1722315000
+  "campaignId": 590511,
+  "vldStartDate": 1777297800000,
+  "vldEndDate": 1780286400000
 }
 ```
 
@@ -1146,17 +1164,42 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 {
   "success": true,
   "data": {
-    "vldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "vldStartDate": 1722311000,
-    "vldEndDate": 1722315000,
-    "vldChargeableImps": 1000,
-    "vldChargedImps": 100,
-    "vldChargeableCost": 1000,
-    "vldChargedCost": 100,
-    "fundsAvailable": true
+    "vldId": 6301,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": true,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": true,
+    "effectiveVldRate": 3.0
+  }
+}
+```
+
+```json title="Response 200 (report not creatable)"
+{
+  "success": true,
+  "data": {
+    "vldId": 0,
+    "vldName": "590511_VLD_Insights_1",
+    "vldStartDate": 1777297800000,
+    "vldEndDate": 1780286400000,
+    "campaignId": 590511,
+    "campaignName": "Test Campaign for VLD",
+    "creativeTypeId": 15,
+    "vldReportCreatable": false,
+    "vldChargeableImps": 5701,
+    "vldChargedImps": 0,
+    "vldChargeableCost": 17.103,
+    "vldChargedCost": 0.0,
+    "fundsAvailable": false,
+    "effectiveVldRate": 3.0
   }
 }
 ```
@@ -1175,18 +1218,20 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 Get a download link for a VLD insight Report in CSV or XLSX format.
 
+The generate response doesn't include the new report's ID (<var>vldId</var> is <var>0</var>), and the report takes time to build. To find its ID, use [Get list of VLD Insights reports](/guidelines/insights-api#get-list-of-vld-insights-reports) and wait until the report's status is <var>Ready</var>. Send that ID as <var>reportId</var>.
+
 | Request schema |  |
 | ---- | --- |
-| `fileTypeId` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var> |
-| `vldId` <br /><span class="type-text">integer</span> | VLD ID |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>. |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Your VLD Insights report ID. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
 <tr>
-  <td>`vldReportUrl` <br /><span class="type-text">string</span></td>
-  <td>VLD Insights report file URL</td>
+  <td>`reportURL` <br /><span class="type-text">string</span></td>
+  <td>Presigned VLD Insights report file URL.</td>
 </tr>
 </table>
 </details>
@@ -1196,12 +1241,30 @@ Get a download link for a VLD insight Report in CSV or XLSX format.
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
+```json title="Request sample"
+{
+  "fileTypeId": 1,
+  "reportId": 6301
+}
+```
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "vldReportUrl": "https://tem.domain.s3.amazonaws.com/vld-campaigns/ds/2024-08-20/503481_Insights_1.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240820T112818Z&X-Amz-"
+    "reportURL": "https://iqm-insights-stage.s3.amazonaws.com/vld-campaigns/ow_id%3D204851/report_id%3D6301/590511_VLD_Insights_1.xlsx?..."
   }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please provide valid insights id value."
+    }
+  ]
 }
 ```
 
@@ -1223,7 +1286,7 @@ To generate a PLD Insights report, first use the <var>campaignId</var> and the G
 
 The endpoint returns a JSON schema of campaign details (the relevant parameters are highlighted in the sample <var>Response 200</var> code block):
    * The status is <var>running</var>.
-   * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration. 
+   * <var>startTime</var> and <var>endTime</var> indicate the campaign's duration, in Unix epoch seconds. 
 
 | Path parameters |  |
 | ---- | --- |
@@ -1251,12 +1314,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "budgetDay": 1199.08,
         "budgetTotal": 50000.0,
         "maxBid": 15.0,
+        "minBid": 0.0,
+        "allowedMinBid": 0.0,
         "timezone": 29,
-               //highlight-next-line
+        //highlight-next-line
         "startTime": 1726518001,
-               //highlight-next-line
+        //highlight-next-line
         "endTime": 1727668800,
-          //highlight-next-line
+        //highlight-next-line
         "status": "running",
         "dspMargin": 0,
         "platformMargin": 0,
@@ -1267,8 +1332,14 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "bidOptimization": true,
         "bidPacing": true,
         "isBidShading": false,
-        "impressionCapping": 0,
-        "maxDayImpressions": 0,
+        "impressionCapping": 999,
+        "frequencyCapEnabled": true,
+        "frequencyCapping": {
+            "1": {
+                "frequencyCapDuration": 1,
+                "frequencyCapValue": 999
+            }
+        },
         "maxDayClicks": 0,
         "maxDayConversions": 0,
         "totalImpressions": 5,
@@ -1280,11 +1351,13 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "isLocationWithOrFilter": true,
         "countryId": "30100001",
         "locationDetails": {},
+        "whiteListedCustomAudienceIds": "1161677",
         "isCampaignFromNewPlatform": true,
+        "whiteListedAudienceIds": "1161677",
+        "campaignIabCategoryIds": "11,12,13,14,15",
         "organizationName": "User's Org",
-        "userEmail": "User@iqm.com",
-        "userName": "User",
-        "conversionTypeId": 0,
+        "userEmail": "user@example.com",
+        "userName": "Jane Smith",
         "isUnapprovedAudienceTargeted": false,
         "isAllAudienceUnapproved": false,
         "createDate": 1726517360,
@@ -1293,12 +1366,12 @@ The endpoint returns a JSON schema of campaign details (the relevant parameters 
         "prebidAudienceSegmentIdList": [],
         "campaignTypeId": 1,
         "budgetTypeId": 1,
-        "isAdvanceAudioVideoTargeted": false,
         "isEstimatorAvailable": true,
+        "isAdvanceAudioVideoTargeted": false,
         "isEditAccess": true,
-        "isMarginSet": false,
-        "isApprovalAccess": false,
-        "isParentInvoiceTemplateSet": true
+        "isParentInvoiceTemplateSet": true,
+        "isMarginSet": true,
+        "isApprovalAccess": false
     }
 }
 ```
@@ -1319,19 +1392,19 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 
 | Request schema | |
 | --- | --- |
-| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs |
+| `campaignIds` <br /><span class="type-text">array of integers</span> | Campaign IDs. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
   <summary style={{fontSize: "16px"}}>Response properties</summary>
   <table className="objectProperties">
       <tr>
-  <td>`campaignId` <br /><span class="type-text">object</span></td>
-  <td>Name-Value pairs of <var>campaignId</var> and its object properties</td>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Name-value pairs of campaign ID and an array of the audience types and audiences the campaign targets (empty array if none).</td>
   </tr>
    <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`campaignId` object properties</summary>
+  <summary>Campaign ID array item properties</summary>
   <table className="objectProperties">
   <tr>
   <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
@@ -1339,7 +1412,7 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
   </tr>
     <tr>
   <td>`audienceIds` <br /><span class="type-text">array of integers</span></td>
-  <td>Audience IDs</td>
+  <td>Audience IDs.</td>
   </tr>
   </table></details>
   </td>
@@ -1357,8 +1430,9 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 ```json title="Request sample"
 {
   "campaignIds": [
-    52241,
-    50322
+    543363,
+    553441,
+    553443
   ]
 }
 ```
@@ -1406,70 +1480,46 @@ Pass the <var>campaignId</var> to check its audience. Audience type ID <var>1</v
 
 </div></div>
 
-### Step 2: Generate PLD Insights report
+### Step 2: Create a PLD report template
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/templates" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Once the desired campaign has been determined eligible, pass the <var>campaignId</var> in the request schema (along with <var>pldStartDate</var> and <var>pldEndDate</var>) to generate a PLD Insights report.
+PLD Insights reports are created from report templates. A template sets the campaigns, date range, and schedule. With a one-time frequency (<var>frequencyId</var> <var>1</var>), the template generates a single report right away.
 
-| Request schema |  |
-| ---- | --- |
-| `pldStartDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of start date, in milliseconds |
-| `pldEndDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of end date, in milliseconds |
-| `campaignId` <br /><span class="type-text">integer</span> | Campaign ID |
+PLD Insights reports are charged per impression. Before creating the template, use [Calculate Insights computation](/guidelines/insights-api#calculate-insights-computation) with <var>category</var> set to <var>pld</var>, the same <var>campaignIds</var>, and the report's <var>startDate</var> and <var>endDate</var> to see the chargeable impressions and cost. If the computation returns <var>reportCreatable</var> <var>false</var>, for example because your funds don't cover the cost, the report fails.
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-  <summary style={{fontSize: "16px"}}>Response properties</summary>
-  <table className="objectProperties">
-     <tr>
-      <td>`pldReportCreated` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates PLD Insights report was created: <var>true</var></td>
-      </tr>
-      <tr>
-      <td>`campaignId` <br /><span class="type-text">integer</span></td>
-      <td>Campaign ID</td>
-      </tr>
-      <tr>
-      <td>`campaignName` <br /><span class="type-text">string</span></td>
-      <td>Campaign name</td>
-      </tr>
-      <tr>
-      <td>`campaignStatus` <br /><span class="type-text">string</span></td>
-      <td>[Campaign status type](/guidelines/campaign-api#get-campaign-count-by-status)</td>
-      </tr>
-      <tr>
-      <td>`pldStartDate`<br /><span class="type-text">integer</span></td>
-      <td>Unix epoch timestamp of start date, in milliseconds</td>
-      </tr>
-      <tr>
-      <td>`pldEndDate`<br /><span class="type-text">integer</span></td>
-      <td>Unix epoch timestamp of end date, in milliseconds</td>
-      </tr>
-      <tr>
-      <td> `pldChargeableImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of chargeable impressions for the requested PLD Insights report</td>
-      </tr>
-      <tr>
-      <td>`pldChargedImps` <br /><span class="type-text">integer</span></td>
-      <td>The number of impressions for which the PLD Insights report is already generated</td>
-      </tr>
-      <tr>
-      <td>`pldChargeableCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost to generate the PLD Insights report</td>
-      </tr>
-      <tr>
-      <td>`pldChargedCost` <br /><span class="type-text">integer</span></td>
-      <td>Cost of PLD Insights report that is already generated</td>
-      </tr>
-      <tr>
-      <td>`fundsAvailable` <br /><span class="type-text">boolean</span></td>
-      <td>Indicates if sufficient funds are available in the Advertiser's account to generate the PLD Insights report (<var>true</var>)</td>
-      </tr>
-  </table>
-  </details>
+For further information see [Create report template](/guidelines/insights-api#create-report-template).
+
+| Request schema | |
+| --- | --- |
+| `name` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Template name, 3 to 100 characters. |
+| `campaignIds` <br /><span class="type-text">array of integers</span> <span class="required-text">required</span> | IDs of eligible campaigns from the same IO, up to 50. |
+| `frequencyId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Scheduling frequency ID. Use <var>1</var> for a one-time report. |
+| `frequencyDetails` <br /><span class="type-text">object</span> <span class="required-text">required</span> | Schedule details. Send an empty object (<var>\{\}</var>) for a one-time report. |
+| `startDate` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Unix epoch timestamp of the report start date, in milliseconds. Must fall within the campaigns' flight. |
+| `endDate` <br /><span class="type-text">integer</span> | Unix epoch timestamp of the report end date, in milliseconds. Must fall within the campaigns' flight. |
+| `aggregationEnabled` <br /><span class="type-text">boolean</span> <span class="required-text">required</span> | Set to <var>true</var> to aggregate data across the campaigns. |
+| `recipientEmails` <br /><span class="type-text">array of strings</span> | Email addresses that receive the report, up to 15. |
+| `status` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>ACTIVE</var> to generate reports, or <var>INACTIVE</var>. |
+| `category` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>pld</var> for a PLD Insights report. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`templateId` <br /><span class="type-text">integer</span></td>
+  <td>ID of the new template. Use it in Step 3.</td>
+</tr>
+<tr>
+  <td>`nextRunDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the next scheduled run, in milliseconds.</td>
+</tr>
+</table>
+</details>
 
 </div><div class="child2">
 
@@ -1478,9 +1528,18 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 ```json title="Request sample"
 {
-  "campaignId": 12345,
-  "pldStartDate": 1722311000,
-  "pldEndDate": 1722315000
+  "name": "PLD report for IO 25016",
+  "campaignIds": [590512],
+  "frequencyId": 1,
+  "frequencyDetails": {},
+  "startDate": 1778904000000,
+  "endDate": 1779336000000,
+  "aggregationEnabled": false,
+  "recipientEmails": [
+    "user@example.com"
+  ],
+  "status": "ACTIVE",
+  "category": "pld"
 }
 ```
 
@@ -1488,27 +1547,8 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 {
   "success": true,
   "data": {
-    "pldReportCreated": true,
-    "campaignId": 1,
-    "campaignName": "Campaign Name",
-    "campaignStatus": "running",
-    "pldStartDate": 1722311000,
-    "pldEndDate": 1722315000,
-    "pldChargeableImps": 1000,
-    "pldChargedImps": 100,
-    "pldChargeableCost": 1000,
-    "pldChargedCost": 100,
-    "fundsAvailable": true
-  }
-}
-```
-
-```json title="Response 200 (failure)"
-{
-  "success": true,
-  "data": {
-    "pldReportCreated": false,
-    "message": "PLD Insights can't be generated for this campaign at the moment as another insight with overlapping date range is processing"
+    "templateId": 789,
+    "nextRunDate": 1793126817471
   }
 }
 ```
@@ -1518,27 +1558,125 @@ Once the desired campaign has been determined eligible, pass the <var>campaignId
 
 </div></div>
 
-### Step 3: Download PLD Insights report
+### Step 3: Get the template's reports
 
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/pld-report/download" />
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/ins/templates/{templateId}/report" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Get a download link for a PLD insight Report in CSV or XLSX format.
+Use the <var>templateId</var> from Step 2 to list the reports the template generated. The report takes time to build. When its <var>statusId</var> is <var>3</var> (success), use its <var>reportId</var> in Step 4.
 
-| Request schema | |
+For further information see [Get template reports](/guidelines/insights-api#get-template-reports).
+
+| Path parameters | |
 | --- | --- |
-| `fileType` <br /><span class="type-text">integer</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>
-| `pldId` <br /><span class="type-text">integer</span> | PLD Insights report ID
+| `templateId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Template ID from Step 2. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}>Response properties</summary>
 
 <table className="objectProperties">
 <tr>
-  <td>`pldReportUrl` <br /><span class="type-text">string</span></td>
-  <td>PLD Insights report file URL</td>
+  <td>`reportId` <br /><span class="type-text">integer</span></td>
+  <td>Report ID. Use it in Step 4.</td>
+</tr>
+<tr>
+  <td>`name` <br /><span class="type-text">string</span></td>
+  <td>Report name.</td>
+</tr>
+<tr>
+  <td>`statusId` <br /><span class="type-text">integer</span></td>
+  <td>Report status: <var>1</var> (queued), <var>2</var> (processing), <var>3</var> (success), <var>4</var> (failed), or <var>5</var> (skipped).</td>
+</tr>
+<tr>
+  <td>`requestedStartDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report start date, in milliseconds.</td>
+</tr>
+<tr>
+  <td>`requestedEndDate` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of the report end date, in milliseconds.</td>
+</tr>
+<tr>
+  <td>`generatedAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch timestamp of when the report run started, in milliseconds.</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "reportId": 8870,
+        "name": "25016_PLD_Insights_3",
+        "statusId": 3,
+        "frequencyId": 1,
+        "requestedStartDate": 1778904000000,
+        "requestedEndDate": 1779336000000,
+        "generatedAt": 1793126817957,
+        "filePaths": {},
+        "fileSizes": {
+          "csvBytes": 15359,
+          "xlsxBytes": 13034
+        }
+      }
+    ],
+    "totalRecords": 1,
+    "filteredRecords": 1,
+    "statusSummary": [
+      {
+        "id": 3,
+        "count": 1
+      }
+    ],
+    "frequencySummary": [
+      {
+        "id": 1,
+        "count": 1
+      }
+    ]
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+### Step 4: Download PLD Insights report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ins/report/download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a download link for a PLD Insights report in CSV or XLSX format.
+
+For further information see [Download report](/guidelines/insights-api#download-report).
+
+Use the <var>reportId</var> from Step 3, once its <var>statusId</var> is <var>3</var> (success).
+
+| Request schema | |
+| --- | --- |
+| `fileTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | File type ID <br />XLSX: <var>1</var> <br />CSV: <var>2</var>. |
+| `reportId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Report ID from Step 3. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+  <summary style={{ fontSize: "16px" }}>Response properties</summary>
+
+<table className="objectProperties">
+<tr>
+  <td>`reportURL` <br /><span class="type-text">string</span></td>
+  <td>Presigned PLD Insights report file URL.</td>
 </tr>
 </table>
 </details>
@@ -1551,8 +1689,8 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 
 ```json title="Request sample"
 {
-  "fileType": 1,
-  "pldId": 50
+  "fileTypeId": 1,
+  "reportId": 6287
 }
 ```
 
@@ -1560,7 +1698,7 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 {
   "success": true,
   "data": {
-    "pldReportUrl": "https://dowload.domain.com/pld-reports/20220101/pld-report-1.xlsx"
+    "reportURL": "https://iqm-insights-stage.s3.amazonaws.com/pld-campaigns/ow_id%3D204995/report_id%3D6287/25016_PLD_Insights_1.xlsx?..."
   }
 }
 ```
@@ -1568,12 +1706,23 @@ Get a download link for a PLD insight Report in CSV or XLSX format.
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 422"
+```json title="Response 422 (invalid report ID)"
 {
   "success": false,
   "errorObjects": [
     {
-      "error": "Invalid sortBy value."
+      "error": "Please provide valid insights id value."
+    }
+  ]
+}
+```
+
+```json title="Response 422 (invalid file type)"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Unsupported file type provided"
     }
   ]
 }

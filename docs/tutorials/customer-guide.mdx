@@ -1,12 +1,11 @@
 ---
-title: Sign Up a New Customer
+title: Onboard a New Customer
 hide_table_of_contents: true
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
-import CustomerFlowchart from '@site/static/img/CustomerSignUp.png';
 import CopyUrl from '@site/src/components/CopyUrl';
 import { customerType } from '@site/src/data/enums/customerType';
 import { customerPaymentType } from '@site/src/data/enums/customerPaymentType';
@@ -15,10 +14,12 @@ import { mediaBudget } from '@site/src/data/enums/mediaBudget';
 import { verticals } from '@site/src/data/enums/verticals';
 import { paymentTypes } from '@site/src/data/enums/paymentTypes';
 import { invoicePaymentModeTypes } from '@site/src/data/enums/invoicePaymentModeTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
-# Sign up a new Customer
+# Onboard a new Customer
 
-Sign up or invite a new Customer with this in-depth tutorial using IQM's API.
+Invite or approve a new Customer with this in-depth tutorial using IQM's API.
 
 ## About IQM Customers
 
@@ -39,6 +40,7 @@ To create a new Customer, the following are required:
   * An account on the IQM platform
     * See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
   * User must have login access to the Organization and access to the Customer app
+  * The Organization must be a Workspace, and <var>X-IAA-OW-ID</var> must be that Workspace's ID. Advertiser organizations can't invite or approve Customers (the API returns <var>403</var>).
 
 ### Log in
 
@@ -47,19 +49,19 @@ To create a new Customer, the following are required:
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers |  |
-| ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+<OAuthHeaders />
 
 | Request schema |  |
 | ---- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
 
@@ -69,7 +71,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -78,53 +80,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -137,28 +119,22 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+<ApiHeaders />
 
 </div>
 
-## Sign up a new Customer using the IQM API
+## Onboard a new Customer using the IQM API
 
-This tutorial covers how to sign up or invite a new Customer using the IQM API. 
+This tutorial covers how to invite or approve a new Customer using the IQM API.
 
 A new Customer can be onboarded in two different ways:
 1. An existing Organization can invite a Customer to the platform.
-2. A new Customer can sign up and be approved by an existing Organization on the platform.
+2. A new Customer can sign up on the Workspace's sign-up page, and the Workspace approves them. Sign-up isn't available through the API.
 
 Once a Customer has accepted their invitation and the onboarding process is complete other Customer actions can be performed. This tutorial covers a few examples. The rest of the possible Customer actions are documented in the [Workspace API](/guidelines/workspace-api). 
 
-The following diagram outlines the two courses of action covered in this tutorial:
 
-<center><img className='diagram' src={CustomerFlowchart} /></center>
-
-## Invite or sign up a Customer
+## Invite or approve a Customer
 
 ### Invite a Customer
 
@@ -169,39 +145,39 @@ The following diagram outlines the two courses of action covered in this tutoria
 
 An Organization already a part of the IQM platform can initiate an invite to create a new Organization for their Customer.
 
-Up to 10 invites are allowed per request. 
+Up to 10 invites are allowed per request. An invite missing <var>email</var>, <var>name</var>, or <var>ownerUserName</var>, or with an invalid email, isn't sent, and its email is listed as failed in the response.
 
 Upon invite, Customer status is <var>invited</var>. Once the invitation is accepted, the Customer's status is <var>active</var> and the onboarding process is complete. 
 
 <table>
 <th>Request schema</th>
 <tr>
-<td>`email` <br /><span class="type-text">string</span></td>
-<td>Customer email</td>
+<td>`email` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+<td>Customer email. Must be a valid email address.</td>
 </tr>
 <tr>
-  <td>`name` <br /><span class="type-text">string</span></td>
-  <td>Customer name</td>
+  <td>`name` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Customer name.</td>
 </tr>
 <tr>
   <td>`password` <br /><span class="type-text">string</span></td>
-  <td>Customer password</td>
+  <td>Sets the Customer's password directly. The account is activated right away and no invitation email is sent.</td>
 </tr>
 <tr>
-  <td>`onwerUserName` <br /><span class="type-text">string</span></td>
-  <td>Customer owner</td>
+  <td>`ownerUserName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Name of the Customer Organization's owner.</td>
 </tr>
 <tr>
   <td>`verticalId` <br /><span class="type-text">integer</span></td>
-  <td>[Vertical type ID](/guidelines/workspace-api#verticals) <br /><EnumWidget values={verticals} /></td>
+  <td>[Vertical type ID](/guidelines/workspace-api#verticals). <br /><EnumWidget values={verticals} /></td>
 </tr>
 <tr>
   <td>`logoUrl` <br /><span class="type-text">string</span></td>
-  <td>Logo URL</td>
+  <td>Logo URL.</td>
 </tr>
 <tr>
   <td>`customerOperationDetails`  <br /><span class="type-text">object</span></td>
-  <td>Customer operations details (Workspace only)</td>
+  <td>Customer operations details (Workspace only).</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -210,27 +186,27 @@ Upon invite, Customer status is <var>invited</var>. Once the invitation is accep
   <table className="objectProperties">
   <tr>
   <td>`customerTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Customer type ID](/guidelines/workspace-api#customer-type) <br /><EnumWidget values={customerType} /></td>
+  <td>[Customer type ID](/guidelines/workspace-api#customer-type). <br /><EnumWidget values={customerType} /></td>
   </tr>
     <tr>
   <td>`customerPaymentTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Customer payment type ID](/guidelines/workspace-api#customer-payment-type) <br /><EnumWidget values={customerPaymentType} /></td>
+  <td>[Customer payment type ID](/guidelines/workspace-api#customer-payment-type). <br /><EnumWidget values={customerPaymentType} /></td>
   </tr>
     <tr>
   <td>`countryId` <br /><span class="type-text">integer</span></td>
-  <td>[Country ID](/guidelines/master-api#get-country-segment)</td>
+  <td>[Country ID](/guidelines/master-api#get-country-segment).</td>
   </tr>
   <tr>
     <td>`adOpsAssigneeUserIds` <br /><span class="type-text">array of integers</span></td>
-    <td>User IDs assigned by the IQM AdOps Team</td>
+    <td>User IDs assigned by the IQM AdOps Team.</td>
     </tr>
     <tr>
       <td>`sellerAssigneeUserIds` <br /><span class="type-text">array of integers</span></td>
-      <td>User IDs assigned by the client/seller team</td>
+      <td>User IDs assigned by the client/seller team.</td>
     </tr>
     <tr>
       <td>`labelIds` <br /><span class="type-text">array of integers</span></td>
-      <td>Label ID</td>
+      <td>Label ID.</td>
     </tr>
   </table></details>
   </td>
@@ -244,15 +220,15 @@ Upon invite, Customer status is <var>invited</var>. Once the invitation is accep
 <table className="objectProperties">
   <tr>
   <td>`successfulEmails` <br /><span class="type-text">array of strings</span></td>
-  <td>Invites successfully sent to specified emails</td>
+  <td>Invites successfully sent to specified emails.</td>
   </tr>
     <tr>
   <td>`failedEmails` <br /><span class="type-text">array of strings</span></td>
-  <td>Invites failed to send to specified emails</td>
+  <td>Invites failed to send to specified emails.</td>
   </tr>
      <tr>
   <td>`message` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
+  <td>Success message. Returned only when at least one invitation is sent.</td>
   </tr>
   </table></details>
 
@@ -290,78 +266,32 @@ Upon invite, Customer status is <var>invited</var>. Once the invitation is accep
 
 ```json title="Response 200"
 {
-"success": true,
-"data": {
-  "successfulEmails": [
-    "user1.g@iqm.com"
-  ],
-  "failedEmails": [
-    "user2.p@iqm.com"
-  ],
-  "message": "1 invitations sent successfully."
+  "success": true,
+  "data": {
+    "successfulEmails": [
+      "user1@iqm.com"
+    ],
+    "failedEmails": [],
+    "message": "1 invitations sent successfully."
   }
 }
 ```
 
-</TabItem>
-</Tabs>
-
-</div></div>
-
-### Sign up a Customer
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/customer/signup" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-A Customer Organization can register itself using the signup API. On signup, the Customer status is <var>pending</var>. This triggers the parent Organization to approve the new Customer signup (see next section). 
-
-Once approved, an invitation email is sent to complete the registration process, and the Customer status updates to <var>active</var>.
-
-| Request schema |  |
-| ---- | --- |
-| `email` <br /><span class="type-text">string</span> | Customer email |
-| `organizationName` <br /><span class="type-text">string</span> | Customer Organization name
-| `userName` <br /><span class="type-text">string</span> | Customer user name |
-| `industry` <br /><span class="type-text">integer</span> | [Industry ID](/guidelines/workspace-api#industries) |
-| `companySize` <br /><span class="type-text">integer</span> | [Company size type ID](/guidelines/workspace-api#company-size) <br /><EnumWidget values={companySize} /> |
-| `mediaBudget` <br /><span class="type-text">integer</span> | [Media budget ID](/guidelines/workspace-api#media-budget) <br /><EnumWidget values={mediaBudget} />
-| `budgetSpent` <br /><span class="type-text">integer</span> | Budget spent |
-
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
-<summary style={{fontSize: "16px"}}>Response properties</summary>
+<summary style={{fontSize: "16px"}}>More responses</summary>
 
-<table className="objectProperties">
-     <tr>
-  <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
-  </tr>
-  </table></details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request sample"
+```json title="Response 403"
 {
-    "email": "email@domain.com",
-    "organizationName": "Organisation Name",
-    "userName": "User Name",
-    "industry": 1,
-    "companySize": 2,
-    "mediaBudget": 3,
-    "budgetSpent": 2000
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to invite.",
+      "reason": "Only admin or IHB customers can invite."
+    }
+  ]
 }
 ```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": "Customer sign up requested successfully."
-}
-```
+</details>
 
 </TabItem>
 </Tabs>
@@ -375,12 +305,12 @@ Once approved, an invitation email is sent to complete the registration process,
 <div class="endpoint-container">
   <div class="child1">
 
-Approve a Customer and add app access.
+Customers who sign up on the Workspace's sign-up page start with a <var>pending</var> status. Approve the Customer and add app access.
 
 | Request schema |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `appIds` <br /><span class="type-text">string</span> | Comma separated [Application IDs](/guidelines/workspace-api#application-ids) to add or revoke Customer access to |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID. |
+| `appIds` <br /><span class="type-text">string</span> | Comma separated [Application IDs](/guidelines/workspace-api#application-ids) to add or revoke Customer access to. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -388,7 +318,7 @@ Approve a Customer and add app access.
 <table className="objectProperties">
      <tr>
   <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
+  <td>Success message.</td>
   </tr>
   </table></details>
 
@@ -440,22 +370,55 @@ Approve a Customer and add app access.
 <div class="endpoint-container">
   <div class="child1">
 
-Assign a Customer to an existing user.
+Assign a Customer to an existing user. <var>uowIds</var> must contain exactly one user; more than one returns a <var>422</var>. You can't assign Customers to yourself or to the Organization owner (<var>403</var>).
 
 | Request schema  |  |
 | ---- | --- |
-| `owIds` <br /><span class="type-text">string</span> | Comma separated OW IDs to assign to user |
-| `uowIds` <br /><span class="type-text">string</span>| Comma separated user IDs to assign Customers to |
+| `owIds` <br /><span class="type-text">string</span> | Comma-separated Customer Organization Workspace IDs to assign to the user. |
+| `uowIds` <br /><span class="type-text">string</span>| ID of the user to assign the Customers to. Only one user per request. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
 
 <table className="objectProperties">
-     <tr>
-  <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
+<tr>
+<td>`success` <br /><span class="type-text">boolean</span></td>
+<td>Indicates all requested changes were made: <var>true</var>. If any Customer can't be assigned, <var>success</var> is <var>false</var>, <var>errorObjects</var> explains why, and <var>data</var> still lists the changes that were made.</td>
+</tr>
+<tr>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Result of the assignment.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`message` <br /><span class="type-text">string</span></td>
+  <td>Success message. Returned only when at least one change was made.</td>
+  </tr>
+  <tr>
+  <td>`successfulCustomerIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs assigned to the user.</td>
+  </tr>
+  <tr>
+  <td>`successfulLogInAccessOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs the user was given login access to.</td>
+  </tr>
+  <tr>
+  <td>`successfulRemoveOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs removed from the user.</td>
+  </tr>
+  <tr>
+  <td>`successfulRemoveLogInAccessOwIds` <br /><span class="type-text">array of integers</span></td>
+  <td>Customer OW IDs the user's login access was removed from.</td>
   </tr>
   </table></details>
+  </td>
+  <td></td>
+</tr>
+</table></details>
 
 </div><div class="child2">
 
@@ -472,7 +435,18 @@ Assign a Customer to an existing user.
 ```json title="Response 200"
 {
     "success": true,
-    "data": "Added Customer association to User successfully."
+    "data": {
+        "message": "Access has been modified successfully.",
+        "successfulCustomerIds": [
+            170,
+            58,
+            167,
+            900
+        ],
+        "successfulLogInAccessOwIds": [],
+        "successfulRemoveOwIds": [],
+        "successfulRemoveLogInAccessOwIds": []
+    }
 }
 ```
 
@@ -492,9 +466,9 @@ Add Customer access to specified apps.
 
 | Request schema  |  |
 | ----  | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `appIds`<br /><span class="type-text">string</span> | Comma separated [Application IDs](/guidelines/workspace-api#application-ids) to add or revoke Customer access to |
-| `accessLevel` <br /><span class="type-text">string</span>| Gives Customer <var>full</var> or <var>limited</var> access to added applications |
+| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID. |
+| `appIds`<br /><span class="type-text">string</span> | Comma separated [Application IDs](/guidelines/workspace-api#application-ids) to add or revoke Customer access to. |
+| `accessLevel` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Gives Customer <var>Full</var> or <var>Limited</var> access to added applications. Default: <var>Full</var>. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -502,7 +476,7 @@ Add Customer access to specified apps.
 <table className="objectProperties">
      <tr>
   <td>`data` <br /><span class="type-text">string</span></td>
-  <td>Success message</td>
+  <td>Success message.</td>
   </tr>
   </table></details>
 
@@ -538,27 +512,27 @@ Add Customer access to specified apps.
 <div class="endpoint-container">
   <div class="child1">
 
-| Request schema |  |
+| Request schema (<var>multipart/form-data</var>) |  |
 | ---- | --- |
-| `owId` <br /><span class="type-text">integer</span> | Organization Workspace ID |
-| `paymentAmount` <br /><span class="type-text">integer</span> | Payment amount |
-| `paymentDate` <br /><span class="type-text">string</span> | Payment date in YYYY-MM-DD format |
-| `paymentMode` <br /><span class="type-text">integer</span> |  [Payment mode type ID](/guidelines/finance-api#invoice-payment-mode-types) <br /><EnumWidget values={invoicePaymentModeTypes} /> |
-| `transactionId` <br /><span class="type-text">integer</span> | Transaction ID |
-| `paymentProof` <br /><span class="type-text">string</span> <span class="required-text">optional</span> | Proof of payment image (jpeg/png) |
-| `paymentType` <br /><span class="type-text">integer</span> | [Payment type ID](/guidelines/finance-api#payment-types) <br /><EnumWidget values={paymentTypes} /> |
-| `invoiceId` <br /><span class="type-text">integer</span> | Invoice ID (provide only if <var>paymentType</var> is **Against Invoice**) |
+| `owId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID of the Customer. |
+| `paymentAmount` <br /><span class="type-text">number</span> <span class="required-text">required</span> | Payment amount. |
+| `paymentDate` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Payment date in YYYY-MM-DD format. |
+| `paymentMode` <br /><span class="type-text">integer</span> <span class="required-text">required</span> |  [Payment mode type ID](/guidelines/finance-api#invoice-payment-mode-types). <br /><EnumWidget values={invoicePaymentModeTypes} /> |
+| `transactionId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Transaction ID. |
+| `paymentProof` <br /><span class="type-text">file</span> <span class="required-text">optional</span> | Proof of payment image (JPEG or PNG). |
+| `paymentType` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Payment type ID](/guidelines/finance-api#payment-types). <br /><EnumWidget values={paymentTypes} /> |
+| `invoiceId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span> | Invoice ID (required only if <var>paymentType</var> is **Against Invoice**). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
     <summary style={{fontSize: "16px"}}>Response properties</summary>
     <table className="objectProperties">
     <tr>
     <td>`success` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates payments successfully added: <var>true</var></td>
+    <td>Indicates payments successfully added: <var>true</var>.</td>
     </tr>
     <tr>
     <td>`data` <br /><span class="type-text">string</span></td>
-    <td>Success message</td>
+    <td>Success message.</td>
     </tr>
     </table>
     </details>
@@ -566,19 +540,20 @@ Add Customer access to specified apps.
 </div><div class="child2">
 
 <Tabs>
-<TabItem value="JSON" label="JSON" default>
+<TabItem value="cURL" label="cURL" default>
 
-```json title="Request sample"
-{
-    "owId": 123654,
-    "paymentAmount": 5000,
-    "paymentDate": "2025-12-01",
-    "paymentMode": 1,
-    "transactionId": 10,
-    "paymentProof": "image.png",
-    "paymentType": 2,
-    "invoiceId": 34
-}
+```curl title="Request sample"
+curl -X POST 'https://api.iqm.com/api/v3/fa/customer/payment/add' \
+  -H 'Authorization: Bearer <access token>' \
+  -H 'X-IAA-OW-ID: <your owId>' \
+  -F 'owId=123654' \
+  -F 'paymentAmount=5000' \
+  -F 'paymentDate=2027-03-01' \
+  -F 'paymentMode=1' \
+  -F 'transactionId=T-1234567' \
+  -F 'paymentType=2' \
+  -F 'invoiceId=34' \
+  -F 'paymentProof=@payment-receipt.png;type=image/png'
 ```
 
 ```json title="Response 200"

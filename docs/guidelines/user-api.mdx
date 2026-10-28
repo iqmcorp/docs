@@ -7,6 +7,8 @@ import TabItem from '@theme/TabItem';
 import ExternalLink from '@site/static/img/external-link2.svg';
 import CopyUrl from '@site/src/components/CopyUrl';
 import { userStatus } from '@site/src/data/enums/userStatus';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # User Management API
 
@@ -22,10 +24,7 @@ Use the following header parameters for all requests:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token or client ID and secret. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -44,20 +43,17 @@ This endpoint accepts a URL encoded form with different grant types. This endpoi
 
 The endpoint will return an OAuth compliant response, as seen in the example <var>Response 200</var> on the right side column. See [The Authorization Response<ExternalLink />](https://www.oauth.com/oauth2-servers/authorization/the-authorization-response/) documentation for more details.
 
-| Authentication |  |
-| --- | --- |   
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Client ID and client secret. |
-| `Content-Type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | application/x-www-form-urlencoded. |
+<OAuthHeaders />
 
 
 | Request parameters | |
 | --- | --- |
-| `grantType` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/):. <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret. <br /><var>password</var>: log in with username and password. <br /><var>refresh_token</var>: obtain a new access token.|
+| `grant_type` <br /><span class="type-text">string</span> | [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/): <br /><var>authorization_code</var>: log in with redirect URL and client ID and secret. <br /><var>password</var>: log in with username and password. <br /><var>refresh_token</var>: obtain a new access token.|
 | `refresh_token` <br /><span class="type-text">string</span> | Refresh token to obtain new access token. |
-| `email` <br /><span class="type-text">string</span> | User's email. |
+| `username` <br /><span class="type-text">string</span> | User's email. Required with the <var>password</var> grant. |
 | `password` <br /><span class="type-text">string</span> | User's password. |
-| `client_id` <br /><span class="type-text">string</span> | Client ID. |
-| `client_secret` <br /><span class="type-text">string</span> | Client secret. |
+| `client_id` <br /><span class="type-text">string</span> | Client ID. Send it with <var>client_secret</var> instead of the <var>Authorization</var> header. |
+| `client_secret` <br /><span class="type-text">string</span> | Client secret. Send it with <var>client_id</var> instead of the <var>Authorization</var> header. |
 
 
 </div>
@@ -95,13 +91,44 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-  "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
   "scope": "read write",
   "token_type": "bearer",
-  "expires_in": 35999
+  "expires_in": 86399
 }
 ```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 401"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
+}
+```
+
+```json title="Response 403"
+{
+  "error": "Client details are not provided."
+}
+```
+
+```json title="Response 415"
+{
+  "type": "about:blank",
+  "title": "Unsupported Media Type",
+  "status": 415,
+  "detail": "Content-Type 'application/json;charset=UTF-8' is not supported.",
+  "instance": "/api/v3/ua/oauth/token"
+}
+```
+</details>
 
 </div></div>
 
@@ -1224,12 +1251,13 @@ Resend an invitation to a user within an Organization Workspace.
 <div class="endpoint-container">
   <div class="child1">
 
-A user/Customer can sign up and create a password to access the API.
+An invited user or Customer completes their invitation by setting a password. This endpoint doesn't create new accounts. The user must already be invited, and the link in the invitation email carries the <var>inviteHash</var>.
 
 | Request schema | |
 | ----  | --- |
-| `email` <br /><span class="type-text">string</span>| User's email. |
-| `password` <br /><span class="type-text">string</span> | User's password. |
+| `email` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User's email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User's password. |
+| `inviteHash` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Invitation hash from the link in the user's invitation email. |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>Response properties</summary>
@@ -1240,24 +1268,49 @@ A user/Customer can sign up and create a password to access the API.
 <td>Indicates user was successfully signed up: <var>true</var>.</td>
 </tr>
 <tr>
-<td>`access_token` <br /><span class="type-text">string</span></td>
-<td>Access token.</td>
+<td>`data` <br /><span class="type-text">object</span></td>
+<td>Login details for the new user.</td>
 </tr>
 <tr>
-<td>`refresh_token` <br /><span class="type-text">string</span></td>
-<td>Refresh token.</td>
-</tr>
-<tr>
-<td>`scope` <br /><span class="type-text">string</span></td>
-<td>User access rights.</td>
-</tr>
-<tr>
-<td>`token_type` <br /><span class="type-text">string</span></td>
-<td>Token type.</td>
-</tr>
-<tr>
-<td>`expires_in` <br /><span class="type-text">integer</span></td>
-<td>Time until token expires.</td>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`data` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+  <td>`access_token` <br /><span class="type-text">string</span></td>
+  <td>Access token (JWT). Send it as <var>Authorization: Bearer</var> in later requests.</td>
+  </tr>
+  <tr>
+  <td>`refresh_token` <br /><span class="type-text">string</span></td>
+  <td>Refresh token, used to get a new access token.</td>
+  </tr>
+  <tr>
+  <td>`scope` <br /><span class="type-text">string</span></td>
+  <td>User access rights.</td>
+  </tr>
+  <tr>
+  <td>`token_type` <br /><span class="type-text">string</span></td>
+  <td>Token type: <var>bearer</var>.</td>
+  </tr>
+  <tr>
+  <td>`expires_in` <br /><span class="type-text">integer</span></td>
+  <td>Seconds until the access token expires.</td>
+  </tr>
+  <tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID of the user's active organization.</td>
+  </tr>
+  <tr>
+  <td>`mfa_required` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates whether multi-factor authentication is enabled for the user.</td>
+  </tr>
+  <tr>
+  <td>`redirectionUrl` <br /><span class="type-text">string</span></td>
+  <td>Workspace redirect URL with the tokens filled in. Returned only when the workspace has a redirect URL configured.</td>
+  </tr>
+  </table></details>
+  </td>
+  <td></td>
 </tr>
 </table>
 </details>
@@ -1270,7 +1323,8 @@ A user/Customer can sign up and create a password to access the API.
 ```json title="Request sample"
 {
     "email": "kartik.g@iqm.com",
-    "password": "123456"
+    "password": "123456",
+    "inviteHash": "abc123xyz"
 }
 ```
 
@@ -1278,17 +1332,35 @@ A user/Customer can sign up and create a password to access the API.
 {
   "success": true,
   "data": {
-    "access_token": "d90fa7de-534c-4652-ad8f-c4f6f70461ac",
-    "refresh_token": "2e379c6f-959d-498f-8319-ff13ebef6bfe",
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+    "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
     "scope": "read write",
     "token_type": "bearer",
-    "expires_in": 35999
+    "expires_in": 86399,
+    "owId": 200001,
+    "mfa_required": false
   }
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 400"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Password is required.",
+      "field": "password"
+    },
+    {
+      "error": "Email is required.",
+      "field": "email"
+    }
+  ]
+}
+```
 
 ```json title="Response 403"
 {
@@ -1302,6 +1374,28 @@ A user/Customer can sign up and create a password to access the API.
 }
 ```
 
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Please pass invitation hash"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User does not exists in the system."
+    }
+  ]
+}
+```
 </details>
 
 </TabItem>

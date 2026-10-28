@@ -10,6 +10,8 @@ import CopyUrl from '@site/src/components/CopyUrl';
 import { proposalStatus } from '@site/src/data/enums/proposalStatus';
 import { planObjectives } from '@site/src/data/enums/planObjectives';
 import { trafficTypes } from '@site/src/data/enums/trafficTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # Political Planner
 
@@ -59,13 +61,13 @@ To create a Political proposal and convert it into an IO, the following are requ
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). This endpoint returns an OAuth-compliant response with an access token and an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information, see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers |  |
-| ---- | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Basic</var> followed by your Base64-encoded <var>client_id:client_secret</var>.<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
+<OAuthHeaders />
 
 | Request schema |  |
 | ---- | --- |
@@ -90,53 +92,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -149,10 +131,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authorization` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>Bearer</var> followed by the <var>access_token</var> from the login response. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -367,8 +346,8 @@ The forecasting service decides which targeting and budget combinations can be p
   "objectiveId": 1,
   "totalBudget": 50000,
   "details": {
-    "startDate": 1793595600000,
-    "endDate": 1796187600000,
+    "startDate": 1803877200000,
+    "endDate": 1806469200000,
     "frequencyCap": 3
   },
   "targeting": {
@@ -501,6 +480,10 @@ If you create extra strategies with [Generate custom strategies](/political-vert
     <td>`channels` <br /><span class="type-text">array of integers</span></td>
     <td>[Channel type IDs](/guidelines/master-api#get-traffic-types). <br /><EnumWidget values={trafficTypes} /></td>
   </tr>
+  <tr>
+    <td>`isTvAutoBuying` <br /><span class="type-text">boolean</span></td>
+    <td>Whether TV auto buying is enabled for the strategy.</td>
+  </tr>
 </table>
 
 </details>
@@ -517,39 +500,20 @@ If you create extra strategies with [Generate custom strategies](/political-vert
     {
       "id": 3001,
       "name": "Maximum Reach",
-      "startDate": 1793595600000,
-      "endDate": 1796187600000,
+      "startDate": 1803877200000,
+      "endDate": 1806469200000,
       "duration": 30,
       "strategyTypeId": 1,
       "campaignsCount": 4,
       "proposalId": null,
-      "budget": 50000,
-      "frequency": 3,
-      "reach": 1250000,
-      "impressions": 2220000,
-      "cpm": 22.52,
+      "budget": 382.8,
+      "frequency": 1,
+      "reach": 1000,
+      "impressions": 16984,
+      "cpm": 22.54,
       "creatives": [11, 14],
-      "devices": [20300001, 20300004],
+      "devices": [20300004, 20300001],
       "channels": [11, 12, 13, 14],
-      "isTvAutoBuying": false
-    },
-    {
-      "id": 3002,
-      "name": "Most Economical",
-      "startDate": 1793595600000,
-      "endDate": 1796187600000,
-      "duration": 30,
-      "strategyTypeId": 4,
-      "campaignsCount": 2,
-      "proposalId": null,
-      "budget": 38500,
-      "frequency": 3,
-      "reach": 980000,
-      "impressions": 2100000,
-      "cpm": 18.33,
-      "creatives": [11, 14],
-      "devices": [20300001, 20300004],
-      "channels": [11, 12],
       "isTvAutoBuying": false
     }
   ]
@@ -764,6 +728,72 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     <td>Whether an IO and campaigns can be generated from the proposal. Only meaningful while the proposal is <var>Ready</var> or <var>Failed</var>; it isn't reset after the proposal is converted.</td>
   </tr>
   <tr>
+    <td>`linearTvReach` <br /><span class="type-text">integer</span></td>
+    <td>Voter TV+ proposals only: Linear TV reach. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvMaxReach` <br /><span class="type-text">integer</span></td>
+    <td>Voter TV+ proposals only: maximum Linear TV reach. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Voter TV+ proposals only: Linear TV impressions. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvMaxImpressions` <br /><span class="type-text">integer</span></td>
+    <td>Voter TV+ proposals only: maximum Linear TV impressions. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvBudget` <br /><span class="type-text">number</span></td>
+    <td>Voter TV+ proposals only: Linear TV budget. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvMaxBudget` <br /><span class="type-text">number</span></td>
+    <td>Voter TV+ proposals only: maximum Linear TV budget. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`linearTvCpm` <br /><span class="type-text">number</span></td>
+    <td>Voter TV+ proposals only: Linear TV CPM. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+    <td>`crossScreenGraphResponse` <br /><span class="type-text">object</span></td>
+    <td>Voter TV+ proposals only: the reach saturation graph the plan was created from, in the same shape as the reach saturation graph response in Voter TV+ Step 1. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`crossScreenGraphResponse` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`graphId` <br /><span class="type-text">string</span></td>
+        <td>Graph ID; <var>null</var> in proposal details.</td>
+      </tr>
+      <tr>
+        <td>`overview` <br /><span class="type-text">object</span></td>
+        <td>Forecast inputs: <var>linearTvCpm</var>, <var>ctvCpm</var>, <var>grp</var>, <var>linearTvPercentage</var>, and <var>ctvFrequency</var>.</td>
+      </tr>
+      <tr>
+        <td>`audienceOverlap` <br /><span class="type-text">object</span></td>
+        <td>Forecasted reach: <var>population</var>, <var>totalReach</var>, <var>linearTvReach</var>, <var>ctvReach</var>, <var>overlapReach</var>, and <var>ctvIncrementalReach</var>.</td>
+      </tr>
+      <tr>
+        <td>`maximumAudienceOverlap` <br /><span class="type-text">object</span></td>
+        <td>Same fields as <var>audienceOverlap</var>, for the maximum achievable reach.</td>
+      </tr>
+      <tr>
+        <td>`reachSaturation` <br /><span class="type-text">array of objects</span></td>
+        <td>Cumulative reach by flight day: <var>day</var>, <var>ctvReach</var>, <var>linearTvReach</var>, and <var>overallReach</var>.</td>
+      </tr>
+    </table>
+    </details>
+  </td>
+  <td></td>
+  </tr>
+  <tr>
+    <td>`targeting` <br /><span class="type-text">object</span></td>
+    <td>Voter TV+ proposals only: the plan's targeting, in the same shape as the <var>targeting</var> object in the Voter TV+ plan request, for example <var>whiteListedLocation</var>, <var>device</var>, and <var>creative</var>. <var>null</var> for other proposals.</td>
+  </tr>
+  <tr>
     <td>`proposedCampaigns` <br /><span class="type-text">array of objects</span></td>
     <td>Campaigns that are created when the IO is generated.</td>
   </tr>
@@ -786,7 +816,7 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
       </tr>
       <tr>
         <td>`strategy` <br /><span class="type-text">string</span></td>
-        <td>Targeting dimensions the campaign was split by.</td>
+        <td>Targeting dimensions the campaign was split by, for example <var>creative_device_channel</var>. For Voter TV+ proposals, the campaign's media, for example <var>VTV + Video</var> or <var>Video</var>.</td>
       </tr>
       <tr>
         <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
@@ -883,33 +913,84 @@ To change the proposal's budget, dates, or campaigns first, see [Edit proposal](
     "planId": 123,
     "planName": "Ohio GOTV Reach Plan",
     "objectiveId": 1,
-    "startTime": 1793595600000,
-    "endTime": 1796187600000,
+    "startTime": 1803877200000,
+    "endTime": 1806469200000,
     "owId": 202500,
     "statusId": 6,
     "ioId": null,
-    "reach": 1250000,
-    "impressions": 2220000,
-    "budget": 50000,
-    "frequencyCap": 3,
+    "minReach": null,
+    "reach": 1000,
+    "maxReach": 1000,
+    "minImpressions": null,
+    "impressions": 16984,
+    "maxImpressions": 16984,
+    "minBudget": null,
+    "budget": 382.8,
+    "maxBudget": 382.8,
+    "minCpm": null,
+    "cpm": null,
+    "maxCpm": null,
+    "frequencyCap": 1,
     "timeZoneId": 29,
     "timeZoneName": "US/Eastern",
     "campaignGeneratable": true,
+    "linearTvReach": null,
+    "linearTvMaxReach": null,
+    "linearTvImpressions": null,
+    "linearTvMaxImpressions": null,
+    "linearTvBudget": null,
+    "linearTvMaxBudget": null,
+    "linearTvCpm": null,
+    "crossScreenGraphResponse": null,
+    "targeting": null,
     "proposedCampaigns": [
       {
-        "id": 101,
-        "name": "Ohio GOTV Reach Plan - CTV",
-        "startTime": 1793595600000,
-        "endTime": 1796187600000,
+        "id": 369366,
+        "name": "Campaign_Creative_Video_Device_tablet_mobile_Channel_App_Web",
+        "type": null,
+        "strategy": "creative_device_channel",
         "creativeTypeId": 14,
+        "startTime": 1803877200000,
+        "endTime": 1806469200000,
         "duration": 30,
         "modelType": "CPM",
-        "targetedReach": 500000,
-        "frequencyCap": 3,
-        "targetedImpressions": 1500000,
-        "cpm": 25.5,
-        "budget": 38250,
-        "strategy": "Device + Channel"
+        "frequencyCap": 1,
+        "minTargetedReach": null,
+        "targetedReach": 181,
+        "maxTargetedReach": 181,
+        "minTargetedImpressions": null,
+        "targetedImpressions": 5447,
+        "maxTargetedImpressions": 5447,
+        "minCpm": null,
+        "cpm": 22.54,
+        "maxCpm": 22.54,
+        "minBudget": null,
+        "budget": 122.78192729191736,
+        "maxBudget": 122.78192729191736
+      },
+      {
+        "id": 369367,
+        "name": "Campaign_Creative_Video_Device_mobile_Channel_App_Web",
+        "type": null,
+        "strategy": "creative_device_channel",
+        "creativeTypeId": 14,
+        "startTime": 1803877200000,
+        "endTime": 1806469200000,
+        "duration": 30,
+        "modelType": "CPM",
+        "frequencyCap": 1,
+        "minTargetedReach": null,
+        "targetedReach": 166,
+        "maxTargetedReach": 166,
+        "minTargetedImpressions": null,
+        "targetedImpressions": 4991,
+        "maxTargetedImpressions": 4991,
+        "minCpm": null,
+        "cpm": 22.52,
+        "maxCpm": 22.52,
+        "minBudget": null,
+        "budget": 112.41915913875692,
+        "maxBudget": 112.41915913875692
       }
     ]
   }
@@ -960,7 +1041,7 @@ Generating an IO is a one-way step. A converted proposal can't be returned to <v
 ```json title="Request sample"
 {
   "politicalAdvertiserId": 789,
-  "startTime": 1793595600000
+  "startTime": 1803877200000
 }
 ```
 
@@ -1191,8 +1272,8 @@ The first request for a new graph calls an external data service and can take mo
   "objectiveId": 3,
   "totalBudget": 100000,
   "details": {
-    "startDate": 1793595600000,
-    "endDate": 1794805200000,
+    "startDate": 1803877200000,
+    "endDate": 1805086800000,
     "frequencyCap": 3
   },
   "targeting": {
@@ -1210,38 +1291,50 @@ The first request for a new graph calls an external data service and can take mo
 {
   "success": true,
   "data": {
-    "graphId": "0f6c7400-a8f5-4a1b-ab65-af15372cc0ff",
+    "graphId": "2ac6eab4-8815-4896-8c37-5a1bc672e22e",
     "overview": {
       "linearTvCpm": 20,
-      "ctvCpm": 7,
-      "grp": 180,
+      "ctvCpm": 20,
+      "grp": 500,
       "linearTvPercentage": 50,
       "ctvFrequency": 3
     },
     "audienceOverlap": {
-      "population": 16100000,
-      "totalReach": 1470000,
-      "linearTvReach": 1020000,
-      "ctvReach": 778000,
-      "overlapReach": 328000,
-      "ctvIncrementalReach": 450000
-    },
-    "maximumAudienceOverlap": {
-      "population": 16100000,
-      "totalReach": 2150000,
-      "linearTvReach": 1480000,
-      "ctvReach": 1150000,
-      "overlapReach": 480000,
-      "ctvIncrementalReach": 670000
+      "ctvIncrementalReach": 719294,
+      "ctvReach": 773657,
+      "linearTvReach": 700000,
+      "overlapReach": 54363,
+      "population": 16137830,
+      "totalReach": 1419294
     },
     "reachSaturation": [
       {
+        "ctvReach": 143043,
         "day": 1,
-        "ctvReach": 12,
-        "linearTvReach": 14,
-        "overallReach": 20
+        "linearTvReach": 616000,
+        "overallReach": 750198
+      },
+      {
+        "ctvReach": 261533,
+        "day": 2,
+        "linearTvReach": 689920,
+        "overallReach": 933340
+      },
+      {
+        "ctvReach": 773657,
+        "day": 14,
+        "linearTvReach": 700000,
+        "overallReach": 1419294
       }
-    ]
+    ],
+    "maximumAudienceOverlap": {
+      "ctvIncrementalReach": 1336294,
+      "ctvReach": 2489330,
+      "linearTvReach": 2050751,
+      "overlapReach": 1153035,
+      "population": 16137830,
+      "totalReach": 3387046
+    }
   }
 }
 ```
@@ -1434,8 +1527,8 @@ Voter TV+ plans don't generate strategies, so [Get the plan's strategies](#step-
     "ctvFrequency": 3
   },
   "details": {
-    "startDate": 1793595600000,
-    "endDate": 1794805200000,
+    "startDate": 1803877200000,
+    "endDate": 1805086800000,
     "frequencyCap": 3
   },
   "targeting": {
@@ -1566,27 +1659,39 @@ Splitting can take more than 60 seconds for large proposals. Set your client tim
   "data": {
     "id": 8,
     "name": "Voter TV+ Plan_Mix_01",
-    "startTime": 1793595600000,
-    "endTime": 1794805200000,
+    "planId": 124,
+    "planName": "Voter TV+ Plan",
+    "objectiveId": 3,
+    "startTime": 1803877200000,
+    "endTime": 1805086800000,
     "owId": 202500,
     "statusId": 6,
-    "reach": 778000,
-    "impressions": 7140000,
-    "budget": 100000,
+    "ioId": null,
+    "reach": 773657,
+    "impressions": 2500003,
+    "budget": 50000.0,
     "frequencyCap": 3,
+    "linearTvReach": 700000,
+    "linearTvImpressions": 2500000,
+    "linearTvBudget": 50000.0,
+    "linearTvCpm": 20.0,
     "campaignGeneratable": true,
+    "crossScreenGraphResponse": { ... },
+    "targeting": { ... },
     "proposedCampaigns": [
       {
         "id": 501,
         "name": "Voter TV+ Plan_Mix_01_VTV + Video",
         "type": "Linear TV",
-        "budget": 50000
+        "strategy": "VTV + Video",
+        "budget": 50000.0
       },
       {
         "id": 502,
         "name": "Voter TV+ Plan_Mix_01_Video",
         "type": "CTV",
-        "budget": 50000
+        "strategy": "Video",
+        "budget": 653388.96
       }
     ]
   }
@@ -1630,6 +1735,14 @@ To browse the segment catalog instead of looking up known taxonomy IDs, see [Get
 
 <table className="objectProperties">
   <tr>
+    <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+    <td>Total number of segments in the catalog, not the number of matches.</td>
+  </tr>
+  <tr>
+    <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+    <td>Number of segments that match the request.</td>
+  </tr>
+  <tr>
     <td>`cvaSegmentData` <br /><span class="type-text">array of objects</span></td>
     <td>Matching segments.</td>
   </tr>
@@ -1651,8 +1764,24 @@ To browse the segment catalog instead of looking up known taxonomy IDs, see [Get
         <td>Segment name.</td>
       </tr>
       <tr>
+        <td>`description` <br /><span class="type-text">string</span></td>
+        <td>Segment description; can be empty.</td>
+      </tr>
+      <tr>
         <td>`isLeaf` <br /><span class="type-text">boolean</span></td>
         <td>Whether the segment is a leaf segment. Only leaf segments can be used in an equation.</td>
+      </tr>
+      <tr>
+        <td>`reach` <br /><span class="type-text">integer</span></td>
+        <td>Number of voters in the segment. <var>0</var> for category segments that aren't leaves.</td>
+      </tr>
+      <tr>
+        <td>`pathKey` <br /><span class="type-text">string</span></td>
+        <td>Segment's full path in the catalog, for example <var>California (CA) &gt; Vote History &gt; General 2024 &gt; Yes</var>.</td>
+      </tr>
+      <tr>
+        <td>`parentSegmentId` <br /><span class="type-text">integer</span></td>
+        <td>Segment ID of the parent category.</td>
       </tr>
     </table>
     </details>
@@ -1672,17 +1801,44 @@ To browse the segment catalog instead of looking up known taxonomy IDs, see [Get
 }
 ```
 
-```json title="Response 200 (abbreviated)"
+```json title="Response 200"
 {
   "success": true,
   "data": {
-    "totalRecords": 3,
-    "filteredRecords": 3,
     "cvaSegmentData": [
-      { "segmentId": 4211, "taxonomyId": "IQMCVACA069112", "isLeaf": true },
-      { "segmentId": 4215, "taxonomyId": "IQMCVACA080323", "isLeaf": true },
-      { "segmentId": 4230, "taxonomyId": "IQMCVACA101616", "isLeaf": true }
-    ]
+      {
+        "segmentId": 71347,
+        "taxonomyValue": "1 adult Male",
+        "description": "",
+        "taxonomyId": "IQMCVACA069112",
+        "isLeaf": true,
+        "reach": 2887320,
+        "pathKey": "California (CA) > Demographics > Parental Status > 1 adult Male",
+        "parentSegmentId": 143
+      },
+      {
+        "segmentId": 82607,
+        "taxonomyValue": "Adelanto",
+        "description": "",
+        "taxonomyId": "IQMCVACA080323",
+        "isLeaf": true,
+        "reach": 17883,
+        "pathKey": "California (CA) > Geographics > City > Adelanto",
+        "parentSegmentId": 242
+      },
+      {
+        "segmentId": 106927,
+        "taxonomyValue": "Yes",
+        "description": "",
+        "taxonomyId": "IQMCVACA101616",
+        "isLeaf": true,
+        "reach": 15745636,
+        "pathKey": "California (CA) > Vote History > General 2024 > Yes",
+        "parentSegmentId": 106382
+      }
+    ],
+    "totalRecords": 104873,
+    "filteredRecords": 3
   }
 }
 ```
@@ -1742,9 +1898,14 @@ This endpoint uses snake_case <var>state_ids</var>, unlike the camelCase <var>st
     "total_num_voters": 23165810,
     "map_metrics": {
       "30200005": {
-        "Republican": 412870,
-        "Democrat": 761304,
-        "Other": 454877
+        "Republican": 411051,
+        "Democrat": 740376,
+        "Other": 469429
+      },
+      "30403807": {
+        "Republican": 2129,
+        "Democrat": 4012,
+        "Other": 2054
       }
     }
   }
@@ -1825,7 +1986,7 @@ Pass the full CVA in the <var>cva</var> field when you [create a ready plan](#st
   "id": 12345,
   "equation": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))",
   "stateIds": [30200005],
-  "segmentIds": [4211, 4215, 4230],
+  "segmentIds": [71347, 82607, 106927],
   "reach": 1629051
 }
 ```
@@ -1855,8 +2016,8 @@ The new flight can be a different length from the original; unlike generating an
 ```json title="Request sample"
 {
   "proposalIds": [7],
-  "startTime": 1793595600000,
-  "endTime": 1796187600000
+  "startTime": 1803877200000,
+  "endTime": 1806469200000
 }
 ```
 

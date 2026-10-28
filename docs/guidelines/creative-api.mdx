@@ -9,6 +9,7 @@ import CopyUrl from '@site/src/components/CopyUrl';
 import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import { creativeTypes } from '@site/src/data/enums/creativeTypes';
 import { creativeStatus } from '@site/src/data/enums/creativeStatus';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
 
 # Creative API
 
@@ -42,10 +43,7 @@ Use the following header parameters for all requests:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token. <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide). |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID header. |
+<ApiHeaders />
 
 </div>
 
@@ -75,6 +73,10 @@ Get creative details by ID.
 <tr>
   <td>`creativeName` <br /><span class="type-text">string</span></td>
   <td>Creative name.</td>
+</tr>
+<tr>
+  <td>`externalCreativeId` <br /><span class="type-text">string</span></td>
+  <td>Your own reference ID for the creative, if one was set at upload.</td>
 </tr>
 <tr>
   <td>`rtbCreativeTypeId`<br /><span class="type-text">integer</span></td>
@@ -114,6 +116,10 @@ Get creative details by ID.
     <td>Pixel URLs, up to five supported per creative.</td>
   </tr>
     <tr>
+    <td>`pixelUrl` <br /><span class="type-text">string</span></td>
+    <td>First pixel URL (same as the first item in <var>pixelUrls</var>).</td>
+  </tr>
+    <tr>
     <td>`creativeWidth` <br /><span class="type-text">integer</span></td>
     <td>Creative width (px).</td>
   </tr>
@@ -135,11 +141,15 @@ Get creative details by ID.
 </tr>
 <tr>
   <td>`createdAt` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch timestamp of campaign creation date, in milliseconds.</td>
+  <td>Unix epoch timestamp of creative creation date, in milliseconds.</td>
 </tr>
 <tr>
   <td>`modifiedAt` <br /><span class="type-text">string</span></td>
-  <td>Last modified date.</td>
+  <td>Last modified date (ISO 8601).</td>
+</tr>
+<tr>
+  <td>`isMetadataFaulty` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates the creative's metadata is flagged as faulty: <var>true</var>.</td>
 </tr>
   <tr>
   <td>`userDetails` <br /><span class="type-text">object</span></td>
@@ -164,11 +174,11 @@ Get creative details by ID.
   </tr>
      <tr>
     <td>`hasApprovalAccess` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if user has access to approve.</td>
+    <td>Indicates if user has access to approve. Omitted when not set.</td>
   </tr>
      <tr>
     <td>`hasEditAccess` <br /><span class="type-text">boolean</span></td>
-    <td>Indicates if user has edit access for the requested resources.</td>
+    <td>Indicates if user has edit access for the requested resources. Omitted when not set.</td>
   </tr>
   </table></details>
   </td>
@@ -208,33 +218,36 @@ Get creative details by ID.
 {
   "success": true,
   "data": {
-    "creativeId": 686855,
-    "creativeName": "300x600-w23-01",
-    "rtbCreativeTypeId": 1,
-    "platformCreativeTypeId": 11,
-    "creativeStatusId": 2,
-    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/202760/efk0sUk_1730201855013.jpg",
-    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/202760/278x220/efk0sUk_1730201855013.jpg",
-    "clickUrl": "http://iqm.com",
-    "imageDetails": {
-      "pixelUrls": ["http://pixel.com"],
-      "creativeWidth": 300,
-      "creativeHeight": 600
-    },
-    "creativeSourceType": "file",
+    "clickUrl": "https://www.example.com/summer-sale",
+    "createdAt": 1793036350122,
+    "creativeCardSource": "https://d3jme5si7t6llb.cloudfront.net/Screenshots/204851/278x220/rvNRZ1A_1793036350122.jpg",
+    "creativeId": 803406,
+    "creativeName": "Summer Sale Banner",
     "creativePreviewFlag": 1,
-    "createdAt": 1730201855165,
-    "modifiedAt": "2024-10-29T06:10:15.000+00:00",
-    "userDetails": {
-      "uowId": 175891,
-      "userName": "Hardik",
-      "userEmail": "hardik.v+iqmsuper@iqm.com",
-      "hasApprovalAccess": true,
-      "hasEditAccess": true
+    "creativeSource": "https://d3jme5si7t6llb.cloudfront.net/image/204851/rvNRZ1A_1793036350122.jpg",
+    "creativeSourceType": "file",
+    "creativeStatusId": 1,
+    "externalCreativeId": "campaign-2024-001",
+    "imageDetails": {
+      "pixelUrls": [
+        "https://tracker.example.com/pixel"
+      ],
+      "pixelUrl": "https://tracker.example.com/pixel",
+      "creativeWidth": 728,
+      "creativeHeight": 90
     },
+    "isMetadataFaulty": false,
+    "modifiedAt": "2026-10-26T17:39:14.334Z",
     "organizationDetails": {
-      "owId": 202760,
-      "organizationName": "AdWing"
+      "owId": 204851,
+      "organizationName": "Example Organization"
+    },
+    "platformCreativeTypeId": 11,
+    "rtbCreativeTypeId": 1,
+    "userDetails": {
+      "uowId": 291477,
+      "userName": "Jane Smith",
+      "userEmail": "user@example.com"
     }
   }
 }
@@ -1209,7 +1222,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 | Request schema | |
 | --- | --- | 
-| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to creative metadata. Each ID corresponds to a single creative. |
+| `creativeRequest`<br /><span class="type-text">form data</span> <span class="required-text">required</span> | This parameter accepts a Map of IDs to creative metadata. Each ID corresponds to a single creative. All creatives in one request must have the same <var>platformCreativeTypeId</var>. |
 | `creativeFiles`<br /><span class="type-text">multipart/form-data</span> | Array of creative files to upload. Required only when creative source type is <var>FILE</var> in the creative metadata. Each uploaded file's name must exactly match the creativeSource value specified in the corresponding creative object. Supports multiple file uploads for batch creative creation. Accepted file types include images (JPEG, PNG, GIF), videos (MP4, WebM), and audio (MP3, WAV, OGG). |
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "600px", padding: "1rem" }}>
@@ -1238,7 +1251,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 </tr>
 <tr>
   <td>`clickUrl` <br /><span class="type-text">string</span></td>
-  <td>Click URL.</td>
+  <td>Click URL. Not allowed for HTML creatives (add click tracking inside the HTML instead).</td>
 </tr>
 <tr>
   <td>`subMediaType` <br /><span class="type-text">integer</span></td>
@@ -1496,34 +1509,25 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 <table className="objectProperties">
 <tr>
-  <td>`successData` <br /><span class="type-text">object</span></td>
-  <td>Success data.</td>
+  <td>`success` <br /><span class="type-text">boolean</span></td>
+  <td><var>true</var> when the request was processed, even if every creative in it failed. Check <var>failedData</var>.</td>
+</tr>
+<tr>
+  <td>`data` <br /><span class="type-text">object</span></td>
+  <td>Upload results, keyed by the IDs you used in <var>creativeRequest</var> (for example, <var>I001</var>).</td>
 </tr>
 <tr>
 <td colSpan="2">
   <details className="objectPropertiesDetails">
-  <summary>`successData` object properties</summary>
+  <summary>`data` object properties</summary>
   <table className="objectProperties">
   <tr>
-    <td>`PS` <br /><span class="type-text">string</span></td>
-    <td>Partial success.</td>
+    <td>`successData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that succeeded to the new creative ID, as a string (for example, <var>"I001": "803406"</var>). Empty if no creative was created.</td>
   </tr>
-  </table></details>
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>`failedData` <br /><span class="type-text">object</span></td>
-  <td>Success data.</td>
-</tr>
-<tr>
-<td colSpan="2">
-  <details className="objectPropertiesDetails">
-  <summary>`failedData` object properties</summary>
-  <table className="objectProperties">
   <tr>
-    <td>`PF` <br /><span class="type-text">string</span></td>
-    <td>Partial failure.</td>
+    <td>`failedData` <br /><span class="type-text">object</span></td>
+    <td>Map of each request ID that failed to its error message. Empty if every creative was created.</td>
   </tr>
   </table></details>
   </td>
@@ -1537,7 +1541,7 @@ Refer to [MDN Documentation<ExternalLink />](https://developer.mozilla.org/en-US
 
 
 <CodeDropdown label="Request Samples">
-<CodeOption label="Form data sample">
+<CodeOption label="Form data sample (image)">
 ```bash
 POST /api/v3/crt/creatives HTTP/1.1
 Host: https://api.iqm.com
@@ -1548,28 +1552,30 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeRequest"
 
-{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href='https://example.com'><img src='https://cdn.example.com/ad.jpg'></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}
+{"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}}}
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="creativeFiles"; filename="summer-banner.jpg"
 Content-Type: image/jpeg
 
 [Binary image data]
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="creativeFiles"; filename="product-demo.mp4"
-Content-Type: video/mp4
-
-[Binary video data]
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
 </CodeOption>
-<CodeOption label="cURL sample">
+<CodeOption label="cURL sample (image)">
 ```bash
 curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "X-IAA-OW-ID: 12345" \
-  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}},"V001":{"creativeName":"Product Demo Video","externalCreativeId":"campaign-2024-002","platformCreativeTypeId":14,"creativeSourceType":"FILE","creativeSource":"product-demo.mp4","clickUrl":"https://www.example.com/products","videoDetails":{"creativeWidth":1920,"creativeHeight":1080,"duration":30,"pixelUrls":["https://tracker.example.com/pixel"],"customTracking":{"startUrl":"https://tracker.example.com/start","firstQuartileURL":"https://tracker.example.com/25","midPointURL":"https://tracker.example.com/50","thirdQuartileURL":"https://tracker.example.com/75","completeURL":"https://tracker.example.com/complete","impressionURL":"https://tracker.example.com/impression"}}},"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","clickUrl":"https://www.example.com","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}' \
-  -F 'creativeFiles=@summer-banner.jpg' \
-  -F 'creativeFiles=@product-demo.mp4'
+  -F 'creativeRequest={"I001":{"creativeName":"Summer Sale Banner","externalCreativeId":"campaign-2024-001","platformCreativeTypeId":11,"creativeSourceType":"FILE","creativeSource":"summer-banner.jpg","clickUrl":"https://www.example.com/summer-sale","imageDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":728,"creativeHeight":90}}}' \
+  -F 'creativeFiles=@summer-banner.jpg'
+```
+</CodeOption>
+<CodeOption label="cURL sample (HTML)">
+```bash
+curl -X POST https://api.iqm.com/api/v3/crt/creatives \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "X-IAA-OW-ID: 12345" \
+  -F 'creativeRequest={"H001":{"creativeName":"Interactive HTML Ad","platformCreativeTypeId":13,"creativeSourceType":"HTML","creativeSource":"<a href=\"https://example.com\"><img src=\"https://cdn.example.com/ad.jpg\"></a>","htmlDetails":{"pixelUrls":["https://tracker.example.com/pixel"],"creativeWidth":300,"creativeHeight":250}}}'
 ```
 </CodeOption>
 </CodeDropdown>
@@ -1584,7 +1590,6 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
     "platformCreativeTypeId": 13,
     "creativeSourceType": "HTML",
     "creativeSource": "<a href=https://iqm.com/political?utm_medium=rtb&utm_campaign=wreckathon-2024-play-1><img src=https://cdn-cfy-p0.iqm.com/wreckathon/2024/Images/w24-728x90-P.jpg></a>",
-    "clickUrl": "www.example.com",
     "htmlDetails": {
       "pixelUrls": ["https://iqm.pixel.com"],
       "creativeWidth": 500,
@@ -2026,14 +2031,41 @@ curl -X POST https://api.iqm.com/api/v3/crt/creatives \
   "success": true,
   "data": {
     "successData": {
-      "PS": "701388"
+      "I001": "803406"
     },
+    "failedData": {}
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 200 (creative failed)"
+{
+  "success": true,
+  "data": {
+    "successData": {},
     "failedData": {
-      "PF": "Creative file missing. Please attach the required file. : null"
+      "I001": "Creative file missing. Please attach the required file."
     }
   }
 }
 ```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "All entries in the request must have the same platformCreativeTypeId.",
+      "field": "creativeRequest"
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
 
@@ -3132,6 +3164,14 @@ Get a list of creative types.
 
 <table className="objectProperties">
 <tr>
+  <td>`totalRecords` <br /><span class="type-text">integer</span></td>
+  <td>Total number of creative types.</td>
+</tr>
+<tr>
+  <td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+  <td>Number of creative types after filters are applied.</td>
+</tr>
+<tr>
   <td>`creativeTypeList` <br /><span class="type-text">array of objects</span></td>
   <td>Creative type list details.</td>
 </tr>
@@ -3150,15 +3190,15 @@ Get a list of creative types.
   </tr>
     <tr>
     <td>`order` <br /><span class="type-text">integer</span></td>
-    <td>Order.</td>
+    <td>Display order.</td>
   </tr>
     <tr>
-    <td>`displayName` <br /><span class="type-text">integer</span></td>
-    <td>Creative type name.</td>
+    <td>`displayName` <br /><span class="type-text">string</span></td>
+    <td>Creative type display name.</td>
   </tr>
       <tr>
     <td>`rtbCreativeTypeId` <br /><span class="type-text">integer</span></td>
-    <td>[RTB creative type ID](/guidelines/creative-api#get-creative-types-list). </td>
+    <td>[RTB creative type ID](/guidelines/creative-api#get-creative-types-list). Not returned for the <var>All</var> entry added by <var>displayAllType</var>.</td>
   </tr>
   </table></details>
   </td>
@@ -3177,52 +3217,45 @@ Get a list of creative types.
 {
   "success": true,
   "data": {
-    "totalRecords": 6,
+    "totalRecords": 5,
     "creativeTypeList": [
-      {
-        "id": 0,
-        "name": "all",
-        "order": 0,
-        "displayName": "All",
-        "rtbCreativeTypeId": null
-      },
       {
         "id": 11,
         "name": "Image",
-        "order": 100,
         "displayName": "Image",
+        "order": 95,
         "rtbCreativeTypeId": 1
       },
       {
         "id": 13,
         "name": "HTML",
-        "order": 100,
         "displayName": "HTML",
+        "order": 96,
         "rtbCreativeTypeId": 1
       },
       {
         "id": 14,
         "name": "Video",
-        "order": 100,
         "displayName": "Video",
+        "order": 97,
         "rtbCreativeTypeId": 3
-      },
-      {
-        "id": 15,
-        "name": "Native",
-        "order": 100,
-        "displayName": "Native",
-        "rtbCreativeTypeId": 4
       },
       {
         "id": 17,
         "name": "Audio",
-        "order": 100,
         "displayName": "Audio",
+        "order": 98,
         "rtbCreativeTypeId": 2
+      },
+      {
+        "id": 15,
+        "name": "Native",
+        "displayName": "Native",
+        "order": 99,
+        "rtbCreativeTypeId": 4
       }
     ],
-    "filteredRecords": 6
+    "filteredRecords": 5
   }
 }
 ```

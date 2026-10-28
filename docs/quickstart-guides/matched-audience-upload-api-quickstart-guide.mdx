@@ -12,6 +12,9 @@ import CodeDropdown, { CodeOption } from '@site/src/components/CodeDropdown';
 import { dataFormats } from '@site/src/data/enums/dataFormats';
 import { audienceSubtypes } from '@site/src/data/enums/audienceSubtypes';
 import { dataPartners } from '@site/src/data/enums/dataPartners';
+import { audienceStatuses } from '@site/src/data/enums/audienceStatuses';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # Upload a Matched audience
 
@@ -20,7 +23,7 @@ Upload a Matched audience with this in-depth tutorial using IQM's API.
 Get started uploading a Matched audience with the following endpoints:
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/ua/oauth/token" />
-<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/static/column-list" />
+<br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/static/column-list" />
 <br /><CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/matched" />
 <br /><CopyUrl method="GET" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}" />
 
@@ -54,6 +57,7 @@ To upload a Matched audience, the following are required:
   * With Voter ID / Email / Phone / Address in the file
     * Only one of these fields is required - Voter ID or Email or Phone, or Address. The preferred format for full address is Street, City, Zip, and State
     * Other fields are optional and can be added along with one of the above fields
+  * Healthcare audiences match on other identifiers, such as NPI, phone, or email. To see the column combinations available for your audience type, use [Matched column combinations](/guidelines/audience-api/#matched-column-combinations)
 
 :::
 </div>
@@ -79,10 +83,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+<ApiHeaders />
 
 </div>
 
@@ -93,19 +94,19 @@ Use the following header parameters for all requests after logging in:
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers |  |
-| ---- | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token<br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+<OAuthHeaders />
 
 | Request schema |  |
 | ---- | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span>| User account password. |
 
 </div><div class="child2">
 
@@ -115,7 +116,7 @@ For further information see [OAuth token](/guidelines/user-api#oauth-token).
 ```curl title="Request sample"
 curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 --header 'accept: application/json, text/plain, */*' \
---header 'Authorization: Basic <Client ID/Client Secret>' \
+--header 'Authorization: Basic <base64 of client_id:client_secret>' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'username=user@iqm.com' \
@@ -124,53 +125,33 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-   "success": true,
-   "data":
-   {
-      "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-      "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-      "scope": "read write",
-      "token_type": "bearer",
-      "expires_in": 35999,
-      "owId": 200001
-   }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
-
 </details>
 
 </TabItem></Tabs>
@@ -196,142 +177,37 @@ To upload a Matched audience, you need to gather some information about your aud
 | Column IDs for matching | A list of [Column IDs](/guidelines/audience-api/#matched-column-list) for matching which correspond to the columns in the file being uploaded. |
 | Data format ID | The [Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) corresponds to the type of identifiers being uploaded. <br /><EnumWidget values={dataFormats} /> |
 | Data partner ID | The [Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience) corresponds to the source of the data being uploaded and is used for reporting purposes. <br /><EnumWidget values={dataPartners} /> |
-| Column combination ID <br /><span class="type-text">Political vertical</span> | The [Column combination ID](/guidelines/audience-api/#matched-column-combinations) corresponds to the combination of columns being used for matching. |
+| Column combination ID <br /><span class="type-text">All verticals</span> | The [Column combination ID](/guidelines/audience-api/#matched-column-combinations) corresponds to the combination of columns being used for matching. |
+
+The <var>column-list</var>, <var>data-partners</var>, and <var>column-combinations</var> endpoints require the <var>audienceTypeId</var> query parameter (<var>1</var> for Matched audiences), and accept an optional <var>audienceSubtypeId</var> for Healthcare subtypes. For example, <var>GET /api/v3/audience/static/column-list?audienceTypeId=1</var> returns the columns shown in the response sample. Each column's <var>dataFormatIds</var> lists the data formats it accepts; columns without <var>dataFormatIds</var> don't take a <var>dataFormatId</var>.
 
 </div><div class="child2">
 
 <Tabs>
 <TabItem value="JSON" label="JSON" default>
 
-```json title="Response 200"
+```json title="Response 200 (column-list)"
 {
   "success": true,
   "data": [
     {
       "id": 1,
-      "label": "Voter ID",
-      "key": "Voters_ID",
+      "name": "Voters_ID",
       "order": 1,
-      "isSingleColumn": true
-    },
-    {
-      "id": 26,
-      "label": "NPI ID",
-      "key": "NPI_ID",
-      "order": 2,
-      "isSingleColumn": true
+      "displayName": "Voter ID"
     },
     {
       "id": 2,
-      "label": "Email",
-      "key": "Email",
+      "name": "Email",
       "order": 3,
-      "isSingleColumn": true
-    },
-    {
-      "id": 3,
-      "label": "Phone",
-      "key": "Phone",
-      "order": 4,
-      "isSingleColumn": true
-    },
-    {
-      "id": 4,
-      "label": "Full Address",
-      "key": "Residence_FullAddress",
-      "order": 5,
-      "isSingleColumn": true
+      "displayName": "Email",
+      "dataFormatIds": [1, 2, 3, 4, 5, 6]
     },
     {
       "id": 5,
-      "label": "First Name",
-      "key": "Voters_FirstName",
+      "name": "Voters_FirstName",
       "order": 6,
-      "isSingleColumn": false
-    },
-    {
-      "id": 6,
-      "label": "Last Name",
-      "key": "Voters_LastName",
-      "order": 7,
-      "isSingleColumn": false
-    },
-    {
-      "id": 7,
-      "label": "Zip",
-      "key": "Residence_Addresses_Zip",
-      "order": 8,
-      "isSingleColumn": false
-    },
-    {
-      "id": 8,
-      "label": "State",
-      "key": "Residence_Addresses_State",
-      "order": 9,
-      "isSingleColumn": false
-    },
-    {
-      "id": 9,
-      "label": "Street Address",
-      "key": "Residence_Addresses_AddressLine",
-      "order": 10,
-      "isSingleColumn": false
-    },
-    {
-      "id": 10,
-      "label": "Full Name",
-      "key": "Voters_FullName",
-      "order": 11,
-      "isSingleColumn": false
-    },
-    {
-      "id": 11,
-      "label": "City",
-      "key": "Residence_Addresses_City",
-      "order": 12,
-      "isSingleColumn": false
-    },
-    {
-      "id": 12,
-      "label": "ZipPlus4",
-      "key": "Residence_Addresses_ZipPlus4",
-      "order": 13,
-      "isSingleColumn": false
-    },
-    {
-      "id": 13,
-      "label": "Age",
-      "key": "Voters_Age",
-      "order": 14,
-      "isSingleColumn": false
-    },
-    {
-      "id": 14,
-      "label": "Gender",
-      "key": "Voters_Gender",
-      "order": 15,
-      "isSingleColumn": false
-    },
-    {
-      "id": 15,
-      "label": "Ethnicity",
-      "key": "Ethnic_Description",
-      "order": 16,
-      "isSingleColumn": false
-    },
-    {
-      "id": 16,
-      "label": "Latitude",
-      "key": "Residence_Addresses_Latitude",
-      "order": 17,
-      "isSingleColumn": false
-    },
-    {
-      "id": 17,
-      "label": "Longitude",
-      "key": "Residence_Addresses_Longitude",
-      "order": 18,
-      "isSingleColumn": false
+      "displayName": "First Name"
     }
   ]
 }
@@ -353,32 +229,36 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 
 | Request schema | |
 | --- | --- |
-| `audienceRequest` <br /><span class="type-text">form data</span> <span class="required-text">required</span> | Audience metadata details
-| `file` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">required</span> | File to be uploaded
+| `audienceRequest` <br /><span class="type-text">form data</span> <span class="required-text">required</span> | Audience metadata details.
+| `file` <br /><span class="type-text">multipart/form-data</span> <span class="required-text">required</span> | File to be uploaded.
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
   <summary style={{ fontSize: "16px" }}><var>audienceRequest</var> properties</summary>
 
 <table className="objectProperties">
 <tr>
-<td>`audienceName` <br /><span class="type-text">string</span></td>
-<td>Audience name</td>
+<td>`audienceName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+<td>Audience name.</td>
 </tr>
 <tr>
-<td>`fileRowCount` <br /><span class="type-text">integer</span></td>
-<td>Number of rows in the file</td>
+<td>`fileRowCount` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>Number of rows in the file.</td>
 </tr>
 <tr>
-<td>`fileColumnCount` <br /><span class="type-text">integer</span></td>
-<td>Number of columns in the file</td>
+<td>`fileColumnCount` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>Number of columns in the file.</td>
 </tr>
 <tr>
 <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
-<td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list) <br /><EnumWidget values={audienceSubtypes} /></td>
+<td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Healthcare audiences only. Omit it for Political audiences, which don't support subtypes. <br /><EnumWidget values={audienceSubtypes} /></td>
 </tr>
 <tr>
-<td>`columnMappings` <br /><span class="type-text">array</span></td>
-<td>Array of column mapping objects</td>
+<td>`consentGiven` <br /><span class="type-text">boolean</span></td>
+<td>Confirms that patients consented to the use of their data. Must be <var>true</var> for the Healthcare Patient subtype (<var>6</var>). Omit it for every other subtype.</td>
+</tr>
+<tr>
+<td>`columnMappings` <br /><span class="type-text">array of objects</span> <span class="required-text">required</span></td>
+<td>Array of column mapping objects.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -387,15 +267,15 @@ Create a Matched audience by uploading a file with user data. The metadata is se
   <table className="objectProperties">
   <tr>
   <td>`columnId` <br /><span class="type-text">integer</span></td>
-  <td>[Column ID](/guidelines/audience-api/#matched-column-list)</td>
+  <td>[Column ID](/guidelines/audience-api/#matched-column-list).</td>
   </tr>
     <tr>
   <td>`fileColumnName` <br /><span class="type-text">string</span></td>
-  <td>File column name</td>
+  <td>File column name.</td>
   </tr>
     <tr>
   <td>`dataFormatId` <br /><span class="type-text">integer</span></td>
-  <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) <br /><EnumWidget values={dataFormats} /></td>
+  <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience). <br /><EnumWidget values={dataFormats} /></td>
   </tr>
   </table></details>
   </td>
@@ -403,11 +283,11 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 </tr>
 <tr>
 <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
-<td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience) <br /><EnumWidget values={dataPartners} /></td>
+<td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Required for HCP audiences and for the Voter ID column combination; omit it for other combinations. <br /><EnumWidget values={dataPartners} /></td>
 </tr>
 <tr>
-<td>`columnCombinationId` <br /><span class="type-text">integer</span></td>
-<td>[Column combination ID](/guidelines/audience-api/#matched-column-combinations)</td>
+<td>`columnCombinationId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+<td>[Column combination ID](/guidelines/audience-api/#matched-column-combinations).</td>
 </tr>
 </table>
 </details>
@@ -418,21 +298,15 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 {
   "audienceName": "matched-audience-example-fs",
   "fileRowCount": 5,
-  "fileColumnCount": 10,
+  "fileColumnCount": 1,
   "columnMappings": [
       {
-          "columnId": 5,
-          "fileColumnName": "l2-voter-id",
-          "dataFormatId": null
-      },
-      {
-          "columnId": 6,
-          "fileColumnName": "email",
-          "dataFormatId": 1
+          "columnId": 1,
+          "fileColumnName": "l2-voter-id"
       }
   ],
   "dataPartnerId": 2,
-  "columnCombinationId": 11
+  "columnCombinationId": 1
 }
 ```
 </details>
@@ -452,8 +326,7 @@ Create a Matched audience by uploading a file with user data. The metadata is se
   ],
   "fileRowCount": 19,
   "fileColumnCount": 1,
-  "columnCombinationId": 14,
-  "consentGiven": true
+  "columnCombinationId": 14
 }
 ```
 </details>
@@ -468,16 +341,16 @@ Create a Matched audience by uploading a file with user data. The metadata is se
 POST /api/v3/audience/matched HTTP/1.1
 Host: api.iqm.com
 Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24
-X-IAA-OW-ID: 1
+X-IAA-OW-ID: <owId>
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="audienceRequest"
 Content-Type: application/json
 
-{"audienceName":"Healthcare Patient Audience 2025","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":3,"consentGiven":true,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"},{"columnId":19,"fileColumnName":"first_name"},{"columnId":20,"fileColumnName":"last_name"}]}
+{"audienceName":"HCP NPI Audience","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":1,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"}]}
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="patient-data.csv"
+Content-Disposition: form-data; name="file"; filename="hcp-npi-list.csv"
 Content-Type: text/csv
 
 [Binary CSV file data]
@@ -486,11 +359,15 @@ Content-Type: text/csv
 </CodeOption>
 <CodeOption label="cURL sample">
 ```bash
-curl -X POST https://api.example.com/api/v3/audience/matched \
+cat > audienceRequest.json <<'EOF'
+{"audienceName":"HCP NPI Audience","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":1,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"}]}
+EOF
+
+curl -X POST https://api.iqm.com/api/v3/audience/matched \
   -H "Authorization: Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24" \
-  -H "X-IAA-OW-ID: 1" \
-  -F 'audienceRequest={"audienceName":"Healthcare Patient Audience 2025","dataPartnerId":7,"audienceSubtypeId":3,"columnCombinationId":14,"fileRowCount":1200,"fileColumnCount":3,"consentGiven":true,"columnMappings":[{"columnId":18,"fileColumnName":"NPI_ID"},{"columnId":19,"fileColumnName":"first_name"},{"columnId":20,"fileColumnName":"last_name"}]};type=application/json' \
-  -F 'file=@/path/to/patient-data.csv;type=text/csv'
+  -H "X-IAA-OW-ID: <owId>" \
+  -F 'audienceRequest=@audienceRequest.json;type=application/json' \
+  -F 'file=@/path/to/hcp-npi-list.csv;type=text/csv'
 ```
 </CodeOption>
 </CodeDropdown>
@@ -499,8 +376,8 @@ curl -X POST https://api.example.com/api/v3/audience/matched \
 {
   "success": true,
   "data": {
-    "matchedAudienceId": 12345,
-    "message": "Matched audience created successfully"
+    "audienceId": 1183883,
+    "message": "HCP NPI Audience audience created successfully"
   }
 }
 ```
@@ -514,13 +391,115 @@ curl -X POST https://api.example.com/api/v3/audience/matched \
 <div class="endpoint-container">
   <div class="child1">
 
-Before the audience can be used for campaign targeting it has to be processed and approved. Once the status is Ready, the audience can be targeted. Use the <var>matchedAudienceId</var> generated in the last step with this endpoint to get audience details. 
+Before the audience can be used for campaign targeting it has to be processed and approved. Once the <var>audienceStatusId</var> is <var>3</var> (Ready), the audience can be targeted. Use the <var>audienceId</var> returned in the last step with this endpoint to get audience details. 
 
 For further information see [Matched audience details](/guidelines/audience-api#matched-audience-details).
 
 | Path parameters |  |
 | ----  | --- |
-| `audienceId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Matched audience ID |
+| `audienceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Matched audience ID. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+ <summary style={{ fontSize: "16px" }}>Response properties</summary>
+ <table className="objectProperties">
+<tr>
+  <td>`audienceId` <br /><span class="type-text">integer</span></td>
+  <td>Audience ID.</td>
+</tr>
+<tr>
+  <td>`audienceName` <br /><span class="type-text">string</span></td>
+  <td>Audience name.</td>
+</tr>
+<tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience type ID](/guidelines/audience-api/#audience-type-list). Always <var>1</var> (Matched audience).</td>
+</tr>
+<tr>
+  <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Returned only for Healthcare audiences. <br /><EnumWidget values={audienceSubtypes} /></td>
+</tr>
+<tr>
+  <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience status ID](/guidelines/audience-api#audience-status-list). <br /><EnumWidget values={audienceStatuses} /></td>
+</tr>
+<tr>
+  <td>`cpm` <br /><span class="type-text">number</span></td>
+  <td>Data cost (CPM) charged if the audience is used in a campaign.</td>
+</tr>
+<tr>
+  <td>`owId` <br /><span class="type-text">integer</span></td>
+  <td>Organization Workspace ID of the audience owner.</td>
+</tr>
+<tr>
+  <td>`createdByUowId` <br /><span class="type-text">integer</span></td>
+  <td>User Organization Workspace ID of the user who created the audience.</td>
+</tr>
+<tr>
+  <td>`createdAt` <br /><span class="type-text">integer</span></td>
+  <td>Unix epoch creation date, in milliseconds.</td>
+</tr>
+<tr>
+  <td>`reach` <br /><span class="type-text">integer</span></td>
+  <td>Audience reach (matched unique users). <var>0</var> until the file is matched.</td>
+</tr>
+<tr>
+  <td>`columnMappings` <br /><span class="type-text">array of objects</span></td>
+  <td>Mappings between the file's columns and matching columns.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`columnMappings` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`columnId` <br /><span class="type-text">integer</span></td>
+        <td>[Column ID](/guidelines/audience-api/#matched-column-list).</td>
+      </tr>
+      <tr>
+        <td>`fileColumnName` <br /><span class="type-text">string</span></td>
+        <td>Column name in the uploaded file.</td>
+      </tr>
+      <tr>
+        <td>`dataFormatId` <br /><span class="type-text">integer</span></td>
+        <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) of the column values. <var>null</var> for columns that don't take a data format.</td>
+      </tr>
+    </table></details>
+  </td>
+</tr>
+<tr>
+  <td>`s3FileName` <br /><span class="type-text">string</span></td>
+  <td>Stored name of the uploaded file.</td>
+</tr>
+<tr>
+  <td>`s3Url` <br /><span class="type-text">string</span></td>
+  <td>S3 location of the uploaded file.</td>
+</tr>
+<tr>
+  <td>`fileRowCount` <br /><span class="type-text">integer</span></td>
+  <td>Number of rows in the uploaded file.</td>
+</tr>
+<tr>
+  <td>`matchRate` <br /><span class="type-text">number</span></td>
+  <td>Percentage of file records that were matched. Returned once the file is matched.</td>
+</tr>
+<tr>
+  <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
+  <td>[Data partner ID](/guidelines/audience-api/#data-partners-list-for-matched-audience). Returned only when a data partner was set. <br /><EnumWidget values={dataPartners} /></td>
+</tr>
+<tr>
+  <td>`modifiedAt` <br /><span class="type-text">string</span></td>
+  <td>Last modified date (ISO 8601 format).</td>
+</tr>
+<tr>
+  <td>`approvalAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the user can approve or reject the audience.</td>
+</tr>
+<tr>
+  <td>`editAccess` <br /><span class="type-text">boolean</span></td>
+  <td>Indicates if the user has edit access for the audience.</td>
+</tr>
+</table>
+</details>
 
 </div><div class="child2">
 
@@ -529,36 +508,35 @@ For further information see [Matched audience details](/guidelines/audience-api#
 
 ```json title="Response 200"
 {
-   "statusCode": 200,
-   "responseObject": {
-     "id": 1,
-     "audienceName": "Sample audience name",
-     "existingColumnMatching": "{\"FirstName\":\"Voters_FirstName\",\"LastName\":\"Voters_LastName\",\"State\":\"Residence_Addresses_State\",\"Zip4\":\"Residence_Addresses_Zip\"}",
-     "metadata": "{\"voterIDColumn\":[],\"columns\":[\"Voter File VANID\",\"LastName\",\"FirstName\",\"MiddleName\",\"Suffix\",\"Address\",\"City\",\"State\",\"Zip5\",\"Zip4\",\"Sex\",\"Age\",\"Preferred Phone\",\"CD\",\"SD\",\"HD \"],\"fileName\":\"NYSD3DigitalUniverse.csv\",\"fileSize\":7856375,\"rows\":0}",
-     "rawS3URL": "",
-     /*highlight-next-line*/
-     "status": "Pending",
-     "matchRate": 57.88,
-     "minEcpm": 0,
-     "maxEcpm": 0,
-     "s3FileName": "MatchedAudienceSample.csv",
-     "included": 0,
-     "excluded": 0,
-     "createdDate": 1642843451,
-     "modifiedDate": 1642843884,
-     "organizationName": "Sample organization name",
-     "userName": "Sample user name",
-     "dataCost": 1.5,
-     "owId": 1,
-     "uowId": 1,
-     "rawS3URLError": "File not available currently, please check later",
-     "uniques": 52432,
-     "approvedRejectedByUserName": "Sample user name",
-     "approvedRejectedByUserEmail": "example@example.com",
-     "isApprovalAccess": true,
-     "isEditAccess": true
-   }
- }
+  "success": true,
+  "data": {
+    "audienceId": 1183883,
+    "audienceName": "HCP NPI Audience",
+    "audienceTypeId": 1,
+    "audienceSubtypeId": 3,
+    /*highlight-next-line*/
+    "audienceStatusId": 2,
+    "cpm": 0.0,
+    "owId": 204995,
+    "createdByUowId": 298904,
+    "createdAt": 1793041168166,
+    "reach": 0,
+    "columnMappings": [
+      {
+        "columnId": 18,
+        "fileColumnName": "NPI_ID",
+        "dataFormatId": null
+      }
+    ],
+    "s3FileName": "1793041168171_hcp-npi-list.csv",
+    "s3Url": "s3://<bucket>/AUDIENCE/UPLOAD/HCP/Client=204995/Audience=1183883/1793041168171_hcp-npi-list.csv",
+    "fileRowCount": 5,
+    "dataPartnerId": 7,
+    "modifiedAt": "2026-10-26T18:59:36.081+00:00",
+    "approvalAccess": false,
+    "editAccess": true
+  }
+}
 ```
 
 </TabItem>

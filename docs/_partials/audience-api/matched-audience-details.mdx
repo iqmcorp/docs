@@ -14,7 +14,7 @@ Get Matched audience details by ID.
 
 | Path parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">string</span> | [Matched audience ID](/guidelines/audience-api/#audience-details-list). |
+| `audienceId` <br /><span class="type-text">integer</span> | [Matched audience ID](/guidelines/audience-api/#audience-details-list). |
 
 | Query parameters | |
 | --- | --- |
@@ -36,8 +36,12 @@ Get Matched audience details by ID.
   <td>Audience name.</td>
 </tr>
 <tr>
+  <td>`audienceTypeId` <br /><span class="type-text">integer</span></td>
+  <td>[Audience type ID](/guidelines/audience-api/#audience-type-list). Always <var>1</var> (Matched audience).</td>
+</tr>
+<tr>
   <td>`audienceSubtypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). <br /><EnumWidget values={audienceSubtypes} /></td>
+  <td>[Audience subtype ID](/guidelines/audience-api/#audience-subtype-list). Returned only for Healthcare audiences. <br /><EnumWidget values={audienceSubtypes} /></td>
 </tr>
 <tr>
   <td>`audienceStatusId` <br /><span class="type-text">integer</span></td>
@@ -45,7 +49,7 @@ Get Matched audience details by ID.
 </tr>
 <tr>
   <td>`cpm` <br /><span class="type-text">number</span></td>
-  <td>Cost per thousand impressions.</td>
+  <td>Data cost (CPM) charged if the audience is used in a campaign.</td>
 </tr>
 <tr>
   <td>`owId` <br /><span class="type-text">integer</span></td>
@@ -61,7 +65,35 @@ Get Matched audience details by ID.
 </tr>
 <tr>
   <td>`reach` <br /><span class="type-text">integer</span></td>
-  <td>Audience reach.</td>
+  <td>Audience reach (matched unique users). <var>0</var> until the file is matched.</td>
+</tr>
+<tr>
+  <td>`householdReach` <br /><span class="type-text">integer</span></td>
+  <td>Household reach. Returned only for Political Matched audiences, once matched.</td>
+</tr>
+<tr>
+  <td>`columnMappings` <br /><span class="type-text">array of objects</span></td>
+  <td>Mappings between the file's columns and matching columns.</td>
+</tr>
+<tr>
+  <td colSpan="2">
+    <details className="objectPropertiesDetails">
+    <summary>`columnMappings` object properties</summary>
+    <table className="objectProperties">
+      <tr>
+        <td>`columnId` <br /><span class="type-text">integer</span></td>
+        <td>[Column ID](/guidelines/audience-api/#matched-column-list).</td>
+      </tr>
+      <tr>
+        <td>`fileColumnName` <br /><span class="type-text">string</span></td>
+        <td>Column name in the uploaded file.</td>
+      </tr>
+      <tr>
+        <td>`dataFormatId` <br /><span class="type-text">integer</span></td>
+        <td>[Data format ID](/guidelines/audience-api/#data-formats-list-for-matched-audience) of the column values. <var>null</var> for columns that don't take a data format.</td>
+      </tr>
+    </table></details>
+  </td>
 </tr>
 <tr>
   <td>`s3FileName` <br /><span class="type-text">string</span></td>
@@ -77,7 +109,7 @@ Get Matched audience details by ID.
 </tr>
 <tr>
   <td>`matchRate` <br /><span class="type-text">number</span></td>
-  <td>The percentage of matched records compared to a reference set.</td>
+  <td>Percentage of file records that were matched. Returned once the file is matched.</td>
 </tr>
 <tr>
   <td>`dataPartnerId` <br /><span class="type-text">integer</span></td>
@@ -88,6 +120,26 @@ Get Matched audience details by ID.
   <td>Modified date (ISO 8601 format).</td>
 </tr>
 <tr>
+  <td>`rejectionReason` <br /><span class="type-text">string</span></td>
+  <td>Reason the audience was rejected. Returned only for rejected audiences.</td>
+</tr>
+<tr>
+  <td>`organizationName` <br /><span class="type-text">string</span></td>
+  <td>Name of the organization that owns the audience. Returned when <var>userDetailsRequired</var> is <var>true</var>.</td>
+</tr>
+<tr>
+  <td>`createdByUserName` <br /><span class="type-text">string</span></td>
+  <td>Name of the user who created the audience. Returned when <var>userDetailsRequired</var> is <var>true</var>.</td>
+</tr>
+<tr>
+  <td>`approvedOrRejectedByUserName` <br /><span class="type-text">string</span></td>
+  <td>Name of the user who approved or rejected the audience. Returned when <var>userDetailsRequired</var> is <var>true</var> and the audience has been approved or rejected.</td>
+</tr>
+<tr>
+  <td>`approvedOrRejectedByUserEmail` <br /><span class="type-text">string</span></td>
+  <td>Email of the user who approved or rejected the audience. Returned under the same conditions as <var>approvedOrRejectedByUserName</var>.</td>
+</tr>
+<tr>
   <td>`approvalAccess` <br /><span class="type-text">boolean</span></td>
   <td>Indicates if user has access to approve.</td>
 </tr>
@@ -96,12 +148,12 @@ Get Matched audience details by ID.
   <td>Indicates if user has edit access for the requested resource.</td>
 </tr>
 <tr>
-  <td>`whitelistedCampaignIds` <br /><span class="type-text">array</span></td>
-  <td>Array of whitelisted campaign IDs.</td>
+  <td>`whitelistedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>IDs of campaigns that include this audience. Returned when <var>campaignTargetingRequired</var> is <var>true</var> and at least one campaign includes it.</td>
 </tr>
 <tr>
-  <td>`blacklistedCampaignIds` <br /><span class="type-text">array</span></td>
-  <td>Array of blacklisted campaign IDs.</td>  
+  <td>`blacklistedCampaignIds` <br /><span class="type-text">array of integers</span></td>
+  <td>IDs of campaigns that exclude this audience. Returned when <var>campaignTargetingRequired</var> is <var>true</var> and at least one campaign excludes it.</td>
 </tr>
 </table>
 
@@ -117,21 +169,30 @@ Get Matched audience details by ID.
 {
   "success": true,
   "data": {
-    "audienceId": 1143824,
-    "audienceName": "Download - Impression _NPI Nurse_iqvia_Filtered",
-    "audienceSubtypeId": 4,
-    "audienceStatusId": 3,
-    "cpm": 25,
-    "owId": 20489,
-    "createdByUowId": 0,
-    "createdAt": 1762502664000,
-    "reach": 242,
-    "s3FileName": "17_iltered9644451186956185605.csv",
-    "s3Url": "s3://test-Client=204389/Audience=1143824/1762502664252_3524Download___Impression__NPI_Nurse_iqvia_Filtered9644451186956185605.csv",
-    "fileRowCount": 1829,
-    "matchRate": 13.23,
-    "dataPartnerId": 5,
-    "modifiedAt": "2025-11-07T02:42:33.000+00:00",
+    "audienceId": 1183827,
+    "audienceName": "HCP NPI Audience",
+    "audienceTypeId": 1,
+    "audienceSubtypeId": 3,
+    "audienceStatusId": 2,
+    "cpm": 0.0,
+    "owId": 204995,
+    "createdByUowId": 298904,
+    "createdAt": 1793036506707,
+    "reach": 0,
+    "columnMappings": [
+      {
+        "columnId": 18,
+        "fileColumnName": "NPI_ID",
+        "dataFormatId": null
+      }
+    ],
+    "s3FileName": "1793036506720_hcp-npi-list.csv",
+    "s3Url": "s3://<bucket>/AUDIENCE/UPLOAD/HCP/Client=204995/Audience=1183827/1793036506720_hcp-npi-list.csv",
+    "fileRowCount": 5,
+    "dataPartnerId": 7,
+    "modifiedAt": "2026-10-26T17:41:50.066+00:00",
+    "organizationName": "Healthcare Workspace",
+    "createdByUserName": "Jane Smith",
     "approvalAccess": false,
     "editAccess": true
   }

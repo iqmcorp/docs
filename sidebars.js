@@ -310,8 +310,14 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Step 2: Schedule a report',
-              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-2-schedule-a-report`,
+              label: 'Step 2: Save a report',
+              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-2-save-a-report`,
+              className: 'sidebarItemQS'
+            },
+            {
+              type: `link`,
+              label: 'Step 3: Schedule a report',
+              href: `/quickstart-guides/schedule-report-api-quickstart-guide#step-3-schedule-a-report`,
               className: 'sidebarItemQS'
             },
           ]
@@ -623,7 +629,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Sign up a new Customer',
+          label: 'Onboard a new Customer',
           className: 'sidebarItem',
           link: {
             type: 'doc',
@@ -644,20 +650,14 @@ const sidebars = {
             },
             {
               type: `link`,
-              label: 'Sign up a new Customer using the IQM API',
-              href: `/tutorials/customer-guide#sign-up-a-new-customer-using-the-iqm-api`,
+              label: 'Onboard a new Customer using the IQM API',
+              href: `/tutorials/customer-guide#onboard-a-new-customer-using-the-iqm-api`,
               className: 'sidebarItemQS'
             },
             {
               type: `link`,
               label: 'Invite a Customer',
               href: `/tutorials/customer-guide#invite-a-customer`,
-              className: 'sidebarItemQS'
-            },
-            {
-              type: `link`,
-              label: 'Sign up a Customer',
-              href: `/tutorials/customer-guide#sign-up-a-customer`,
               className: 'sidebarItemQS'
             },
             {
@@ -5073,6 +5073,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Get list of accessible Organizations',
+              href: '/guidelines/workspace-api#get-list-of-accessible-organizations',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Get Organization details',
               href: '/guidelines/workspace-api#get-organization-details',
               customProps: { method: 'GET' },
@@ -5417,13 +5424,6 @@ const sidebars = {
               label: 'Cancel Customer invite',
               href: '/guidelines/workspace-api#cancel-customer-invite',
               customProps: { method: 'DEL' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Customer Signup',
-              href: '/guidelines/workspace-api#customer-signup',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {

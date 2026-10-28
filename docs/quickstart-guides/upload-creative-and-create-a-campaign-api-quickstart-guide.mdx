@@ -12,6 +12,8 @@ import { creativeTypes } from '@site/src/data/enums/creativeTypes';
 import { campaignTypes } from '@site/src/data/enums/campaignTypes';
 import { budgetTypes } from '@site/src/data/enums/budgetTypes';
 import { conversionTypes } from '@site/src/data/enums/conversionTypes';
+import ApiHeaders from '@site/docs/_partials/common/api-headers.mdx';
+import OAuthHeaders from '@site/docs/_partials/common/oauth-headers.mdx';
 
 # Create a PG campaign
 
@@ -38,21 +40,22 @@ To create a PG campaign, the following are required:
 
 1. An account on the IQM platform
    *  See [Getting started](/getting-started/before-you-begin) section to create an account and request a Client ID and Client Secret
-1. An approved and running creative 
+1. An uploaded creative
    * See [Upload a creative](/quickstart-guides/upload-a-creative-quickstart) quickstart guide
 1. An insertion order
    * See [Create a campaign](/quickstart-guides/create-a-campaign-quickstart) quickstart guide to create a new insertion order
-1. A conversion
+1. A conversion (optional)
    * See [Create a conversion](/tutorials/create-a-conversion) tutorial
-1. A PG deal
+1. An active PG deal
    * See [Create a deal](/tutorials/deal-guide) tutorial
+   * The deal's status must be active (<var>statusId</var> <var>1</var>). If you attach more than one deal, they must all use the same payment type.
 
 
 ## Create a PG campaign using the IQM API
 
-This tutorial covers how to create a campaign and upload a creative. 
+This tutorial covers how to create a PG campaign and check its status.
 
-The minimum requirements to perform this task are: logging in with authentication credentials, uploading a creative, and creating a campaign. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
+The minimum requirements to perform this task are: logging in with authentication credentials and creating a PG campaign. Once these steps are accomplished, more can be learned about IQM's API through the [guidelines](/guidelines/) pages.
 
 1. Log in
     * Optional if you have already logged in and have a token
@@ -66,10 +69,7 @@ Use the following header parameters for all requests after logging in:
 
   <div class="smallTable">
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide) |
-| `X-IAA-OW-ID` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Organization Workspace ID Header |
+<ApiHeaders />
 
 </div>
 
@@ -80,19 +80,19 @@ Use the following header parameters for all requests after logging in:
 <div class="endpoint-container">
   <div class="child1">
 
-To log in, the <var>Authentication: Basic</var> header is required. The Login API returns an OAuth-compliant response with an Organization Workspace ID (<var>owId</var>), a unique identifier for each Organization. This ID is used for any further API communications.
+To log in, send the <var>Authorization: Basic</var> header with your Base64-encoded Client ID and Client Secret, and send the request body as form data (<var>application/x-www-form-urlencoded</var>). The response contains an OAuth access token.
+
+To find the Organization Workspace IDs that you have access to, use [Get list of accessible Organizations](/guidelines/workspace-api#get-list-of-accessible-organizations).
 
 For further information see [OAuth token](/guidelines/user-api#oauth-token).
 
-| Headers  |  |
-| ----  | --- |
-| `Authentication` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Authentication bearer token <br />See [Sign up and authenticate](/quickstart-guides/authentication-quickstart-guide)<br /> |
+<OAuthHeaders />
 
 | Request schema  |  |
 | ----  | --- |
-| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login <br />[OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/) |
-| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email |
-| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password |
+| `grant_type` <br /><span class="type-text">string</span> <span class="required-text">required</span> | <var>password</var> for login. <br />See [OAuth Grant Types<ExternalLink />](https://oauth.net/2/grant-types/). |
+| `username` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account email. |
+| `password` <br /><span class="type-text">string</span> <span class="required-text">required</span> | User account password. |
 
 </div><div class="child2">
 
@@ -111,50 +111,31 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 
 ```json title="Response 200"
 {
-  "success": true,
-  "data":
-  {
-    "access_token": "106adb25-37b0-4cab-8381-d682fe7cc3c8",
-    "refresh_token": "eac4c1f6-781e-4b04-baff-9c2e415d1f64",
-    "scope": "read write",
-    "token_type": "bearer",
-    "expires_in": 35999,
-    "owId": 200001
-  }
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIn0...",
+  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIn0...",
+  "scope": "read write",
+  "token_type": "bearer",
+  "expires_in": 86399
 }
 ```
 
 <details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
 <summary style={{fontSize: "16px"}}>More responses</summary>
 
-```json title="Response 400"
+```json title="Response 401"
 {
-   "success": false,
-   "data":
-   {
-      "status": "On Hold",
-      "reason": "The particular account is kept on hold due to missed payment dates for last 3 months.",
-      "supportEmail": "support@iqm.com"
-   },
-   "errorObjects":
-   [
-      {
-         "error": "User is not allowed to access provided customer",
-         "reason": "User is not associated with any active organization."
-      }
-   ]
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Bad Credentials or invalid grant type"
+    }
+  ]
 }
 ```
 
 ```json title="Response 403"
 {
-   "success": false,
-   "errorObjects":
-   [
-      {
-         "error": "User doesn't exist or user is not allowed to provided workspace."
-      }
-   ]
+  "error": "Client details are not provided."
 }
 ```
 </details>
@@ -174,7 +155,7 @@ curl -i --location 'https://api.iqm.com/api/v3/ua/oauth/token' \
 <div class="endpoint-container">
   <div class="child1">
 
-Once you are logged in and have met the prerequisite conditions (see [Before you begin](#before-you-begin)), you can create a PG campaign. You need a creative, an insertion order, a conversion, and a PG deal to create a PG campaign. Review the request schema table below for all the other parameters required for this endpoint.  
+Once you are logged in and have met the prerequisite conditions (see [Before you begin](#before-you-begin)), you can create a PG campaign. You need a creative, an insertion order, and an active PG deal to create a PG campaign. A conversion is optional. Review the request schema table below for all the other parameters required for this endpoint.  
 
 :::info
 
@@ -187,8 +168,8 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
 <th>Request schema</th>
 <th></th>
 <tr>
-<td>`pgCampaignInfo` <br /><span class="type-text">object</span></td>
-<td>Object containing campaign information</td>
+<td>`pgCampaignInfo` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing campaign information.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -196,56 +177,56 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <summary>`pgCampaignInfo` object properties</summary>
   <table className="objectProperties">
   <tr>
-  <td>`campaignName` <br /><span class="type-text">string</span></td>
-  <td>Name of campaign</td>
+  <td>`campaignName` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Name of campaign.</td>
   </tr>
     <tr>
-  <td>`ioId` <br /><span class="type-text">integer</span></td>
-  <td>Insertion Order ID</td>
+  <td>`ioId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Insertion Order ID.</td>
   </tr>
     <tr>
-  <td>`timeZoneId` <br /><span class="type-text">integer</span></td>
-  <td>[Timezone ID](/guidelines/master-api#get-timezones)</td>
+  <td>`timeZoneId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Timezone ID](/guidelines/master-api#get-timezones).</td>
   </tr>
       <tr>
   <td>`totalImpressions` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
-  <td>Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign</td>
+  <td>Targeted impressions for impression-based campaign as budget, use if not a dollars-based campaign.</td>
   </tr>
       <tr>
-  <td>`budgetTotal` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
-  <td>Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign</td>
+  <td>`spendingBudget` <br /><span class="type-text">number</span> <span class="required-text">optional</span></td>
+  <td>Total budget of the campaign for dollars-based campaign, use if not an impressions-based campaign.</td>
   </tr>
       <tr>
-  <td>`maxBid` <br /><span class="type-text">integer</span></td>
-  <td>Maximum allowed bid price for campaign</td>
+  <td>`maxBid` <br /><span class="type-text">number</span> <span class="required-text">required</span></td>
+  <td>Maximum allowed bid price for campaign.</td>
   </tr>
       <tr>
-  <td>`startTime` <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch start time of campaign, in milliseconds</td>
+  <td>`startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>Unix epoch start time of campaign, in seconds.</td>
   </tr>
         <tr>
   <td>`endTime`  <br /><span class="type-text">integer</span></td>
-  <td>Unix epoch end time of campaign, in milliseconds</td>
+  <td>Unix epoch end time of campaign, in seconds.</td>
   </tr>
         <tr>
-  <td>`budgetTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based) <br /><EnumWidget values={budgetTypes} /></td>
+  <td>`budgetTypeId` <br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+  <td>[Budget type ID](/guidelines/campaign-api#get-list-of-campaign-budget-types) of given campaign (impression-based or dollar-based). <br /><EnumWidget values={budgetTypes} /></td>
   </tr>
         <tr>
   <td>`campaignTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type) <br /><EnumWidget values={campaignTypes} /></td>
+  <td>[Campaign type ID](/guidelines/campaign-api#get-campaign-count-with-campaign-type). <br /><EnumWidget values={campaignTypes} /></td>
   </tr>
         <tr>
-  <td>`advertiserDomain` <br /><span class="type-text">string</span></td>
-  <td>Domain of the Advertiser user</td>
+  <td>`advertiserDomain` <br /><span class="type-text">string</span> <span class="required-text">required</span></td>
+  <td>Domain of the Advertiser user.</td>
   </tr>
   </table></details>
   </td>
   <td></td>
 </tr>
 <tr>
-<td>`creativeTargeting` <br /><span class="type-text">object</span></td>
-<td>Object containing creative targeting details</td>
+<td>`creativeTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing creative targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -254,19 +235,19 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <table className="objectProperties">
   <tr>
   <td>`creativeTypeId` <br /><span class="type-text">integer</span></td>
-  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list) <br /><EnumWidget values={creativeTypes} /></td>
+  <td>[Creative type ID](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
   </tr>
     <tr>
   <td>`creativeIds` <br /><span class="type-text">array of integers</span></td>
-  <td>IDs of creatives attached to this campaign</td>
+  <td>IDs of creatives attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
   <td></td>
 </tr>
 <tr>
-<td>`inventoryTargeting` <br /><span class="type-text">object</span></td>
-<td>Object containing inventory targeting details</td>
+<td>`inventoryTargeting` <br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+<td>Object containing inventory targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -275,7 +256,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   <table className="objectProperties">
   <tr>
   <td>`pgDealIds` <br /><span class="type-text">array of integers</span></td>
-  <td>PG deal IDs attached to this campaign</td>
+  <td>PG deal IDs attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
@@ -283,7 +264,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
 </tr>
 <tr>
 <td>`conversionTargeting`  <br /><span class="type-text">object</span></td>
-<td>Object containing campaign conversion targeting details</td>
+<td>Object containing campaign conversion targeting details.</td>
 </tr>
 <tr>
 <td colSpan="2">
@@ -296,19 +277,19 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   </tr>
     <tr>
   <td>`conversionIds` <br /><span class="type-text">array of integers</span></td>
-  <td>IDs of conversions attached to this campaign</td>
+  <td>IDs of conversions attached to this campaign.</td>
   </tr>
   </table></details>
   </td>
   <td></td>
 </tr>
 <tr>
-<td>`politicalAdvertiserClientId` <br /><span class="type-text">integer</span></td>
-<td>Advertiser client ID if user is Political Advertiser</td>
+<td>`politicalAdvertiserClientId` <br /><span class="type-text">integer</span> <span class="required-text">optional</span></td>
+<td>Advertiser client ID if user is Political Advertiser. Omit it otherwise.</td>
 </tr>
 <tr>
 <td>`countryId` <br /><span class="type-text">integer</span></td>
-<td>ID of targeted country</td>
+<td>ID of targeted country (for example, <var>30100001</var> for the US).</td>
 </tr>
 </table>
 
@@ -325,8 +306,8 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
     "timeZoneId": 29,
     "totalImpressions": 12345,
     "maxBid": 8,
-    "startTime": 1715662337,
-    "endTime": 1717128000,
+    "startTime": 1803859200,
+    "endTime": 1806451200,
     "budgetTypeId": 2,
     "campaignTypeId": 2,
     "advertiserDomain": "https://www.xyz.com"
@@ -351,17 +332,16 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
       987
     ]
   },
-  "politicalAdvertiserClientId": 989898,
-  "countryId": 23
+  "countryId": 30100001
 }
 ```
 
-```json title="Response 200"
+```json title="Response 201"
 {
   "success": true,
   "data": {
-    "message": "PG Campaign Created successfully",
-    "campaignId": 2
+    "campaignId": 625981,
+    "message": "PG Campaign Created successfully"
   }
 }
 ```
@@ -374,7 +354,7 @@ Make sure that the <var>budgetTypeId</var> of your PG campaign matches the <var>
   "success": false,
   "errorObjects": [
     {
-      "error": "Invalid campaign Type provided"
+      "error": "Invalid country/countries"
     }
   ]
 }
@@ -398,7 +378,7 @@ To run a campaign, it must be approved. Use the <var>campaignId</var> returned f
 
 | Path parameter  |  |
 | ---  | --- |
-| `campaignId` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Campaign ID
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Campaign ID.
 
 </div><div class="child2">
 
@@ -409,66 +389,72 @@ To run a campaign, it must be approved. Use the <var>campaignId</var> returned f
 {
   "statusCode": 200,
   "responseObject": {
-    "owId": 1,
-    "parentOrganizationName": "IQM Corporation",
-    "id": 25859,
-    "uowId": 9216,
-    "campaignName": "Test Campaign",
-    "advertiserDomain": "https://iqm.com",
+    "owId": 204851,
+    "parentOrganizationName": "Example Workspace",
+    "id": 625981,
+    "uowId": 291477,
+    "campaignName": "test imps PG campaign",
+    "advertiserDomain": "https://www.xyz.com",
     "creativeType": 11,
     "campaignType": 1,
     "totalBudgetPacing": false,
     "isTvAd": false,
-    "budgetDay": 10.0,
-    "budgetTotal": 100.0,
-    "maxBid": 10.0,
-    "timezone": 433,
-    "startTime": 1703794800,
-    "endTime": 1704614400,
+    "budgetDay": 0.0,
+    "budgetTotal": 108.636,
+    "maxBid": 8.0,
+    "allowedMinBid": 0.0,
+    "timezone": 29,
+    "startTime": 1803859200,
+    "endTime": 1806451200,
     //highlight-next-line
-    "status": "running",
+    "status": "pending",
     "dspMargin": 0,
     "platformMargin": 0,
     "userDealMargin": 0,
     "spentScale": false,
-    "creativeIds": "148971",
+    "creativeIds": "803406",
     "conversionType": "None",
     "bidOptimization": true,
     "bidPacing": true,
+    "isBidShading": false,
     "impressionCapping": 0,
-    "maxDayImpressions": 0,
-    "maxDayClicks": 0,
-    "maxDayConversions": 0,
-    "totalImpressions": 0,
-    "totalClicks": 0,
-    "totalConversions": 0,
-    "deviceType": "13,15,11,12",
-    "trafficType": "11,12",
-    "exchanges": "55,61,58,41,39,47,59,1,54,56,45,16,11,37,57,50,46,53,60",
+    "frequencyCapEnabled": false,
+    "totalImpressions": 12345,
+    "exchanges": "",
     "isLocationWithOrFilter": true,
     "countryId": "30100001",
     "locationDetails": {},
     "isCampaignFromNewPlatform": true,
-    "organizationName": "IQM Corporation 1",
-    "userEmail": "domo@iqm.com",
-    "userName": "Domo Integration",
-    "conversionTypeId": 0,
+    "organizationName": "Example Organization",
+    "userEmail": "user@example.com",
+    "userName": "Jane Smith",
+    "conversionIds": "8072",
+    "conversionTypeId": 1,
     "isUnapprovedAudienceTargeted": false,
     "isAllAudienceUnapproved": false,
-    "createDate": 1703794110,
-    "ioId": 2695,
-    "ioName": "Sanity test Io",
+    "createDate": 1793041194,
+    "ioId": 29317,
+    "ioName": "PG IO 1",
     "prebidAudienceSegmentIdList": [],
-    "budgetTypeId": 1,
-    "isAdvanceAudioVideoTargeted": false,
+    "campaignTypeId": 2,
+    "pgDealIds": [
+      2680
+    ],
+    "spendingBudget": 98.76,
+    "pgFeesPercentage": 10.0,
+    "pgFeesBudget": 9.876,
+    "pgPaymentTypeId": 2,
+    "budgetTypeId": 2,
     "isEstimatorAvailable": true,
+    "isAdvanceAudioVideoTargeted": false,
     "isEditAccess": true,
-    "isApprovalAccess": false,
+    "isParentInvoiceTemplateSet": true,
     "isMarginSet": true,
-    "isParentInvoiceTemplateSet": true
+    "isApprovalAccess": false
   }
 }
 ```
+
 
 </TabItem>
 </Tabs>
