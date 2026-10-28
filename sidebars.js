@@ -3167,50 +3167,8 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Generate PSI report',
-              href: '/guidelines/insights-api#generate-psi-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights list',
-              href: '/guidelines/insights-api#get-power-segment-insights-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download PSI report',
-              href: '/guidelines/insights-api#download-psi-report',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Email PSI report',
-              href: '/guidelines/insights-api#email-psi-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Get Power Segment Insights category types',
               href: '/guidelines/insights-api#get-power-segment-insights-category-types',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights avatar URL',
-              href: '/guidelines/insights-api#get-power-segment-insights-avatar-url',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights report data',
-              href: '/guidelines/insights-api#get-power-segment-insights-report-data',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -6336,6 +6294,48 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Count public Power Segments',
+              href: '/political-vertical/audience-segments#count-public-power-segments',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Generate Power Segment Insights',
+              href: '/political-vertical/audience-segments#generate-power-segment-insights',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Download Power Segment Insights report',
+              href: '/political-vertical/audience-segments#download-power-segment-insights-report',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights report data',
+              href: '/political-vertical/audience-segments#get-power-segment-insights-report-data',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get Power Segment Insights avatar URL',
+              href: '/political-vertical/audience-segments#get-power-segment-insights-avatar-url',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Email Power Segment Insights report',
+              href: '/political-vertical/audience-segments#email-power-segment-insights-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
               label: 'Power Segment category type list',
               href: '/political-vertical/audience-segments#power-segment-category-type-list',
               customProps: { method: 'GET' },
@@ -6442,50 +6442,8 @@ const sidebars = {
           items: [
             {
               type: 'link',
-              label: 'Generate PSI report',
-              href: '/political-vertical/insights-vld/#generate-psi-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights list',
-              href: '/political-vertical/insights-vld/#get-power-segment-insights-list',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Download PSI report',
-              href: '/political-vertical/insights-vld/#download-psi-report',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Email PSI report',
-              href: '/political-vertical/insights-vld/#email-psi-report',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Get Power Segment Insights category types',
               href: '/political-vertical/insights-vld/#get-power-segment-insights-category-types',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights avatar URL',
-              href: '/political-vertical/insights-vld/#get-power-segment-insights-avatar-url',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Power Segment Insights report data',
-              href: '/political-vertical/insights-vld/#get-power-segment-insights-report-data',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
