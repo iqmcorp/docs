@@ -935,12 +935,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/guidelines/audience-api/#refresh-matched-audience',
-              customProps: { method: 'PUT' },
-            },
-            {
-              type: 'link',
               label: 'Data partners list for Matched audience',
               href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
@@ -6104,12 +6098,6 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
-            {
-              type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/political-vertical/audience-segments#refresh-matched-audience',
-              customProps: { method: 'PUT' },
-            },
           ]
         },
         {
@@ -7176,12 +7164,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
-              customProps: { method: 'PUT' },
-            },
-            {
-              type: 'link',
               label: 'Data partners list for Matched audience',
               href: '/healthcare-vertical/audience-healthcare#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
@@ -7710,13 +7692,6 @@ const sidebars = {
                   },
                   {
                     type: 'link',
-                    label: 'Get list of accounts',
-                    href: '/healthcare-vertical/planner/#get-list-of-accounts',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  },
-                  {
-                    type: 'link',
                     label: 'Download HCP planner',
                     href: '/healthcare-vertical/planner/#download-hcp-planner',
                     customProps: { method: 'POST' },
@@ -7834,20 +7809,6 @@ const sidebars = {
                     customProps: { method: 'GET' },
                     className: 'sidebarItem',
                   },
-                  {
-                    type: 'link',
-                    label: 'Get specialties list',
-                    href: '/healthcare-vertical/planner/#get-specialties-list',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  },
-                  {
-                    type: 'link',
-                    label: 'Get account types',
-                    href: '/healthcare-vertical/planner/#get-account-types',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  }
               ]
             }          
           ]
