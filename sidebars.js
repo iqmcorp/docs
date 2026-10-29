@@ -935,6 +935,20 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Approve or reject Matched audience',
+              href: '/guidelines/audience-api#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/guidelines/audience-api#rematch-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Data partners list for Matched audience',
               href: '/guidelines/audience-api#data-partners-list-for-matched-audience',
               customProps: { method: 'GET' },
@@ -1238,6 +1252,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience status list',
               href: '/guidelines/audience-api#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience failure reason list',
+              href: '/guidelines/audience-api#audience-failure-reason-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -6098,6 +6119,20 @@ const sidebars = {
               customProps: { method: 'PATCH' },
               className: 'sidebarItem',
             },
+            {
+              type: 'link',
+              label: 'Approve or reject Matched audience',
+              href: '/political-vertical/audience-segments#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/political-vertical/audience-segments#rematch-audience',
+              customProps: { method: 'PUT' },
+              className: 'sidebarItem',
+            },
           ]
         },
         {
@@ -6375,6 +6410,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience status list',
               href: '/political-vertical/audience-segments#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience failure reason list',
+              href: '/political-vertical/audience-segments#audience-failure-reason-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -7161,6 +7203,18 @@ const sidebars = {
               label: 'Update Matched audience',
               href: '/healthcare-vertical/audience-healthcare#update-matched-audience',
               customProps: { method: 'PATCH' },
+            },
+            {
+              type: 'link',
+              label: 'Approve or reject Matched audience',
+              href: '/healthcare-vertical/audience-healthcare#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/healthcare-vertical/audience-healthcare#rematch-audience',
+              customProps: { method: 'PUT' },
             },
             {
               type: 'link',
