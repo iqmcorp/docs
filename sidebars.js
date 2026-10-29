@@ -3558,6 +3558,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Get list of report statuses',
+              href: '/guidelines/insights-api#get-list-of-report-statuses',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Get list of template status types',
               href: '/guidelines/insights-api#get-list-of-template-status-types',
               customProps: { method: 'GET' },
@@ -4035,6 +4042,20 @@ const sidebars = {
               href: '/guidelines/inventory-api#get-pmp-deal-details-by-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get inventories for a PMP deal',
+              href: '/guidelines/inventory-api#get-inventories-for-a-pmp-deal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download inventories for a PMP deal',
+              href: '/guidelines/inventory-api#download-inventories-for-a-pmp-deal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
             },
             {
               type: 'link',
