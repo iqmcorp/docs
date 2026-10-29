@@ -2565,6 +2565,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Download dashboard report',
+              href: '/guidelines/dashboard-api#download-dashboard-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Metrics timeline',
               href: '/guidelines/dashboard-api#metrics-timeline',
               customProps: { method: 'POST' },
@@ -2574,6 +2581,20 @@ const sidebars = {
               type: 'link',
               label: 'Metrics comparison',
               href: '/guidelines/dashboard-api#metrics-comparison',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get campaign metric details',
+              href: '/guidelines/dashboard-api#get-campaign-metric-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get open exchange inventory deviation slabs',
+              href: '/guidelines/dashboard-api#get-open-exchange-inventory-deviation-slabs',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },

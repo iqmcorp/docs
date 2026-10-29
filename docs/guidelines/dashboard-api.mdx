@@ -3998,6 +3998,389 @@ Get a report on a campaign's performance by supported filters.
 
 ---
 
+### Download dashboard report
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-workspace-download" operationId="dashboard-report-by-workspace-download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-io-download" operationId="v4-dashboard-report-by-io-download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-exchange-download" operationId="v4-dashboard-download-report-by-exchange" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-customer-download" operationId="dashboard-report-by-customer-download" />
+<br /><CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/by-campaign-download" operationId="dashboard-report-by-campaign-download" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Download a Workspace, IO, Exchange, Customer, or Campaign report as a CSV or XLSX file. Each endpoint takes the same filters as its matching report, plus a <var>downloadRequest</var> object that sets the file's columns, type, and name. The response contains a temporary pre-signed URL for the file, so start the download promptly.
+
+The file includes every record that matches the filters, so pagination doesn't apply. The date range must be one year or less.
+
+<table>
+<th>Request schema</th>
+<tr>
+  <td>`sort`<br /><span class="type-text">object</span></td>
+  <td>Sorting settings.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`sort` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`field`<br /><span class="type-text">string</span></td>
+    <td>Field to sort by, for example <var>impressions</var>.</td>
+  </tr>
+  <tr>
+    <td>`order`<br /><span class="type-text">string</span></td>
+    <td>Sort order: <var>ASC</var> or <var>DESC</var>.</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+<tr>
+  <td>`filters`<br /><span class="type-text">object</span> <span class="required-text">required</span></td>
+  <td>Filter criteria.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`filters` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`startTimeEpochMillis`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+    <td>Start time, Unix epoch in milliseconds.</td>
+  </tr>
+  <tr>
+    <td>`endTimeEpochMillis`<br /><span class="type-text">integer</span> <span class="required-text">required</span></td>
+    <td>End time, Unix epoch in milliseconds.</td>
+  </tr>
+  <tr>
+    <td>`owIds`<br /><span class="type-text">array of integers</span></td>
+    <td>Organization Workspace IDs.</td>
+  </tr>
+  <tr>
+    <td>`campaignIds`<br /><span class="type-text">array of integers</span></td>
+    <td>Campaign IDs.</td>
+  </tr>
+  <tr>
+    <td>`ioIds`<br /><span class="type-text">array of integers</span></td>
+    <td>Insertion order IDs.</td>
+  </tr>
+  <tr>
+    <td>`searchField`<br /><span class="type-text">string</span></td>
+    <td>Search filter.</td>
+  </tr>
+  <tr>
+    <td>`creativeTypeIds`<br /><span class="type-text">array of integers</span></td>
+    <td>[Creative type IDs](/guidelines/creative-api#get-creative-types-list). <br /><EnumWidget values={creativeTypes} /></td>
+  </tr>
+  <tr>
+    <td>`campaignTypeIds`<br /><span class="type-text">array of integers</span></td>
+    <td>[Campaign type IDs](/guidelines/campaign-api#get-campaign-count-with-campaign-type). <br /><EnumWidget values={campaignTypes} /></td>
+  </tr>
+  <tr>
+    <td>`campaignBudgetTypeIds`<br /><span class="type-text">array of integers</span></td>
+    <td>[Campaign budget type IDs](/guidelines/campaign-api#get-list-of-campaign-budget-types). <br /><EnumWidget values={budgetTypes} /></td>
+  </tr>
+  <tr>
+    <td>`verticalIds`<br /><span class="type-text">array of integers</span></td>
+    <td>[Vertical IDs](/guidelines/workspace-api/#verticals). <br /><EnumWidget values={verticals} /></td>
+  </tr>
+  <tr>
+    <td>`campaignStatusList`<br /><span class="type-text">array of strings</span></td>
+    <td>Campaign statuses: <var>running</var>, <var>paused</var>, <var>pending</var>, <var>expired</var>, <var>deleted</var>, <var>draft</var>, or <var>rejected</var>.</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+<tr>
+  <td>`downloadRequest`<br /><span class="type-text">object</span></td>
+  <td>File options.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`downloadRequest` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`columns`<br /><span class="type-text">array of objects</span></td>
+    <td>Columns to include, in order. Each object has a <var>label</var> (the column header in the file) and a <var>value</var> (the report field key). See the supported columns below.</td>
+  </tr>
+  <tr>
+    <td>`fileType`<br /><span class="type-text">string</span></td>
+    <td>File type: <var>csv</var> or <var>xlsx</var>.</td>
+  </tr>
+  <tr>
+    <td>`fileName`<br /><span class="type-text">string</span></td>
+    <td>File name, without the extension.</td>
+  </tr>
+  </table></details>
+</td>
+</tr>
+<tr>
+  <td>`campaignRequest`<br /><span class="type-text">boolean</span></td>
+  <td>Campaign report download only. Whether the request is scoped to a specific campaign.</td>
+</tr>
+</table>
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Supported columns</summary>
+
+<CodeDropdown label="Report">
+<CodeOption label="Workspace">
+
+| Label | Value |
+| --- | --- |
+| ID | <var>workspaceId</var> |
+| Workspace Name | <var>workspaceName</var> |
+| Insertion Order Name | <var>ioName</var> |
+| Daily Budget | <var>budgetDay</var> |
+| Total Budget | <var>budgetTotal</var> |
+| Bid Shading Saving | <var>organizationBidShadingSaving</var> |
+| Workspace Media Earnings | <var>workspaceMediaEarning</var> |
+| Total Workspace Earnings | <var>workspaceTotalEarning</var> |
+| Workspace PLD Insights Earnings | <var>workspacePLDInsightsEarnings</var> |
+| Workspace SLS Insights Earnings | <var>workspaceSLSInsightsEarnings</var> |
+| Workspace VLD Insights Earnings | <var>workspaceVLDInsightsEarnings</var> |
+| Workspace Bid Shading Earnings | <var>workspaceBidShadingEarning</var> |
+| Workspace AQ Insights Earnings | <var>workspaceAQInsightsEarnings</var> |
+| Platform Media Earnings | <var>platformMediaEarning</var> |
+| Total Platform Earnings | <var>platformTotalEarning</var> |
+| Platform PLD Insights Earnings | <var>platformPLDInsightsEarnings</var> |
+| Platform SLS Insights Earnings | <var>platformSLSInsightsEarnings</var> |
+| Platform VLD Insights Earnings | <var>platformVLDInsightsEarnings</var> |
+| Platform Bid Shading Earnings | <var>platformBidShadingEarning</var> |
+| Platform AQ Insights Earnings | <var>platformAQInsightsEarnings</var> |
+| Impressions | <var>impressions</var> |
+| Clicks | <var>clicks</var> |
+| CTR | <var>CTR</var> |
+| Win Rate | <var>winRate</var> |
+| VCR | <var>VCR</var> |
+| Total Advertiser Spent | <var>spent</var> |
+| Ad Serving Cost | <var>adServingCost</var> |
+| Data Cost | <var>dataCost</var> |
+| Pre-bid Cost | <var>prebidCost</var> |
+| Media Cost | <var>mediaSpent</var> |
+| 3rd Party Cost | <var>thirdPartyCost</var> |
+| PLD Insights Cost | <var>pldInsightsCost</var> |
+| SLS Insights Cost | <var>slsInsightsCost</var> |
+| VLD Insights Cost | <var>vldInsightsCost</var> |
+| AQ Insights Cost | <var>aqInsightsCost</var> |
+| Workspace Spent | <var>workspaceSpent</var> |
+| Platform Spent | <var>platformSpent</var> |
+| Attributed Conversions | <var>totalAttributedConversion</var> |
+| Attributed View Through Conversions | <var>totalAttributedViewThroughConversion</var> |
+| Attributed Click Through Conversions | <var>totalAttributedClickThroughConversion</var> |
+| Cost Per Attributed Conversion | <var>costPerAttributedConversion</var> |
+| Attributed Conversion Rate | <var>totalAttributedConversionRate</var> |
+
+</CodeOption>
+<CodeOption label="Customer">
+
+| Label | Value |
+| --- | --- |
+| ID | <var>owId</var> |
+| Advertiser Name | <var>organizationName</var> |
+| Total Budget | <var>budgetTotal</var> |
+| Daily Budget | <var>budgetDay</var> |
+| Bid Shading Saving | <var>organizationBidShadingSaving</var> |
+| Impressions | <var>impressions</var> |
+| Clicks | <var>clicks</var> |
+| CTR | <var>CTR</var> |
+| Win Rate | <var>winRate</var> |
+| VCR | <var>VCR</var> |
+| Data Cost | <var>dataCost</var> |
+| Pre-bid Cost | <var>prebidCost</var> |
+| Media Cost | <var>mediaSpent</var> |
+| 3rd Party Cost | <var>thirdPartyCost</var> |
+| PLD Insights Cost | <var>pldInsightsCost</var> |
+| SLS Insights Cost | <var>slsInsightsCost</var> |
+| AQ Insights Cost | <var>aqInsightsCost</var> |
+| VLD Insights Cost | <var>vldInsightsCost</var> |
+| Total Advertiser Spent | <var>spent</var> |
+| Workspace Spent | <var>workspaceSpent</var> |
+| Platform Spent | <var>platformSpent</var> |
+| Ad Serving Cost | <var>adServingCost</var> |
+| Platform Media Earnings | <var>platformMediaEarning</var> |
+| Total Platform Earnings | <var>platformTotalEarning</var> |
+| Platform PLD Insights Earnings | <var>platformPLDInsightsEarnings</var> |
+| Platform SLS Insights Earnings | <var>platformSLSInsightsEarnings</var> |
+| Platform AQ Insights Earnings | <var>platformAQInsightsEarnings</var> |
+| Platform VLD Insights Earnings | <var>platformVLDInsightsEarnings</var> |
+| Platform Bid Shading Earnings | <var>platformBidShadingEarning</var> |
+| Total Workspace Earnings | <var>workspaceTotalEarning</var> |
+| Workspace PLD Insights Earnings | <var>workspacePLDInsightsEarnings</var> |
+| Workspace SLS Insights Earnings | <var>workspaceSLSInsightsEarnings</var> |
+| Workspace AQ Insights Earnings | <var>workspaceAQInsightsEarnings</var> |
+| Workspace VLD Insights Earnings | <var>workspaceVLDInsightsEarnings</var> |
+| Workspace Bid Shading Earnings | <var>workspaceBidShadingEarning</var> |
+| Workspace Media Earnings | <var>workspaceMediaEarning</var> |
+
+</CodeOption>
+<CodeOption label="Exchange">
+
+| Label | Value |
+| --- | --- |
+| ID | <var>exchangeId</var> |
+| Exchange Name | <var>exchangeName</var> |
+| Impressions | <var>impressions</var> |
+| IVT Impressions | <var>ivtImpressions</var> |
+| Clicks | <var>clicks</var> |
+| IVT Clicks | <var>ivtClicks</var> |
+| CTR | <var>CTR</var> |
+| Win Rate | <var>winRate</var> |
+| VCR | <var>VCR</var> |
+| Total Advertiser Spent | <var>spent</var> |
+| Workspace Spent | <var>workspaceSpent</var> |
+| Platform Spent | <var>platformSpent</var> |
+| Pre-bid Cost | <var>prebidCost</var> |
+| Media eCPM | <var>eCPM</var> |
+
+</CodeOption>
+<CodeOption label="Campaign">
+
+| Label | Value |
+| --- | --- |
+| ID | <var>campaignId</var> |
+| Campaign Name | <var>campaignName</var> |
+| Insertion Order Name | <var>ioName</var> |
+| IO End Time | <var>ioEndTime</var> |
+| Status | <var>status</var> |
+| Creatives | <var>creativesCount</var> |
+| Time Zone | <var>campaignTimezone</var> |
+| Start Time | <var>startTime</var> |
+| End Time | <var>endTime</var> |
+| Optimization Method | <var>optimizationMethod</var> |
+| Bid Shading | <var>bidShading</var> |
+| Daily Budget | <var>budgetDayCombined</var> |
+| Total Budget | <var>budgetTotalCombined</var> |
+| Max Bid Price | <var>maxBid</var> |
+| Min Bid Price | <var>minBid</var> |
+| Bid Shading Saving | <var>organizationBidShadingSaving</var> |
+| Budget Completion | <var>percentageOfTotalSpent</var> |
+| Campaign Pacing | <var>pacingPercentage</var> |
+| Daily Pacing | <var>dailyPacingPercentage</var> |
+| Workspace Media Earnings | <var>workspaceMediaEarning</var> |
+| Total Workspace Earnings | <var>workspaceTotalEarning</var> |
+| Workspace PLD Insights Earnings | <var>workspacePLDInsightsEarnings</var> |
+| Workspace SLS Insights Earnings | <var>workspaceSLSInsightsEarnings</var> |
+| Workspace VLD Insights Earnings | <var>workspaceVLDInsightsEarnings</var> |
+| Workspace Bid Shading Earnings | <var>workspaceBidShadingEarning</var> |
+| Workspace AQ Insights Earnings | <var>workspaceAQInsightsEarnings</var> |
+| Platform Media Earnings | <var>platformMediaEarning</var> |
+| Total Platform Earnings | <var>platformTotalEarning</var> |
+| Platform PLD Insights Earnings | <var>platformPLDInsightsEarnings</var> |
+| Platform SLS Insights Earnings | <var>platformSLSInsightsEarnings</var> |
+| Platform VLD Insights Earnings | <var>platformVLDInsightsEarnings</var> |
+| Platform Bid Shading Earnings | <var>platformBidShadingEarning</var> |
+| Platform AQ Insights Earnings | <var>platformAQInsightsEarnings</var> |
+| Impressions | <var>impressions</var> |
+| IVT Impressions | <var>ivtImpressions</var> |
+| Clicks | <var>clicks</var> |
+| IVT Clicks | <var>ivtClicks</var> |
+| Reach | <var>reach</var> |
+| CTR | <var>CTR</var> |
+| Win Rate | <var>winRate</var> |
+| VCR | <var>VCR</var> |
+| Frequency | <var>frequency</var> |
+| Total Advertiser Spent | <var>spent</var> |
+| Ad Serving Cost | <var>adServingCost</var> |
+| Data Cost | <var>dataCost</var> |
+| Pre-bid Cost | <var>prebidCost</var> |
+| Media Cost | <var>mediaSpent</var> |
+| 3rd Party Cost | <var>thirdPartyCost</var> |
+| PLD Insights Cost | <var>pldInsightsCost</var> |
+| SLS Insights Cost | <var>slsInsightsCost</var> |
+| VLD Insights Cost | <var>vldInsightsCost</var> |
+| AQ Insights Cost | <var>aqInsightsCost</var> |
+| Workspace Spent | <var>workspaceSpent</var> |
+| Platform Spent | <var>platformSpent</var> |
+| Media eCPM | <var>eCPM</var> |
+| Total eCPM | <var>totalECPM</var> |
+| Media eCPC | <var>eCPC</var> |
+| Total eCPC | <var>totalECPC</var> |
+| CPCV | <var>eCPCV</var> |
+| Video Start | <var>startCount</var> |
+| Video 25% | <var>firstCount</var> |
+| Video 50% | <var>midCount</var> |
+| Video 75% | <var>thirdCount</var> |
+| Video 100% | <var>completeCount</var> |
+| Hours viewed | <var>audioVideoViewed</var> |
+| Attributed Conversions | <var>totalAttributedConversion</var> |
+| Attributed View Through Conversions | <var>totalAttributedViewThroughConversion</var> |
+| Attributed Click Through Conversions | <var>totalAttributedClickThroughConversion</var> |
+| Cost Per Attributed Conversion | <var>costPerAttributedConversion</var> |
+| Attributed Conversion Rate | <var>totalAttributedConversionRate</var> |
+| Budget Type | <var>budgetTypeId</var> |
+
+</CodeOption>
+<CodeOption label="IO">
+
+The IO report download doesn't publish a fixed column list. Use field keys from the IO report response, such as <var>ioName</var>, <var>impressions</var>, and <var>spent</var>.
+
+</CodeOption>
+</CodeDropdown>
+
+</details>
+
+<p /><details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`url` <br /><span class="type-text">string</span></td>
+<td>Temporary pre-signed URL to download the report file.</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request sample"
+{
+  "sort": {
+    "field": "impressions",
+    "order": "DESC"
+  },
+  "filters": {
+    "startTimeEpochMillis": 1773896400000,
+    "endTimeEpochMillis": 1773982799000,
+    "campaignStatusList": ["running"]
+  },
+  "downloadRequest": {
+    "columns": [
+      { "label": "ID", "value": "campaignId" },
+      { "label": "Campaign Name", "value": "campaignName" },
+      { "label": "Impressions", "value": "impressions" }
+    ],
+    "fileType": "csv",
+    "fileName": "campaign-report"
+  }
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "url": "https://example.com/download/campaign_report.csv"
+  }
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid sortBy value."
+    }
+  ]
+}
+```
+
+</div></div>
+
+---
+
 ### Metrics timeline
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v4/das/report/metrics-timeline" operationId="dashboard-report-metrics-timeline" />
@@ -4507,5 +4890,297 @@ Compare aggregated performance metrics between the current and previous time per
 
 </CodeOption>
 </CodeDropdown>
+
+</div></div>
+
+
+---
+
+### Get campaign metric details
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/metric-details" operationId="dashboard-metric-details" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get daily performance metrics for a campaign within a time range. Days are bucketed in the campaign's timezone.
+
+| Request schema | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns). |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, Unix epoch in milliseconds. |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, Unix epoch in milliseconds. Can't be earlier than <var>startTime</var>. |
+| `owIds` <br /><span class="type-text">array of integers</span> | Organization Workspace IDs to scope the results to. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`cumulativeEcpm` <br /><span class="type-text">number</span></td>
+<td>eCPM across the whole time range.</td>
+</tr>
+<tr>
+<td>`cumulativeEcpcv` <br /><span class="type-text">number</span></td>
+<td>eCPCV across the whole time range.</td>
+</tr>
+<tr>
+<td>`cumulativeEcpc` <br /><span class="type-text">number</span></td>
+<td>eCPC across the whole time range.</td>
+</tr>
+<tr>
+<td>`details` <br /><span class="type-text">array of objects</span></td>
+<td>Metrics for each day.</td>
+</tr>
+<tr>
+<td colSpan="2">
+  <details className="objectPropertiesDetails">
+  <summary>`details` object properties</summary>
+  <table className="objectProperties">
+  <tr>
+    <td>`timeStamp` <br /><span class="type-text">integer</span></td>
+    <td>Start of the day, Unix epoch in milliseconds.</td>
+  </tr>
+  <tr>
+    <td>`impressions` <br /><span class="type-text">integer</span></td>
+    <td>Impressions.</td>
+  </tr>
+  <tr>
+    <td>`clicks` <br /><span class="type-text">integer</span></td>
+    <td>Clicks.</td>
+  </tr>
+  <tr>
+    <td>`bids` <br /><span class="type-text">integer</span></td>
+    <td>Bids.</td>
+  </tr>
+  <tr>
+    <td>`winRate` <br /><span class="type-text">number</span></td>
+    <td>Percentage of bids won.</td>
+  </tr>
+  <tr>
+    <td>`ctr` <br /><span class="type-text">number</span></td>
+    <td>Click-through rate.</td>
+  </tr>
+  <tr>
+    <td>`vcr` <br /><span class="type-text">number</span></td>
+    <td>Video completion rate.</td>
+  </tr>
+  <tr>
+    <td>`ecpm` <br /><span class="type-text">number</span></td>
+    <td>Effective cost per thousand impressions.</td>
+  </tr>
+  <tr>
+    <td>`ecpc` <br /><span class="type-text">number</span></td>
+    <td>Effective cost per click.</td>
+  </tr>
+  <tr>
+    <td>`ecpcv` <br /><span class="type-text">number</span></td>
+    <td>Effective cost per completed view.</td>
+  </tr>
+  <tr>
+    <td>`startCount` <br /><span class="type-text">integer</span></td>
+    <td>Video starts.</td>
+  </tr>
+  <tr>
+    <td>`firstCount` <br /><span class="type-text">integer</span></td>
+    <td>Videos played to 25%.</td>
+  </tr>
+  <tr>
+    <td>`midCount` <br /><span class="type-text">integer</span></td>
+    <td>Videos played to 50%.</td>
+  </tr>
+  <tr>
+    <td>`thirdCount` <br /><span class="type-text">integer</span></td>
+    <td>Videos played to 75%.</td>
+  </tr>
+  <tr>
+    <td>`completeCount` <br /><span class="type-text">integer</span></td>
+    <td>Videos played to 100%.</td>
+  </tr>
+  </table>
+  </details>
+</td>
+<td></td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request sample"
+{
+  "campaignId": 582510,
+  "startTime": 1773888000000,
+  "endTime": 1774319999000,
+  "owIds": [201427]
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "cumulativeEcpm": 110,
+    "cumulativeEcpcv": 0,
+    "cumulativeEcpc": 0,
+    "details": [
+      {
+        "timeStamp": 1786579200000,
+        "impressions": 1,
+        "winRate": 100,
+        "vcr": 0,
+        "ctr": 0,
+        "ecpcv": 0,
+        "ecpc": 0,
+        "ecpm": 110,
+        "clicks": 0,
+        "startCount": 0,
+        "firstCount": 0,
+        "midCount": 0,
+        "thirdCount": 0,
+        "completeCount": 0,
+        "bids": 2012
+      }
+    ]
+  }
+}
+```
+
+</div></div>
+
+---
+
+### Get open exchange inventory deviation slabs
+
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/das/report/open-exchange-inventories/deviation-slabs" operationId="report-open-exchange-inventories-deviation-slabs" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Group a campaign's open exchange inventories by how far their performance on a metric deviates from the campaign's overall value. Deviation is the absolute difference between the inventory's metric and the campaign's metric, as a percentage of the campaign's metric. All four slabs are always returned: <var>5-10%</var>, <var>10-20%</var>, <var>20-40%</var>, and <var>40%+</var>.
+
+| Request schema | |
+| --- | --- |
+| `campaignId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Campaign ID](/guidelines/campaign-api#get-list-of-campaigns). |
+| `metric` <br /><span class="type-text">string</span> <span class="required-text">required</span> | Metric to evaluate: <var>vcr</var>, <var>ctr</var>, or <var>win_rate</var>. |
+| `startTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | Start time, Unix epoch in milliseconds. |
+| `endTime` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | End time, Unix epoch in milliseconds. Can't be earlier than <var>startTime</var>. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`deviationSlab` <br /><span class="type-text">string</span></td>
+<td>Deviation range.</td>
+</tr>
+<tr>
+<td>`inventoryCount` <br /><span class="type-text">integer</span></td>
+<td>Number of distinct inventories in the slab.</td>
+</tr>
+<tr>
+<td>`impressions` <br /><span class="type-text">integer</span></td>
+<td>Total impressions across inventories in the slab.</td>
+</tr>
+<tr>
+<td>`clicks` <br /><span class="type-text">integer</span></td>
+<td>Total clicks across inventories in the slab.</td>
+</tr>
+<tr>
+<td>`spend` <br /><span class="type-text">number</span></td>
+<td>Total spend across inventories in the slab.</td>
+</tr>
+<tr>
+<td>`videoStart` <br /><span class="type-text">integer</span></td>
+<td>Total video starts across inventories in the slab.</td>
+</tr>
+<tr>
+<td>`videoComplete` <br /><span class="type-text">integer</span></td>
+<td>Total video completions across inventories in the slab.</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+```json title="Request sample"
+{
+  "campaignId": 334740,
+  "metric": "vcr",
+  "startTime": 1773888000000,
+  "endTime": 1774319999000
+}
+```
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": [
+    {
+      "deviationSlab": "5-10%",
+      "inventoryCount": 42,
+      "impressions": 120000,
+      "clicks": 1500,
+      "spend": 3200.5,
+      "videoStart": 8000,
+      "videoComplete": 6500
+    },
+    {
+      "deviationSlab": "10-20%",
+      "inventoryCount": 18,
+      "impressions": 45000,
+      "clicks": 600,
+      "spend": 1100,
+      "videoStart": 3000,
+      "videoComplete": 2100
+    },
+    {
+      "deviationSlab": "20-40%",
+      "inventoryCount": 7,
+      "impressions": 12000,
+      "clicks": 100,
+      "spend": 280,
+      "videoStart": 900,
+      "videoComplete": 500
+    },
+    {
+      "deviationSlab": "40%+",
+      "inventoryCount": 2,
+      "impressions": 3000,
+      "clicks": 20,
+      "spend": 60,
+      "videoStart": 200,
+      "videoComplete": 80
+    }
+  ]
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Invalid metric. Accepted values: vcr, ctr, win_rate"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "startTime must not be after endTime."
+    }
+  ]
+}
+```
+
+</details>
 
 </div></div>
