@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Dashboard API Specification",
-    "version": "1.3.1",
+    "version": "2.1.0",
     "description": "IQM Dashboard API tools for ready-made performance views and operational monitoring. Use this specification for IQM dashboard management, delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. For custom, saved, or scheduled report definitions, use the Reports API instead.",
     "contact": {
       "name": "IQM Support",
@@ -5177,14 +5177,14 @@
         }
       }
     },
-    "/api/v3/das/static/campaign-pulse/categories": {
+    "/api/v3/das/static/ai-insights/categories": {
       "get": {
         "tags": [
           "MCP"
         ],
         "summary": "Get campaign pulse category list",
         "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns the static campaign pulse category metadata list with display name and order.",
-        "operationId": "dashboard-campaign-pulse-categories",
+        "operationId": "dashboard-ai-insights-categories",
         "parameters": [
           {
             "name": "Authorization",
@@ -5923,14 +5923,14 @@
         }
       }
     },
-    "/api/v3/das/campaign-pulse/severity-count": {
+    "/api/v3/das/ai-insights/severity-count": {
       "get": {
         "tags": [
           "MCP"
         ],
         "summary": "Get campaign pulse severity check counts",
         "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns the count of diagnosis checks grouped by severity for given campaign IDs.",
-        "operationId": "campaignPulseSeverityDetails",
+        "operationId": "aiInsightsSeverityDetails",
         "parameters": [
           {
             "name": "campaignIds",
@@ -6141,14 +6141,14 @@
         }
       }
     },
-    "/api/v3/das/campaign-pulse/result": {
+    "/api/v3/das/ai-insights/result": {
       "get": {
         "tags": [
           "MCP"
         ],
         "summary": "Get campaign pulse diagnosis results",
         "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns the latest campaign pulse run details and diagnosis checks for a given campaign ID.",
-        "operationId": "campaignPulseDetails",
+        "operationId": "aiInsightsDetails",
         "parameters": [
           {
             "name": "campaignId",
@@ -6239,6 +6239,354 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/das/metric-details": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get metric details",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports.\n\nGet daily metric details for one campaign over a time range: day-by-day impressions, clicks, bids, win rate, CTR, VCR, eCPM, eCPC, eCPCV and video quartile counts, plus cumulative eCPM, eCPC and eCPCV for the whole range.\n\n- `campaignId`, `startTime` and `endTime` are required; times are epoch milliseconds and `endTime` must not be before `startTime`.\n- Days are bucketed in the campaign's own timezone; any `timezone` sent in the request is ignored.\n- `owIds` optionally scopes the data to specific workspaces.",
+        "operationId": "dashboard-metric-details",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Campaign and time-range filters for metric details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricDetailsRequestVO"
+              },
+              "examples": {
+                "Metric details request": {
+                  "description": "Metric details request",
+                  "value": {
+                    "campaignId": 582510,
+                    "startTime": 1773888000000,
+                    "endTime": 1774319999000,
+                    "owIds": [
+                      201427
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricDetailsResponse"
+                },
+                "examples": {
+                  "Metric details response": {
+                    "description": "Metric details response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "cumulativeEcpm": 110,
+                        "cumulativeEcpcv": 0,
+                        "cumulativeEcpc": 0,
+                        "details": [
+                          {
+                            "timeStamp": 1786579200000,
+                            "impressions": 1,
+                            "winRate": 100,
+                            "vcr": 0,
+                            "ctr": 0,
+                            "ecpcv": 0,
+                            "ecpc": 0,
+                            "ecpm": 110,
+                            "clicks": 0,
+                            "startCount": 0,
+                            "firstCount": 0,
+                            "midCount": 0,
+                            "thirdCount": 0,
+                            "completeCount": 0,
+                            "bids": 2012
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/das/report/open-exchange-inventories/deviation-slabs": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get open-exchange inventories grouped by deviation slab",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports.\n\nGroup (bucket) a campaign's open exchange inventories into deviation slabs by how far each inventory's VCR, CTR or win rate differs from the campaign's overall value, with totals per slab.\n\n- Deviation = |inventory metric - campaign metric| / campaign metric x 100.\n- `metric` must be `vcr`, `ctr` or `win_rate`. `campaignId`, `startTime` and `endTime` (epoch milliseconds) are required, and `startTime` must not be after `endTime`.\n- All four slabs are always returned: 5-10%, 10-20%, 20-40% and 40%+. Each has the inventory count and total impressions, clicks, spend, video starts and video completes.",
+        "operationId": "report-open-exchange-inventories-deviation-slabs",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenExchangeGroupingRequestVO"
+              },
+              "examples": {
+                "VCR grouping": {
+                  "description": "VCR grouping",
+                  "value": {
+                    "campaignId": 334740,
+                    "metric": "vcr",
+                    "startTime": 1773888000000,
+                    "endTime": 1774319999000
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Grouping result",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Response": {
+                    "description": "Response",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "deviationSlab": "5-10%",
+                          "inventoryCount": 42,
+                          "impressions": 120000,
+                          "clicks": 1500,
+                          "spend": 3200.5,
+                          "videoStart": 8000,
+                          "videoComplete": 6500
+                        },
+                        {
+                          "deviationSlab": "10-20%",
+                          "inventoryCount": 18,
+                          "impressions": 45000,
+                          "clicks": 600,
+                          "spend": 1100,
+                          "videoStart": 3000,
+                          "videoComplete": 2100
+                        },
+                        {
+                          "deviationSlab": "20-40%",
+                          "inventoryCount": 7,
+                          "impressions": 12000,
+                          "clicks": 100,
+                          "spend": 280,
+                          "videoStart": 900,
+                          "videoComplete": 500
+                        },
+                        {
+                          "deviationSlab": "40%+",
+                          "inventoryCount": 2,
+                          "impressions": 3000,
+                          "clicks": 20,
+                          "spend": 60,
+                          "videoStart": 200,
+                          "videoComplete": 80
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Invalid metric, missing campaignId, startTime or endTime, or startTime after endTime",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid metric error": {
+                    "description": "Invalid metric error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid metric. Accepted values: vcr, ctr, win_rate"
+                        }
+                      ]
+                    }
+                  },
+                  "Missing campaignId error": {
+                    "description": "Missing campaignId error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "campaignId is required."
+                        }
+                      ]
+                    }
+                  },
+                  "Missing startTime error": {
+                    "description": "Missing startTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "startTime is required."
+                        }
+                      ]
+                    }
+                  },
+                  "Missing endTime error": {
+                    "description": "Missing endTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "endTime is required."
+                        }
+                      ]
+                    }
+                  },
+                  "startTime after endTime error": {
+                    "description": "startTime after endTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "startTime must not be after endTime."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -10294,6 +10642,181 @@
           }
         },
         "description": "Represents a single diagnosis check in the campaign pulse response."
+      },
+      "MetricDetailsRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Campaign ID. Required."
+          },
+          "startTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Start of the time range, epoch milliseconds. Required."
+          },
+          "endTime": {
+            "type": "integer",
+            "format": "int64",
+            "description": "End of the time range, epoch milliseconds. Required; must not be before startTime."
+          },
+          "owIds": {
+            "type": "array",
+            "description": "Optional organization workspace IDs used to scope the metric details.",
+            "example": [
+              201427
+            ],
+            "items": {
+              "type": "integer",
+              "description": "Optional organization workspace IDs used to scope the metric details.",
+              "format": "int32"
+            }
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Ignored: days are bucketed in the campaign's own timezone."
+          }
+        },
+        "required": [
+          "campaignId",
+          "startTime",
+          "endTime"
+        ]
+      },
+      "MetricDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "cumulativeEcpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "cumulativeEcpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "cumulativeEcpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailsVO"
+            }
+          }
+        }
+      },
+      "DetailsVO": {
+        "type": "object",
+        "properties": {
+          "timeStamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "impressions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "winRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "clicks": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "midCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "thirdCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completeCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bids": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "OpenExchangeGroupingRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID to scope the inventory data and baseline against",
+            "format": "int32",
+            "example": 334740
+          },
+          "metric": {
+            "type": "string",
+            "description": "Metric to evaluate. Accepted values: vcr, ctr, win_rate",
+            "example": "vcr"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start of the time window, epoch milliseconds",
+            "format": "int64",
+            "example": 1773888000000
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End of the time window, epoch milliseconds",
+            "format": "int64",
+            "example": 1774319999000
+          }
+        },
+        "description": "Request for grouping open-exchange inventories by metric deviation slab"
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
       }
     }
   }
