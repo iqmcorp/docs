@@ -935,9 +935,17 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/guidelines/audience-api/#refresh-matched-audience',
+              label: 'Approve or reject Matched audience',
+              href: '/guidelines/audience-api#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/guidelines/audience-api#rematch-audience',
               customProps: { method: 'PUT' },
+              className: 'sidebarItem'
             },
             {
               type: 'link',
@@ -1244,6 +1252,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience status list',
               href: '/guidelines/audience-api#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience failure reason list',
+              href: '/guidelines/audience-api#audience-failure-reason-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -2550,6 +2565,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Download dashboard report',
+              href: '/guidelines/dashboard-api#download-dashboard-report',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Metrics timeline',
               href: '/guidelines/dashboard-api#metrics-timeline',
               customProps: { method: 'POST' },
@@ -2559,6 +2581,20 @@ const sidebars = {
               type: 'link',
               label: 'Metrics comparison',
               href: '/guidelines/dashboard-api#metrics-comparison',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get campaign metric details',
+              href: '/guidelines/dashboard-api#get-campaign-metric-details',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get open exchange inventory deviation slabs',
+              href: '/guidelines/dashboard-api#get-open-exchange-inventory-deviation-slabs',
               customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
@@ -3132,20 +3168,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Get Matched audience details',
-              href: '/guidelines/insights-api#get-matched-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Matched audience file URL',
-              href: '/guidelines/insights-api#get-matched-audience-file-url',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Audience Insights report',
               href: '/guidelines/insights-api#create-audience-insights-report',
               customProps: { method: 'POST' },
@@ -3517,6 +3539,13 @@ const sidebars = {
               type: 'link',
               label: 'Get list of Insights status types',
               href: '/guidelines/insights-api#get-list-of-insights-status-types',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get list of report statuses',
+              href: '/guidelines/insights-api#get-list-of-report-statuses',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -3938,13 +3967,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Add Contextual inventory group for campaign',
-              href: '/guidelines/inventory-api#add-contextual-inventory-group-for-campaign',
-              customProps: { method: 'POST' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Validate inventory group',
               href: '/guidelines/inventory-api#validate-inventory-group',
               customProps: { method: 'POST' },
@@ -3999,6 +4021,20 @@ const sidebars = {
               href: '/guidelines/inventory-api#get-pmp-deal-details-by-ids',
               customProps: { method: 'GET' },
               className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Get inventories for a PMP deal',
+              href: '/guidelines/inventory-api#get-inventories-for-a-pmp-deal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Download inventories for a PMP deal',
+              href: '/guidelines/inventory-api#download-inventories-for-a-pmp-deal',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
             },
             {
               type: 'link',
@@ -4561,6 +4597,13 @@ const sidebars = {
               type: 'link',
               label: 'Proposal summary parameters list',
               href: '/guidelines/planner-api#proposal-summary-parameters-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Get plan count by type',
+              href: '/guidelines/planner-api#get-plan-count-by-type',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -6106,9 +6149,17 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/political-vertical/audience-segments#refresh-matched-audience',
+              label: 'Approve or reject Matched audience',
+              href: '/political-vertical/audience-segments#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+              className: 'sidebarItem',
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/political-vertical/audience-segments#rematch-audience',
               customProps: { method: 'PUT' },
+              className: 'sidebarItem',
             },
           ]
         },
@@ -6387,6 +6438,13 @@ const sidebars = {
               type: 'link',
               label: 'Audience status list',
               href: '/political-vertical/audience-segments#audience-status-list',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
+              label: 'Audience failure reason list',
+              href: '/political-vertical/audience-segments#audience-failure-reason-list',
               customProps: { method: 'GET' },
               className: 'sidebarItem'
             },
@@ -7176,8 +7234,14 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Refresh Matched audience',
-              href: '/healthcare-vertical/audience-healthcare#refresh-matched-audience',
+              label: 'Approve or reject Matched audience',
+              href: '/healthcare-vertical/audience-healthcare#approve-or-reject-matched-audience',
+              customProps: { method: 'POST' },
+            },
+            {
+              type: 'link',
+              label: 'Rematch audience',
+              href: '/healthcare-vertical/audience-healthcare#rematch-audience',
               customProps: { method: 'PUT' },
             },
             {
@@ -7198,12 +7262,6 @@ const sidebars = {
               type: 'link',
               label: 'ABM audience details',
               href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'ABM audience statistics',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
               customProps: { method: 'GET' },
             },
             {
@@ -7710,13 +7768,6 @@ const sidebars = {
                   },
                   {
                     type: 'link',
-                    label: 'Get list of accounts',
-                    href: '/healthcare-vertical/planner/#get-list-of-accounts',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  },
-                  {
-                    type: 'link',
                     label: 'Download HCP planner',
                     href: '/healthcare-vertical/planner/#download-hcp-planner',
                     customProps: { method: 'POST' },
@@ -7759,6 +7810,20 @@ const sidebars = {
                   },
                   {
                     type: 'link',
+                    label: 'Upload NPI list',
+                    href: '/healthcare-vertical/planner/#upload-npi-list',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Delete NPI list file',
+                    href: '/healthcare-vertical/planner/#delete-npi-list-file',
+                    customProps: { method: 'DEL' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
                     label: 'Get targeting graphs',
                     href: '/healthcare-vertical/planner/#get-targeting-graphs',
                     customProps: { method: 'POST' },
@@ -7775,6 +7840,13 @@ const sidebars = {
                     type: 'link',
                     label: 'Get audience summary',
                     href: '/healthcare-vertical/planner/#get-audience-summary',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get generated audiences',
+                    href: '/healthcare-vertical/planner/#get-generated-audiences',
                     customProps: { method: 'POST' },
                     className: 'sidebarItem',
                   },
@@ -7834,20 +7906,6 @@ const sidebars = {
                     customProps: { method: 'GET' },
                     className: 'sidebarItem',
                   },
-                  {
-                    type: 'link',
-                    label: 'Get specialties list',
-                    href: '/healthcare-vertical/planner/#get-specialties-list',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  },
-                  {
-                    type: 'link',
-                    label: 'Get account types',
-                    href: '/healthcare-vertical/planner/#get-account-types',
-                    customProps: { method: 'GET' },
-                    className: 'sidebarItem',
-                  }
               ]
             }          
           ]

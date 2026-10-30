@@ -5703,60 +5703,6 @@ Remove Contextual inventories from an inventory group.
 
 ---
 
-### Add Contextual inventory group for campaign
-
-<CopyUrl method="POST" url="https://api.iqm.com/api/v3/custom/inv/contextual/group/campaign/add" operationId="addInventoryGroupForCampaign" />
-
-<div class="endpoint-container">
-  <div class="child1">
-
-Creates a new Contextual inventory group from the provided keywords/URLs and returns its generated group id, for attaching to a campaign.
-
-| Request schema |  |
-| ---- | --- |
-| `groupName` <br /><span class="type-text">string</span> | Name for the Contextual inventory group. |
-| `keywords` <br /><span class="type-text">array of strings</span> | List of keywords to associate. |
-| `urls` <br /><span class="type-text">array of strings</span> | List of URLs to associate. |
-
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
-  <summary style={{ fontSize: "16px" }}>Response properties</summary>
-
-<table className="objectProperties">
-  <tr>
-  <td>`inventoryGroupId` <br /><span class="type-text">integer</span></td>
-  <td>ID of the newly created Contextual inventory group, for attaching to a campaign.</td>
-  </tr>
-  </table></details>
-
-</div><div class="child2">
-
-<Tabs>
-<TabItem value="JSON" label="JSON" default>
-
-```json title="Request sample"
-{
-    "groupName": "Sports Keywords Group",
-    "keywords": ["sports", "nfl", "basketball"],
-    "urls": ["https://www.espn.com/", "https://www.nfl.com/"]
-}
-```
-
-```json title="Response 200"
-{
-    "success": true,
-    "data": {
-        "inventoryGroupId": 170800
-    }
-}
-```
-
-</TabItem>
-</Tabs>
-
-</div></div>
-
----
-
 ### Validate inventory group
 
 <CopyUrl method="POST" url="https://api.iqm.com/api/v3/inv/group/validate" operationId="validateInventoryGroup" />
@@ -6418,6 +6364,177 @@ A PMP deal <var>id</var> can be used in the [Create a new inventory group](#crea
   }
 }
 ```
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Get inventories for a PMP deal
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/pmp/deals/{dealId}/inventories/list" operationId="getPMPDealInventoriesByDealId" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a paginated list of the inventories mapped to a PMP deal, with the deal's ID and name.
+
+| Path parameter |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [PMP deal ID](#get-pmp-deals-list): the deal's <var>id</var>, not its external <var>dealId</var>. |
+
+| Query parameters |  |
+| ---- | --- |
+| `pageNo` <br /><span class="type-text">integer</span> | Page number, default: <var>1</var>. |
+| `noOfEntries` <br /><span class="type-text">integer</span> | Inventories per page, default: <var>50</var>. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+<summary style={{ fontSize: "16px" }}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`dealId` <br /><span class="type-text">string</span></td>
+<td>External deal ID.</td>
+</tr>
+<tr>
+<td>`dealName` <br /><span class="type-text">string</span></td>
+<td>PMP deal name.</td>
+</tr>
+<tr>
+<td>`totalRecords` <br /><span class="type-text">integer</span></td>
+<td>Total number of inventories mapped to the deal.</td>
+</tr>
+<tr>
+<td>`filteredRecords` <br /><span class="type-text">integer</span></td>
+<td>Number of inventories after filtering.</td>
+</tr>
+<tr>
+<td>`inventoryList` <br /><span class="type-text">array of strings</span></td>
+<td>Inventories mapped to the deal, for the requested page.</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "dealId": "IQM-12345",
+    "dealName": "Sample PMP Deal",
+    "totalRecords": 1234,
+    "filteredRecords": 1234,
+    "inventoryList": [
+      "inv1",
+      "inv2",
+      "inv3"
+    ]
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to access the deals"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Download inventories for a PMP deal
+
+<CopyUrl method="GET" url="https://api.iqm.com/api/v3/inv/pmp/deals/{dealId}/inventories/download" operationId="downloadCSVForPMPDealInventoriesByDealId" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Get a URL to download a CSV file of all the inventories mapped to a PMP deal.
+
+| Path parameter |  |
+| ---- | --- |
+| `dealId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [PMP deal ID](#get-pmp-deals-list): the deal's <var>id</var>, not its external <var>dealId</var>. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
+<summary style={{ fontSize: "16px" }}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`fileUrl` <br /><span class="type-text">string</span></td>
+<td>URL of the CSV file.</td>
+</tr>
+</table>
+</details>
+
+</div><div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "fileUrl": "https://sample.csv"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "User is not allowed to access the deals"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "PMP deal id/s is/are invalid or not accessible for logged-in user"
+    }
+  ]
+}
+```
+
+</details>
 
 </TabItem>
 </Tabs>

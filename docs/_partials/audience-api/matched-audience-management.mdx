@@ -243,38 +243,30 @@ Update a Matched audience.
 
 ---
 
-### Refresh Matched audience
+### Approve or reject Matched audience
 
-<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}/rematch" operationId="rematchMatchedAudience" />
+<CopyUrl method="POST" url="https://api.iqm.com/api/v3/audience/matched/{audienceId}/approve" operationId="approveMatchedAudience" />
 
 <div class="endpoint-container">
   <div class="child1">
 
-Rematch/refresh an existing Matched audience's data. Rematching retriggers the audience matching process, updating the audience's <var>reach</var> and <var>matchRate</var> details. The audience must be eligible for rematch based on its status, last rematch time, and other criteria. 
-
-Refer to our [Help Center<ExternalLink />](https://help.iqm.com/en/articles/11535636-matched-audience-overview#h_0cc9c103cf) articles for more information.
-
-:::warning
-
-Rematching an audience and changing its reach can impact campaign performance. Exercise caution when rematching an active audience.
-
-:::
+Approve or reject a Matched audience that has a <var>Pending</var> status. Only Matched audiences of the Patient subtype can be approved or rejected, and only full-access users in the organization that owns the Audiences application can perform this action.
 
 | Path parameter | |
 | --- | --- |
-| `audienceId` <br /><span class="type-text">integer</span> | [Matched audience ID](/guidelines/audience-api/#audience-details-list) to be rematched. |
+| `audienceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Matched audience ID](/guidelines/audience-api/#audience-details-list). |
 
-<details className="objectPropertiesDetails" style={{ maxWidth: "800px", padding: "1rem" }}>
- <summary style={{ fontSize: "16px" }}>Response properties</summary>
+| Request schema | |
+| --- | --- |
+| `audienceStatusId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Audience status ID](/guidelines/audience-api/#audience-status-list): <var>3</var> to approve (Ready) or <var>4</var> to reject (Rejected). |
+| `rejectionReason` <br /><span class="type-text">string</span> | Reason for rejecting the audience. Required when <var>audienceStatusId</var> is <var>4</var>, and must not be provided when approving. |
 
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
 <table className="objectProperties">
 <tr>
-  <td>`audienceId` <br /><span class="type-text">integer</span></td>
-  <td>[Audience ID](/guidelines/audience-api#audience-details-list).</td>
-</tr>
-<tr>
-  <td>`message` <br /><span class="type-text">string</span></td>
-  <td>Success message.</td>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Success message.</td>
 </tr>
 </table>
 </details>
@@ -282,17 +274,121 @@ Rematching an audience and changing its reach can impact campaign performance. E
 </div>
 <div class="child2">
 
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Request sample: approve"
+{
+  "audienceStatusId": 3
+}
+```
+
+```json title="Request sample: reject"
+{
+  "audienceStatusId": 4,
+  "rejectionReason": "Insufficient data quality."
+}
+```
+
 ```json title="Response 200"
 {
   "success": true,
   "data": {
-    "audienceId": 1119083,
+    "message": "Changes saved successfully"
+  }
+}
+```
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem" }}>
+<summary style={{fontSize: "16px"}}>More responses</summary>
+
+```json title="Response 403"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Only application owner users with full access can update the audience status"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Only audiences in PENDING status can be approved/rejected"
+    }
+  ]
+}
+```
+
+```json title="Response 422"
+{
+  "success": false,
+  "errorObjects": [
+    {
+      "error": "Rejection reason must be provided when rejecting an audience",
+      "field": "rejectionReason"
+    }
+  ]
+}
+```
+
+</details>
+
+</TabItem>
+</Tabs>
+
+</div></div>
+
+---
+
+### Rematch audience
+
+<CopyUrl method="PUT" url="https://api.iqm.com/api/v3/audience/{audienceId}/rematch" operationId="rematchAudience" />
+
+<div class="endpoint-container">
+  <div class="child1">
+
+Rematch (refresh) an existing audience with the latest data. Supports Matched audiences and primary Integrated Care Team (ICT) audiences; extension ICT audiences aren't supported. The audience must be eligible for a rematch based on its status, when it was last rematched, and other criteria.
+
+| Path parameter | |
+| --- | --- |
+| `audienceId` <br /><span class="type-text">integer</span> <span class="required-text">required</span> | [Audience ID](/guidelines/audience-api/#audience-details-list) to rematch. |
+
+<details className="objectPropertiesDetails" style={{ maxWidth: "100%", padding: "1rem"}}>
+<summary style={{fontSize: "16px"}}>Response properties</summary>
+<table className="objectProperties">
+<tr>
+<td>`audienceId` <br /><span class="type-text">integer</span></td>
+<td>[Audience ID](/guidelines/audience-api/#audience-details-list) of the rematched audience.</td>
+</tr>
+<tr>
+<td>`message` <br /><span class="type-text">string</span></td>
+<td>Success message.</td>
+</tr>
+</table>
+</details>
+
+</div>
+<div class="child2">
+
+<Tabs>
+<TabItem value="JSON" label="JSON" default>
+
+```json title="Response 200"
+{
+  "success": true,
+  "data": {
+    "audienceId": 12345,
     "message": "Test audience rematched successfully via Re-Match"
   }
 }
 ```
 
-```json title="Error 422"
+```json title="Response 422"
 {
   "success": false,
   "errorObjects": [
@@ -303,6 +399,9 @@ Rematching an audience and changing its reach can impact campaign performance. E
   ]
 }
 ```
+
+</TabItem>
+</Tabs>
 
 </div></div>
 
