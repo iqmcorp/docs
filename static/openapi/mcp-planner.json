@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Planner API Specification",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "MCP Planner API Specification",
     "contact": {
       "name": "IQM Support",
@@ -5431,7 +5431,7 @@
           }
         ],
         "requestBody": {
-          "description": "Request body containing the planner name to validate",
+          "description": "Plan details to generate proposed campaigns from",
           "content": {
             "application/json": {
               "schema": {
@@ -14279,6 +14279,9 @@
         "description": "HCP location value object"
       },
       "HcpPlannerRequestVO": {
+        "required": [
+          "npiTypeIds"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -14399,11 +14402,15 @@
           },
           "npiTypeIds": {
             "type": "array",
-            "description": "List of NPI type IDs",
+            "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here\nis targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped\ninto campaigns.\n",
             "items": {
               "type": "integer",
-              "description": "List of NPI type IDs",
-              "format": "int32"
+              "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here\nis targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped\ninto campaigns.\n",
+              "format": "int32",
+              "enum": [
+                3,
+                4
+              ]
             }
           },
           "audienceBlocks": {
@@ -14804,6 +14811,10 @@
         "description": "Speciality value object representing selected specialties and whether all specialties are selected"
       },
       "SplitStrategyVO": {
+        "required": [
+          "splitDimensionTypeId",
+          "selectedValueIds"
+        ],
         "type": "object",
         "properties": {
           "splitDimensionTypeId": {
@@ -14814,7 +14825,7 @@
           },
           "selectedValueIds": {
             "type": "array",
-            "description": "List of selected value IDs for the split. Must exactly match the equivalent plan-level selection\nfor this dimension, or the request is rejected with \"Selected <dimension> IDs and split IDs do not\nmatch\": dimension 1 (creative) must equal planLevelTargeting.creativeTypes (all real creative type\nIDs when allCreativeTypesSelected is true, otherwise creativeTypeIds); dimension 2 (npi) must equal\nthe top-level npiTypeIds; dimension 3 (partner) must equal the set of dataPartners[].id across all\naudienceBlocks; dimension 4 (device) must equal planLevelTargeting.devices (all real device type IDs\nwhen allDeviceTypesSelected is true, otherwise deviceTypeIds); dimension 5 (audience type) must equal\nthe union of selectedAudienceTypeIds across audienceBlocks.\n",
+            "description": "List of value IDs to split into separate campaigns for this dimension. It controls how the targeted\nvalues are grouped into campaigns, not which values are targeted: each selected value gets its own\ncampaigns, and the plan-level values that are not selected are still targeted and grouped together\ninto one campaign. To exclude a value, remove it from the plan-level targeting (for example\nnpiTypeIds), not from the split. Dimension 1 (creative) must exactly match\nplanLevelTargeting.creativeTypes (all real creative type IDs when allCreativeTypesSelected is true,\notherwise creativeTypeIds). For the other dimensions the selected values must be a subset of the\nplan-level values: dimension 2 (npi) of the top-level npiTypeIds; dimension 3 (partner) of the set of\ndataPartners[].id across all audienceBlocks; dimension 4 (device) of planLevelTargeting.devices (all\nreal device type IDs when allDeviceTypesSelected is true, otherwise deviceTypeIds); dimension 5\n(audience type) of the union of selectedAudienceTypeIds across audienceBlocks. Otherwise the request\nis rejected with \"Selected <dimension> IDs and split IDs do not match.\"\n",
             "example": [
               101,
               102,
@@ -16328,20 +16339,26 @@
         }
       },
       "HcpTargetingRequestVO": {
+        "required": [
+          "npiTypeIds"
+        ],
         "type": "object",
         "properties": {
           "npiTypeIds": {
             "type": "array",
-            "description": "List of NPI type IDs to be included in the targeting criteria.",
+            "description": "List of NPI type IDs to be included in the targeting criteria. Allowed values: 3 (HCP), 4 (NPI Nurse).",
             "example": [
-              1,
-              2,
-              3
+              3,
+              4
             ],
             "items": {
               "type": "integer",
-              "description": "List of NPI type IDs to be included in the targeting criteria.",
-              "format": "int32"
+              "description": "List of NPI type IDs to be included in the targeting criteria. Allowed values: 3 (HCP), 4 (NPI Nurse).",
+              "format": "int32",
+              "enum": [
+                3,
+                4
+              ]
             }
           },
           "audienceBlocks": {
@@ -16564,6 +16581,9 @@
         }
       },
       "HCPPlannerGeneratedAudienceRequestVO": {
+        "required": [
+          "npiTypeIds"
+        ],
         "type": "object",
         "properties": {
           "planName": {
@@ -16580,15 +16600,19 @@
           },
           "npiTypeIds": {
             "type": "array",
-            "description": "List of NPI type IDs to be included",
+            "description": "List of NPI type IDs to be included. Allowed values: 3 (HCP), 4 (NPI Nurse).",
             "example": [
               3,
               4
             ],
             "items": {
               "type": "integer",
-              "description": "List of NPI type IDs to be included",
-              "format": "int32"
+              "description": "List of NPI type IDs to be included. Allowed values: 3 (HCP), 4 (NPI Nurse).",
+              "format": "int32",
+              "enum": [
+                3,
+                4
+              ]
             }
           },
           "sortBy": {
@@ -16709,19 +16733,26 @@
         "description": "Generated Audiences Data"
       },
       "AudienceGraphDataAPIRequestVO": {
+        "required": [
+          "npiTypeIds"
+        ],
         "type": "object",
         "properties": {
           "npiTypeIds": {
             "type": "array",
-            "description": "List of NPI type IDs to be included in the audience graph",
+            "description": "List of NPI type IDs to be included in the audience graph. Allowed values: 3 (HCP), 4 (NPI Nurse).",
             "example": [
               3,
               4
             ],
             "items": {
               "type": "integer",
-              "description": "List of NPI type IDs to be included in the audience graph",
-              "format": "int32"
+              "description": "List of NPI type IDs to be included in the audience graph. Allowed values: 3 (HCP), 4 (NPI Nurse).",
+              "format": "int32",
+              "enum": [
+                3,
+                4
+              ]
             }
           },
           "audienceBlock": {
