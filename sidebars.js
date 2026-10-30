@@ -3168,20 +3168,6 @@ const sidebars = {
             },
             {
               type: 'link',
-              label: 'Get Matched audience details',
-              href: '/guidelines/insights-api#get-matched-audience-details',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Get Matched audience file URL',
-              href: '/guidelines/insights-api#get-matched-audience-file-url',
-              customProps: { method: 'GET' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
               label: 'Create Audience Insights report',
               href: '/guidelines/insights-api#create-audience-insights-report',
               customProps: { method: 'POST' },
@@ -3977,13 +3963,6 @@ const sidebars = {
               label: 'Remove Contextual inventories from group',
               href: '/guidelines/inventory-api#remove-contextual-inventories-from-group',
               customProps: { method: 'DEL' },
-              className: 'sidebarItem'
-            },
-            {
-              type: 'link',
-              label: 'Add Contextual inventory group for campaign',
-              href: '/guidelines/inventory-api#add-contextual-inventory-group-for-campaign',
-              customProps: { method: 'POST' },
               className: 'sidebarItem'
             },
             {
@@ -7283,12 +7262,6 @@ const sidebars = {
               type: 'link',
               label: 'ABM audience details',
               href: '/healthcare-vertical/audience-healthcare#abm-audience-details',
-              customProps: { method: 'GET' },
-            },
-            {
-              type: 'link',
-              label: 'ABM audience statistics',
-              href: '/healthcare-vertical/audience-healthcare#abm-audience-statistics',
               customProps: { method: 'GET' },
             },
             {
