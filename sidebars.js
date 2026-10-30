@@ -4623,6 +4623,13 @@ const sidebars = {
             },
             {
               type: 'link',
+              label: 'Get plan count by type',
+              href: '/guidelines/planner-api#get-plan-count-by-type',
+              customProps: { method: 'GET' },
+              className: 'sidebarItem'
+            },
+            {
+              type: 'link',
               label: 'Get user access details',
               href: '/guidelines/planner-api#get-user-access-details',
               customProps: { method: 'GET' },
@@ -7830,6 +7837,20 @@ const sidebars = {
                   },
                   {
                     type: 'link',
+                    label: 'Upload NPI list',
+                    href: '/healthcare-vertical/planner/#upload-npi-list',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Delete NPI list file',
+                    href: '/healthcare-vertical/planner/#delete-npi-list-file',
+                    customProps: { method: 'DEL' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
                     label: 'Get targeting graphs',
                     href: '/healthcare-vertical/planner/#get-targeting-graphs',
                     customProps: { method: 'POST' },
@@ -7846,6 +7867,13 @@ const sidebars = {
                     type: 'link',
                     label: 'Get audience summary',
                     href: '/healthcare-vertical/planner/#get-audience-summary',
+                    customProps: { method: 'POST' },
+                    className: 'sidebarItem',
+                  },
+                  {
+                    type: 'link',
+                    label: 'Get generated audiences',
+                    href: '/healthcare-vertical/planner/#get-generated-audiences',
                     customProps: { method: 'POST' },
                     className: 'sidebarItem',
                   },
