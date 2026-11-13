@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Planner API Specification",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "description": "MCP Planner API Specification",
     "contact": {
       "name": "IQM Support",
@@ -449,7 +449,7 @@
           "MCP"
         ],
         "summary": "API to edit a political draft plan",
-        "description": "Updates an existing political plan in draft status. Name, details, and targeting are required.",
+        "description": "Updates a Political plan that is still in draft status. Only name and objectiveId are required, plus totalBudget greater than 0 when objectiveId is 1 (reach forecasting); details and targeting are optional but validated if present, as when saving a draft (createDraftPlan).",
         "operationId": "editDraftPlan",
         "parameters": [
           {
@@ -707,7 +707,7 @@
           "MCP"
         ],
         "summary": "API to edit plan for the HCP planner",
-        "description": "Validates user access, retrieves vertical type, and updates the existing HCP proposal with\nthe details in the request body. The request body's statusId must exactly equal the\nproposal's current database status, or the request is rejected -- see\nHcpPlannerRequestVO.statusId.\n",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nOptional step. Start from the getHcpPlanById response, before generateIOCampaigns_2.\n\nEdits (updates, changes) a saved HCP plan before it is published, starting from the plan's current details. Available only to healthcare-vertical customers.\n\nThe request body's statusId must equal the plan's current status, or the request is rejected (see the statusId field).\n",
         "operationId": "editProposal_1",
         "parameters": [
           {
@@ -1168,6 +1168,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1183,6 +1186,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1844,6 +1850,46 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "User does not have access to this proposal",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Forbidden": {
+                    "description": "Forbidden",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Requested proposal is not accessible for the user"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Proposal does not exist",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Not Found": {
+                    "description": "Not Found",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Requested proposal with id [id] does not exist"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2222,7 +2268,7 @@
           "MCP"
         ],
         "summary": "Endpoint to fetch the cross-screen planner graph response based on the request received from the client",
-        "description": "This endpoint provides cross-screen planner graph details,\nbased on the targeting and budgeting criteria provided in the input,\nthe graphs are venn-diagram and line graphs for linear and ctv based reach\n",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nVoter TV+ step 1. Send graphId and overview to createReadyPlan.\n\nGets the reach saturation graph (reach forecast) for a Voter TV+ plan's linear TV and CTV budget. Send the returned graphId and overview when saving the Voter TV+ plan.\n\nBased on the targeting and budget in the request, it returns a Venn diagram of linear TV and CTV reach and a reach saturation line graph for each.\n",
         "operationId": "getCrossScreenGraph",
         "parameters": [
           {
@@ -2687,7 +2733,7 @@
           "MCP"
         ],
         "summary": "API to activate a proposal and its proposed campaigns",
-        "description": "This API activates a proposal and all of its proposed campaigns by setting is_deleted = false. The caller provides a strategyId and the system looks up the linked proposal.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nStep 3. Next: getProposalDetailsById_1, then generateIOCampaigns_1.\n\nActivates the Political proposal, and its proposed campaigns, for a strategy (strategyId) or a Voter TV+ plan (planId). Next, review the proposal and generate its IO and campaigns.\n",
         "operationId": "activateProposal",
         "parameters": [
           {
@@ -2934,7 +2980,7 @@
           "MCP"
         ],
         "summary": "API to split an existing proposal",
-        "description": "Regenerates a cross-screen (Voter TV+, objectiveId 3) proposal's CTV campaigns by splitting\nits targeting across the given dimensions -- e.g. a separate CTV campaign per device or per\ncreative -- instead of a single combined campaign. Only applies to cross-screen proposals;\ncalling this on any other proposal type is not supported.\n",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nOptional Voter TV+ step. Run before generateIOCampaigns_1.\n\nSplits a Voter TV+ (cross-screen, objectiveId 3) proposal's CTV campaigns by the given targeting dimensions, for example one CTV campaign per device or per creative instead of a single combined campaign. Only cross-screen proposals are supported. Do this before generating the proposal's IO and campaigns.\n",
         "operationId": "splitProposal",
         "parameters": [
           {
@@ -3068,7 +3114,7 @@
           "MCP"
         ],
         "summary": "Generate IO and campaigns from a political proposal",
-        "description": "Converts a political proposal into an Insertion Order with draft campaigns. Updates the\nproposal, sets status to PROCESSING, and triggers async campaign generation.\n",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nFinal step. Check the result with getProposalDetailsById_1.\n\nConverts (publishes) a Political proposal into an insertion order (IO) and draft campaigns. The proposal's status is PROCESSING while the campaigns are generated in the background; get the proposal to check the result.\n",
         "operationId": "generateIOCampaigns_1",
         "parameters": [
           {
@@ -3168,7 +3214,7 @@
           "MCP"
         ],
         "summary": "API to create a political plan (ready)",
-        "description": "Creates a new political plan in ready status. Name, details, and targeting are required. The\nprovided targeting.creative/targeting.device selection is sent to an external strategy-generation\nservice (DSI), which computes viable strategies from real-time inventory/forecast data -- there is\nno fixed, enumerable list of valid creative/device combinations within this API itself. If DSI\nfinds no viable strategy for the given combination (even one where every individual ID is valid),\nthe request is rejected with \"No strategies meet your criteria. Edit the plan to explore more\noptions.\" rather than a field-specific validation error.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nStep 1. Next: getPoliticalStrategyListing, or activateProposal for a Voter TV+ plan.\n\nCreates (saves) a ready Political plan. Name, details (budget and flight dates), and targeting are required. IQM generates the plan's strategies. Next, list the plan's strategies, or for a Voter TV+ plan activate the plan directly by planId.\n\nStrategies come from an external strategy-generation service (DSI) that uses current inventory and forecast data, so there is no fixed list of valid creative and device combinations. If no strategy fits the selected targeting.creative and targeting.device, even when every ID is valid, the request is rejected with \"No strategies meet your criteria. Edit the plan to explore more options.\"\n",
         "operationId": "createReadyPlan",
         "parameters": [
           {
@@ -3417,7 +3463,7 @@
           "MCP"
         ],
         "summary": "API to create a political plan (draft)",
-        "description": "Creates a new political plan in draft status. Only name is required; all other fields are optional but validated if present.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nOptional. Save it with createReadyPlan before continuing.\n\nSaves an incomplete Political plan as a draft. Only name and objectiveId are required (an omitted objectiveId is sent as 0 and rejected), plus totalBudget greater than 0 when objectiveId is 1 (reach forecasting); other fields are optional but validated if present. Draft plans don't have strategies; save the plan as ready before continuing.\n",
         "operationId": "createDraftPlan",
         "parameters": [
           {
@@ -3666,7 +3712,7 @@
           "MCP"
         ],
         "summary": "API to generate custom strategies for an existing plan",
-        "description": "Generates custom strategies by calling the DSI API with the provided targeting and budget\nparameters, persists the resulting strategies/proposals/campaigns, and returns strategy summaries.\nNote: each returned summary's id is the DSI (external strategy-generation service)'s own\nidentifier for that strategy, not the real, persisted planner-api strategy ID -- passing this id\ndirectly to activateProposal's strategyId will fail with \"Strategy with strategy id X does not\nexist\". To get the real, usable strategy ID, call getPoliticalStrategyListing(planId) after this\ncompletes and use the id it returns instead.\n",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nOptional step. Get the new strategy's id from getPoliticalStrategyListing before activateProposal.\n\nGenerates an additional custom strategy for an existing Political plan from the targeting and budget in the request, and saves it with its proposal and campaigns.\n\nEach returned summary's id is the external strategy-generation service's (DSI) identifier, not the planner strategy ID. Using it as strategyId when activating a proposal (POST /proposals) fails with \"Strategy with strategy id X does not exist\". List the plan's strategies (GET /strategies?planId=...) afterwards and use the id from there.\n",
         "operationId": "generateCustomStrategies",
         "parameters": [
           {
@@ -4032,7 +4078,7 @@
           "MCP"
         ],
         "summary": "API to create CVA details",
-        "description": "This API creates a new Custom Voter Audience (CVA) detail record with segment IDs, state IDs, reach value, and an equation string.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nOptional first step. Send the CVA in the cva field of createReadyPlan.\n\nCreates a Custom Voter audience (CVA) for a Political plan from voter segment IDs, state IDs, a reach value, and a segment equation. Send it in the cva field when saving the plan.\n",
         "operationId": "createCvaDetails",
         "parameters": [
           {
@@ -4299,7 +4345,7 @@
           "MCP"
         ],
         "summary": "API to add a draft proposal for the HCP planner",
-        "description": "Validates user access, retrieves vertical type, and creates a draft proposal.",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nStep 2 (draft). Save it again with createProposal_1 before generateIOCampaigns_2.\n\nSaves an incomplete HCP plan in draft status. A draft must be saved again in ready status before it can be published. Available only to healthcare-vertical customers.\n",
         "operationId": "addDraftProposal_1",
         "parameters": [
           {
@@ -4620,7 +4666,7 @@
           "MCP"
         ],
         "summary": "API to create ready proposal for the HCP planner",
-        "description": "Validates user access, retrieves vertical type, and creates ready proposal.",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nStep 2. Send the generateHCPProposedCampaigns response. The returned id is the planId for getHcpPlanById, editProposal_1, and generateIOCampaigns_2.\n\nSaves (creates) an HCP plan in ready status, typically from the generated proposed campaigns. The returned id is the planId used to get, edit, and publish the plan. Available only to healthcare-vertical customers.\n",
         "operationId": "createProposal_1",
         "parameters": [
           {
@@ -5004,6 +5050,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5053,6 +5102,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5397,7 +5449,7 @@
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "This file\u2019s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
+                      "error": "This file’s NPI(s) contain non-numeric characters. Update the file and try again, or choose another file.",
                       "field": "npi"
                     }
                   ]
@@ -5414,7 +5466,7 @@
           "MCP"
         ],
         "summary": "This API primarily generates proposed campaigns for HCP based on the request parameters.",
-        "description": "This API contains the logic to split the campaigns based on the split strategy provided in the request. It also validates the vertical ID for healthcare and ensures that the user has the necessary permissions to access this functionality.Along, with that the accurate reach for each campaigns is fetched making it budget friendly",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nStep 1. Send the response to createProposal_1.\n\nGenerates (builds, forecasts) the proposed campaigns, budget, impressions, and reach for an HCP plan. Read-only: nothing is saved. The response can be sent as the request body to save the HCP plan.\n\nCampaigns are split by the split strategy in the request. Each campaign's reach is fetched and used to set default budgets, and campaigns are returned sorted by reach, highest first. If no campaigns are generated, budget and reach are returned as 0. Available only to healthcare-vertical customers.\n",
         "operationId": "generateHCPProposedCampaigns",
         "parameters": [
           {
@@ -5431,7 +5483,7 @@
           }
         ],
         "requestBody": {
-          "description": "Plan details to generate proposed campaigns from",
+          "description": "HCP plan details (budget, flight dates, NPI types, and audience blocks) to generate proposed campaigns from",
           "content": {
             "application/json": {
               "schema": {
@@ -6005,6 +6057,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -6020,6 +6075,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -6040,7 +6098,7 @@
           "MCP"
         ],
         "summary": "API to publish draft campaigns",
-        "description": "This API publishes draft campaigns for a given HCP plan. The actual campaigns in draft status are created using this API. ",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nFinal step. Check the result with getHcpPlanById.\n\nPublishes an HCP plan to create an insertion order (IO) and draft campaigns. It runs in the background; get the plan to check the result.\n\nPublishing edits the plan first, so the request body's statusId must equal the plan's current status (see the statusId field).\n",
         "operationId": "generateIOCampaigns_2",
         "parameters": [
           {
@@ -6948,6 +7006,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -6963,6 +7024,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7048,6 +7112,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7063,6 +7130,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7303,6 +7373,9 @@
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7417,6 +7490,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7432,6 +7508,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -7619,6 +7698,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8082,6 +8164,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8097,6 +8182,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8472,6 +8560,9 @@
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8568,6 +8659,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8583,6 +8677,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -8804,7 +8901,7 @@
           "MCP"
         ],
         "summary": "API to fetch political strategy listing",
-        "description": "This API retrieves a list of political strategies for a specific plan with comprehensive data including core attributes, campaign metrics, budgeting data, performance metrics, and targeting arrays.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nStep 2. Send the chosen strategy's id to activateProposal.\n\nLists the strategies generated for a Political plan, with each strategy's budget, campaign and performance metrics, and targeting. Choose one and send its id as strategyId to activate it into a proposal.\n",
         "operationId": "getPoliticalStrategyListing",
         "parameters": [
           {
@@ -9466,13 +9563,106 @@
         }
       }
     },
+    "/api/v3/plan/political/static/demographics": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "    Retrieve active demographics segment definitions including segment ID,\n    parent segment ID, and display name for cross-screen planning audience mapping service.\n",
+        "description": "    Fetch hierarchical demographics segments used in political planning workflows.\n    Returns immutable segment metadata (segmentId, parentSegmentId, displayName) filtered for active status,\n    enabling deterministic mapping of segmented audiences across multiple planner modules and\n    cross-screen targeting logic with consistent identifiers and versioning support.\n",
+        "operationId": "getDemographicsKeyData",
+        "parameters": [
+          {
+            "name": "parentIds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Demographics keys fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemographicsKeyListResponse"
+                },
+                "examples": {
+                  "Success response for Segment Keys": {
+                    "description": "Success response for Segment Keys",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "segmentId": 10,
+                          "name": "Age Group"
+                        },
+                        {
+                          "id": 2,
+                          "segmentId": 2,
+                          "name": "Income Range"
+                        }
+                      ]
+                    }
+                  },
+                  "Success response for Demographics Values": {
+                    "description": "Success response for Demographics Values",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 4,
+                          "segmentId": 10,
+                          "name": "65+",
+                          "parentId": 1,
+                          "reach": 5012322,
+                          "order": 1
+                        },
+                        {
+                          "id": 5,
+                          "segmentId": 20,
+                          "name": "100K+",
+                          "parentId": 2,
+                          "reach": 603242,
+                          "order": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/plan/political/proposal/{proposalId}": {
       "get": {
         "tags": [
           "MCP"
         ],
         "summary": "API to fetch proposal details by proposal ID",
-        "description": "This API retrieves the complete details of a political proposal including budgeting metrics, linear TV CPM, timezone info, whether new campaigns can still be generated for the proposal, and proposed campaigns with their budgeting and creative data.",
+        "description": "Political Planner routing: Use this IQM Planner API tool to create, plan, forecast, or publish a Political plan, strategy, or proposal for a political campaign, including Voter TV+ (cross-screen linear TV and CTV) plans. Typical order: createReadyPlan, getPoliticalStrategyListing, activateProposal, getProposalDetailsById_1, generateIOCampaigns_1. For Voter TV+: getCrossScreenGraph, createReadyPlan, activateProposal, optional splitProposal, generateIOCampaigns_1. Optional first step for a Custom Voter audience (CVA): createCvaDetails.\n\nStep 4. Use before generateIOCampaigns_1 and to check its result.\n\nGets a Political proposal's details and status: budget metrics, linear TV CPM, timezone, whether new campaigns can still be generated, and the proposed campaigns with their budget and creative data. Use it before generating the proposal's IO and campaigns, and to check that result.\n",
         "operationId": "getProposalDetailsById_1",
         "parameters": [
           {
@@ -11290,134 +11480,6 @@
         }
       }
     },
-    "/api/v3/plan/hcp/specialities": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "API for fetching specialities list",
-        "description": "This API fetches a list of all specialities. Sorted by the specified field and allows searching by name.",
-        "operationId": "specialitiesList",
-        "parameters": [
-          {
-            "name": "pageNo",
-            "in": "query",
-            "description": "Page number for the required data. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "noOfEntries",
-            "in": "query",
-            "description": "The maximum number of returned results per page. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          },
-          {
-            "name": "searchField",
-            "in": "query",
-            "description": "Search the result by provided keyword in the searchField.  Search by speciality name.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - name, id, createdOn",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "+displayName"
-            }
-          },
-          {
-            "name": "specialityIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          {
-            "name": "dataPartnerIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Specialities list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecialtiesListResponse"
-                },
-                "examples": {
-                  "Success response": {
-                    "description": "Success response",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "specialitiesList": [
-                          {
-                            "id": 40500003,
-                            "name": "Addiction Medicine",
-                            "displayName": "Addiction Medicine",
-                            "displayOrder": 3
-                          },
-                          {
-                            "id": 40500004,
-                            "name": "Addiction Medicine",
-                            "displayName": "Addiction Medicine",
-                            "displayOrder": 3
-                          }
-                        ],
-                        "totalRecords": 2,
-                        "filteredRecords": 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/api/v3/plan/hcp/plans": {
       "get": {
         "tags": [
@@ -11645,7 +11707,7 @@
           "MCP"
         ],
         "summary": "API to fetch HCP plan by ID",
-        "description": "This API retrieves a specific HCP plan based on the provided plan ID.",
+        "description": "HCP Planner routing: Use this IQM Planner API tool to create, save, edit, or publish a Healthcare Professional (HCP) plan that targets healthcare professionals by NPI (National Provider Identifier) type. Typical order: generateHCPProposedCampaigns, createProposal_1 (or addDraftProposal_1 for a draft), getHcpPlanById, optional editProposal_1, generateIOCampaigns_2.\n\nStep 3. Use before editProposal_1 or generateIOCampaigns_2, and to check the result of generateIOCampaigns_2.\n\nGets an HCP plan's details, status, and campaigns by planId. Use it before editing or publishing a plan, and to check the result of publishing. Available only to healthcare-vertical customers.\n",
         "operationId": "getHcpPlanById",
         "parameters": [
           {
@@ -11861,7 +11923,7 @@
                         "campaigns": [
                           {
                             "id": 1,
-                            "name": "Filter\u2011Block1\u2022Device1\u2022Creative1",
+                            "name": "Filter‑Block1•Device1•Creative1",
                             "startDate": 1732707706666,
                             "endDate": 1733312506666,
                             "budget": 16000,
@@ -11921,244 +11983,6 @@
             }
           }
         }
-      }
-    },
-    "/api/v3/plan/hcp/accounts": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "API for fetching accounts list",
-        "description": "This API fetches a list of all accounts. Sorted by the specified field and allows searching by name.",
-        "operationId": "accountsList",
-        "parameters": [
-          {
-            "name": "pageNo",
-            "in": "query",
-            "description": "Page number for the required data. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "noOfEntries",
-            "in": "query",
-            "description": "The maximum number of returned results per page. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          },
-          {
-            "name": "searchField",
-            "in": "query",
-            "description": "Search the result by provided keyword in the searchField.  Search by account name.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - name, id, createdOn",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "+displayName"
-            }
-          },
-          {
-            "name": "accountTypeIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          {
-            "name": "accountIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Accounts list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountsListResponse"
-                },
-                "examples": {
-                  "Success response": {
-                    "description": "Success response",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "accountsList": [
-                          {
-                            "id": 1,
-                            "name": "Account 1",
-                            "displayName": "Account 1",
-                            "displayOrder": 1,
-                            "accountTypeId": 1,
-                            "reach": 1000
-                          },
-                          {
-                            "id": 2,
-                            "name": "Account 2",
-                            "displayName": "Account 2",
-                            "displayOrder": 2,
-                            "accountTypeId": 1,
-                            "reach": 1000
-                          }
-                        ],
-                        "totalRecords": 2,
-                        "filteredRecords": 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/v3/plan/hcp/account-types": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "API for fetching account types list",
-        "description": "This API fetches a list of all account types. Sorted by the specified field and allows searching by name.",
-        "operationId": "accountTypesList",
-        "parameters": [
-          {
-            "name": "pageNo",
-            "in": "query",
-            "description": "Page number for the required data. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "noOfEntries",
-            "in": "query",
-            "description": "The maximum number of returned results per page. ",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          },
-          {
-            "name": "searchField",
-            "in": "query",
-            "description": "Search the result by provided keyword in the searchField.  Search by account type name.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "description": "Sort the result set by specific field. For ascending use plus(+) sign(ascii value '%2B') and for descending use minus(-) sign. Allowed values - name, id, createdOn",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "-reach"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Account types list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountTypeListResponse"
-                },
-                "examples": {
-                  "Success response": {
-                    "description": "Success response",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "accountTypesList": [
-                          {
-                            "id": 1,
-                            "name": "Individual",
-                            "displayName": "Individual",
-                            "displayOrder": 1,
-                            "accountCount": 1
-                          },
-                          {
-                            "id": 2,
-                            "name": "Organization",
-                            "displayName": "Organization",
-                            "displayOrder": 2,
-                            "accountCount": 1
-                          }
-                        ],
-                        "totalRecords": 2,
-                        "filteredRecords": 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/api/v3/plan/proposal": {
@@ -12227,6 +12051,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12242,6 +12069,9 @@
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12257,6 +12087,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12458,6 +12291,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12496,6 +12332,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12616,6 +12455,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -12623,99 +12465,6 @@
                       "error": "server encountered an error !"
                     }
                   ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/plan/political/static/demographics": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "    Retrieve active demographics segment definitions including segment ID,\n    parent segment ID, and display name for cross-screen planning audience mapping service.\n",
-        "description": "    Fetch hierarchical demographics segments used in political planning workflows.\n    Returns immutable segment metadata (segmentId, parentSegmentId, displayName) filtered for active status,\n    enabling deterministic mapping of segmented audiences across multiple planner modules and\n    cross-screen targeting logic with consistent identifiers and versioning support.\n",
-        "operationId": "getDemographicsKeyData",
-        "parameters": [
-          {
-            "name": "parentIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "uniqueItems": true,
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Demographics keys fetched successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DemographicsKeyListResponse"
-                },
-                "examples": {
-                  "Success response for Segment Keys": {
-                    "description": "Success response for Segment Keys",
-                    "value": {
-                      "success": true,
-                      "data": [
-                        {
-                          "id": 1,
-                          "segmentId": 10,
-                          "name": "Age Group"
-                        },
-                        {
-                          "id": 2,
-                          "segmentId": 2,
-                          "name": "Income Range"
-                        }
-                      ]
-                    }
-                  },
-                  "Success response for Demographics Values": {
-                    "description": "Success response for Demographics Values",
-                    "value": {
-                      "success": true,
-                      "data": [
-                        {
-                          "id": 4,
-                          "segmentId": 10,
-                          "name": "65+",
-                          "parentId": 1,
-                          "reach": 5012322,
-                          "order": 1
-                        },
-                        {
-                          "id": 5,
-                          "segmentId": 20,
-                          "name": "100K+",
-                          "parentId": 2,
-                          "reach": 603242,
-                          "order": 1
-                        }
-                      ]
-                    }
-                  }
                 }
               }
             }
@@ -13421,7 +13170,7 @@
             "description": "Whitelisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
             "items": {
               "type": "integer",
-              "description": "Whitelisted audience targeting criteria for the campaign plan",
+              "description": "Whitelisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
               "format": "int32"
             }
           },
@@ -13431,7 +13180,7 @@
             "description": "Blacklisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
             "items": {
               "type": "integer",
-              "description": "Blacklisted audience targeting criteria for the campaign plan",
+              "description": "Blacklisted audience targeting criteria for the campaign plan. Power Segment audiences (audienceTypeId 12) are supported, except when objectiveId is 3 (Voter TV+).",
               "format": "int32"
             }
           },
@@ -13745,7 +13494,7 @@
           },
           "equation": {
             "type": "string",
-            "description": "Equation representing the CVA logic, built from real segment IDs (from the Audience API / Master\nAPI, e.g. \"IQMCVACA069112\"). Segment IDs in parentheses separated by \"|\" are OR'd together;\ngroups of segments separated by \"&\" are AND'd together (intersection). See\nCreateCustomVoterAudienceRequest.equation for the endpoint that validates and resolves this.\n",
+            "description": "Equation representing the CVA logic, built from real segment IDs: the taxonomyId of each leaf\nsegment returned by the Audience API's getSegmentDetails operation (e.g. \"IQMCVACA069112\").\nSegment IDs in parentheses separated by \"|\" are OR'd together;\ngroups of segments separated by \"&\" are AND'd together (intersection). See\nCreateCustomVoterAudienceRequest.equation for the endpoint that validates and resolves this.\n",
             "example": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))"
           },
           "stateIds": {
@@ -13837,7 +13586,7 @@
           },
           "objectiveId": {
             "type": "integer",
-            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required on operations that validate against an already-persisted graph\n(PUT /plans/{id}, and transitioning a plan to Ready) -- omitting either is rejected with\n\"Graph details are required\" / \"Overview is required\". This does not apply to\nPOST /reach-saturation-graph (CrossScreenPlannerGraphController.getCrossScreenGraph), which\ngenerates the graph itself and is called before a graphId exists.\n",
+            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = Voter TV+ (full list: getPlanObjectiveTypes). When 3, graphId and overview are required when updating a plan (editPlan) or making it ready; omitting them returns \"Graph details are required\" or \"Overview is required\". getCrossScreenGraph, which creates the graph, doesn't need them.\n",
             "format": "int32",
             "example": 1
           },
@@ -14279,9 +14028,6 @@
         "description": "HCP location value object"
       },
       "HcpPlannerRequestVO": {
-        "required": [
-          "npiTypeIds"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -14396,16 +14142,16 @@
           },
           "statusId": {
             "type": "integer",
-            "description": "Status ID. On edit operations (PUT /proposal/{planId}) and on generateIOCampaigns_2\n(POST /campaigns/publish, which internally edits the proposal before publishing), this value\nmust exactly equal the proposal's CURRENT statusId in the database, or the request is rejected\nwith \"Proposal cannot be edited in its current status.\" -- even though the actual status may be\nperfectly editable. Fetch the current statusId via getHcpPlanById first and echo it back unchanged.\n",
+            "description": "Status ID. When editing (PUT /proposal/{planId}) or publishing (POST /campaigns/publish, which\nedits the plan first), it must equal the plan's current statusId, or the request is rejected with\n\"Proposal cannot be edited in its current status.\" even if the plan is editable. Get the plan\n(GET /plans/{planId}) and send its statusId back unchanged.\n",
             "format": "int32",
             "example": 1
           },
           "npiTypeIds": {
             "type": "array",
-            "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here\nis targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped\ninto campaigns.\n",
+            "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here is targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped into campaigns.",
             "items": {
               "type": "integer",
-              "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here\nis targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped\ninto campaigns.\n",
+              "description": "List of NPI type IDs to target. Allowed values: 3 (HCP), 4 (NPI Nurse). Every NPI type listed here is targeted and gets campaigns; the NPI split in splitStrategy only controls how they are grouped into campaigns.",
               "format": "int32",
               "enum": [
                 3,
@@ -14445,7 +14191,10 @@
             "example": 123
           }
         },
-        "description": "Request object for creating HCP planner"
+        "description": "Request object for creating HCP planner",
+        "required": [
+          "npiTypeIds"
+        ]
       },
       "HcpProposedCampaignVO": {
         "type": "object",
@@ -14811,10 +14560,6 @@
         "description": "Speciality value object representing selected specialties and whether all specialties are selected"
       },
       "SplitStrategyVO": {
-        "required": [
-          "splitDimensionTypeId",
-          "selectedValueIds"
-        ],
         "type": "object",
         "properties": {
           "splitDimensionTypeId": {
@@ -14833,12 +14578,16 @@
             ],
             "items": {
               "type": "integer",
-              "description": "List of selected value IDs for the split. Must exactly match the equivalent plan-level selection\nfor this dimension, or the request is rejected with \"Selected <dimension> IDs and split IDs do not\nmatch\": dimension 1 (creative) must equal planLevelTargeting.creativeTypes (all real creative type\nIDs when allCreativeTypesSelected is true, otherwise creativeTypeIds); dimension 2 (npi) must equal\nthe top-level npiTypeIds; dimension 3 (partner) must equal the set of dataPartners[].id across all\naudienceBlocks; dimension 4 (device) must equal planLevelTargeting.devices (all real device type IDs\nwhen allDeviceTypesSelected is true, otherwise deviceTypeIds); dimension 5 (audience type) must equal\nthe union of selectedAudienceTypeIds across audienceBlocks.\n",
+              "description": "List of value IDs to split into separate campaigns for this dimension. It controls how the targeted\nvalues are grouped into campaigns, not which values are targeted: each selected value gets its own\ncampaigns, and the plan-level values that are not selected are still targeted and grouped together\ninto one campaign. To exclude a value, remove it from the plan-level targeting (for example\nnpiTypeIds), not from the split. Dimension 1 (creative) must exactly match\nplanLevelTargeting.creativeTypes (all real creative type IDs when allCreativeTypesSelected is true,\notherwise creativeTypeIds). For the other dimensions the selected values must be a subset of the\nplan-level values: dimension 2 (npi) of the top-level npiTypeIds; dimension 3 (partner) of the set of\ndataPartners[].id across all audienceBlocks; dimension 4 (device) of planLevelTargeting.devices (all\nreal device type IDs when allDeviceTypesSelected is true, otherwise deviceTypeIds); dimension 5\n(audience type) of the union of selectedAudienceTypeIds across audienceBlocks. Otherwise the request\nis rejected with \"Selected <dimension> IDs and split IDs do not match.\"\n",
               "format": "int32"
             }
           }
         },
-        "description": "Split strategy value object representing the split dimension type and selected values"
+        "description": "Split strategy value object representing the split dimension type and selected values",
+        "required": [
+          "splitDimensionTypeId",
+          "selectedValueIds"
+        ]
       },
       "TitleVO": {
         "type": "object",
@@ -15945,7 +15694,7 @@
           },
           "objectiveId": {
             "type": "integer",
-            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = voter_tv+ (see\ngetPlanObjectiveTypes for the authoritative list). When set to 3, both graphId and overview\nbelow become required on operations that validate against an already-persisted graph\n(PUT /plans/{id}, and transitioning a plan to Ready) -- omitting either is rejected with\n\"Graph details are required\" / \"Overview is required\". This does not apply to\nPOST /reach-saturation-graph (CrossScreenPlannerGraphController.getCrossScreenGraph), which\ngenerates the graph itself and is called before a graphId exists.\n",
+            "description": "Plan objective ID: 1 = reach forecasting, 2 = budget estimation, 3 = Voter TV+ (full list: getPlanObjectiveTypes). When 3, graphId and overview are required when updating a plan (editPlan) or making it ready; omitting them returns \"Graph details are required\" or \"Overview is required\". getCrossScreenGraph, which creates the graph, doesn't need them.\n",
             "format": "int32",
             "example": 1
           },
@@ -16213,7 +15962,7 @@
           },
           "equation": {
             "type": "string",
-            "description": "Equation representing the custom voter audience logic, built from real segment IDs (from the\nAudience API / Master API, e.g. \"IQMCVACA069112\") -- placeholder-style IDs will fail validation.\nSegment IDs in parentheses separated by \"|\" are OR'd together (their sets are combined); groups\nof segments separated by \"&\" are AND'd together (built from the intersection of those groups).\nValidated live against the Audience API on submit -- an equation referencing segment IDs that\ndon't exist there fails with a generic \"Invalid CVA details provided\" 500.\n",
+            "description": "Equation representing the custom voter audience logic, built from real segment IDs: the\ntaxonomyId of each leaf segment returned by the Audience API's getSegmentDetails operation\n(e.g. \"IQMCVACA069112\") -- placeholder-style IDs will fail validation.\nSegment IDs in parentheses separated by \"|\" are OR'd together (their sets are combined); groups\nof segments separated by \"&\" are AND'd together (built from the intersection of those groups).\nValidated live against the Audience API on submit -- an equation referencing segment IDs that\ndon't exist there fails with a generic \"Invalid CVA details provided\" 500.\n",
             "example": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))"
           }
         },
@@ -16339,9 +16088,6 @@
         }
       },
       "HcpTargetingRequestVO": {
-        "required": [
-          "npiTypeIds"
-        ],
         "type": "object",
         "properties": {
           "npiTypeIds": {
@@ -16378,7 +16124,10 @@
             "example": 12345
           }
         },
-        "description": "Value object representing the request for HCP targeting, including NPI type IDs, audience blocks, plan level targeting, and OW ID."
+        "description": "Value object representing the request for HCP targeting, including NPI type IDs, audience blocks, plan level targeting, and OW ID.",
+        "required": [
+          "npiTypeIds"
+        ]
       },
       "ChannelBreakdownVO": {
         "type": "object",
@@ -16581,9 +16330,6 @@
         }
       },
       "HCPPlannerGeneratedAudienceRequestVO": {
-        "required": [
-          "npiTypeIds"
-        ],
         "type": "object",
         "properties": {
           "planName": {
@@ -16621,7 +16367,10 @@
             "example": "+dataPartner,-reach"
           }
         },
-        "description": "Request object for generating audiences for the HCP planner"
+        "description": "Request object for generating audiences for the HCP planner",
+        "required": [
+          "npiTypeIds"
+        ]
       },
       "AudienceResponseVO": {
         "type": "object",
@@ -16733,9 +16482,6 @@
         "description": "Generated Audiences Data"
       },
       "AudienceGraphDataAPIRequestVO": {
-        "required": [
-          "npiTypeIds"
-        ],
         "type": "object",
         "properties": {
           "npiTypeIds": {
@@ -16759,7 +16505,10 @@
             "$ref": "#/components/schemas/AudienceBlockVO"
           }
         },
-        "description": "Request object for fetching audience graph data"
+        "description": "Request object for fetching audience graph data",
+        "required": [
+          "npiTypeIds"
+        ]
       },
       "AccountReachVO": {
         "type": "object",
@@ -17407,7 +17156,7 @@
           },
           "equation": {
             "type": "string",
-            "description": "Equation representing the custom voter audience logic, built from real segment IDs (from the\nAudience API / Master API, e.g. \"IQMCVACA069112\") -- placeholder-style IDs will fail validation.\nSegment IDs in parentheses separated by \"|\" are OR'd together (their sets are combined); groups\nof segments separated by \"&\" are AND'd together (built from the intersection of those groups).\nValidated live against the Audience API on submit -- an equation referencing segment IDs that\ndon't exist there fails with a generic \"Invalid CVA details provided\" 500.\n",
+            "description": "Equation representing the custom voter audience logic, built from real segment IDs: the\ntaxonomyId of each leaf segment returned by the Audience API's getSegmentDetails operation\n(e.g. \"IQMCVACA069112\") -- placeholder-style IDs will fail validation.\nSegment IDs in parentheses separated by \"|\" are OR'd together (their sets are combined); groups\nof segments separated by \"&\" are AND'd together (built from the intersection of those groups).\nValidated live against the Audience API on submit -- an equation referencing segment IDs that\ndon't exist there fails with a generic \"Invalid CVA details provided\" 500.\n",
             "example": "((IQMCVACA069112|(IQMCVACA080323))&(IQMCVACA101616))"
           },
           "id": {
@@ -17487,20 +17236,25 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Unique identifier for the static item.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the static item (e.g., status, type).",
+            "nullable": true
           },
           "order": {
             "type": "integer",
+            "description": "The order or position of the item in the list, Useful for sorting purposes.",
             "format": "int32"
           },
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "A user-friendly label or display name for the static item, Typically used for UI representation."
           }
         },
-        "description": "List of specialities"
+        "description": "A Value Object representing a standardized response for static data APIs."
       },
       "ProposalListRecords": {
         "type": "object",
@@ -17596,9 +17350,8 @@
           },
           "timezoneId": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true,
             "description": "Timezone ID of the proposal. May be null; not currently populated by this endpoint.",
+            "format": "int32",
             "example": 29
           },
           "reach": {
@@ -18419,6 +18172,12 @@
             "format": "int64",
             "example": 1706745600000
           },
+          "timezoneId": {
+            "type": "integer",
+            "description": "Timezone ID associated with the political proposal",
+            "format": "int32",
+            "example": 1
+          },
           "reach": {
             "type": "integer",
             "description": "Estimated reach for the political proposal",
@@ -18818,7 +18577,7 @@
           },
           "equation": {
             "type": "string",
-            "description": "CVA equation used for the campaign plan, built from real segment IDs (from the Audience API /\nMaster API). Segment IDs in parentheses separated by \"|\" are OR'd together; groups of segments\nseparated by \"&\" are AND'd together (intersection).\n",
+            "description": "CVA equation used for the campaign plan, built from real segment IDs: the taxonomyId of each\nleaf segment returned by the Audience API's getSegmentDetails operation. Segment IDs in\nparentheses separated by \"|\" are OR'd together; groups of segments separated by \"&\" are AND'd\ntogether (intersection).\n",
             "example": "((IQMCVAAL017144|IQMCVAAL086142))"
           },
           "stateIds": {
@@ -18978,17 +18737,22 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Unique identifier for the static item.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the static item (e.g., status, type).",
+            "nullable": true
           },
           "order": {
             "type": "integer",
+            "description": "The order or position of the item in the list, Useful for sorting purposes.",
             "format": "int32"
           },
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "A user-friendly label or display name for the static item, Typically used for UI representation."
           },
           "dataCost": {
             "type": "number",
@@ -19003,48 +18767,6 @@
           }
         },
         "description": "Data partners response object for HCP planner"
-      },
-      "SpecialtiesListRecords": {
-        "type": "object",
-        "properties": {
-          "totalRecords": {
-            "type": "integer",
-            "description": "Total number of records",
-            "format": "int32",
-            "example": 120
-          },
-          "filteredRecords": {
-            "type": "integer",
-            "description": "Filtered number of records",
-            "format": "int32",
-            "example": 2
-          },
-          "specialitiesList": {
-            "type": "array",
-            "description": "List of specialities",
-            "items": {
-              "$ref": "#/components/schemas/StaticDataResponseVO"
-            }
-          }
-        },
-        "description": "Specialties List Records"
-      },
-      "SpecialtiesListResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/SpecialtiesListRecords"
-          }
-        }
       },
       "HcpPlannerListingResponseVO": {
         "type": "object",
@@ -19096,8 +18818,8 @@
           },
           "timezoneId": {
             "type": "integer",
-            "format": "int32",
             "description": "Timezone ID of the plan. See the timezone list in the Master API.",
+            "format": "int32",
             "example": 29
           },
           "reach": {
@@ -19204,145 +18926,6 @@
             "$ref": "#/components/schemas/HcpPlannerRequestVO"
           }
         }
-      },
-      "AccountsListRecords": {
-        "type": "object",
-        "properties": {
-          "totalRecords": {
-            "type": "integer",
-            "description": "Total number of records",
-            "format": "int32",
-            "example": 120
-          },
-          "filteredRecords": {
-            "type": "integer",
-            "description": "Filtered number of records",
-            "format": "int32",
-            "example": 2
-          },
-          "accountsList": {
-            "type": "array",
-            "description": "List of accounts",
-            "items": {
-              "$ref": "#/components/schemas/AccountsListingResponseVO"
-            }
-          }
-        },
-        "description": "Accounts List Records"
-      },
-      "AccountsListResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/AccountsListRecords"
-          }
-        }
-      },
-      "AccountsListingResponseVO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Unique identifier for the account",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the account"
-          },
-          "order": {
-            "type": "integer",
-            "description": "Order of the account in the listing",
-            "format": "int32"
-          },
-          "displayName": {
-            "type": "string",
-            "description": "Display name for the account"
-          },
-          "reach": {
-            "type": "integer",
-            "description": "Reach associated with the account",
-            "format": "int32"
-          }
-        },
-        "description": "Response object for accounts listing, containing account ID and reach."
-      },
-      "AccountTypeListRecords": {
-        "type": "object",
-        "properties": {
-          "totalRecords": {
-            "type": "integer",
-            "description": "Total number of records",
-            "format": "int32",
-            "example": 120
-          },
-          "filteredRecords": {
-            "type": "integer",
-            "description": "Filtered number of records",
-            "format": "int32",
-            "example": 2
-          },
-          "accountTypesList": {
-            "type": "array",
-            "description": "List of account types",
-            "items": {
-              "$ref": "#/components/schemas/AccountTypesListingResponseVO"
-            }
-          }
-        },
-        "description": "Account Type List Records"
-      },
-      "AccountTypeListResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/AccountTypeListRecords"
-          }
-        }
-      },
-      "AccountTypesListingResponseVO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "accountTypeReach": {
-            "type": "integer",
-            "description": "Reach associated with the account type",
-            "format": "int64",
-            "example": 5
-          }
-        },
-        "description": "Account types listing response"
       },
       "CommonResponseString": {
         "type": "object",

@@ -1,8 +1,8 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "OpenAPI definition",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "MCP Finance API Specification",
     "contact": {
       "name": "IQM Support",
@@ -36,22 +36,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -85,6 +83,20 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Payment added Successfully."
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
             "content": {
@@ -100,24 +112,13 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "Payment added Successfully."
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -137,30 +138,28 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API is used to get margin settings of the workspace",
-        "description": "This API can be used by workspace organization users to get margin related settings.\nFor example, workspace can view default margin which would be applied on newly onboarded advertiser.",
+        "summary": "Get your workspace's default margin for new advertisers",
+        "description": "Gets the default margin of your own workspace (from the session; there is no owId), which is applied to advertisers onboarded afterwards. It is not an existing advertiser's margin: for that, use getCustomerMargin (advertiser default) and getCampaignMarginList (campaign margins).",
         "operationId": "getMarginSettings",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -211,6 +210,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -228,30 +230,28 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API is used to update margin settings of the workspace",
-        "description": "This API can be used by workspace organization users to update margin related settings.\nFor example, workspace can set default margin and it will applied on newly onboarded advertiser.\n\n---\n\n\n**Request Body Details:**\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| marginTypeId | Integer | Margin type id. 1 - Gross margin. |\n| marginValue | Integer | Margin value. It should be between 1 to 99. |\n",
+        "summary": "Set your workspace's default margin for new advertisers",
+        "description": "Sets the default margin of your own workspace (from the session; there is no owId), which is applied to advertisers onboarded afterwards. It does not change existing advertisers or their campaigns: for one advertiser's margin and its campaign margins, use editCustomerMargin.\n",
         "operationId": "updateMarginSettings",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -340,6 +340,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -387,22 +390,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -425,6 +426,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -445,7 +449,7 @@
           "MCP"
         ],
         "summary": "Add or Update Third Party Cost",
-        "description": "This API allows Workspace (WS) organization users to add or update third-party cost details. The API supports the following scenarios: 1) A WS user setting or updating the default third-party cost for their own workspace, and 2) A WS user setting or updating the third-party cost for an advertiser under the same workspace. If the WS user is setting or updating the cost for self, the owId can be passed as null and will be derived from the logged-in user context. For advertiser-level cost configuration, owId must be provided explicitly. The API validates user access and organization type before processing the request. If a third-party cost already exists for the given owId, the existing cost will be updated; otherwise, a new third-party cost record will be created. Upon successful add or update, the customer configuration is refreshed in Redis and an activity log is generated accordingly.| owId | Integer | OW ID of the workspace or advertiser for which the cost is being added or updated (optional for WS self, required for advertiser). || cost | Double | Third-party cost value to be added or updated (required, range >0 and <=999). |",
+        "description": "This API allows Workspace (WS) organization users to add, update or disable third-party cost details for a workspace or an advertiser under the same workspace, and allows toggling whether an advertiser's third-party cost may be edited. Exactly one of isThirdPartyCostEnabled or isEditingThirdPartyCostEnabled must be provided per request: 1) isThirdPartyCostEnabled = true adds or updates the cost for the given owId (cost is required; owId may be omitted to target the WS user's own workspace). 2) isThirdPartyCostEnabled = false disables the existing third-party cost for the given owId. 3) isEditingThirdPartyCostEnabled enables or disables editing of an existing third-party cost configuration; owId must be an advertiser under the same workspace. Upon success, the customer configuration is refreshed in Redis and an activity log is generated accordingly.| owId | Integer | OW ID of the workspace or advertiser the request applies to (optional for WS self when adding/updating/disabling cost, required when updating the editing flag). || isThirdPartyCostEnabled | Boolean | true to add/update the cost, false to disable it. Mutually exclusive with isEditingThirdPartyCostEnabled. || isEditingThirdPartyCostEnabled | Boolean | true to enable, false to disable editing of the existing cost. Mutually exclusive with isThirdPartyCostEnabled. || cost | Double | Third-party cost value to be added or updated (required when isThirdPartyCostEnabled is true, range >0 and <=999). |",
         "operationId": "addThirdPartyCost",
         "requestBody": {
           "content": {
@@ -479,12 +483,9 @@
         },
         "responses": {
           "200": {
-            "description": "Third-party cost added or updated successfully.",
+            "description": "Third-party cost request processed successfully.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseMessage"
-                },
                 "example": {
                   "success": true,
                   "data": {
@@ -495,7 +496,7 @@
             }
           },
           "422": {
-            "description": "Invalid or inaccessible customer ow id passed.",
+            "description": "Invalid or inaccessible owId, missing/ambiguous action flags, or missing cost.",
             "content": {
               "application/json": {
                 "example": {
@@ -517,38 +518,14 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API is used to edit customer or bid shading margin details based on margin type id",
-        "description": "Edits customer or bid shading margin details based on the specified margin type ID. Updates the default margin and applies it to campaign-level margins.",
+        "summary": "Set an advertiser's margin and campaign margins",
+        "description": "Sets one advertiser's (customer organization workspace, `owId`) default gross or bid shading margin (marginTypeId, marginValue). Campaigns that follow the advertiser default get the new value. Optionally sets campaign-level margins: campaignMargins gives specific campaigns their own margin, and resetCampaignIds returns campaigns to the advertiser default. This does not change your workspace's default for newly onboarded advertisers (updateMarginSettings).",
         "operationId": "editCustomerMargin",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignMarginInternalRequestVO",
+                "$ref": "#/components/schemas/UpdateCustomerMarginRequestVO",
                 "required": [
                   "marginTypeId",
                   "marginValue",
@@ -575,20 +552,13 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -600,10 +570,23 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -615,17 +598,7 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api/v3/fa/customer/ad-serving-cost": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Add Ad Serving Cost",
-        "description": "This API allows super organization users to add ad serving costs for a specific customer. The API validates the user's access and updates the customer configuration accordingly.| owId              | Integer | Customer's ow id for whom the cost is being added (required). || imageCreativeCost | Double  | Ad serving cost for iqm hosted image creatives (required).    || videoCreativeCost | Double  | Ad serving cost for iqm hosted video creatives (required).    || audioCreativeCost | Double  | Ad serving cost for iqm hosted audio creatives (required).    || html5CreativeCost | Double  | Ad serving cost for iqm hosted html5 creatives (required).    |",
-        "operationId": "addAdServingCost",
+        },
         "parameters": [
           {
             "name": "Authorization",
@@ -647,6 +620,38 @@
               "type": "string",
               "format": "int64",
               "example": "1"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v3/fa/customer/ad-serving-cost": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Add Ad Serving Cost",
+        "description": "This API allows super organization users to add ad serving costs for a specific customer. The API validates the user's access and updates the customer configuration accordingly.| owId              | Integer | Customer's ow id for whom the cost is being added (required). || imageCreativeCost | Double  | Ad serving cost for iqm hosted image creatives (required).    || videoCreativeCost | Double  | Ad serving cost for iqm hosted video creatives (required).    || audioCreativeCost | Double  | Ad serving cost for iqm hosted audio creatives (required).    || html5CreativeCost | Double  | Ad serving cost for iqm hosted html5 creatives (required).    |",
+        "operationId": "addAdServingCost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -708,6 +713,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -755,22 +763,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -825,21 +831,6 @@
               }
             }
           },
-          "default": {
-            "description": "default response",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invoice with the provided ID does not exists"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "422": {
             "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
             "content": {
@@ -859,11 +850,29 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice with the provided ID does not exists"
                     }
                   ]
                 }
@@ -896,22 +905,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -932,6 +939,20 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Invoice with the provided ID rejected successfully"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
             "content": {
@@ -947,24 +968,13 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "Invoice with the provided ID rejected successfully"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1002,22 +1012,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1064,66 +1072,14 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/fa/customer/{customerOwId}/third-party-cost/disable": {
-      "patch": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Disable Third Party Cost",
-        "description": "This API allows Workspace (WS) organization users to disable an existing third-party cost configuration. The API supports the following scenarios: 1) A WS user disabling the default third-party cost configured for their own workspace, and 2) A WS user disabling the third-party cost configured for an advertiser under the same workspace. The customerOwId path parameter represents the workspace or advertiser for which the cost needs to be disabled. The API validates user access, workspace ownership, and ensures that a third-party cost configuration exists for the given customer before proceeding. If a valid configuration is found, the third-party cost is marked as inactive and cost is set as null in the database. Upon successful disablement, the updated configuration is refreshed in Redis and an activity log entry is generated accordingly.| customerOwId | Integer | OW ID of the workspace or advertiser for which the third-party cost is being disabled (required). |",
-        "operationId": "disableThirdPartyCost",
-        "parameters": [
-          {
-            "name": "customerOwId",
-            "in": "path",
-            "description": "Customer organization workspace ID",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Third-party cost disabled successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseMessage"
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "message": "3rd party cost disabled successfully."
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Invalid or inaccessible customer ow id passed.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "User is not allowed to access provided customer details."
                     }
                   ]
                 }
@@ -1156,22 +1112,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1211,6 +1165,16 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable entity",
             "content": {
@@ -1229,20 +1193,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1278,22 +1235,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1330,20 +1285,13 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1355,10 +1303,23 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1405,22 +1366,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1489,6 +1448,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1524,22 +1486,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1618,6 +1578,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1655,22 +1618,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1724,6 +1685,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1768,22 +1732,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1852,6 +1814,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1879,22 +1844,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1935,10 +1898,23 @@
               }
             }
           },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1949,9 +1925,6 @@
                 }
               }
             }
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -1964,30 +1937,6 @@
         "summary": "Payment Types",
         "description": "Returns the static list of available payment types.",
         "operationId": "getPaymentTypes",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -2026,6 +1975,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2037,17 +1989,7 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api/v3/fa/static/payment-status": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Payment Status",
-        "description": "Returns the static list of available payment statuses.",
-        "operationId": "getPaymentStatuses",
+        },
         "parameters": [
           {
             "name": "Authorization",
@@ -2071,7 +2013,17 @@
               "example": "1"
             }
           }
+        ]
+      }
+    },
+    "/api/v3/fa/static/payment-status": {
+      "get": {
+        "tags": [
+          "MCP"
         ],
+        "summary": "Payment Status",
+        "description": "Returns the static list of available payment statuses.",
+        "operationId": "getPaymentStatuses",
         "responses": {
           "200": {
             "description": "OK",
@@ -2116,6 +2068,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2127,17 +2082,7 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api/v3/fa/static/invoice-status": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Invoice Status",
-        "description": "Returns the static list of available invoice statuses.",
-        "operationId": "getInvoiceStatuses",
+        },
         "parameters": [
           {
             "name": "Authorization",
@@ -2161,7 +2106,17 @@
               "example": "1"
             }
           }
+        ]
+      }
+    },
+    "/api/v3/fa/static/invoice-status": {
+      "get": {
+        "tags": [
+          "MCP"
         ],
+        "summary": "Invoice Status",
+        "description": "Returns the static list of available invoice statuses.",
+        "operationId": "getInvoiceStatuses",
         "responses": {
           "200": {
             "description": "OK",
@@ -2224,6 +2179,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2235,17 +2193,7 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api/v3/fa/static/invoice-payment-terms": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Invoice Payment Term",
-        "description": "Returns the static list of available invoice payment terms.",
-        "operationId": "getPaymentTerms",
+        },
         "parameters": [
           {
             "name": "Authorization",
@@ -2269,7 +2217,17 @@
               "example": "1"
             }
           }
+        ]
+      }
+    },
+    "/api/v3/fa/static/invoice-payment-terms": {
+      "get": {
+        "tags": [
+          "MCP"
         ],
+        "summary": "Invoice Payment Term",
+        "description": "Returns the static list of available invoice payment terms.",
+        "operationId": "getPaymentTerms",
         "responses": {
           "200": {
             "description": "OK",
@@ -2308,6 +2266,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2319,17 +2280,7 @@
               }
             }
           }
-        }
-      }
-    },
-    "/api/v3/fa/static/invoice-payment-modes": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Invoice Payment Modes",
-        "description": "Returns the static list of available invoice payment modes.",
-        "operationId": "getPaymentModes",
+        },
         "parameters": [
           {
             "name": "Authorization",
@@ -2353,7 +2304,17 @@
               "example": "1"
             }
           }
+        ]
+      }
+    },
+    "/api/v3/fa/static/invoice-payment-modes": {
+      "get": {
+        "tags": [
+          "MCP"
         ],
+        "summary": "Invoice Payment Modes",
+        "description": "Returns the static list of available invoice payment modes.",
+        "operationId": "getPaymentModes",
         "responses": {
           "200": {
             "description": "OK",
@@ -2392,6 +2353,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2403,7 +2367,31 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ]
       }
     },
     "/api/v3/fa/invoice/list/{owId}": {
@@ -2504,26 +2492,34 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceListResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
             "content": {
@@ -2539,20 +2535,13 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceListResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2572,8 +2561,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Get Invoice Template Margin Details",
-        "description": "Retrieves invoice template and margin configuration status for the specified organization workspace IDs.",
+        "summary": "Check whether advertisers have an invoice template and margin set",
+        "description": "For the given advertiser organization workspace IDs (`owIds`), returns whether an invoice template and a margin are configured. Status only, not margin values: for an advertiser's margin, use getCustomerMargin.",
         "operationId": "getInvoiceTemplateMarginDetails",
         "parameters": [
           {
@@ -2635,22 +2624,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2688,6 +2675,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2715,22 +2705,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2769,6 +2757,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2807,41 +2798,24 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": "default response",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invoice with the provided ID does not exists"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -2894,11 +2868,29 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
                       "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invoice with the provided ID does not exists"
                     }
                   ]
                 }
@@ -2939,30 +2931,36 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "server encountered an error !"
+                      "error": "Forbidden !"
                     }
                   ]
                 }
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
                     {
-                      "error": "Forbidden !"
+                      "error": "server encountered an error !"
                     }
                   ]
                 }
@@ -2995,22 +2993,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3061,6 +3057,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3080,8 +3079,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "This API will provide customer margin details",
-        "description": "Fetches customer margin details including gross margin and bid shading margin for a given customer organization workspace.",
+        "summary": "Get an advertiser's margin",
+        "description": "Gets one advertiser's (customer organization workspace, `owId`) default gross margin and bid shading margin. The advertiser's campaigns use this margin unless a campaign has its own (see getCampaignMarginList). Your workspace's default for newly onboarded advertisers is a separate setting: getMarginSettings.",
         "operationId": "getCustomerMargin",
         "parameters": [
           {
@@ -3152,6 +3151,16 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable entity",
             "content": {
@@ -3170,20 +3179,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3244,22 +3246,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3292,6 +3292,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3311,8 +3314,8 @@
         "tags": [
           "MCP"
         ],
-        "summary": "Get campaign wise margin list",
-        "description": "Provides a paginated list of campaign-wise margin details for a given customer. Supports search filtering and edit/non-edit view modes.",
+        "summary": "List an advertiser's campaign margins",
+        "description": "Lists one advertiser's (customer organization workspace, `owId`) campaigns with their margins; isDefault shows whether a campaign follows the advertiser default or has its own margin. Paginated, with search; isEdit switches between the edit and view modes. To change campaign margins, use editCustomerMargin (campaignMargins, resetCampaignIds).",
         "operationId": "getCampaignMarginList",
         "parameters": [
           {
@@ -3374,22 +3377,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3426,6 +3427,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3448,30 +3452,6 @@
         "summary": "Get Basic Finance Details",
         "description": "Returns basic finance configuration details such as PayPal fees percentage.",
         "operationId": "getBasicDetails",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -3507,7 +3487,31 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            }
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "example": "1"
+            }
+          }
+        ]
       }
     },
     "/api/v3/fa/available-balance": {
@@ -3545,22 +3549,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3583,6 +3585,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3621,26 +3626,38 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "example": {
+                  "success": true,
+                  "data": "Tax data deleted successfully"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity (WebDAV) (RFC 4918)",
             "content": {
@@ -3656,24 +3673,13 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponseString"
-                },
-                "example": {
-                  "success": true,
-                  "data": "Tax data deleted successfully"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3691,6 +3697,53 @@
   },
   "components": {
     "schemas": {
+      "CommonResponseString": {
+        "type": "object",
+        "description": "Common response with data as message",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates successful response",
+            "example": true
+          },
+          "data": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Operation completed successfully"
+          }
+        }
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        }
+      },
       "PayInvoiceMultipartRequest": {
         "type": "object",
         "description": "Multipart form payload for the pay-invoice endpoint",
@@ -3753,22 +3806,6 @@
           }
         }
       },
-      "CommonResponseString": {
-        "type": "object",
-        "description": "Common response with data as message",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "description": "Indicates successful response",
-            "example": true
-          },
-          "data": {
-            "type": "string",
-            "description": "Success message",
-            "example": "Operation completed successfully"
-          }
-        }
-      },
       "MarginDetailRequest": {
         "type": "object",
         "properties": {
@@ -3779,37 +3816,6 @@
           "marginValue": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "CommonResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "type": "object"
-          }
-        }
-      },
-      "ErrorObject": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string"
-          },
-          "reason": {
-            "type": "string"
-          },
-          "field": {
-            "type": "string"
           }
         }
       },
@@ -3830,6 +3836,49 @@
         "required": [
           "cost"
         ]
+      },
+      "UpdateCampaignMarginRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "campaignMargin": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateCustomerMarginRequestVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "marginTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "marginValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "campaignMargins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateCampaignMarginRequestVO"
+            }
+          },
+          "resetCampaignIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
       },
       "CommonResponseMessage": {
         "type": "object",
@@ -3854,33 +3903,6 @@
             "type": "string",
             "description": "Success message",
             "example": "Operation completed successfully"
-          }
-        }
-      },
-      "UpdateCampaignMarginInternalRequestVO": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "campaignId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "workspaceMargin": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "organizationMargin": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "marginTypeId": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -3982,6 +4004,35 @@
           "routing": {
             "type": "string"
           },
+          "companyTaxId": {
+            "type": "string"
+          },
+          "companyTaxName": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taxType": {
+            "type": "string"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "InvoiceTaxDetailVO": {
+        "type": "object",
+        "properties": {
+          "taxCharges": {
+            "type": "number",
+            "format": "double"
+          },
+          "currencyFormattedTaxCharges": {
+            "type": "string"
+          },
           "taxId": {
             "type": "integer",
             "format": "int32"
@@ -3993,11 +4044,9 @@
             "type": "number",
             "format": "double"
           },
-          "companyTaxId": {
-            "type": "string"
-          },
-          "companyTaxName": {
-            "type": "string"
+          "invoiceId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4590,33 +4639,6 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
-          }
-        }
-      },
-      "InvoiceTaxDetailVO": {
-        "type": "object",
-        "properties": {
-          "taxCharges": {
-            "type": "number",
-            "format": "double"
-          },
-          "currencyFormattedTaxCharges": {
-            "type": "string"
-          },
-          "taxId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "taxType": {
-            "type": "string"
-          },
-          "taxRate": {
-            "type": "number",
-            "format": "double"
-          },
-          "invoiceId": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },

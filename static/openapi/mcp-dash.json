@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Dashboard API Specification",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "IQM Dashboard API tools for ready-made performance views and operational monitoring. Use this specification for IQM dashboard management, delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. For custom, saved, or scheduled report definitions, use the Reports API instead.",
     "contact": {
       "name": "IQM Support",
@@ -43,26 +43,24 @@
             }
           },
           {
-            "name": "Authorization",
+            "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "example": "{{bearer_token}}"
+              "example": "1",
+              "format": "int64"
             }
           },
           {
-            "name": "X-IAA-OW-ID",
+            "name": "Authorization",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Authorization Bearer Token",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           }
         ],
         "requestBody": {
@@ -201,6 +199,24 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
@@ -221,25 +237,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -260,29 +264,27 @@
           "MCP"
         ],
         "summary": "Get campaign performance metrics over time (graph)",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns time-bucketed data points representing campaign performance over the requested date range.\n\n**Output-point count by range**\n- 1\u201311 days (hourly): always **24 points** \u2014 hourly slots are merged so that each output point covers an equal number of hours.\n- 12\u201324 days (daily): **one point per day** \u2014 no merging, output count equals the number of calendar days.\n- 25\u2013360 days (daily): **\u2264 24 points** \u2014 consecutive days are merged into buckets using the smallest factor that keeps the output count \u2264 24.\n    - Example: if the range is 44 days, the system will merge days into 2-day buckets to produce 22 output points.\n    - If the range is 75 days, it will use 4-day buckets to produce 19 output points.\n- > 360 days (daily): same as above, with the first N buckets absorbing one extra day each to distribute the remainder evenly.\n- Missing time slots (no DB data for a slot) are gap-filled with zero-value data points so the response always covers the full requested range.\n\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns time-bucketed data points representing campaign performance over the requested date range.\n\n**Output-point count by range**\n- 1–11 days (hourly): always **24 points** — hourly slots are merged so that each output point covers an equal number of hours.\n- 12–24 days (daily): **one point per day** — no merging, output count equals the number of calendar days.\n- 25–360 days (daily): **≤ 24 points** — consecutive days are merged into buckets using the smallest factor that keeps the output count ≤ 24.\n    - Example: if the range is 44 days, the system will merge days into 2-day buckets to produce 22 output points.\n    - If the range is 75 days, it will use 4-day buckets to produce 19 output points.\n- > 360 days (daily): same as above, with the first N buckets absorbing one extra day each to distribute the remainder evenly.\n- Missing time slots (no DB data for a slot) are gap-filled with zero-value data points so the response always covers the full requested range.\n\n",
         "operationId": "dashboard-report-metrics-timeline",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -336,36 +338,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "Successful graph data response.",
             "content": {
@@ -427,10 +399,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -451,29 +462,27 @@
           "MCP"
         ],
         "summary": "Compare aggregated campaign metrics between two periods",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns aggregated performance metrics for the selected date range (current period)\nand for the immediately preceding period of the exact same duration (previous period).\n\nComparison logic:\n- If the selected range is 1 day, response compares \"today vs yesterday\".\n- If the selected range is 7 days, response compares \"this 7\u2011day period vs previous 7\u2011day period\".\n- In general, previous period = [startTimeEpochMillis - duration, startTimeEpochMillis),\n  where duration = endTimeEpochMillis - startTimeEpochMillis.\n\nThe API supports rich filtering on campaigns, creatives, IOs, verticals, statuses and owners.\nData is fetched from reporting.tblr_campaigns and is filtered partition\u2011first on ow_id and ts_epoch_hourly.\n\n**Ownership rules and owIds behaviour**\n- If filters.owIds is provided, it is validated against the logged\u2011in user's ownership configuration.\n- If filters.owIds is omitted or empty, the system will automatically expand it to:\n  (a) all customer OW IDs the user is allowed to see, plus\n  (b) the logged\u2011in user's own OW ID.\n- For app / workspace owners, if after validation there are no effective OW IDs,\n  the API returns a successful response with all metrics set to 0 for both periods.\n\n**Validation rules**\n- filters: mandatory object.\n- filters.startTimeEpochMillis: required, must be < endTimeEpochMillis.\n- filters.endTimeEpochMillis: required, must be > startTimeEpochMillis.\n- dimension: required, must be one of the supported values of DashboardDimension\n  (e.g. CAMPAIGN, IO, CUSTOMER, WORKSPACE, EXCHANGE). Any other value results\n  in HTTP 422 with an appropriate error message.\n\n**Search behaviour (searchField)**\n- When dimension = CAMPAIGN, the free\u2011text search is applied on campaign fields\n\n**Response semantics**\n- data.current: metrics aggregated over [startTimeEpochMillis, endTimeEpochMillis).\n- data.previous: metrics aggregated over the immediately preceding window of the same duration.\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Returns aggregated performance metrics for the selected date range (current period)\nand for the immediately preceding period of the exact same duration (previous period).\n\nComparison logic:\n- If the selected range is 1 day, response compares \"today vs yesterday\".\n- If the selected range is 7 days, response compares \"this 7‑day period vs previous 7‑day period\".\n- In general, previous period = [startTimeEpochMillis - duration, startTimeEpochMillis),\n  where duration = endTimeEpochMillis - startTimeEpochMillis.\n\nThe API supports rich filtering on campaigns, creatives, IOs, verticals, statuses and owners.\nData is fetched from reporting.tblr_campaigns and is filtered partition‑first on ow_id and ts_epoch_hourly.\n\n**Ownership rules and owIds behaviour**\n- If filters.owIds is provided, it is validated against the logged‑in user's ownership configuration.\n- If filters.owIds is omitted or empty, the system will automatically expand it to:\n  (a) all customer OW IDs the user is allowed to see, plus\n  (b) the logged‑in user's own OW ID.\n- For app / workspace owners, if after validation there are no effective OW IDs,\n  the API returns a successful response with all metrics set to 0 for both periods.\n\n**Validation rules**\n- filters: mandatory object.\n- filters.startTimeEpochMillis: required, must be < endTimeEpochMillis.\n- filters.endTimeEpochMillis: required, must be > startTimeEpochMillis.\n- dimension: required, must be one of the supported values of DashboardDimension\n  (e.g. CAMPAIGN, IO, CUSTOMER, WORKSPACE, EXCHANGE). Any other value results\n  in HTTP 422 with an appropriate error message.\n\n**Search behaviour (searchField)**\n- When dimension = CAMPAIGN, the free‑text search is applied on campaign fields\n\n**Response semantics**\n- data.current: metrics aggregated over [startTimeEpochMillis, endTimeEpochMillis).\n- data.previous: metrics aggregated over the immediately preceding window of the same duration.\n",
         "operationId": "dashboard-report-metrics-comparison",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -487,7 +496,7 @@
               "examples": {
                 "Single day, campaign dimension, minimal filters": {
                   "summary": "Today vs yesterday for a single campaign",
-                  "description": "Compares metrics for one campaign for a 1\u2011day window against the previous day.",
+                  "description": "Compares metrics for one campaign for a 1‑day window against the previous day.",
                   "value": {
                     "filters": {
                       "startTimeEpochMillis": 1773719999000,
@@ -499,9 +508,9 @@
                     "dimension": "CAMPAIGN"
                   }
                 },
-                "Seven\u2011day range with rich filters": {
-                  "summary": "Week\u2011over\u2011week comparison for multiple campaigns and owners",
-                  "description": "Compares a 7\u2011day period vs the previous 7\u2011day period with campaign, status and owner filters.",
+                "Seven‑day range with rich filters": {
+                  "summary": "Week‑over‑week comparison for multiple campaigns and owners",
+                  "description": "Compares a 7‑day period vs the previous 7‑day period with campaign, status and owner filters.",
                   "value": {
                     "filters": {
                       "startTimeEpochMillis": 1773633600000,
@@ -564,21 +573,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "Successful metrics comparison.",
             "content": {
@@ -587,9 +581,9 @@
                   "$ref": "#/components/schemas/MetricsComparisonResponse"
                 },
                 "examples": {
-                  "Successful response with non\u2011zero metrics": {
+                  "Successful response with non‑zero metrics": {
                     "summary": "Today vs yesterday example",
-                    "description": "Successful response with non\u2011zero metrics",
+                    "description": "Successful response with non‑zero metrics",
                     "value": {
                       "success": true,
                       "data": {
@@ -617,7 +611,7 @@
                     }
                   },
                   "Empty metrics for app/workspace owner with no accessible OW IDs": {
-                    "summary": "All\u2011zero metrics when user has no effective ownership scope",
+                    "summary": "All‑zero metrics when user has no effective ownership scope",
                     "description": "Empty metrics for app/workspace owner with no accessible OW IDs",
                     "value": {
                       "success": true,
@@ -649,10 +643,31 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -673,29 +688,27 @@
           "MCP"
         ],
         "summary": "Get campaign performance report grouped by workspace (v4).",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Fetches aggregated campaign performance metrics grouped by workspace owner (owId). Only Super IQM users are authorised. When owIds is empty the API auto-populates all customer owIds of the logged-in super user. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types. startTimeEpochMillis, endTimeEpochMillis, requestType, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Fetches aggregated campaign performance metrics grouped by workspace owner (owId). Only Super IQM users are authorised. When owIds is empty the API auto-populates all customer owIds of the logged-in super user. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response. requestType is optional and defaults to AGGREGATED when omitted.\n",
         "operationId": "v4-dashboard-get-report-by-workspace",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -792,36 +805,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -1042,10 +1025,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1066,29 +1088,27 @@
           "MCP"
         ],
         "summary": "Download workspace report based on filters",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a workspace-level campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint to export workspace-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Supported column fields and labels:**\n| Label | Field Value |\n|-------|-------------|\n| ID | workspaceId |\n| Workspace Name | workspaceName |\n| Insertion Order Name | ioName |\n| Daily Budget | budgetDay |\n| Total Budget | budgetTotal |\n| Bid Shading Saving | organizationBidShadingSaving |\n| Workspace Media Earnings | workspaceMediaEarning |\n| Total Workspace Earnings | workspaceTotalEarning |\n| Workspace PLD Insights Earnings | workspacePLDInsightsEarnings |\n| Workspace SLS Insights Earnings | workspaceSLSInsightsEarnings |\n| Workspace VLD Insights Earnings | workspaceVLDInsightsEarnings |\n| Workspace Bid Shading Earnings | workspaceBidShadingEarning |\n| Workspace AQ Insights Earnings | workspaceAQInsightsEarnings |\n| Platform Media Earnings | platformMediaEarning |\n| Total Platform Earnings | platformTotalEarning |\n| Platform PLD Insights Earnings | platformPLDInsightsEarnings |\n| Platform SLS Insights Earnings | platformSLSInsightsEarnings |\n| Platform VLD Insights Earnings | platformVLDInsightsEarnings |\n| Platform Bid Shading Earnings | platformBidShadingEarning |\n| Platform AQ Insights Earnings | platformAQInsightsEarnings |\n| Impressions | impressions |\n| Clicks | clicks |\n| CTR | CTR |\n| Win Rate | winRate |\n| VCR | VCR |\n| Total Advertiser Spent | spent |\n| Ad Serving Cost | adServingCost |\n| Data Cost | dataCost |\n| Pre-bid Cost | prebidCost |\n| Media Cost | mediaSpent |\n| 3rd Party Cost | thirdPartyCost |\n| PLD Insights Cost | pldInsightsCost |\n| SLS Insights Cost | slsInsightsCost |\n| VLD Insights Cost | vldInsightsCost |\n| AQ Insights Cost | aqInsightsCost |\n| Workspace Spent | workspaceSpent |\n| Platform Spent | platformSpent |\n| Attributed Conversions | totalAttributedConversion |\n| Attributed View Through Conversions | totalAttributedViewThroughConversion |\n| Attributed Click Through Conversions | totalAttributedClickThroughConversion |\n| Cost Per Attributed Conversion | costPerAttributedConversion |\n| Attributed Conversion Rate | totalAttributedConversionRate |\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a workspace-level campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint to export workspace-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
         "operationId": "dashboard-report-by-workspace-download",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1292,36 +1312,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -1340,10 +1330,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1364,29 +1393,27 @@
           "MCP"
         ],
         "summary": "Get IO (Insertion-Order) level performance report data (v4).",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches IO (Insertion-Order) level aggregated performance report data including core metrics, pacing, reach/frequency, insights earnings and conversions as per the given filters in the request body. It supports pagination and sorting on supported columns. startTimeEpochMillis, endTimeEpochMillis, requestType, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches IO (Insertion-Order) level aggregated performance report data including core metrics, pacing, reach/frequency, insights earnings and conversions as per the given filters in the request body. It supports pagination and sorting on supported columns.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response. requestType is optional and defaults to AGGREGATED when omitted.\n",
         "operationId": "v4-dashboard-report-by-io",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -1500,21 +1527,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -1845,10 +1857,31 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1864,6 +1897,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -1884,29 +1920,27 @@
           "MCP"
         ],
         "summary": "Download IO (Insertion-Order) level performance report (v4).",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API generates and uploads an IO level performance report file (xlsx/csv) based on the given filters and columns, and returns a pre-signed S3 download URL. startTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API generates and uploads an IO level performance report file (xlsx/csv) based on the given filters and columns, and returns a pre-signed S3 download URL.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
         "operationId": "v4-dashboard-report-by-io-download",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2114,36 +2148,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -2162,10 +2166,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2186,29 +2229,27 @@
           "MCP"
         ],
         "summary": "Get campaign performance report grouped by exchange.",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches campaign performance aggregated metrics grouped by exchange as per the given filters in the request body. Only Super IQM users are authorised to access exchange-level reports. It supports pagination and sorting on supported columns. startTimeEpochMillis, endTimeEpochMillis, requestType, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches campaign performance aggregated metrics grouped by exchange as per the given filters in the request body. Only Super IQM users are authorised to access exchange-level reports. It supports pagination and sorting on supported columns.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response. requestType is optional and defaults to AGGREGATED when omitted.\n",
         "operationId": "v4-dashboard-get-report-by-exchange",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2440,6 +2481,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2455,6 +2499,9 @@
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2470,6 +2517,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2490,29 +2540,27 @@
           "MCP"
         ],
         "summary": "Download campaign performance report grouped by exchange.",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a campaign performance report grouped by exchange in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint when you need to export exchange-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Supported column fields and labels:**\n| Label | Field Value |\n|-------|-------------|\n| ID | exchangeId |\n| Exchange Name | exchangeName |\n| Impressions | impressions |\n| IVT Impressions | ivtImpressions |\n| Clicks | clicks |\n| IVT Clicks | ivtClicks |\n| CTR | CTR |\n| Win Rate | winRate |\n| VCR | VCR |\n| Total Advertiser Spent | spent |\n| Workspace Spent | workspaceSpent |\n| Platform Spent | platformSpent |\n| Pre-bid Cost | prebidCost |\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a campaign performance report grouped by exchange in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint when you need to export exchange-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
         "operationId": "v4-dashboard-download-report-by-exchange",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2602,36 +2650,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -2650,10 +2668,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -2674,29 +2731,27 @@
           "MCP"
         ],
         "summary": "Get campaign performance report grouped by customer/advertiser (v4).",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Fetches aggregated campaign performance metrics grouped by advertiser owId. Accessible by workspace owners and Super IQM users. Last-level advertisers (who have no sub-customers) receive a 403 Forbidden response. When owIds is empty the API auto-populates all child (advertiser-level) owIds of the logged-in user. Workspace-level owIds supplied in the request are silently dropped \u2014 only advertiser (leaf) owIds are used for aggregation. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types. startTimeEpochMillis, endTimeEpochMillis, requestType, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Fetches aggregated campaign performance metrics grouped by advertiser owId. Accessible by workspace owners and Super IQM users. Last-level advertisers (who have no sub-customers) receive a 403 Forbidden response. When owIds is empty the API auto-populates all child (advertiser-level) owIds of the logged-in user. Workspace-level owIds supplied in the request are silently dropped — only advertiser (leaf) owIds are used for aggregation. Supports AGGREGATED, AGGREGATED_LIST, and AGGREGATED_TOTAL request types.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response. requestType is optional and defaults to AGGREGATED when omitted.\n",
         "operationId": "v4-dashboard-get-report-by-customer",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -2795,36 +2850,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -3049,10 +3074,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3073,29 +3137,27 @@
           "MCP"
         ],
         "summary": "Download customer/advertiser report based on filters",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a customer (advertiser)-level campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint to export advertiser-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n- Only workspace owners and Super IQM users can access this endpoint. Last-level advertisers (who have no sub-customers) will receive a 403 Forbidden response.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Supported column fields and labels:**\n| Label | Field Value |\n|-------|-------------|\n| ID | owId |\n| Advertiser Name | organizationName |\n| Total Budget | budgetTotal |\n| Daily Budget | budgetDay |\n| Bid Shading Saving | organizationBidShadingSaving |\n| Impressions | impressions |\n| Clicks | clicks |\n| CTR | CTR |\n| Win Rate | winRate |\n| VCR | VCR |\n| Data Cost | dataCost |\n| Pre-bid Cost | prebidCost |\n| Media Cost | mediaSpent |\n| 3rd Party Cost | thirdPartyCost |\n| PLD Insights Cost | pldInsightsCost |\n| SLS Insights Cost | slsInsightsCost |\n| AQ Insights Cost | aqInsightsCost |\n| VLD Insights Cost | vldInsightsCost |\n| Total Advertiser Spent | spent |\n| Workspace Spent | workspaceSpent |\n| Platform Spent | platformSpent |\n| Ad Serving Cost | adServingCost |\n| Platform Media Earnings | platformMediaEarning |\n| Total Platform Earnings | platformTotalEarning |\n| Platform PLD Insights Earnings | platformPLDInsightsEarnings |\n| Platform SLS Insights Earnings | platformSLSInsightsEarnings |\n| Platform AQ Insights Earnings | platformAQInsightsEarnings |\n| Platform VLD Insights Earnings | platformVLDInsightsEarnings |\n| Platform Bid Shading Earnings | platformBidShadingEarning |\n| Total Workspace Earnings | workspaceTotalEarning |\n| Workspace PLD Insights Earnings | workspacePLDInsightsEarnings |\n| Workspace SLS Insights Earnings | workspaceSLSInsightsEarnings |\n| Workspace AQ Insights Earnings | workspaceAQInsightsEarnings |\n| Workspace VLD Insights Earnings | workspaceVLDInsightsEarnings |\n| Workspace Bid Shading Earnings | workspaceBidShadingEarning |\n| Workspace Media Earnings | workspaceMediaEarning |\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a customer (advertiser)-level campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint to export advertiser-level campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n- Only workspace owners and Super IQM users can access this endpoint. Last-level advertisers (who have no sub-customers) will receive a 403 Forbidden response.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
         "operationId": "dashboard-report-by-customer-download",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3285,36 +3347,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -3333,10 +3365,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -3357,29 +3428,27 @@
           "MCP"
         ],
         "summary": "Get campaign performance report grouped by campaign.",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches campaign performance aggregated metrics for each campaign as per the given filters in the request body. It supports pagination and sorting on supported columns. startTimeEpochMillis, endTimeEpochMillis, requestType, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API fetches campaign performance aggregated metrics for each campaign as per the given filters in the request body. It supports pagination and sorting on supported columns.\n\nstartTimeEpochMillis, endTimeEpochMillis, and filters are required, and the requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response. requestType is optional and defaults to AGGREGATED when omitted.\n",
         "operationId": "dashboard-report-by-campaign-v2",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -3533,36 +3602,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Invalid sortBy value."
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -4298,10 +4337,49 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Invalid sortBy value."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -4322,29 +4400,27 @@
           "MCP"
         ],
         "summary": "Download campaign report based on filters",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint when you need to export campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Supported column fields and labels:**\n| Label | Field Value |\n|-------|-------------|\n| ID | campaignId |\n| Campaign Name | campaignName |\n| Insertion Order Name | ioName |\n| IO End Time | ioEndTime |\n| Status | status |\n| Creatives | creativesCount |\n| Time Zone | campaignTimezone |\n| Start Time | startTime |\n| End Time | endTime |\n| Optimization Method | optimizationMethod |\n| Bid Shading | bidShading |\n| Daily Budget | budgetDayCombined |\n| Total Budget | budgetTotalCombined |\n| Max Bid Price | maxBid |\n| Min Bid Price | minBid |\n| Bid Shading Saving | organizationBidShadingSaving |\n| Budget Completion | percentageOfTotalSpent |\n| Campaign Pacing | pacingPercentage |\n| Daily Pacing | dailyPacingPercentage |\n| Workspace Media Earnings | workspaceMediaEarning |\n| Total Workspace Earnings | workspaceTotalEarning |\n| Workspace PLD Insights Earnings | workspacePLDInsightsEarnings |\n| Workspace SLS Insights Earnings | workspaceSLSInsightsEarnings |\n| Workspace VLD Insights Earnings | workspaceVLDInsightsEarnings |\n| Workspace Bid Shading Earnings | workspaceBidShadingEarning |\n| Workspace AQ Insights Earnings | workspaceAQInsightsEarnings |\n| Platform Media Earnings | platformMediaEarning |\n| Total Platform Earnings | platformTotalEarning |\n| Platform PLD Insights Earnings | platformPLDInsightsEarnings |\n| Platform SLS Insights Earnings | platformSLSInsightsEarnings |\n| Platform VLD Insights Earnings | platformVLDInsightsEarnings |\n| Platform Bid Shading Earnings | platformBidShadingEarning |\n| Platform AQ Insights Earnings | platformAQInsightsEarnings |\n| Impressions | impressions |\n| IVT Impressions | ivtImpressions |\n| Clicks | clicks |\n| IVT Clicks | ivtClicks |\n| Reach | reach |\n| CTR | CTR |\n| Win Rate | winRate |\n| VCR | VCR |\n| Frequency | frequency |\n| Total Advertiser Spent | spent |\n| Ad Serving Cost | adServingCost |\n| Data Cost | dataCost |\n| Pre-bid Cost | prebidCost |\n| Media Cost | mediaSpent |\n| 3rd Party Cost | thirdPartyCost |\n| PLD Insights Cost | pldInsightsCost |\n| SLS Insights Cost | slsInsightsCost |\n| VLD Insights Cost | vldInsightsCost |\n| AQ Insights Cost | aqInsightsCost |\n| Workspace Spent | workspaceSpent |\n| Platform Spent | platformSpent |\n| Media eCPM | eCPM |\n| Total eCPM | totalECPM |\n| Media eCPC | eCPC |\n| Total eCPC | totalECPC |\n| CPCV | eCPCV |\n| Video Start | startCount |\n| Video 25% | firstCount |\n| Video 50% | midCount |\n| Video 75% | thirdCount |\n| Video 100% | completeCount |\n| Hours viewed | audioVideoViewed |\n| Attributed Conversions | totalAttributedConversion |\n| Attributed View Through Conversions | totalAttributedViewThroughConversion |\n| Attributed Click Through Conversions | totalAttributedClickThroughConversion |\n| Cost Per Attributed Conversion | costPerAttributedConversion |\n| Attributed Conversion Rate | totalAttributedConversionRate |\n| Budget Type | budgetTypeId |\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads a campaign performance report in the specified file format based on the provided filters.\n\n**When to use this API:**\n- Use this endpoint when you need to export campaign performance data for offline analysis or reporting.\n- The API returns a pre-signed URL that is valid for a limited time to download the generated file.\n\n**Supported file formats:**\n- `xlsx` - Microsoft Excel format\n- `csv` - Comma-separated values format\n\n**Pagination:**\n- This endpoint does **not** support pagination parameters. All matching records based on the applied filters are included in the downloaded file.\n- Sorting is supported via the `sort` object with `field` (column name) and `order` (`ASC` or `DESC`).\n\n**Response URL:**\n- On success, the response contains a pre-signed download URL in `data.url`.\n- The URL is a temporary, pre-signed cloud storage link (e.g., AWS S3) that expires after a limited period.\n- The client should initiate the file download promptly after receiving the URL.\n\n**Date range:**\n- `startTimeEpochMillis`, `endTimeEpochMillis`, and `filters` are required.\n- The requested date range must not exceed 365 days, or the API returns a 422 Unprocessable Entity response.\n",
         "operationId": "dashboard-report-by-campaign-download",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -4668,21 +4744,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -4701,10 +4762,31 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -4720,6 +4802,353 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/das/report/open-exchange-inventories/deviation-slabs": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get open-exchange inventories grouped by deviation slab",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Group (bucket) a campaign's open exchange inventories into deviation slabs by how far each inventory's VCR, CTR or win rate differs from the campaign's overall value, with totals per slab.\n\n- Deviation = |inventory metric - campaign metric| / campaign metric x 100.\n- `metric` must be `vcr`, `ctr` or `win_rate`. `campaignId`, `startTime` and `endTime` (epoch milliseconds) are required, and `startTime` must not be after `endTime`.\n- All four slabs are always returned: 5-10%, 10-20%, 20-40% and 40%+. Each has the inventory count and total impressions, clicks, spend, video starts and video completes.",
+        "operationId": "report-open-exchange-inventories-deviation-slabs",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenExchangeGroupingRequestVO"
+              },
+              "examples": {
+                "VCR grouping": {
+                  "description": "VCR grouping",
+                  "value": {
+                    "campaignId": 334740,
+                    "metric": "vcr",
+                    "startTime": 1773888000000,
+                    "endTime": 1774319999000
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Grouping result",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Response": {
+                    "description": "Response",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "deviationSlab": "5-10%",
+                          "inventoryCount": 42,
+                          "impressions": 120000,
+                          "clicks": 1500,
+                          "spend": 3200.5,
+                          "videoStart": 8000,
+                          "videoComplete": 6500
+                        },
+                        {
+                          "deviationSlab": "10-20%",
+                          "inventoryCount": 18,
+                          "impressions": 45000,
+                          "clicks": 600,
+                          "spend": 1100,
+                          "videoStart": 3000,
+                          "videoComplete": 2100
+                        },
+                        {
+                          "deviationSlab": "20-40%",
+                          "inventoryCount": 7,
+                          "impressions": 12000,
+                          "clicks": 100,
+                          "spend": 280,
+                          "videoStart": 900,
+                          "videoComplete": 500
+                        },
+                        {
+                          "deviationSlab": "40%+",
+                          "inventoryCount": 2,
+                          "impressions": 3000,
+                          "clicks": 20,
+                          "spend": 60,
+                          "videoStart": 200,
+                          "videoComplete": 80
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Invalid metric, missing campaignId, startTime or endTime, or startTime after endTime",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid metric error": {
+                    "description": "Invalid metric error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid metric. Accepted values: vcr, ctr, win_rate"
+                        }
+                      ]
+                    }
+                  },
+                  "Missing campaignId error": {
+                    "description": "Missing campaignId error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "campaignId is required."
+                        }
+                      ]
+                    }
+                  },
+                  "Missing startTime error": {
+                    "description": "Missing startTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "startTime is required."
+                        }
+                      ]
+                    }
+                  },
+                  "Missing endTime error": {
+                    "description": "Missing endTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "endTime is required."
+                        }
+                      ]
+                    }
+                  },
+                  "startTime after endTime error": {
+                    "description": "startTime after endTime error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "startTime must not be after endTime."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/das/metric-details": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get metric details",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Get daily metric details for one campaign over a time range: day-by-day impressions, clicks, bids, win rate, CTR, VCR, eCPM, eCPC, eCPCV and video quartile counts, plus cumulative eCPM, eCPC and eCPCV for the whole range.\n\n- `campaignId`, `startTime` and `endTime` are required; times are epoch milliseconds and `endTime` must not be before `startTime`.\n- Days are bucketed in the campaign's own timezone; any `timezone` sent in the request is ignored.",
+        "operationId": "dashboard-metric-details",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Campaign and time-range filters for metric details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricDetailsRequestVO"
+              },
+              "examples": {
+                "Metric details request": {
+                  "description": "Metric details request",
+                  "value": {
+                    "campaignId": 582510,
+                    "startTime": 1773888000000,
+                    "endTime": 1774319999000,
+                    "owIds": [
+                      201427
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricDetailsResponse"
+                },
+                "examples": {
+                  "Metric details response": {
+                    "description": "Metric details response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "cumulativeEcpm": 110,
+                        "cumulativeEcpcv": 0,
+                        "cumulativeEcpc": 0,
+                        "details": [
+                          {
+                            "timeStamp": 1786579200000,
+                            "impressions": 1,
+                            "winRate": 100,
+                            "vcr": 0,
+                            "ctr": 0,
+                            "ecpcv": 0,
+                            "ecpc": 0,
+                            "ecpm": 110,
+                            "clicks": 0,
+                            "startCount": 0,
+                            "firstCount": 0,
+                            "midCount": 0,
+                            "thirdCount": 0,
+                            "completeCount": 0,
+                            "bids": 2012
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -4744,26 +5173,24 @@
         "operationId": "createDashboardAPI",
         "parameters": [
           {
-            "name": "Authorization",
+            "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "example": "{{bearer_token}}"
+              "example": "1",
+              "format": "int64"
             }
           },
           {
-            "name": "X-IAA-OW-ID",
+            "name": "Authorization",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Authorization Bearer Token",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           }
         ],
         "requestBody": {
@@ -4853,6 +5280,24 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
@@ -4873,25 +5318,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -4907,9 +5340,7 @@
       },
       "delete": {
         "tags": [
-          "Internal",
-          "Organization",
-          "Workspace"
+          "MCP"
         ],
         "summary": "Delete Dashboard API",
         "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. This API allows the user to delete valid dashboard configuration of a user.",
@@ -4926,26 +5357,24 @@
             }
           },
           {
-            "name": "Authorization",
+            "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "example": "{{bearer_token}}"
+              "example": "1",
+              "format": "int64"
             }
           },
           {
-            "name": "X-IAA-OW-ID",
+            "name": "Authorization",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Authorization Bearer Token",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           }
         ],
         "responses": {
@@ -4970,6 +5399,24 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
@@ -4990,25 +5437,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5029,29 +5464,27 @@
           "MCP"
         ],
         "summary": "Run campaign pulse severity check now",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Triggers an asynchronous AWS Lambda function to immediately execute campaign pulse severity diagnostics for the specified campaign IDs. The function validates campaign ownership and status, then invokes Lambda to perform the diagnosis.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Starts campaign pulse severity diagnostics for the given campaign IDs in the background (asynchronous AWS Lambda), after validating campaign ownership and status. The response doesn't include the results. When the run finishes, read each campaign's latest results with aiInsightsDetails (campaignId), or severity counts for several campaigns with aiInsightsSeverityDetails (campaignIds). To run one campaign and get its results in the same call, use dashboard-campaign-pulse-run-single.",
         "operationId": "run-campaign-pulse-severity-check",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -5098,6 +5531,40 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Lambda function invoked successfully.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success response": {
+                    "description": "Success response",
+                    "value": {
+                      "success": true,
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity - Invalid request (e.g., empty campaignIds, invalid campaign status).",
             "content": {
@@ -5128,41 +5595,13 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Lambda function invoked successfully.",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "Success response": {
-                    "description": "Success response",
-                    "value": {
-                      "success": true,
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5190,56 +5629,24 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -5271,6 +5678,42 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -5298,56 +5741,24 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -5383,6 +5794,42 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -5390,10 +5837,10 @@
     "/api/v3/das/goal-ai/optimization-activity/campaign/{campaignId}": {
       "get": {
         "tags": [
-          "Dashboard API"
+          "MCP"
         ],
         "summary": "Get the Goal-AI Optimization Activities for Campaign",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Retrieves detailed log of Goal-AI optimization activities and decisions for a campaign.\n            \n            **Use Case**: Understand what optimization actions Goal-AI has taken and why, providing transparency into AI decision-making.\n            \n            **What it does**:\n            - Lists all optimization activities performed by Goal-AI\n            - Shows bid adjustments, budget reallocations, targeting changes, and creative optimizations\n            - Provides timestamps and reasons for each optimization action\n            - Displays predicted vs. actual impact of optimizations\n            - Enables audit trail of AI decision-making\n            \n            **Activity Types**:\n            - Bid adjustments (raised/lowered bids on specific dimensions)\n            - Budget reallocation across campaigns or line items\n            - Targeting modifications (geo, device, audience changes)\n            - Creative performance optimizations\n            - Pacing adjustments\n            - Goal threshold updates\n            \n            **Returns**: Chronological log of optimization activities with action details and performance impact\n            \n            **Business Value**: Provides transparency and explainability for AI-driven optimizations, building trust and enabling manual oversight.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Lists the Goal-AI optimization activities for a campaign on one day (`dayEpoch`): the date, time, action, dimension and value of each activity. Supports a search filter (`searchField`) and pagination (`pageNo`, `noOfEntries`).",
         "operationId": "getGoalAIOptimizationActivities",
         "parameters": [
           {
@@ -5451,22 +5898,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -5518,6 +5963,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5533,6 +5981,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5550,10 +6001,10 @@
     "/api/v3/das/goal-ai/optimization-activity/campaign/{campaignId}/download": {
       "get": {
         "tags": [
-          "Dashboard API"
+          "MCP"
         ],
         "summary": "Get the Goal-AI Optimization Activities for Campaign Download in a File",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Downloads Goal-AI optimization activities as a file in the specified format (CSV, Excel, PDF).\n            \n            **Use Case**: Export Goal-AI optimization history for offline analysis, reporting, or sharing with stakeholders.\n            \n            **What it does**:\n            - Generates downloadable file containing all Goal-AI optimization activities\n            - Supports multiple file formats (CSV, XLSX, PDF)\n            - Includes same data as getGoalAIOptimizationActivities endpoint\n            - Formats data for readability and analysis in external tools\n            - Streams file to client for download\n            \n            **File Formats**:\n            - CSV: For data analysis in Excel, Python, R\n            - XLSX: For formatted Excel reports with multiple sheets\n            - PDF: For presentation-ready optimization reports\n            \n            **Returns**: File stream with optimization activities in requested format\n            \n            **Business Value**: Enables offline analysis, stakeholder reporting, and integration with external BI tools for Goal-AI performance review.",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Exports the Goal-AI optimization activities for a campaign on one day (`dayEpoch`) as a CSV file and returns its download URL. Only `fileType` csv is supported; other values return 422. Same data and `searchField` filter as getGoalAIOptimizationActivities.",
         "operationId": "getGoalAIOptimizationActivitiesDownload",
         "parameters": [
           {
@@ -5599,22 +6050,20 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
@@ -5641,6 +6090,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5656,6 +6108,9 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5680,26 +6135,24 @@
         "operationId": "getDashBoardList",
         "parameters": [
           {
-            "name": "Authorization",
+            "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "example": "{{bearer_token}}"
+              "example": "1",
+              "format": "int64"
             }
           },
           {
-            "name": "X-IAA-OW-ID",
+            "name": "Authorization",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Authorization Bearer Token",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           }
         ],
         "responses": {
@@ -5894,6 +6347,9 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5909,6 +6365,125 @@
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/das/campaign-pulse/run/{campaignId}": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Run campaign pulse now for a single campaign",
+        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Triggers campaign pulse execution for the provided campaign ID and returns the latest campaign pulse response.",
+        "operationId": "dashboard-campaign-pulse-run-single",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "Unique identifier of the campaign",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiInsightsResponse"
+                },
+                "examples": {
+                  "Run campaign pulse response": {
+                    "description": "Run campaign pulse response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "lastRun": 1774245600000,
+                        "campaignName": "Summer Awareness Campaign",
+                        "campaignId": 582510,
+                        "timezoneId": 29,
+                        "diagnosisResults": [
+                          {
+                            "checkId": 1,
+                            "checkLabel": "Low CTR",
+                            "checkDescription": "CTR is below the expected threshold for this campaign type.",
+                            "recommendedActions": "Refresh creatives and validate audience targeting.",
+                            "severity": "Critical",
+                            "category": "PERFORMANCE",
+                            "agentName": "campaign-pulse-agent",
+                            "order": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -5949,41 +6524,24 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -6011,71 +6569,13 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/das/campaign-pulse/run/{campaignId}": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Run campaign pulse now for a single campaign",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports. Triggers campaign pulse execution for the provided campaign ID and returns the latest campaign pulse response.",
-        "operationId": "dashboard-campaign-pulse-run-single",
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "path",
-            "description": "Unique identifier of the campaign",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
-        "responses": {
           "403": {
             "description": "Forbidden",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -6087,46 +6587,13 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignPulseResponse"
-                },
-                "examples": {
-                  "Run campaign pulse response": {
-                    "description": "Run campaign pulse response",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "lastRun": 1774245600000,
-                        "campaignName": "Summer Awareness Campaign",
-                        "campaignId": 582510,
-                        "timezoneId": 29,
-                        "diagnosisResults": [
-                          {
-                            "checkId": 1,
-                            "checkLabel": "Low CTR",
-                            "checkDescription": "CTR is below the expected threshold for this campaign type.",
-                            "recommendedActions": "Refresh creatives and validate audience targeting.",
-                            "severity": "Critical",
-                            "category": "PERFORMANCE",
-                            "agentName": "campaign-pulse-agent",
-                            "order": 1
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
                 "example": {
                   "success": false,
                   "errorObjects": [
@@ -6164,47 +6631,30 @@
             "name": "Authorization",
             "in": "header",
             "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
             "schema": {
               "type": "string",
               "example": "{{bearer_token}}"
-            }
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
           },
           {
             "name": "X-IAA-OW-ID",
             "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
+            "description": "Organization Workspace Id Header",
             "schema": {
               "type": "string",
-              "format": "int64",
-              "example": "1"
+              "example": "1",
+              "format": "int64"
             }
           }
         ],
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CampaignPulseResponse"
+                  "$ref": "#/components/schemas/AiInsightsResponse"
                 },
                 "examples": {
                   "Campaign pulse response": {
@@ -6235,123 +6685,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/das/metric-details": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Get metric details",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports.\n\nGet daily metric details for one campaign over a time range: day-by-day impressions, clicks, bids, win rate, CTR, VCR, eCPM, eCPC, eCPCV and video quartile counts, plus cumulative eCPM, eCPC and eCPCV for the whole range.\n\n- `campaignId`, `startTime` and `endTime` are required; times are epoch milliseconds and `endTime` must not be before `startTime`.\n- Days are bucketed in the campaign's own timezone; any `timezone` sent in the request is ignored.\n- `owIds` optionally scopes the data to specific workspaces.",
-        "operationId": "dashboard-metric-details",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Campaign and time-range filters for metric details.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MetricDetailsRequestVO"
-              },
-              "examples": {
-                "Metric details request": {
-                  "description": "Metric details request",
-                  "value": {
-                    "campaignId": 582510,
-                    "startTime": 1773888000000,
-                    "endTime": 1774319999000,
-                    "owIds": [
-                      201427
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MetricDetailsResponse"
-                },
-                "examples": {
-                  "Metric details response": {
-                    "description": "Metric details response",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "cumulativeEcpm": 110,
-                        "cumulativeEcpcv": 0,
-                        "cumulativeEcpc": 0,
-                        "details": [
-                          {
-                            "timeStamp": 1786579200000,
-                            "impressions": 1,
-                            "winRate": 100,
-                            "vcr": 0,
-                            "ctr": 0,
-                            "ecpcv": 0,
-                            "ecpc": 0,
-                            "ecpm": 110,
-                            "clicks": 0,
-                            "startCount": 0,
-                            "firstCount": 0,
-                            "midCount": 0,
-                            "thirdCount": 0,
-                            "completeCount": 0,
-                            "bids": 2012
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -6366,216 +6699,6 @@
                       "error": "Forbidden !"
                     }
                   ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/das/report/open-exchange-inventories/deviation-slabs": {
-      "post": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Get open-exchange inventories grouped by deviation slab",
-        "description": "Dashboard routing: Use this IQM Dashboard API tool for ready-made IQM performance views and operational monitoring, including delivery, pacing, spend, impressions, clicks, CTR, trends, comparisons, diagnostics, and exports.\n\nGroup (bucket) a campaign's open exchange inventories into deviation slabs by how far each inventory's VCR, CTR or win rate differs from the campaign's overall value, with totals per slab.\n\n- Deviation = |inventory metric - campaign metric| / campaign metric x 100.\n- `metric` must be `vcr`, `ctr` or `win_rate`. `campaignId`, `startTime` and `endTime` (epoch milliseconds) are required, and `startTime` must not be after `endTime`.\n- All four slabs are always returned: 5-10%, 10-20%, 20-40% and 40%+. Each has the inventory count and total impressions, clicks, spend, video starts and video completes.",
-        "operationId": "report-open-exchange-inventories-deviation-slabs",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            }
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id",
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "format": "int64",
-              "example": "1"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OpenExchangeGroupingRequestVO"
-              },
-              "examples": {
-                "VCR grouping": {
-                  "description": "VCR grouping",
-                  "value": {
-                    "campaignId": 334740,
-                    "metric": "vcr",
-                    "startTime": 1773888000000,
-                    "endTime": 1774319999000
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Grouping result",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "Response": {
-                    "description": "Response",
-                    "value": {
-                      "success": true,
-                      "data": [
-                        {
-                          "deviationSlab": "5-10%",
-                          "inventoryCount": 42,
-                          "impressions": 120000,
-                          "clicks": 1500,
-                          "spend": 3200.5,
-                          "videoStart": 8000,
-                          "videoComplete": 6500
-                        },
-                        {
-                          "deviationSlab": "10-20%",
-                          "inventoryCount": 18,
-                          "impressions": 45000,
-                          "clicks": 600,
-                          "spend": 1100,
-                          "videoStart": 3000,
-                          "videoComplete": 2100
-                        },
-                        {
-                          "deviationSlab": "20-40%",
-                          "inventoryCount": 7,
-                          "impressions": 12000,
-                          "clicks": 100,
-                          "spend": 280,
-                          "videoStart": 900,
-                          "videoComplete": 500
-                        },
-                        {
-                          "deviationSlab": "40%+",
-                          "inventoryCount": 2,
-                          "impressions": 3000,
-                          "clicks": 20,
-                          "spend": 60,
-                          "videoStart": 200,
-                          "videoComplete": 80
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "Forbidden !"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity - Invalid metric, missing campaignId, startTime or endTime, or startTime after endTime",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "Invalid metric error": {
-                    "description": "Invalid metric error",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Invalid metric. Accepted values: vcr, ctr, win_rate"
-                        }
-                      ]
-                    }
-                  },
-                  "Missing campaignId error": {
-                    "description": "Missing campaignId error",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "campaignId is required."
-                        }
-                      ]
-                    }
-                  },
-                  "Missing startTime error": {
-                    "description": "Missing startTime error",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "startTime is required."
-                        }
-                      ]
-                    }
-                  },
-                  "Missing endTime error": {
-                    "description": "Missing endTime error",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "endTime is required."
-                        }
-                      ]
-                    }
-                  },
-                  "startTime after endTime error": {
-                    "description": "startTime after endTime error",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "startTime must not be after endTime."
-                        }
-                      ]
-                    }
-                  }
                 }
               }
             }
@@ -6663,6 +6786,23 @@
           },
           "field": {
             "type": "string"
+          }
+        }
+      },
+      "CommonResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "object"
           }
         }
       },
@@ -6813,11 +6953,11 @@
             }
           }
         },
+        "description": "Filter criteria for the campaign report",
         "required": [
           "startTimeEpochMillis",
           "endTimeEpochMillis"
-        ],
-        "description": "Filter criteria for the campaign report"
+        ]
       },
       "CampaignGraphDataPointResponse": {
         "type": "object",
@@ -6955,6 +7095,30 @@
             "format": "double",
             "example": 0
           },
+          "dataCost": {
+            "type": "number",
+            "description": "Total data cost",
+            "format": "double",
+            "example": 0
+          },
+          "organizationBidShadingSaving": {
+            "type": "number",
+            "description": "Organisation bid shading saving",
+            "format": "double",
+            "example": 0
+          },
+          "ivtImpressions": {
+            "type": "integer",
+            "description": "Impressions flagged as invalid traffic (IVT)",
+            "format": "int64",
+            "example": 120
+          },
+          "ivtClicks": {
+            "type": "integer",
+            "description": "Clicks flagged as invalid traffic (IVT)",
+            "format": "int64",
+            "example": 3
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate: (clicks * 100) / impressions",
@@ -7065,6 +7229,10 @@
             "format": "double",
             "example": 0
           },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate: (clicks * 100) / impressions",
@@ -7122,7 +7290,7 @@
           },
           "requestType": {
             "type": "string",
-            "description": "Report aggregation shape requested: AGGREGATED, AGGREGATED_LIST, or AGGREGATED_TOTAL",
+            "description": "Report aggregation shape requested: AGGREGATED, AGGREGATED_LIST, or AGGREGATED_TOTAL. Optional -- defaults to AGGREGATED when omitted.",
             "example": "AGGREGATED",
             "enum": [
               "AGGREGATED_LIST",
@@ -7134,11 +7302,11 @@
             "type": "boolean"
           }
         },
+        "description": "Request model for the v4 workspace report endpoint (v4-dashboard-get-report-by-workspace)",
         "required": [
           "filters",
           "requestType"
-        ],
-        "description": "Request model for the v4 workspace report endpoint (POST /api/v4/dashboard/report/by-workspace)"
+        ]
       },
       "WorkspaceReportEnvelope": {
         "type": "object",
@@ -7559,6 +7727,26 @@
             "format": "double",
             "example": 2
           },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate (clicks / impressions)",
@@ -7634,6 +7822,9 @@
         "description": "Download options: which columns to include, output file type and name"
       },
       "WorkspaceReportDownloadRequest": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "pagination": {
@@ -7662,9 +7853,6 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "filters"
-        ],
         "description": "Request model for downloading workspace reports, containing the base report query parameters and additional download parameters"
       },
       "IOReportRequest": {
@@ -7681,7 +7869,7 @@
           },
           "requestType": {
             "type": "string",
-            "description": "Report request type",
+            "description": "Report request type. Optional -- defaults to AGGREGATED when omitted.",
             "example": "AGGREGATED",
             "enum": [
               "AGGREGATED_LIST",
@@ -7693,11 +7881,11 @@
             "type": "boolean"
           }
         },
+        "description": "Request for generating an IO (Insertion-Order) level aggregated report (v4)",
         "required": [
           "filters",
           "requestType"
-        ],
-        "description": "Request for generating an IO (Insertion-Order) level aggregated report (v4)"
+        ]
       },
       "IOReportEnvelope": {
         "type": "object",
@@ -8034,6 +8222,11 @@
             "format": "int32",
             "example": 1
           },
+          "ioStatusName": {
+            "type": "string",
+            "description": "IO status display name",
+            "example": "Active"
+          },
           "ioStartTime": {
             "type": "integer",
             "description": "IO start time, epoch milliseconds",
@@ -8070,7 +8263,7 @@
           },
           "ioTotalBudget": {
             "type": "number",
-            "description": "Monetary total budget \u2014 populated only when budget_type_id = 1",
+            "description": "Monetary total budget — populated only when budget_type_id = 1",
             "format": "double",
             "example": 8000
           },
@@ -8082,13 +8275,13 @@
           },
           "ioTotalImpressions": {
             "type": "integer",
-            "description": "Impression target \u2014 populated only when budget_type_id = 2",
+            "description": "Impression target — populated only when budget_type_id = 2",
             "format": "int64",
             "example": 500000
           },
           "targetImpression": {
             "type": "integer",
-            "description": "Alias of ioTotalImpressions \u2014 kept for UI/front-end compatibility",
+            "description": "Alias of ioTotalImpressions — kept for UI/front-end compatibility",
             "format": "int64",
             "example": 500000
           },
@@ -8194,6 +8387,26 @@
             "format": "double",
             "example": 6.67
           },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate (clicks / impressions)",
@@ -8228,6 +8441,9 @@
         "description": "IO (Insertion-Order) level aggregated report row, extending ReportResponse with IO-specific identity, metadata, pacing, and insights-earnings fields"
       },
       "IOReportDownloadRequest": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "pagination": {
@@ -8256,9 +8472,6 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "filters"
-        ],
         "description": "Request for downloading an IO (Insertion-Order) level performance report (v4), extending the base IOReportRequest with download-specific options"
       },
       "ExchangeReportRequest": {
@@ -8275,7 +8488,7 @@
           },
           "requestType": {
             "type": "string",
-            "description": "Type of report requested",
+            "description": "Type of report requested. Optional -- defaults to AGGREGATED when omitted.",
             "example": "AGGREGATED",
             "enum": [
               "AGGREGATED_LIST",
@@ -8287,11 +8500,11 @@
             "type": "boolean"
           }
         },
+        "description": "Request for generating an exchange-level report, including pagination, sorting, filters, and report type",
         "required": [
           "filters",
           "requestType"
-        ],
-        "description": "Request for generating an exchange-level report, including pagination, sorting, filters, and report type"
+        ]
       },
       "ExchangeReportResponse": {
         "type": "object",
@@ -8559,6 +8772,26 @@
             "description": "Exchange name",
             "example": "Pubmatic"
           },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate (clicks / impressions)",
@@ -8593,6 +8826,9 @@
         "description": "Exchange-level aggregated report row, combining base reporting metrics with exchange identity fields"
       },
       "ExchangeReportDownloadRequest": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "pagination": {
@@ -8621,9 +8857,6 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "filters"
-        ],
         "description": "Request for downloading an exchange-level report, extending the base exchange report request with download options"
       },
       "CustomerReportRequest": {
@@ -8640,7 +8873,7 @@
           },
           "requestType": {
             "type": "string",
-            "description": "Aggregation mode for the request",
+            "description": "Aggregation mode for the request. Optional -- defaults to AGGREGATED when omitted.",
             "example": "AGGREGATED",
             "enum": [
               "AGGREGATED_LIST",
@@ -8652,11 +8885,11 @@
             "type": "boolean"
           }
         },
+        "description": "Request model for the v4 customer report endpoint",
         "required": [
           "filters",
           "requestType"
-        ],
-        "description": "Request model for the v4 customer report endpoint"
+        ]
       },
       "CustomerReportResponse": {
         "type": "object",
@@ -9042,6 +9275,26 @@
             "format": "double",
             "example": 0
           },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
           "CTR": {
             "type": "number",
             "description": "Click-through rate (clicks / impressions)",
@@ -9076,6 +9329,9 @@
         "description": "Customer (advertiser)-level aggregated report row"
       },
       "CustomerReportDownloadRequest": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "pagination": {
@@ -9104,9 +9360,6 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "filters"
-        ],
         "description": "Request model for downloading customer reports, extending the base CustomerReportRequest with additional download parameters"
       },
       "CampaignReportRequest": {
@@ -9123,7 +9376,7 @@
           },
           "requestType": {
             "type": "string",
-            "description": "Type of report requested",
+            "description": "Type of report requested. Optional -- defaults to AGGREGATED when omitted.",
             "example": "AGGREGATED",
             "enum": [
               "AGGREGATED_LIST",
@@ -9140,11 +9393,11 @@
             "type": "boolean"
           }
         },
+        "description": "Request for generating a campaign performance report, aggregated by campaign.",
         "required": [
           "filters",
           "requestType"
-        ],
-        "description": "Request for generating a campaign performance report, aggregated by campaign."
+        ]
       },
       "CampaignReportEnvelope": {
         "type": "object",
@@ -9247,8 +9500,7 @@
             "type": "integer",
             "description": "Unique reach",
             "format": "int64",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "dataCost": {
             "type": "number",
@@ -9290,8 +9542,7 @@
             "type": "number",
             "description": "Average frequency",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "totalECPM": {
             "type": "number",
@@ -9453,26 +9704,22 @@
             "type": "integer",
             "description": "Campaign ID",
             "format": "int32",
-            "example": 582315,
-            "nullable": true
+            "example": 582315
           },
           "campaignName": {
             "type": "string",
             "description": "Campaign name",
-            "example": "P n",
-            "nullable": true
+            "example": "P n"
           },
           "campaignType": {
             "type": "string",
             "description": "Campaign type",
-            "example": "cpm",
-            "nullable": true
+            "example": "cpm"
           },
           "status": {
             "type": "string",
             "description": "Campaign status",
-            "example": "pending",
-            "nullable": true
+            "example": "pending"
           },
           "dailyImpression": {
             "type": "integer",
@@ -9483,113 +9730,96 @@
           "campaignTimezone": {
             "type": "string",
             "description": "Campaign timezone",
-            "example": "US/Eastern",
-            "nullable": true
+            "example": "US/Eastern"
           },
           "creativeType": {
             "type": "string",
             "description": "Creative type ID",
-            "example": "13",
-            "nullable": true
+            "example": "13"
           },
           "budgetPacing": {
             "type": "boolean",
             "description": "Whether budget pacing is enabled for the campaign",
-            "example": false,
-            "nullable": true
+            "example": false
           },
           "owId": {
             "type": "integer",
             "description": "Advertiser (owner) ID",
             "format": "int32",
-            "example": 201427,
-            "nullable": true
+            "example": 201427
           },
           "bidShading": {
             "type": "boolean",
             "description": "Whether bid shading is enabled for the campaign",
-            "example": false,
-            "nullable": true
+            "example": false
           },
           "ioId": {
             "type": "integer",
             "description": "Insertion order ID",
             "format": "int32",
-            "example": 10374,
-            "nullable": true
+            "example": 10374
           },
           "ioName": {
             "type": "string",
             "description": "Insertion order name",
-            "example": "DD",
-            "nullable": true
+            "example": "DD"
           },
           "ioStartTime": {
             "type": "integer",
             "description": "Insertion order start time, epoch milliseconds",
             "format": "int64",
-            "example": 1715054400000,
-            "nullable": true
+            "example": 1715054400000
           },
           "ioEndTime": {
             "type": "integer",
             "description": "Insertion order end time, epoch milliseconds",
             "format": "int64",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "ioTotalBudget": {
             "type": "number",
             "description": "Insertion order total budget",
             "format": "double",
-            "example": 386836.845,
-            "nullable": true
+            "example": 386836.845
           },
           "ioTotalImpressions": {
             "type": "integer",
             "description": "Insertion order total impressions",
             "format": "int64",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "ioTimezone": {
             "type": "integer",
             "description": "Insertion order timezone ID",
             "format": "int32",
-            "example": 29,
-            "nullable": true
+            "example": 29
           },
           "ioStatusId": {
             "type": "integer",
             "description": "Insertion order status ID",
             "format": "int32",
-            "example": 1,
-            "nullable": true
+            "example": 1
           },
           "ioBudgetDistributionMethod": {
             "type": "integer",
             "description": "Insertion order budget distribution method",
             "format": "int32",
-            "example": 1,
-            "nullable": true
+            "example": 1
           },
           "isAutoSumIoTotalBudget": {
             "type": "boolean",
             "description": "Whether the IO total budget is auto-summed from its campaigns",
-            "example": true,
-            "nullable": true
+            "example": true
           },
           "organizationName": {
             "type": "string",
             "description": "Advertiser organization name",
-            "example": "Stage Shared Advertiser",
-            "nullable": true
+            "example": "Stage Shared Advertiser"
           },
           "workspaceOrganizationName": {
             "type": "string",
             "description": "Workspace organization name",
-            "example": "IQM Corporation",
-            "nullable": true
+            "example": "IQM Corporation"
           },
           "workspaceOwId": {
             "type": "integer",
@@ -9601,50 +9831,43 @@
             "type": "number",
             "description": "Percentage of total budget spent",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "defaultMinBid": {
             "type": "number",
             "description": "Default minimum bid",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "maxBid": {
             "type": "number",
             "description": "Maximum bid price",
             "format": "double",
-            "example": 55,
-            "nullable": true
+            "example": 55
           },
           "minBid": {
             "type": "number",
             "description": "Minimum bid price",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "baseBid": {
             "type": "number",
             "description": "Base bid price",
             "format": "double",
-            "example": 5,
-            "nullable": true
+            "example": 5
           },
           "budgetTypeId": {
             "type": "integer",
             "description": "Budget type ID: 1=Budget, 2=Impression",
             "format": "int32",
-            "example": 1,
-            "nullable": true
+            "example": 1
           },
           "campaignTypeId": {
             "type": "integer",
             "description": "Campaign type ID: 1=Advanced, 2=Programmatic Guaranteed (PG)",
             "format": "int32",
-            "example": 2,
-            "nullable": true
+            "example": 2
           },
           "targetImpression": {
             "type": "integer",
@@ -9668,85 +9891,73 @@
             "type": "number",
             "description": "Combined daily budget (campaign + IO)",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "budgetTotalCombined": {
             "type": "number",
             "description": "Combined total budget (campaign + IO)",
             "format": "double",
-            "example": 1020,
-            "nullable": true
+            "example": 1020
           },
           "expectedSpent": {
             "type": "number",
             "description": "Expected total spend to date",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "actualSpent": {
             "type": "number",
             "description": "Actual total spend to date",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "pacingPercentage": {
             "type": "number",
             "description": "Campaign pacing percentage",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "remainingDuration": {
             "type": "integer",
             "description": "Remaining campaign duration in days",
             "format": "int64",
-            "example": 2,
-            "nullable": true
+            "example": 2
           },
           "campaignDuration": {
             "type": "integer",
             "description": "Total campaign duration in days",
             "format": "int64",
-            "example": 5,
-            "nullable": true
+            "example": 5
           },
           "expectedDailySpent": {
             "type": "number",
             "description": "Expected daily spend",
             "format": "double",
-            "example": 29303.1666666667,
-            "nullable": true
+            "example": 29303.1666666667
           },
           "actualDailySpent": {
             "type": "number",
             "description": "Actual daily spend",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "dailyPacingPercentage": {
             "type": "number",
             "description": "Daily pacing percentage",
             "format": "double",
-            "example": 0,
-            "nullable": true
+            "example": 0
           },
           "dailyRemainingDuration": {
             "type": "integer",
             "description": "Remaining daily duration in hours",
             "format": "int64",
-            "example": 10,
-            "nullable": true
+            "example": 10
           },
           "dailyCampaignDuration": {
             "type": "integer",
             "description": "Total daily duration in hours",
             "format": "int64",
-            "example": 24,
-            "nullable": true
+            "example": 24
           },
           "workspacePLDInsightsEarnings": {
             "type": "number",
@@ -9824,8 +10035,7 @@
             "type": "integer",
             "description": "AI optimization goal ID",
             "format": "int32",
-            "example": 1,
-            "nullable": true
+            "example": 1
           },
           "modelledDimensionIds": {
             "type": "array",
@@ -9839,64 +10049,54 @@
               "type": "integer",
               "description": "Modelled dimension IDs used for rule-based optimization",
               "format": "int32"
-            },
-            "nullable": true
+            }
           },
           "creativesCount": {
             "type": "integer",
             "description": "Number of creatives associated with the campaign",
             "format": "int32",
-            "example": 2,
-            "nullable": true
+            "example": 2
           },
           "isEligibleForAQInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the AQ insights report",
-            "example": true,
-            "nullable": true
+            "example": true
           },
           "isEligibleForPLDInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the PLD insights report",
-            "example": true,
-            "nullable": true
+            "example": true
           },
           "isEligibleForSLSInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the SLS insights report",
-            "example": true,
-            "nullable": true
+            "example": true
           },
           "isEligibleForVLDInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the VLD insights report",
-            "example": true,
-            "nullable": true
+            "example": true
           },
           "isEligibleForICTInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the ICT insights report",
-            "example": false,
-            "nullable": true
+            "example": false
           },
           "isEligibleForNLDInsightsReport": {
             "type": "boolean",
             "description": "Whether the campaign is eligible for the NLD insights report",
-            "example": false,
-            "nullable": true
+            "example": false
           },
           "verticalId": {
             "type": "integer",
             "description": "Vertical ID",
             "format": "int32",
-            "example": 1,
-            "nullable": true
+            "example": 1
           },
           "verticalName": {
             "type": "string",
             "description": "Vertical name",
-            "example": "Healthcare",
-            "nullable": true
+            "example": "Healthcare"
           },
           "campaignPriority": {
             "type": "integer",
@@ -9925,6 +10125,29 @@
               "Critical": 5,
               "Medium": 3
             }
+          },
+          "signalIQResult": {
+            "$ref": "#/components/schemas/SignalIQResultResponse"
+          },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
           },
           "CTR": {
             "type": "number",
@@ -9960,20 +10183,117 @@
             "type": "integer",
             "description": "Campaign start time, epoch",
             "format": "int64",
-            "example": 1773214800,
-            "nullable": true
+            "example": 1773214800
           },
           "endTime": {
             "type": "integer",
             "description": "Campaign end time, epoch",
             "format": "int64",
-            "example": 0,
-            "nullable": true
+            "example": 0
           }
         },
         "description": "Detailed campaign report row, extending the base ReportResponse with campaign-specific metadata, IO details, budget/pacing helper fields, insights costs/earnings and eligibility flags."
       },
+      "MetricSummary": {
+        "type": "object",
+        "properties": {
+          "average": {
+            "type": "number",
+            "description": "Baseline average",
+            "format": "double",
+            "example": 1.76
+          },
+          "deviation": {
+            "type": "number",
+            "description": "Deviation percentage",
+            "format": "double",
+            "example": 38
+          }
+        },
+        "description": "Win rate baseline and deviation"
+      },
+      "SignalIQResultResponse": {
+        "type": "object",
+        "properties": {
+          "baselineImpressions": {
+            "type": "integer",
+            "description": "Baseline impressions",
+            "format": "int64",
+            "example": 123
+          },
+          "baselineClicks": {
+            "type": "integer",
+            "description": "Baseline clicks",
+            "format": "int64",
+            "example": 123
+          },
+          "bids": {
+            "type": "integer",
+            "description": "Bid count",
+            "format": "int32",
+            "example": 123
+          },
+          "videoStarts": {
+            "type": "integer",
+            "description": "Video starts",
+            "format": "int32",
+            "example": 123
+          },
+          "videoCompletes": {
+            "type": "integer",
+            "description": "Video completes",
+            "format": "int32",
+            "example": 123
+          },
+          "ctr": {
+            "$ref": "#/components/schemas/MetricSummary"
+          },
+          "vcr": {
+            "$ref": "#/components/schemas/MetricSummary"
+          },
+          "winRate": {
+            "$ref": "#/components/schemas/MetricSummary"
+          },
+          "windowStartDate": {
+            "type": "string",
+            "description": "Start date of the qualifying baseline window",
+            "format": "date",
+            "example": "2026-08-01"
+          },
+          "windowEndDate": {
+            "type": "string",
+            "description": "End date of the qualifying baseline window",
+            "format": "date",
+            "example": "2026-08-05"
+          }
+        },
+        "description": "SignalIQ metric results for a campaign",
+        "example": {
+          "baselineImpressions": 123,
+          "baselineClicks": 123,
+          "bids": 123,
+          "videoStarts": 123,
+          "videoCompletes": 123,
+          "ctr": {
+            "average": 1.76,
+            "deviation": 38
+          },
+          "vcr": {
+            "average": 1.76,
+            "deviation": 38
+          },
+          "winRate": {
+            "average": 1.76,
+            "deviation": 38
+          },
+          "windowStartDate": "2026-08-01",
+          "windowEndDate": "2026-08-05"
+        }
+      },
       "CampaignReportDownloadRequest": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "pagination": {
@@ -10007,10 +10327,165 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "filters"
-        ],
         "description": "Request for downloading a campaign performance report as a file."
+      },
+      "OpenExchangeGroupingRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID to scope the inventory data and baseline against",
+            "format": "int32",
+            "example": 334740
+          },
+          "metric": {
+            "type": "string",
+            "description": "Metric to evaluate. Accepted values: vcr, ctr, win_rate",
+            "example": "vcr"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start of the time window, epoch milliseconds",
+            "format": "int64",
+            "example": 1773888000000
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End of the time window, epoch milliseconds",
+            "format": "int64",
+            "example": 1774319999000
+          }
+        },
+        "description": "Request for grouping open-exchange inventories by metric deviation slab"
+      },
+      "MetricDetailsRequestVO": {
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "integer",
+            "description": "Campaign ID.",
+            "format": "int32"
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Start of the time range, epoch milliseconds.",
+            "format": "int64"
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "End of the time range, epoch milliseconds. Must not be before startTime.",
+            "format": "int64"
+          },
+          "owIds": {
+            "type": "array",
+            "description": "Optional organization workspace IDs used to scope the metric details.",
+            "example": [
+              201427
+            ],
+            "items": {
+              "type": "integer",
+              "description": "Optional organization workspace IDs used to scope the metric details.",
+              "format": "int32"
+            }
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Ignored: days are bucketed in the campaign's own timezone."
+          }
+        },
+        "required": [
+          "campaignId",
+          "startTime",
+          "endTime"
+        ]
+      },
+      "DetailsVO": {
+        "type": "object",
+        "properties": {
+          "timeStamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "impressions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "winRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "vcr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ctr": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "ecpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "clicks": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "midCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "thirdCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completeCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bids": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MetricDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "cumulativeEcpm": {
+            "type": "number",
+            "format": "double"
+          },
+          "cumulativeEcpcv": {
+            "type": "number",
+            "format": "double"
+          },
+          "cumulativeEcpc": {
+            "type": "number",
+            "format": "double"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailsVO"
+            }
+          }
+        }
       },
       "DashboardCreateRequest": {
         "type": "object",
@@ -10092,6 +10567,23 @@
         },
         "description": "Request payload for fetching campaign basic details for a workspace, with optional IO and campaign-id filters."
       },
+      "AiInsightsCategoryVO": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "integer",
+            "description": "Display order of the category",
+            "format": "int32",
+            "example": 10
+          },
+          "category": {
+            "type": "string",
+            "description": "Display name of the AI insights category",
+            "example": "Audience"
+          }
+        },
+        "description": "Represents an AI insights category, containing its display name and display order."
+      },
       "CampaignPulseCategoryListResponse": {
         "type": "object",
         "properties": {
@@ -10107,28 +10599,11 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CampaignPulseCategoryVO"
+              "$ref": "#/components/schemas/AiInsightsCategoryVO"
             }
           }
         },
         "description": "Campaign Pulse Category List Response Wrapper"
-      },
-      "CampaignPulseCategoryVO": {
-        "type": "object",
-        "properties": {
-          "order": {
-            "type": "integer",
-            "description": "Display order of the category",
-            "format": "int32",
-            "example": 10
-          },
-          "category": {
-            "type": "string",
-            "description": "Display name of the campaign pulse category",
-            "example": "Audience"
-          }
-        },
-        "description": "Represents a campaign pulse category, containing its display name and display order."
       },
       "DashboardConfigurations": {
         "type": "object",
@@ -10514,53 +10989,7 @@
         },
         "description": "Timezone option"
       },
-      "CampaignPulseSeverityListResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CampaignPulseSeverityResponse"
-            }
-          }
-        },
-        "description": "Campaign Pulse Severity List Response Wrapper"
-      },
-      "CampaignPulseSeverityResponse": {
-        "type": "object",
-        "properties": {
-          "campaignId": {
-            "type": "integer",
-            "description": "Campaign ID",
-            "format": "int32",
-            "example": 582510
-          },
-          "severityCount": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "description": "Map of severity level to diagnosis check count",
-              "format": "int32"
-            },
-            "description": "Map of severity level to diagnosis check count",
-            "example": {
-              "Critical": 3,
-              "Medium": 2
-            }
-          }
-        },
-        "description": "Represents the severity response for a campaign pulse, containing the campaign ID and a map of severity counts."
-      },
-      "CampaignPulseResponse": {
+      "AiInsightsResponse": {
         "type": "object",
         "properties": {
           "campaignName": {
@@ -10587,14 +11016,23 @@
               "$ref": "#/components/schemas/DiagnosisResult"
             }
           },
+          "signalIQResult": {
+            "$ref": "#/components/schemas/SignalIQResultResponse"
+          },
           "lastRun": {
-            "type": "integer",
-            "description": "Epoch milliseconds of the last campaign pulse run",
-            "format": "int64",
-            "example": 1774245600000
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "description": "Map of agent name to epoch milliseconds of that agent's last run",
+              "format": "int64"
+            },
+            "description": "Map of agent name to epoch milliseconds of that agent's last run",
+            "example": {
+              "campaign-pulse-agent": 1774245600000
+            }
           }
         },
-        "description": "Response model for the campaign pulse API, containing campaign-level pulse metadata and an ordered list of diagnosis checks."
+        "description": "Response model for the AI insights API, containing campaign-level metadata and an ordered list of diagnosis checks."
       },
       "DiagnosisResult": {
         "type": "object",
@@ -10639,169 +11077,41 @@
             "description": "Display order of the diagnosis check",
             "format": "int32",
             "example": 1
+          },
+          "detailsAvailable": {
+            "type": "boolean",
+            "description": "Indicates whether detailed information is available for the diagnosis check",
+            "example": true
           }
         },
         "description": "Represents a single diagnosis check in the campaign pulse response."
       },
-      "MetricDetailsRequestVO": {
+      "AiInsightsSeverityResponse": {
         "type": "object",
         "properties": {
           "campaignId": {
             "type": "integer",
+            "description": "Campaign ID",
             "format": "int32",
-            "description": "Campaign ID. Required."
+            "example": 582510
           },
-          "startTime": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Start of the time range, epoch milliseconds. Required."
-          },
-          "endTime": {
-            "type": "integer",
-            "format": "int64",
-            "description": "End of the time range, epoch milliseconds. Required; must not be before startTime."
-          },
-          "owIds": {
-            "type": "array",
-            "description": "Optional organization workspace IDs used to scope the metric details.",
-            "example": [
-              201427
-            ],
-            "items": {
+          "severityCount": {
+            "type": "object",
+            "additionalProperties": {
               "type": "integer",
-              "description": "Optional organization workspace IDs used to scope the metric details.",
+              "description": "Map of severity level to diagnosis check count",
               "format": "int32"
-            }
-          },
-          "timezone": {
-            "type": "string",
-            "description": "Ignored: days are bucketed in the campaign's own timezone."
-          }
-        },
-        "required": [
-          "campaignId",
-          "startTime",
-          "endTime"
-        ]
-      },
-      "MetricDetailsResponse": {
-        "type": "object",
-        "properties": {
-          "cumulativeEcpm": {
-            "type": "number",
-            "format": "double"
-          },
-          "cumulativeEcpcv": {
-            "type": "number",
-            "format": "double"
-          },
-          "cumulativeEcpc": {
-            "type": "number",
-            "format": "double"
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DetailsVO"
+            },
+            "description": "Map of severity level to diagnosis check count",
+            "example": {
+              "Critical": 3,
+              "Medium": 2
             }
           }
-        }
-      },
-      "DetailsVO": {
-        "type": "object",
-        "properties": {
-          "timeStamp": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "impressions": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "winRate": {
-            "type": "number",
-            "format": "double"
-          },
-          "vcr": {
-            "type": "number",
-            "format": "double"
-          },
-          "ctr": {
-            "type": "number",
-            "format": "double"
-          },
-          "ecpcv": {
-            "type": "number",
-            "format": "double"
-          },
-          "ecpc": {
-            "type": "number",
-            "format": "double"
-          },
-          "ecpm": {
-            "type": "number",
-            "format": "double"
-          },
-          "clicks": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "startCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "firstCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "midCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "thirdCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "completeCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "bids": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "OpenExchangeGroupingRequestVO": {
-        "type": "object",
-        "properties": {
-          "campaignId": {
-            "type": "integer",
-            "description": "Campaign ID to scope the inventory data and baseline against",
-            "format": "int32",
-            "example": 334740
-          },
-          "metric": {
-            "type": "string",
-            "description": "Metric to evaluate. Accepted values: vcr, ctr, win_rate",
-            "example": "vcr"
-          },
-          "startTime": {
-            "type": "integer",
-            "description": "Start of the time window, epoch milliseconds",
-            "format": "int64",
-            "example": 1773888000000
-          },
-          "endTime": {
-            "type": "integer",
-            "description": "End of the time window, epoch milliseconds",
-            "format": "int64",
-            "example": 1774319999000
-          }
         },
-        "description": "Request for grouping open-exchange inventories by metric deviation slab"
+        "description": "Represents the severity response for AI insights, containing the campaign ID and a map of severity counts."
       },
-      "CommonResponse": {
+      "CampaignPulseSeverityListResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -10814,9 +11124,13 @@
             }
           },
           "data": {
-            "type": "object"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AiInsightsSeverityResponse"
+            }
           }
-        }
+        },
+        "description": "Campaign Pulse Severity List Response Wrapper"
       }
     }
   }
