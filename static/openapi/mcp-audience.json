@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MCP Audience API Specification",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "MCP Audience API Specification",
     "contact": {
       "name": "IQM Support",
@@ -4534,7 +4534,7 @@
           "MCP"
         ],
         "summary": "Create an ABM (account based) audience",
-        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nBefore creating, confirm the name-to-ID mapping (input, matched name, ID, reach) with the user.\n\nCreate (save) a new ABM (account based) audience of healthcare providers from filter IDs resolved with the ABM lookup operations. Only advertiser users in the healthcare vertical can create one.\n\nBefore calling:\n1. Get dataProviderId from getAudienceDataPartners (audienceTypeId 9).\n2. Resolve each name to IDs with the ABM lookup operations.\n3. Estimate reach (getHealthcareDataStatistics) with the same filters and check npiReach meets the minimum (currently 10, admin-configurable); otherwise this call returns 422 \"Minimum reach for creating a audience is N\".\n\nRequest:\n- filters: the resolved IDs (titleIds, specialityIds, accountIds, accountTypeIds, accountSubTypeIds, healthCareSystemIds, location IDs) and selectAll. filters.dataProviderIds and filters.audienceSubtypeIds are taken from the top-level dataProviderId and audienceSubtypeId.\n- All matching rows: filters.selectAll true and healthCareDataMappingIds [].\n- Specific rows: filters.selectAll false and healthCareDataMappingIds set to id values from getHealthcareData under the same filters. Title, account, and other filter IDs do not go in healthCareDataMappingIds.\n- audienceSubtypeId: omit to build from generic rows only, or send 3 (HCP) to build from HCP rows only.\n\nReturns the new audienceId. The audience starts in Processing status while it builds.\n\nThe call can time out after the audience is saved. After a timeout or 5xx error, search getAudienceBasicList with searchFields [audienceName] and audienceTypeIds [9] before retrying, to avoid a duplicate.",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nBefore creating, confirm the name-to-ID mapping (input, matched name, ID, reach) with the user.\n\nCreate (save) a new ABM (account based) audience of healthcare providers from filter IDs resolved with the ABM lookup operations. Only advertiser users in the healthcare vertical can create one.\n\nBefore calling:\n1. Get dataProviderId from getAudienceDataPartners (audienceTypeId 9).\n2. Resolve each name to IDs with the ABM lookup operations.\n3. Estimate reach (getHealthcareDataStatistics) with the same filters and check npiReach meets the minimum (currently 10, admin-configurable); otherwise this call returns 422 \"Minimum reach for creating a audience is N\".\n\nRequest:\n- filters: the resolved IDs (titleIds, specialityIds, accountIds, accountTypeIds, accountSubTypeIds, healthCareSystemIds, location IDs) and selectAll. Omit filters.dataProviderIds and filters.audienceSubtypeIds, or keep them equal to the top-level dataProviderId and audienceSubtypeId: the audience is built from the top-level values, while the selectAll reach count uses the nested values when sent and falls back to the top-level ones when they are empty.\n- All matching rows: filters.selectAll true and healthCareDataMappingIds [].\n- Specific rows: filters.selectAll false and healthCareDataMappingIds set to id values from getHealthcareData under the same filters. Title, account, and other filter IDs do not go in healthCareDataMappingIds.\n- audienceSubtypeId: omit to build from generic rows only, or send 3 (HCP) to build from HCP rows only.\n\nReturns the new audienceId. The audience starts in Processing status while it builds.\n\nThe call can time out after the audience is saved. After a timeout or 5xx error, search getAudienceBasicList with searchFields [audienceName] and audienceTypeIds [9] before retrying, to avoid a duplicate.",
         "operationId": "createAbmAudience",
         "parameters": [
           {
@@ -4813,7 +4813,7 @@
           "MCP"
         ],
         "summary": "List ABM healthcare data mapping rows",
-        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (browse) ABM healthcare data mapping rows that match a set of filters. Each row is one combination of filter values (healthCareSystemId, accountId, titleId, specialityId, location IDs, dataProviderId) with reach and cost; its id is a mapping ID for healthCareDataMappingIds when creating an ABM audience (createAbmAudience) with filters.selectAll false.\n\nSend pageNo 1 and noOfEntries explicitly: the body defaults are 0 (pageNo 0 returns 422; noOfEntries 0 returns no rows). pageNo -1 returns every row; avoid it on broad filters.\n",
+        "description": "ABM routing: Use this IQM Audience API tool to build an ABM (account based) audience of healthcare providers.\n\nList (browse) ABM healthcare data mapping rows that match a set of filters. Each row is one combination of filter values (healthCareSystemId, accountId, titleId, specialityId, location IDs, dataProviderId) with reach and cost; its id is a mapping ID for healthCareDataMappingIds when creating an ABM audience (createAbmAudience) with filters.selectAll false.\n\nSend noOfEntries explicitly: its body default is 0, which returns no rows. pageNo starts at 1 (the body default 0 is treated as 1). pageNo -1 returns every row; avoid it on broad filters.\n",
         "operationId": "getHealthcareData",
         "parameters": [
           {
@@ -5030,7 +5030,7 @@
           "MCP"
         ],
         "summary": "The API extracts ABM filters from the uploaded file.",
-        "description": "This API provides the ABM audiences Health Care Data filters on the provided file and columns by fetching the data from the uploaded file. Send it as multipart/form-data with three parts: abmFilterFile (the CSV or Excel file), fileType (1 for Excel, 2 for CSV), and columns (a JSON string mapping file column headers to ABM column type IDs, for example {\"health-system-name\": \"23\"}). Send these parts as multipart form fields inside the body object (NOT as query parameters or top-level request arguments). For example: body: {\"abmFilterFile\": <binary>, \"fileType\": 2, \"columns\": \"{\\\"health-system-name\\\":\\\"23\\\"}\"}",
+        "description": "This API provides the ABM audiences Health Care Data filters on the provided file and columns by fetching the data from the uploaded file. Send it as multipart/form-data with three parts: abmFilterFile (the CSV or Excel file), fileType (1 for Excel, 2 for CSV), and columns (a JSON string mapping file column headers to ABM column type IDs, for example {\"health-system-name\": \"22\"}). Send these parts as multipart form fields inside the body object (NOT as query parameters or top-level request arguments). For example: body: {\"abmFilterFile\": <binary>, \"fileType\": 2, \"columns\": \"{\\\"health-system-name\\\":\\\"22\\\"}\"}",
         "operationId": "getHealthcareDataFiltersFromFile",
         "parameters": [
           {
@@ -6799,7 +6799,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AudienceInsightsDocs"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AudienceInsightsDocs"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AudienceComputedInsightsDocs"
+                    }
+                  ]
                 },
                 "examples": {
                   "Matched audience insights report": {
@@ -9278,193 +9285,6 @@
         }
       }
     },
-    "/api/v3/audience/ict/{audienceId}": {
-      "get": {
-        "tags": [
-          "MCP"
-        ],
-        "summary": "Fetch Integrated Care Team Messaging Audience details for ID provided",
-        "description": "This endpoint will fetch the Integrated Care Team Messaging Audience details for the given audience ID.\nThe response will include information such as audience name, status, CPM, creation timestamp, extended audience details, parent audience details,\naudience subtype details, reach, match rate, matched row from file uploaded, column mappings with file headers, and uploaded file details.\n",
-        "operationId": "getIctAudienceDetailsByAudienceId",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "description": "Unique Identifier for Integrated Care Team Messaging Audience",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Authorization Bearer Token",
-            "schema": {
-              "type": "string",
-              "example": "{{bearer_token}}"
-            },
-            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
-          },
-          {
-            "name": "X-IAA-OW-ID",
-            "in": "header",
-            "description": "Organization Workspace Id Header",
-            "schema": {
-              "type": "string",
-              "example": "1",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully fetched the Integrated Care Team Messaging details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ICTAudienceResponseDocs"
-                },
-                "examples": {
-                  "Integrated Care Team Messaging Audience details for ID provided for Parent audience": {
-                    "description": "Integrated Care Team Messaging Audience details for ID provided for Parent audience",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "audienceId": 110110,
-                        "audienceName": "ictm-123",
-                        "createdAt": 1767803546490,
-                        "audienceSubtypeId": 3,
-                        "reach": 3,
-                        "dataPartnerId": 7,
-                        "fileRowCount": 5,
-                        "matchRate": 20,
-                        "cpm": 10,
-                        "audienceStatusId": 3,
-                        "s3FileName": "1767803546585_healthcare_ictm_audience_example.csv",
-                        "s3Url": "s3://ictm-aud-bucket/1767803546585_healthcare_ictm_audience_example.csv",
-                        "extensionAudiences": [
-                          {
-                            "audienceId": 110111,
-                            "audienceName": "ictm-123_Ext_Nurse",
-                            "audienceStatusId": 1
-                          },
-                          {
-                            "audienceId": 110112,
-                            "audienceName": "ictm-123_Ext_Non-NPI Nurse",
-                            "audienceStatusId": 3
-                          }
-                        ],
-                        "columnMappings": [
-                          {
-                            "columnId": 3,
-                            "fileColumnName": "phone",
-                            "dataFormatId": 1
-                          }
-                        ],
-                        "owId": 203615,
-                        "createdByUowId": 200180
-                      }
-                    }
-                  },
-                  "Integrated Care Team Messaging Audience details for ID provided for Extension audience": {
-                    "description": "Integrated Care Team Messaging Audience details for ID provided for Extension audience",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "audienceId": 110111,
-                        "audienceName": "ictm-123_Ext_Nurse",
-                        "createdAt": 1767803546490,
-                        "audienceSubtypeId": 1,
-                        "reach": 3000,
-                        "dataPartnerId": 111,
-                        "fileRowCount": 5555,
-                        "matchRate": 70.56,
-                        "cpm": 10,
-                        "audienceStatusId": 3,
-                        "parentAudience": {
-                          "audienceId": 110110,
-                          "audienceName": "ictm-123",
-                          "audienceStatusId": 3
-                        },
-                        "owId": 203615,
-                        "createdByUowId": 200180
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Workspace user tries to access the endpoint",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Political vertical user trying to access the endpoint": {
-                    "description": "Political vertical user trying to access the endpoint",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "Request for resource with forbidden vertical ID."
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "examples": {
-                  "Invalid audience ID provided": {
-                    "description": "Invalid audience ID provided",
-                    "value": {
-                      "success": false,
-                      "errorObjects": [
-                        {
-                          "error": "No active audience found with the given Id.",
-                          "field": "audienceId"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommonResponse"
-                },
-                "example": {
-                  "success": false,
-                  "errorObjects": [
-                    {
-                      "error": "server encountered an error !"
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/audience/ict/audience-subtypes/extension-audience": {
       "get": {
         "tags": [
@@ -11492,6 +11312,521 @@
           }
         }
       }
+    },
+    "/api/v3/audience/ict/list": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "List ICT audiences grouped by parent audience",
+        "description": "Lists the ICT audiences grouped under their parent (input) audience. The request body is the same as that of the general audience list API.\n\n* Pagination (`pageNo`, `noOfEntries`) and sorting (`sortBy`) are applied on the parent groups, not on the nested audiences.\n* Allowed `sortBy` values are `parentId`, `parentName` and `createdAt`, which order the parent groups, and `audienceId`, which orders the audiences within a group (prefixed with `+` for ascending and `-` for descending order, descending when not prefixed, e.g. `-createdAt,+audienceId`). The groups default to `-parentId` and the audiences within a group to `+audienceId`, so that the parent audience comes first.\n* Filters are applied on the audiences: a group is returned only if at least one of its audiences matches, and only the matching audiences are nested under it.\n* `searchFields` match the audience ID and name, the parent ID and the parent name.\n* `filteredAudiences` is the number of matching audiences across all groups, `filteredAudienceGroups` the number of groups having a matching audience and `totalAudienceGroups` the number of groups irrespective of the filters.\n",
+        "operationId": "getICTAudienceGroupList",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Filters, parent level pagination and parent level sorting of the listing",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AudienceSearchRequest"
+              },
+              "examples": {
+                "ICT audience group list request": {
+                  "description": "ICT audience group list request",
+                  "value": {
+                    "audienceStatusIds": [
+                      3
+                    ],
+                    "audienceSubtypeIds": [
+                      3,
+                      4
+                    ],
+                    "dataPartnerIds": [
+                      7
+                    ],
+                    "pageNo": 1,
+                    "noOfEntries": 20,
+                    "sortBy": "-createdAt,+audienceId",
+                    "searchFields": [
+                      "test audience"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ICT audience groups fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ICTAudienceGroupListDocs"
+                },
+                "examples": {
+                  "ICT audience group list response": {
+                    "description": "ICT audience group list response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "filteredAudiences": 2,
+                        "totalAudienceGroups": 3,
+                        "filteredAudienceGroups": 1,
+                        "audienceGroupList": [
+                          {
+                            "parentId": 1179597,
+                            "parentName": "Test audience",
+                            "audienceTypeId": 11,
+                            "createdAt": 1787736839840,
+                            "audienceRematchEligible": true,
+                            "lastRematchStatusId": 1,
+                            "audienceList": [
+                              {
+                                "audienceId": 1179597,
+                                "audienceName": "Test audience_HCP",
+                                "audienceSubtypeId": 3,
+                                "audienceStatusId": 3,
+                                "cpm": 10,
+                                "iqmIdTargeted": true,
+                                "reach": 632,
+                                "includedCampaignList": [
+                                  604127
+                                ],
+                                "excludedCampaignList": [],
+                                "matchRate": 99.22,
+                                "fileTotalCount": 637,
+                                "s3FileName": "1787736856229_Sample_File_NY_HL_1.csv",
+                                "dataPartnerId": 7
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not allowed to access the endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Non advertiser user trying to access the endpoint": {
+                    "description": "Non advertiser user trying to access the endpoint",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "User is not allowed to access this API. Only Advertiser users can access this API."
+                        }
+                      ]
+                    }
+                  },
+                  "Non healthcare vertical user trying to access the endpoint": {
+                    "description": "Non healthcare vertical user trying to access the endpoint",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for resource with forbidden vertical ID."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid status ID": {
+                    "description": "Invalid status ID",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Invalid status ID: 99"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/audience/ict/{parentId}/update-parent-name": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Update the parent name of an ICT audience group",
+        "description": "Updates the parent (group) name of the ICT audience group identified by the given parent ID. Only the parent name is changed; audience names are not modified. Duplicate parent names are allowed.",
+        "operationId": "updateParentName",
+        "parameters": [
+          {
+            "name": "parentId",
+            "in": "path",
+            "description": "Parent audience ID of the ICT audience group",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 1180230
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request containing the new parent name of the ICT audience group",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIctParentNameRequest"
+              },
+              "examples": {
+                "Request to update the parent name": {
+                  "description": "Request to update the parent name",
+                  "value": {
+                    "parentName": "My ICT Group"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Successful parent name update": {
+                    "description": "Successful parent name update",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Changes saved successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Non Advertiser user accessing the API": {
+                    "description": "Non Advertiser user accessing the API",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "User is not allowed to access this API. Only Advertiser users can access this API."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Parent name size error": {
+                    "description": "Parent name size error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Audience name must be between 1 and 255 characters."
+                        }
+                      ]
+                    }
+                  },
+                  "Audience not found or not accessible": {
+                    "description": "Audience not found or not accessible",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No active audience found with the provided ID or the audience is not accessible"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/audience/ict/{parentId}": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Fetch Integrated Care Team Messaging Audience group details for the parent ID provided",
+        "description": "This endpoint will fetch the Integrated Care Team Messaging Audience group details for the given parent ID.\nThe response will include the parent name, creation timestamp, uploaded file details, column mappings with file headers\nand the list of all the audiences of the group (including the audience given as input at creation) with their name, status,\nsubtype, reach, data partner, file row count and CPM.\n",
+        "operationId": "getIctAudienceDetailsByParentId",
+        "parameters": [
+          {
+            "name": "parentId",
+            "in": "path",
+            "description": "Parent audience ID of the Integrated Care Team Messaging Audience group",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched the Integrated Care Team Messaging audience group details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ICTAudienceDetailsResponseDocs"
+                },
+                "examples": {
+                  "Integrated Care Team Messaging Audience group details": {
+                    "description": "Integrated Care Team Messaging Audience group details",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "parentId": 1183458,
+                        "parentName": "testnewAUD",
+                        "createdAt": 1792739042490,
+                        "s3FileName": "1792739042580_ict_audience_example.csv",
+                        "s3Url": "s3://ictm-aud-bucket/1792739042580_ict_audience_example.csv",
+                        "columnMappings": [
+                          {
+                            "columnId": 3,
+                            "fileColumnName": "phone",
+                            "dataFormatId": 1
+                          }
+                        ],
+                        "audienceList": [
+                          {
+                            "audienceId": 1183458,
+                            "audienceName": "testnewAUD_HCP",
+                            "audienceStatusId": 6,
+                            "audienceSubtypeId": 3,
+                            "reach": 0,
+                            "dataPartnerId": 7,
+                            "fileRowCount": 5,
+                            "cpm": 10
+                          },
+                          {
+                            "audienceId": 1183459,
+                            "audienceName": "testnewAUD_Ext_Nurse",
+                            "audienceStatusId": 6,
+                            "audienceSubtypeId": 1,
+                            "reach": 0,
+                            "dataPartnerId": 7,
+                            "fileRowCount": 5,
+                            "cpm": 10
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Workspace user tries to access the endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Political vertical user trying to access the endpoint": {
+                    "description": "Political vertical user trying to access the endpoint",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Request for resource with forbidden vertical ID."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Invalid parent ID provided": {
+                    "description": "Invalid parent ID provided",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "No active audience found with the given Id.",
+                          "field": "audienceId"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -11890,9 +12225,6 @@
         "description": "Request model for searching audiences with various filters"
       },
       "HealthcareDataRequest": {
-        "required": [
-          "dataProviderIds"
-        ],
         "type": "object",
         "properties": {
           "sortCriteriaMap": {
@@ -11919,10 +12251,10 @@
           "dataProviderIds": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Required. ABM data provider IDs from the data partner list (getAudienceDataPartners) with audienceTypeId 9 (Account Based Audience). An invalid ID returns 422. When creating, this is taken from the top-level dataProviderId. Do not guess.",
+            "description": "ABM data provider IDs from the data partner list (getAudienceDataPartners) with audienceTypeId 9 (Account Based Audience). An invalid ID returns 422. Required for the healthcare data list (getHealthcareData) and statistics (getHealthcareDataStatistics), which return 422 when it is empty. When creating an ABM audience (createAbmAudience), omit it: it is taken from the top-level dataProviderId. Do not guess.",
             "items": {
               "type": "integer",
-              "description": "Required. ABM data provider IDs from the data partner list (getAudienceDataPartners) with audienceTypeId 9 (Account Based Audience). An invalid ID returns 422. When creating, this is taken from the top-level dataProviderId.",
+              "description": "ABM data provider IDs from the data partner list (getAudienceDataPartners) with audienceTypeId 9 (Account Based Audience). An invalid ID returns 422. Required for the healthcare data list (getHealthcareData) and statistics (getHealthcareDataStatistics), which return 422 when it is empty. When creating an ABM audience (createAbmAudience), omit it: it is taken from the top-level dataProviderId.",
               "format": "int32"
             }
           },
@@ -12036,7 +12368,7 @@
           },
           "pageNo": {
             "type": "integer",
-            "description": "Page number for the healthcare data list (getHealthcareData), starting at 1. Send it: the body default is 0, which returns 422.",
+            "description": "Page number for the healthcare data list (getHealthcareData), starting at 1. The body default 0 is treated as 1. -1 returns every row.",
             "format": "int32"
           },
           "noOfEntries": {
@@ -12059,7 +12391,10 @@
             ]
           }
         },
-        "description": "Request model for healthcare data filters"
+        "description": "Request model for healthcare data filters",
+        "required": [
+          "dataProviderIds"
+        ]
       },
       "ReachMetaData": {
         "type": "object",
@@ -13206,10 +13541,14 @@
             "example": 2
           },
           "approvalAccess": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Flag indicating if user has approval access. Unavailability of flag represents this field is not applicable for particular audience type.",
+            "example": false
           },
           "editAccess": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Flag indicating if user has edit access. Unavailability of flag represents this field is not applicable for particular audience type.",
+            "example": true
           }
         },
         "description": "Detailed audience response containing attributes and campaign insights. Fields may be optional depending on audienceTypeId.",
@@ -16110,214 +16449,6 @@
         },
         "description": "Model representing details of a targeted campaign, including campaign name, ID, targeting type, creative type, and status"
       },
-      "AudienceBasicDetails": {
-        "type": "object",
-        "properties": {
-          "audienceId": {
-            "type": "integer",
-            "description": "Audience ID",
-            "format": "int32",
-            "example": 101
-          },
-          "audienceName": {
-            "type": "string",
-            "description": "Name of the audience",
-            "example": "Summer Campaign Audience"
-          },
-          "audienceTypeId": {
-            "type": "integer",
-            "description": "Type ID of the audience",
-            "format": "int32",
-            "example": 1
-          },
-          "audienceSubtypeId": {
-            "type": "integer",
-            "description": "Subtype ID of the audience",
-            "format": "int32",
-            "example": 2
-          },
-          "audienceStatusId": {
-            "type": "integer",
-            "description": "Status ID of the audience",
-            "format": "int32",
-            "example": 3
-          },
-          "cpm": {
-            "type": "number",
-            "description": "Cost per mille (CPM) for the audience",
-            "format": "double",
-            "example": 5.5
-          },
-          "owId": {
-            "type": "integer",
-            "description": "Ow ID associated with the audience",
-            "format": "int32",
-            "example": 10
-          },
-          "createdByUowId": {
-            "type": "integer",
-            "description": "UOW ID of the user who created the audience",
-            "format": "int32",
-            "example": 20
-          },
-          "createdAt": {
-            "type": "integer",
-            "description": "Timestamp when the audience was created",
-            "format": "int64",
-            "example": 1627847261
-          },
-          "iqmIdTargeted": {
-            "type": "boolean"
-          }
-        },
-        "description": "Basic details of an audience"
-      },
-      "ICTAudienceResponse": {
-        "type": "object",
-        "properties": {
-          "audienceId": {
-            "type": "integer",
-            "description": "Audience ID",
-            "format": "int32",
-            "example": 101
-          },
-          "audienceName": {
-            "type": "string",
-            "description": "Name of the audience",
-            "example": "Summer Campaign Audience"
-          },
-          "audienceTypeId": {
-            "type": "integer",
-            "description": "Type ID of the audience",
-            "format": "int32",
-            "example": 1
-          },
-          "audienceSubtypeId": {
-            "type": "integer",
-            "description": "Subtype ID of the audience",
-            "format": "int32",
-            "example": 2
-          },
-          "audienceStatusId": {
-            "type": "integer",
-            "description": "Status ID of the audience",
-            "format": "int32",
-            "example": 3
-          },
-          "cpm": {
-            "type": "number",
-            "description": "Cost per mille (CPM) for the audience",
-            "format": "double",
-            "example": 5.5
-          },
-          "owId": {
-            "type": "integer",
-            "description": "Ow ID associated with the audience",
-            "format": "int32",
-            "example": 10
-          },
-          "createdByUowId": {
-            "type": "integer",
-            "description": "UOW ID of the user who created the audience",
-            "format": "int32",
-            "example": 20
-          },
-          "createdAt": {
-            "type": "integer",
-            "description": "Timestamp when the audience was created",
-            "format": "int64",
-            "example": 1627847261
-          },
-          "iqmIdTargeted": {
-            "type": "boolean"
-          },
-          "reach": {
-            "type": "integer",
-            "description": "Estimated reach of the audience",
-            "format": "int64",
-            "example": 15000
-          },
-          "householdReach": {
-            "type": "integer",
-            "description": "Estimated household reach of the audience (only for matched audiences in the Political vertical)",
-            "format": "int64",
-            "example": 5000
-          },
-          "failureReasonId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dataPartnerId": {
-            "type": "integer",
-            "description": "ID of the data partner associated with this audience",
-            "format": "int32",
-            "example": 7
-          },
-          "fileRowCount": {
-            "type": "integer",
-            "description": "Total number of rows in the uploaded file",
-            "format": "int32",
-            "example": 500
-          },
-          "fileMatchRowCount": {
-            "type": "integer",
-            "description": "Number of rows from the file that were successfully matched",
-            "format": "int32",
-            "example": 450
-          },
-          "matchRate": {
-            "type": "number",
-            "description": "Match rate as a percentage of matched rows to total rows",
-            "format": "double",
-            "example": 90
-          },
-          "s3FileName": {
-            "type": "string",
-            "description": "Name of the file stored in S3",
-            "example": "audience-data-12345.csv"
-          },
-          "s3Url": {
-            "type": "string",
-            "description": "S3 URL for the uploaded file",
-            "example": "https://s3.amazonaws.com/bucket/audience-data-12345.csv"
-          },
-          "columnMappings": {
-            "type": "array",
-            "description": "List of column mappings used for file matching",
-            "items": {
-              "$ref": "#/components/schemas/AudienceColumnMapping"
-            }
-          },
-          "extensionAudiences": {
-            "type": "array",
-            "description": "List of extension audiences created from this ICT audience",
-            "items": {
-              "$ref": "#/components/schemas/AudienceBasicDetails"
-            }
-          },
-          "parentAudience": {
-            "$ref": "#/components/schemas/AudienceBasicDetails"
-          }
-        },
-        "description": "Response model for ICT Audience details, including file information, match rate, extension/parent audiences, and column mappings"
-      },
-      "ICTAudienceResponseDocs": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "errorObjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorObject"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/ICTAudienceResponse"
-          }
-        }
-      },
       "BaseCustomLocationDetails": {
         "type": "object",
         "properties": {
@@ -17359,6 +17490,290 @@
           }
         }
       },
+      "ICTAudienceGroupListDocs": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ICTAudienceGroupListResponse"
+          }
+        }
+      },
+      "ICTAudienceGroupListResponse": {
+        "type": "object",
+        "properties": {
+          "filteredAudiences": {
+            "type": "integer",
+            "description": "Number of audiences, across all groups, matching the requested filters",
+            "format": "int32",
+            "example": 25
+          },
+          "totalAudienceGroups": {
+            "type": "integer",
+            "description": "Total number of audience groups visible to the user, irrespective of the filters",
+            "format": "int32",
+            "example": 3
+          },
+          "filteredAudienceGroups": {
+            "type": "integer",
+            "description": "Number of audience groups having at least one audience matching the requested filters",
+            "format": "int32",
+            "example": 1
+          },
+          "audienceGroupList": {
+            "type": "array",
+            "description": "Audience groups of the requested page",
+            "items": {
+              "$ref": "#/components/schemas/ICTAudienceGroupResponse"
+            }
+          }
+        },
+        "description": "Nested ICT audience listing, paginated on the parent audience groups"
+      },
+      "ICTAudienceGroupResponse": {
+        "type": "object",
+        "properties": {
+          "parentId": {
+            "type": "integer",
+            "description": "ID of the parent (input) audience of the group",
+            "format": "int32",
+            "example": 1179597
+          },
+          "parentName": {
+            "type": "string",
+            "description": "Name of the group, i.e. the input audience name given at creation",
+            "example": "Test audience"
+          },
+          "audienceTypeId": {
+            "type": "integer",
+            "description": "Audience type ID of the group",
+            "format": "int32",
+            "example": 11
+          },
+          "createdAt": {
+            "type": "integer",
+            "description": "Timestamp (epoch millis) when the group was created",
+            "format": "int64",
+            "example": 1787736839840
+          },
+          "audienceRematchEligible": {
+            "type": "boolean",
+            "description": "Whether the input audience of the group is eligible for rematch",
+            "example": true
+          },
+          "lastRematchStatusId": {
+            "type": "integer",
+            "description": "Status ID of the last rematch of the input audience. Absent if never rematched",
+            "format": "int32",
+            "example": 1
+          },
+          "audienceList": {
+            "type": "array",
+            "description": "Audiences of the group matching the requested filters",
+            "items": {
+              "$ref": "#/components/schemas/AudienceResponse"
+            }
+          }
+        },
+        "description": "ICT audience group - the input audience and its extension audiences nested under the parent"
+      },
+      "UpdateIctParentNameRequest": {
+        "required": [
+          "parentName"
+        ],
+        "type": "object",
+        "properties": {
+          "parentName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "New parent name for the ICT audience group",
+            "example": "My ICT Group"
+          }
+        },
+        "description": "Request model for updating the parent name of an ICT audience group"
+      },
+      "AudienceComputedInsightsDocs": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/AudienceComputedInsightsResponse"
+          }
+        },
+        "description": "Common response wrapping segmented or ABM audience insights"
+      },
+      "AudienceComputedInsightsResponse": {
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "Audience ID",
+            "example": "1185907"
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "Audience name",
+            "example": "Segmented Test 3 - Ages 65+ OR 17-24"
+          },
+          "audienceDate": {
+            "type": "string",
+            "description": "Audience date",
+            "example": "2026-04-08"
+          },
+          "verticalId": {
+            "type": "string",
+            "description": "Always the placeholder \"dummy\"",
+            "example": "dummy"
+          },
+          "vertical": {
+            "type": "string",
+            "description": "Always the placeholder \"dummy\"",
+            "example": "dummy"
+          },
+          "widgets": {
+            "type": "array",
+            "description": "Insight widgets such as age, gender, state, and device type. In each data entry, nationalAvg(%) and delta are always -1.",
+            "items": {
+              "$ref": "#/components/schemas/InsightWidget"
+            }
+          }
+        },
+        "description": "Segmented or ABM audience insights, computed on request"
+      },
+      "ICTAudienceDetails": {
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "integer",
+            "description": "Audience ID",
+            "format": "int32",
+            "example": 1183459
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "Name of the audience",
+            "example": "testnewAUD_Ext_Nurse"
+          },
+          "audienceStatusId": {
+            "type": "integer",
+            "description": "Status ID of the audience",
+            "format": "int32",
+            "example": 6
+          },
+          "audienceSubtypeId": {
+            "type": "integer",
+            "description": "Subtype ID of the audience",
+            "format": "int32",
+            "example": 3
+          },
+          "reach": {
+            "type": "integer",
+            "description": "Reach of the audience",
+            "format": "int64",
+            "example": 0
+          },
+          "dataPartnerId": {
+            "type": "integer",
+            "description": "ID of the data partner associated with the audience",
+            "format": "int32",
+            "example": 7
+          },
+          "fileRowCount": {
+            "type": "integer",
+            "description": "Total number of rows in the uploaded file",
+            "format": "int32",
+            "example": 5
+          },
+          "cpm": {
+            "type": "number",
+            "description": "Cost per mille (CPM) of the audience",
+            "format": "double",
+            "example": 10
+          }
+        },
+        "description": "Details of an audience of the ICT audience group"
+      },
+      "ICTAudienceDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "parentId": {
+            "type": "integer",
+            "description": "ID of the parent (input) audience of the group",
+            "format": "int32",
+            "example": 1183458
+          },
+          "parentName": {
+            "type": "string",
+            "description": "Name of the group, i.e. the input audience name given at creation",
+            "example": "testnewAUD"
+          },
+          "createdAt": {
+            "type": "integer",
+            "description": "Timestamp (epoch millis) when the group was created",
+            "format": "int64",
+            "example": 1792739042490
+          },
+          "s3FileName": {
+            "type": "string",
+            "description": "Name of the uploaded file stored in S3",
+            "example": "1792739042580_ict_audience_example.csv"
+          },
+          "s3Url": {
+            "type": "string",
+            "description": "S3 URL of the uploaded file",
+            "example": "s3://iqm-healthcare-assets/AUDIENCE/UPLOAD/HCP/Client=205022/Audience=1183458/1792739042580_ict_audience_example.csv"
+          },
+          "columnMappings": {
+            "type": "array",
+            "description": "List of column mappings used for file matching",
+            "items": {
+              "$ref": "#/components/schemas/AudienceColumnMapping"
+            }
+          },
+          "audienceList": {
+            "type": "array",
+            "description": "All the audiences of the group, including the audience given as input at creation",
+            "items": {
+              "$ref": "#/components/schemas/ICTAudienceDetails"
+            }
+          }
+        },
+        "description": "ICT audience group details - file details, column mappings and all the audiences of the group"
+      },
+      "ICTAudienceDetailsResponseDocs": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ICTAudienceDetailsResponse"
+          }
+        }
+      },
       "MatchedAudienceUploadSchema": {
         "required": [
           "audienceRequest",
@@ -17401,8 +17816,8 @@
           },
           "columns": {
             "type": "string",
-            "description": "Serialised JSON mapping of file column headers (as keys) to their corresponding numeric ABM column type IDs (as string values). The column type IDs can be obtained from the healthcare data filter endpoints. For example: {\"health-system-name\": \"23\", \"account-type\": \"24\", \"state\": \"25\"}. Keys must match the actual column headers in the uploaded file.",
-            "example": "{\"health-system-name\":\"23\",\"account-type\":\"24\",\"state\":\"25\"}"
+            "description": "Serialised JSON mapping of file column headers (as keys) to their corresponding numeric ABM column type IDs (as string values). The column type IDs can be obtained from the healthcare data filter endpoints. For example: {\"health-system-name\": \"22\", \"account-type\": \"24\", \"state\": \"8\"}. Keys must match the actual column headers in the uploaded file.",
+            "example": "{\"health-system-name\":\"22\",\"account-type\":\"24\",\"state\":\"8\"}"
           }
         },
         "description": "Multipart form data for extracting ABM filters from an uploaded file"
