@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "OpenAPI definition",
-    "version": "4.0.0",
+    "version": "4.1.0",
     "description": "MCP Inventory API Specification",
     "contact": {
       "name": "IQM Support",
@@ -1976,6 +1976,112 @@
                       ]
                     }
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/inv/groups/delete": {
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Deletes multiple existing inventory groups based on the provided group IDs.",
+        "operationId": "bulkDeleteInventoryGroups",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Object containing the list of group IDs to delete",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteInventoryGroupRequestVO"
+              },
+              "examples": {
+                "Bulk delete request": {
+                  "description": "Bulk delete request",
+                  "value": {
+                    "groupIds": [
+                      191712,
+                      191714
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Bulk delete success response": {
+                    "description": "Bulk delete success response",
+                    "value": {
+                      "success": true,
+                      "data": "2 inventory group(s) deleted successfully."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "Forbidden !"
+                    }
+                  ]
                 }
               }
             }
@@ -4242,6 +4348,162 @@
         }
       }
     },
+    "/api/v3/inv/groups/shared/customers/edit": {
+      "patch": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "It will add or remove customers from shared inventory groups.",
+        "description": "Adds or removes customer organizations from a shared inventory group by updating the OW ID mappings.",
+        "operationId": "editSharedGroupMapping",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditSharedGroupMappingRequestVO"
+              },
+              "examples": {
+                "Add and remove shared group mapping": {
+                  "description": "Add and remove shared group mapping",
+                  "value": {
+                    "groupIds": [
+                      191712,
+                      191714
+                    ],
+                    "addOWIds": [
+                      200425,
+                      200495,
+                      200496
+                    ],
+                    "removeOWIds": [
+                      200929,
+                      200931
+                    ]
+                  }
+                },
+                "OW IDs required error": {
+                  "description": "OW IDs required error",
+                  "value": {
+                    "groupIds": [
+                      191712
+                    ],
+                    "addOWIds": [],
+                    "removeOWIds": []
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "examples": {
+                  "Success Response": {
+                    "description": "Success Response",
+                    "value": {
+                      "success": true,
+                      "data": "Your changes have been successfully saved."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "examples": {
+                  "Unauthorized": {
+                    "description": "Unauthorized",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Unauthorized"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                },
+                "examples": {
+                  "Validation Error": {
+                    "description": "Validation Error",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "One or more ow ids are required in addOWIds or removeOWIds."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/inv/static/streaming-devices": {
       "get": {
         "tags": [
@@ -4516,6 +4778,200 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/inv/pmp/deals/{dealId}/inventories/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get inventories associated with a specific PMP deal",
+        "description": "This API retrieves paginated list of inventories associated with a specific PMP (Private Marketplace) deal. Returns deal information along with the list of inventories linked to the given deal ID.The deal ID required is the internal primary key (integer) of the deal not the external deal identifier.",
+        "operationId": "getPMPDealInventoriesByDealId",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Unique identifier of the PMP deal for which inventories are to be retrieved",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page number for pagination (default: 1)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "noOfEntries",
+            "in": "query",
+            "description": "Number of inventory entries per page (default: 50)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PMPDealInventoriesResponse"
+                },
+                "examples": {
+                  "PMP deal inventories retrieved successfully": {
+                    "description": "PMP deal inventories retrieved successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "dealId": "IQM-12345",
+                        "dealName": "Sample PMP Deal",
+                        "totalRecords": 1234,
+                        "filteredRecords": 1234,
+                        "inventoryList": [
+                          "inv1",
+                          "inv2",
+                          "inv3"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/inv/pmp/deals/{dealId}/inventories/download": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Download inventories associated with a specific PMP deal",
+        "description": "This API allows downloading the list of inventories associated with a specific PMP (Private Marketplace) deal. Returns the downloadable URL for the csv file.The deal ID required is the internal primary key (integer) of the deal not the external deal identifier.",
+        "operationId": "downloadCSVForPMPDealInventoriesByDealId",
+        "parameters": [
+          {
+            "name": "dealId",
+            "in": "path",
+            "description": "Unique identifier of the PMP deal for which inventories are to be downloaded",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PMPDealInventoriesDownloadResponse"
+                },
+                "examples": {
+                  "PMP deal inventories download initiated successfully": {
+                    "description": "PMP deal inventories download initiated successfully",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "fileUrl": "https://sample.csv"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -7030,6 +7486,154 @@
                       "error": "Forbidden !"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "example": {
+                  "success": false,
+                  "errorObjects": [
+                    {
+                      "error": "server encountered an error !"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/inv/group/{groupId}/shared/customer/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "Get shared group customer details",
+        "description": "Retrieves the list of customers associated with a shared group.",
+        "operationId": "getSharedGroupCustomerDetails",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseListSharedGroupCustomerDetailVO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/inv/group/{groupId}/shared/campaign/list": {
+      "get": {
+        "tags": [
+          "MCP"
+        ],
+        "summary": "It will provide campaigns attached to the inventory group.",
+        "description": "Returns a list of campaign IDs that are attached to the specified shared inventory group.",
+        "operationId": "getSharedGroupCampaignList",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "Inventory group id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization Bearer Token",
+            "schema": {
+              "type": "string",
+              "example": "{{bearer_token}}"
+            },
+            "example": "Bearer 0ed52da8-24ab-44b1-bc88-7ea03a090d24"
+          },
+          {
+            "name": "X-IAA-OW-ID",
+            "in": "header",
+            "description": "Organization Workspace Id Header",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseArray"
+                },
+                "examples": {
+                  "Attached Campaigns": {
+                    "description": "Attached Campaigns",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        286107,
+                        284229,
+                        287201,
+                        287202
+                      ]
+                    }
+                  },
+                  "No campaigns attached": {
+                    "description": "No campaigns attached",
+                    "value": {
+                      "success": true,
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                },
+                "examples": {
+                  "Not authorized to access group": {
+                    "description": "Not authorized to access group",
+                    "value": {
+                      "success": false,
+                      "errorObjects": [
+                        {
+                          "error": "Unauthorized"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -10627,6 +11231,28 @@
         },
         "description": "Inventory Group row without statistics (values may be null/empty)"
       },
+      "BulkDeleteInventoryGroupRequestVO": {
+        "required": [
+          "groupIds"
+        ],
+        "type": "object",
+        "properties": {
+          "groupIds": {
+            "type": "array",
+            "description": "List of Inventory Group IDs to be deleted",
+            "example": [
+              191712,
+              191714
+            ],
+            "items": {
+              "type": "integer",
+              "description": "List of Inventory Group IDs to be deleted",
+              "format": "int32"
+            }
+          }
+        },
+        "description": "Request object for bulk deleting inventory groups"
+      },
       "ValidateInventoryGroupVO": {
         "type": "object",
         "properties": {
@@ -11525,6 +12151,38 @@
           }
         }
       },
+      "EditSharedGroupMappingRequestVO": {
+        "required": [
+          "groupIds"
+        ],
+        "type": "object",
+        "properties": {
+          "addOWIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "removeOWIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "groupIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "StreamingDevice": {
         "type": "object",
         "properties": {
@@ -11691,6 +12349,95 @@
           },
           "data": {
             "$ref": "#/components/schemas/PMPDealDetailVO"
+          }
+        }
+      },
+      "PMPDealInventoriesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PMPDealInventoriesResponseVO"
+          }
+        }
+      },
+      "PMPDealInventoriesResponseVO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filteredRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recordsAggregation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "dealId": {
+            "type": "string",
+            "description": "Unique identifier of the PMP deal for which inventories are retrieved",
+            "example": "deal123"
+          },
+          "dealName": {
+            "type": "string",
+            "description": "Name of the PMP deal for which inventories are retrieved",
+            "example": "Sample PMP Deal"
+          },
+          "inventoryList": {
+            "type": "array",
+            "description": "List of inventory entries associated with the PMP deal",
+            "items": {
+              "type": "string",
+              "description": "List of inventory entries associated with the PMP deal"
+            }
+          }
+        },
+        "description": "PMP Deal Inventories Response Object"
+      },
+      "PMPDealInventoriesDownloadData": {
+        "type": "object",
+        "properties": {
+          "fileUrl": {
+            "type": "string",
+            "description": "Downloadable URL of the CSV file containing the PMP deal's inventories",
+            "example": "https://sample.csv"
+          }
+        },
+        "description": "PMP Deal Inventories Download Response"
+      },
+      "PMPDealInventoriesDownloadResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PMPDealInventoriesDownloadData"
           }
         }
       },
@@ -12498,6 +13245,55 @@
           },
           "data": {
             "$ref": "#/components/schemas/GroupsCountData"
+          }
+        }
+      },
+      "CommonResponseListSharedGroupCustomerDetailVO": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "errorObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SharedGroupCustomerDetailVO"
+            }
+          }
+        }
+      },
+      "SharedGroupCustomerDetailVO": {
+        "type": "object",
+        "properties": {
+          "owId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ownerUserEmail": {
+            "type": "string"
+          },
+          "logoUrl": {
+            "type": "string"
+          },
+          "campaignCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "runningCampaignCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
